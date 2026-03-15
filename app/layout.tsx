@@ -168,37 +168,71 @@ export default async function RootLayout({
         <meta name="robots" content="index, follow" />
 
         {/* Apply stored theme before paint to avoid blank flash */}
-        {nonce ? (
-          <script
-            id="init-theme"
-            nonce={nonce}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: `
+        <script
+          id="init-theme"
+          nonce={nonce ?? undefined}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
             (function() {
               try {
                 var root = document.documentElement;
+                var pathname = window.location.pathname || '/';
+                var isDashboardRoute = /^\\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\\/dashboard(?:\\/|$)/i.test(pathname);
+                var dashboardThemeClasses = [
+                  'dashboard-theme-blue',
+                  'dashboard-theme-violet',
+                  'dashboard-theme-emerald',
+                  'dashboard-theme-amber',
+                  'dashboard-theme-rose'
+                ];
+
+                if (!isDashboardRoute) {
+                  root.classList.remove('light', 'dark');
+                  root.classList.add('light');
+                  root.style.setProperty('--theme-intensity', '100%');
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.removeAttribute('data-dashboard-theme');
+                  root.removeAttribute('data-theme');
+                  return;
+                }
+
                 var savedTheme = localStorage.getItem('theme');
-                var resolvedTheme = savedTheme === 'dark'
-                  ? 'dark'
-                  : savedTheme === 'light'
-                    ? 'light'
-                    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                var resolvedTheme = isDashboardRoute
+                  ? (savedTheme === 'dark'
+                      ? 'dark'
+                      : savedTheme === 'light'
+                        ? 'light'
+                        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+                  : 'light';
 
                 root.classList.remove('light', 'dark');
                 root.classList.add(resolvedTheme);
 
-                var savedIntensity = localStorage.getItem('intensity');
-                var intensity = savedIntensity ? Number(savedIntensity) : 100;
+                var savedIntensity = Number(localStorage.getItem('intensity'));
+                var intensity = Number.isFinite(savedIntensity)
+                  ? Math.min(100, Math.max(90, Math.round(savedIntensity)))
+                  : 100;
                 root.style.setProperty('--theme-intensity', intensity + '%');
+
+                var savedDashboardTheme = localStorage.getItem('dashboard-theme');
+                var dashboardThemes = { blue: true, violet: true, emerald: true, amber: true, rose: true };
+                if (savedDashboardTheme && dashboardThemes[savedDashboardTheme] && savedDashboardTheme !== 'blue') {
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.classList.add('dashboard-theme-' + savedDashboardTheme);
+                  root.setAttribute('data-dashboard-theme', savedDashboardTheme);
+                } else {
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.removeAttribute('data-dashboard-theme');
+                }
+                root.removeAttribute('data-theme');
               } catch (e) {
                 // Fail silently to avoid blocking render
               }
             })();
           `,
-            }}
-          />
-        ) : null}
+          }}
+        />
 
         {/* PostHog Analytics */}
         {/*{process.env.NODE_ENV === "production" && (

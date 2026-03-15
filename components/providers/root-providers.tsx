@@ -34,8 +34,10 @@ function shouldRecoverFromChunkError(reason: unknown): boolean {
 
 export function RootProviders({
     children,
+    themeScope = "fixed-blue",
 }: {
     children: React.ReactNode
+    themeScope?: "dashboard" | "fixed-blue"
 }) {
     useEffect(() => {
         if (process.env.NODE_ENV !== "production") {
@@ -157,7 +159,7 @@ export function RootProviders({
 
     return (
         <TooltipProvider>
-            <ThemeProvider>
+            <ThemeProvider scope={themeScope}>
                 {children}
             </ThemeProvider>
         </TooltipProvider>
@@ -172,11 +174,11 @@ export function PublicRootProviders({
     const enablePublicMotion = process.env.NEXT_PUBLIC_ENABLE_PUBLIC_MOTION === "true";
 
     if (!enablePublicMotion) {
-        return <RootProviders>{children}</RootProviders>;
+        return <RootProviders themeScope="fixed-blue">{children}</RootProviders>;
     }
 
     return (
-        <RootProviders>
+        <RootProviders themeScope="fixed-blue">
             <SmoothScrollProvider>
                 <GlobalMotionEffects />
                 {children}
@@ -195,7 +197,7 @@ export function SidebarRootProviders({
     withAuthTimeout?: boolean
 }) {
     return (
-        <RootProviders>
+        <RootProviders themeScope="dashboard">
             <SidebarProvider defaultOpen={defaultOpen}>
                 {withAuthTimeout ? <AuthTimeout /> : null}
                 {children}

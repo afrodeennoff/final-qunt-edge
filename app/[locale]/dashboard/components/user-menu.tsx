@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useI18n, useChangeLocale, useCurrentLocale } from '@/locales/client'
-import { useTheme } from '@/context/theme-provider'
+import { DASHBOARD_THEMES, type DashboardTheme, useTheme } from '@/context/theme-provider'
 import { useDashboardActions } from '@/context/data-provider'
 import { useUserStore } from '@/store/user-store'
 import { useTradovateSyncStore } from '@/store/tradovate-sync-store'
@@ -38,6 +38,7 @@ import {
   Laptop,
   Settings,
   Building2,
+  Palette,
 } from 'lucide-react'
 import { SubscriptionBadge } from '@/components/subscription-badge'
 import { signOut } from '@/server/auth'
@@ -45,6 +46,12 @@ import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
 type Locale = 'en' | 'fr'
+type DashboardThemeOption = {
+  value: DashboardTheme
+  label: string
+  preview: string
+  swatchClass: string
+}
 
 const timezones = [
   'UTC',
@@ -56,12 +63,19 @@ const timezones = [
   'Asia/Shanghai',
   'Australia/Sydney',
 ]
+const dashboardThemeOptions: DashboardThemeOption[] = [
+  { value: 'blue', label: 'VTRON Blue', preview: 'Balanced and crisp', swatchClass: 'bg-chart-1' },
+  { value: 'violet', label: 'CWH Violet', preview: 'High contrast focus', swatchClass: 'bg-chart-2' },
+  { value: 'emerald', label: 'Emerald Light', preview: 'Fresh and minimal', swatchClass: 'bg-chart-4' },
+  { value: 'amber', label: 'Lara Amber', preview: 'Warm and energetic', swatchClass: 'bg-chart-5' },
+  { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
+]
 
 export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' | 'sidebar' }) {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
-  const { theme, setTheme, intensity, setIntensity } = useTheme()
+  const { theme, setTheme, dashboardTheme, setDashboardTheme, intensity, setIntensity } = useTheme()
   const { refreshAllData } = useDashboardActions()
   const user = useUserStore(state => state.supabaseUser)
   const timezone = useUserStore(state => state.timezone)
@@ -78,6 +92,14 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
     setTheme(value as 'light' | 'dark' | 'system')
   }
 
+  const handleDashboardThemeChange = (value: string) => {
+    if (!DASHBOARD_THEMES.includes(value as DashboardTheme)) {
+      return
+    }
+
+    setDashboardTheme(value as DashboardTheme)
+  }
+
   const getThemeIcon = () => {
     if (theme === 'light') return <Sun className="h-4 w-4" />
     if (theme === 'dark') return <Moon className="h-4 w-4" />
@@ -88,16 +110,25 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
     return <Laptop className="h-4 w-4" />
   }
 
+  const activeDashboardTheme = useMemo(
+    () => dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0],
+    [dashboardTheme]
+  )
+
   return (
     <div className="relative">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <div className={cn(
-            "flex items-center gap-2 cursor-pointer transition-colors",
-            variant === 'navbar'
-              ? "hover:bg-accent/70 p-1 rounded-full"
-              : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-2 w-full group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
-          )}>
+          <button
+            type="button"
+            aria-label="Open user menu"
+            className={cn(
+              "flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              variant === 'navbar'
+                ? "hover:bg-accent/70 p-1 rounded-full"
+                : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-2 w-full group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+            )}
+          >
             <div className="relative flex-none">
               <Avatar className={cn(
                 "rounded-lg transition-transform hover:scale-105",
@@ -131,7 +162,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
             {variant === 'sidebar' && (
               <Settings className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
             )}
-          </div>
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>{t('dashboard.myAccount')}</DropdownMenuLabel>
@@ -194,22 +225,79 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
           </Link>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger
+              aria-label="Select dashboard theme"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <Palette className="mr-2 h-4 w-4" />
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="truncate">Dashboard Theme</span>
+                <span className={cn('h-2.5 w-2.5 shrink-0 rounded-full', activeDashboardTheme.swatchClass)} />
+              </span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent className="w-[240px]">
+                <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+                  Palette presets
+                </DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={dashboardTheme}
+                  onValueChange={handleDashboardThemeChange}
+                  aria-label="Dashboard theme"
+                >
+                  {dashboardThemeOptions.map((option) => (
+                    <DropdownMenuRadioItem
+                      key={option.value}
+                      value={option.value}
+                      className="items-start py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      aria-label={`${option.label} theme`}
+                    >
+                      <div className="flex min-w-0 items-start gap-2">
+                        <span className={cn('mt-0.5 h-3 w-3 shrink-0 rounded-full', option.swatchClass)} />
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm">{option.label}</span>
+                          <span className="block truncate text-xs text-muted-foreground">{option.preview}</span>
+                        </span>
+                      </div>
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger
+              aria-label={t('landing.navbar.toggleTheme')}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               {getThemeIcon()}
               <span className="ml-2">{t('landing.navbar.toggleTheme')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent className="w-[200px]">
-                <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
-                  <DropdownMenuRadioItem value="light">
+                <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange} aria-label="Interface theme">
+                  <DropdownMenuRadioItem
+                    value="light"
+                    className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-label={t('landing.navbar.lightMode')}
+                  >
                     <Sun className="mr-2 h-4 w-4" />
                     <span>{t('landing.navbar.lightMode')}</span>
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="dark">
+                  <DropdownMenuRadioItem
+                    value="dark"
+                    className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-label={t('landing.navbar.darkMode')}
+                  >
                     <Moon className="mr-2 h-4 w-4" />
                     <span>{t('landing.navbar.darkMode')}</span>
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="system">
+                  <DropdownMenuRadioItem
+                    value="system"
+                    className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-label={t('landing.navbar.systemTheme')}
+                  >
                     <Laptop className="mr-2 h-4 w-4" />
                     <span>{t('landing.navbar.systemTheme')}</span>
                   </DropdownMenuRadioItem>
@@ -224,6 +312,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
                     max={100}
                     step={1}
                     className="w-full"
+                    aria-label={t('dashboard.theme.intensity')}
                   />
                   <div className="mt-2 text-sm text-muted-foreground">
                     {intensity}%
@@ -233,18 +322,22 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger
+              aria-label={t('dashboard.language')}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               <Globe className="mr-2 h-4 w-4" />
               <span>{t('dashboard.language')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <ScrollArea className="h-[64px]">
-                  <DropdownMenuRadioGroup value={currentLocale}>
+                  <DropdownMenuRadioGroup value={currentLocale} aria-label="Language selection">
                     {languages.map((lang) => (
                       <DropdownMenuRadioItem
                         key={lang.value}
                         value={lang.value}
+                        className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         onClick={() => {
                           changeLocale(lang.value)
                         }}
@@ -258,16 +351,28 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger
+              aria-label={t('dashboard.timezone')}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               <Clock className="mr-2 h-4 w-4" />
               <span>{t('dashboard.timezone')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <ScrollArea className="h-[40px] sm:h-[120px]">
-                  <DropdownMenuRadioGroup value={timezone} onValueChange={setTimezone}>
+                  <DropdownMenuRadioGroup
+                    value={timezone}
+                    onValueChange={setTimezone}
+                    aria-label="Timezone selection"
+                  >
                     {timezones.map((tz) => (
-                      <DropdownMenuRadioItem key={tz} value={tz}>
+                      <DropdownMenuRadioItem
+                        key={tz}
+                        value={tz}
+                        className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        aria-label={tz.replace('_', ' ')}
+                      >
                         {tz.replace('_', ' ')}
                       </DropdownMenuRadioItem>
                     ))}

@@ -755,3 +755,109 @@
   --color-info: 210 60% 60%;
   --color-info-bg: 210 60% 60% / 0.15;
 }
+
+/* ===== ROUTE-SCOPED DASHBOARD THEMES (dashboard-only) ===== */
+:root[data-dashboard-theme="blue"],
+:root.dashboard-theme-blue {
+  /* VTRON - cmjhgwebp000404jl22fv5sh6 */
+  --primary: oklch(0.5729 0.2337 264.3664);
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(1 0 0);
+  --accent-foreground: oklch(0.5729 0.2337 264.3664);
+  --ring: oklch(0.5784 0.2303 263.8862);
+  --sidebar-primary: oklch(0.5729 0.2337 264.3664);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(1 0 0);
+  --sidebar-accent-foreground: oklch(0.5729 0.2337 264.3664);
+  --sidebar-ring: oklch(0.5784 0.2303 263.8862);
+  --chart-1: oklch(0.5729 0.2337 264.3664);
+  --chart-2: oklch(0.7677 0.1312 194.1427);
+  --chart-3: oklch(0.9649 0.1962 111.4216);
+  --chart-4: oklch(0.8439 0.1679 169.5646);
+  --chart-5: oklch(0.6411 0.2446 28.5713);
+  --chart-win: oklch(0.72 0.16 162);
+}
+
+:root[data-dashboard-theme="violet"],
+:root.dashboard-theme-violet {
+  /* cwh-learning - cmhxpdle4000804le8gkp0rak */
+  --primary: oklch(0.6217 0.2589 305.3090);
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(0.9194 0.0402 352.1774);
+  --accent-foreground: oklch(0.6217 0.2589 305.3090);
+  --ring: oklch(0.6217 0.2589 305.3090);
+  --sidebar-primary: oklch(0.6217 0.2589 305.3090);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.9401 0 0);
+  --sidebar-accent-foreground: oklch(0.7441 0.1501 308.4646);
+  --sidebar-ring: oklch(0.5441 0.2940 297.8222);
+  --chart-1: oklch(0.7459 0.1483 156.4499);
+  --chart-2: oklch(0.6217 0.2589 305.3090);
+  --chart-3: oklch(0.7336 0.1758 50.5517);
+  --chart-4: oklch(0.6050 0.2526 302.1776);
+  --chart-5: oklch(0.5590 0 0);
+  --chart-win: oklch(0.7459 0.1483 156.4499);
+}
+
+:root[data-dashboard-theme="emerald"],
+:root.dashboard-theme-emerald {
+  /* Light Green - cmlhfpjhw000004l4f4ax3m7z */
+  --primary: oklch(0.8871 0.2122 128.5041);
+  --primary-foreground: oklch(0.2077 0.0398 265.7549);
+  --accent: oklch(0.9819 0.0181 155.8263);
+  --accent-foreground: oklch(0.8871 0.2122 128.5041);
+  --ring: oklch(0.8871 0.2122 128.5041);
+  --sidebar-primary: oklch(0.8871 0.2122 128.5041);
+  --sidebar-primary-foreground: oklch(0.2077 0.0398 265.7549);
+  --sidebar-accent: oklch(0.9683 0.0069 247.8956);
+  --sidebar-accent-foreground: oklch(0.7227 0.1920 149.5793);
+  --sidebar-ring: oklch(0.8871 0.2122 128.5041);
+  --chart-1: oklch(0.8871 0.2122 128.5041);
+  --chart-2: oklch(0.3717 0.0392 257.2870);
+  --chart-3: oklch(0.7227 0.1920 149.5793);
+  --chart-4: oklch(0.5544 0.0407 257.4166);
+  --chart-5: oklch(0.7107 0.0351 256.7878);
+  --chart-win: oklch(0.8871 0.2122 128.5041);
+}
+
+:root[data-dashboard-theme="amber"],
+:root.dashboard-theme-amber {
+  /* Lara - cmm2769u2000004jobride6q4 */
+  --primary: oklch(0.6370 0.2370 25.3310);
+  --primary-foreground: oklch(1 0 0);
+  --accent: oklch(0.6370 0.2370 25.3310);
+  --accent-foreground: oklch(1 0 0);
+  --ring: oklch(0.6370 0.2370 25.3310);
+  --sidebar-primary: oklch(0.6370 0.2370 25.3310);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.9700 0 0);
+  --sidebar-accent-foreground: oklch(0.6370 0.2370 25.3310);
+  --sidebar-ring: oklch(0.6370 0.2370 25.3310);
+  --chart-1: oklch(0.6370 0.2370 25.3310);
+  --chart-2: oklch(0.7000 0.2000 60);
+  --chart-3: oklch(0.6200 0.1800 200);
+  --chart-4: oklch(0.5800 0.2200 140);
+  --chart-5: oklch(0.6500 0.1500 280);
+  --chart-win: oklch(0.72 0.16 162);
+}
+
+:root[data-dashboard-theme="rose"],
+:root.dashboard-theme-rose {
+  /* Efferd - cmmi8o8ic000904l12ucn8i9p */
+  --primary: oklch(0.2050 0 0);
+  --primary-foreground: oklch(0.8800 0.0055 16.2560);
+  --accent: oklch(0.9500 0 0);
+  --accent-foreground: oklch(0.2050 0 0);
+  --ring: oklch(0.8000 0 0);
+  --sidebar-primary: oklch(0.2050 0 0);
+  --sidebar-primary-foreground: oklch(0.9850 0 0);
+  --sidebar-accent: oklch(0.9500 0 0);
+  --sidebar-accent-foreground: oklch(0.2050 0 0);
+  --sidebar-ring: oklch(0.8000 0 0);
+  --chart-1: oklch(0.6460 0.2220 41.1160);
+  --chart-2: oklch(0.6000 0.1180 184.7040);
+  --chart-3: oklch(0.3980 0.0700 227.3920);
+  --chart-4: oklch(0.8280 0.1890 84.4290);
+  --chart-5: oklch(0.7690 0.1880 70.0800);
+  --chart-win: oklch(0.72 0.16 162);
+}

@@ -9,6 +9,12 @@
 
 Verification: `npm run lint -- app/layout.tsx tailwind.config.ts app/globals.css` (ESLint warns `app/globals.css` is ignored because no matching config is supplied; layout and config files pass).
 
+## Task: Accessibility polish – user menu & settings (2026-03-16)
+
+- [x] Audit `app/[locale]/dashboard/components/user-menu.tsx` and `app/[locale]/dashboard/settings/page.tsx` for ARIA names, keyboard focus visibility, and theme selector clarity.
+- [x] Implement minimal fixes: make menu trigger keyboard-focusable with visible focus ring, add aria-labels to sliders/icon buttons, and ensure theme radio/swatches have descriptive labels.
+- [x] Re-verify keyboard navigation/focus order for theme and timezone/language pickers; document changed lines/files.
+
 ## Task: Color token cleanup (2026-03-15)
 
 - [x] Save the color token cleanup plan in `docs/superpowers/plans/2026-03-15-color-token-cleanup.md` and confirm the targets.
@@ -555,3 +561,9 @@ Verification: `npx eslint app/[locale]/teams/components/user-equity/team-equity-
   - Manual QA: light/dark walkthrough via local app + browser automation on authentication and docs surfaces; dashboard auth redirect path also checked.
 - Residual risk:
   - Some legacy color classes remain in untouched files outside this migration batch (notably email templates and additional long-tail route components).
+## Task: TweakCN theme extraction (2026-03-16)
+
+- [ ] Locate the online TweakCN interface or API endpoint that shows the requested theme slugs so I know where to grab the CSS variables from.
+- [ ] Use Playwright automation to visit each theme page, extract the `:root`, `.dark`, and any inline `@theme` variable blocks, and note any chart/sidebar overrides.
+- [ ] Normalize each theme into discrete light/dark/chart/sidebar sections, ensuring commentary if a section is absent.
+- [ ] Compile the clean report listing each slug with its extracted blocks and specify verification details (Playwright captures) before closing the task.
