@@ -303,7 +303,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
     const t = useI18n()
     return (
       <div className="relative">
-        <Card className="relative bg-background h-full">
+        <Card className="relative bg-card h-full border-border">
           <CardHeader>
             <CardTitle>{plan.name}</CardTitle>
             <CardDescription>{plan.description}</CardDescription>
@@ -430,10 +430,10 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
 
     return (
       <div className="relative z-10 w-full">
-        <span className="absolute inset-[-8px] bg-[hsl(var(--chart-1)/0.15)] dark:bg-[hsl(var(--chart-1)/0.15)] rounded-[14.5867px] -z-10"></span>
-        <span className="absolute inset-[-4px] bg-[hsl(var(--chart-1)/0.25)] dark:bg-[hsl(var(--chart-1)/0.25)] rounded-[14.5867px] -z-20"></span>
-        <span className="absolute inset-0 shadow-[0_18.2333px_27.35px_-5.47px_hsl(var(--background)/0.1),0_7.29333px_10.94px_-7.29333px_hsl(var(--background)/0.1)] dark:shadow-[0_18.2333px_27.35px_-5.47px_hsl(var(--chart-1)/0.1),0_7.29333px_10.94px_-7.29333px_hsl(var(--chart-1)/0.1)] rounded-[14.5867px] -z-30"></span>
-        <Card className="relative bg-background h-full">
+        <span className="absolute inset-[-8px] bg-primary/10 rounded-[14.5867px] -z-10"></span>
+        <span className="absolute inset-[-4px] bg-primary/20 rounded-[14.5867px] -z-20"></span>
+        <span className="absolute inset-0 shadow-lg rounded-[14.5867px] -z-30"></span>
+        <Card className="relative bg-card h-full border-border">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2">
             <span className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full whitespace-nowrap">
               {t('pricing.fullVersion')}
@@ -444,13 +444,13 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             <CardDescription>{plan.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-muted rounded-lg p-4 mb-4 space-y-3 dark:bg-muted/50">
+            <div className="bg-muted/50 rounded-lg p-4 mb-4 space-y-3">
               <span className="text-sm font-medium block text-center">
                 {t('pricing.billingPeriod')}
               </span>
 
               {/* Toggle group for recurring billing options */}
-              <div className="grid grid-cols-3 gap-1 p-1 bg-background rounded-md">
+              <div className="grid grid-cols-3 gap-1 p-1 bg-card rounded-md border border-border/50">
                 {recurringBillingOptions.map((option) => (
                   <Button
                     key={option.key}
@@ -481,7 +481,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
                   {t('pricing.lifetimeAccess')}
                   <Badge
                     variant="secondary"
-                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-semantic-warning-bg/10 text-semantic-warning dark:bg-white/10 dark:text-foreground border border-semantic-warning-border/40 dark:border-white/20"
+                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-warning/10 text-warning border border-warning/40"
                   >
                     {t('pricing.limitedTimeOffer')}
                   </Badge>
@@ -597,14 +597,14 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="bg-semantic-warning-bg dark:bg-semantic-warning-bg/20 border border-semantic-warning-border dark:border-semantic-warning-border rounded-lg p-4">
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
               <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-semantic-warning dark:text-semantic-warning mr-3 mt-0.5 shrink-0" />
+                <AlertCircle className="h-5 w-5 text-warning mr-3 mt-0.5 shrink-0" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-semantic-warning dark:text-semantic-warning">
+                  <p className="text-sm font-medium text-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-semantic-warning dark:text-semantic-warning">
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-warning">
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.currentPlan')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.immediateCancel')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.oneTimePayment')}</li>
