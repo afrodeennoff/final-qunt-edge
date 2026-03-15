@@ -100,8 +100,34 @@ function getInitialDashboardTheme(scope: ThemeScope): DashboardTheme {
     return DEFAULT_DASHBOARD_THEME
   }
 
+  // First try localStorage for immediate theme (server-side DB fetch happens asynchronously)
   const savedDashboardTheme = window.localStorage.getItem(DASHBOARD_THEME_STORAGE_KEY)
-  return isValidDashboardTheme(savedDashboardTheme) ? savedDashboardTheme : DEFAULT_DASHBOARD_THEME
+  if (isValidDashboardTheme(savedDashboardTheme)) {
+    return savedDashboardTheme
+  }
+  
+  return DEFAULT_DASHBOARD_THEME
+}
+
+// Fetch theme from database API (called separately for async loading)
+async function fetchDashboardThemeFromDatabase(): Promise<DashboardTheme | null> {
+  if (typeof window === 'undefined') return null
+  
+  try {
+    const response = await fetch('/api/user/theme', {
+      method: 'GET',
+      credentials: 'include',
+    })
+    if (response.ok) {
+      const data = await response.json()
+      if (data.theme && isValidDashboardTheme(data.theme)) {
+        return data.theme
+      }
+    }
+  } catch (error) {
+    console.warn('[ThemeProvider] Failed to fetch theme from database:', error)
+  }
+  return null
 }
 
 function getInitialIntensity(scope: ThemeScope): number {
@@ -188,7 +214,7 @@ export function ThemeProvider({
     }
 
     localStorage.setItem(THEME_STORAGE_KEY, theme)
-    localStorage.setItem(INTENSITY_STORAGE_KEY, clampIntensity(intensity).toString())
+    localStorage.setItem(INTENSITY_STORAGE_KEY, intensity.toString())
     localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dashboardTheme)
   }, [
     dashboardTheme,
@@ -207,6 +233,28 @@ export function ThemeProvider({
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  useEffect(() => {
+    if (!isThemeMutable || typeof window === 'undefined') {
+      return
+    }
+
+    let mounted = true
+
+    const syncWithDatabase = async () => {
+      const dbTheme = await fetchDashboardThemeFromDatabase()
+      if (mounted && dbTheme && dbTheme !== dashboardTheme) {
+        setDashboardThemeState(dbTheme)
+        localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dbTheme)
+      }
+    }
+
+    syncWithDatabase()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   const setTheme = useCallback((newTheme: Theme) => {
     if (!isThemeMutable) {
       return
@@ -221,11 +269,24 @@ export function ThemeProvider({
     setDashboardThemeState(mapLegacyColorThemeToDashboardTheme(newColorTheme))
   }, [isThemeMutable])
 
-  const setDashboardTheme = useCallback((newDashboardTheme: DashboardTheme) => {
+  const setDashboardTheme = useCallback(async (newDashboardTheme: DashboardTheme) => {
     if (!isThemeMutable) {
       return
     }
+    
     setDashboardThemeState(newDashboardTheme)
+    localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, newDashboardTheme)
+    
+    try {
+      await fetch('/api/user/theme', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: newDashboardTheme }),
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.warn('[ThemeProvider] Failed to save theme to database:', error)
+    }
   }, [isThemeMutable])
 
   const setIntensity = useCallback((newIntensity: number) => {

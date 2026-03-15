@@ -20,6 +20,7 @@ model User {
   isFirstConnection  Boolean             @default(true)
   isBeta             Boolean             @default(false)
   language           String              @default("en")
+  dashboardTheme     String              @default("blue") // dashboard theme preference: blue, violet, emerald, amber, rose
   etpToken           String?
   etpTokenHash       String?             @unique
   etpTokenExpiresAt  DateTime?
