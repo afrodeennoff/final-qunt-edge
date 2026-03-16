@@ -605,7 +605,7 @@ export function TeamManagement({
       case 'admin':
         return 'bg-semantic-info-bg' // Blue for admin
       case 'viewer':
-        return 'bg-white/10' // Green for viewer
+        return 'bg-surface-subtle' // Green for viewer
       default:
         return 'bg-muted'
     }

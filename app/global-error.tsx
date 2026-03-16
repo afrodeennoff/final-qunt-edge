@@ -27,13 +27,13 @@ export default function GlobalError({
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
-              className="rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+              className="rounded-md border border-subtle bg-surface-subtle px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
               onClick={() => window.location.reload()}
             >
               Reload
             </button>
             <button
-              className="rounded-md border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition hover:text-white"
+              className="rounded-md border border-subtle px-4 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
               onClick={reset}
             >
               Try again

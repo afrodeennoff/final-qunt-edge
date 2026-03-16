@@ -75,10 +75,10 @@ export function calculateTradingScore(metrics: ScoreMetrics): number {
 }
 
 export function getScoreColor(score: number): string {
-    if (score >= 80) return "text-white"
-    if (score >= 60) return "text-white/80"
-    if (score >= 40) return "text-white/60"
-    return "text-white/40"
+    if (score >= 80) return "text-foreground"
+    if (score >= 60) return "text-foreground/80"
+    if (score >= 40) return "text-foreground/60"
+    return "text-foreground/40"
 }
 
 export function getScoreLabel(score: number): string {
