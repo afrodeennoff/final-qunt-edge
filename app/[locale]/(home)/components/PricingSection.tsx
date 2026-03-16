@@ -100,7 +100,7 @@ function getPlanCardClassName(popular: boolean): string {
 function getPlanCtaClassName(popular: boolean): string {
   return cn(
     'h-12 w-full rounded-2xl text-[10px] font-semibold uppercase tracking-[0.18em] [font-family:var(--home-copy)]',
-     !popular && 'border-surface-subtle/12 bg-surface/35 hover:bg-surface/55',
+     !popular && 'border-subtle/30 bg-surface-subtle hover:bg-surface-muted',
     popular && 'shadow-md shadow-primary/20'
   )
 }
