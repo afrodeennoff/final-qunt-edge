@@ -202,7 +202,7 @@ export default function PricingSection() {
   const periodLabel = billingMode === 'annual' ? '/month, billed yearly' : '/month'
 
   return (
-    <section id="pricing" className="relative border-y border-[hsl(var(--foreground)/0.32)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+    <section id="pricing" className="relative border-y border-[hsl(var(--foreground)/0.32)] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
           <Badge variant="outline" className="mb-4 border-[hsl(var(--brand-primary)/0.32)] bg-[hsl(var(--brand-primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">

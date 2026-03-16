@@ -43,7 +43,7 @@ export default function Footer() {
   ].filter((item) => item.href)
 
   return (
-    <footer aria-labelledby="footer-heading" className="relative mt-20 px-4 pb-12 sm:px-6 sm:pb-16">
+    <footer aria-labelledby="footer-heading" className="relative mt-12 px-4 pb-10 sm:px-6 sm:pb-14">
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
       <motion.div
