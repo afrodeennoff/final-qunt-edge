@@ -67,7 +67,7 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
 
 export default function AIFuturesSection() {
   return (
-    <section className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center sm:mb-12">
           <Badge variant="outline" className="px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
