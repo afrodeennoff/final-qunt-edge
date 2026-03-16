@@ -81,8 +81,8 @@ function getChartColorByIndex(index: number): string {
     "hsl(var(--foreground) / 0.65)",
     "hsl(var(--foreground) / 0.55)",
     "hsl(var(--foreground) / 0.45)",
-    "hsl(var(--foreground) / 0.35)",
-    "hsl(var(--foreground) / 0.25)",
+    "hsl(var(--foreground) / 0.4)",
+    "hsl(var(--foreground) / 0.34)",
   ];
   return paletteVars[index % paletteVars.length];
 }

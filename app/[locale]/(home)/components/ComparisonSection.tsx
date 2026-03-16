@@ -45,14 +45,14 @@ export default function ComparisonSection() {
         </div>
 
         <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
-          <CardHeader className="border-b border-[hsl(var(--mk-border)/0.2)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
+          <CardHeader className="border-b border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
             <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[680px] text-left">
                 <thead>
-                  <tr className="border-b border-[hsl(var(--mk-border)/0.2)]">
+                  <tr className="border-b border-[hsl(var(--mk-border)/0.28)]">
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Capability</th>
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Qunt Edge</th>
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Most Alternatives</th>
@@ -62,7 +62,7 @@ export default function ComparisonSection() {
                   {comparisonRows.map((row) => (
                     <tr
                       key={row.item}
-                      className="border-b border-[hsl(var(--mk-border)/0.14)]"
+                      className="border-b border-[hsl(var(--mk-border)/0.24)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
                       <td className="px-4 py-4">

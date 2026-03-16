@@ -55,7 +55,7 @@ export default function ReferralPage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/80 md:w-auto"
+                  className="h-12 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto"
                 >
                   <Link href={affiliateUrl} target="_blank" rel="noopener noreferrer">
                     <HandCoins className="h-4 w-4" />

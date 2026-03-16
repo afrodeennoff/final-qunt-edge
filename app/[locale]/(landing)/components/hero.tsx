@@ -104,10 +104,10 @@ export default function Hero({  }: HeroProps) {
           className="mt-16 border-t border-border/75 px-4 pt-8 opacity-90 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
         >
            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
-              <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">TRADOVATE</span>
-              <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">RITHMIC</span>
-              <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">IBKR</span>
-              <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">CQG</span>
+              <span className="text-sm font-black tracking-tighter text-foreground/85 sm:text-base md:text-xl">TRADOVATE</span>
+              <span className="text-sm font-black tracking-tighter text-foreground/85 sm:text-base md:text-xl">RITHMIC</span>
+              <span className="text-sm font-black tracking-tighter text-foreground/85 sm:text-base md:text-xl">IBKR</span>
+              <span className="text-sm font-black tracking-tighter text-foreground/85 sm:text-base md:text-xl">CQG</span>
            </div>
         </motion.div>
       </motion.div>

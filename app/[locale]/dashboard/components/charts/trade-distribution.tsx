@@ -90,7 +90,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
           <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t('tradeDistribution.tooltip.percentage')}
           </span>
-          <span className={cn('font-black text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground/55')}>
+          <span className={cn('font-black text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground/75')}>
             {data.value.toFixed(2)}%
           </span>
         </div>
@@ -172,7 +172,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
                     <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl chart-positive-emphasis">
                       {chartData[0].value.toFixed(0)}%
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-foreground/70 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground/85 text-[10px] uppercase font-black tracking-[0.16em]">
                       WIN RATE
                     </tspan>
                   </text>

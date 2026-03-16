@@ -249,7 +249,7 @@ export default React.memo(function TickDistributionChart({
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="count"

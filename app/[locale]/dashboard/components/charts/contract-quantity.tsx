@@ -225,7 +225,7 @@ export default React.memo(function ContractQuantityChart({
                         label={label}
                       />
                     )}
-                    cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                    cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                   />
                 <Bar
                   dataKey="totalQuantity"

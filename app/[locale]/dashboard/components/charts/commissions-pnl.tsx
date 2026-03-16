@@ -77,7 +77,7 @@ const chartConfig = {
   },
   commissions: {
     label: "Commissions",
-    color: "hsl(var(--foreground) / 0.35)",
+    color: "hsl(var(--chart-axis))",
   },
 } satisfies ChartConfig;
 
@@ -199,7 +199,7 @@ export default React.memo(function CommissionsPnLChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.name === "NET P/L" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.35)"}
+                      fill={entry.name === "NET P/L" ? "hsl(var(--foreground))" : "hsl(var(--chart-axis))"}
                       fillOpacity={entry.name === "NET P/L" ? 0.98 : 0.24}
                       className={cn(
                         "transition-all duration-300 ease-in-out hover:fill-opacity-100",
@@ -211,14 +211,14 @@ export default React.memo(function CommissionsPnLChart({
                     <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl">
                       {formatCenterCurrency(chartData[0]?.raw ?? 0)}
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-foreground/70 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground/85 text-[10px] uppercase font-black tracking-[0.16em]">
                       NET P/L
                     </tspan>
                   </text>
                 </Pie>
                 <Tooltip
                   content={<CommissionsTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
               </PieChart>
             </ResponsiveContainer>

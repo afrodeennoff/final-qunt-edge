@@ -356,7 +356,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                 )}
               >
                 {Math.round(convertToDisplayValue(progress.target))}
-                <span className="text-[10px] font-black ml-1 text-muted-foreground/55 uppercase tracking-widest">
+                <span className="text-[10px] font-black ml-1 text-muted-foreground/75 uppercase tracking-widest">
                   {getDisplayUnit()}
                   {progress.target !== 1 ? "s" : ""}
                 </span>

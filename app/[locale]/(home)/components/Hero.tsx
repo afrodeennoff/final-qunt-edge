@@ -10,7 +10,7 @@ export default function Hero({ locale }: { locale: string }) {
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_-8%,hsl(var(--foreground)/0.16)_0%,transparent_58%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.04)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.04)_1px,transparent_1px)] bg-[size:44px_44px] sm:bg-[size:52px_52px]" />
-        <div className="absolute inset-x-10 top-8 h-px bg-[linear-gradient(90deg,transparent,hsl(var(--foreground)/0.25),transparent)]" />
+        <div className="absolute inset-x-10 top-8 h-px bg-[linear-gradient(90deg,transparent,hsl(var(--foreground)/0.34),transparent)]" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl">
@@ -34,7 +34,7 @@ export default function Hero({ locale }: { locale: string }) {
         </p>
 
         <div className="mt-12 flex w-full flex-col items-center justify-center gap-3 sm:mt-14 sm:w-auto sm:flex-row sm:gap-5">
-          <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl text-[11px] font-semibold uppercase tracking-[0.14em] shadow-lg shadow-primary/20 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
+          <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
             <Link href={`/${locale}/authentication?next=dashboard`}>
               Start My Performance Audit
             </Link>
@@ -58,15 +58,15 @@ export default function Hero({ locale }: { locale: string }) {
             <CardContent className="p-4 sm:p-6">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Session Grade Confidence</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Session Grade Confidence</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">94%</p>
                 </div>
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Rule Adherence Uplift</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Rule Adherence Uplift</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-fg-primary [font-family:var(--home-display)]">+37%</p>
                 </div>
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Impulse Trades Reduced</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Impulse Trades Reduced</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">-42%</p>
                 </div>
               </div>
@@ -74,7 +74,7 @@ export default function Hero({ locale }: { locale: string }) {
           </Card>
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/70 [font-family:var(--home-copy)]">
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">
           <span>Tradovate</span>
           <span>Rithmic</span>
           <span>IBKR</span>

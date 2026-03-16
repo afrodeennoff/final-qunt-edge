@@ -12,51 +12,51 @@ export default function FAQ() {
           {t("faq.heading")}
         </h2>
         <div className="max-w-3xl mx-auto space-y-6">
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question1")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer1")}
             </p>
           </details>
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question2")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer2")}
             </p>
           </details>
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question3")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer3")}
             </p>
           </details>
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question4")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer4")}
             </p>
           </details>
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question5")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer5")}
             </p>
           </details>
-          <details className="border-b pb-4">
-            <summary className="font-semibold cursor-pointer">
+          <details className="border-b border-border/70 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question6")}
             </summary>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-2 text-foreground/85">
               {t("faq.answer6")}
             </p>
           </details>

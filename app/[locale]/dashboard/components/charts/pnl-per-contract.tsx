@@ -233,10 +233,10 @@ export default React.memo(function PnLPerContractChart({
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                   domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
                 />
-                <ReferenceLine y={0} stroke="hsl(var(--foreground) / 0.35)" />
+                <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
                 <Tooltip
                   content={renderTooltip}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="averagePnl"

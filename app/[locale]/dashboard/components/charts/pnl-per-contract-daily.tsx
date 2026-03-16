@@ -325,18 +325,18 @@ export default React.memo(function PnLPerContractDailyChart({
                         tick={false}
                         domain={[domainMin, domainMax]}
                       />
-                      <ReferenceLine y={0} stroke="hsl(var(--foreground) / 0.35)" />
+                      <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
                       <Bar
                         dataKey="averagePnl"
                         radius={[2, 2, 2, 2]}
                         maxBarSize={size === "small" ? 25 : 40}
                         className="transition-none"
-                        fill="hsl(var(--foreground) / 0.35)"
+                        fill="hsl(var(--chart-axis))"
                       >
                         {loadingMockData.map((_, index) => (
                           <Cell
                             key={`skeleton-cell-${index}`}
-                            fill="hsl(var(--foreground) / 0.35)"
+                            fill="hsl(var(--chart-axis))"
                           />
                         ))}
                       </Bar>
@@ -393,10 +393,10 @@ export default React.memo(function PnLPerContractDailyChart({
                     Math.max(maxPnL * 1.1, 0),
                   ]}
                 />
-                <ReferenceLine y={0} stroke="hsl(var(--foreground) / 0.35)" />
+                <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
                 <Tooltip
                   content={renderTooltip}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="averagePnl"

@@ -67,7 +67,7 @@ const formatCurrency = (value: number) => {
 };
 
 const positiveColor = "hsl(var(--foreground))";
-const negativeColor = "hsl(var(--foreground) / 0.35)";
+const negativeColor = "hsl(var(--chart-axis))";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   const t = useI18n();
@@ -225,7 +225,7 @@ export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) 
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="pnl"

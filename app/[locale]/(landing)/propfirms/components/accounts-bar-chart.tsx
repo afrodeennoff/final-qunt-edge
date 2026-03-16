@@ -112,11 +112,11 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern">
+    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
-          <p className="text-xs text-foreground/75">Minimal view. Add layers if you need more detail.</p>
+          <p className="text-xs text-foreground/85">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -129,7 +129,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showPayoutBars
                 ? "bg-secondary text-secondary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-foreground/80 hover:text-foreground"
             )}
           >
             Payouts
@@ -144,7 +144,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showAccountValue
                 ? "bg-secondary text-secondary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-foreground/80 hover:text-foreground"
             )}
           >
             Value
@@ -159,7 +159,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showRegistered
                 ? "bg-secondary text-secondary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-foreground/80 hover:text-foreground"
             )}
           >
             Reg
@@ -174,7 +174,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showSized
                 ? "bg-secondary text-secondary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-foreground/80 hover:text-foreground"
             )}
           >
             Sized
@@ -189,7 +189,7 @@ export function AccountsBarChart({
               "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showZeroFirms
                 ? "bg-secondary text-secondary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                : "text-foreground/80 hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
@@ -205,6 +205,7 @@ export function AccountsBarChart({
             <CartesianGrid
               vertical={false}
               strokeDasharray="2 10"
+              stroke="hsl(var(--chart-grid) / 0.62)"
             />
             <XAxis
               dataKey="propfirmName"

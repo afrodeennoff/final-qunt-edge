@@ -90,7 +90,7 @@ export default React.memo(function PnLBySideChart({
         winCount: shortWins,
         isAverage: showAverage,
         value: 0,
-        color: "hsl(var(--foreground) / 0.35)",
+        color: "hsl(var(--chart-axis))",
       },
     ];
 
@@ -233,7 +233,7 @@ export default React.memo(function PnLBySideChart({
                     <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl">
                       {dominantSide.label}
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-foreground/55 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground/80 text-[10px] uppercase font-black tracking-[0.16em]">
                       {dominantSide.trades} TRADES
                     </tspan>
                   </text>

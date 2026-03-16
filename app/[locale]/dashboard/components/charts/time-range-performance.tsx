@@ -109,7 +109,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
   }, [activeRange, timeRange.range, setTimeRange])
 
   function getColorByWinRate(winRate: number): string {
-    if (winRate === 0) return "hsl(var(--foreground) / 0.35)"
+    if (winRate === 0) return "hsl(var(--chart-axis))"
     return "hsl(var(--foreground))"
   }
 
@@ -283,7 +283,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="avgPnl"

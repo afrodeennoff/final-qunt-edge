@@ -97,16 +97,8 @@ function getPlanCardClassName(popular: boolean): string {
   )
 }
 
-function getPlanCtaClassName(isPrimaryCta: boolean): string {
-  return cn(
-    'h-12 w-full rounded-2xl text-[10px] font-semibold uppercase tracking-[0.18em] [font-family:var(--home-copy)]',
-    isPrimaryCta && 'bg-primary text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90',
-    !isPrimaryCta && 'bg-primary text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90'
-  )
-}
-
-function getPlanButtonVariant(isPrimaryCta: boolean): 'default' | 'outline' {
-  return isPrimaryCta ? 'default' : 'outline'
+function getPlanCtaClassName(): string {
+  return 'h-12 w-full rounded-2xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90 [font-family:var(--home-copy)]'
 }
 
 function shouldShowSavings(billingMode: BillingMode, monthlyPrice: number): boolean {
@@ -152,9 +144,6 @@ function PlanCard({
   const periodText = getPlanPeriodText(plan, periodLabel)
   const savings = getSavingsPerMonth(plan)
   const showSavings = shouldShowSavings(billingMode, plan.monthlyPrice)
-  const isPrimaryCta = plan.cta === 'Start Free Audit' || plan.popular
-  const buttonVariant = getPlanButtonVariant(isPrimaryCta)
-
   return (
     <div className="flex">
       <Card className={getPlanCardClassName(plan.popular)}>
@@ -193,8 +182,8 @@ function PlanCard({
         <CardFooter className="flex flex-col gap-2">
           <Button
             asChild
-            variant={buttonVariant}
-            className={getPlanCtaClassName(isPrimaryCta)}
+            variant="default"
+            className={getPlanCtaClassName()}
           >
             <Link href={href}>{plan.cta}</Link>
           </Button>
