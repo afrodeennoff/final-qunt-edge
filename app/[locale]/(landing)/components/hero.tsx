@@ -85,7 +85,7 @@ export default function Hero({  }: HeroProps) {
         >
           <Link
             href={`/${locale}/authentication?next=dashboard`}
-            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-primary px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-primary-foreground transition-all hover:opacity-90 sm:w-auto sm:text-xs"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-primary px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-primary-foreground transition-all shadow-[0_12px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90 sm:w-auto sm:text-xs"
           >
             Start Free Audit
           </Link>
@@ -101,7 +101,7 @@ export default function Hero({  }: HeroProps) {
 
         <motion.div
           variants={item}
-          className="mt-16 border-t border-border/30 px-4 pt-8 opacity-80 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
+          className="mt-16 border-t border-border/55 px-4 pt-8 opacity-80 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
         >
            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
               <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">TRADOVATE</span>
@@ -112,8 +112,8 @@ export default function Hero({  }: HeroProps) {
         </motion.div>
       </motion.div>
 
-      <div className="absolute top-0 left-4 h-full w-[1px] bg-gradient-to-b from-transparent via-border/60 to-transparent pointer-events-none sm:left-8 md:left-12"></div>
-      <div className="absolute top-0 right-4 h-full w-[1px] bg-gradient-to-b from-transparent via-border/60 to-transparent pointer-events-none sm:right-8 md:right-12"></div>
+      <div className="absolute top-0 left-4 h-full w-[1px] bg-gradient-to-b from-transparent via-border/80 to-transparent pointer-events-none sm:left-8 md:left-12"></div>
+      <div className="absolute top-0 right-4 h-full w-[1px] bg-gradient-to-b from-transparent via-border/80 to-transparent pointer-events-none sm:right-8 md:right-12"></div>
     </section>
   );
 }

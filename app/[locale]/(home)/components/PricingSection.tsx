@@ -97,16 +97,16 @@ function getPlanCardClassName(popular: boolean): string {
   )
 }
 
-function getPlanCtaClassName(popular: boolean): string {
+function getPlanCtaClassName(isPrimaryCta: boolean): string {
   return cn(
     'h-12 w-full rounded-2xl text-[10px] font-semibold uppercase tracking-[0.18em] [font-family:var(--home-copy)]',
-     !popular && 'border-subtle/30 bg-surface-subtle hover:bg-surface-muted',
-    popular && 'shadow-md shadow-primary/20'
+    isPrimaryCta && 'bg-primary text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90',
+    !isPrimaryCta && 'border-subtle/30 bg-surface-subtle hover:bg-surface-muted'
   )
 }
 
-function getPlanButtonVariant(popular: boolean): 'default' | 'outline' {
-  return popular ? 'default' : 'outline'
+function getPlanButtonVariant(isPrimaryCta: boolean): 'default' | 'outline' {
+  return isPrimaryCta ? 'default' : 'outline'
 }
 
 function shouldShowSavings(billingMode: BillingMode, monthlyPrice: number): boolean {
@@ -118,7 +118,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
   return (
     <div className="absolute right-4 top-4">
-      <Badge variant="default" className="bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-ink))]">
+      <Badge variant="default" className="bg-primary text-primary-foreground">
         Most Popular
       </Badge>
     </div>
@@ -152,7 +152,8 @@ function PlanCard({
   const periodText = getPlanPeriodText(plan, periodLabel)
   const savings = getSavingsPerMonth(plan)
   const showSavings = shouldShowSavings(billingMode, plan.monthlyPrice)
-  const buttonVariant = getPlanButtonVariant(plan.popular)
+  const isPrimaryCta = plan.cta === 'Start Free Audit' || plan.popular
+  const buttonVariant = getPlanButtonVariant(isPrimaryCta)
 
   return (
     <div className="flex">
@@ -193,7 +194,7 @@ function PlanCard({
           <Button
             asChild
             variant={buttonVariant}
-            className={getPlanCtaClassName(plan.popular)}
+            className={getPlanCtaClassName(isPrimaryCta)}
           >
             <Link href={href}>{plan.cta}</Link>
           </Button>
@@ -212,7 +213,7 @@ export default function PricingSection() {
   const periodLabel = billingMode === 'annual' ? '/month, billed yearly' : '/month'
 
   return (
-    <section id="pricing" className="relative border-y border-[hsl(var(--mk-border)/0.24)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+    <section id="pricing" className="relative border-y border-[hsl(var(--foreground)/0.2)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
           <Badge variant="outline" className="mb-4 border-[hsl(var(--brand-primary)/0.32)] bg-[hsl(var(--brand-primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">

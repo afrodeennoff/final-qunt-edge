@@ -116,7 +116,7 @@ export function AccountsBarChart({
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
-          <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
+          <p className="text-xs text-foreground/75">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -126,8 +126,8 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showPayoutBars && "opacity-55"
+              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
+              !showPayoutBars && "opacity-80"
             )}
           >
             Payouts
@@ -139,8 +139,8 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showAccountValue && "opacity-55"
+              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
+              !showAccountValue && "opacity-80"
             )}
           >
             Value
@@ -152,8 +152,8 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showRegistered && "opacity-55"
+              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
+              !showRegistered && "opacity-80"
             )}
           >
             Reg
@@ -165,8 +165,8 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showSized && "opacity-55"
+              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
+              !showSized && "opacity-80"
             )}
           >
             Sized
@@ -178,8 +178,8 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showZeroFirms && "opacity-55"
+              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
+              !showZeroFirms && "opacity-80"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
@@ -195,8 +195,8 @@ export function AccountsBarChart({
             <CartesianGrid
               vertical={false}
               strokeDasharray="2 10"
-              opacity={0.32}
-              className="stroke-muted"
+              stroke="hsl(var(--border) / 0.62)"
+              opacity={0.56}
             />
             <XAxis
               dataKey="propfirmName"
@@ -211,7 +211,7 @@ export function AccountsBarChart({
               tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}…` : value)}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--foreground) / 0.82)",
               }}
             />
             <YAxis
@@ -233,7 +233,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--foreground) / 0.84)",
               }}
               tickFormatter={(value) => compactCurrency.format(value)}
             />
@@ -255,7 +255,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--foreground) / 0.84)",
               }}
               tickFormatter={(value) => value.toLocaleString()}
             />
