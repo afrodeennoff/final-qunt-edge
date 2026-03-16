@@ -63,7 +63,7 @@ export default function CumulativePnlCard({ size = 'medium' }: CumulativePnlCard
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info className="h-4 w-4 shrink-0 text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors cursor-help" />
+                <Info className="h-4 w-4 shrink-0 text-muted-foreground hover:text-muted-foreground/85 transition-colors cursor-help" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.cumulativePnl.tooltip')}
@@ -93,11 +93,11 @@ export default function CumulativePnlCard({ size = 'medium' }: CumulativePnlCard
 
       <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/55 border-dashed">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground/70">Profits</span>
+          <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Profits</span>
           <span className="micro-sans text-[11px] font-bold text-foreground tabular-nums">{formatCurrency(safeGrossWin)}</span>
         </div>
         <div className="flex flex-col gap-0.5 text-right">
-          <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground/70">Losses</span>
+          <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Losses</span>
           <span className="micro-sans text-[11px] font-bold metric-negative tabular-nums">{formatCurrency(safeGrossLosses)}</span>
         </div>
       </div>

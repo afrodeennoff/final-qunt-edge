@@ -117,12 +117,12 @@ export default React.memo(function PnLBySideChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.side")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.side")}</span>
             <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.side}</span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">
                 {data.isAverage ? t("pnlBySide.tooltip.averageTotal") : "Total"} P/L
               </span>
               <span className={cn(
@@ -131,13 +131,13 @@ export default React.memo(function PnLBySideChart({
               )}>{formatCurrency(data.pnl)}</span>
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.winRate")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.winRate")}</span>
               <span className="font-black text-muted-foreground/85 text-[11px]">
                 {formatWinRate(data.winCount, data.tradeCount)}%
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.trades")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.trades")}</span>
               <span className="font-black text-muted-foreground/85 text-[11px]">
                 {data.tradeCount}
               </span>

@@ -40,7 +40,7 @@ function CommissionsTooltip({
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
         <div className="flex flex-col mb-2 border-b border-border/55 pb-1">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.type")}
           </span>
           <span className="font-black text-foreground text-[11px] uppercase tracking-widest">
@@ -48,7 +48,7 @@ function CommissionsTooltip({
           </span>
         </div>
         <div className="flex flex-col mb-2">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.amount")}
           </span>
           <span className={cn(
@@ -57,7 +57,7 @@ function CommissionsTooltip({
           )}>{formatCurrency(data.raw)}</span>
         </div>
         <div className="flex flex-col pt-2 border-t border-border/55">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.percentage")}
           </span>
           <span className="font-black text-muted-foreground/85 text-[11px]">

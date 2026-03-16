@@ -112,19 +112,19 @@ export default React.memo(function TimeOfDayTradeChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
             <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.averagePnl")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.averagePnl")}</span>
               <span className={cn(
                 "font-black text-[13px] tabular-nums",
                 data.avgPnl >= 0 ? "metric-positive" : "metric-negative"
               )}>{formatCurrency(data.avgPnl)}</span>
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
               <span className="font-black text-muted-foreground/85 text-[10px]">
                 {data.tradeCount}
               </span>
@@ -159,7 +159,7 @@ export default React.memo(function TimeOfDayTradeChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -174,7 +174,7 @@ export default React.memo(function TimeOfDayTradeChart({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground/70 hover:text-foreground hover:bg-secondary/22"
+              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setHourFilter({ hour: null })}
             >
               {t("pnlTime.clearFilter")}
@@ -276,7 +276,7 @@ export default React.memo(function TimeOfDayTradeChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/70">
+            <div className="h-full w-full flex items-center justify-center text-[10px] font-black uppercase tracking-widest text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}

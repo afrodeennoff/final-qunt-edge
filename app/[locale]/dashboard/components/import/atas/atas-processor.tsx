@@ -664,7 +664,7 @@ export default function AtasProcessor({
               role="alert"
             >
               <p className="font-bold">{t("import.commission.title")}</p>
-              <p className="text-muted-foreground/70">{t("import.commission.description")}</p>
+              <p className="text-muted-foreground">{t("import.commission.description")}</p>
               <p className="mt-2 text-sm text-muted-foreground/60">{t("import.commission.help")}</p>
               <p className="text-sm italic text-muted-foreground/50">{t("import.commission.example")}</p>
               <div className="mt-4 space-y-2">
@@ -683,7 +683,7 @@ export default function AtasProcessor({
                     >
                       <label
                         htmlFor={`commission-${pair}`}
-                        className="min-w-[200px] text-muted-foreground/70"
+                        className="min-w-[200px] text-muted-foreground"
                       >
                         {accountNumber} - {instrument} - {t("import.commission.perContract")}
                       </label>
@@ -713,7 +713,7 @@ export default function AtasProcessor({
               role="alert"
             >
               <p className="font-bold">{t("import.error.duplicateTrades")}</p>
-              <p className="text-muted-foreground/70">{t("import.error.duplicateTradesDescription")}</p>
+              <p className="text-muted-foreground">{t("import.error.duplicateTradesDescription")}</p>
             </div>
           )}
 
@@ -724,7 +724,7 @@ export default function AtasProcessor({
                 role="alert"
               >
                 <p className="font-bold">{t("import.account.selectAccount")}</p>
-                <p className="text-muted-foreground/70">{t("import.account.selectAccountToView")}</p>
+                <p className="text-muted-foreground">{t("import.account.selectAccountToView")}</p>
               </div>
             )}
 

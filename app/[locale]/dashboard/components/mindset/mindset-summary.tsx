@@ -80,7 +80,7 @@ export function MindsetSummary({
   const getEmotionLabel = (value: number) => {
     if (value < 20) return { label: t('mindset.emotion.verySad'), color: "text-muted-foreground/30" }
     if (value < 40) return { label: t('mindset.emotion.sad'), color: "text-muted-foreground/50" }
-    if (value < 60) return { label: t('mindset.emotion.neutral'), color: "text-muted-foreground/70" }
+    if (value < 60) return { label: t('mindset.emotion.neutral'), color: "text-muted-foreground" }
     if (value < 80) return { label: t('mindset.emotion.happy'), color: "text-muted-foreground/90" }
     return { label: t('mindset.emotion.veryHappy'), color: "text-foreground" }
   }

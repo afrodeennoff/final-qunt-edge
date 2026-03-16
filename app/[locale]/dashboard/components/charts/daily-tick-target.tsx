@@ -191,7 +191,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4"
                     )}
                   />
@@ -211,7 +211,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                       <span
                         className={cn(
                           "text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
-                          displayMode === "ticks" ? "text-foreground drop-shadow-none" : "text-muted-foreground/70 hover:text-muted-foreground/70"
+                          displayMode === "ticks" ? "text-foreground drop-shadow-none" : "text-muted-foreground hover:text-muted-foreground"
                         )}
                         onClick={() => setDisplayMode("ticks")}
                       >
@@ -221,7 +221,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                       <span
                         className={cn(
                           "text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
-                          displayMode === "points" ? "text-foreground drop-shadow-none" : "text-muted-foreground/70 hover:text-muted-foreground/70"
+                          displayMode === "points" ? "text-foreground drop-shadow-none" : "text-muted-foreground hover:text-muted-foreground"
                         )}
                         onClick={() => setDisplayMode("points")}
                       >
@@ -317,7 +317,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
             <div className="flex flex-col items-center gap-1">
               <span
                 className={cn(
-                  "text-muted-foreground/70 uppercase tracking-[0.2em] font-black",
+                  "text-muted-foreground uppercase tracking-[0.2em] font-black",
                   size === "small" ? "text-[8px]" : "text-[9px]"
                 )}
               >
@@ -331,7 +331,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                 )}
               >
                 {Math.round(convertToDisplayValue(progress.current))}
-                <span className="text-[10px] font-black ml-1 text-muted-foreground/70 uppercase tracking-widest">
+                <span className="text-[10px] font-black ml-1 text-muted-foreground uppercase tracking-widest">
                   {getDisplayUnit()}
                   {progress.current !== 1 ? "s" : ""}
                 </span>
@@ -343,7 +343,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
             <div className="flex flex-col items-center gap-1">
               <span
                 className={cn(
-                  "text-muted-foreground/70 uppercase tracking-[0.2em] font-black",
+                  "text-muted-foreground uppercase tracking-[0.2em] font-black",
                   size === "small" ? "text-[8px]" : "text-[9px]"
                 )}
               >
@@ -351,7 +351,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
               </span>
               <span
                 className={cn(
-                  "font-black tracking-tighter tabular-nums text-muted-foreground/70",
+                  "font-black tracking-tighter tabular-nums text-muted-foreground",
                   size === "small" ? "text-2xl" : "text-4xl"
                 )}
               >
@@ -391,7 +391,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
               <div className="flex flex-col">
                 <span
                   className={cn(
-                    "text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70",
+                    "text-[10px] uppercase font-bold tracking-wider text-muted-foreground",
                   )}
                 >
                   {t("widgets.dailyTickTarget.negative")}
@@ -415,7 +415,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
               <div className="flex justify-between items-center">
                 <span
                   className={cn(
-                    "text-muted-foreground/70 text-[10px] uppercase font-bold tracking-wider",
+                    "text-muted-foreground text-[10px] uppercase font-bold tracking-wider",
                   )}
                 >
                   {t("widgets.dailyTickTarget.progress")}

@@ -67,7 +67,7 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors" />
+                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground hover:text-muted-foreground/85 transition-colors" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.riskRewardRatio.tooltip')}
@@ -96,11 +96,11 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
-          <span className="text-muted-foreground/70">Avg Win</span>
+          <span className="text-muted-foreground">Avg Win</span>
           <span className="text-foreground/90">${avgWin.toFixed(2)}</span>
         </div>
         <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
-          <span className="text-muted-foreground/70">Avg Loss</span>
+          <span className="text-muted-foreground">Avg Loss</span>
           <span className="text-muted-foreground/85">${avgLoss.toFixed(2)}</span>
         </div>
         <TooltipProvider delayDuration={100}>

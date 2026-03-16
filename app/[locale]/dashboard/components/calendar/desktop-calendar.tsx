@@ -210,7 +210,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{t('propFirm.renewal.title')}</h3>
-              <p className="text-xs text-muted-foreground/70">{renewals.length} {renewals.length === 1 ? t('propFirm.renewal.account') : t('propFirm.renewal.accounts')}</p>
+              <p className="text-xs text-muted-foreground">{renewals.length} {renewals.length === 1 ? t('propFirm.renewal.account') : t('propFirm.renewal.accounts')}</p>
             </div>
           </div>
 
@@ -245,7 +245,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground/70">
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground">
                       <div className="px-2 py-1 bg-secondary/22 text-foreground/80 rounded-md font-medium whitespace-nowrap border border-border/55">
                         {account.paymentFrequency?.toLowerCase()} {t('propFirm.renewal.frequency')}
                       </div>
@@ -263,7 +263,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                     <div className="font-bold text-base sm:text-lg text-foreground mb-1">
                       {account.price != null && formatCurrency(account.price, { maximumFractionDigits: 2 })}
                     </div>
-                    <div className="text-xs text-muted-foreground/70">
+                    <div className="text-xs text-muted-foreground">
                       {account.paymentFrequency?.toLowerCase()}
                     </div>
                   </div>

@@ -391,7 +391,7 @@ function AccountsTableSection({
             <button
               type="button"
               onClick={handleDismissHint}
-              className="text-muted-foreground/70 transition-colors hover:text-muted-foreground pointer-cursor"
+              className="text-muted-foreground transition-colors hover:text-muted-foreground pointer-cursor"
             >
               <XCircle className="h-4 w-4" />
               <span className="sr-only">{t("accounts.table.dismissHint")}</span>
@@ -614,7 +614,7 @@ export function AccountsTableView({
             <div className="flex items-center justify-center">
               {isFunded ? (
                 <>
-                  <CheckCircle className="h-4 w-4 text-success text-white" />
+                  <CheckCircle className="h-4 w-4 text-success" />
                   <span className="sr-only">{t("accounts.table.fundedYes")}</span>
                 </>
               ) : (

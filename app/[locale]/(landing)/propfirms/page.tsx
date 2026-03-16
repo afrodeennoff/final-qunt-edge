@@ -85,7 +85,7 @@ function renderPropfirmCard(
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
           <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground/70">
+          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
             Registered
           </div>
             <p className="text-3xl font-black text-foreground leading-none tabular-nums">
@@ -135,7 +135,7 @@ function renderPropfirmCard(
                   {formatCurrency(paidAmount)}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground/70">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: paidCount })}
               </p>
             </div>
@@ -150,7 +150,7 @@ function renderPropfirmCard(
                   {formatCurrency(pendingAmount)}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground/70">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: pendingCount })}
               </p>
             </div>
@@ -165,7 +165,7 @@ function renderPropfirmCard(
                   {formatCurrency(refusedAmount)}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground/70">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: refusedCount })}
               </p>
             </div>

@@ -45,7 +45,7 @@ export default function TradePerformanceCard({ size = 'medium' }: TradePerforman
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors cursor-help" />
+                <HelpCircle className="h-4 w-4 shrink-0 text-muted-foreground hover:text-muted-foreground/85 transition-colors cursor-help" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.tradePerformance.tooltip')}
@@ -68,8 +68,8 @@ export default function TradePerformanceCard({ size = 'medium' }: TradePerforman
         <span className="font-terminal font-bold text-[11px] tabular-nums metric-positive">{winRate}%</span>
       </div>
       <div className="precision-panel flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-secondary/22 border-border/55">
-        <Minus className="h-3 w-3 text-muted-foreground/70" />
-        <span className="font-terminal font-bold text-[11px] tabular-nums text-muted-foreground/70">{beRate}%</span>
+        <Minus className="h-3 w-3 text-muted-foreground" />
+        <span className="font-terminal font-bold text-[11px] tabular-nums text-muted-foreground">{beRate}%</span>
       </div>
       <div className="precision-panel flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-secondary/22 border-border/55">
         <TrendingDown className="h-3 w-3 metric-negative" />

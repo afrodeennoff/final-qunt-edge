@@ -43,10 +43,10 @@ export default function ReferralPage() {
                 <h1 className="text-3xl font-bold leading-tight md:text-5xl">
                   {t('referral.landing.heroTitle')}
                 </h1>
-                <p className="max-w-2xl text-sm text-muted-foreground/70 md:text-base">
+                <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
                   {t('referral.landing.heroDescription')}
                 </p>
-                <p className="text-xs text-muted-foreground/70">
+                <p className="text-xs text-muted-foreground">
                   {t('referral.landing.affiliateLinkLabel')}: {affiliateUrl}
                 </p>
               </div>

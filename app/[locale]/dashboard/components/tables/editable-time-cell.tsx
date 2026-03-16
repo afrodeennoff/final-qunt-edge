@@ -135,7 +135,7 @@ export function EditableTimeCell({
           onClick={handleCancel}
           disabled={isSaving}
         >
-          <X className="h-3 w-3 text-muted-foreground/70" />
+          <X className="h-3 w-3 text-muted-foreground" />
         </Button>
       </div>
     )

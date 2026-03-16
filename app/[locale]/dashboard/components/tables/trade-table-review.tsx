@@ -243,7 +243,7 @@ function TagsColumnHeader() {
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleClearFilter}>
-              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               {t("widgets.tags.clearFilter")} ({tagFilter.tags.length})
             </DropdownMenuItem>
           </>

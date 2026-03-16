@@ -39,7 +39,7 @@ export default function ProfitFactorCard({ size = 'medium' }: ProfitFactorCardPr
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors" />
+                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground hover:text-muted-foreground/85 transition-colors" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.profitFactor.tooltip')}

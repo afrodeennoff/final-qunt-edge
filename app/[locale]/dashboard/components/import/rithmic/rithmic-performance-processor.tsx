@@ -140,7 +140,7 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
             <div className="flex justify-between">
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Total PnL</h3>
-                    <p className={`text-xl font-bold ${totalPnL >= 0 ? 'text-white' : 'text-semantic-error'}`}>
+                    <p className={`text-xl font-bold ${totalPnL >= 0 ? 'text-foreground' : 'text-semantic-error'}`}>
                         {totalPnL.toFixed(2)}
                     </p>
                 </div>

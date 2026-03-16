@@ -194,7 +194,7 @@ export default async function Page({ params }: PageProps) {
           position="top"
         />
         <div className="mb-8">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground/70 dark:text-muted-foreground/50 mb-4">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground dark:text-muted-foreground mb-4">
             <time dateTime={meta.date} itemProp="datePublished">
               {formattedDate}
             </time>

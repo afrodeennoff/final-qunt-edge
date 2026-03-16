@@ -32,7 +32,7 @@ export default function WinningStreakCard({ size = 'medium' }: WinningStreakCard
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors cursor-help" />
+                <HelpCircle className="h-4 w-4 shrink-0 text-muted-foreground hover:text-muted-foreground/85 transition-colors cursor-help" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.winningStreak.tooltip')}

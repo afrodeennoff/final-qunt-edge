@@ -121,11 +121,11 @@ export default React.memo(function TickDistributionChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
             <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.ticks}</span>
           </div>
           <div className="flex justify-between items-center pt-1.5">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
             <span className="font-black text-foreground text-[11px] tabular-nums">
               {data.count}
             </span>
@@ -159,7 +159,7 @@ export default React.memo(function TickDistributionChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -174,7 +174,7 @@ export default React.memo(function TickDistributionChart({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground/70 hover:text-foreground hover:bg-secondary/22"
+              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setTickFilter({ value: null })}
             >
               {t("tickDistribution.clearFilter")}

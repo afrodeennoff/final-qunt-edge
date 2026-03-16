@@ -155,31 +155,31 @@ export default React.memo(function PnLPerContractDailyChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[160px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
             <span className="font-black text-muted-foreground/85 text-[10px] uppercase tracking-widest">{data.date}</span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
               <span className={cn(
                 "font-black text-[13px] tabular-nums",
                 data.averagePnl >= 0 ? "metric-positive" : "metric-negative"
               )}>{formatCurrency(data.averagePnl)}</span>
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
               <span className="font-black text-muted-foreground/85 text-[10px]">
                 {formatCurrency(data.totalPnl)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
               <span className="font-black text-muted-foreground/85 text-[10px]">
                 {data.tradeCount} ({formatWinRate(data.winCount, data.tradeCount)}% WR)
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
               <span className="font-black text-muted-foreground/85 text-[10px]">
                 {data.totalContracts}
               </span>
@@ -214,7 +214,7 @@ export default React.memo(function PnLPerContractDailyChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -421,7 +421,7 @@ export default React.memo(function PnLPerContractDailyChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground/70 text-[10px] font-black uppercase tracking-widest">
+            <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-widest">
               {config.selectedInstrument
                 ? t("pnlPerContractDaily.noData")
                 : t("pnlPerContractDaily.selectInstrument")}

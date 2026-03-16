@@ -203,13 +203,13 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                   size="icon"
                   disabled={isUpdating || !draftUrl}
                   onClick={handleClear}
-                  className="shrink-0 text-muted-foreground/70 hover:text-foreground"
+                  className="shrink-0 text-muted-foreground hover:text-foreground"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
               {!isValid && draftUrl && (
-                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground/70">
+                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
                   {t('trade-table.invalidVideoUrl')}
                 </p>
               )}

@@ -83,7 +83,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                 </div>
               </CardTitle>
               <p className={cn(
-                "text-muted-foreground/70 truncate font-mono",
+                "text-muted-foreground truncate font-mono",
                 size === 'small' || size === 'small-long' ? "text-[10px]" : "text-[10px]"
               )}>
                 {account.number}

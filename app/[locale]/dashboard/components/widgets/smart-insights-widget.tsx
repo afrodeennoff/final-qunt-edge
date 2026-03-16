@@ -160,13 +160,13 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                                         </div>
                                         <div>
                                             <h4 className="text-sm font-medium leading-none">{insight.title}</h4>
-                                            <span className="text-[10px] text-muted-foreground/70">
+                                            <span className="text-[10px] text-muted-foreground">
                                                 {formatInsightDate(insight.timestamp)}
                                             </span>
                                         </div>
                                     </div>
                                     {insight.confidence && (
-                                        <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-secondary/22 border-border/55 text-muted-foreground/70">
+                                        <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-secondary/22 border-border/55 text-muted-foreground">
                                             {insight.confidence}% Conf.
                                         </Badge>
                                     )}

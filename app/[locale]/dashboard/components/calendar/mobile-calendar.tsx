@@ -202,7 +202,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
             } catch (e) {
               console.error("Error parsing date string for display:", dateString, e);
               // Render a placeholder or skip if parsing fails
-              return <div key={dateString} className="text-muted-foreground/70 text-[10px] uppercase font-bold">Error</div>;
+              return <div key={dateString} className="text-muted-foreground text-[10px] uppercase font-bold">Error</div>;
             }
 
             // Determine if the date belongs to the currently displayed month
@@ -268,7 +268,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
                       </div>
                     </>
                   ) : (
-                    <div className="truncate text-[10px] text-muted-foreground/70">-</div>
+                    <div className="truncate text-[10px] text-muted-foreground">-</div>
                   )}
                 </div>
               </button>

@@ -313,7 +313,7 @@ const OptimizedTooltip = React.memo(
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[160px]">
         <div className="grid gap-2">
           <div className="flex justify-between items-center border-b border-border/55 pb-1">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
               {t("equity.tooltip.date")}
             </span>
             <span className="font-black text-muted-foreground/85 text-[10px] uppercase tracking-widest">
@@ -323,7 +323,7 @@ const OptimizedTooltip = React.memo(
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
               {t("equity.tooltip.totalEquity")}
             </span>
             <span className={cn(
@@ -336,7 +336,7 @@ const OptimizedTooltip = React.memo(
 
           {resetAccounts.length > 0 && (
             <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
                 {t("equity.tooltip.resets")}
               </span>
               <div className="space-y-1">
@@ -361,7 +361,7 @@ const OptimizedTooltip = React.memo(
 
           {payoutAccounts.length > 0 && (
             <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
                 {t("equity.tooltip.payouts")}
               </span>
               <div className="space-y-1">
@@ -887,7 +887,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4"
                     )}
                   />

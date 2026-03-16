@@ -80,24 +80,24 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const date = new Date(data.date + "T00:00:00Z");
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-        <p className="font-black text-muted-foreground/70 text-[10px] uppercase tracking-widest mb-2 border-b border-border/55 pb-1">
+        <p className="font-black text-muted-foreground text-[10px] uppercase tracking-widest mb-2 border-b border-border/55 pb-1">
           {formatInTimeZone(date, timezone, "MMM d, yyyy", {
             locale: dateLocale,
           })}
         </p>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
+          <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
           <span className={cn("font-black text-sm tabular-nums", data.pnl >= 0 ? "metric-positive" : "metric-negative")}>
             {formatCurrency(data.pnl)}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-border/55">
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-wider">{t("pnl.tooltip.longTrades")}</span>
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.longTrades")}</span>
             <span className="text-[11px] font-black text-muted-foreground/85">{data.longNumber}</span>
           </div>
           <div className="flex flex-col text-right">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
             <span className="text-[11px] font-black text-muted-foreground/85">{data.shortNumber}</span>
           </div>
         </div>

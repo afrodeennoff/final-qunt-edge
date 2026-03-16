@@ -85,7 +85,7 @@ export default function Hero({ locale }: { locale: string }) {
           <span>CSV Import</span>
         </div>
 
-        <p className="mt-6 text-center text-xs tracking-[0.08em] text-muted-foreground/70 [font-family:var(--home-copy)]">
+        <p className="mt-6 text-center text-xs tracking-[0.08em] text-muted-foreground [font-family:var(--home-copy)]">
           Join free. Import your first session. Get a ranked diagnostic before your next open.
         </p>
       </div>

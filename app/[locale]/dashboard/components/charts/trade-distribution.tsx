@@ -79,7 +79,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
         <div className="flex flex-col mb-1 border-b border-border/55 pb-1">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t('tradeDistribution.tooltip.type')}
           </span>
           <span className="font-black text-foreground text-[11px] uppercase tracking-widest">
@@ -87,7 +87,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t('tradeDistribution.tooltip.percentage')}
           </span>
           <span className={cn('font-black text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground/55')}>
@@ -121,7 +121,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      'text-muted-foreground/70 hover:text-foreground transition-colors cursor-help',
+                      'text-muted-foreground hover:text-foreground transition-colors cursor-help',
                       size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'
                     )}
                   />
