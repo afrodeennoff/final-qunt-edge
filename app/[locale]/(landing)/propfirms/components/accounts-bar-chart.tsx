@@ -126,8 +126,10 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
-              !showPayoutBars && "opacity-80"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showPayoutBars
+                ? "bg-secondary text-secondary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Payouts
@@ -139,8 +141,10 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
-              !showAccountValue && "opacity-80"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showAccountValue
+                ? "bg-secondary text-secondary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Value
@@ -152,8 +156,10 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
-              !showRegistered && "opacity-80"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showRegistered
+                ? "bg-secondary text-secondary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Reg
@@ -165,8 +171,10 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
-              !showSized && "opacity-80"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showSized
+                ? "bg-secondary text-secondary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Sized
@@ -178,8 +186,10 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide text-foreground/90",
-              !showZeroFirms && "opacity-80"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showZeroFirms
+                ? "bg-secondary text-secondary-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
@@ -195,8 +205,6 @@ export function AccountsBarChart({
             <CartesianGrid
               vertical={false}
               strokeDasharray="2 10"
-              stroke="hsl(var(--border) / 0.62)"
-              opacity={0.56}
             />
             <XAxis
               dataKey="propfirmName"
@@ -211,7 +219,7 @@ export function AccountsBarChart({
               tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}…` : value)}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--foreground) / 0.82)",
+                fill: "hsl(var(--chart-axis) / 0.95)",
               }}
             />
             <YAxis
@@ -233,7 +241,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--foreground) / 0.84)",
+                fill: "hsl(var(--chart-axis) / 0.95)",
               }}
               tickFormatter={(value) => compactCurrency.format(value)}
             />
@@ -255,7 +263,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--foreground) / 0.84)",
+                fill: "hsl(var(--chart-axis) / 0.95)",
               }}
               tickFormatter={(value) => value.toLocaleString()}
             />

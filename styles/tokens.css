@@ -148,9 +148,9 @@
     --mk-bg-2: 240 5% 3%;
     --mk-surface: 240 5% 4%;
     --mk-surface-muted: 240 4% 6%;
-    --mk-border: 35 18% 18%;
-    --mk-text: 35 15% 88%;
-    --mk-text-muted: 35 10% 55%;
+    --mk-border: 35 20% 30%;
+    --mk-text: 35 15% 92%;
+    --mk-text-muted: 35 12% 72%;
 
     /* ===== BACKGROUND HIERARCHY (7 levels) - Luxury obsidian depths ===== */
     /* Semantic background tokens from darkest to lightest */

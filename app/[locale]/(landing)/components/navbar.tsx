@@ -56,7 +56,7 @@ export default function Navbar() {
         <motion.div
           className={cn(
             'flex h-[56px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
-            'border-[hsl(var(--foreground)/0.4)] bg-[hsl(var(--mk-surface)/0.72)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.68)] backdrop-blur-md sm:backdrop-blur-xl',
+            'border-[hsl(var(--foreground)/0.55)] bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-md sm:backdrop-blur-xl',
             scrolled ? 'shadow-[0_20px_34px_-26px_hsl(var(--brand-ink)/0.82)] sm:shadow-[0_28px_48px_-32px_hsl(var(--brand-ink)/0.86)]' : 'shadow-[0_8px_24px_-20px_hsl(var(--brand-ink)/0.7)]'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
@@ -79,7 +79,7 @@ export default function Navbar() {
                     'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
                       ? 'bg-[hsl(var(--brand-primary)/0.14)] text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
-                      : 'text-[hsl(var(--mk-text-muted))] hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
+                      : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >
                   {link.title}

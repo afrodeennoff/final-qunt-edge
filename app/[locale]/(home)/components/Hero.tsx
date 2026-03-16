@@ -28,7 +28,7 @@ export default function Hero({ locale }: { locale: string }) {
           </span>
         </h1>
 
-        <p className="mx-auto mt-6 max-w-3xl text-center text-[14px] leading-[1.72] text-muted-foreground sm:text-[18px] sm:leading-[1.8] [font-family:var(--home-copy)]">
+        <p className="mx-auto mt-6 max-w-3xl text-center text-[14px] leading-[1.72] text-foreground/85 sm:text-[18px] sm:leading-[1.8] [font-family:var(--home-copy)]">
           Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
           Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
         </p>
@@ -39,7 +39,7 @@ export default function Hero({ locale }: { locale: string }) {
               Start My Performance Audit
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="h-12 w-full max-w-[320px] rounded-2xl border-border/70 bg-card/60 text-[11px] font-medium uppercase tracking-[0.14em] backdrop-blur-sm hover:bg-card/80 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
+          <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
             <Link href={`/${locale}/#pricing`}>
               See Pricing
               <ArrowRight className="ml-2 h-3.5 w-3.5" />
@@ -47,7 +47,7 @@ export default function Hero({ locale }: { locale: string }) {
           </Button>
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[10px] uppercase tracking-[0.16em] text-foreground/80 [font-family:var(--home-copy)]">
           <span className="marketing-badge rounded-full px-3 py-1">No credit card required</span>
           <span className="marketing-badge rounded-full px-3 py-1">First audit in minutes</span>
           <span className="marketing-badge rounded-full px-3 py-1">Built for discretionary futures traders</span>
@@ -58,15 +58,15 @@ export default function Hero({ locale }: { locale: string }) {
             <CardContent className="p-4 sm:p-6">
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">Session Grade Confidence</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Session Grade Confidence</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">94%</p>
                 </div>
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">Rule Adherence Uplift</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Rule Adherence Uplift</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-fg-primary [font-family:var(--home-display)]">+37%</p>
                 </div>
                 <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">Impulse Trades Reduced</p>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/75 [font-family:var(--home-copy)]">Impulse Trades Reduced</p>
                   <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">-42%</p>
                 </div>
               </div>
@@ -74,7 +74,7 @@ export default function Hero({ locale }: { locale: string }) {
           </Card>
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/70 [font-family:var(--home-copy)]">
           <span>Tradovate</span>
           <span>Rithmic</span>
           <span>IBKR</span>
@@ -85,7 +85,7 @@ export default function Hero({ locale }: { locale: string }) {
           <span>CSV Import</span>
         </div>
 
-        <p className="mt-6 text-center text-xs tracking-[0.08em] text-muted-foreground [font-family:var(--home-copy)]">
+        <p className="mt-6 text-center text-xs tracking-[0.08em] text-foreground/75 [font-family:var(--home-copy)]">
           Join free. Import your first session. Get a ranked diagnostic before your next open.
         </p>
       </div>

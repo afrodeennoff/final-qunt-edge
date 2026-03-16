@@ -101,7 +101,7 @@ function getPlanCtaClassName(isPrimaryCta: boolean): string {
   return cn(
     'h-12 w-full rounded-2xl text-[10px] font-semibold uppercase tracking-[0.18em] [font-family:var(--home-copy)]',
     isPrimaryCta && 'bg-primary text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90',
-    !isPrimaryCta && 'border-subtle/30 bg-surface-subtle hover:bg-surface-muted'
+    !isPrimaryCta && 'bg-primary text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90'
   )
 }
 
@@ -213,7 +213,7 @@ export default function PricingSection() {
   const periodLabel = billingMode === 'annual' ? '/month, billed yearly' : '/month'
 
   return (
-    <section id="pricing" className="relative border-y border-[hsl(var(--foreground)/0.2)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+    <section id="pricing" className="relative border-y border-[hsl(var(--foreground)/0.32)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
           <Badge variant="outline" className="mb-4 border-[hsl(var(--brand-primary)/0.32)] bg-[hsl(var(--brand-primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
@@ -223,7 +223,7 @@ export default function PricingSection() {
             Choose your
             <span className="block text-[hsl(var(--brand-primary))]">performance operating system</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.78] text-muted-foreground sm:text-[18px] [font-family:var(--home-copy)]">
+          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.78] text-foreground/85 sm:text-[18px] [font-family:var(--home-copy)]">
             Start free. Upgrade when you want deeper diagnostics, tighter coaching loops, and desk-grade review workflows.
           </p>
           <div className="mx-auto mt-6 inline-flex rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.58)] p-1">
@@ -232,7 +232,7 @@ export default function PricingSection() {
               onClick={() => setBillingMode('monthly')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-muted-foreground hover:text-foreground'
+                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/75 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'monthly'}
             >
@@ -243,14 +243,14 @@ export default function PricingSection() {
               onClick={() => setBillingMode('annual')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-muted-foreground hover:text-foreground'
+                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/75 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'annual'}
             >
               Annual (Best Value)
             </button>
           </div>
-          <p className="mt-3 text-xs text-muted-foreground [font-family:var(--home-copy)]">7-day free trial on Pro AI. Cancel anytime.</p>
+          <p className="mt-3 text-xs text-foreground/75 [font-family:var(--home-copy)]">7-day free trial on Pro AI. Cancel anytime.</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
@@ -265,7 +265,7 @@ export default function PricingSection() {
             />
           ))}
         </div>
-        <p className="mt-6 text-center text-xs text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">
+        <p className="mt-6 text-center text-xs text-foreground/75 [font-family:var(--home-copy)]">
           Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
         </p>
       </div>

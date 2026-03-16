@@ -80,12 +80,12 @@ function renderPropfirmCard(
   const refusedCount = stat.payouts.refusedCount
 
   return (
-    <Card key={propfirmName} className="h-full">
+    <Card key={propfirmName} className="h-full border-border/70 bg-card/90">
       <CardHeader className="space-y-3">
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
           <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.22em] text-foreground/70">
+          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
             Registered
           </div>
             <p className="text-3xl font-black text-foreground leading-none tabular-nums">
@@ -128,14 +128,14 @@ function renderPropfirmCard(
             {/* Paid */}
             <div className="p-3 rounded-lg border border-border/70 bg-card/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.paid.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(paidAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: paidCount })}
               </p>
             </div>
@@ -143,14 +143,14 @@ function renderPropfirmCard(
             {/* Pending */}
             <div className="p-3 rounded-lg border border-border/70 bg-card/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.pending.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(pendingAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: pendingCount })}
               </p>
             </div>
@@ -158,14 +158,14 @@ function renderPropfirmCard(
             {/* Refused */}
             <div className="p-3 rounded-lg border border-border/70 bg-card/30">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.refused.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(refusedAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: refusedCount })}
               </p>
             </div>

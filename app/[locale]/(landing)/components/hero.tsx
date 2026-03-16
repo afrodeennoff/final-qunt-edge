@@ -46,7 +46,7 @@ export default function Hero({  }: HeroProps) {
   return (
     <section ref={ref} className="relative isolate flex min-h-[90svh] md:min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-16 pt-24 text-center sm:px-6 sm:pb-24 sm:pt-28 lg:px-8">
       <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none">
-         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.04)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.04)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.08)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.08)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl sm:max-w-6xl md:max-w-7xl h-[300px] sm:h-[400px] md:h-[600px] bg-[hsl(var(--foreground)/0.08)] blur-[80px] sm:blur-[100px] md:blur-[120px] rounded-full"></div>
       </motion.div>
 
@@ -73,7 +73,7 @@ export default function Hero({  }: HeroProps) {
 
         <motion.p
           variants={item}
-          className="text-responsive sm:text-responsive-lg md:text-xl lg:text-2xl text-[hsl(var(--mk-text-muted))] max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-normal px-2"
+          className="text-responsive sm:text-responsive-lg md:text-xl lg:text-2xl text-foreground/85 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-normal px-2"
         >
           Stop auditing the money. Audit the execution. <br className="hidden sm:block" />
           <span className="text-[hsl(var(--mk-text-muted))]">The clinical intelligence layer for professional discretionary traders.</span>
@@ -92,16 +92,16 @@ export default function Hero({  }: HeroProps) {
 
           <Link
             href={`/${locale}/updates`}
-            className="touch-target group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-foreground sm:text-xs sm:tracking-[0.2em]"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full bg-primary px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-primary-foreground transition-all shadow-[0_12px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90 sm:w-auto sm:text-xs"
           >
              View Product Updates
-             <svg className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+             <svg className="h-3 w-3 transition-transform group-hover:translate-x-1 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </Link>
         </motion.div>
 
         <motion.div
           variants={item}
-          className="mt-16 border-t border-border/55 px-4 pt-8 opacity-80 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
+          className="mt-16 border-t border-border/75 px-4 pt-8 opacity-90 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
         >
            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
               <span className="text-sm font-black tracking-tighter text-foreground/75 sm:text-base md:text-xl">TRADOVATE</span>

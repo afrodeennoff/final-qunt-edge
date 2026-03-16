@@ -52,8 +52,8 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
                 scrolled
-                    ? 'bg-background/88 backdrop-blur-2xl border-b border-border/70 py-3'
-                    : 'bg-background/45 backdrop-blur-md border-b border-border/45 py-4'
+                    ? 'bg-background/90 backdrop-blur-2xl border-b border-border py-3'
+                    : 'bg-background/55 backdrop-blur-md border-b border-border/70 py-4'
             )}
         >
             <div className="container-fluid flex items-center justify-between">
@@ -98,13 +98,13 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                 </Button>
                                 <Button
                                     onClick={onAccessPortal}
-                                    className="h-9 px-6 text-xs font-bold uppercase tracking-[0.12em] rounded-lg shadow-sm"
+                                    className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90"
                                 >
                                     {t('landing.cta')}
                                 </Button>
                             </>
                         ) : (
-                            <Button asChild className="h-9 px-6 text-xs font-bold uppercase tracking-[0.12em] rounded-lg shadow-sm">
+                            <Button asChild className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90">
                                 <Link href={`/${locale}/dashboard`}>
                                     {t('landing.navbar.dashboard')}
                                 </Link>
@@ -156,13 +156,13 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                                     setIsOpen(false);
                                                     onAccessPortal();
                                                 }}
-                                                className="w-full h-12 text-xs font-bold uppercase tracking-widest shadow-lg"
+                                                className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90"
                                             >
                                                 {t('landing.cta')}
                                             </Button>
                                         </>
                                     ) : (
-                                        <Button asChild className="w-full h-12 text-xs font-bold uppercase tracking-widest shadow-lg">
+                                        <Button asChild className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90">
                                             <Link
                                                 href={`/${locale}/dashboard`}
                                                 onClick={() => setIsOpen(false)}
