@@ -15,6 +15,16 @@ Verification: `npm run lint -- app/layout.tsx tailwind.config.ts app/globals.css
 - [x] Implement minimal fixes: make menu trigger keyboard-focusable with visible focus ring, add aria-labels to sliders/icon buttons, and ensure theme radio/swatches have descriptive labels.
 - [x] Re-verify keyboard navigation/focus order for theme and timezone/language pickers; document changed lines/files.
 
+## Task: Theme UX accessibility tests (2026-03-16)
+
+- [x] Review existing theme provider and theme switcher tests to confirm coverage gaps for ARIA labels and non-dashboard lock behavior.
+- [x] Add targeted tests around theme UX accessibility: verify accessible label on the theme switcher trigger and confirm non-dashboard scope locks theme mutations.
+- [x] Run `npx vitest run tests/theme-provider.test.tsx` and capture the results.
+- [x] Summarize test coverage and verification output in this checklist.
+
+Verification: `npx vitest run tests/theme-provider.test.tsx` (pass).
+Review: Added theme UX tests for non-dashboard lock behavior and theme switcher accessible labeling in `tests/theme-provider.test.tsx`.
+
 ## Task: Color token cleanup (2026-03-15)
 
 - [x] Save the color token cleanup plan in `docs/superpowers/plans/2026-03-15-color-token-cleanup.md` and confirm the targets.

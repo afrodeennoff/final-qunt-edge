@@ -200,7 +200,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                 variant="outline"
                 size="sm"
                 onClick={requestAIMapping}
-                className="flex items-center gap-2 bg-white/50 dark:bg-semantic-warning-bg/30 hover:bg-white/80 dark:hover:bg-semantic-warning-bg/50 text-semantic-warning dark:text-semantic-warning border-semantic-warning-border dark:border-semantic-warning-border transition-colors"
+                className="flex items-center gap-2 bg-semantic-warning-bg/30 hover:bg-semantic-warning-bg/50 text-semantic-warning border-semantic-warning-border transition-colors"
               >
                 <RefreshCwIcon className={cn("h-4 w-4", isLoading && "animate-spin")} />
                 Use AI for mapping

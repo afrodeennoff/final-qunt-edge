@@ -27,6 +27,8 @@ model User {
   thorToken          String?
   thorTokenHash      String?             @unique
   thorTokenExpiresAt DateTime?
+  mt5TokenHash       String?             @unique
+  mt5TokenExpiresAt  DateTime?
   referral           Referral?           @relation("UserReferral")
   referralRedemption ReferralRedemption? @relation("UserReferralRedemption")
   subscription       Subscription?       @relation("UserSubscription")
@@ -49,6 +51,7 @@ model User {
   orders                Order[]                @relation("UserOrders")
   posts                 Post[]                 @relation("UserPosts")
   synchronizations      Synchronization[]      @relation("UserSynchronizations")
+  mt5Accounts          MT5Account[]          @relation("UserMT5Accounts")
   tags                  Tag[]                  @relation("UserTags")
   votes                 Vote[]                 @relation("UserVotes")
   paymentTransactions   PaymentTransaction[]   @relation("UserPaymentTransactions")
@@ -438,6 +441,42 @@ model Synchronization {
   @@index([userId])
   @@index([service])
   @@index([userId, accountId]) // Optimization for rapid synchronization checkups
+  @@schema("public")
+}
+
+model MT5Account {
+  id        String @id @default(uuid())
+  userId    String
+  login     BigInt
+  server    String
+
+  passwordCiphertext String
+  passwordIv        String
+  passwordTag       String
+  passwordKeyVersion String @default("1")
+
+  status          String  @default("PENDING")
+  lastSyncError   String?
+
+  lastSyncAt   DateTime?
+  nextSyncAt   DateTime?
+  lastTradeCount Int    @default(0)
+
+  isActive         Boolean @default(false)
+  lastActivityAt   DateTime?
+  tradeCount24h    Int     @default(0)
+
+  accountName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation("UserMT5Accounts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, login, server])
+  @@index([userId])
+  @@index([status])
+  @@index([nextSyncAt])
+  @@index([userId, status])
   @@schema("public")
 }
 

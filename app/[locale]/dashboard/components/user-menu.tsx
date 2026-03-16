@@ -46,6 +46,8 @@ import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
 type Locale = 'en' | 'fr'
+type MenuVariant = 'navbar' | 'sidebar'
+type ThemeMode = 'light' | 'dark' | 'system'
 type DashboardThemeOption = {
   value: DashboardTheme
   label: string
@@ -71,7 +73,50 @@ const dashboardThemeOptions: DashboardThemeOption[] = [
   { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
 ]
 
-export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' | 'sidebar' }) {
+const variantClasses: Record<
+  MenuVariant,
+  {
+    trigger: string
+    avatar: string
+    avatarFallback: string
+    account: string
+    subscriptionBadge: string
+    settingsIcon: string
+  }
+> = {
+  navbar: {
+    trigger: 'hover:bg-accent/70 p-1 rounded-full',
+    avatar: 'h-8 w-8 rounded-full border-2 border-primary/20',
+    avatarFallback: 'rounded-full bg-primary/10 text-primary',
+    account: 'hidden sm:grid',
+    subscriptionBadge: '',
+    settingsIcon: 'hidden',
+  },
+  sidebar: {
+    trigger: 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-2 w-full group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center',
+    avatar: 'h-8 w-8',
+    avatarFallback: 'bg-sidebar-primary text-sidebar-primary-foreground',
+    account: 'group-data-[collapsible=icon]:hidden',
+    subscriptionBadge: 'group-data-[collapsible=icon]:hidden',
+    settingsIcon: 'ml-auto size-4 group-data-[collapsible=icon]:hidden',
+  },
+}
+
+function getSystemAwareThemeIcon(theme: ThemeMode) {
+  if (theme === 'light') return <Sun className="h-4 w-4" />
+  if (theme === 'dark') return <Moon className="h-4 w-4" />
+  if (typeof window !== 'undefined') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
+  }
+  return <Laptop className="h-4 w-4" />
+}
+
+function getUserInitial(email: string) {
+  return email[0] ?? '?'
+}
+
+export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVariant }) {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
@@ -82,6 +127,14 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
   const setTimezone = useUserStore(state => state.setTimezone)
   const resetUser = useUserStore(state => state.resetUser)
   const clearTradovate = useTradovateSyncStore((state) => state.clearAll)
+
+  const variantClass = variantClasses[variant]
+  const userMetadata = user?.user_metadata
+  const userEmail = user?.email ?? ''
+  const userAvatarUrl = typeof userMetadata?.avatar_url === 'string' ? userMetadata.avatar_url : undefined
+  const userFullName = typeof userMetadata?.full_name === 'string' ? userMetadata.full_name : undefined
+  const userDisplayName = userFullName ?? userEmail.split('@')[0]
+  const userInitial = getUserInitial(userEmail)
 
   const languages: { value: Locale; label: string }[] = useMemo(() => ([
     { value: 'en', label: 'English' },
@@ -100,16 +153,6 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
     setDashboardTheme(value as DashboardTheme)
   }
 
-  const getThemeIcon = () => {
-    if (theme === 'light') return <Sun className="h-4 w-4" />
-    if (theme === 'dark') return <Moon className="h-4 w-4" />
-    if (typeof window !== 'undefined') {
-      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-      return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
-    }
-    return <Laptop className="h-4 w-4" />
-  }
-
   const activeDashboardTheme = useMemo(
     () => dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0],
     [dashboardTheme]
@@ -124,50 +167,45 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
             aria-label="Open user menu"
             className={cn(
               "flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              variant === 'navbar'
-                ? "hover:bg-accent/70 p-1 rounded-full"
-                : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-2 w-full group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+              variantClass.trigger
             )}
           >
             <div className="relative flex-none">
               <Avatar className={cn(
                 "rounded-lg transition-transform hover:scale-105",
-                variant === 'navbar' ? "h-8 w-8 rounded-full border-2 border-primary/20" : "h-8 w-8"
+                variantClass.avatar
               )}>
-                <AvatarImage src={user?.user_metadata.avatar_url} />
+                <AvatarImage src={userAvatarUrl} />
                 <AvatarFallback className={cn(
                   "uppercase text-xs rounded-lg",
-                  variant === 'navbar' ? "rounded-full bg-primary/10 text-primary" : "bg-sidebar-primary text-sidebar-primary-foreground"
+                  variantClass.avatarFallback
                 )}>
-                  {user?.email![0]}
+                  {userInitial}
                 </AvatarFallback>
               </Avatar>
               <SubscriptionBadge className={cn(
                 "absolute -bottom-1 -right-1 px-1 py-0 text-[10px] leading-3",
-                variant === 'sidebar' && "group-data-[collapsible=icon]:hidden"
+                variantClass.subscriptionBadge
               )} />
             </div>
             <div className={cn(
               "grid flex-1 text-left text-sm leading-tight",
-              variant === 'sidebar' && "group-data-[collapsible=icon]:hidden",
-              variant === 'navbar' && "hidden sm:grid"
+              variantClass.account
             )}>
               <span className="truncate font-bold text-foreground">
-                {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                {userDisplayName}
               </span>
               <span className="truncate text-[10px] text-muted-foreground font-medium">
-                {user?.email}
+                {userEmail}
               </span>
             </div>
-            {variant === 'sidebar' && (
-              <Settings className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
-            )}
+            <Settings className={variantClass.settingsIcon} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>{t('dashboard.myAccount')}</DropdownMenuLabel>
           <div className="px-2 py-1.5 text-sm text-muted-foreground">
-            {user?.email}
+            {userEmail}
           </div>
           <DropdownMenuItem asChild>
             <Link href={`/${currentLocale}/dashboard`}>
@@ -271,7 +309,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: 'navbar' |
               aria-label={t('landing.navbar.toggleTheme')}
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              {getThemeIcon()}
+              {getSystemAwareThemeIcon(theme)}
               <span className="ml-2">{t('landing.navbar.toggleTheme')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>

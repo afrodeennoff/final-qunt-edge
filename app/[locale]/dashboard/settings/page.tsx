@@ -47,7 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Slider } from "@/components/ui/slider"
-import { createTeam, joinTeam, leaveTeam, getUserTeams } from './actions'
+import { leaveTeam, getUserTeams } from './actions'
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -65,11 +65,22 @@ import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
 import { cn } from "@/lib/utils"
 
 type Locale = 'en' | 'fr'
+type ThemeMode = 'light' | 'dark' | 'system'
 type DashboardThemeOption = {
   value: DashboardTheme
   label: string
   preview: string
   swatchClass: string
+}
+type TranslateFn = ReturnType<typeof useI18n>
+type TeamSummary = {
+  id: string
+  name: string
+  traderIds: string[]
+}
+type UserTeamsState = {
+  ownedTeams: TeamSummary[]
+  joinedTeams: TeamSummary[]
 }
 
 // Add timezone list
@@ -93,6 +104,233 @@ const dashboardThemeOptions: DashboardThemeOption[] = [
   { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
 ]
 
+const THEME_MODE_LABELS: Record<ThemeMode, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'System',
+}
+
+function getThemeIcon(theme: ThemeMode) {
+  if (theme === 'light') return <Sun className="h-4 w-4" />
+  if (theme === 'dark') return <Moon className="h-4 w-4" />
+  if (typeof window !== 'undefined') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
+  }
+  return <Laptop className="h-4 w-4" />
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return fallback
+}
+
+function TeamSettingsCard({
+  userTeams,
+  onLeaveTeam,
+}: {
+  userTeams: UserTeamsState
+  onLeaveTeam: (teamId: string) => Promise<void>
+}) {
+  const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
+
+  return (
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Building2 className="h-5 w-5" />
+          Team
+        </CardTitle>
+        <CardDescription>
+          Manage your team connections
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {hasTeams && (
+          <div>
+            <Label className="text-base font-medium">Current Teams</Label>
+            <div className="mt-2 space-y-2">
+              {userTeams.ownedTeams.map((team) => (
+                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{team.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {team.traderIds.length} traders
+                    </p>
+                  </div>
+                  <Badge variant="secondary">Owner</Badge>
+                </div>
+              ))}
+
+              {userTeams.joinedTeams.map((team) => (
+                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{team.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {team.traderIds.length} traders
+                    </p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Leave Team
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Leave Team</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to leave this team?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => onLeaveTeam(team.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Leave Team
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!hasTeams && (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No team linked</p>
+            <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
+            <div className="mt-4">
+              <Link href="/teams/dashboard">
+                <Button>
+                  <Building2 className="mr-2 h-4 w-4" />
+                  Manage Teams
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {hasTeams && (
+          <div className="mt-4">
+            <Link href="/teams/dashboard">
+              <Button variant="outline" className="w-full">
+                <Settings className="mr-2 h-4 w-4" />
+                Manage Teams
+              </Button>
+            </Link>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function PasswordSettingsCard({
+  t,
+  newPassword,
+  confirmPassword,
+  showNewPassword,
+  showConfirmPassword,
+  onNewPasswordChange,
+  onConfirmPasswordChange,
+  onToggleNewPassword,
+  onToggleConfirmPassword,
+  onUpdatePassword,
+}: {
+  t: TranslateFn
+  newPassword: string
+  confirmPassword: string
+  showNewPassword: boolean
+  showConfirmPassword: boolean
+  onNewPasswordChange: (value: string) => void
+  onConfirmPasswordChange: (value: string) => void
+  onToggleNewPassword: () => void
+  onToggleConfirmPassword: () => void
+  onUpdatePassword: () => Promise<void>
+}) {
+  return (
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="h-5 w-5" />
+          {t('auth.setPassword')}
+        </CardTitle>
+        <CardDescription>
+          {t('auth.setPasswordDescription')}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-4">
+          <div>
+            <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
+            <div className="relative">
+              <Input
+                id="newPassword"
+                type={showNewPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={newPassword}
+                onChange={(e) => onNewPasswordChange(e.target.value)}
+                className="pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showNewPassword}
+                onClick={onToggleNewPassword}
+              >
+                {showNewPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => onConfirmPasswordChange(e.target.value)}
+                className="pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
+                aria-pressed={showConfirmPassword}
+                onClick={onToggleConfirmPassword}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+          <Button onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
@@ -113,11 +351,7 @@ export default function SettingsPage() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  // Team state
-  const [userTeams, setUserTeams] = useState<{
-    ownedTeams: any[]
-    joinedTeams: any[]
-  }>({ ownedTeams: [], joinedTeams: [] })
+  const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -125,7 +359,7 @@ export default function SettingsPage() {
   ]
 
   const handleThemeChange = (value: string) => {
-    setTheme(value as "light" | "dark" | "system")
+    setTheme(value as ThemeMode)
   }
 
   const handleDashboardThemeChange = (value: string) => {
@@ -136,47 +370,69 @@ export default function SettingsPage() {
     setDashboardTheme(value as DashboardTheme)
   }
 
-  const getThemeIcon = () => {
-    if (theme === 'light') return <Sun className="h-4 w-4" />;
-    if (theme === 'dark') return <Moon className="h-4 w-4" />;
-    if (typeof window !== 'undefined') {
-      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />;
-    }
-    return <Laptop className="h-4 w-4" />;
-  };
   const activeDashboardTheme = dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0]
+  const currentThemeLabel = THEME_MODE_LABELS[theme]
+
+  const refreshTeams = async () => {
+    const result = await getUserTeams()
+    if (!result.success || !result.ownedTeams || !result.joinedTeams) {
+      return
+    }
+    setUserTeams({
+      ownedTeams: result.ownedTeams,
+      joinedTeams: result.joinedTeams,
+    })
+  }
 
   // Load user teams on component mount
   useEffect(() => {
-    const loadTeams = async () => {
-      const result = await getUserTeams()
-      if (result.success && result.ownedTeams && result.joinedTeams) {
-        setUserTeams({
-          ownedTeams: result.ownedTeams,
-          joinedTeams: result.joinedTeams,
-        })
+    let isCancelled = false
+    void getUserTeams().then((result) => {
+      if (isCancelled || !result.success || !result.ownedTeams || !result.joinedTeams) {
+        return
       }
+      setUserTeams({
+        ownedTeams: result.ownedTeams,
+        joinedTeams: result.joinedTeams,
+      })
+    })
+
+    return () => {
+      isCancelled = true
     }
-    loadTeams()
   }, [])
-
-
 
   const handleLeaveTeam = async (teamId: string) => {
     const result = await leaveTeam(teamId)
     if (result.success) {
       toast.success(t('dashboard.teams.leaveSuccess'))
-      // Reload teams
-      const updatedTeams = await getUserTeams()
-      if (updatedTeams.success && updatedTeams.ownedTeams && updatedTeams.joinedTeams) {
-        setUserTeams({
-          ownedTeams: updatedTeams.ownedTeams,
-          joinedTeams: updatedTeams.joinedTeams,
-        })
-      }
+      await refreshTeams()
     } else {
       toast.error(result.error || t('dashboard.teams.error'))
+    }
+  }
+
+  const handlePasswordUpdate = async () => {
+    const newPwd = newPassword || ''
+    const confirmPwd = confirmPassword || ''
+    if (!newPwd || newPwd.length < 6) {
+      toast.error(t('error'), { description: t('auth.passwordMinLength') })
+      return
+    }
+    if (newPwd !== confirmPwd) {
+      toast.error(t('error'), { description: t('auth.passwordsDoNotMatch') })
+      return
+    }
+
+    try {
+      await setPasswordAction(newPwd)
+      toast.success(t('success'), { description: t('auth.passwordUpdated') })
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (error: unknown) {
+      toast.error(t('error'), {
+        description: getErrorMessage(error, 'Failed to update password'),
+      })
     }
   }
 
@@ -303,10 +559,8 @@ export default function SettingsPage() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="w-full justify-start sm:w-[200px]">
-                          {getThemeIcon()}
-                          <span className="ml-2">
-                            {theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}
-                          </span>
+                          {getThemeIcon(theme)}
+                          <span className="ml-2">{currentThemeLabel}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -490,201 +744,23 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Team Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Team
-            </CardTitle>
-            <CardDescription>
-              Manage your team connections
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-
-            {/* Current Teams */}
-            {(userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0) && (
-              <div>
-                <Label className="text-base font-medium">Current Teams</Label>
-                <div className="mt-2 space-y-2">
-                  {/* Owned Teams */}
-                  {userTeams.ownedTeams.map((team) => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{team.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {team.traderIds.length} traders
-                        </p>
-                      </div>
-                      <Badge variant="secondary">Owner</Badge>
-                    </div>
-                  ))}
-
-                  {/* Joined Teams */}
-                  {userTeams.joinedTeams.map((team) => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{team.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {team.traderIds.length} traders
-                        </p>
-                      </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            Leave Team
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Leave Team</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to leave this team?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleLeaveTeam(team.id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Leave Team
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* No Teams */}
-            {userTeams.ownedTeams.length === 0 && userTeams.joinedTeams.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No team linked</p>
-                <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
-                <div className="mt-4">
-                  <Link href="/teams/dashboard">
-                    <Button>
-                      <Building2 className="mr-2 h-4 w-4" />
-                      Manage Teams
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Team Management Link */}
-            {(userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0) && (
-              <div className="mt-4">
-                <Link href="/teams/dashboard">
-                  <Button variant="outline" className="w-full">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Manage Teams
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} />
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
 
-        {/* Password (Migration) Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              {t('auth.setPassword')}
-            </CardTitle>
-            <CardDescription>
-              {t('auth.setPasswordDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4">
-              <div>
-                <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
-                <div className="relative">
-                  <Input
-                    id="newPassword"
-                    type={showNewPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
-                    aria-pressed={showNewPassword}
-                    onClick={() => setShowNewPassword((v) => !v)}
-                  >
-                    {showNewPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
-                    aria-pressed={showConfirmPassword}
-                    onClick={() => setShowConfirmPassword((v) => !v)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-              <Button onClick={async () => {
-                const newPwd = newPassword || ''
-                const confirmPwd = confirmPassword || ''
-                if (!newPwd || newPwd.length < 6) {
-                  toast.error(t('error'), { description: t('auth.passwordMinLength') })
-                  return
-                }
-                if (newPwd !== confirmPwd) {
-                  toast.error(t('error'), { description: t('auth.passwordsDoNotMatch') })
-                  return
-                }
-                try {
-                  await setPasswordAction(newPwd)
-                  toast.success(t('success'), { description: t('auth.passwordUpdated') })
-                  setNewPassword('')
-                  setConfirmPassword('')
-                } catch (e: any) {
-                  toast.error(t('error'), { description: e?.message || 'Failed to update password' })
-                }
-              }}>{t('auth.setPassword')}</Button>
-            </div>
-          </CardContent>
-        </Card>
+        <PasswordSettingsCard
+          t={t}
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          showNewPassword={showNewPassword}
+          showConfirmPassword={showConfirmPassword}
+          onNewPasswordChange={setNewPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          onToggleNewPassword={() => setShowNewPassword((value) => !value)}
+          onToggleConfirmPassword={() => setShowConfirmPassword((value) => !value)}
+          onUpdatePassword={handlePasswordUpdate}
+        />
 
         {/* Account Management Section */}
         <Card className="border-border/12 bg-popover/45 shadow-sm">

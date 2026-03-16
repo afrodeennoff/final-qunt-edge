@@ -8,7 +8,7 @@ export default function DashboardPage() {
     <UnifiedPageShell density="compact">
       <div className="flex w-full flex-1 flex-col">
         <Tabs defaultValue="accounts" className="w-full space-y-4">
-          <TabsList className="h-auto rounded-2xl border border-white/10 bg-black/40 p-1">
+          <TabsList className="h-auto rounded-2xl border border-border bg-card/60 p-1">
             <TabsTrigger value="accounts">Accounts</TabsTrigger>
             <TabsTrigger value="trades">Trades</TabsTrigger>
             {/* <TabsTrigger value="propfirm">Prop Firm</TabsTrigger> */}

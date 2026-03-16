@@ -4,21 +4,40 @@ import { getRedisJson, invalidateCacheNamespace, setRedisJson } from './redis-ca
 
 const TOKEN_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000
 
-export async function generateSecureToken(userId: string, tokenType: 'etp' | 'thor') {
+export type SecureTokenType = 'etp' | 'thor' | 'mt5'
+
+export async function generateSecureToken(userId: string, tokenType: SecureTokenType) {
   const token = crypto.randomBytes(32).toString('hex')
   const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
   const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_MS)
   
-  const field = tokenType === 'etp' ? 'etpTokenHash' : 'thorTokenHash'
-  const legacyField = tokenType === 'etp' ? 'etpToken' : 'thorToken'
+  const fieldMap: Record<SecureTokenType, string> = {
+    etp: 'etpTokenHash',
+    thor: 'thorTokenHash',
+    mt5: 'mt5TokenHash'
+  }
+  
+  const legacyFieldMap: Record<SecureTokenType, string> = {
+    etp: 'etpToken',
+    thor: 'thorToken',
+    mt5: null as unknown as string
+  }
+  
+  const field = fieldMap[tokenType]
+  const legacyField = legacyFieldMap[tokenType]
+  
+  const updateData: Record<string, unknown> = {
+    [field]: tokenHash,
+    [`${tokenType}TokenExpiresAt`]: expiresAt
+  }
+  
+  if (legacyField) {
+    updateData[legacyField] = null
+  }
   
   await prisma.user.update({
     where: { id: userId },
-    data: {
-      [field]: tokenHash,
-      [legacyField]: null,
-      [`${tokenType}TokenExpiresAt`]: expiresAt
-    }
+    data: updateData
   })
 
   await invalidateCacheNamespace(`secure-token-${tokenType}`)
@@ -26,7 +45,7 @@ export async function generateSecureToken(userId: string, tokenType: 'etp' | 'th
   return token
 }
 
-export async function verifySecureToken(token: string, tokenType: 'etp' | 'thor') {
+export async function verifySecureToken(token: string, tokenType: SecureTokenType) {
   const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
   const cacheKey = `hash:${tokenHash}`
   const namespace = `secure-token-${tokenType}`
@@ -35,7 +54,13 @@ export async function verifySecureToken(token: string, tokenType: 'etp' | 'thor'
     return cachedUser
   }
 
-  const field = tokenType === 'etp' ? 'etpTokenHash' : 'thorTokenHash'
+  const fieldMap: Record<SecureTokenType, string> = {
+    etp: 'etpTokenHash',
+    thor: 'thorTokenHash',
+    mt5: 'mt5TokenHash'
+  }
+  
+  const field = fieldMap[tokenType]
   const expiresField = `${tokenType}TokenExpiresAt`
   
   const user = await prisma.user.findFirst({
@@ -54,18 +79,35 @@ export async function verifySecureToken(token: string, tokenType: 'etp' | 'thor'
   return user
 }
 
-export async function revokeSecureToken(userId: string, tokenType: 'etp' | 'thor') {
-  const field = tokenType === 'etp' ? 'etpTokenHash' : 'thorTokenHash'
-  const legacyField = tokenType === 'etp' ? 'etpToken' : 'thorToken'
+export async function revokeSecureToken(userId: string, tokenType: SecureTokenType) {
+  const fieldMap: Record<SecureTokenType, string> = {
+    etp: 'etpTokenHash',
+    thor: 'thorTokenHash',
+    mt5: 'mt5TokenHash'
+  }
+  
+  const legacyFieldMap: Record<SecureTokenType, string | null> = {
+    etp: 'etpToken',
+    thor: 'thorToken',
+    mt5: null as unknown as string
+  }
+  
+  const field = fieldMap[tokenType]
+  const legacyField = legacyFieldMap[tokenType]
   const expiresField = `${tokenType}TokenExpiresAt`
+  
+  const updateData: Record<string, unknown> = {
+    [field]: null,
+    [expiresField]: null
+  }
+  
+  if (legacyField) {
+    updateData[legacyField] = null
+  }
   
   await prisma.user.update({
     where: { id: userId },
-    data: {
-      [field]: null,
-      [legacyField]: null,
-      [expiresField]: null
-    }
+    data: updateData
   })
 
   await invalidateCacheNamespace(`secure-token-${tokenType}`)

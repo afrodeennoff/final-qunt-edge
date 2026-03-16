@@ -187,43 +187,50 @@ export default async function RootLayout({
                   'dashboard-theme-rose'
                 ];
 
+                var removeDashboardThemes = function() {
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.removeAttribute('data-dashboard-theme');
+                };
+
+                var clampIntensity = function(value) {
+                  var parsed = Number(value);
+                  return Number.isFinite(parsed)
+                    ? Math.min(100, Math.max(90, Math.round(parsed)))
+                    : 100;
+                };
+
+                var resolveTheme = function(savedTheme) {
+                  if (savedTheme === 'dark' || savedTheme === 'light') {
+                    return savedTheme;
+                  }
+                  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                };
+
+                var resolveDashboardTheme = function(value) {
+                  return value === 'violet' || value === 'emerald' || value === 'amber' || value === 'rose' ? value : 'blue';
+                };
+
                 if (!isDashboardRoute) {
                   root.classList.remove('light', 'dark');
                   root.classList.add('light');
                   root.style.setProperty('--theme-intensity', '100%');
-                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
-                  root.removeAttribute('data-dashboard-theme');
+                  removeDashboardThemes();
                   root.removeAttribute('data-theme');
                   return;
                 }
 
-                var savedTheme = localStorage.getItem('theme');
-                var resolvedTheme = isDashboardRoute
-                  ? (savedTheme === 'dark'
-                      ? 'dark'
-                      : savedTheme === 'light'
-                        ? 'light'
-                        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
-                  : 'light';
-
+                var resolvedTheme = resolveTheme(localStorage.getItem('theme'));
                 root.classList.remove('light', 'dark');
                 root.classList.add(resolvedTheme);
 
-                var savedIntensity = Number(localStorage.getItem('intensity'));
-                var intensity = Number.isFinite(savedIntensity)
-                  ? Math.min(100, Math.max(90, Math.round(savedIntensity)))
-                  : 100;
+                var intensity = clampIntensity(localStorage.getItem('intensity'));
                 root.style.setProperty('--theme-intensity', intensity + '%');
 
-                var savedDashboardTheme = localStorage.getItem('dashboard-theme');
-                var dashboardThemes = { blue: true, violet: true, emerald: true, amber: true, rose: true };
-                if (savedDashboardTheme && dashboardThemes[savedDashboardTheme] && savedDashboardTheme !== 'blue') {
-                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                removeDashboardThemes();
+                var savedDashboardTheme = resolveDashboardTheme(localStorage.getItem('dashboard-theme'));
+                if (savedDashboardTheme !== 'blue') {
                   root.classList.add('dashboard-theme-' + savedDashboardTheme);
                   root.setAttribute('data-dashboard-theme', savedDashboardTheme);
-                } else {
-                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
-                  root.removeAttribute('data-dashboard-theme');
                 }
                 root.removeAttribute('data-theme');
               } catch (e) {
