@@ -21,9 +21,9 @@ export default function CTA() {
             href={`/${locale}/authentication?next=dashboard`}
             className="inline-flex h-12 min-w-[230px] items-center justify-center rounded-2xl bg-primary px-9 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-all duration-300 hover:bg-primary/90 [font-family:var(--home-copy)]"
           >
-            Start My Performance Audit
+            Start Free Audit
           </Link>
-          <p className="text-xs text-foreground/75 [font-family:var(--home-copy)]">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
+          <p className="text-xs text-foreground/80 [font-family:var(--home-copy)]">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
         </div>
       </div>
     </section>

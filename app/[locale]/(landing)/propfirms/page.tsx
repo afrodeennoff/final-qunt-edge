@@ -80,12 +80,12 @@ function renderPropfirmCard(
   const refusedCount = stat.payouts.refusedCount
 
   return (
-    <Card key={propfirmName} className="h-full border-border/75 bg-card/95">
-      <CardHeader className="space-y-3 border-b border-border/60 pb-4">
+    <Card key={propfirmName} className="h-full border-border/70 bg-card/90">
+      <CardHeader className="space-y-3 border-b border-border/70 pb-4">
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
           <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.22em] text-foreground/72">
+          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
             Registered
           </div>
             <p className="text-3xl font-black text-foreground leading-none tabular-nums">
@@ -95,25 +95,25 @@ function renderPropfirmCard(
         </div>
         {/* Unified (non-rainbow) KPI strip + remove duplicate "registered" blocks */}
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="border-border/75 bg-card/55 text-foreground/95">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Paid:{' '}
             <span className="ml-1 font-semibold text-foreground tabular-nums">
               {formatCompactCurrency(paidAmount)}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-border/75 bg-card/55 text-foreground/95">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Account Value:{' '}
             <span className="ml-1 font-semibold text-foreground tabular-nums">
               {formatCompactCurrency(stat.totalAccountValue)}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-border/75 bg-card/55 text-foreground/95">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Size Mix:{' '}
             <span className="ml-1 font-semibold text-foreground">
               {stat.sizeBreakdown}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-border/75 bg-card/55 text-foreground/95">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Sized:{' '}
             <span className="ml-1 font-semibold text-foreground tabular-nums">
               {stat.sizedAccountsCount.toLocaleString()}
@@ -123,49 +123,49 @@ function renderPropfirmCard(
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="mb-3 border-b border-border/60 pb-2 text-sm font-semibold text-foreground/95">{t('landing.propfirms.payouts.title')}</h3>
+          <h3 className="mb-3 border-b border-border/70 pb-2 text-sm font-semibold text-foreground">{t('landing.propfirms.payouts.title')}</h3>
           <div className="space-y-3">
             {/* Paid */}
-            <div className="rounded-lg border border-border/75 bg-card/45 p-3">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.paid.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(paidAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: paidCount })}
               </p>
             </div>
 
             {/* Pending */}
-            <div className="rounded-lg border border-border/75 bg-card/45 p-3">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.pending.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(pendingAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: pendingCount })}
               </p>
             </div>
 
             {/* Refused */}
-            <div className="rounded-lg border border-border/75 bg-card/45 p-3">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-foreground/78">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.refused.label')}
                 </span>
                 <span className="text-sm font-bold text-foreground">
                   {formatCurrency(refusedAmount)}
                 </span>
               </div>
-              <p className="text-xs text-foreground/72">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: refusedCount })}
               </p>
             </div>
@@ -247,7 +247,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
       <div className="mx-auto w-full max-w-[1280px] px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">{t('landing.propfirms.title')}</h1>
-          <p className="max-w-3xl text-lg text-foreground/78">
+          <p className="max-w-3xl text-lg text-muted-foreground">
             {t('landing.propfirms.description')}
           </p>
         </div>
@@ -278,7 +278,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
         </div>
 
         {/* Controls */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border/60 bg-card/35 px-3 py-2">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border/70 bg-card/30 px-3 py-2">
           <TimeframeControls
             timeframeLabel={t('landing.propfirms.timeframe.label')}
             timeframeOptions={{

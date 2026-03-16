@@ -97,7 +97,8 @@ export function AccountsBarChart({
       return anyMoney || anyCounts
     })
 
-    const base = showZeroFirms ? sortedData : nonZero
+    // Keep chart visible even when all firms are at zero by falling back to the full set.
+    const base = showZeroFirms || nonZero.length === 0 ? sortedData : nonZero
     // Keep the chart readable; the grid below has the full list anyway.
     return base.slice(0, 14)
   }, [showZeroFirms, sortedData])
@@ -112,11 +113,11 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern" className="border-border/75 bg-card/95">
+    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
-          <p className="text-xs text-foreground/85">Minimal view. Add layers if you need more detail.</p>
+          <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -126,7 +127,7 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showPayoutBars
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
@@ -141,7 +142,7 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showAccountValue
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
@@ -156,7 +157,7 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showRegistered
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
@@ -171,7 +172,7 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showSized
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
@@ -186,7 +187,7 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
               showZeroFirms
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
@@ -196,7 +197,7 @@ export function AccountsBarChart({
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="border-t border-border/60 pt-4">
+      <CardContent className="border-t border-border/70 pt-4">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
@@ -269,8 +270,10 @@ export function AccountsBarChart({
               tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip
+              cursor={{ stroke: "hsl(var(--chart-axis) / 0.8)", strokeWidth: 1, strokeDasharray: "3 6" }}
               content={
                 <ChartTooltipContent
+                  className="border-[hsl(var(--chart-tooltip-border))] bg-[hsl(var(--chart-tooltip)/0.98)]"
                   labelFormatter={(label) => <span className="font-semibold text-foreground">{String(label)}</span>}
                   formatter={(value, name, item) => {
                     const key = String(name)
@@ -309,6 +312,7 @@ export function AccountsBarChart({
                   stackId="payouts"
                   fill="var(--color-refusedAmount)"
                   fillOpacity={0.62}
+                  minPointSize={2}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -318,6 +322,7 @@ export function AccountsBarChart({
                   stackId="payouts"
                   fill="var(--color-pendingAmount)"
                   fillOpacity={0.72}
+                  minPointSize={2}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -327,6 +332,7 @@ export function AccountsBarChart({
                   stackId="payouts"
                   fill="var(--color-paidAmount)"
                   fillOpacity={0.86}
+                  minPointSize={2}
                   radius={[4, 4, 0, 0]}
                   maxBarSize={44}
                 />

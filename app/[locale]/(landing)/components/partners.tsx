@@ -15,10 +15,11 @@ export default function Partners() {
                         <h2 className="text-fluid-3xl md:text-fluid-5xl font-bold tracking-tighter">
                             {t('landing.partners.title')}
                         </h2>
-                        <p className="mx-auto max-w-[700px] text-muted-foreground md:text-fluid-lg leading-relaxed">
+                        <p className="mx-auto max-w-[700px] leading-relaxed text-foreground/85 md:text-fluid-lg">
                             {t('landing.partners.description')}
                         </p>
                     </div>
+                    <div className="h-px w-full max-w-[700px] bg-[hsl(var(--mk-border)/0.34)]" />
                     <div className="grid grid-fluid gap-fluid-lg items-center justify-items-center w-full mt-fluid-md">
                         <a className="relative w-full h-16 flex items-center justify-center touch-optimized" href="https://ninjatraderdomesticvendor.sjv.io/e1VQMz" target="_blank" rel="noopener noreferrer">
                             <Image

@@ -37,13 +37,13 @@ export default function ProofStrip() {
             >
               Trust and Proof
             </Badge>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">
               Social proof should be earned. Until then, we lead with enforceable constraints and an observable review loop.
             </p>
           </div>
           <div className="text-center sm:text-right">
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground [font-family:var(--home-copy)]">Start in minutes</p>
-            <p className="mt-1 text-sm text-foreground/80 [font-family:var(--home-copy)]">No credit card required on Starter.</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">Start in minutes</p>
+            <p className="mt-1 text-sm text-foreground/85 [font-family:var(--home-copy)]">No credit card required on Starter.</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export default function ProofStrip() {
                       <Icon className="h-4 w-4" />
                     </div>
                     <h3 className="text-sm font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">
                       {item.description}
                     </p>
                   </article>

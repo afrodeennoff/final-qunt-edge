@@ -65,7 +65,7 @@ export default function ProblemStatement() {
               className="group relative rounded-xl bg-card/20 p-1 transition-all duration-500 hover:bg-card/30"
             >
               <div className="relative h-full overflow-hidden rounded-lg border border-border/75 bg-card p-4 transition-colors group-hover:border-border sm:p-6">
-                  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/70 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
+                  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">
                       {item.code}
                   </div>
                   <div className="flex items-start gap-4 sm:gap-6">

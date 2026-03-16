@@ -31,17 +31,17 @@ export function SortControls({ sortLabel, sortOptions }: SortControlsProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <Label htmlFor="sort-select" className="text-xs font-semibold tracking-wide text-foreground/88">
+      <Label htmlFor="sort-select" className="text-xs font-semibold tracking-wide text-muted-foreground">
         {sortLabel}
       </Label>
       <Select value={currentSort} onValueChange={handleSortChange}>
         <SelectTrigger
           id="sort-select"
-          className="w-[200px] border border-border/75 bg-card/90 text-foreground shadow-none backdrop-blur-sm hover:bg-card focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+          className="w-[200px] border border-border/70 bg-card/80 text-foreground shadow-none backdrop-blur-sm hover:bg-card focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="border border-border/75 bg-card/95 text-foreground shadow-xl">
+        <SelectContent className="border border-border/70 bg-card text-foreground shadow-xl">
           <SelectItem value="accounts">{sortOptions.accounts}</SelectItem>
           <SelectItem value="paidPayout">{sortOptions.paidPayout}</SelectItem>
           <SelectItem value="refusedPayout">{sortOptions.refusedPayout}</SelectItem>

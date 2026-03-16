@@ -155,7 +155,7 @@ function PlanCard({
           </CardTitle>
           <div className="mt-4 flex items-baseline text-5xl font-semibold tracking-[-0.025em] [font-family:var(--home-display)]">
             {priceText}
-            <span className="ml-1 text-sm font-medium text-muted-foreground [font-family:var(--home-copy)]">
+            <span className="ml-1 text-sm font-medium text-foreground/80 [font-family:var(--home-copy)]">
               {periodText}
             </span>
           </div>
@@ -170,7 +170,7 @@ function PlanCard({
             {plan.features.map((feature) => (
               <li
                 key={feature}
-                className="flex items-start gap-3 text-sm text-muted-foreground [font-family:var(--home-copy)]"
+                className="flex items-start gap-3 text-sm text-foreground/80 [font-family:var(--home-copy)]"
               >
                 <Check className="h-5 w-5 shrink-0 text-[hsl(var(--brand-primary))]" />
                 <span>{feature}</span>
@@ -187,7 +187,7 @@ function PlanCard({
           >
             <Link href={href}>{plan.cta}</Link>
           </Button>
-          <p className="text-center text-xs text-muted-foreground [font-family:var(--home-copy)]">{plan.note}</p>
+          <p className="text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">{plan.note}</p>
         </CardFooter>
       </Card>
     </div>
@@ -221,7 +221,7 @@ export default function PricingSection() {
               onClick={() => setBillingMode('monthly')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/75 hover:text-foreground'
+                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/80 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'monthly'}
             >
@@ -232,14 +232,14 @@ export default function PricingSection() {
               onClick={() => setBillingMode('annual')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/75 hover:text-foreground'
+                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/80 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'annual'}
             >
               Annual (Best Value)
             </button>
           </div>
-          <p className="mt-3 text-xs text-foreground/75 [font-family:var(--home-copy)]">7-day free trial on Pro AI. Cancel anytime.</p>
+          <p className="mt-3 text-xs text-foreground/80 [font-family:var(--home-copy)]">7-day free trial on Pro AI. Cancel anytime.</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
@@ -254,7 +254,7 @@ export default function PricingSection() {
             />
           ))}
         </div>
-        <p className="mt-6 text-center text-xs text-foreground/75 [font-family:var(--home-copy)]">
+        <p className="mt-6 text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">
           Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
         </p>
       </div>

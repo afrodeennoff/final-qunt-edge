@@ -12,7 +12,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background relative overflow-hidden border-t border-border/50">
+    <section id="how-it-works" className="relative overflow-hidden border-t border-border/70 bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 sm:mb-20 relative z-10">
           <motion.h2
@@ -28,7 +28,7 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground max-w-lg mx-auto text-base sm:text-lg font-light px-4"
+            className="mx-auto max-w-lg px-4 text-base font-light text-foreground/85 sm:text-lg"
           >
             A closed-loop system designed to extract alpha from behavioral inefficiencies.
           </motion.p>
@@ -37,13 +37,13 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 relative">
 
           <div className="hidden lg:block absolute top-[28px] left-[10%] w-[80%] h-[2px] z-0">
-             <div className="absolute inset-0 bg-card/90"></div>
+             <div className="absolute inset-0 bg-[hsl(var(--mk-border)/0.34)]"></div>
              <motion.div
                initial={{ width: 0 }}
                whileInView={{ width: '100%' }}
                viewport={{ once: true }}
                transition={{ duration: 1.5, ease: "easeInOut" }}
-               className="h-full bg-gradient-to-r from-card/90 via-card/60 to-card/90"
+               className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-[hsl(var(--brand-primary)/0.35)] to-[hsl(var(--mk-border)/0.34)]"
              />
           </div>
 
@@ -58,13 +58,13 @@ export default function HowItWorks() {
             >
               <div className="flex justify-center mb-6 sm:mb-8 relative">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-card border border-border/60 flex items-center justify-center relative z-10 group-hover:border-border/80 transition-colors shadow-2xl">
-                      <span className="text-muted-foreground font-mono text-xs sm:text-sm font-bold group-hover:text-foreground">0{i+1}</span>
+                      <span className="font-mono text-xs font-bold text-foreground/85 group-hover:text-foreground sm:text-sm">0{i+1}</span>
                   </div>
               </div>
 
               <div className="text-center px-2 sm:px-3">
                 <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-3 sm:mb-4 text-foreground mono group-hover:text-foreground transition-colors">{step.name}</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">{step.desc}</p>
+                <p className="text-xs leading-relaxed font-light text-foreground/85 sm:text-sm">{step.desc}</p>
               </div>
             </motion.div>
           ))}

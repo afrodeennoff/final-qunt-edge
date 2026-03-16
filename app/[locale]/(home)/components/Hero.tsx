@@ -36,7 +36,7 @@ export default function Hero({ locale }: { locale: string }) {
         <div className="mt-12 flex w-full flex-col items-center justify-center gap-3 sm:mt-14 sm:w-auto sm:flex-row sm:gap-5">
           <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
             <Link href={`/${locale}/authentication?next=dashboard`}>
-              Start My Performance Audit
+              Start Free Audit
             </Link>
           </Button>
           <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
@@ -85,7 +85,7 @@ export default function Hero({ locale }: { locale: string }) {
           <span>CSV Import</span>
         </div>
 
-        <p className="mt-6 text-center text-xs tracking-[0.08em] text-foreground/75 [font-family:var(--home-copy)]">
+        <p className="mt-6 text-center text-xs tracking-[0.08em] text-foreground/80 [font-family:var(--home-copy)]">
           Join free. Import your first session. Get a ranked diagnostic before your next open.
         </p>
       </div>

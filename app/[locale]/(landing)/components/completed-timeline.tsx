@@ -27,7 +27,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
 
   return (
     <div className="relative">
-      <div className="absolute left-4 top-0 h-full w-0.5 bg-border/60 dark:bg-border/80" />
+      <div className="absolute left-4 top-0 h-full w-0.5 bg-border/70 dark:bg-border/85" />
       
       <div className="space-y-12 pl-12">
         {completedMilestones.map((milestone) => (
@@ -37,13 +37,13 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
             </div>
             
             <Link href={`/${locale}/updates/${milestone.id}`} className="block hover:opacity-90 transition-opacity">
-              <time className="mb-2 block text-sm text-muted-foreground">
+              <time className="mb-2 block text-sm text-foreground/80">
                 {format(new Date(milestone.completedDate), 'MMMM d, yyyy', { locale: dateLocale })}
               </time>
               <h3 className="text-lg font-semibold text-foreground">
                 {milestone.title}
               </h3>
-              <p className="mt-2 text-muted-foreground">
+              <p className="mt-2 text-foreground/85">
                 {milestone.description}
               </p>
               

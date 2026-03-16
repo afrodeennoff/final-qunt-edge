@@ -42,7 +42,7 @@ export function PerformanceVisualizationChart() {
 
   return (
     <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-card px-4 py-3 shadow-sm">
-      <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+      <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-win))]" />
@@ -118,7 +118,7 @@ export function PerformanceVisualizationChart() {
                 x={x}
                 y={chartHeight - 8}
                 textAnchor="middle"
-                className="fill-muted-foreground text-[10px]"
+                className="fill-foreground/80 text-[10px]"
               >
                 {point.day}
               </text>

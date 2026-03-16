@@ -234,7 +234,7 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
       case "negative":
         return <AlertTriangle className="h-3 w-3 text-foreground" />
       default:
-        return <Target className="h-3 w-3 text-muted-foreground" />
+        return <Target className="h-3 w-3 text-foreground/80" />
     }
   }
 
@@ -258,14 +258,14 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
         isolation: "isolate",
       }}
     >
-      <div className="w-full h-full border border-muted bg-card shadow-lg  transition-all duration-500 rounded-lg overflow-hidden">
+      <div className="h-full w-full overflow-hidden rounded-lg border border-border/70 bg-card shadow-lg transition-all duration-500">
         <div className="p-4 h-full flex flex-col min-h-0">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-muted transition-colors duration-300 shrink-0">
+          <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border/70 pb-2 transition-colors duration-300">
             <Bot className="h-4 w-4 text-foreground transition-colors duration-300" />
             <span className="text-sm font-medium text-foreground transition-colors duration-300">
               {t('landing.features.chat-feature.title')}
             </span>
-            <div className="ml-auto text-xs text-muted-foreground">
+            <div className="ml-auto text-xs text-foreground/80">
               {t('landing.features.chat-feature.stat')}
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
                       <p className="leading-relaxed">
                         {message.content}
                         {message.isStreaming && (
-                          <span className="animate-pulse text-muted-foreground ml-1">|</span>
+                          <span className="ml-1 animate-pulse text-foreground/80">|</span>
                         )}
                       </p>
 
@@ -327,7 +327,7 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
                             <div className="text-sm font-semibold text-foreground mb-1">
                               {message.analysis.value}
                             </div>
-                            <div className="text-xs text-muted-foreground">{message.analysis.insight}</div>
+                            <div className="text-xs text-foreground/80">{message.analysis.insight}</div>
                           </div>
                         </div>
                       )}

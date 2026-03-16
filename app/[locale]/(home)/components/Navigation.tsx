@@ -76,7 +76,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="group relative py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground [font-family:var(--home-copy)]"
+                            className="group relative py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/80 transition-colors hover:text-foreground [font-family:var(--home-copy)]"
                         >
                             {link.name}
                             <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-foreground transition-all duration-300 group-hover:w-full"></span>
@@ -91,7 +91,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                 <Button
                                     variant="ghost"
                                     onClick={onAccessPortal}
-                                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground hover:bg-transparent"
+                                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground hover:bg-transparent"
                                     
                                 >
                                     {t('landing.navbar.signIn')}
@@ -119,7 +119,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                 <Menu className="w-6 h-6" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-[min(88vw,360px)] bg-background/95 backdrop-blur-xl border-border/40 p-0 flex flex-col justify-between">
+                        <SheetContent side="right" className="w-[min(88vw,360px)] border-border/50 bg-background/95 p-0 backdrop-blur-xl flex flex-col justify-between">
                             <div className="flex flex-col h-full pt-16 px-6 pb-8">
                                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                                 <SheetDescription className="sr-only">
@@ -131,14 +131,14 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                             key={link.name}
                                             href={link.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="block text-2xl font-bold tracking-tight text-muted-foreground hover:text-foreground transition-colors"
+                                            className="block text-2xl font-bold tracking-tight text-foreground/85 hover:text-foreground transition-colors"
                                         >
                                             {link.name}
                                         </Link>
                                     ))}
                                 </div>
 
-                                <div className="mt-auto space-y-4 pt-8 border-t border-border/35">
+                                <div className="mt-auto space-y-4 border-t border-border/50 pt-8">
                                     {!user ? (
                                         <>
                                             <Button
@@ -172,7 +172,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                         </Button>
                                     )}
                                     <div className="pt-4 text-center">
-                                        <p className="text-[10px] text-muted-foreground font-mono uppercase">
+                                        <p className="text-[10px] font-mono uppercase text-foreground/80">
                                             Qunt Edge Mobile
                                         </p>
                                     </div>
