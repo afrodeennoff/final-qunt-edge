@@ -31,7 +31,7 @@ export async function TraderInfo({ slug }: { slug: string }) {
           <strong>Email:</strong>{" "}
           {traderInfoResponse?.email
             ? traderInfoResponse.email
-            : <span className="text-gray-500">No email</span>}
+            : <span className="text-muted-foreground">No email</span>}
         </p>
       </div>
 
