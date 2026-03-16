@@ -71,7 +71,7 @@ export default function Footer() {
               <Link href={`/${locale}/support`} prefetch={false} className="rounded-full border border-[hsl(var(--mk-border)/0.38)] px-4 py-2 text-[11px] font-medium text-[hsl(var(--mk-text))] transition-all hover:border-[hsl(var(--brand-primary)/0.5)] hover:text-[hsl(var(--mk-text))]">
                 Contact Support
               </Link>
-              <Link href={`/${locale}/authentication`} prefetch={false} className="rounded-full bg-[hsl(var(--brand-primary))] px-4 py-2 text-[11px] font-medium text-primary-foreground transition-all hover:bg-[hsl(var(--brand-primary-strong))]">
+              <Link href={`/${locale}/authentication`} prefetch={false} className="rounded-full bg-primary px-4 py-2 text-[11px] font-medium text-primary-foreground transition-all hover:bg-primary/90">
                 Start Free Audit
               </Link>
             </div>

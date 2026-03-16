@@ -33,21 +33,27 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
             <stop offset="95%" stopColor="hsl(var(--brand-primary))" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="hsl(var(--mk-border)/0.22)" strokeDasharray="3 3" />
+        <CartesianGrid stroke="hsl(var(--mk-border)/0.3)" strokeDasharray="3 3" />
         <XAxis dataKey="time" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--mk-text-muted))" />
         <YAxis yAxisId="price" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--mk-text-muted))" />
         <YAxis yAxisId="volume" hide />
         <Tooltip
-          cursor={{ stroke: 'hsl(var(--mk-border)/0.45)' }}
+          cursor={{ stroke: 'hsl(var(--mk-border)/0.62)' }}
+          formatter={(value: number | string, name: string) => {
+            if (name === 'volume') return [value, 'Volume']
+            if (name === 'price') return [value, 'Price']
+            if (name === 'ema') return [value, 'EMA']
+            return [value, name]
+          }}
           contentStyle={{
             background: 'hsl(var(--mk-surface))',
-            border: '1px solid hsl(var(--mk-border)/0.45)',
+            border: '1px solid hsl(var(--mk-border)/0.62)',
             borderRadius: '10px',
             color: 'hsl(var(--mk-text))',
           }}
         />
-        <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.16} barSize={8} />
-        <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#chartArea)" />
+        <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.28} barSize={8} />
+        <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#chartArea)" tooltipType="none" />
         <Line yAxisId="price" dataKey="price" dot={false} stroke="hsl(var(--brand-primary))" strokeWidth={2} />
         <Line yAxisId="price" dataKey="ema" dot={false} stroke="hsl(var(--mk-text-muted))" strokeDasharray="6 4" strokeWidth={1.5} />
       </ComposedChart>
