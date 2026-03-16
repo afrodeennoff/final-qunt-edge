@@ -112,7 +112,7 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
+    <Card data-chart-surface="modern" className="border-border/75 bg-card/95">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
@@ -126,10 +126,10 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
               showPayoutBars
-                ? "bg-secondary text-secondary-foreground"
-                : "text-foreground/80 hover:text-foreground"
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Payouts
@@ -141,10 +141,10 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
               showAccountValue
-                ? "bg-secondary text-secondary-foreground"
-                : "text-foreground/80 hover:text-foreground"
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Value
@@ -156,10 +156,10 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
               showRegistered
-                ? "bg-secondary text-secondary-foreground"
-                : "text-foreground/80 hover:text-foreground"
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Reg
@@ -171,10 +171,10 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
               showSized
-                ? "bg-secondary text-secondary-foreground"
-                : "text-foreground/80 hover:text-foreground"
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Sized
@@ -186,18 +186,18 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              "h-7 px-2 border-border/80 text-[11px] tracking-wide",
               showZeroFirms
-                ? "bg-secondary text-secondary-foreground"
-                : "text-foreground/80 hover:text-foreground"
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[380px] w-full">
+      <CardContent className="border-t border-border/60 pt-4">
+        <ChartContainer config={chartConfig} className="h-[380px] w-full [&_.recharts-tooltip-cursor]:stroke-[hsl(var(--chart-axis)/0.85)]">
           <ComposedChart
             data={visibleData}
             margin={{ left: 0, right: 8, top: 10, bottom: 40 }}

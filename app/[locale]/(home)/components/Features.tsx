@@ -38,12 +38,13 @@ export default function Features() {
     <section id="features" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Platform Weapons</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/85 [font-family:var(--home-copy)]">Platform Weapons</p>
           <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] [font-family:var(--home-display)]">
             Built for traders who
             <span className="block text-[hsl(var(--brand-primary))]">want standards, not excuses</span>
           </h2>
         </div>
+        <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
            {items.map((item) => {
@@ -57,7 +58,7 @@ export default function Features() {
                  <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-[hsl(var(--brand-primary))]">
                    <Icon className="h-5 w-5" />
                  </div>
-                 <h3 className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</h3>
+                 <h3 className="text-lg font-semibold tracking-[-0.01em] text-[hsl(var(--mk-text))] [font-family:var(--home-display)]">{item.title}</h3>
                  <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">{item.desc}</p>
                </article>
              )

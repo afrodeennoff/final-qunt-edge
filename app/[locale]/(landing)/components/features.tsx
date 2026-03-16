@@ -38,7 +38,7 @@ export default function Features() {
     {
       id: "ai-journaling",
       title: t("landing.features.ai-journaling.title"),
-      icon: <Brain className="h-5 w-5 text-muted-foreground" />,
+      icon: <Brain className="h-5 w-5 text-[hsl(var(--brand-primary))]" />,
       description: t("landing.features.ai-journaling.description"),
       stat: t("landing.features.ai-journaling.stat"),
       image: <TradingChatAssistant />
@@ -46,7 +46,7 @@ export default function Features() {
     {
       id: "performance-visualization",
       title: t("landing.features.performance-visualization.title"),
-      icon: <BarChart3 className="h-5 w-5 text-muted-foreground" />,
+      icon: <BarChart3 className="h-5 w-5 text-[hsl(var(--brand-primary))]" />,
       description: t("landing.features.performance-visualization.description"),
       stat: t("landing.features.performance-visualization.stat"),
       image: <PnlPerContractPreview />,
@@ -55,7 +55,7 @@ export default function Features() {
     {
       id: "daily-performance",
       title: t("landing.features.daily-performance.title"),
-      icon: <Calendar className="h-5 w-5 text-muted-foreground" />,
+      icon: <Calendar className="h-5 w-5 text-[hsl(var(--brand-primary))]" />,
       description: t("landing.features.daily-performance.description"),
       stat: t("landing.features.daily-performance.stat"),
       image: <CalendarFeaturePreview />,
@@ -64,7 +64,7 @@ export default function Features() {
     {
       id: "data-import",
       title: t("landing.features.data-import.title"),
-      icon: <Database className="h-5 w-5 text-muted-foreground" />,
+      icon: <Database className="h-5 w-5 text-[hsl(var(--brand-primary))]" />,
       description: t("landing.features.data-import.description"),
       stat: t("landing.features.data-import.stat"),
       image: <ImportFeature />
@@ -73,8 +73,9 @@ export default function Features() {
 
   return (
     <main className="container-responsive py-14 sm:py-18 md:py-24">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 sm:mb-4">{t("landing.features.heading")}</h1>
-      <p className="text-base sm:text-lg md:text-xl text-center text-muted-foreground mb-8 sm:mb-12 px-4">{t("landing.features.subheading")}</p>
+      <h1 className="mb-3 text-center text-2xl font-bold text-[hsl(var(--mk-text))] sm:mb-4 sm:text-3xl md:text-4xl">{t("landing.features.heading")}</h1>
+      <p className="mb-8 px-4 text-center text-base text-[hsl(var(--mk-text-muted))] sm:mb-12 sm:text-lg md:text-xl">{t("landing.features.subheading")}</p>
+      <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 md:gap-6">
         {features.map((feature, index) => (
           <Card
@@ -85,15 +86,15 @@ export default function Features() {
               index === 2 ? 'lg:col-span-4' : 'lg:col-span-2'
             }`}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-base sm:text-lg font-medium">{feature.title}</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[hsl(var(--mk-border)/0.32)] pb-4">
+              <CardTitle className="text-base font-medium text-[hsl(var(--mk-text))] sm:text-lg">{feature.title}</CardTitle>
               {feature.icon}
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-3 sm:space-y-4">
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold">{feature.stat}</div>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-2">
+                  <div className="text-xl font-bold text-[hsl(var(--mk-text))] sm:text-2xl">{feature.stat}</div>
+                  <p className="mt-2 text-xs text-[hsl(var(--mk-text-muted))] sm:text-sm">
                     {feature.description}
                   </p>
                 </div>
