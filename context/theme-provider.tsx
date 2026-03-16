@@ -21,7 +21,7 @@ const THEME_STORAGE_KEY = 'theme'
 const INTENSITY_STORAGE_KEY = 'intensity'
 const DASHBOARD_THEME_STORAGE_KEY = 'dashboard-theme'
 const DEFAULT_INTENSITY = 100
-const DEFAULT_NON_DASHBOARD_THEME: Theme = 'light'
+const DEFAULT_NON_DASHBOARD_THEME: Theme = 'dark'
 const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'blue'
 
 type ThemeContextType = {
@@ -40,7 +40,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: DEFAULT_NON_DASHBOARD_THEME,
-  effectiveTheme: 'light',
+  effectiveTheme: 'dark',
   colorTheme: 'default',
   dashboardTheme: DEFAULT_DASHBOARD_THEME,
   intensity: DEFAULT_INTENSITY,

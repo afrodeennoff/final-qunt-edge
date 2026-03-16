@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import asyncio
 import time
 import signal
 from datetime import datetime, timedelta
@@ -9,9 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import MetaTrader5 as mt5
-import requests
+import httpx
 from dotenv import load_dotenv
-import schedule
 from prisma import Prisma
 
 project_root = Path(__file__).parent.parent
@@ -103,20 +103,26 @@ class MT5Connection:
 
 
 class Worker:
-    def __init__(self):
-        self.db = Prisma()
+    def __init__(self, db: Prisma = None):
+        self._db = db
         self.running = True
         self.worker_id = os.getenv('WORKER_ID', 'worker-1')
         
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
 
+    @property
+    def db(self):
+        return self._db
+
     def _signal_handler(self, signum, frame):
         logger.info(f"Received signal {signum}, shutting down...")
         self.running = False
 
     async def start(self):
-        await self.db.connect()
+        if self._db is None:
+            self._db = Prisma()
+            await self._db.connect()
         logger.info(f"Worker {self.worker_id} started")
         
         while self.running:
@@ -128,10 +134,11 @@ class Worker:
             await self._sleep(60)
 
     async def _sleep(self, seconds: int):
+        """Non-blocking async sleep with cancellation support"""
         for _ in range(seconds):
             if not self.running:
                 break
-            time.sleep(1)
+            await asyncio.sleep(1)
 
     async def process_accounts(self):
         accounts = await self.db.mt5account.find_many(
@@ -236,20 +243,21 @@ class Worker:
 
             api_token = await self._get_api_token(account.user_id)
             
-            response = requests.post(
-                f"{MT5_API_URL}/api/mt5/store",
-                json={
-                    'account_login': account.login,
-                    'account_server': account.server,
-                    'positions': payload_positions,
-                    'deals': payload_deals,
-                },
-                headers={
-                    'Authorization': f'Bearer {api_token}',
-                    'Content-Type': 'application/json',
-                },
-                timeout=60
-            )
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    f"{MT5_API_URL}/api/mt5/store",
+                    json={
+                        'account_login': account.login,
+                        'account_server': account.server,
+                        'positions': payload_positions,
+                        'deals': payload_deals,
+                    },
+                    headers={
+                        'Authorization': f'Bearer {api_token}',
+                        'Content-Type': 'application/json',
+                    },
+                    timeout=60.0
+                )
 
             if response.status_code == 200:
                 result = response.json()

@@ -98,7 +98,7 @@ describe('ThemeProvider', () => {
     expect(document.documentElement.classList.contains('light')).toBe(true)
   })
 
-  it('forces light default theme when scope is non-dashboard', async () => {
+  it('forces dark default theme when scope is non-dashboard', async () => {
     localStorage.setItem('theme', 'dark')
     localStorage.setItem('dashboard-theme', 'rose')
     localStorage.setItem('intensity', '92')
@@ -128,13 +128,13 @@ describe('ThemeProvider', () => {
     const setDashboardTheme = container.querySelector('[data-testid="setDashboardTheme"]') as HTMLButtonElement
     const setIntensity = container.querySelector('[data-testid="setIntensity"]') as HTMLButtonElement
 
-    expect(theme?.textContent).toBe('light')
-    expect(effectiveTheme?.textContent).toBe('light')
+    expect(theme?.textContent).toBe('dark')
+    expect(effectiveTheme?.textContent).toBe('dark')
     expect(colorTheme?.textContent).toBe('default')
     expect(dashboardTheme?.textContent).toBe('blue')
     expect(intensity?.textContent).toBe('100')
     expect(isThemeMutable?.textContent).toBe('false')
-    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
     expect(document.documentElement.hasAttribute('data-dashboard-theme')).toBe(false)
     expect(document.documentElement.className.includes('dashboard-theme-')).toBe(false)
 
@@ -147,12 +147,12 @@ describe('ThemeProvider', () => {
       setIntensity.click()
     })
 
-    expect(theme?.textContent).toBe('light')
-    expect(effectiveTheme?.textContent).toBe('light')
+    expect(theme?.textContent).toBe('dark')
+    expect(effectiveTheme?.textContent).toBe('dark')
     expect(colorTheme?.textContent).toBe('default')
     expect(dashboardTheme?.textContent).toBe('blue')
     expect(intensity?.textContent).toBe('100')
-    expect(document.documentElement.classList.contains('dark')).toBe(false)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
     expect(localStorage.getItem('theme')).toBe('dark')
     expect(localStorage.getItem('dashboard-theme')).toBe('rose')
     expect(localStorage.getItem('intensity')).toBe('92')

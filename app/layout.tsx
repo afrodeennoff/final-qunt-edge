@@ -146,7 +146,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background dark`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -212,7 +212,7 @@ export default async function RootLayout({
 
                 if (!isDashboardRoute) {
                   root.classList.remove('light', 'dark');
-                  root.classList.add('light');
+                  root.classList.add('dark');
                   root.style.setProperty('--theme-intensity', '100%');
                   removeDashboardThemes();
                   root.removeAttribute('data-theme');
