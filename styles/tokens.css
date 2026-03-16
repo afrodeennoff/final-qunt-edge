@@ -97,16 +97,16 @@
     --precision-panel-inner: 35 40% 85%;
 
     /* ===== OPTIMIZATION PASS: SEMANTIC CORE TOKENS ===== */
-    --bg: 240 8% 2%;
-    --surface-1: 240 6% 3%;
-    --surface-2: 240 5% 5%;
-    --text-primary: 35 15% 92%;
-    --text-secondary: 35 10% 65%;
-    --accent-1: 35 40% 85%;
-    --accent-2: 35 30% 70%;
-    --success: 35 40% 85%;
-    --warning: 35 60% 55%;
-    --danger: 0 40% 35%;
+    --bg: var(--background);
+    --surface-1: var(--card);
+    --surface-2: var(--popover);
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --accent-1: var(--primary);
+    --accent-2: var(--secondary);
+    --success: var(--primary);
+    --warning: var(--accent-bronze);
+    --danger: var(--destructive);
 
     /* ===== 4PX RHYTHM SPACING SCALE ===== */
     --space-1: 0.25rem;  /* 4px */

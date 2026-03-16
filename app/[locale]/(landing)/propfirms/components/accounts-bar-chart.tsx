@@ -206,7 +206,7 @@ export function AccountsBarChart({
             <CartesianGrid
               vertical={false}
               strokeDasharray="2 10"
-              stroke="hsl(var(--chart-grid) / 0.62)"
+              stroke="hsl(var(--chart-grid) / 0.78)"
             />
             <XAxis
               dataKey="propfirmName"
@@ -221,7 +221,7 @@ export function AccountsBarChart({
               tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}…` : value)}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--chart-axis) / 0.95)",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
             />
             <YAxis
@@ -243,7 +243,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--chart-axis) / 0.95)",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
               tickFormatter={(value) => compactCurrency.format(value)}
             />
@@ -265,15 +265,15 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--chart-axis) / 0.95)",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
               tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip
-              cursor={{ stroke: "hsl(var(--chart-axis) / 0.8)", strokeWidth: 1, strokeDasharray: "3 6" }}
+              cursor={{ stroke: "hsl(var(--chart-axis) / 0.8)", strokeWidth: 1, strokeDasharray: "4 8" }}
               content={
                 <ChartTooltipContent
-                  className="border-[hsl(var(--chart-tooltip-border))] bg-[hsl(var(--chart-tooltip)/0.98)]"
+                  className="border-[hsl(var(--chart-tooltip-border))] bg-[hsl(var(--chart-tooltip)/0.96)] text-foreground"
                   labelFormatter={(label) => <span className="font-semibold text-foreground">{String(label)}</span>}
                   formatter={(value, name, item) => {
                     const key = String(name)

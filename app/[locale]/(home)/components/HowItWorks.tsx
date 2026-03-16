@@ -8,7 +8,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
           <p className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">How It Works</p>
