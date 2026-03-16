@@ -72,11 +72,19 @@ export default function Features() {
   ]
 
   return (
-    <main className="container-responsive py-14 sm:py-18 md:py-24">
-      <h1 className="mb-3 text-center text-2xl font-bold text-[hsl(var(--mk-text))] sm:mb-4 sm:text-3xl md:text-4xl">{t("landing.features.heading")}</h1>
-      <p className="mb-8 px-4 text-center text-base text-[hsl(var(--mk-text-muted))] sm:mb-12 sm:text-lg md:text-xl">{t("landing.features.subheading")}</p>
-      <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 md:gap-6">
+    <section id="features" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 text-center sm:mb-14">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/85 [font-family:var(--home-copy)]">Platform Weapons</p>
+          <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] text-[hsl(var(--mk-text))] [font-family:var(--home-display)]">
+            {t("landing.features.heading")}
+          </h2>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] sm:mt-4 sm:text-base md:text-lg">
+            {t("landing.features.subheading")}
+          </p>
+        </div>
+        <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 sm:gap-5 md:gap-6">
         {features.map((feature, index) => (
           <Card
             id={feature.id}
@@ -129,7 +137,8 @@ export default function Features() {
             </CardContent>
           </Card>
         ))}
+        </div>
       </div>
-    </main>
+    </section>
   )
 }

@@ -40,27 +40,27 @@ interface AccountsBarChartProps {
 const chartConfig = {
   paidAmount: {
     label: "Paid",
-    color: "hsl(var(--chart-1) / 0.70)",
+    color: "var(--color-chart-1)",
   },
   pendingAmount: {
     label: "Pending",
-    color: "hsl(var(--chart-2) / 0.62)",
+    color: "var(--color-chart-2)",
   },
   refusedAmount: {
     label: "Refused",
-    color: "hsl(var(--chart-3) / 0.54)",
+    color: "var(--color-chart-3)",
   },
   totalAccountValue: {
     label: "Total Account Value",
-    color: "hsl(var(--chart-1))",
+    color: "var(--color-chart-1)",
   },
   accountsCount: {
     label: "Registered Accounts",
-    color: "hsl(var(--chart-2))",
+    color: "var(--color-chart-2)",
   },
   sizedAccountsCount: {
     label: "Sized Accounts",
-    color: "hsl(var(--chart-3))",
+    color: "var(--color-chart-3)",
   },
 } satisfies ChartConfig
 
@@ -197,7 +197,7 @@ export function AccountsBarChart({
         </div>
       </CardHeader>
       <CardContent className="border-t border-border/60 pt-4">
-        <ChartContainer config={chartConfig} className="h-[380px] w-full [&_.recharts-tooltip-cursor]:stroke-[hsl(var(--chart-axis)/0.85)]">
+        <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
             margin={{ left: 0, right: 8, top: 10, bottom: 40 }}
@@ -308,6 +308,7 @@ export function AccountsBarChart({
                   dataKey="refusedAmount"
                   stackId="payouts"
                   fill="var(--color-refusedAmount)"
+                  fillOpacity={0.62}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -316,6 +317,7 @@ export function AccountsBarChart({
                   dataKey="pendingAmount"
                   stackId="payouts"
                   fill="var(--color-pendingAmount)"
+                  fillOpacity={0.72}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -324,6 +326,7 @@ export function AccountsBarChart({
                   dataKey="paidAmount"
                   stackId="payouts"
                   fill="var(--color-paidAmount)"
+                  fillOpacity={0.86}
                   radius={[4, 4, 0, 0]}
                   maxBarSize={44}
                 />

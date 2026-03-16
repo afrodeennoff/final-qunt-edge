@@ -68,13 +68,15 @@ export default function Footer() {
             <p className="max-w-md text-sm leading-relaxed text-[hsl(var(--mk-text-muted))]">{t('footer.description')}</p>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Link href={`/${locale}/authentication`} prefetch={false} className="rounded-full border border-[hsl(var(--mk-border)/0.35)] px-4 py-2 text-[11px] font-medium text-[hsl(var(--mk-text))] transition-all hover:border-[hsl(var(--brand-primary)/0.5)]">
-                Sign In
-              </Link>
-              <Link href={`/${locale}/support`} prefetch={false} className="rounded-full bg-[hsl(var(--brand-primary))] px-4 py-2 text-[11px] font-medium text-[hsl(var(--brand-ink))] transition-all hover:bg-[hsl(var(--brand-primary-strong))]">
+              <Link href={`/${locale}/support`} prefetch={false} className="rounded-full border border-[hsl(var(--mk-border)/0.38)] px-4 py-2 text-[11px] font-medium text-[hsl(var(--mk-text))] transition-all hover:border-[hsl(var(--brand-primary)/0.5)] hover:text-[hsl(var(--mk-text))]">
                 Contact Support
               </Link>
+              <Link href={`/${locale}/authentication`} prefetch={false} className="rounded-full bg-[hsl(var(--brand-primary))] px-4 py-2 text-[11px] font-medium text-primary-foreground transition-all hover:bg-[hsl(var(--brand-primary-strong))]">
+                Start Free Audit
+              </Link>
             </div>
+
+            <div className="h-px w-full max-w-md bg-[hsl(var(--mk-border)/0.34)]" />
 
             <div className="flex items-center gap-2">
               {socialLinks.map((item, idx) => (
@@ -88,7 +90,7 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.35)] text-[hsl(var(--mk-text-muted))] transition-all hover:border-[hsl(var(--brand-primary)/0.5)] hover:text-[hsl(var(--brand-primary))]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.4)] text-[hsl(var(--mk-text-muted))] transition-all hover:border-[hsl(var(--brand-primary)/0.5)] hover:text-[hsl(var(--brand-primary))]"
                 >
                   <item.icon className="h-4 w-4" />
                 </motion.a>
@@ -103,8 +105,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-[hsl(var(--mk-border)/0.28)] pt-5 text-[hsl(var(--mk-text-muted))]">
-          <p className="text-xs">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
+        <div className="mt-8 border-t border-[hsl(var(--mk-border)/0.34)] pt-5 text-[hsl(var(--mk-text-muted))]">
+          <p className="text-xs text-[hsl(var(--mk-text))]">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <p className="mt-2 text-[11px] leading-relaxed">{t('disclaimer.risk.content')}</p>
         </div>
       </motion.div>
@@ -116,7 +118,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
   const locale = useCurrentLocale()
   return (
     <div>
-      <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))]">{title}</h3>
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/85">{title}</h3>
       <ul className="mt-3 space-y-2.5">
         {links.map((item, idx) => (
           <motion.li
