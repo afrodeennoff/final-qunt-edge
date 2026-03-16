@@ -111,10 +111,16 @@ function getInitialDashboardTheme(scope: ThemeScope): DashboardTheme {
 
 // Fetch theme from database API (called separately for async loading)
 async function fetchDashboardThemeFromDatabase(): Promise<DashboardTheme | null> {
-  if (typeof window === 'undefined') return null
+  if (typeof window === 'undefined' || process.env.NODE_ENV === 'test') return null
   
   try {
-    const response = await fetch('/api/user/theme', {
+    const origin = window.location.origin
+    if (!origin || origin === 'null') {
+      return null
+    }
+
+    const apiUrl = new URL('/api/user/theme', origin)
+    const response = await fetch(apiUrl.toString(), {
       method: 'GET',
       credentials: 'include',
     })
@@ -242,10 +248,18 @@ export function ThemeProvider({
 
     const syncWithDatabase = async () => {
       const dbTheme = await fetchDashboardThemeFromDatabase()
-      if (mounted && dbTheme && dbTheme !== dashboardTheme) {
-        setDashboardThemeState(dbTheme)
-        localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dbTheme)
+      if (!mounted || !dbTheme) {
+        return
       }
+
+      setDashboardThemeState((currentTheme) => {
+        if (currentTheme === dbTheme) {
+          return currentTheme
+        }
+
+        localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dbTheme)
+        return dbTheme
+      })
     }
 
     syncWithDatabase()
@@ -253,7 +267,7 @@ export function ThemeProvider({
     return () => {
       mounted = false
     }
-  }, [])
+  }, [isThemeMutable])
 
   const setTheme = useCallback((newTheme: Theme) => {
     if (!isThemeMutable) {
