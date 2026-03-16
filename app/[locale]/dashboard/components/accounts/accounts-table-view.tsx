@@ -806,7 +806,7 @@ export function AccountsTableView({
                     ? "text-success"
                     : remainingLoss >
                         Number(row.original.drawdownThreshold ?? 0) * 0.2
-                      ? "text-warning"
+                      ? "text-warning-fg"
                       : "text-destructive"
                 )}
               >
@@ -973,7 +973,7 @@ export function AccountsTableView({
                   "font-medium",
                   validTradingDays === totalTradingDays
                     ? "text-success"
-                    : "text-warning"
+                    : "text-warning-fg"
                 )}
               >
                 {validTradingDays}/{totalTradingDays}

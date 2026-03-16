@@ -430,9 +430,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
 
     return (
       <div className="relative z-10 w-full">
-        <span className="absolute inset-[-8px] bg-primary/10 rounded-[14.5867px] -z-10"></span>
-        <span className="absolute inset-[-4px] bg-primary/20 rounded-[14.5867px] -z-20"></span>
-        <span className="absolute inset-0 shadow-lg rounded-[14.5867px] -z-30"></span>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl -z-10" />
         <Card className="relative bg-card h-full border-border">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2">
             <span className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full whitespace-nowrap">
@@ -481,7 +479,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
                   {t('pricing.lifetimeAccess')}
                   <Badge
                     variant="secondary"
-                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-warning/10 text-warning border border-warning/40"
+                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-warning-bg text-warning-fg border border-warning-border"
                   >
                     {t('pricing.limitedTimeOffer')}
                   </Badge>
@@ -597,14 +595,14 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
+            <div className="bg-warning-bg border border-warning-border rounded-lg p-4">
               <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-warning mr-3 mt-0.5 shrink-0" />
+                <AlertCircle className="h-5 w-5 text-warning-fg mr-3 mt-0.5 shrink-0" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-warning">
+                  <p className="text-sm font-medium text-warning-fg">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-warning">
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-warning-fg">
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.currentPlan')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.immediateCancel')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.oneTimePayment')}</li>
