@@ -89,7 +89,7 @@ export function AudioExtractor({ onAudioExtracted }: AudioExtractorProps) {
         accept="video/*"
         onChange={handleFileChange}
         disabled={isLoading}
-          className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-semantic-info-bg dark:file:bg-semantic-info-bg/20 file:text-semantic-info dark:file:text-semantic-info hover:file:bg-semantic-info-bg dark:hover:file:bg-semantic-info-bg/30"
+          className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-semantic-info-bg dark:file:bg-semantic-info-bg/20 file:text-semantic-info dark:file:text-semantic-info hover:file:bg-semantic-info-bg dark:hover:file:bg-semantic-info-bg/30"
         />
         <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground dark:text-muted-foreground pointer-events-none" />
       </div>
