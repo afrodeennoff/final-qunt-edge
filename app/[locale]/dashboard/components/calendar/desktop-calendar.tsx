@@ -251,7 +251,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                       </div>
                       {account.autoRenewal && (
                         <div className="flex items-center gap-1 px-2 py-1 bg-secondary/30 text-foreground rounded-md whitespace-nowrap border border-border/55">
-                          <div className="w-1.5 h-1.5 bg-white rounded-full shrink-0 animate-pulse"></div>
+                          <div className="w-1.5 h-1.5 bg-foreground rounded-full shrink-0 animate-pulse"></div>
                           <span className="text-xs font-medium">{t('propFirm.renewal.notification')}</span>
                         </div>
                       )}
