@@ -38,10 +38,217 @@
 
 - **Tradovate sync** for real-time trade data synchronization
 - **Rithmic sync** via proprietary service integration
+- **MetaTrader 5 (MT5)** automatic trade import with smart sync intervals
 - **Built-in integrations** for FTMO, ProjectX, ATAS, and Interactive Brokers (IBKR)
 - **AI-powered file parsing** for any broker format when specific integration doesn't exist yet
 
 <!-- TODO: Add GIF showing CSV import flow with AI field mapping -->
+
+---
+
+## 🦊 MT5 Auto-Import Setup
+
+Qunt Edge supports automatic import of trades from MetaTrader 5 accounts using a Python worker service.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    3-VM Architecture                        │
+├─────────────────────────────────────────────────────────────┤
+│  VM1: Frontend (Next.js)  │  VM2: Database (Supabase)   │
+│  - API Routes             │  - MT5Account table          │
+│  - /api/mt5/*             │  - Trades table              │
+└────────────┬───────────────┴──────────────┬────────────────┘
+             │                               │
+             │ REST                           │
+             ▼                               │
+┌────────────────────────────────────────────────────────────┐
+│  VM3: Python Worker (MT5 Service)                         │
+│  - Connects to MT5 terminals                              │
+│  - Fetches trades/deals                                    │
+│  - Calls API to save trades                                │
+└────────────────────────────────────────────────────────────┘
+```
+
+### Features
+
+- **AES-256-GCM encryption** for stored credentials
+- **Investor password only** (read-only, safer for automation)
+- **Smart sync intervals** based on account activity:
+  - Active (trades < 1hr): Every 5 minutes
+  - Normal (trades < 24hr): Every 30 minutes
+  - Inactive: Every 4 hours
+- **Bearer token authentication** for API calls
+- **Rate limiting** on all endpoints
+
+### Prerequisites
+
+1. **MetaTrader 5** account with investor password
+2. **MT5 Terminal** running (can be on same VM as worker or different)
+3. **Python 3.11+** for the worker service
+4. **PostgreSQL database** (Supabase)
+
+### Step 1: Generate Encryption Key
+
+```bash
+# Generate a secure 256-bit key
+openssl rand -base64 32
+
+# Example output: 3K4J5L8M9N0P1Q2R3S4T5U6V7W8X9Y0Z1A2B3C4D5E6F7G8H9I0J1K2L3M4N5O
+```
+
+### Step 2: Environment Variables
+
+Add these to your environment:
+
+```env
+# Required for MT5 Worker
+TOKEN_CRYPTO_KEY=your_32_byte_base64_key
+DATABASE_URL=postgresql://user:password@host:5432/database
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+# Optional: Sync intervals (defaults shown)
+SYNC_INTERVAL_ACTIVE=300      # 5 minutes
+SYNC_INTERVAL_NORMAL=1800      # 30 minutes  
+SYNC_INTERVAL_INACTIVE=14400  # 4 hours
+```
+
+### Step 3: Run Database Migration
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run MT5 migration
+npx prisma migrate dev --name add_mt5_accounts
+```
+
+### Step 4: Build Docker Image
+
+```bash
+cd mt5_import_service
+
+# Build the worker container
+docker build -t mt5-worker .
+
+# Or use the pre-built image
+# docker pull quntedge/mt5-worker:latest
+```
+
+### Step 5: Deploy Worker
+
+```bash
+# Run the container
+docker run -d --name mt5-worker \
+  -e DATABASE_URL="postgresql://user:password@host:5432/database" \
+  -e TOKEN_CRYPTO_KEY="your_32_byte_base64_key" \
+  -e NEXT_PUBLIC_APP_URL="https://your-domain.com" \
+  mt5-worker
+
+# View logs
+docker logs -f mt5-worker
+
+# Check status
+docker ps | grep mt5-worker
+```
+
+### Step 6: Connect MT5 Account (Frontend)
+
+1. Open Qunt Edge dashboard
+2. Navigate to **Accounts** or **Import**
+3. Click **Add MT5 Account**
+4. Enter:
+   - **Login**: Your MT5 login number
+   - **Server**: Your broker's MT5 server (e.g., `MetaQuotes-Demo`)
+   - **Password**: Your **investor password** (read-only)
+5. Click **Connect**
+
+The worker will automatically:
+- Test the connection
+- Begin syncing trades
+- Set sync interval based on account activity
+
+### API Reference
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/mt5/accounts` | POST | Add new MT5 account |
+| `/api/mt5/accounts` | GET | List user's MT5 accounts |
+| `/api/mt5/accounts` | PATCH | Update account status |
+| `/api/mt5/accounts` | DELETE | Remove MT5 account |
+| `/api/mt5/store` | POST | Save trades (worker only) |
+| `/api/mt5/store` | GET | List accounts with sync status |
+| `/api/mt5/test-connection` | POST | Test credentials |
+
+### Security
+
+- **Passwords are encrypted** with AES-256-GCM before storage
+- **Investor password** required (not trading password) - prevents trade execution
+- **Bearer tokens** expire after 30 days
+- **Rate limiting** prevents abuse:
+  - Store write: 30 requests/minute
+  - Account CRUD: 10 requests/minute
+  - Connection test: 5 requests/minute
+
+### Troubleshooting
+
+**Worker not connecting:**
+```bash
+# Check worker logs
+docker logs mt5-worker
+
+# Verify credentials
+# Make sure you're using INVESTOR password, not master password
+```
+
+**No trades imported:**
+```bash
+# Check if account is ACTIVE
+docker exec mt5-worker python -c "
+import asyncio
+from prisma import Prisma
+async def check():
+    db = Prisma()
+    await db.connect()
+    accounts = await db.mt5account.find_many()
+    for a in accounts:
+        print(f'{a.login}: {a.status} - {a.lastSyncError}')
+    await db.disconnect()
+asyncio.run(check())
+"
+```
+
+**MT5 terminal not found:**
+- Ensure MT5 terminal is running
+- Verify network connectivity between worker and MT5 server
+- Check firewall settings
+
+### Monitoring
+
+```bash
+# Watch worker output
+docker logs -f mt5-worker
+
+# Check resource usage
+docker stats mt5-worker
+
+# View sync status
+docker exec mt5-worker python -c "
+import asyncio
+from prisma import Prisma
+async def status():
+    db = Prisma()
+    await db.connect()
+    accounts = await db.mt5account.find_many({'status': 'ACTIVE'})
+    for a in accounts:
+        print(f'{a.login}: {a.lastTradeCount} trades, last sync: {a.lastSyncAt}')
+    await db.disconnect()
+asyncio.run(status())
+"
+```
+
+---
 
 ### 🤖 AI-Powered Insights
 
@@ -96,7 +303,7 @@
 - **Payments**: Whop integration with webhooks (see https://docs.whop.com/get-started)
 - **AI/ML**: OpenAI API for analysis and field mapping
 - **Storage**: Supabase Storage for file uploads
-- **Broker Syncs**: Tradovate API, Rithmic proprietary service
+- **Broker Syncs**: Tradovate API, Rithmic proprietary service, MetaTrader 5 (MT5)
 - **Platform Integrations**: FTMO, ProjectX, ATAS, Interactive Brokers (IBKR)
 - **Deployment**: Vercel-optimized with edge functions
 

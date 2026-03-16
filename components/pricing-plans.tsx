@@ -479,7 +479,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
                   {t('pricing.lifetimeAccess')}
                   <Badge
                     variant="secondary"
-                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-warning-bg text-warning-fg border border-warning-border"
+                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-semantic-warning-bg text-semantic-warning border border-semantic-warning-border"
                   >
                     {t('pricing.limitedTimeOffer')}
                   </Badge>
@@ -595,14 +595,14 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="bg-warning-bg border border-warning-border rounded-lg p-4">
+            <div className="bg-semantic-warning-bg border border-semantic-warning-border rounded-lg p-4">
               <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-warning-fg mr-3 mt-0.5 shrink-0" />
+                <AlertCircle className="h-5 w-5 text-semantic-warning mr-3 mt-0.5 shrink-0" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-warning-fg">
+                  <p className="text-sm font-medium text-semantic-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-warning-fg">
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-semantic-warning">
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.currentPlan')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.immediateCancel')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.oneTimePayment')}</li>
