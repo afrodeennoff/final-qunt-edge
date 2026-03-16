@@ -86,6 +86,7 @@ if (migrationUrl) {
     const autoApplyRepairMigrations = new Set([
       "20260213091500_supabase_storage_scaling",
       "20260226120000_restrict_storage_list_objects_rpc",
+      "20260316000000_add_mt5_accounts",
     ]);
 
     if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {

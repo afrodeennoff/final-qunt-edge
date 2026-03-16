@@ -1,13 +1,12 @@
 ---
 active: true
-iteration: 15
-completion_promise: "VERIFIED"
+iteration: 2
+completion_promise: "DONE"
 initial_completion_promise: "DONE"
-started_at: "2026-03-16T14:39:25.729Z"
+started_at: "2026-03-16T16:00:10.742Z"
 session_id: "ses_30cd32622ffeM5Qxdm988jY5We"
 ultrawork: true
-verification_pending: true
 strategy: "continue"
-message_count_at_start: 262
+message_count_at_start: 379
 ---
-see this look shite please cross cechk and give me te report
+21:19:07.413 Running build in Washington, D.C., USA (East) – iad1 21:19:07.414 Build machine configuration: 2 cores, 8 GB 21:19:07.562 Cloning github.com/afrodeennoff/qunt-edge (Branch: fix/dashboard-sync-context-crash-pr2, Commit: 682b2a6) 21:19:10.917 Cloning completed: 3.354s 21:19:11.291 Found .vercelignore 21:19:11.322 Removed 26 ignored files defined in .vercelignore 21:19:11.323 /.git/config 21:19:11.323 /.git/description 21:19:11.323 /.git/FETCH_HEAD 21:19:11.323 /.git/HEAD 21:19:11.323 /.git/hooks/applypatch-msg.sample 21:19:11.323 /.git/hooks/commit-msg.sample 21:19:11.324 /.git/hooks/fsmonitor-watchman.sample 21:19:11.324 /.git/hooks/post-update.sample 21:19:11.324 /.git/hooks/pre-applypatch.sample 21:19:11.324 /.git/hooks/pre-commit.sample 21:19:11.537 Restored build cache from previous deployment (GECX2UY7hMopVcijxpqkn57Ppk5m) 21:19:11.836 Warning: Detected "engines": { "node": ">=20.10.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: https://vercel.link/node-version 21:19:11.837 Running "vercel build" 21:19:12.492 Vercel CLI 50.32.4 21:19:13.317 Warning: Detected "engines": { "node": ">=20.10.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: https://vercel.link/node-version 21:19:13.344 Installing dependencies... 21:19:15.995 21:19:15.996 > quntedge@0.3 postinstall 21:19:15.996 > prisma generate 21:19:15.996 21:19:17.063 Loaded Prisma config from prisma.config.ts. 21:19:17.064 21:19:17.157 Prisma schema loaded from prisma/schema.prisma. 21:19:18.169 21:19:18.170 ✔ Generated Prisma Client (v7.3.0) to ./prisma/generated/prisma in 553ms 21:19:18.170 21:19:18.170 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client) 21:19:18.170 21:19:18.170 21:19:18.198 21:19:18.199 up to date in 5s 21:19:18.199 21:19:18.199 452 packages are looking for funding 21:19:18.199 run `npm fund` for details 21:19:18.230 Detected Next.js version: 16.1.6 21:19:18.240 Running "npm run build" 21:19:18.341 21:19:18.342 > quntedge@0.3 prebuild 21:19:18.342 > npm run clean:build-artifacts && tsx scripts/generate-routes.ts 21:19:18.342 21:19:18.445 21:19:18.446 > quntedge@0.3 clean:build-artifacts 21:19:18.446 > node scripts/clean-build-artifacts.mjs 21:19:18.446 21:19:18.480 [clean-build] removed tsconfig.tsbuildinfo 21:19:18.484 [clean-build] removed .next 21:19:18.821 Generated 52 routes 21:19:18.836 21:19:18.836 > quntedge@0.3 build 21:19:18.836 > npm run db:sync && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs 21:19:18.836 21:19:18.934 21:19:18.935 > quntedge@0.3 db:sync 21:19:18.935 > node scripts/sync-stack.mjs 21:19:18.935 21:19:20.953 Loaded Prisma config from prisma.config.ts. 21:19:20.954 21:19:21.000 Prisma schema loaded from prisma/schema.prisma. 21:19:21.931 ┌─────────────────────────────────────────────────────────┐ 21:19:21.932 │ Update available 7.3.0 -> 7.5.0 │ 21:19:21.932 │ Run the following to update │ 21:19:21.932 │ npm i
