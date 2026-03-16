@@ -256,7 +256,7 @@ const getTimeframeLabel = (timeframe: Timeframe): string => (timeframe === 'tota
 const getDisplaySuffix = (mode: 'currency' | 'percent'): string => (mode === 'percent' ? '%' : '')
 const getSignSymbol = (isPositive: boolean): string => (isPositive ? '+' : '-')
 const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ? "text-foreground" : "text-foreground/60")
-const getHeroSignClass = (isPositive: boolean): string => (isPositive ? "text-foreground/60" : "text-foreground/20")
+const getHeroSignClass = (isPositive: boolean): string => (isPositive ? "text-foreground/70" : "text-foreground/45")
 
 const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn(
     "px-2.5 py-1 rounded-[6px] text-[10px] font-bold transition-all",
@@ -640,7 +640,7 @@ export function DailySummaryModal() {
                     <button className="text-xs font-medium uppercase tracking-wider text-foreground hover:underline decoration-foreground/30 underline-offset-4" onClick={handleDownload} disabled={isExporting} aria-label="Download summary image">
                         {downloadLabel}
                     </button>
-                    <span className="text-foreground/20">•</span>
+                    <span className="text-foreground/50">•</span>
                     <button className="text-xs font-medium uppercase tracking-wider text-foreground hover:underline decoration-foreground/30 underline-offset-4" onClick={handleShare} disabled={isExporting} aria-label="Share summary image">
                         Share
                     </button>

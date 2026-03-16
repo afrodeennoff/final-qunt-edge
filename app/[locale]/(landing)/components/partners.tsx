@@ -15,7 +15,7 @@ export default function Partners() {
                         <h2 className="text-fluid-3xl md:text-fluid-5xl font-bold tracking-tighter">
                             {t('landing.partners.title')}
                         </h2>
-                        <p className="mx-auto max-w-[700px] text-zinc-500 md:text-fluid-lg leading-relaxed">
+                        <p className="mx-auto max-w-[700px] text-muted-foreground md:text-fluid-lg leading-relaxed">
                             {t('landing.partners.description')}
                         </p>
                     </div>

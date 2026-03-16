@@ -44,7 +44,7 @@ export default function ComparisonSection() {
           </h2>
         </div>
 
-        <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-black/20">
+        <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
           <CardHeader className="border-b border-[hsl(var(--mk-border)/0.2)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
             <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
           </CardHeader>

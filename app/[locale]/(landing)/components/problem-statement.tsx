@@ -21,7 +21,7 @@ export default function ProblemStatement() {
             PnL is a <br/>
             <span className="text-foreground/80">Lagging Indicator.</span>
           </h2>
-        <div className="space-y-6 sm:space-y-8 text-muted-foreground/70 text-base sm:text-lg leading-relaxed max-w-lg font-light">
+        <div className="space-y-6 sm:space-y-8 text-muted-foreground text-base sm:text-lg leading-relaxed max-w-lg font-light">
              <p>
                Your bank account tells you <em>what</em> happened. It doesn&apos;t tell you <em>why</em>.
                Legacy journals are static graveyards of data that fail to capture the most critical variable in trading: <strong className="text-foreground font-medium">State of Mind.</strong>
@@ -65,14 +65,14 @@ export default function ProblemStatement() {
               className="group relative p-1 rounded-xl bg-card/10 hover:bg-card/20 transition-all duration-500"
             >
               <div className="bg-card p-4 sm:p-6 rounded-lg h-full border border-border/60 relative overflow-hidden group-hover:border-border/80 transition-colors">
-                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 text-[8px] sm:text-[9px] font-mono text-muted-foreground/70 group-hover:text-fg-primary transition-colors">
+                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 text-[8px] sm:text-[9px] font-mono text-muted-foreground group-hover:text-fg-primary transition-colors">
                       {item.code}
                   </div>
                   <div className="flex items-start gap-4 sm:gap-6">
-                     <div className="text-muted-foreground/70 font-mono text-xl sm:text-2xl font-bold mt-1 group-hover:text-foreground transition-colors">0{i+1}</div>
+                     <div className="text-muted-foreground font-mono text-xl sm:text-2xl font-bold mt-1 group-hover:text-foreground transition-colors">0{i+1}</div>
                      <div>
-                        <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight text-muted-foreground/80 group-hover:text-foreground transition-colors">{item.title}</h3>
-                        <p className="text-muted-foreground/70 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
+                        <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">{item.title}</h3>
+                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{item.desc}</p>
                       </div>
                   </div>
               </div>

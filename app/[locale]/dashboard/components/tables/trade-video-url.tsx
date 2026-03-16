@@ -153,8 +153,8 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                     onChange={(e) => handleUrlChange(e.target.value)}
                     className={cn(
                       "pr-8",
-                      !isValid && draftUrl && "border-border/65 focus-visible:ring-white/20",
-                      showSuccess && "border-white focus-visible:ring-white",
+                      !isValid && draftUrl && "border-border/65 focus-visible:ring-ring/30",
+                      showSuccess && "border-border/80 focus-visible:ring-ring",
                       isUpdating && "border-border/65"
                     )}
                   />

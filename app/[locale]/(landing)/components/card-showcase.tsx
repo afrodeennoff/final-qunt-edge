@@ -301,7 +301,7 @@ export function CardShowcase() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Growth</span>
-                  <span className="font-medium text-white">+12.5%</span>
+                  <span className="font-medium text-foreground">+12.5%</span>
                 </div>
               </div>
               <div className="h-32 bg-muted rounded-lg flex items-center justify-center">

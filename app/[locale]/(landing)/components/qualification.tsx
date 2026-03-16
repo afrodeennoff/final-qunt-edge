@@ -34,16 +34,16 @@ export default function Qualification() {
             viewport={{ once: true }}
             className="p-16 bg-card/95"
           >
-            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground/70 mb-10 mono">Hard Refusals</h3>
-            <ul className="space-y-6 opacity-80">
+            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-10 mono">Hard Refusals</h3>
+            <ul className="space-y-6">
               {[
                 "Signal seekers or copy-trading accounts",
                 "Social traders chasing dopamine and clout",
                 "Casual dabblers trading for excitement",
                 "Motivation chasers seeking 'mindset' coaches"
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4 text-muted-foreground/80">
-                  <span className="text-muted-foreground/60 mt-1">✕</span>
+                <li key={i} className="flex items-start gap-4 text-muted-foreground">
+                  <span className="text-muted-foreground/80 mt-1">✕</span>
                   <span className="text-sm italic font-light leading-relaxed tracking-tight">{item}</span>
                 </li>
               ))}

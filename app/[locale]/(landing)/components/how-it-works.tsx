@@ -28,7 +28,7 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground/70 max-w-lg mx-auto text-base sm:text-lg font-light px-4"
+            className="text-muted-foreground max-w-lg mx-auto text-base sm:text-lg font-light px-4"
           >
             A closed-loop system designed to extract alpha from behavioral inefficiencies.
           </motion.p>
@@ -58,13 +58,13 @@ export default function HowItWorks() {
             >
               <div className="flex justify-center mb-6 sm:mb-8 relative">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-card border border-border/60 flex items-center justify-center relative z-10 group-hover:border-border/80 transition-colors shadow-2xl">
-                      <span className="text-muted-foreground/70 font-mono text-xs sm:text-sm font-bold group-hover:text-foreground">0{i+1}</span>
+                      <span className="text-muted-foreground font-mono text-xs sm:text-sm font-bold group-hover:text-foreground">0{i+1}</span>
                   </div>
               </div>
 
               <div className="text-center px-2 sm:px-3">
                 <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-3 sm:mb-4 text-foreground mono group-hover:text-foreground transition-colors">{step.name}</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground/70 leading-relaxed font-light">{step.desc}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-light">{step.desc}</p>
               </div>
             </motion.div>
           ))}

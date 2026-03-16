@@ -368,7 +368,7 @@
     background-color: hsl(var(--bg-elevated));
   }
 
-  .bg-card {
+  .bg-token-card {
     background-color: hsl(var(--bg-card));
   }
 
@@ -427,11 +427,11 @@
   }
 
   /* Contrast-compliant text tokens (replaces text-white/50, text-white/60, text-white/70) */
-  .text-primary {
+  .text-token-primary {
     color: hsl(var(--text-primary));
   }
 
-  .text-secondary {
+  .text-token-secondary {
     color: hsl(var(--text-secondary));
   }
 

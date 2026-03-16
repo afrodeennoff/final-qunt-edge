@@ -8,23 +8,23 @@ export function DealsMarketIllustration() {
     >
       <defs>
         <linearGradient id="board" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.04)" />
+          <stop offset="0%" stopColor="hsl(var(--foreground) / 0.22)" />
+          <stop offset="100%" stopColor="hsl(var(--foreground) / 0.08)" />
         </linearGradient>
         <linearGradient id="lineA" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.25)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+          <stop offset="0%" stopColor="hsl(var(--foreground) / 0.30)" />
+          <stop offset="100%" stopColor="hsl(var(--foreground) / 0.88)" />
         </linearGradient>
         <linearGradient id="lineB" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.55)" />
+          <stop offset="0%" stopColor="hsl(var(--foreground) / 0.20)" />
+          <stop offset="100%" stopColor="hsl(var(--foreground) / 0.62)" />
         </linearGradient>
       </defs>
 
       <rect x="30" y="30" width="500" height="300" rx="24" fill="url(#board)" />
-      <rect x="30" y="30" width="500" height="300" rx="24" fill="none" stroke="rgba(255,255,255,0.25)" />
+      <rect x="30" y="30" width="500" height="300" rx="24" fill="none" stroke="hsl(var(--foreground) / 0.28)" />
 
-      <g stroke="rgba(255,255,255,0.12)">
+      <g stroke="hsl(var(--foreground) / 0.16)">
         <line x1="70" y1="90" x2="490" y2="90" />
         <line x1="70" y1="145" x2="490" y2="145" />
         <line x1="70" y1="200" x2="490" y2="200" />
@@ -52,21 +52,21 @@ export function DealsMarketIllustration() {
       />
 
       <g>
-        <rect x="90" y="68" width="108" height="52" rx="12" fill="rgba(255,255,255,0.12)" />
-        <text x="106" y="90" fill="rgba(255,255,255,0.85)" fontSize="13" fontWeight="700">
+        <rect x="90" y="68" width="108" height="52" rx="12" fill="hsl(var(--foreground) / 0.14)" />
+        <text x="106" y="90" fill="hsl(var(--foreground) / 0.9)" fontSize="13" fontWeight="700">
           DEAL WINDOW
         </text>
-        <text x="106" y="107" fill="rgba(255,255,255,0.7)" fontSize="12">
+        <text x="106" y="107" fill="hsl(var(--foreground) / 0.76)" fontSize="12">
           -50% eval
         </text>
       </g>
 
       <g>
-        <rect x="338" y="224" width="132" height="66" rx="14" fill="rgba(255,255,255,0.15)" />
-        <text x="354" y="248" fill="rgba(255,255,255,0.86)" fontSize="13" fontWeight="700">
+        <rect x="338" y="224" width="132" height="66" rx="14" fill="hsl(var(--foreground) / 0.17)" />
+        <text x="354" y="248" fill="hsl(var(--foreground) / 0.92)" fontSize="13" fontWeight="700">
           PAYOUT MODE
         </text>
-        <text x="354" y="267" fill="rgba(255,255,255,0.72)" fontSize="12">
+        <text x="354" y="267" fill="hsl(var(--foreground) / 0.78)" fontSize="12">
           Policy + fees
         </text>
       </g>

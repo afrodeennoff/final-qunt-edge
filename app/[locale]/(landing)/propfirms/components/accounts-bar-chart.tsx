@@ -44,11 +44,11 @@ const chartConfig = {
   },
   pendingAmount: {
     label: "Pending",
-    color: "hsl(var(--chart-2) / 0.38)",
+    color: "hsl(var(--chart-2) / 0.62)",
   },
   refusedAmount: {
     label: "Refused",
-    color: "hsl(var(--chart-3) / 0.26)",
+    color: "hsl(var(--chart-3) / 0.54)",
   },
   totalAccountValue: {
     label: "Total Account Value",
