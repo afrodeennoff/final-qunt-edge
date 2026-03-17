@@ -56,14 +56,14 @@ export default function CumulativePnlCard({ size = 'medium' }: CumulativePnlCard
           ) : (
             <TrendingDown className="h-4 w-4 shrink-0 metric-negative" />
           )}
-          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/85">Net</span>
-          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground/90">
+          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Net</span>
+          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
             {isPositive ? '+' : '-'}{formatCurrency(netPnl)}
           </span>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info className="h-4 w-4 shrink-0 text-muted-foreground hover:text-muted-foreground/85 transition-colors cursor-help" />
+                <Info className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.cumulativePnl.tooltip')}

@@ -28,12 +28,12 @@ export default function AveragePositionTimeCard({ size = 'medium' }: AveragePosi
       >
         <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
           <Clock className="h-4 w-4 shrink-0 metric-positive" />
-          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/85">Avg Time</span>
-          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground/90">{averagePositionTime}</span>
+          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Avg Time</span>
+          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">{averagePositionTime}</span>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 text-muted-foreground hover:text-muted-foreground/85 transition-colors cursor-help" />
+                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.averagePositionTime.tooltip')}

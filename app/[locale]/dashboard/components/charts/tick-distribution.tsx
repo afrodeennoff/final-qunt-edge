@@ -274,7 +274,7 @@ export default React.memo(function TickDistributionChart({
                             : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
                       }
                       stroke="hsl(var(--chart-axis))"
-                      strokeOpacity={0.35}
+                      strokeOpacity={0.55}
                       strokeWidth={1}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",

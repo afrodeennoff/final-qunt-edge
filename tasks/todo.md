@@ -1,3 +1,12 @@
+## Task: Dashboard non-chart widget/card token + contrast polish (2026-03-17)
+
+- [x] Audit non-chart widget/card components under `app/[locale]/dashboard/components/{widgets,statistics,accounts}` for low-contrast text and inconsistent semantic token usage.
+- [x] Replace overly faint foreground variants and non-semantic opacity-based text styling with semantic token classes while preserving layout/behavior.
+- [x] Run `npx eslint` on touched files and capture results.
+- [x] Record changed files and verification summary in this checklist.
+
+Verification: `npx eslint app/[locale]/dashboard/components/widgets/smart-insights-widget.tsx app/[locale]/dashboard/components/widgets/propfirm-catalogue-widget.tsx app/[locale]/dashboard/components/widgets/trading-score-widget.tsx app/[locale]/dashboard/components/widgets/risk-metrics-widget.tsx app/[locale]/dashboard/components/statistics/profit-factor-card.tsx app/[locale]/dashboard/components/statistics/risk-reward-ratio-card.tsx app/[locale]/dashboard/components/statistics/winning-streak-card.tsx app/[locale]/dashboard/components/statistics/trade-performance-card.tsx app/[locale]/dashboard/components/statistics/average-position-time-card.tsx app/[locale]/dashboard/components/statistics/long-short-card.tsx app/[locale]/dashboard/components/statistics/cumulative-pnl-card.tsx app/[locale]/dashboard/components/statistics/statistics-widget.tsx app/[locale]/dashboard/components/accounts/account-card.tsx` (0 errors, warnings only from existing complexity/unused vars).
+
 ## Task: Root layout font + metadata refresh (2026-03-14)
 
 - [x] Review `app/layout.tsx`, `app/globals.css`, and `tailwind.config.ts` to understand the current font wiring, inline variables, and metadata defaults.

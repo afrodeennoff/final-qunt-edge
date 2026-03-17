@@ -32,14 +32,14 @@ export default function ProfitFactorCard({ size = 'medium' }: ProfitFactorCardPr
       >
         <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
           <Scale className={cn("h-4 w-4 shrink-0", isProfitable ? "metric-positive" : "metric-negative")} />
-          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/85">PF</span>
-          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground/90">
+          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">PF</span>
+          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
             {formattedPF}
           </span>
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground hover:text-muted-foreground/85 transition-colors" />
+                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.profitFactor.tooltip')}

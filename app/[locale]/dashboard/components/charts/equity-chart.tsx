@@ -75,14 +75,14 @@ const formatCurrency = (value: number) =>
 
 function getChartColorByIndex(index: number): string {
   const paletteVars = [
-    "hsl(var(--foreground) / 0.95)",
-    "hsl(var(--foreground) / 0.85)",
-    "hsl(var(--foreground) / 0.75)",
-    "hsl(var(--foreground) / 0.65)",
-    "hsl(var(--foreground) / 0.55)",
-    "hsl(var(--foreground) / 0.45)",
-    "hsl(var(--foreground) / 0.4)",
-    "hsl(var(--foreground) / 0.34)",
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
+    "hsl(var(--chart-6))",
+    "hsl(var(--chart-7))",
+    "hsl(var(--chart-8))",
   ];
   return paletteVars[index % paletteVars.length];
 }
@@ -152,10 +152,10 @@ const renderDot = (props: any) => {
           cx={cx}
           cy={cy}
           r={5}
-          fill="hsl(var(--foreground))"
-          fillOpacity={0.2}
+          fill="hsl(var(--chart-axis))"
+          fillOpacity={0.55}
           stroke="hsl(var(--foreground))"
-          strokeOpacity={0.1}
+          strokeOpacity={0.75}
           strokeWidth={1}
         />
       );
@@ -973,9 +973,9 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                     />
                     <ReferenceLine
                       y={0}
-                      stroke="hsl(var(--foreground))"
+                      stroke="hsl(var(--chart-axis))"
                       strokeDasharray="3 3"
-                      strokeOpacity={0.1}
+                      strokeOpacity={0.55}
                     />
                     <ChartTooltip
                       content={({

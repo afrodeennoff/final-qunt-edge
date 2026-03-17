@@ -237,9 +237,9 @@ export default React.memo(function ContractQuantityChart({
                     <Cell
                       key={`cell-${index}`}
                       fill="hsl(var(--chart-3))"
-                      fillOpacity={entry.tradeCount > 0 ? 0.9 : 0.2}
+                      fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
                       stroke="hsl(var(--chart-axis))"
-                      strokeOpacity={0.35}
+                      strokeOpacity={0.55}
                       strokeWidth={1}
                       className="hover:fill-opacity-100 transition-all duration-300"
                     />

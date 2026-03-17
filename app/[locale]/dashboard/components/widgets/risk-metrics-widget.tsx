@@ -59,19 +59,19 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
                         <div className="flex-1 flex flex-col justify-center gap-2.5">
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground text-xs">Sharpe</span>
-                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeSharpeRatio > 1 ? "text-foreground/90 bg-secondary/30 border border-border/55" : "text-muted-foreground/85 bg-secondary/22 border border-border/55")}>
+                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeSharpeRatio > 1 ? "text-foreground bg-secondary/30 border border-border/55" : "text-muted-foreground bg-secondary/22 border border-border/55")}>
                                     {safeSharpeRatio.toFixed(2)}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground text-xs">Sortino</span>
-                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeSortinoRatio > 1.5 ? "text-foreground/90 bg-secondary/30 border border-border/55" : "text-muted-foreground/85 bg-secondary/22 border border-border/55")}>
+                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeSortinoRatio > 1.5 ? "text-foreground bg-secondary/30 border border-border/55" : "text-muted-foreground bg-secondary/22 border border-border/55")}>
                                     {safeSortinoRatio.toFixed(2)}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground text-xs">Calmar</span>
-                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeCalmarRatio > 1 ? "text-foreground/90 bg-secondary/30 border border-border/55" : "text-muted-foreground/85 bg-secondary/22 border border-border/55")}>
+                                <span className={cn("text-[10px] font-bold uppercase tracking-wider tabular-nums px-2 py-0.5 rounded-md", safeCalmarRatio > 1 ? "text-foreground bg-secondary/30 border border-border/55" : "text-muted-foreground bg-secondary/22 border border-border/55")}>
                                     {safeCalmarRatio.toFixed(2)}
                                 </span>
                             </div>
@@ -113,7 +113,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
                     )}>
                         <div className="flex justify-between items-end mb-2">
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold font-mono tracking-tight tabular-nums text-foreground/90">
+                                <span className="text-xl font-bold font-mono tracking-tight tabular-nums text-foreground">
                                     {formatCurrency(safeMaxDrawdown)}
                                 </span>
                             </div>

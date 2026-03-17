@@ -63,10 +63,10 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
 
     const getIcon = (type: SmartInsight['type']) => {
         switch (type) {
-            case 'risk': return <AlertTriangle className="h-4 w-4 text-foreground/75" />
-            case 'opportunity': return <Lightbulb className="h-4 w-4 text-foreground/75" />
-            case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground/90" />
-            default: return <Brain className="h-4 w-4 text-foreground/90" />
+            case 'risk': return <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            case 'opportunity': return <Lightbulb className="h-4 w-4 text-muted-foreground" />
+            case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground" />
+            default: return <Brain className="h-4 w-4 text-foreground" />
         }
     }
 
@@ -126,9 +126,9 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
             state={widgetState}
             emptyMessage={
                 <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-                    <Brain className="h-8 w-8 mb-2 opacity-30" />
+                    <Brain className="h-8 w-8 mb-2 text-muted-foreground" />
                     <p className="text-sm">No insights available yet.</p>
-                    <p className="text-xs opacity-60">Trade more to generate data.</p>
+                    <p className="text-xs text-muted-foreground">Trade more to generate data.</p>
                 </div>
             }
             errorMessage="Failed to load insights. Please try again."
