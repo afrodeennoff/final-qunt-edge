@@ -98,7 +98,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={5}
           fill="hsl(var(--destructive))"
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={2}
         />
       );
@@ -118,7 +118,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={getPayoutColor(status)}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );
@@ -136,7 +136,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={5}
           fill="hsl(var(--destructive))"
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={2}
         />
       );
@@ -151,7 +151,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={getPayoutColor(status)}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );

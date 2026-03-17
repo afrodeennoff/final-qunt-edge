@@ -256,17 +256,14 @@ function AccountsTableSection({
         }
         return (
           <div className="min-w-[160px] space-y-1">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center justify-between text-xs text-foreground/70">
               <span>{t("accounts.table.remaining")}</span>
               <span>${summary.summary.totalRemainingToTarget.toFixed(2)}</span>
             </div>
             <Progress
               value={summary.summary.averageProgress}
-              className="h-1.5"
-              indicatorClassName={cn(
-                "transition-colors duration-300",
-                "bg-[hsl(var(--chart-6))]"
-              )}
+              className="h-1.5 bg-card/10"
+              indicatorClassName="transition-colors duration-300 bg-primary/80"
             />
           </div>
         )
@@ -298,16 +295,16 @@ function AccountsTableSection({
     <div className="relative">
       <div className="overflow-x-auto" ref={tableWrapperRef}>
         <table className="w-full border-separate border-spacing-0 text-sm">
-        <thead className="sticky top-0 z-10 bg-muted/90 backdrop-blur-xs shadow-xs border-b [&_tr]:border-b">
+        <thead className="sticky top-0 z-10 bg-card/90 backdrop-blur-xs shadow-xs border-b [&_tr]:border-b">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               key={headerGroup.id}
-              className="border-b transition-colors hover:bg-muted/50"
+              className="border-b transition-colors hover:bg-card/40"
             >
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l align-middle text-muted-foreground"
+                  className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-card/90 border-r border-border/50 last:border-r-0 first:border-l align-middle text-foreground/80"
                   style={{ width: header.getSize() }}
                 >
                   {header.isPlaceholder
@@ -327,7 +324,7 @@ function AccountsTableSection({
               return (
                 <tr
                   key={entry.summary.id}
-                className="border-b border-border bg-muted/50 font-semibold"
+                className="border-b border-border bg-card/90 font-semibold"
                 >
                   {table.getVisibleLeafColumns().map((column) => (
                     <td
@@ -347,9 +344,9 @@ function AccountsTableSection({
               <tr
                 key={row.id}
                 className={cn(
-                  "border-b border-border transition-all duration-75 hover:bg-muted/40",
-                  rowIndex % 2 === 1 && "bg-muted/20",
-                  row.getCanExpand() && "bg-muted/30 font-medium",
+                  "border-b border-border transition-all duration-75 hover:bg-card/40",
+                  rowIndex % 2 === 1 && "bg-card/5",
+                  row.getCanExpand() && "bg-card/10 font-medium",
                   isDrawdownBreached(row.original) && "opacity-50",
                   (row.getCanExpand() || row.depth > 0) && "cursor-pointer"
                 )}
@@ -433,7 +430,7 @@ export function AccountsTableView({
                 event.stopPropagation()
                 row.toggleExpanded()
               }}
-              className="flex items-center justify-center h-6 w-6 rounded hover:bg-muted/60 transition-colors"
+              className="flex items-center justify-center h-6 w-6 rounded hover:bg-card/60 transition-colors"
               aria-label={
                 row.getIsExpanded()
                   ? t("accounts.table.collapseGroup")

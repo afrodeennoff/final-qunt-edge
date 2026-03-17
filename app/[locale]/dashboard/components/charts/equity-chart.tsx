@@ -175,7 +175,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={fg}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );
@@ -192,7 +192,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={5}
           fill="hsl(var(--destructive))"
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={2}
         />
       );
@@ -208,7 +208,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={fg}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );
@@ -906,7 +906,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                 onCheckedChange={setShowIndividualConfig}
                 className="shrink-0 scale-75"
               />
-              <Label htmlFor="view-mode" className="text-xs text-fg-secondary cursor-pointer">
+              <Label htmlFor="view-mode" className="text-xs text-token-secondary cursor-pointer">
                 {t("equity.toggle.individual")}
               </Label>
             </div>
@@ -923,7 +923,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
           <div className="flex-1 min-h-0">
             {isLoading ? (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="text-fg-muted text-sm animate-pulse">
+                <div className="text-muted-foreground text-sm animate-pulse">
                   {t("equity.loading")}
                 </div>
               </div>
@@ -1001,7 +1001,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                 </ResponsiveContainer>
               </ChartContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-fg-muted text-xs">
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
                 {t("widgets.emptyState") ?? "No trades yet."}
               </div>
             )}

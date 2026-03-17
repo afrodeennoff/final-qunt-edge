@@ -243,7 +243,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(-1)}
-              className="h-6 w-6 p-0 hover:bg-secondary/22 text-fg-muted hover:text-fg-primary rounded-full transition-colors"
+              className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Minus className="h-3 w-3" />
             </Button>
@@ -251,7 +251,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(1)}
-              className="h-6 w-6 p-0 hover:bg-secondary/22 text-fg-muted hover:text-fg-primary rounded-full transition-colors"
+              className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Plus className="h-3 w-3" />
             </Button>
@@ -262,21 +262,21 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 hover:bg-secondary/30 text-fg-muted hover:text-foreground rounded-full transition-colors"
+                  className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground rounded-full transition-colors"
                 >
                   <Target className="h-3 w-3" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="border-border/55 bg-background/95 backdrop-blur-xl">
                 <DialogHeader>
-                  <DialogTitle className="text-fg-primary">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
-                  <DialogDescription className="text-fg-secondary">
+                  <DialogTitle className="text-foreground">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
+                  <DialogDescription className="text-token-secondary">
                     {t("widgets.dailyTickTarget.setTargetDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-fg-secondary">
+                    <label className="text-sm font-medium text-token-secondary">
                       {t("widgets.dailyTickTarget.target")} (
                       {displayMode === "points"
                         ? t("widgets.dailyTickTarget.displayMode.points")
@@ -288,11 +288,11 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                       value={targetValue}
                       onChange={(e) => setTargetValue(e.target.value)}
                       placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
-                      className="bg-secondary/22 border-border/55 text-fg-primary placeholder:text-fg-muted focus:border-border/65 focus:ring-border/20 transition-all"
+                      className="bg-secondary/22 border-border/55 text-foreground placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-all"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-fg-secondary">
+                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-token-secondary">
                       {t("common.cancel")}
                     </Button>
                     <Button onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
