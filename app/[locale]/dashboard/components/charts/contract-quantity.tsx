@@ -236,10 +236,10 @@ export default React.memo(function ContractQuantityChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill="hsl(var(--foreground))"
-                      fillOpacity={0.4}
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={0.2}
+                      fill="hsl(var(--chart-3))"
+                      fillOpacity={entry.tradeCount > 0 ? 0.9 : 0.2}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.35}
                       strokeWidth={1}
                       className="hover:fill-opacity-100 transition-all duration-300"
                     />

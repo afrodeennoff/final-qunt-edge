@@ -66,8 +66,8 @@ const formatCurrency = (value: number) => {
   return `${value < 0 ? "-" : ""}$${absValue.toFixed(0)}`;
 };
 
-const positiveColor = "hsl(var(--foreground))";
-const negativeColor = "hsl(var(--chart-axis))";
+const positiveColor = "hsl(var(--chart-1))";
+const negativeColor = "hsl(var(--chart-4))";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   const t = useI18n();
@@ -237,9 +237,9 @@ export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) 
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.pnl >= 0 ? positiveColor : negativeColor}
-                      fillOpacity={entry.pnl >= 0 ? 0.98 : 0.24}
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={entry.pnl >= 0 ? 0.42 : 0.06}
+                      fillOpacity={entry.pnl >= 0 ? 0.94 : 0.86}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.35}
                       strokeWidth={1}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",

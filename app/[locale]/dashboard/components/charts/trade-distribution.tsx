@@ -55,8 +55,8 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
 
     return [
       { name: `WINNING TRADES (${nbWin}/${nbTrades})`, value: winRate, color: 'hsl(var(--chart-1))', count: nbWin, total: nbTrades },
-      { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-5))', count: nbBe, total: nbTrades },
-      { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-6))', count: nbLoss, total: nbTrades },
+      { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-3))', count: nbBe, total: nbTrades },
+      { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-4))', count: nbLoss, total: nbTrades },
     ]
   }, [nbWin, nbLoss, nbBe, nbTrades])
 
@@ -161,7 +161,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.color}
-                      fillOpacity={entry.color === 'hsl(var(--chart-1))' ? 0.95 : 1}
+                      fillOpacity={0.92}
                       className={cn(
                         "transition-all duration-300 ease-in-out hover:fill-opacity-100",
                         entry.color === "hsl(var(--chart-1))" ? "chart-positive-emphasis" : "chart-negative-muted"

@@ -250,21 +250,21 @@ export default React.memo(function TimeOfDayTradeChart({
                   {chartData.map((entry) => (
                     <Cell
                       key={`cell-${entry.hour}`}
-                      fill="hsl(var(--foreground))"
+                      fill={entry.avgPnl >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
                       fillOpacity={
                         hourFilter.hour === entry.hour
                           ? 1
                           : hourFilter.hour !== null
-                            ? 0.15
-                            : (entry.avgPnl >= 0 ? 0.98 : 0.22)
+                            ? 0.22
+                            : (entry.avgPnl >= 0 ? 0.94 : 0.84)
                       }
-                      stroke="hsl(var(--foreground))"
+                      stroke="hsl(var(--chart-axis))"
                       strokeOpacity={
                         hourFilter.hour === entry.hour
-                          ? 0.8
+                          ? 0.9
                           : hourFilter.hour !== null
-                            ? 0.1
-                            : (entry.avgPnl >= 0 ? 0.42 : 0.06)
+                            ? 0.2
+                            : 0.35
                       }
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",

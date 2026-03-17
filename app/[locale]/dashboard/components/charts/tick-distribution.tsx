@@ -261,16 +261,20 @@ export default React.memo(function TickDistributionChart({
                   {chartData.map((entry) => (
                     <Cell
                       key={`cell-${entry.ticks}`}
-                      fill="hsl(var(--foreground))"
+                      fill={
+                        parseInt(entry.ticks) >= 0
+                          ? "hsl(var(--chart-1))"
+                          : "hsl(var(--chart-4))"
+                      }
                       fillOpacity={
                         tickFilter.value === entry.ticks
                           ? 1
                           : tickFilter.value
-                            ? 0.1
-                            : parseInt(entry.ticks) >= 0 ? 0.98 : 0.22
+                            ? 0.22
+                            : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
                       }
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={parseInt(entry.ticks) >= 0 ? 0.42 : 0.06}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.35}
                       strokeWidth={1}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",

@@ -99,12 +99,13 @@ export default React.memo(function WeekdayPNLChart({
   const hasData = weekdayData.some((d) => d.tradeCount > 0);
 
   const getColor = (value: number) => {
-    const ratio = Math.abs((value - minPnL) / (maxPnL - minPnL));
-    const baseColorVar = value >= 0 ? "--chart-win" : "--chart-loss";
+    const range = Math.max(1, maxPnL - minPnL);
+    const ratio = Math.abs((value - minPnL) / range);
+    const baseColorVar = value >= 0 ? "--chart-1" : "--chart-4";
     const intensity = darkMode
-      ? Math.max(0.3, ratio) // Higher minimum intensity in dark mode
-      : Math.max(0.2, ratio); // Lower minimum intensity in light mode
-    return `hsl(var(${baseColorVar}) / ${intensity})`;
+      ? Math.max(0.72, 0.72 + ratio * 0.22)
+      : Math.max(0.62, 0.62 + ratio * 0.22);
+    return `hsl(var(${baseColorVar}) / ${Math.min(intensity, 1)})`;
   };
 
   const handleClick = React.useCallback(() => {

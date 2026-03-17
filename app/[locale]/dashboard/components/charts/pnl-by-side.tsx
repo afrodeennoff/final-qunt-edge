@@ -77,7 +77,7 @@ export default React.memo(function PnLBySideChart({
         winCount: longWins,
         isAverage: showAverage,
         value: 0,
-        color: "hsl(var(--foreground))",
+        color: "hsl(var(--chart-1))",
       },
       {
         side: "Short",
@@ -90,7 +90,7 @@ export default React.memo(function PnLBySideChart({
         winCount: shortWins,
         isAverage: showAverage,
         value: 0,
-        color: "hsl(var(--chart-axis))",
+        color: "hsl(var(--chart-4))",
       },
     ];
 
@@ -225,7 +225,7 @@ export default React.memo(function PnLBySideChart({
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.color}
-                      fillOpacity={entry.side === "Long" ? 0.98 : 0.26}
+                      fillOpacity={entry.side === "Long" ? 0.94 : 0.84}
                       className="transition-all duration-300 ease-in-out hover:fill-opacity-100"
                     />
                   ))}

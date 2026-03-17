@@ -73,11 +73,11 @@ function CommissionsTooltip({
 const chartConfig = {
   pnl: {
     label: "Net P/L",
-    color: "hsl(var(--foreground))",
+    color: "hsl(var(--chart-1))",
   },
   commissions: {
     label: "Commissions",
-    color: "hsl(var(--chart-axis))",
+    color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
@@ -199,8 +199,8 @@ export default React.memo(function CommissionsPnLChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.name === "NET P/L" ? "hsl(var(--foreground))" : "hsl(var(--chart-axis))"}
-                      fillOpacity={entry.name === "NET P/L" ? 0.98 : 0.24}
+                      fill={entry.name === "NET P/L" ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
+                      fillOpacity={entry.name === "NET P/L" ? 0.94 : 0.84}
                       className={cn(
                         "transition-all duration-300 ease-in-out hover:fill-opacity-100",
                         entry.name === "NET P/L" ? "chart-positive-emphasis" : "chart-negative-muted"

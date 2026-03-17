@@ -407,10 +407,10 @@ export default React.memo(function PnLPerContractDailyChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.averagePnl >= 0 ? "hsl(var(--foreground))" : "hsl(var(--foreground))"}
-                      stroke={entry.averagePnl >= 0 ? "hsl(var(--foreground))" : "hsl(var(--foreground))"}
-                      strokeOpacity={entry.averagePnl >= 0 ? 0.42 : 0.06}
-                      fillOpacity={entry.averagePnl >= 0 ? 0.98 : 0.22}
+                      fill={entry.averagePnl >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.35}
+                      fillOpacity={entry.averagePnl >= 0 ? 0.94 : 0.84}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",
                         entry.averagePnl >= 0 ? "chart-positive-emphasis" : "chart-negative-muted"
