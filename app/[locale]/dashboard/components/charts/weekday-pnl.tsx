@@ -279,17 +279,17 @@ export default React.memo(function WeekdayPNLChart({
                   {weekdayData.map((entry) => (
                     <Cell
                       key={`cell-${entry.day}`}
-                      fill="hsl(var(--foreground))"
+                      fill={entry.pnl >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
                       fillOpacity={
                         weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
-                          ? 0.3
-                          : (entry.pnl >= 0 ? 0.98 : 0.22)
+                          ? 0.45
+                          : (entry.pnl >= 0 ? 0.94 : 0.84)
                       }
-                      stroke="hsl(var(--foreground))"
+                      stroke="hsl(var(--chart-axis))"
                       strokeOpacity={
                         weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
-                          ? 0.3
-                          : (entry.pnl >= 0 ? 0.42 : 0.06)
+                          ? 0.45
+                          : 0.35
                       }
                       className={cn(
                         "hover:opacity-100",
