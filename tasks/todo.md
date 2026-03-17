@@ -1,3 +1,14 @@
+## Task: Theme branch sync + deploy trigger status (2026-03-17)
+
+- [x] Reset branch `fix/dashboard-sync-context-crash-pr2` to commit `087eaa8` as requested.
+- [x] Force-pushed remote branch to match `087eaa8` and verified local/remote hashes are identical.
+- [x] Attempted Vercel deploy trigger from CLI.
+- [ ] Complete deployment trigger after Vercel authentication (`vercel login` or `--token`).
+
+Verification:
+- Branch hash check: local `087eaa8cbb068b88583ee9d88becabf5e706bd1b` and remote `origin/fix/dashboard-sync-context-crash-pr2` match.
+- Vercel CLI result: `No existing credentials found. Please run vercel login or pass --token`.
+
 ## Task: Dashboard non-chart widget/card token + contrast polish (2026-03-17)
 
 - [x] Audit non-chart widget/card components under `app/[locale]/dashboard/components/{widgets,statistics,accounts}` for low-contrast text and inconsistent semantic token usage.
