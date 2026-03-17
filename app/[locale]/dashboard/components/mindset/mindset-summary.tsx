@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { HourlyFinancialTimeline } from "./hourly-financial-timeline"
+import { EmotionTrendChart } from "./emotion-trend-chart"
 import { useState, useEffect } from "react"
 import type { FinancialEvent } from "@/prisma/generated/prisma"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -17,6 +18,7 @@ import { Label } from "@/components/ui/label"
 import { useUserStore } from "@/store/user-store"
 import { useTradesStore } from "@/store/trades-store"
 import { useFinancialEventsStore } from "@/store/financial-events-store"
+import { useMoodStore } from "@/store/mood-store"
 import { sanitizeHtml } from "@/lib/sanitize"
 
 type ImpactLevel = "low" | "medium" | "high"
@@ -60,6 +62,7 @@ export function MindsetSummary({
   const dateLocale = locale === 'fr' ? fr : enUS
   const trades = useTradesStore(state => state.trades)
   const financialEvents = useFinancialEventsStore(state => state.events)
+  const moods = useMoodStore(state => state.moods)
   const timezone = useUserStore(state => state.timezone)
   const [events, setEvents] = useState<FinancialEvent[]>([])
   const [showOnlySelectedNews, setShowOnlySelectedNews] = useState(true)
@@ -99,6 +102,18 @@ export function MindsetSummary({
     setEmotion(getEmotionLabel(emotionValue))
   }, [emotionValue])
 
+  const emotionHistoryData = moods
+    .filter(mood => {
+      const moodDate = new Date(mood.day)
+      const daysDiff = Math.floor((date.getTime() - moodDate.getTime()) / (1000 * 60 * 60 * 24))
+      return daysDiff >= 0 && daysDiff < 7
+    })
+    .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime())
+    .map(mood => ({
+      date: new Date(mood.day),
+      value: mood.emotionValue
+    }))
+
   return (
     <div className="h-full flex flex-col gap-4 p-4 overflow-y-auto">
       <div className="flex items-center justify-between">
@@ -124,6 +139,7 @@ export function MindsetSummary({
               </p>
             </div>
           </div>
+          <EmotionTrendChart data={emotionHistoryData} />
         </div>
 
         <div className="space-y-2">

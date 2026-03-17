@@ -221,7 +221,7 @@ export function AccountsBarChart({
               tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}…` : value)}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--mk-text) / 0.9)",
+                fill: "hsl(var(--foreground) / 0.9)",
               }}
             />
             <YAxis
@@ -243,7 +243,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--mk-text) / 0.9)",
+                fill: "hsl(var(--foreground) / 0.9)",
               }}
               tickFormatter={(value) => compactCurrency.format(value)}
             />
@@ -265,7 +265,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "hsl(var(--mk-text) / 0.9)",
+                fill: "hsl(var(--foreground) / 0.9)",
               }}
               tickFormatter={(value) => value.toLocaleString()}
             />

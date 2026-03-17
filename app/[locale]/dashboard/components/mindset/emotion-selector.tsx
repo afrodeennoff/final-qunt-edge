@@ -3,6 +3,7 @@
 import { useI18n } from "@/locales/client"
 import { Frown, Smile } from "lucide-react"
 import { Tracker } from "@/components/ui/mood-tracker"
+import { EmotionPresets } from "./emotion-presets"
 
 interface EmotionSelectorProps {
   value: number
@@ -12,13 +13,13 @@ interface EmotionSelectorProps {
 export function EmotionSelector({ value, onChange }: EmotionSelectorProps) {
   const t = useI18n()
 
-  // Create 20 steps for granular mood selection
   const moodData = Array.from({ length: 20 }, (_, i) => ({
     key: i,
   }))
 
   return (
     <div className="flex flex-col gap-4">
+      <EmotionPresets value={value} onChange={onChange} />
       <div className="flex items-center gap-4 w-full">
         <Frown className="h-6 w-6 text-muted-foreground" />
         <Tracker

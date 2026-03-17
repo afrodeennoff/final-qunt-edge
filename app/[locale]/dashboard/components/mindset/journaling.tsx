@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useI18n } from "@/locales/client"
 import { EmotionSelector } from "./emotion-selector"
+import { EmotionGauge } from "./emotion-gauge"
 import { DayTagSelector } from "./day-tag-selector"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { Trade } from "@/lib/data-types"
@@ -40,11 +41,16 @@ export function Journaling({
   return (
     <div className="h-full flex flex-col">
       <div className="flex-none">
-        <h3 className="text-sm font-medium mb-2">{t('mindset.emotion.title')}</h3>
-        <EmotionSelector
+        <EmotionGauge
           value={emotionValue}
           onChange={onEmotionChange}
         />
+        <div className="mt-4">
+          <EmotionSelector
+            value={emotionValue}
+            onChange={onEmotionChange}
+          />
+        </div>
       </div>
 
       <div className="flex-none mt-6">
