@@ -314,12 +314,35 @@
     --card-padding-xl: var(--space-lg);
   }
 
-  /* .dark class inherits luxury theme from :root */
-  .dark {
-    /* Inherits all luxury tokens from :root for consistency */
-    /* Dark mode uses the same warm obsidian palette with gold accents */
+    /* ===== EMOTION VISUALIZATION TOKENS ===== */
+    --emotion-sad: 270 50% 60%;
+    --emotion-sad-subtle: 270 50% 60% / 0.15;
+    --emotion-neutral: 240 5% 50%;
+    --emotion-neutral-subtle: 240 5% 50% / 0.1;
+    --emotion-happy: 160 60% 55%;
+    --emotion-happy-subtle: 160 60% 55% / 0.15;
+    --emotion-anxious: 45 80% 55%;
+    --emotion-anxious-subtle: 45 80% 55% / 0.15;
+    --emotion-focused: 210 40% 55%;
+    --emotion-focused-subtle: 210 40% 55% / 0.12;
+    --emotion-confident: 340 60% 65%;
+    --emotion-confident-subtle: 340 60% 65% / 0.15;
+    --emotion-gradient: linear-gradient(90deg, hsl(var(--emotion-sad)) 0%, hsl(var(--emotion-neutral)) 50%, hsl(var(--emotion-happy)) 100%);
+
+    /* ===== JOURNAL GLASSMORPHISM TOKENS ===== */
+    --journal-glass-bg: 240 6% 4% / 0.7;
+    --journal-glass-border: 35 20% 20% / 0.15;
+    --journal-glass-blur: blur(16px);
+    --journal-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --journal-glass-elevated-bg: 240 6% 4% / 0.85;
+    --journal-glass-elevated-border: 35 20% 20% / 0.25;
+
+    /* .dark class inherits luxury theme from :root */
+    .dark {
+      /* Inherits all luxury tokens from :root for consistency */
+      /* Dark mode uses the same warm obsidian palette with gold accents */
+    }
   }
-}
 
 @theme inline {
   --color-background: hsl(var(--background));
@@ -860,4 +883,36 @@
   --chart-4: 84 74% 62%;
   --chart-5: 70 70% 58%;
   --chart-win: 160 62% 56%;
+}
+
+.journal-glass {
+  background: var(--journal-glass-bg);
+  backdrop-filter: var(--journal-glass-blur);
+  border: 1px solid var(--journal-glass-border);
+  box-shadow: var(--journal-glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.journal-glass-elevated {
+  background: var(--journal-glass-elevated-bg);
+  backdrop-filter: var(--journal-glass-blur);
+  border: 1px solid var(--journal-glass-elevated-border);
+  box-shadow: var(--journal-glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.emotion-gradient {
+  background: var(--emotion-gradient);
+}
+
+.emotion-glow-sad {
+  box-shadow: 0 0 12px hsl(var(--emotion-sad) / 0.3);
+}
+
+.emotion-glow-neutral {
+  box-shadow: 0 0 12px hsl(var(--emotion-neutral) / 0.2);
+}
+
+.emotion-glow-happy {
+  box-shadow: 0 0 12px hsl(var(--emotion-happy) / 0.3);
 }
