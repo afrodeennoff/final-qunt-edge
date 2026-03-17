@@ -141,7 +141,7 @@ export default function TradeDistributionChartEmbed({
                 dataKey="value"
                 startAngle={90}
                 endAngle={-270}
-                stroke="hsl(var(--background))"
+                  stroke="hsl(var(--chart-axis) / 0.55)"
                 strokeWidth={1}
               >
                 {chartData.map((entry, idx) => (
