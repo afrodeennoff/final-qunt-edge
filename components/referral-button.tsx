@@ -160,7 +160,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
               {getTierIcon(referralData.referral.tier.level)}
             </div>
 
-            <div className="rounded-lg border border-white/10 bg-muted/30 p-3">
+            <div className="rounded-lg border border-subtle bg-surface-subtle p-3">
               <p className="text-sm font-semibold">{t('referral.landing.heroTitle')}</p>
               <Button asChild size="sm" className="mt-2 h-8 w-full">
                 <Link href={affiliateUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>

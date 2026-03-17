@@ -69,6 +69,7 @@ import { useMoodStore } from "@/store/mood-store";
 import { useSubscriptionStore } from "@/store/subscription-store";
 import { getSubscriptionData } from "@/server/billing";
 import { defaultLayouts } from "@/lib/default-layouts";
+import { removeAccountFromGroups } from "@/context/data-provider-utils";
 
 import {
   generateMockTrades
@@ -290,6 +291,7 @@ export const DataProvider: React.FC<{
   const groups = useUserStore((state) => state.groups);
   const accounts = useUserStore((state) => state.accounts);
   const setSupabaseUser = useUserStore((state) => state.setSupabaseUser);
+  const resetUserState = useUserStore((state) => state.resetUser);
   const setTickDetails = useTickDetailsStore((state) => state.setTickDetails);
   const tickDetails = useTickDetailsStore((state) => state.tickDetails);
   const setEvents = useFinancialEventsStore((state) => state.setEvents);
@@ -313,6 +315,7 @@ export const DataProvider: React.FC<{
   const [isRevalidating, setIsRevalidating] = useState(false);
   const bootstrappedSharedSlugRef = useRef<string | null>(null);
   const dashboardLayoutRef = useRef(dashboardLayout);
+  const activeUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     dashboardLayoutRef.current = dashboardLayout;
@@ -556,12 +559,20 @@ export const DataProvider: React.FC<{
         return;
       }
 
-      // Step 1: Get Supabase user
+      // Step 1: Parallelize auth resolution, layout fetch, and cache reads
       const {
         data: { user },
       } = await withTimeout(supabase.auth.getUser(), 15000, "supabase.auth.getUser");
 
       if (!user?.id) {
+        activeUserIdRef.current = null;
+        setTrades([]);
+        setAccounts([]);
+        setGroups([]);
+        setTags([]);
+        setMoods([]);
+        setEvents([]);
+        setTickDetails([]);
         await signOut();
         setIsLoading(false);
         return;
@@ -569,35 +580,45 @@ export const DataProvider: React.FC<{
 
       setSupabaseUser(user);
       const userId = await withTimeout(getUserId(), 15000, "getUserId");
-
-      // CRITICAL: Get dashboard layout first
-      // But check if the layout is already in the state
-      if (
-        userId &&
-        (!dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId)
-      ) {
-        const dashboardLayoutResponse = await withTimeout(
-          getDashboardLayout(userId),
-          15000,
-          "getDashboardLayout"
-        );
-        if (dashboardLayoutResponse) {
-          setDashboardLayout(
-            dashboardLayoutResponse as unknown as DashboardLayoutWithWidgets
-          );
-        } else {
-          // If no layout exists in database, use default layout
-          setDashboardLayout(defaultLayouts);
-        }
+      if (activeUserIdRef.current && activeUserIdRef.current !== userId) {
+        // Prevent transient cross-user UI bleed before the next user's snapshot loads.
+        resetUserState();
+        setTrades([]);
+        setAccounts([]);
+        setGroups([]);
+        setTags([]);
+        setMoods([]);
+        setEvents([]);
+        setTickDetails([]);
       }
+      activeUserIdRef.current = userId;
 
+      // Parallel: layout fetch + cache reads
       let hasLocalSnapshot = false;
       if (userId && !isSharedView) {
-        const [cachedTradesResult, cachedUserDataResult] = await Promise.allSettled([
+        const [dashboardLayoutResult, cachedTradesResult, cachedUserDataResult] = await Promise.allSettled([
+          // Only fetch layout if not already loaded for this user
+          (!dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId)
+            ? withTimeout(getDashboardLayout(userId), 15000, "getDashboardLayout")
+            : Promise.resolve(undefined),
           withTimeout(getTradesCache(userId), 2000, "getTradesCache"),
           withTimeout(getUserDataCache(userId), 2000, "getUserDataCache"),
         ]);
 
+        // Handle layout result
+        if (dashboardLayoutResult.status === "fulfilled" && dashboardLayoutResult.value !== undefined) {
+          const dashboardLayoutResponse = dashboardLayoutResult.value;
+          if (dashboardLayoutResponse) {
+            setDashboardLayout(
+              dashboardLayoutResponse as unknown as DashboardLayoutWithWidgets
+            );
+          } else {
+            // If no layout exists in database, use default layout
+            setDashboardLayout(defaultLayouts);
+          }
+        }
+
+        // Handle cache results
         const cachedTrades =
           cachedTradesResult.status === "fulfilled" ? cachedTradesResult.value : undefined;
         const cachedUserData =
@@ -660,7 +681,7 @@ export const DataProvider: React.FC<{
                 : [];
           setTrades(sanitizeTradesForState(tradesToUse));
 
-          if (userId && tradesToUse.length > 0) {
+          if (userId) {
             setTradesCache(userId, tradesToUse).catch((err) =>
               logger.error({ err }, "Failed to set trades cache")
             );
@@ -684,18 +705,8 @@ export const DataProvider: React.FC<{
             setIsLoading(false);
           }
 
-          let accountsWithMetrics = normalizedAccounts;
-          try {
-            accountsWithMetrics = await withTimeout(
-              calculateAccountMetricsAction(normalizedAccounts),
-              20000,
-              "calculateAccountMetricsAction"
-            );
-          } catch (e) {
-            logger.warn({ error: e }, "Account metrics timed out; continuing without metrics");
-          }
-          setAccounts(normalizeAccountsForClient(accountsWithMetrics));
-
+          // Defer heavy metrics calculation to background
+          // Don't block initial load on metrics
           if (userId && !isSharedView) {
             setUserDataCache(userId, {
               userData: data.userData,
@@ -707,6 +718,15 @@ export const DataProvider: React.FC<{
               financialEvents: data.financialEvents,
               moodHistory: data.moodHistory,
             }).catch((err) => logger.error({ err }, "Failed to set user data cache"));
+
+            // Calculate metrics in background after cache write
+            calculateAccountMetricsAction(normalizedAccounts)
+              .then((accountsWithMetrics) => {
+                setAccounts(normalizeAccountsForClient(accountsWithMetrics));
+              })
+              .catch((e) => {
+                logger.warn({ error: e }, "Account metrics calculation failed; continuing without metrics");
+              });
           }
         } finally {
           setIsRevalidating(false);
@@ -756,6 +776,7 @@ export const DataProvider: React.FC<{
     setTickDetails,
     setTrades,
     setUser,
+    resetUserState,
     syncSharedDataState,
     withTimeout,
     supabase,
@@ -1709,19 +1730,27 @@ export const DataProvider: React.FC<{
     async (account: Account) => {
       if (!supabaseUser?.id || isSharedView) return;
 
-      const previousAccounts = [...accounts];
+      const { accounts: previousAccounts, groups: previousGroups } =
+        useUserStore.getState();
       try {
-        // Update local state immediately
-        setAccounts(accounts.filter((acc: Account) => acc.id !== account.id));
+        const { accounts: currentAccounts, groups: currentGroups } =
+          useUserStore.getState();
+
+        const updatedAccounts = currentAccounts.filter(
+          (acc: Account) => acc.id !== account.id
+        );
+        setAccounts(updatedAccounts);
+        setGroups(removeAccountFromGroups(currentGroups, account.id));
         // Delete from database
         await deleteAccountAction(account);
       } catch (error) {
         logger.error({ error }, "Error deleting account, rolling back");
         setAccounts(previousAccounts);
+        setGroups(previousGroups);
         throw error;
       }
     },
-    [supabaseUser?.id, isSharedView, accounts, setAccounts]
+    [supabaseUser?.id, isSharedView, setAccounts, setGroups]
   );
 
   // Add deletePayout function
@@ -2175,8 +2204,8 @@ export const useDashboardActions = () => {
   return context;
 };
 
-// Add getTimeRangeKey function at the top level
-function getTimeRangeKey(timeInPosition: number): string {
+ // Add getTimeRangeKey function at the top level
+ function getTimeRangeKey(timeInPosition: number): string {
   const minutes = timeInPosition / 60; // Convert seconds to minutes
   if (minutes < 1) return "under1min";
   if (minutes >= 1 && minutes < 5) return "1to5min";

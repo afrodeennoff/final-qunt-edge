@@ -7,6 +7,7 @@ import { getAiLanguageModel } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
+import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 
 export const maxDuration = 30;
 const dateSearchRateLimit = rateLimit({ limit: 30, window: 60_000, identifier: "ai-search-date" });
@@ -24,11 +25,11 @@ const requestSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const policy = getAiPolicy("analysis");
+  const policy = getAiPolicy("search");
   const startedAt = Date.now();
 
-  // Apply AI route guard (auth + entitlements + rate limit + budget)
-  const guard = await guardAiRequest(req, 'analysis', dateSearchRateLimit)
+  // Apply AI route guard (auth + entitlements + rate limit)
+  const guard = await guardAiRequest(req, 'search', dateSearchRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
 
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
     });
 
     const { output, usage } = await generateText({
-      model: getAiLanguageModel("analysis"),
+      model: getAiLanguageModel("search"),
       output: Output.object({ schema: dateRangeSchema }),
       prompt: `You are an expert at parsing natural language date queries into date ranges or weekday filters.
 
@@ -120,8 +121,9 @@ Return the appropriate filter type (date range OR weekday).`,
     });
 
     void logAiRequest({
+      userId,
       route: "/api/ai/search/date",
-      feature: "analysis",
+      feature: "search",
       model: policy.model,
       provider: policy.provider,
       usage: extractUsage(usage),
@@ -137,23 +139,30 @@ Return the appropriate filter type (date range OR weekday).`,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
+    }
+
     if (error instanceof z.ZodError) {
-      return apiError("VALIDATION_FAILED", "Invalid date-search payload", 400, error.errors);
+      return apiError("VALIDATION_FAILED", "Invalid date-search payload", 400, {
+        issues: error.errors,
+      });
     }
 
     void logAiRequest({
+      userId,
       route: "/api/ai/search/date",
-      feature: "analysis",
+      feature: "search",
       model: policy.model,
       provider: policy.provider,
       latencyMs: Date.now() - startedAt,
       success: false,
       errorCategory: categorizeAiError(error),
-      errorCode: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code ?? "") || null : null,
+      errorCode: getAiErrorCode(error),
       sampleRate: 1,
     });
 
-    console.error("Error in date parsing route:", error);
+    logAiError("Error in date parsing route", error, { userId });
     return apiError("INTERNAL_ERROR", "Failed to parse date query", 500);
   }
 }

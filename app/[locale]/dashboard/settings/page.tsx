@@ -11,7 +11,8 @@ import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useUserStore } from '../../../../store/user-store'
-import { useTheme } from '@/context/theme-provider'
+import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
+import { DASHBOARD_THEMES, type DashboardTheme, useTheme } from '@/context/theme-provider'
 import {
   User,
   Settings,
@@ -25,6 +26,7 @@ import {
   CreditCard,
   Database,
   LifeBuoy,
+  Palette,
   LogOut,
   Building2,
   Eye,
@@ -45,7 +47,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Slider } from "@/components/ui/slider"
-import { createTeam, joinTeam, leaveTeam, getUserTeams } from './actions'
+import { leaveTeam, getUserTeams } from './actions'
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -60,8 +62,26 @@ import {
 } from "@/components/ui/alert-dialog"
 import { LinkedAccounts } from "@/components/linked-accounts"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
+import { cn } from "@/lib/utils"
 
 type Locale = 'en' | 'fr'
+type ThemeMode = 'light' | 'dark' | 'system'
+type DashboardThemeOption = {
+  value: DashboardTheme
+  label: string
+  preview: string
+  swatchClass: string
+}
+type TranslateFn = ReturnType<typeof useI18n>
+type TeamSummary = {
+  id: string
+  name: string
+  traderIds: string[]
+}
+type UserTeamsState = {
+  ownedTeams: TeamSummary[]
+  joinedTeams: TeamSummary[]
+}
 
 // Add timezone list
 const timezones = [
@@ -76,15 +96,251 @@ const timezones = [
   // Add more common timezones as needed
 ];
 
+const dashboardThemeOptions: DashboardThemeOption[] = [
+  { value: 'blue', label: 'VTRON Blue', preview: 'Balanced and crisp', swatchClass: 'bg-chart-1' },
+  { value: 'violet', label: 'CWH Violet', preview: 'High contrast focus', swatchClass: 'bg-chart-2' },
+  { value: 'emerald', label: 'Emerald Light', preview: 'Fresh and minimal', swatchClass: 'bg-chart-4' },
+  { value: 'amber', label: 'Lara Amber', preview: 'Warm and energetic', swatchClass: 'bg-chart-5' },
+  { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
+]
+
+const THEME_MODE_LABELS: Record<ThemeMode, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'System',
+}
+
+function getThemeIcon(theme: ThemeMode) {
+  if (theme === 'light') return <Sun className="h-4 w-4" />
+  if (theme === 'dark') return <Moon className="h-4 w-4" />
+  if (typeof window !== 'undefined') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
+  }
+  return <Laptop className="h-4 w-4" />
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return fallback
+}
+
+function TeamSettingsCard({
+  userTeams,
+  onLeaveTeam,
+}: {
+  userTeams: UserTeamsState
+  onLeaveTeam: (teamId: string) => Promise<void>
+}) {
+  const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
+
+  return (
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Building2 className="h-5 w-5" />
+          Team
+        </CardTitle>
+        <CardDescription>
+          Manage your team connections
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {hasTeams && (
+          <div>
+            <Label className="text-base font-medium">Current Teams</Label>
+            <div className="mt-2 space-y-2">
+              {userTeams.ownedTeams.map((team) => (
+                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{team.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {team.traderIds.length} traders
+                    </p>
+                  </div>
+                  <Badge variant="secondary">Owner</Badge>
+                </div>
+              ))}
+
+              {userTeams.joinedTeams.map((team) => (
+                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{team.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {team.traderIds.length} traders
+                    </p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Leave Team
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Leave Team</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to leave this team?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => onLeaveTeam(team.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Leave Team
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!hasTeams && (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No team linked</p>
+            <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
+            <div className="mt-4">
+              <Link href="/teams/dashboard">
+                <Button>
+                  <Building2 className="mr-2 h-4 w-4" />
+                  Manage Teams
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {hasTeams && (
+          <div className="mt-4">
+            <Link href="/teams/dashboard">
+              <Button variant="outline" className="w-full">
+                <Settings className="mr-2 h-4 w-4" />
+                Manage Teams
+              </Button>
+            </Link>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function PasswordSettingsCard({
+  t,
+  newPassword,
+  confirmPassword,
+  showNewPassword,
+  showConfirmPassword,
+  onNewPasswordChange,
+  onConfirmPasswordChange,
+  onToggleNewPassword,
+  onToggleConfirmPassword,
+  onUpdatePassword,
+}: {
+  t: TranslateFn
+  newPassword: string
+  confirmPassword: string
+  showNewPassword: boolean
+  showConfirmPassword: boolean
+  onNewPasswordChange: (value: string) => void
+  onConfirmPasswordChange: (value: string) => void
+  onToggleNewPassword: () => void
+  onToggleConfirmPassword: () => void
+  onUpdatePassword: () => Promise<void>
+}) {
+  return (
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="h-5 w-5" />
+          {t('auth.setPassword')}
+        </CardTitle>
+        <CardDescription>
+          {t('auth.setPasswordDescription')}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-4">
+          <div>
+            <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
+            <div className="relative">
+              <Input
+                id="newPassword"
+                type={showNewPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={newPassword}
+                onChange={(e) => onNewPasswordChange(e.target.value)}
+                className="pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showNewPassword}
+                onClick={onToggleNewPassword}
+              >
+                {showNewPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => onConfirmPasswordChange(e.target.value)}
+                className="pr-10"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
+                aria-pressed={showConfirmPassword}
+                onClick={onToggleConfirmPassword}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+          <Button onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
-  const { theme, setTheme, intensity, setIntensity } = useTheme()
+  const { theme, setTheme, dashboardTheme, setDashboardTheme, intensity, setIntensity } = useTheme()
   const user = useUserStore(state => state.supabaseUser)
   const timezone = useUserStore(state => state.timezone)
   const setTimezone = useUserStore(state => state.setTimezone)
   const resetUser = useUserStore(state => state.resetUser)
+  const clearTradovate = useTradovateSyncStore((state) => state.clearAll)
 
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [pushNotifications, setPushNotifications] = useState(false)
@@ -95,11 +351,7 @@ export default function SettingsPage() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  // Team state
-  const [userTeams, setUserTeams] = useState<{
-    ownedTeams: any[]
-    joinedTeams: any[]
-  }>({ ownedTeams: [], joinedTeams: [] })
+  const [userTeams, setUserTeams] = useState<UserTeamsState>({ ownedTeams: [], joinedTeams: [] })
 
   const languages: { value: Locale; label: string }[] = [
     { value: 'en', label: 'English' },
@@ -107,49 +359,80 @@ export default function SettingsPage() {
   ]
 
   const handleThemeChange = (value: string) => {
-    setTheme(value as "light" | "dark" | "system")
+    setTheme(value as ThemeMode)
   }
 
-  const getThemeIcon = () => {
-    if (theme === 'light') return <Sun className="h-4 w-4" />;
-    if (theme === 'dark') return <Moon className="h-4 w-4" />;
-    if (typeof window !== 'undefined') {
-      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />;
+  const handleDashboardThemeChange = (value: string) => {
+    if (!DASHBOARD_THEMES.includes(value as DashboardTheme)) {
+      return
     }
-    return <Laptop className="h-4 w-4" />;
-  };
+
+    setDashboardTheme(value as DashboardTheme)
+  }
+
+  const activeDashboardTheme = dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0]
+  const currentThemeLabel = THEME_MODE_LABELS[theme]
+
+  const refreshTeams = async () => {
+    const result = await getUserTeams()
+    if (!result.success || !result.ownedTeams || !result.joinedTeams) {
+      return
+    }
+    setUserTeams({
+      ownedTeams: result.ownedTeams,
+      joinedTeams: result.joinedTeams,
+    })
+  }
 
   // Load user teams on component mount
   useEffect(() => {
-    const loadTeams = async () => {
-      const result = await getUserTeams()
-      if (result.success && result.ownedTeams && result.joinedTeams) {
-        setUserTeams({
-          ownedTeams: result.ownedTeams,
-          joinedTeams: result.joinedTeams,
-        })
+    let isCancelled = false
+    void getUserTeams().then((result) => {
+      if (isCancelled || !result.success || !result.ownedTeams || !result.joinedTeams) {
+        return
       }
+      setUserTeams({
+        ownedTeams: result.ownedTeams,
+        joinedTeams: result.joinedTeams,
+      })
+    })
+
+    return () => {
+      isCancelled = true
     }
-    loadTeams()
   }, [])
-
-
 
   const handleLeaveTeam = async (teamId: string) => {
     const result = await leaveTeam(teamId)
     if (result.success) {
       toast.success(t('dashboard.teams.leaveSuccess'))
-      // Reload teams
-      const updatedTeams = await getUserTeams()
-      if (updatedTeams.success && updatedTeams.ownedTeams && updatedTeams.joinedTeams) {
-        setUserTeams({
-          ownedTeams: updatedTeams.ownedTeams,
-          joinedTeams: updatedTeams.joinedTeams,
-        })
-      }
+      await refreshTeams()
     } else {
       toast.error(result.error || t('dashboard.teams.error'))
+    }
+  }
+
+  const handlePasswordUpdate = async () => {
+    const newPwd = newPassword || ''
+    const confirmPwd = confirmPassword || ''
+    if (!newPwd || newPwd.length < 6) {
+      toast.error(t('error'), { description: t('auth.passwordMinLength') })
+      return
+    }
+    if (newPwd !== confirmPwd) {
+      toast.error(t('error'), { description: t('auth.passwordsDoNotMatch') })
+      return
+    }
+
+    try {
+      await setPasswordAction(newPwd)
+      toast.success(t('success'), { description: t('auth.passwordUpdated') })
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (error: unknown) {
+      toast.error(t('error'), {
+        description: getErrorMessage(error, 'Failed to update password'),
+      })
     }
   }
 
@@ -157,7 +440,7 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
@@ -207,7 +490,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
@@ -221,43 +504,95 @@ export default function SettingsPage() {
             {/* Theme Settings */}
             <div>
               <Label className="text-base font-medium">Theme</Label>
-              <div className="mt-2 flex items-center gap-4">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
-                      {getThemeIcon()}
-                      <span className="ml-2">
-                        {theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => handleThemeChange("light")}>
-                      <Sun className="mr-2 h-4 w-4" />
-                      <span>Light</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
-                      <Moon className="mr-2 h-4 w-4" />
-                      <span>Dark</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleThemeChange("system")}>
-                      <Laptop className="mr-2 h-4 w-4" />
-                      <span>System</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <div className="flex-1">
-                  <Label className="text-sm">Theme Intensity</Label>
-                  <div className="mt-2 flex items-center gap-4">
-                    <Slider
-                      value={[intensity]}
-                      onValueChange={([value]) => setIntensity(value)}
-                      min={90}
-                      max={100}
-                      step={1}
-                      className="flex-1"
-                    />
-                    <span className="text-sm text-muted-foreground w-12">{intensity}%</span>
+              <div className="mt-2 grid gap-3">
+                <div className="rounded-md border border-border/50 bg-background/30 p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <p className="text-sm font-medium">Dashboard palette</p>
+                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <span className={cn('h-2.5 w-2.5 rounded-full', activeDashboardTheme.swatchClass)} />
+                      {activeDashboardTheme.label}
+                    </span>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start">
+                        <Palette className="mr-2 h-4 w-4" />
+                        <span className="flex min-w-0 flex-col items-start text-left">
+                          <span className="truncate text-sm">{activeDashboardTheme.label}</span>
+                          <span className="truncate text-xs text-muted-foreground">{activeDashboardTheme.preview}</span>
+                        </span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[260px]">
+                      <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+                        Palette presets
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup
+                        value={dashboardTheme}
+                        onValueChange={handleDashboardThemeChange}
+                        aria-label="Dashboard theme"
+                      >
+                        {dashboardThemeOptions.map((option) => (
+                          <DropdownMenuRadioItem
+                            key={option.value}
+                            value={option.value}
+                            className="items-start py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                            aria-label={`${option.label} theme`}
+                          >
+                            <div className="flex min-w-0 items-start gap-2">
+                              <span className={cn('mt-0.5 h-3 w-3 shrink-0 rounded-full', option.swatchClass)} />
+                              <span className="min-w-0">
+                                <span className="block truncate text-sm">{option.label}</span>
+                                <span className="block truncate text-xs text-muted-foreground">{option.preview}</span>
+                              </span>
+                            </div>
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <div className="rounded-md border border-border/50 bg-background/30 p-3">
+                  <p className="mb-2 text-sm font-medium">Interface mode</p>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start sm:w-[200px]">
+                          {getThemeIcon(theme)}
+                          <span className="ml-2">{currentThemeLabel}</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
+                          <Sun className="mr-2 h-4 w-4" />
+                          <span>Light</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
+                          <Moon className="mr-2 h-4 w-4" />
+                          <span>Dark</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleThemeChange("system")}>
+                          <Laptop className="mr-2 h-4 w-4" />
+                          <span>System</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <div className="flex-1">
+                      <Label className="text-sm">Theme Intensity</Label>
+                      <div className="mt-2 flex items-center gap-4">
+                        <Slider
+                          value={[intensity]}
+                          onValueChange={([value]) => setIntensity(value)}
+                          min={90}
+                          max={100}
+                          step={1}
+                          className="flex-1"
+                          aria-label="Theme intensity"
+                        />
+                        <span className="w-12 text-sm text-muted-foreground">{intensity}%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -280,11 +615,12 @@ export default function SettingsPage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value={currentLocale}>
+                    <DropdownMenuRadioGroup value={currentLocale} aria-label="Language selection">
                       {languages.map((lang) => (
                         <DropdownMenuRadioItem
                           key={lang.value}
                           value={lang.value}
+                          className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                           onClick={() => changeLocale(lang.value)}
                         >
                           {lang.label}
@@ -314,9 +650,18 @@ export default function SettingsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <ScrollArea className="h-[200px]">
-                      <DropdownMenuRadioGroup value={timezone} onValueChange={setTimezone}>
+                      <DropdownMenuRadioGroup
+                        value={timezone}
+                        onValueChange={setTimezone}
+                        aria-label="Timezone selection"
+                      >
                         {timezones.map((tz) => (
-                          <DropdownMenuRadioItem key={tz} value={tz}>
+                          <DropdownMenuRadioItem
+                            key={tz}
+                            value={tz}
+                            className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                            aria-label={tz.replace('_', ' ')}
+                          >
                             {tz.replace('_', ' ')}
                           </DropdownMenuRadioItem>
                         ))}
@@ -330,7 +675,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
@@ -399,200 +744,26 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Team Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Team
-            </CardTitle>
-            <CardDescription>
-              Manage your team connections
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-
-            {/* Current Teams */}
-            {(userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0) && (
-              <div>
-                <Label className="text-base font-medium">Current Teams</Label>
-                <div className="mt-2 space-y-2">
-                  {/* Owned Teams */}
-                  {userTeams.ownedTeams.map((team) => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{team.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {team.traderIds.length} traders
-                        </p>
-                      </div>
-                      <Badge variant="secondary">Owner</Badge>
-                    </div>
-                  ))}
-
-                  {/* Joined Teams */}
-                  {userTeams.joinedTeams.map((team) => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium">{team.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {team.traderIds.length} traders
-                        </p>
-                      </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            Leave Team
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Leave Team</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to leave this team?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleLeaveTeam(team.id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Leave Team
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* No Teams */}
-            {userTeams.ownedTeams.length === 0 && userTeams.joinedTeams.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                <p>No team linked</p>
-                <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
-                <div className="mt-4">
-                  <Link href="/teams/dashboard">
-                    <Button>
-                      <Building2 className="mr-2 h-4 w-4" />
-                      Manage Teams
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Team Management Link */}
-            {(userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0) && (
-              <div className="mt-4">
-                <Link href="/teams/dashboard">
-                  <Button variant="outline" className="w-full">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Manage Teams
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} />
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
 
-        {/* Password (Migration) Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              {t('auth.setPassword')}
-            </CardTitle>
-            <CardDescription>
-              {t('auth.setPasswordDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4">
-              <div>
-                <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
-                <div className="relative">
-                  <Input
-                    id="newPassword"
-                    type={showNewPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    onClick={() => setShowNewPassword((v) => !v)}
-                  >
-                    {showNewPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    onClick={() => setShowConfirmPassword((v) => !v)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-              <Button onClick={async () => {
-                const newPwd = newPassword || ''
-                const confirmPwd = confirmPassword || ''
-                if (!newPwd || newPwd.length < 6) {
-                  toast.error(t('error'), { description: t('auth.passwordMinLength') })
-                  return
-                }
-                if (newPwd !== confirmPwd) {
-                  toast.error(t('error'), { description: t('auth.passwordsDoNotMatch') })
-                  return
-                }
-                try {
-                  await setPasswordAction(newPwd)
-                  toast.success(t('success'), { description: t('auth.passwordUpdated') })
-                  setNewPassword('')
-                  setConfirmPassword('')
-                } catch (e: any) {
-                  toast.error(t('error'), { description: e?.message || 'Failed to update password' })
-                }
-              }}>{t('auth.setPassword')}</Button>
-            </div>
-          </CardContent>
-        </Card>
+        <PasswordSettingsCard
+          t={t}
+          newPassword={newPassword}
+          confirmPassword={confirmPassword}
+          showNewPassword={showNewPassword}
+          showConfirmPassword={showConfirmPassword}
+          onNewPasswordChange={setNewPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+          onToggleNewPassword={() => setShowNewPassword((value) => !value)}
+          onToggleConfirmPassword={() => setShowConfirmPassword((value) => !value)}
+          onUpdatePassword={handlePasswordUpdate}
+        />
 
         {/* Account Management Section */}
-        <Card className="border-white/12 bg-black/45 shadow-sm">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
@@ -627,6 +798,7 @@ export default function SettingsPage() {
                 variant="destructive"
                 className="w-full justify-start"
                 onClick={async () => {
+                  clearTradovate()
                   resetUser()
                   await signOut()
                 }}

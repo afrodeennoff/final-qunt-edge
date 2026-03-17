@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
 
@@ -120,12 +121,13 @@ export async function updateTeam(teamId: string, userId: string, data: { name?: 
   }
 }
 
-export async function deleteTeam(teamId: string, userId: string) {
+export async function deleteTeam(teamId: string, userId?: string) {
   try {
+    const actorUserId = userId ?? await getDatabaseUserId()
     const team = await prisma.team.findFirst({
       where: {
         id: teamId,
-        userId,
+        userId: actorUserId,
       }
     })
 
@@ -303,27 +305,33 @@ export async function getTeamAnalytics(teamId: string, period: 'daily' | 'weekly
       }
     })
 
-    if (!analytics) {
-      await prisma.teamAnalytics.create({
-        data: {
-          teamId,
-          period,
-          totalPnl: 0,
-          totalTrades: 0,
-          winRate: 0,
-          averageRr: 0,
-        }
-      })
+    if (analytics) {
+      return analytics
     }
 
-    return analytics
+    const created = await prisma.teamAnalytics.create({
+      data: {
+        teamId,
+        period,
+        totalPnl: 0,
+        totalTrades: 0,
+        winRate: 0,
+        averageRr: 0,
+      }
+    })
+
+    return created
   } catch (error) {
     console.error('Error fetching team analytics:', error)
     throw error
   }
 }
 
-export async function updateTeamAnalytics(teamId: string, userId: string) {
+export async function updateTeamAnalytics(
+  teamId: string,
+  userId: string,
+  period: 'daily' | 'weekly' | 'monthly' = 'monthly'
+) {
   try {
     // Check authorization
     const teamMember = await prisma.teamMember.findFirst({
@@ -401,12 +409,12 @@ export async function updateTeamAnalytics(teamId: string, userId: string) {
       where: {
         teamId_period: {
           teamId,
-          period: 'monthly'
+          period,
         }
       },
       create: {
         teamId,
-        period: 'monthly',
+        period,
         totalPnl,
         totalTrades,
         winRate,

@@ -1,6 +1,14 @@
+import type { Metadata } from "next"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
 import { TeamsSidebar } from '../components/teams-sidebar'
+
+export const metadata: Metadata = {
+    robots: {
+        index: false,
+        follow: false,
+    },
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 
@@ -8,7 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
         <SidebarProvider defaultOpen={true}>
             <AuthTimeout />
-            <div className="flex min-h-screen w-full bg-background selection:bg-white/20 selection:text-foreground">
+            <div className="flex min-h-screen w-full bg-background selection:bg-muted selection:text-foreground">
                 <TeamsSidebar />
 
                 <SidebarInset className="flex-1 relative overflow-hidden">

@@ -44,7 +44,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function WeekdayPNLChart({
+export default React.memo(function WeekdayPNLChart({
   size = "medium",
 }: WeekdayPNLChartProps) {
   const { calendarData } = useDashboardStats();
@@ -99,12 +99,13 @@ export default function WeekdayPNLChart({
   const hasData = weekdayData.some((d) => d.tradeCount > 0);
 
   const getColor = (value: number) => {
-    const ratio = Math.abs((value - minPnL) / (maxPnL - minPnL));
-    const baseColorVar = value >= 0 ? "--chart-win" : "--chart-loss";
+    const range = Math.max(1, maxPnL - minPnL);
+    const ratio = Math.abs((value - minPnL) / range);
+    const baseColorVar = value >= 0 ? "--chart-1" : "--chart-4";
     const intensity = darkMode
-      ? Math.max(0.3, ratio) // Higher minimum intensity in dark mode
-      : Math.max(0.2, ratio); // Lower minimum intensity in light mode
-    return `hsl(var(${baseColorVar}) / ${intensity})`;
+      ? Math.max(0.72, 0.72 + ratio * 0.22)
+      : Math.max(0.62, 0.62 + ratio * 0.22);
+    return `hsl(var(${baseColorVar}) / ${Math.min(intensity, 1)})`;
   };
 
   const handleClick = React.useCallback(() => {
@@ -133,15 +134,15 @@ export default function WeekdayPNLChart({
       return (
         <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("weekdayPnl.tooltip.day")}
             </span>
-            <span className="font-bold text-fg-primary text-xs">
+            <span className="font-bold text-foreground text-xs">
               {translateWeekdayPnL(t, data.day)}
             </span>
           </div>
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("weekdayPnl.tooltip.averagePnl")}
             </span>
             <span className={cn(
@@ -150,10 +151,10 @@ export default function WeekdayPNLChart({
             )}>{formatCurrency(data.pnl)}</span>
           </div>
           <div className="flex flex-col pt-2 border-t border-border/55">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("weekdayPnl.tooltip.trades")}
             </span>
-            <span className="font-bold text-fg-primary text-xs">
+            <span className="font-bold text-foreground text-xs">
               {data.tradeCount}{" "}
               {data.tradeCount !== 1
                 ? t("weekdayPnl.tooltip.trades_plural")
@@ -178,7 +179,7 @@ export default function WeekdayPNLChart({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-fg-primary",
+                "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -189,7 +190,7 @@ export default function WeekdayPNLChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-fg-muted hover:text-fg-primary transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -204,7 +205,7 @@ export default function WeekdayPNLChart({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-fg-muted hover:text-foreground hover:bg-secondary/30"
+              className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
               onClick={() => setWeekdayFilter({ days: [] })}
             >
               {t("weekdayPnl.clearFilter")}
@@ -218,7 +219,12 @@ export default function WeekdayPNLChart({
           size === "small" ? "p-1" : "p-2 sm:p-3",
         )}
       >
-        <div className="w-full h-full cursor-pointer" onClick={handleClick}>
+        <button
+          type="button"
+          className="w-full h-full cursor-pointer text-left"
+          onClick={handleClick}
+          aria-label={t("weekdayPnl.title")}
+        >
           {hasData ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -242,7 +248,7 @@ export default function WeekdayPNLChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => {
                     const dayName = translateWeekdayPnL(t, value);
@@ -256,13 +262,13 @@ export default function WeekdayPNLChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="pnl"
@@ -273,17 +279,17 @@ export default function WeekdayPNLChart({
                   {weekdayData.map((entry) => (
                     <Cell
                       key={`cell-${entry.day}`}
-                      fill="hsl(var(--foreground))"
+                      fill={entry.pnl >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
                       fillOpacity={
                         weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
-                          ? 0.3
-                          : (entry.pnl >= 0 ? 0.98 : 0.22)
+                          ? 0.45
+                          : (entry.pnl >= 0 ? 0.94 : 0.84)
                       }
-                      stroke="hsl(var(--foreground))"
+                      stroke="hsl(var(--chart-axis))"
                       strokeOpacity={
                         weekdayFilter.days && weekdayFilter.days.length > 0 && !weekdayFilter.days.includes(entry.day)
-                          ? 0.3
-                          : (entry.pnl >= 0 ? 0.42 : 0.06)
+                          ? 0.45
+                          : 0.35
                       }
                       className={cn(
                         "hover:opacity-100",
@@ -295,12 +301,12 @@ export default function WeekdayPNLChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
-        </div>
+        </button>
       </div>
     </ChartSurface>
   );
-}
+})

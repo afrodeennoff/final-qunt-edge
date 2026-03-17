@@ -14,22 +14,25 @@ datasource db {
 // ============================================================================
 
 model User {
-  id                 String           @id @default(cuid())
-  email              String           @unique
-  auth_user_id       String           @unique
-  isFirstConnection  Boolean          @default(true)
-  isBeta             Boolean          @default(false)
-  language           String           @default("en")
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  auth_user_id       String              @unique
+  isFirstConnection  Boolean             @default(true)
+  isBeta             Boolean             @default(false)
+  language           String              @default("en")
+  dashboardTheme     String              @default("blue") // dashboard theme preference: blue, violet, emerald, amber, rose
   etpToken           String?
-  etpTokenHash       String?          @unique
+  etpTokenHash       String?             @unique
   etpTokenExpiresAt  DateTime?
   thorToken          String?
-  thorTokenHash      String?          @unique
+  thorTokenHash      String?             @unique
   thorTokenExpiresAt DateTime?
-  referral           Referral?        @relation("UserReferral")
+  mt5TokenHash       String?             @unique
+  mt5TokenExpiresAt  DateTime?
+  referral           Referral?           @relation("UserReferral")
   referralRedemption ReferralRedemption? @relation("UserReferralRedemption")
-  subscription       Subscription?    @relation("UserSubscription")
-  dashboardLayout    DashboardLayout? @relation("UserDashboardLayout")
+  subscription       Subscription?       @relation("UserSubscription")
+  dashboardLayout    DashboardLayout?    @relation("UserDashboardLayout")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -48,6 +51,7 @@ model User {
   orders                Order[]                @relation("UserOrders")
   posts                 Post[]                 @relation("UserPosts")
   synchronizations      Synchronization[]      @relation("UserSynchronizations")
+  mt5Accounts          MT5Account[]          @relation("UserMT5Accounts")
   tags                  Tag[]                  @relation("UserTags")
   votes                 Vote[]                 @relation("UserVotes")
   paymentTransactions   PaymentTransaction[]   @relation("UserPaymentTransactions")
@@ -57,6 +61,7 @@ model User {
   paymentMethods        PaymentMethod[]        @relation("UserPaymentMethods")
   usageMetrics          UsageMetric[]          @relation("UserUsageMetrics")
   aiRequestLogs         AiRequestLog[]         @relation("UserAiRequestLogs")
+  aiUsageLedgerEntries  AiUsageLedger[]
   authAttempts          AuthAttempt[]          @relation("UserAuthAttempts")
   oauthStates           OAuthState[]           @relation("UserOAuthStates")
   recoveryCodes         RecoveryCode[]         @relation("UserRecoveryCodes")
@@ -118,14 +123,14 @@ model RecoveryCode {
 }
 
 model Referral {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  slug            String   @unique
+  id     String @id @default(uuid())
+  userId String @unique
+  slug   String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation("UserReferral", fields: [userId], references: [id], onDelete: Cascade)
+  user        User                 @relation("UserReferral", fields: [userId], references: [id], onDelete: Cascade)
   redemptions ReferralRedemption[] @relation("ReferralOwner")
 
   @@index([userId])
@@ -149,24 +154,24 @@ model ReferralRedemption {
 }
 
 model Subscription {
-   id                String  @id @unique @default(uuid())
-   email             String  @unique
-   plan              String
-   status            String  @default("ACTIVE")
-   cancelAtPeriodEnd Boolean @default(false)
-   interval          String?
+  id                String  @id @unique @default(uuid())
+  email             String  @unique
+  plan              String
+  status            String  @default("ACTIVE")
+  cancelAtPeriodEnd Boolean @default(false)
+  interval          String?
 
-   userId      String    @unique
-   endDate     DateTime?
-   trialEndsAt DateTime?
+  userId      String    @unique
+  endDate     DateTime?
+  trialEndsAt DateTime?
 
-   createdAt DateTime @default(now())
-   updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-   user User @relation("UserSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation("UserSubscription", fields: [userId], references: [id], onDelete: Cascade)
 
-   @@index([email])
-   @@schema("public")
+  @@index([email])
+  @@schema("public")
 }
 
 model DashboardLayout {
@@ -226,37 +231,37 @@ model Account {
   accountSize     String?
   accountSizeName String?
 
-  startingBalance   Decimal  @default(0)
-  balanceRequired   Decimal?
-  drawdownThreshold Decimal  @default(0)
-  dailyLoss         Decimal  @default(0)
-  profitTarget      Decimal  @default(0)
-  buffer            Decimal  @default(0)
-  considerBuffer    Boolean  @default(true)
+  startingBalance   Decimal @default(0) @db.Decimal(18, 2)
+  balanceRequired   Decimal? @db.Decimal(18, 2)
+  drawdownThreshold Decimal @default(0) @db.Decimal(18, 2)
+  dailyLoss         Decimal @default(0) @db.Decimal(18, 2)
+  profitTarget      Decimal @default(0) @db.Decimal(18, 2)
+  buffer            Decimal @default(0) @db.Decimal(18, 2)
+  considerBuffer    Boolean @default(true)
 
-  trailingDrawdown   Boolean  @default(false)
-  trailingStopProfit Decimal?
+  trailingDrawdown   Boolean @default(false)
+  trailingStopProfit Decimal? @db.Decimal(18, 2)
   trailing           String?
 
   isPerformance Boolean @default(false)
   evaluation    Boolean @default(true)
 
   payoutCount   Int      @default(0)
-  minPayout     Decimal?
+  minPayout     Decimal? @db.Decimal(18, 2)
   maxPayout     String?
-  profitSharing Decimal?
-  payoutBonus   Decimal?
+  profitSharing Decimal? @db.Decimal(18, 2)
+  payoutBonus   Decimal? @db.Decimal(18, 2)
   payoutPolicy  String?
 
-  consistencyPercentage   Decimal? @default(30)
+  consistencyPercentage   Decimal? @default(30) @db.Decimal(5, 2)
   minTradingDaysForPayout Int?
   minDays                 Int?
-  minPnlToCountAsDay      Decimal?
+  minPnlToCountAsDay      Decimal? @db.Decimal(18, 2)
 
-  activationFees  Decimal?
-  price           Decimal?
-  priceWithPromo  Decimal?
-  promoPercentage Decimal?
+  activationFees  Decimal? @db.Decimal(18, 2)
+  price           Decimal? @db.Decimal(18, 2)
+  priceWithPromo  Decimal? @db.Decimal(18, 2)
+  promoPercentage Decimal? @db.Decimal(5, 2)
   promoType       PromoType?
 
   tradingNewsAllowed Boolean @default(true)
@@ -275,7 +280,7 @@ model Account {
   shouldConsiderTradesBeforeReset Boolean   @default(true)
 
   groupId String?
-  group   Group?  @relation(fields: [groupId], references: [id])
+  group   Group?  @relation(fields: [groupId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
 
@@ -292,6 +297,7 @@ model Account {
   @@index([userId, isPerformance, createdAt])
   @@index([userId, number]) // Performance scan index
   @@index([userId, groupId])
+  @@index([userId, propfirm]) // Composite for propfirm filtering
   @@schema("public")
 }
 
@@ -302,12 +308,12 @@ model Trade {
 
   instrument String
   side       String? @default("")
-  quantity   Decimal
+  quantity   Decimal @default(0) @db.Decimal(18, 6)
 
-  entryPrice Decimal
-  closePrice Decimal
-  pnl        Decimal
-  commission Decimal @default(0)
+  entryPrice Decimal @db.Decimal(18, 6)
+  closePrice Decimal @db.Decimal(18, 6)
+  pnl        Decimal @default(0) @db.Decimal(18, 2)
+  commission Decimal @default(0) @db.Decimal(18, 2)
 
   entryId String? @default("")
   closeId String? @default("")
@@ -315,7 +321,7 @@ model Trade {
   entryDate DateTime
   closeDate DateTime
 
-  timeInPosition Decimal @default(0)
+  timeInPosition Decimal @default(0) @db.Decimal(10, 2)
 
   comment String?
   tags    String[] @default([])
@@ -339,6 +345,9 @@ model Trade {
   @@index([userId, accountNumber, instrument])
   @@index([userId, accountNumber, entryDate, pnl])
   @@index([userId, instrument])
+  @@index([userId, accountNumber, entryDate]) // Composite for dashboard trade queries
+  @@index([userId, pnl]) // Composite for PnL filtering
+  @@index([userId, tags]) // GIN index for array column filtering
   @@schema("public")
 }
 
@@ -363,7 +372,7 @@ model Payout {
   accountId     String
   accountNumber String
 
-  amount Decimal
+  amount Decimal @db.Decimal(18, 2)
   status String  @default("PENDING")
 
   date      DateTime
@@ -374,6 +383,8 @@ model Payout {
   @@index([accountNumber])
   @@index([accountId])
   @@index([status])
+  @@index([accountId, status]) // Composite for payout processing queries
+  @@index([date]) // For date-based payout queries
   @@schema("public")
 }
 
@@ -387,8 +398,8 @@ model Order {
   instrumentType String
   orderAction    String
 
-  quantity           Decimal
-  averageFilledPrice Decimal
+  quantity           Decimal @db.Decimal(18, 6)
+  averageFilledPrice Decimal @db.Decimal(18, 6)
   isOpeningOrder     Boolean
 
   time DateTime
@@ -397,10 +408,11 @@ model Order {
 
   user User @relation("UserOrders", fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, orderId])
   @@index([accountId])
   @@index([orderId])
   @@index([userId])
-  @@unique([userId, orderId])
+  @@index([userId, time]) // Composite for time-based order queries
   @@schema("public")
 }
 
@@ -432,6 +444,42 @@ model Synchronization {
   @@schema("public")
 }
 
+model MT5Account {
+  id        String @id @default(uuid())
+  userId    String
+  login     BigInt
+  server    String
+
+  passwordCiphertext String
+  passwordIv        String
+  passwordTag       String
+  passwordKeyVersion String @default("1")
+
+  status          String  @default("PENDING")
+  lastSyncError   String?
+
+  lastSyncAt   DateTime?
+  nextSyncAt   DateTime?
+  lastTradeCount Int    @default(0)
+
+  isActive         Boolean @default(false)
+  lastActivityAt   DateTime?
+  tradeCount24h    Int     @default(0)
+
+  accountName String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation("UserMT5Accounts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, login, server])
+  @@index([userId])
+  @@index([status])
+  @@index([nextSyncAt])
+  @@index([userId, status])
+  @@schema("public")
+}
+
 // ============================================================================
 // ANALYTICS & MARKET DATA
 // ============================================================================
@@ -449,12 +497,12 @@ model TradeAnalytics {
   id      String @id @default(uuid())
   tradeId String @unique
 
-  mae                Decimal  @default(0)
-  mfe                Decimal  @default(0)
-  entryPriceFromData Decimal?
-  priceDifference    Decimal?
-  riskRewardRatio    Decimal?
-  efficiency         Decimal?
+  mae                Decimal  @default(0) @db.Decimal(18, 4)
+  mfe                Decimal  @default(0) @db.Decimal(18, 4)
+  entryPriceFromData Decimal? @db.Decimal(18, 6)
+  priceDifference    Decimal? @db.Decimal(18, 6)
+  riskRewardRatio    Decimal? @db.Decimal(8, 4)
+  efficiency         Decimal? @db.Decimal(5, 4)
 
   dataSource String @default("DATABENTO")
 
@@ -463,6 +511,7 @@ model TradeAnalytics {
 
   @@index([tradeId])
   @@index([computedAt])
+  @@index([tradeId, computedAt]) // Composite for trade analytics lookups
   @@schema("public")
 }
 
@@ -1226,6 +1275,24 @@ model AiRequestLog {
   @@index([feature, createdAt])
   @@index([userId, createdAt])
   @@index([success])
+  @@schema("public")
+}
+
+model AiUsageLedger {
+  id     String @id @default(uuid())
+  userId String
+
+  route       String
+  feature     String
+  totalTokens Int
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([feature, createdAt])
+  @@index([userId, createdAt])
   @@schema("public")
 }
 

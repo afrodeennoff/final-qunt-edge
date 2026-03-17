@@ -231,7 +231,7 @@ export function AccountEquityChart({
         cy={cy}
         r={4}
         fill={getPayoutColor(payload.payoutStatus)}
-        stroke="hsl(var(--background))"
+        stroke="hsl(var(--chart-axis))"
         strokeWidth={1}
       />
     )

@@ -56,15 +56,15 @@ export function TradeProgressChart({
     },
     drawdown: {
       label: t('propFirm.chart.drawdownLevel'),
-      color: "hsl(var(--foreground) / 0.35)",
+      color: "hsl(var(--chart-axis))",
     },
     target: {
       label: t('propFirm.chart.profitTarget'),
-      color: "hsl(var(--foreground) / 0.35)",
+      color: "hsl(var(--chart-axis))",
     },
     payout: {
       label: t('propFirm.chart.payout'),
-      color: "hsl(var(--foreground) / 0.35)",
+      color: "hsl(var(--chart-axis))",
     }
   }
 
@@ -154,11 +154,11 @@ export function TradeProgressChart({
 
   const getPayoutColor = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'hsl(var(--foreground) / 0.35)'
-      case 'VALIDATED': return 'hsl(var(--foreground) / 0.35)'
-      case 'REFUSED': return 'hsl(var(--foreground) / 0.35)'
-      case 'PAID': return 'hsl(var(--foreground) / 0.35)'
-      default: return 'hsl(var(--foreground) / 0.35)'
+      case 'PENDING': return 'hsl(var(--chart-axis))'
+      case 'VALIDATED': return 'hsl(var(--chart-4))'
+      case 'REFUSED': return 'hsl(var(--destructive))'
+      case 'PAID': return 'hsl(var(--chart-win))'
+      default: return 'hsl(var(--chart-axis))'
     }
   }
 
@@ -170,29 +170,29 @@ export function TradeProgressChart({
 
     if (payload?.isReset) {
       return (
-        <circle
-          key={`dot-${index}-reset`}
-          cx={cx}
-          cy={cy}
-          r={5}
-          fill="hsl(var(--foreground))"
-          stroke="black"
-          strokeWidth={2}
-        />
+          <circle
+            key={`dot-${index}-reset`}
+            cx={cx}
+            cy={cy}
+            r={5}
+            fill="hsl(var(--foreground))"
+            stroke="hsl(var(--foreground))"
+            strokeWidth={2}
+          />
       )
     }
 
     if (payload?.isPayout) {
       return (
-        <circle
-          key={`dot-${index}-payout`}
-          cx={cx}
-          cy={cy}
-          r={4}
-          fill={getPayoutColor(payload.payoutStatus || '')}
-          stroke="black"
-          strokeWidth={1}
-        />
+          <circle
+            key={`dot-${index}-payout`}
+            cx={cx}
+            cy={cy}
+            r={4}
+            fill={getPayoutColor(payload.payoutStatus || '')}
+            stroke="hsl(var(--foreground))"
+            strokeWidth={1}
+          />
       )
     }
 
@@ -216,7 +216,7 @@ export function TradeProgressChart({
                 bottom: 20,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--foreground) / 0.35)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--chart-grid) / 0.58)" />
               <XAxis
                 dataKey="tradeIndex"
                 tickLine={false}
@@ -232,27 +232,27 @@ export function TradeProgressChart({
                 ]}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: 'hsl(var(--foreground) / 0.35)', fontSize: 10 }}
+                tick={{ fill: 'hsl(var(--chart-axis))', fontSize: 10 }}
               />
               <Tooltip
-                cursor={{ stroke: 'hsl(var(--foreground) / 0.35)', strokeWidth: 1, strokeDasharray: '3 3' }}
+                cursor={{ stroke: 'hsl(var(--chart-axis))', strokeWidth: 1, strokeDasharray: '3 3' }}
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload as ChartDataPoint;
                     return (
-                      <div className="bg-black/90 backdrop-blur-xl p-3 border border-white/10 rounded-lg shadow-2xl text-[10px] space-y-2 min-w-[140px]">
-                        <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                          <span className="font-black text-white">TRADE #{data.tradeIndex}</span>
-                          <span className="text-white/40">{data.date}</span>
+                      <div className="bg-popover/90 backdrop-blur-xl p-3 border border-border/10 rounded-lg shadow-2xl text-[10px] space-y-2 min-w-[140px]">
+                        <div className="flex items-center justify-between border-b border-border/5 pb-1">
+                          <span className="font-black text-foreground">TRADE #{data.tradeIndex}</span>
+                          <span className="text-foreground/60">{data.date}</span>
                         </div>
                         <div className="space-y-1">
                           <div className="flex justify-between items-center">
-                            <span className="text-white/40 uppercase font-bold tracking-wider">Balance</span>
-                            <span className="text-white font-black">${data.balance.toLocaleString()}</span>
+                            <span className="text-foreground/60 uppercase font-bold tracking-wider">Balance</span>
+                            <span className="text-foreground font-black">${data.balance.toLocaleString()}</span>
                           </div>
                           {!data.isPayout && !data.isReset && (
                             <div className="flex justify-between items-center">
-                              <span className="text-white/40 uppercase font-bold tracking-wider">Net P/L</span>
+                              <span className="text-foreground/60 uppercase font-bold tracking-wider">Net P/L</span>
                               <span className={cn(
                                 "font-black",
                                 data.pnl >= 0 ? "metric-positive" : "metric-negative"
@@ -262,28 +262,28 @@ export function TradeProgressChart({
                             </div>
                           )}
                         </div>
-                        <div className="space-y-1 pt-1 border-t border-white/5">
+                        <div className="space-y-1 pt-1 border-t border-border/5">
                           <div className="flex justify-between items-center">
-                            <span className="text-white/20 uppercase font-bold tracking-wider">Drawdown</span>
-                            <span className="text-white/60 font-medium">${data.drawdownLevel.toLocaleString()}</span>
+                            <span className="text-foreground/65 uppercase font-bold tracking-wider">Drawdown</span>
+                            <span className="text-muted-foreground font-medium">${data.drawdownLevel.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-white/20 uppercase font-bold tracking-wider">ATH</span>
-                            <span className="text-white/60 font-medium">${data.highestBalance.toLocaleString()}</span>
+                            <span className="text-foreground/65 uppercase font-bold tracking-wider">ATH</span>
+                            <span className="text-muted-foreground font-medium">${data.highestBalance.toLocaleString()}</span>
                           </div>
                         </div>
                         {data.isReset && (
-                          <div className="mt-1 pt-1 border-t border-white/10 metric-negative font-black uppercase text-center tracking-widest">
+                          <div className="mt-1 pt-1 border-t border-border/10 metric-negative font-black uppercase text-center tracking-widest">
                             {t('propFirm.chart.accountReset')}
                           </div>
                         )}
                         {data.isPayout && data.payoutStatus && (
-                          <div className="mt-1 pt-1 border-t border-white/10">
+                          <div className="mt-1 pt-1 border-t border-border/10">
                             <div className="flex justify-between items-center">
-                              <span className="text-white font-black uppercase tracking-wider">Payout</span>
-                              <span className="text-white font-black">${data.payoutAmount.toLocaleString()}</span>
+                              <span className="text-foreground font-black uppercase tracking-wider">Payout</span>
+                              <span className="text-foreground font-black">${data.payoutAmount.toLocaleString()}</span>
                             </div>
-                            <div className="text-[8px] text-white/40 uppercase text-right tracking-widest">
+                            <div className="text-[8px] text-foreground/60 uppercase text-right tracking-widest">
                               {data.payoutStatus}
                             </div>
                           </div>
@@ -324,12 +324,12 @@ export function TradeProgressChart({
               />
               <ReferenceLine
                 y={startingBalance}
-                stroke="hsl(var(--foreground) / 0.35)"
+                stroke="hsl(var(--chart-axis))"
                 strokeDasharray="2 2"
                 label={{
                   value: t('propFirm.chart.startingBalance'),
                   position: "insideBottomRight",
-                  fill: "hsl(var(--foreground) / 0.35)",
+                  fill: "hsl(var(--chart-axis))",
                   fontSize: 9,
                   fontWeight: 'bold',
                 }}

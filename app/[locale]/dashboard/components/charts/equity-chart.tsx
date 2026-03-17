@@ -75,14 +75,14 @@ const formatCurrency = (value: number) =>
 
 function getChartColorByIndex(index: number): string {
   const paletteVars = [
-    "hsl(var(--foreground) / 0.95)",
-    "hsl(var(--foreground) / 0.85)",
-    "hsl(var(--foreground) / 0.75)",
-    "hsl(var(--foreground) / 0.65)",
-    "hsl(var(--foreground) / 0.55)",
-    "hsl(var(--foreground) / 0.45)",
-    "hsl(var(--foreground) / 0.35)",
-    "hsl(var(--foreground) / 0.25)",
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
+    "hsl(var(--chart-6))",
+    "hsl(var(--chart-7))",
+    "hsl(var(--chart-8))",
   ];
   return paletteVars[index % paletteVars.length];
 }
@@ -152,10 +152,10 @@ const renderDot = (props: any) => {
           cx={cx}
           cy={cy}
           r={5}
-          fill="hsl(var(--foreground))"
-          fillOpacity={0.2}
+          fill="hsl(var(--chart-axis))"
+          fillOpacity={0.55}
           stroke="hsl(var(--foreground))"
-          strokeOpacity={0.1}
+          strokeOpacity={0.75}
           strokeWidth={1}
         />
       );
@@ -175,7 +175,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={fg}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );
@@ -192,7 +192,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={5}
           fill="hsl(var(--destructive))"
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={2}
         />
       );
@@ -208,7 +208,7 @@ const renderDot = (props: any) => {
           cy={cy}
           r={4}
           fill={fg}
-          stroke="hsl(var(--background))"
+          stroke="hsl(var(--chart-axis))"
           strokeWidth={1}
         />
       );
@@ -313,17 +313,17 @@ const OptimizedTooltip = React.memo(
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[160px]">
         <div className="grid gap-2">
           <div className="flex justify-between items-center border-b border-border/55 pb-1">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
               {t("equity.tooltip.date")}
             </span>
-            <span className="font-black text-muted-foreground/85 text-[10px] uppercase tracking-widest">
+            <span className="font-black text-muted-foreground text-[10px] uppercase tracking-widest">
               {format(new Date(data.date), "MMM d, yyyy", {
                 locale: dateLocale,
               })}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
               {t("equity.tooltip.totalEquity")}
             </span>
             <span className={cn(
@@ -336,7 +336,7 @@ const OptimizedTooltip = React.memo(
 
           {resetAccounts.length > 0 && (
             <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
                 {t("equity.tooltip.resets")}
               </span>
               <div className="space-y-1">
@@ -361,7 +361,7 @@ const OptimizedTooltip = React.memo(
 
           {payoutAccounts.length > 0 && (
             <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
                 {t("equity.tooltip.payouts")}
               </span>
               <div className="space-y-1">
@@ -376,7 +376,7 @@ const OptimizedTooltip = React.memo(
                             generateAccountColor(account),
                         }}
                       />
-                      <span className="text-[10px] font-black text-foreground/80 uppercase tracking-widest leading-none">
+                      <span className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none">
                         {account}
                       </span>
                     </div>
@@ -560,7 +560,7 @@ const AccountsLegend = React.memo(
 );
 AccountsLegend.displayName = "AccountsLegend";
 
-export default function EquityChart({ size = "medium" }: EquityChartProps) {
+export default React.memo(function EquityChart({ size = "medium" }: EquityChartProps) {
   const pathname = usePathname();
   const isTeamView = pathname.includes("teams");
   const {
@@ -887,7 +887,7 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4"
                     )}
                   />
@@ -906,7 +906,7 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
                 onCheckedChange={setShowIndividualConfig}
                 className="shrink-0 scale-75"
               />
-              <Label htmlFor="view-mode" className="text-xs text-fg-secondary cursor-pointer">
+              <Label htmlFor="view-mode" className="text-xs text-muted-foreground cursor-pointer">
                 {t("equity.toggle.individual")}
               </Label>
             </div>
@@ -923,7 +923,7 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
           <div className="flex-1 min-h-0">
             {isLoading ? (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="text-fg-muted text-sm animate-pulse">
+                <div className="text-muted-foreground text-sm animate-pulse">
                   {t("equity.loading")}
                 </div>
               </div>
@@ -953,7 +953,7 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
                       minTickGap={30}
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
-                        fill: "var(--fg-muted)",
+                        fill: "hsl(var(--text-secondary))",
                       }}
                       tickFormatter={(value) =>
                         format(new Date(value), "MMM d", { locale: dateLocale })
@@ -967,15 +967,15 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
                       tickMargin={4}
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
-                        fill: "var(--fg-muted)",
+                        fill: "hsl(var(--text-secondary))",
                       }}
                       tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
                     />
                     <ReferenceLine
                       y={0}
-                      stroke="hsl(var(--foreground))"
+                      stroke="hsl(var(--chart-axis))"
                       strokeDasharray="3 3"
-                      strokeOpacity={0.1}
+                      strokeOpacity={0.55}
                     />
                     <ChartTooltip
                       content={({
@@ -1001,7 +1001,7 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
                 </ResponsiveContainer>
               </ChartContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-fg-muted text-xs">
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
                 {t("widgets.emptyState") ?? "No trades yet."}
               </div>
             )}
@@ -1026,4 +1026,4 @@ export default function EquityChart({ size = "medium" }: EquityChartProps) {
       </div>
     </ChartSurface>
   );
-}
+})

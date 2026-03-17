@@ -111,20 +111,20 @@ export function DataTableColumnHeader<TData, TValue>({
             ) : column.getIsSorted() === "asc" ? (
               <ArrowUp className="ml-1 h-3.5 w-3.5" />
             ) : (
-              <ChevronsUpDown className="ml-1 h-3.5 w-3.5 text-muted-foreground/70" />
+              <ChevronsUpDown className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
             )}
             {isFiltered && (
-              <Filter className="ml-1 h-3.5 w-3.5 text-muted-foreground/70" />
+              <Filter className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUp className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUp className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
             {t('table.sortAscending')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
             {t('table.sortDescending')}
           </DropdownMenuItem>
           {showToggle && (
@@ -147,7 +147,7 @@ export function DataTableColumnHeader<TData, TValue>({
               <DropdownMenuSeparator />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                  <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                  <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
                   {t('table.filter')}
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent className="w-80">
@@ -206,7 +206,7 @@ export function DataTableColumnHeader<TData, TValue>({
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleHideColumn}>
-            <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
             {t('table.hideColumn')}
           </DropdownMenuItem>
         </DropdownMenuContent>

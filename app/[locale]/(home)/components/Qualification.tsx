@@ -45,12 +45,12 @@ export default function Qualification() {
             viewport={{ once: true }}
             className="rounded-2xl border border-border/70 bg-card/70 p-6"
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">Not Ideal</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-foreground/80">Not Ideal</p>
             <h3 className="mt-2 text-2xl font-black tracking-tight">Noise-First Trading</h3>
             <ul className="mt-4 space-y-3">
               {noFitList.map((item) => (
-                <li key={item} className="flex gap-3 text-sm text-muted-foreground">
-                  <span className="mt-0.5 text-muted-foreground">✕</span>
+                <li key={item} className="flex gap-3 text-sm text-foreground/80">
+                  <span className="mt-0.5 text-foreground/80">✕</span>
                   <span>{item}</span>
                 </li>
               ))}

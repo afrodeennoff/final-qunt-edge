@@ -18,6 +18,7 @@ const LINKS: NavLink[] = [
   { title: 'Features', href: '/#features' },
   { title: 'Pricing', href: '/pricing' },
   { title: 'Prop Firms', href: '/propfirms' },
+  { title: 'Deals', href: '/deals' },
   { title: 'Teams', href: '/teams' },
   { title: 'Support', href: '/support' },
 ]
@@ -54,8 +55,8 @@ export default function Navbar() {
       >
         <motion.div
           className={cn(
-            'flex h-[58px] items-center rounded-full border px-3 sm:h-[66px] sm:px-4',
-            'border-[hsl(var(--mk-border)/0.4)] bg-[hsl(var(--mk-surface)/0.72)] backdrop-blur-md sm:backdrop-blur-xl',
+            'flex h-[56px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
+            'border-[hsl(var(--foreground)/0.55)] bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-md sm:backdrop-blur-xl',
             scrolled ? 'shadow-[0_20px_34px_-26px_hsl(var(--brand-ink)/0.82)] sm:shadow-[0_28px_48px_-32px_hsl(var(--brand-ink)/0.86)]' : 'shadow-[0_8px_24px_-20px_hsl(var(--brand-ink)/0.7)]'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
@@ -78,7 +79,7 @@ export default function Navbar() {
                     'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
                       ? 'bg-[hsl(var(--brand-primary)/0.14)] text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
-                      : 'text-[hsl(var(--mk-text-muted))] hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
+                      : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >
                   {link.title}
@@ -88,7 +89,7 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <Button asChild className="hidden h-10 rounded-full bg-[hsl(var(--brand-primary))] px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))] shadow-[0_10px_24px_-14px_hsl(var(--brand-primary))] md:inline-flex">
+            <Button asChild className="hidden h-10 rounded-full bg-primary px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90 md:inline-flex">
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </Button>
 
@@ -116,7 +117,7 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
-                  <Button asChild className="mt-auto h-11 rounded-full bg-[hsl(var(--brand-primary))] text-[hsl(var(--brand-ink))]">
+                  <Button asChild className="mt-auto h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
                     <Link href={`/${locale}/authentication`} onClick={() => setMobileOpen(false)}>
                       Start Free Audit
                     </Link>

@@ -1,79 +1,112 @@
 /**
- * Centralized Design Token System
+ * Centralized Design Token System - LUXURY EDITION
  * Replaces CDN-based Tailwind approach with token-based architecture
+ * Premium color palette: Champagne Gold, Rose Gold, Deep Obsidian
  * All colors use HSL format for consistency and theme support
  */
 
 @layer base {
   :root {
+    /* ===== LUXURY PRIMARY ACCENT - CHAMPAGNE GOLD ===== */
+    /* Primary accent - elegant champagne gold (#F5E6D3 / #E8D4B8) */
+    --accent-luxury: 35 40% 85%;
+    --accent-luxury-hover: 35 38% 78%;
+    --accent-luxury-active: 35 36% 72%;
+    --accent-luxury-subtle: 35 40% 85% / 0.12;
+    --accent-luxury-glow: 35 40% 85% / 0.25;
+    
+    /* Secondary accent - Rose Gold (#B76E79 / #E8C4C4) */
+    --accent-rose: 350 30% 75%;
+    --accent-rose-hover: 350 28% 70%;
+    --accent-rose-active: 350 25% 65%;
+    --accent-rose-subtle: 350 30% 75% / 0.1;
+    
+    /* Tertiary - Bronze (#CD7F32 variant) */
+    --accent-bronze: 30 45% 55%;
+    --accent-bronze-hover: 30 42% 50%;
+    
     /* ===== CANONICAL APP SEMANTIC TOKENS ===== */
-    --background: 0 0% 1%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 11%;
-    --muted-foreground: 0 0% 68%;
-    --accent: 0 0% 17%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 0% 30%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 0 0% 100%;
-    --success-foreground: 0 0% 0%;
-    --input: 0 0% 18%;
-    --border: 0 0% 21%;
-    --ring: 0 0% 100%;
+    /* Rich obsidian backgrounds with warm undertones */
+    --background: 240 8% 2%;
+    --foreground: 35 15% 92%;
+    --card: 240 6% 4%;
+    --card-foreground: 35 15% 92%;
+    --popover: 240 5% 3%;
+    --popover-foreground: 35 15% 92%;
+    --primary: 35 40% 85%;
+    --primary-foreground: 240 8% 8%;
+    --secondary: 240 4% 12%;
+    --secondary-foreground: 35 15% 88%;
+    --muted: 240 4% 10%;
+    --muted-foreground: 35 10% 60%;
+    --accent: 35 35% 15%;
+    --accent-foreground: 35 40% 85%;
+    --destructive: 0 40% 25%;
+    --destructive-foreground: 35 40% 85%;
+    --success: 150 30% 40%;
+    --success-foreground: 35 15% 92%;
+    --input: 240 4% 16%;
+    --border: 35 20% 20%;
+    --ring: 35 40% 85%;
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 0 0% 93%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 14%;
-    --sidebar-ring: 0 0% 100%;
+    /* ===== UI ALLOCATION TOKENS (60/30/10) ===== */
+    --ui-60-bg: var(--background);
+    --ui-60-surface: var(--card);
+    --ui-60-text: var(--foreground);
+    --ui-30-border: var(--border);
+    --ui-30-subtle: var(--secondary);
+    --ui-30-text: var(--muted-foreground);
+    --ui-10-accent: var(--primary);
+    --ui-10-accent-fg: var(--primary-foreground);
 
-    --chart-1: 0 0% 100%;
-    --chart-2: 0 0% 80%;
-    --chart-3: 0 0% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 0 0% 30%;
-    --chart-6: 0 0% 20%;
-    --chart-7: 0 0% 15%;
-    --chart-8: 0 0% 10%;
-    --chart-loss: 0 0% 18%;
-    --chart-win: 0 0% 100%;
-    --chart-grid: 0 0% 18%;
-    --chart-axis: 0 0% 68%;
-    --chart-tooltip: 0 0% 5%;
-    --chart-tooltip-border: 0 0% 15%;
+    /* ===== LUXURY SIDEBAR - Deep obsidian with gold accents ===== */
+    --sidebar-background: 240 6% 2%;
+    --sidebar-foreground: 35 15% 88%;
+    --sidebar-primary: 35 40% 85%;
+    --sidebar-primary-foreground: 240 8% 8%;
+    --sidebar-accent: 35 25% 12%;
+    --sidebar-accent-foreground: 35 40% 85%;
+    --sidebar-border: 35 20% 15%;
+    --sidebar-ring: 35 40% 85%;
 
-    --precision-cobalt: 0 0% 100%;
-    --precision-cobalt-rgb: 255 255 255;
-    --accent-neutral-rgb: 255 255 255;
-    --rose-500-rgb: 100 100 100;
-    --precision-panel: 0 0% 2%;
-    --precision-panel-elevated: 0 0% 4%;
-    --precision-panel-line: 0 0% 10%;
-    --precision-panel-inner: 0 0% 100%;
+    /* ===== CHART COLORS - Luxury monotone with gold/rose accents ===== */
+    --chart-1: 35 40% 85%;
+    --chart-2: 35 30% 70%;
+    --chart-3: 35 25% 55%;
+    --chart-4: 350 30% 75%;
+    --chart-5: 30 45% 55%;
+    --chart-6: 220 12% 66%;
+    --chart-7: 220 11% 56%;
+    --chart-8: 220 10% 46%;
+    --chart-loss: 0 40% 25%;
+    --chart-win: 35 40% 85%;
+    --chart-grid: 35 15% 18%;
+    --chart-axis: 35 10% 55%;
+    --chart-tooltip: 240 6% 4%;
+    --chart-tooltip-border: 35 20% 20%;
+
+    /* ===== LUXURY PRECISION PANEL ===== */
+    --precision-cobalt: 35 40% 85%;
+    --precision-cobalt-rgb: 245 230 211;
+    --accent-neutral-rgb: 245 230 211;
+    --rose-500-rgb: 183 110 121;
+    --precision-panel: 240 6% 2%;
+    --precision-panel-elevated: 240 6% 4%;
+    --precision-panel-line: 35 20% 18%;
+    --precision-panel-inner: 35 40% 85%;
 
     /* ===== OPTIMIZATION PASS: SEMANTIC CORE TOKENS ===== */
-    --bg: 0 0% 0%;
-    --surface-1: 0 0% 4%;
-    --surface-2: 0 0% 7%;
-    --text-primary: 0 0% 97%;
-    --text-secondary: 0 0% 68%;
-    --accent-1: 0 0% 100%;
-    --accent-2: 0 0% 82%;
-    --success: 0 0% 100%;
-    --warning: 0 0% 66%;
-    --danger: 0 0% 42%;
+    --bg: var(--background);
+    --surface-1: var(--card);
+    --surface-2: var(--popover);
+    --text-primary: var(--foreground);
+    --text-secondary: var(--muted-foreground);
+    --accent-1: var(--primary);
+    --accent-2: var(--secondary);
+    --success: var(--primary);
+    --warning: var(--accent-bronze);
+    --danger: var(--destructive);
 
     /* ===== 4PX RHYTHM SPACING SCALE ===== */
     --space-1: 0.25rem;  /* 4px */
@@ -101,40 +134,40 @@
     --shadow-md: 0 8px 18px -12px rgb(0 0 0 / 0.55);
     --shadow-lg: 0 18px 28px -16px rgb(0 0 0 / 0.7);
 
-    /* ===== GLOBAL BRAND COLORS ===== */
-    --brand-primary: 0 0% 100%;
-    --brand-primary-strong: 0 0% 90%;
-    --brand-secondary: 0 0% 80%;
-    --brand-warm: 0 0% 70%;
-    --brand-ink: 0 0% 5%;
-    --brand-soft-ink: 0 0% 16%;
+    /* ===== GLOBAL BRAND COLORS - Luxury Champagne Gold & Rose Gold ===== */
+    --brand-primary: 35 40% 85%;
+    --brand-primary-strong: 35 38% 78%;
+    --brand-secondary: 350 30% 75%;
+    --brand-warm: 30 45% 55%;
+    --brand-ink: 35 15% 8%;
+    --brand-soft-ink: 35 12% 15%;
 
-    /* ===== MARKETING SURFACE TOKENS ===== */
-    --mk-bg-0: 0 0% 2%;
-    --mk-bg-1: 0 0% 3%;
-    --mk-bg-2: 0 0% 4%;
-    --mk-surface: 0 0% 5%;
-    --mk-surface-muted: 0 0% 8%;
-    --mk-border: 0 0% 20%;
-    --mk-text: 0 0% 90%;
-    --mk-text-muted: 0 0% 50%;
+    /* ===== MARKETING SURFACE TOKENS - Rich luxury surfaces ===== */
+    --mk-bg-0: 240 6% 1%;
+    --mk-bg-1: 240 6% 2%;
+    --mk-bg-2: 240 5% 3%;
+    --mk-surface: 240 5% 4%;
+    --mk-surface-muted: 240 4% 6%;
+    --mk-border: 35 20% 30%;
+    --mk-text: 35 15% 92%;
+    --mk-text-muted: 35 12% 72%;
 
-    /* ===== BACKGROUND HIERARCHY (7 levels) ===== */
+    /* ===== BACKGROUND HIERARCHY (7 levels) - Luxury obsidian depths ===== */
     /* Semantic background tokens from darkest to lightest */
-    --bg-base: 240 10% 3.9%;
-    --bg-elevated: 240 10% 5%;
-    --bg-card: 240 10% 7%;
-    --bg-card-hover: 240 10% 9%;
-    --bg-overlay: 240 10% 11%;
-    --bg-modal: 240 10% 13%;
-    --bg-highlight: 240 10% 15%;
+    --bg-base: 240 8% 1.5%;
+    --bg-elevated: 240 6% 3%;
+    --bg-card: 240 6% 4.5%;
+    --bg-card-hover: 240 5% 6%;
+    --bg-overlay: 240 5% 8%;
+    --bg-modal: 240 4% 10%;
+    --bg-highlight: 240 4% 12%;
 
-    /* ===== PRIMARY ACCENT (Teal-500: #2dd4bf) ===== */
-    --accent-neutral: 0 0% 100%;
-    --accent-neutral-hover: 0 0% 90%;
-    --accent-neutral-active: 0 0% 80%;
-    --accent-neutral-subtle: 0 0% 100%;
-    --accent-neutral-glow: 0 0% 100%;
+    /* ===== PRIMARY ACCENT (Luxury Champagne Gold: #F5E6D3) ===== */
+    --accent-neutral: 35 40% 85%;
+    --accent-neutral-hover: 35 38% 78%;
+    --accent-neutral-active: 35 36% 72%;
+    --accent-neutral-subtle: 35 40% 85% / 0.1;
+    --accent-neutral-glow: 35 40% 85% / 0.2;
 
     /* ===== NEUTRAL PALETTE (Zinc scale) ===== */
     --neutral-50: 240 5% 96%;
@@ -149,76 +182,103 @@
     --neutral-900: 240 6% 10%;
     --neutral-950: 240 10% 3.9%;
 
-    /* ===== FOREGROUND COLORS ===== */
-    --fg-primary: 0 0% 98%;
-    --fg-secondary: 240 5% 65%;
-    --fg-tertiary: 240 5% 45%;
-    --fg-muted: 240 5% 35%;
-    --fg-disabled: 240 5% 25%;
+    /* ===== FOREGROUND COLORS - Warm luxury tones ===== */
+    --fg-primary: 35 15% 92%;
+    --fg-secondary: 35 10% 65%;
+    --fg-tertiary: 35 10% 50%;
+    --fg-muted: 35 10% 40%;
+    --fg-disabled: 35 8% 28%;
 
-    /* ===== BORDER COLORS ===== */
-    --border-default: 240 4% 20%;
-    --border-subtle: 240 4% 15%;
-    --border-strong: 240 4% 25%;
+    /* ===== BORDER COLORS - Subtle gold/bronze hints ===== */
+    --border-default: 35 18% 18%;
+    --border-subtle: 35 15% 14%;
+    --border-strong: 35 20% 22%;
     --border-focus: var(--accent-neutral);
-    --border-error: 0 62% 50%;
-    --border-warning: 35 85% 55%;
+    --border-error: 0 40% 35%;
+    --border-warning: 35 60% 50%;
     --border-success: var(--accent-neutral);
 
-    /* ===== GLASSMORPHISM TOKENS ===== */
-    --glass-bg: var(--bg-elevated) / 0.6;
-    --glass-bg-strong: var(--bg-card) / 0.8;
-    --glass-bg-subtle: var(--bg-base) / 0.4;
+    /* ===== GLASSMORPHISM TOKENS - Luxury gold-tinted glass ===== */
+    --glass-bg: var(--bg-elevated) / 0.65;
+    --glass-bg-strong: var(--bg-card) / 0.85;
+    --glass-bg-subtle: var(--bg-base) / 0.45;
     --glass-blur: blur(20px);
     --glass-blur-strong: blur(40px);
-    --glass-border: 255 255 255 / 0.05;
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --glass-border: 245 230 211 / 0.08;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 
-    /* ===== INTERACTIVE STATES ===== */
-    --hover-overlay: 255 255 255 / 0.05;
-    --hover-accent: var(--accent-neutral) / 0.1;
-    --active-overlay: 255 255 255 / 0.1;
-    --focus-ring: var(--accent-neutral) / 0.5;
+    /* ===== INTERACTIVE STATES - Gold accent hover/active ===== */
+    --hover-overlay: 245 230 211 / 0.06;
+    --hover-accent: var(--accent-neutral) / 0.12;
+    --active-overlay: 245 230 211 / 0.1;
+    --focus-ring: var(--accent-neutral) / 0.6;
     --focus-ring-offset: 0 0 0 2px var(--bg-base);
 
-    /* ===== SEMANTIC COLORS ===== */
-    --color-error: 0 0% 40%;
-    --color-error-bg: 0 0% 40% / 0.1;
-    --color-warning: 0 0% 60%;
-    --color-warning-bg: 0 0% 60% / 0.1;
+    /* ===== SEMANTIC COLORS - Luxury refined tones ===== */
+    --color-error: 0 40% 35%;
+    --color-error-bg: 0 40% 35% / 0.12;
+    --color-warning: 35 60% 50%;
+    --color-warning-bg: 35 60% 50% / 0.1;
     --color-success: var(--accent-neutral);
     --color-success-bg: var(--accent-neutral) / 0.1;
-    --color-info: 0 0% 80%;
-    --color-info-bg: 0 0% 80% / 0.1;
-    --semantic-success: 0 0% 98%;
-    --semantic-success-fg: 0 0% 8%;
-    --semantic-success-bg: 0 0% 100% / 0.08;
-    --semantic-success-border: 0 0% 100% / 0.2;
-    --semantic-warning: 0 0% 90%;
-    --semantic-warning-fg: 0 0% 10%;
-    --semantic-warning-bg: 0 0% 100% / 0.06;
-    --semantic-warning-border: 0 0% 100% / 0.16;
-    --semantic-error: 0 0% 82%;
-    --semantic-error-fg: 0 0% 10%;
-    --semantic-error-bg: 0 0% 100% / 0.05;
-    --semantic-error-border: 0 0% 100% / 0.14;
-    --semantic-info: 0 0% 92%;
-    --semantic-info-fg: 0 0% 10%;
-    --semantic-info-bg: 0 0% 100% / 0.07;
-    --semantic-info-border: 0 0% 100% / 0.18;
+    --color-info: 35 25% 70%;
+    --color-info-bg: 35 25% 70% / 0.1;
 
-    /* ===== CHART COLORS ===== */
-    --chart-positive: 0 0% 100%;
-    --chart-negative: 0 0% 40%;
-    --chart-neutral: 240 5% 50%;
-    --chart-1: 0 0% 100%;
-    --chart-2: 0 0% 80%;
-    --chart-3: 0 0% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 0 0% 30%;
-    --chart-6: 0 0% 20%;
-    --chart-7: 0 0% 15%;
-    --chart-8: 0 0% 10%;
+    /* ===== CONTRAST-COMPLIANT TEXT TOKENS (replaces raw text-white/xx) ===== */
+    /* Primary text on dark backgrounds - warm white */
+    --text-primary: 35 15% 92%;
+    /* Secondary text - warm gray, WCAG AA compliant (>4.5:1) */
+    --text-secondary: 35 10% 65%;
+    /* Tertiary/muted text - WCAG AA compliant for large text (>3:1) */
+    --text-tertiary: 35 10% 55%;
+    /* Disabled/placeholder */
+    --text-disabled: 35 8% 38%;
+
+    /* ===== SURFACE TOKENS (replaces raw bg-white/xx and bg-black/xx) ===== */
+    /* Subtle surfaces - replaces bg-white/5 */
+    --surface-subtle: 0 0% 100% / 0.05;
+    --surface-subtle-hover: 245 230 211 / 0.08;
+    --surface-subtle-active: 245 230 211 / 0.12;
+    /* Muted surfaces - replaces bg-white/10 */
+    --surface-muted: 245 230 211 / 0.08;
+    --surface-muted-hover: 245 230 211 / 0.12;
+    /* Elevated/dark surfaces - replaces bg-black/95 */
+    --surface-elevated: 245 230 211 / 0.02;
+    --surface-elevated-hover: 245 230 211 / 0.05;
+
+    /* ===== BORDER TOKENS (replaces raw border-white/xx) ===== */
+    --border-subtle: 245 230 211 / 0.06;
+    --border-muted: 245 230 211 / 0.1;
+    --border-default: 245 230 211 / 0.15;
+    --semantic-success: 35 40% 85%;
+    --semantic-success-fg: 35 15% 8%;
+    --semantic-success-bg: 35 40% 85% / 0.08;
+    --semantic-success-border: 35 40% 85% / 0.2;
+    --semantic-warning: 35 60% 55%;
+    --semantic-warning-fg: 35 15% 8%;
+    --semantic-warning-bg: 35 60% 55% / 0.06;
+    --semantic-warning-border: 35 60% 55% / 0.16;
+    --semantic-error: 0 40% 45%;
+    --semantic-error-fg: 35 15% 92%;
+    --semantic-error-bg: 0 40% 45% / 0.08;
+    --semantic-error-border: 0 40% 45% / 0.16;
+    --semantic-info: 35 25% 70%;
+    --semantic-info-fg: 35 15% 8%;
+    --semantic-info-bg: 35 25% 70% / 0.07;
+    --semantic-info-border: 35 25% 70% / 0.18;
+
+    /* ===== CHART COLORS - Luxury palette with gold accents ===== */
+    --chart-positive: 35 40% 85%;
+    --chart-negative: 0 40% 35%;
+    --chart-neutral: 35 10% 50%;
+    --chart-1: 35 40% 85%;
+    --chart-2: 35 30% 72%;
+    --chart-3: 35 25% 58%;
+    --chart-4: 350 30% 75%;
+    --chart-5: 30 45% 55%;
+    --chart-6: 220 12% 66%;
+    --chart-7: 220 11% 56%;
+    --chart-8: 220 10% 46%;
 
     /* ===== ANIMATION TIMING ===== */
     --transition-fast: 150ms;
@@ -254,70 +314,10 @@
     --card-padding-xl: var(--space-lg);
   }
 
+  /* .dark class inherits luxury theme from :root */
   .dark {
-    --background: 0 0% 1%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 13%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 11%;
-    --muted-foreground: 0 0% 68%;
-    --accent: 0 0% 17%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 0% 25%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 0 0% 100%;
-    --success-foreground: 0 0% 0%;
-    --input: 0 0% 18%;
-    --border: 0 0% 21%;
-    --ring: 0 0% 100%;
-
-    --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 0 0% 93%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 14%;
-    --sidebar-ring: 0 0% 100%;
-
-    --chart-1: 0 0% 100%;
-    --chart-2: 0 0% 80%;
-    --chart-3: 0 0% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 0 0% 30%;
-    --chart-6: 0 0% 20%;
-    --chart-7: 0 0% 15%;
-    --chart-8: 0 0% 10%;
-    --chart-win: 0 0% 100%;
-    --chart-loss: 0 0% 22%;
-    --chart-grid: 0 0% 18%;
-    --chart-axis: 0 0% 68%;
-    --chart-tooltip: 0 0% 4%;
-    --chart-tooltip-border: 0 0% 12%;
-
-    /* Dark theme inherits same structure, ensuring consistency */
-    --bg-base: 240 10% 3.9%;
-    --bg-elevated: 240 10% 5%;
-    --bg-card: 240 10% 7%;
-    --bg-card-hover: 240 10% 9%;
-    --bg-overlay: 240 10% 11%;
-    --bg-modal: 240 10% 13%;
-    --bg-highlight: 240 10% 15%;
-
-    --mk-bg-0: 0 0% 2%;
-    --mk-bg-1: 0 0% 3%;
-    --mk-bg-2: 0 0% 4%;
-    --mk-surface: 0 0% 5%;
-    --mk-surface-muted: 0 0% 8%;
-    --mk-border: 0 0% 20%;
-    --mk-text: 0 0% 90%;
-    --mk-text-muted: 0 0% 50%;
+    /* Inherits all luxury tokens from :root for consistency */
+    /* Dark mode uses the same warm obsidian palette with gold accents */
   }
 }
 
@@ -368,7 +368,7 @@
     background-color: hsl(var(--bg-elevated));
   }
 
-  .bg-card {
+  .bg-token-card {
     background-color: hsl(var(--bg-card));
   }
 
@@ -424,6 +424,57 @@
 
   .text-fg-muted {
     color: hsl(var(--fg-muted));
+  }
+
+  /* Contrast-compliant text tokens (replaces text-white/50, text-white/60, text-white/70) */
+  .text-token-primary {
+    color: hsl(var(--text-primary));
+  }
+
+  .text-token-secondary {
+    color: hsl(var(--text-secondary));
+  }
+
+  .text-tertiary {
+    color: hsl(var(--text-tertiary));
+  }
+
+  .text-disabled {
+    color: hsl(var(--text-disabled));
+  }
+
+  /* Surface tokens (replaces bg-white/5, bg-white/10, bg-black/95) */
+  .bg-surface-subtle {
+    background-color: var(--surface-subtle);
+  }
+
+  .bg-surface-subtle-hover:hover {
+    background-color: var(--surface-subtle-hover);
+  }
+
+  .bg-surface-muted {
+    background-color: var(--surface-muted);
+  }
+
+  .bg-surface-muted-hover:hover {
+    background-color: var(--surface-muted-hover);
+  }
+
+  .bg-surface-elevated {
+    background-color: var(--surface-elevated);
+  }
+
+  .bg-surface-elevated-hover:hover {
+    background-color: var(--surface-elevated-hover);
+  }
+
+  /* Border tokens (replaces border-white/10, border-white/20) */
+  .border-subtle {
+    border-color: var(--border-subtle);
+  }
+
+  .border-muted {
+    border-color: var(--border-muted);
   }
 
   /* Glassmorphism tokens */
@@ -529,4 +580,284 @@
   .card-clickable:active {
     transform: scale(0.98);
   }
+}
+
+/* ===== TIESEN THEME - Purple Accent Alternative ===== */
+/* From tweakcn.com/r/themes/cmie97f2b000704l27r9g1p11 */
+/* Uses purple/violet as primary accent instead of champagne gold */
+
+:root[data-theme="tiesen"] {
+  /* ===== TIESEN LIGHT MODE ===== */
+  --accent-luxury: 266 64% 56%;
+  --accent-luxury-hover: 266 60% 50%;
+  --accent-luxury-active: 266 55% 44%;
+  --accent-luxury-subtle: 266 64% 56% / 0.12;
+  --accent-luxury-glow: 266 64% 56% / 0.25;
+
+  --accent-rose: 280 40% 65%;
+  --accent-bronze: 30 45% 55%;
+
+  /* Semantic tokens - Light */
+  --background: 0 0% 98.5%;
+  --foreground: 0 0% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 20%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 20%;
+  --primary: 266 64% 56%;
+  --primary-foreground: 254 47% 96%;
+  --secondary: 0 0% 94%;
+  --secondary-foreground: 0 0% 40%;
+  --muted: 0 0% 97%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 257 50% 92%;
+  --accent-foreground: 257 70% 25%;
+  --destructive: 27 59% 46%;
+  --destructive-foreground: 254 47% 96%;
+  --input: 0 0% 94%;
+  --border: 0 0% 92%;
+  --ring: 266 64% 56%;
+
+  /* Sidebar - Light */
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 0 0% 20%;
+  --sidebar-primary: 266 64% 56%;
+  --sidebar-primary-foreground: 254 47% 96%;
+  --sidebar-accent: 257 50% 92%;
+  --sidebar-accent-foreground: 257 70% 25%;
+  --sidebar-border: 0 0% 92%;
+  --sidebar-ring: 266 64% 56%;
+
+  /* Chart - Purple palette */
+  --chart-1: 257 50% 92%;
+  --chart-2: 266 45% 75%;
+  --chart-3: 272 40% 60%;
+  --chart-4: 266 64% 56%;
+  --chart-5: 280 40% 65%;
+  --chart-loss: 27 59% 46%;
+  --chart-win: 266 64% 56%;
+  --chart-grid: 0 0% 90%;
+  --chart-axis: 0 0% 60%;
+
+  /* Surface tokens - Light */
+  --surface-subtle: 0 0% 100% / 0.05;
+  --surface-subtle-hover: 266 20% 96% / 0.08;
+  --surface-subtle-active: 266 20% 96% / 0.12;
+  --surface-muted: 266 10% 96% / 0.08;
+  --surface-muted-hover: 266 10% 96% / 0.12;
+  --surface-elevated: 0 0% 100% / 0.02;
+  --surface-elevated-hover: 0 0% 100% / 0.05;
+
+  /* Border tokens - Light */
+  --border-subtle: 266 10% 92% / 0.06;
+  --border-muted: 266 10% 92% / 0.1;
+  --border-default: 266 10% 92% / 0.15;
+
+  /* Text tokens - Light */
+  --text-primary: 0 0% 20%;
+  --text-secondary: 0 0% 40%;
+  --text-tertiary: 0 0% 55%;
+  --text-disabled: 0 0% 35%;
+
+  /* Semantic colors - Light */
+  --color-success: 154 48% 46%;
+  --color-success-bg: 154 48% 46% / 0.1;
+  --color-warning: 38 75% 55%;
+  --color-warning-bg: 38 75% 55% / 0.1;
+  --color-error: 27 59% 46%;
+  --color-error-bg: 27 59% 46% / 0.1;
+  --color-info: 210 60% 55%;
+  --color-info-bg: 210 60% 55% / 0.1;
+}
+
+/* Tiesen Dark Mode */
+:root[data-theme="tiesen"].dark,
+[data-theme="tiesen"] .dark {
+  /* ===== TIESEN DARK MODE ===== */
+  --accent-luxury: 266 64% 56%;
+  --accent-luxury-hover: 266 70% 62%;
+  --accent-luxury-active: 266 75% 68%;
+  --accent-luxury-subtle: 266 64% 56% / 0.15;
+  --accent-luxury-glow: 266 64% 56% / 0.3;
+
+  --accent-rose: 280 50% 70%;
+  --accent-bronze: 30 55% 50%;
+
+  /* Semantic tokens - Dark */
+  --background: 0 0% 3%;
+  --foreground: 0 0% 98%;
+  --card: 240 5% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 5% 8%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 266 64% 56%;
+  --primary-foreground: 254 47% 96%;
+  --secondary: 240 5% 15%;
+  --secondary-foreground: 0 0% 80%;
+  --muted: 240 5% 12%;
+  --muted-foreground: 0 0% 60%;
+  --accent: 260 15% 20%;
+  --accent-foreground: 257 50% 92%;
+  --destructive: 0 50% 45%;
+  --destructive-foreground: 254 47% 96%;
+  --input: 240 5% 18%;
+  --border: 240 5% 18%;
+  --ring: 266 64% 56%;
+
+  /* Sidebar - Dark */
+  --sidebar-background: 240 5% 6%;
+  --sidebar-foreground: 0 0% 90%;
+  --sidebar-primary: 266 64% 56%;
+  --sidebar-primary-foreground: 254 47% 96%;
+  --sidebar-accent: 260 15% 18%;
+  --sidebar-accent-foreground: 257 50% 92%;
+  --sidebar-border: 240 5% 15%;
+  --sidebar-ring: 266 64% 56%;
+
+  /* Chart - Dark purple palette */
+  --chart-1: 257 50% 92%;
+  --chart-2: 266 45% 60%;
+  --chart-3: 272 40% 50%;
+  --chart-4: 266 64% 56%;
+  --chart-5: 280 50% 70%;
+  --chart-loss: 0 50% 45%;
+  --chart-win: 266 64% 56%;
+  --chart-grid: 240 5% 15%;
+  --chart-axis: 0 0% 50%;
+
+  /* Surface tokens - Dark */
+  --surface-subtle: 0 0% 100% / 0.03;
+  --surface-subtle-hover: 266 30% 12% / 0.08;
+  --surface-subtle-active: 266 30% 12% / 0.12;
+  --surface-muted: 266 20% 12% / 0.08;
+  --surface-muted-hover: 266 20% 12% / 0.12;
+  --surface-elevated: 266 10% 8% / 0.02;
+  --surface-elevated-hover: 266 10% 8% / 0.05;
+
+  /* Border tokens - Dark */
+  --border-subtle: 266 20% 20% / 0.06;
+  --border-muted: 266 20% 20% / 0.1;
+  --border-default: 266 20% 20% / 0.15;
+
+  /* Text tokens - Dark */
+  --text-primary: 0 0% 98%;
+  --text-secondary: 0 0% 70%;
+  --text-tertiary: 0 0% 55%;
+  --text-disabled: 0 0% 40%;
+
+  /* Semantic colors - Dark */
+  --color-success: 154 48% 56%;
+  --color-success-bg: 154 48% 56% / 0.15;
+  --color-warning: 38 75% 55%;
+  --color-warning-bg: 38 75% 55% / 0.15;
+  --color-error: 0 50% 55%;
+  --color-error-bg: 0 50% 55% / 0.15;
+  --color-info: 210 60% 60%;
+  --color-info-bg: 210 60% 60% / 0.15;
+}
+
+/* ===== ROUTE-SCOPED DASHBOARD THEMES (dashboard-only) ===== */
+:root[data-dashboard-theme="blue"],
+:root.dashboard-theme-blue {
+  /* VTRON - cmjhgwebp000404jl22fv5sh6 */
+  --primary: 221 84% 58%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 222 28% 14%;
+  --accent-foreground: 0 0% 94%;
+  --ring: 221 84% 58%;
+  --sidebar-primary: 221 84% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 28% 14%;
+  --sidebar-accent-foreground: 0 0% 94%;
+  --sidebar-ring: 221 84% 58%;
+  --chart-1: 221 84% 58%;
+  --chart-2: 194 64% 63%;
+  --chart-3: 111 72% 78%;
+  --chart-4: 170 60% 56%;
+  --chart-5: 29 80% 56%;
+  --chart-win: 160 62% 56%;
+}
+
+:root[data-dashboard-theme="violet"],
+:root.dashboard-theme-violet {
+  /* cwh-learning - cmhxpdle4000804le8gkp0rak */
+  --primary: 292 72% 58%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 292 24% 14%;
+  --accent-foreground: 0 0% 94%;
+  --ring: 292 72% 58%;
+  --sidebar-primary: 292 72% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 292 24% 14%;
+  --sidebar-accent-foreground: 0 0% 94%;
+  --sidebar-ring: 292 72% 58%;
+  --chart-1: 156 56% 64%;
+  --chart-2: 305 72% 58%;
+  --chart-3: 50 70% 58%;
+  --chart-4: 302 66% 54%;
+  --chart-5: 0 0% 55%;
+  --chart-win: 156 56% 64%;
+}
+
+:root[data-dashboard-theme="emerald"],
+:root.dashboard-theme-emerald {
+  /* Light Green - cmlhfpjhw000004l4f4ax3m7z */
+  --primary: 128 78% 68%;
+  --primary-foreground: 220 26% 10%;
+  --accent: 128 24% 14%;
+  --accent-foreground: 0 0% 94%;
+  --ring: 128 78% 68%;
+  --sidebar-primary: 128 78% 68%;
+  --sidebar-primary-foreground: 220 26% 10%;
+  --sidebar-accent: 128 24% 14%;
+  --sidebar-accent-foreground: 0 0% 94%;
+  --sidebar-ring: 128 78% 68%;
+  --chart-1: 128 78% 68%;
+  --chart-2: 257 12% 38%;
+  --chart-3: 150 62% 56%;
+  --chart-4: 257 16% 48%;
+  --chart-5: 257 18% 62%;
+  --chart-win: 128 78% 68%;
+}
+
+:root[data-dashboard-theme="amber"],
+:root.dashboard-theme-amber {
+  /* Lara - cmm2769u2000004jobride6q4 */
+  --primary: 25 84% 56%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 25 26% 14%;
+  --accent-foreground: 0 0% 94%;
+  --ring: 25 84% 56%;
+  --sidebar-primary: 25 84% 56%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 25 26% 14%;
+  --sidebar-accent-foreground: 0 0% 94%;
+  --sidebar-ring: 25 84% 56%;
+  --chart-1: 25 84% 56%;
+  --chart-2: 60 72% 58%;
+  --chart-3: 200 60% 52%;
+  --chart-4: 140 68% 50%;
+  --chart-5: 280 56% 58%;
+  --chart-win: 160 62% 56%;
+}
+
+:root[data-dashboard-theme="rose"],
+:root.dashboard-theme-rose {
+  /* Efferd - cmmi8o8ic000904l12ucn8i9p */
+  --primary: 345 68% 58%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 345 22% 14%;
+  --accent-foreground: 0 0% 94%;
+  --ring: 345 68% 58%;
+  --sidebar-primary: 345 68% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 345 22% 14%;
+  --sidebar-accent-foreground: 0 0% 94%;
+  --sidebar-ring: 345 68% 58%;
+  --chart-1: 41 74% 56%;
+  --chart-2: 185 48% 52%;
+  --chart-3: 227 32% 40%;
+  --chart-4: 84 74% 62%;
+  --chart-5: 70 70% 58%;
+  --chart-win: 160 62% 56%;
 }

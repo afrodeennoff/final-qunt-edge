@@ -6,6 +6,8 @@ import { getAiLanguageModel } from "@/lib/ai/client";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
+import { apiError } from "@/lib/api-response";
+import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 
 // Analysis Tools
 import { generateAnalysisComponent } from "../accounts/generate-analysis-component";
@@ -80,7 +82,7 @@ export async function POST(req: NextRequest) {
   const startedAt = Date.now();
   let toolCallsCount = 0;
 
-  // Apply AI route guard (auth + entitlements + rate limit + budget)
+  // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'analysis', globalAnalysisRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
@@ -116,6 +118,7 @@ export async function POST(req: NextRequest) {
       },
       onFinish: (finalResult) => {
         void logAiRequest({
+          userId,
           route: "/api/ai/analysis/global",
           feature: "analysis",
           model: policy.model,
@@ -130,6 +133,7 @@ export async function POST(req: NextRequest) {
       },
       onError: ({ error }) => {
         void logAiRequest({
+          userId,
           route: "/api/ai/analysis/global",
           feature: "analysis",
           model: policy.model,
@@ -138,7 +142,7 @@ export async function POST(req: NextRequest) {
           toolCallsCount,
           success: false,
           errorCategory: categorizeAiError(error),
-          errorCode: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code ?? "") || null : null,
+          errorCode: getAiErrorCode(error),
           sampleRate: 1,
         });
       },
@@ -146,13 +150,17 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
+    }
+
     if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify({ error: error.errors }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
+      return apiError("VALIDATION_FAILED", "Invalid analysis request payload", 400, {
+        issues: error.errors,
       });
     }
     void logAiRequest({
+      userId,
       route: "/api/ai/analysis/global",
       feature: "analysis",
       model: policy.model,
@@ -160,13 +168,10 @@ export async function POST(req: NextRequest) {
       latencyMs: Date.now() - startedAt,
       success: false,
       errorCategory: categorizeAiError(error),
-      errorCode: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code ?? "") || null : null,
+      errorCode: getAiErrorCode(error),
       sampleRate: 1,
     });
-    console.error("Error in global analysis route:", error);
-    return new Response(JSON.stringify({ error: "Failed to process global analysis" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    logAiError("Error in global analysis route", error, { userId });
+    return apiError("INTERNAL_ERROR", "Failed to process global analysis", 500);
   }
 }

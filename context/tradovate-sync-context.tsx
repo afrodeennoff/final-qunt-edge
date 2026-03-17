@@ -16,7 +16,7 @@ interface TradovateSyncResult {
 interface TradovateSyncContextType {
   // Core sync management
   performSyncForAccount: (accountId: string, options?: { skipToast?: boolean, skipRefresh?: boolean }) => Promise<{ success: boolean; message: string; savedCount?: number } | undefined>
-  performSyncForAllAccounts: () => Promise<void>
+  performSyncForAllAccounts: (options?: { skipRefresh?: boolean }) => Promise<void>
 
   // State management
   isAutoSyncing: boolean
@@ -85,13 +85,27 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
   }, [normalizeSynchronization])
 
   const deleteAccount = useCallback(async (accountId: string) => {
+    const previousAccounts = accounts
+
     setAccounts(prev => prev.filter(acc => acc.accountId !== accountId))
-    await fetch("/api/tradovate/synchronizations", {
+    const response = await fetch("/api/tradovate/synchronizations", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ accountId })
     })
-  }, [])
+
+    let payload: { success?: boolean; message?: string } | null = null
+    try {
+      payload = await response.json()
+    } catch {
+      payload = null
+    }
+
+    if (!response.ok || !payload?.success) {
+      setAccounts(previousAccounts)
+      throw new Error(payload?.message || `Failed to delete synchronization (${response.status})`)
+    }
+  }, [accounts])
 
   // Perform sync for a specific account
   const performSyncForAccount = useCallback(async (accountId: string, options?: { skipToast?: boolean, skipRefresh?: boolean }) => {
@@ -189,7 +203,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
   }, [accounts, t, refreshAllData, loadAccounts])
 
   // Perform sync for all accounts
-  const performSyncForAllAccounts = useCallback(async () => {
+  const performSyncForAllAccounts = useCallback(async (options?: { skipRefresh?: boolean }) => {
     if (isAutoSyncing) {
       return
     }
@@ -221,8 +235,10 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
         await new Promise(resolve => setTimeout(resolve, 500))
       }
 
-      // Final thorough refresh
-      await refreshAllData({ force: true })
+      // Final thorough refresh (unless skipped)
+      if (!options?.skipRefresh) {
+        await refreshAllData({ force: true })
+      }
 
       if (totalNewTrades > 0) {
         toast.success(t('tradovateSync.bulk.complete', { successCount, totalNewTrades }), { id: toastId })

@@ -86,9 +86,11 @@ export async function removeAccountFromTradesAction(accountNumber: string): Prom
   invalidateAllUserCaches(userId)
 }
 
-export async function deleteInstrumentGroupAction(accountNumber: string, instrumentGroup: string, userId: string): Promise<void> {
-  const currentUserId = await getDatabaseUserId()
-  const effectiveUserId = currentUserId ?? userId
+export async function deleteInstrumentGroupAction(accountNumber: string, instrumentGroup: string): Promise<void> {
+  const effectiveUserId = await getDatabaseUserId()
+  if (!effectiveUserId) {
+    throw new Error('Unauthorized')
+  }
   await prisma.trade.deleteMany({
     where: {
       accountNumber: accountNumber,
@@ -106,26 +108,47 @@ export async function deleteInstrumentGroupAction(accountNumber: string, instrum
 
 export async function updateCommissionForGroupAction(accountNumber: string, instrumentGroup: string, newCommission: number): Promise<void> {
   const userId = await getDatabaseUserId()
-  // We have to update the commission for all trades in the group and compute based on the quantity
-  const trades = await prisma.trade.findMany({
-    where: {
-      accountNumber: accountNumber,
-      instrument: { startsWith: instrumentGroup },
-      userId
-    }
-  })
-  // For each trade, update the commission
-  for (const trade of trades) {
-    const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
-    await prisma.trade.update({
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
+
+  // Use transaction to batch update all trades in the group atomically
+  await prisma.$transaction(async (tx) => {
+    // First get all trades in the group with their quantities
+    const trades = await tx.trade.findMany({
       where: {
-        id: trade.id
+        accountNumber: accountNumber,
+        instrument: { startsWith: instrumentGroup },
+        userId
       },
-      data: {
-        commission: updatedCommission
+      select: {
+        id: true,
+        quantity: true
       }
     })
-  }
+
+    if (trades.length === 0) {
+      return // No trades to update
+    }
+
+    // Calculate new commission for each trade and prepare batch updates
+    const updateOperations = trades.map(trade => {
+      const updatedCommission = new Prisma.Decimal(newCommission).times(new Prisma.Decimal(trade.quantity))
+      return tx.trade.updateMany({
+        where: {
+          id: trade.id,
+          userId
+        },
+        data: {
+          commission: updatedCommission
+        }
+      })
+    })
+
+    // Execute all updates in parallel within the transaction
+    await Promise.all(updateOperations)
+  })
+
   updateTag(`trades-${userId}`)
   updateTag(`user-data-${userId}`)
   // Invalidate all user-related caches
@@ -208,12 +231,29 @@ export async function renameAccountAction(oldAccountNumber: string, newAccountNu
 
 export async function deleteTradesByIdsAction(tradeIds: string[]): Promise<void> {
   const userId = await getDatabaseUserId()
-  await prisma.trade.deleteMany({
-    where: {
-      id: { in: tradeIds },
-      userId
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
+  await prisma.$transaction(async (tx) => {
+    const ownedCount = await tx.trade.count({
+      where: {
+        id: { in: tradeIds },
+        userId,
+      },
+    })
+
+    if (ownedCount !== tradeIds.length) {
+      throw new Error('Forbidden')
     }
+
+    await tx.trade.deleteMany({
+      where: {
+        id: { in: tradeIds },
+        userId,
+      },
+    })
   })
+
   updateTag(`trades-${userId}`)
   updateTag(`user-data-${userId}`)
   updateTag(`dashboard-${userId}`)
@@ -438,38 +478,57 @@ export async function savePayoutAction(payout: Payout) {
       }
     }
 
-    let result
-    if (payout.id) {
-      result = await prisma.payout.update({
-        where: { id: payout.id },
-        data: {
-          accountNumber: payout.accountNumber,
-          date: payout.date,
-          amount: payout.amount,
-          status: payout.status,
-          account: {
-            connect: {
-              id: account.id
+    // Use transaction to ensure atomicity - payout creation/update and account payoutCount update
+    const result = await prisma.$transaction(async (tx) => {
+      let payoutResult
+
+      if (payout.id) {
+        // Update existing payout
+        payoutResult = await tx.payout.update({
+          where: { id: payout.id },
+          data: {
+            accountNumber: payout.accountNumber,
+            date: payout.date,
+            amount: payout.amount,
+            status: payout.status,
+            account: {
+              connect: {
+                id: account.id
+              }
+            }
+          },
+        })
+      } else {
+        // Create new payout and increment payoutCount atomically
+        payoutResult = await tx.payout.create({
+          data: {
+            id: payout.id || crypto.randomUUID(),
+            accountNumber: payout.accountNumber,
+            date: payout.date,
+            amount: payout.amount,
+            status: payout.status,
+            account: {
+              connect: {
+                id: account.id
+              }
+            }
+          },
+        })
+
+        // Increment payoutCount on the account atomically
+        await tx.account.update({
+          where: { id: account.id },
+          data: {
+            payoutCount: {
+              increment: 1
             }
           }
-        },
-      })
-    } else {
-      result = await prisma.payout.create({
-        data: {
-          id: payout.id || crypto.randomUUID(),
-          accountNumber: payout.accountNumber,
-          date: payout.date,
-          amount: payout.amount,
-          status: payout.status,
-          account: {
-            connect: {
-              id: account.id
-            }
-          }
-        },
-      })
-    }
+        })
+      }
+
+      return payoutResult
+    })
+
     updateTag(`user-data-${userId}`)
     // Invalidate all user-related caches
     invalidateAllUserCaches(userId)
@@ -483,6 +542,11 @@ export async function savePayoutAction(payout: Payout) {
 export async function deletePayoutAction(payoutId: string) {
   try {
     const userId = await getDatabaseUserId()
+    if (!userId) {
+      throw new Error('Unauthorized')
+    }
+    
+    // First get the payout to know which account to update
     const payout = await prisma.payout.findFirst({
       where: { id: payoutId, account: { userId: userId } },
       include: {
@@ -494,21 +558,33 @@ export async function deletePayoutAction(payoutId: string) {
       throw new Error('Payout not found');
     }
 
-    // Delete the payout
-    await prisma.payout.delete({
-      where: { id: payoutId }
-    });
-
-    // Decrement the payoutCount on the account
-    await prisma.account.update({
-      where: {
-        id: payout.account.id
-      },
-      data: {
-        payoutCount: {
-          decrement: 1
+    // Use transaction to ensure atomicity - delete payout and decrement payoutCount atomically
+    await prisma.$transaction(async (tx) => {
+      // Delete the payout
+      const deleted = await tx.payout.deleteMany({
+        where: {
+          id: payoutId,
+          account: {
+            userId
+          }
         }
+      });
+      
+      if (deleted.count !== 1) {
+        throw new Error('Payout not found');
       }
+
+      // Decrement the payoutCount on the account atomically
+      await tx.account.update({
+        where: {
+          id: payout.account.id
+        },
+        data: {
+          payoutCount: {
+            decrement: 1
+          }
+        }
+      });
     });
 
     updateTag(`user-data-${userId}`)
@@ -589,6 +665,9 @@ export async function createAccountAction(accountNumber: string) {
         payoutCount: 0,
       },
     })
+    updateTag(`user-data-${userId}`)
+    updateTag(`trades-${userId}`)
+    invalidateAllUserCaches(userId)
     return account
   } catch (error) {
     console.error('Error creating account:', error)

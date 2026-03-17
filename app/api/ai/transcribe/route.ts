@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { rateLimit } from '@/lib/rate-limit'
 import { guardAiRequest } from '@/lib/ai/route-guard'
+import { apiError } from '@/lib/api-response'
+import { categorizeAiError, logAiRequest } from '@/lib/ai/telemetry'
+import { estimateTokenCountFromText, getAiErrorCode, logAiError } from '@/lib/ai/error-utils'
 
 const transcribeRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: 'ai-transcribe' })
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024
@@ -19,25 +22,25 @@ const ALLOWED_AUDIO_TYPES = new Set([
 ])
 
 export async function POST(request: NextRequest) {
-  // Apply AI route guard (auth + entitlements + rate limit + budget)
+  const startedAt = Date.now()
+
+  // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(request, 'transcribe', transcribeRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
 
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'Service unavailable', message: 'Transcription service is not configured' },
-        { status: 503 }
-      )
+      return apiError('SERVICE_UNAVAILABLE', 'Transcription service is not configured', 503)
     }
 
     const lengthHeader = request.headers.get('content-length')
     const contentLength = lengthHeader ? Number(lengthHeader) : 0
     if (Number.isFinite(contentLength) && contentLength > MAX_AUDIO_BYTES) {
-      return NextResponse.json(
-        { error: `Audio file exceeds ${Math.round(MAX_AUDIO_BYTES / (1024 * 1024))}MB limit` },
-        { status: 413 }
+      return apiError(
+        'PAYLOAD_TOO_LARGE',
+        `Audio file exceeds ${Math.round(MAX_AUDIO_BYTES / (1024 * 1024))}MB limit`,
+        413,
       )
     }
 
@@ -45,31 +48,23 @@ export async function POST(request: NextRequest) {
     const audioFile = formData.get('audio') as File
 
     if (!audioFile) {
-      return NextResponse.json(
-        { error: 'No audio file provided' },
-        { status: 400 }
-      )
+      return apiError('VALIDATION_FAILED', 'No audio file provided', 400)
     }
 
     if (audioFile.size <= 0) {
-      return NextResponse.json(
-        { error: 'Audio file is empty' },
-        { status: 400 }
-      )
+      return apiError('VALIDATION_FAILED', 'Audio file is empty', 400)
     }
 
     if (audioFile.size > MAX_AUDIO_BYTES) {
-      return NextResponse.json(
-        { error: `Audio file exceeds ${Math.round(MAX_AUDIO_BYTES / (1024 * 1024))}MB limit` },
-        { status: 413 }
+      return apiError(
+        'PAYLOAD_TOO_LARGE',
+        `Audio file exceeds ${Math.round(MAX_AUDIO_BYTES / (1024 * 1024))}MB limit`,
+        413,
       )
     }
 
     if (!ALLOWED_AUDIO_TYPES.has(audioFile.type)) {
-      return NextResponse.json(
-        { error: 'Unsupported audio format' },
-        { status: 415 }
-      )
+      return apiError('UNSUPPORTED_MEDIA_TYPE', 'Unsupported audio format', 415)
     }
 
     // Convert File to the format expected by OpenAI
@@ -93,16 +88,40 @@ export async function POST(request: NextRequest) {
       response_format: 'text',
     })
 
+    const transcriptionText = String(transcription ?? '')
+    void logAiRequest({
+      userId,
+      route: '/api/ai/transcribe',
+      feature: 'transcribe',
+      model: 'whisper-1',
+      provider: 'openai-compatible',
+      usage: { totalTokens: estimateTokenCountFromText(transcriptionText) },
+      latencyMs: Date.now() - startedAt,
+      success: true,
+      sampleRate: 1,
+      finishReason: 'stop',
+    })
+
     return NextResponse.json({
       transcription: transcription,
       fileName: audioFile.name,
     })
 
-  } catch (error) {
-    console.error('Transcription error:', error)
-    return NextResponse.json(
-      { error: 'Failed to transcribe audio' },
-      { status: 500 }
-    )
+  } catch (error: unknown) {
+    void logAiRequest({
+      userId,
+      route: '/api/ai/transcribe',
+      feature: 'transcribe',
+      model: 'whisper-1',
+      provider: 'openai-compatible',
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    })
+
+    logAiError('Transcription error', error, { userId })
+    return apiError('INTERNAL_ERROR', 'Failed to transcribe audio', 500)
   }
 }

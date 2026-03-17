@@ -227,51 +227,60 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
   }
 
   // New pricing structure
-  const pricing = {
-    yearly: 120,
-    quarterly: 45,
-    monthly: 19.99,
-    lifetime: 300
-  }
+  const pricing = useMemo(
+    () => ({
+      yearly: 120,
+      quarterly: 45,
+      monthly: 19.99,
+      lifetime: 300,
+    }),
+    [],
+  )
 
   // Previous pricing (for line-through display)
-  const previousPricing = {
-    yearly: 300,
-    quarterly: 82.5,
-    monthly: 29.99,
-    lifetime: 500
-  }
+  const previousPricing = useMemo(
+    () => ({
+      yearly: 300,
+      quarterly: 82.5,
+      monthly: 29.99,
+      lifetime: 500,
+    }),
+    [],
+  )
 
-  const plans: Plans = {
-    basic: {
-      name: t('pricing.basic.name'),
-      description: t('pricing.basic.description'),
-      price: { yearly: 0, quarterly: 0, monthly: 0, lifetime: 0 },
-      features: [
-        t('pricing.basic.feature1'),
-        t('pricing.basic.feature2'),
-        t('pricing.basic.feature3'),
-        t('pricing.basic.feature6'),
-        t('pricing.basic.feature7'),
-        t('pricing.basic.feature8'),
-        t('pricing.basic.feature9'),
-        t('pricing.basic.feature10'),
-        t('pricing.basic.feature11'),
-        t('pricing.basic.feature12'),
-      ]
-    },
-    plus: {
-      name: t('pricing.plus.name'),
-      description: t('pricing.plus.description'),
-      price: pricing,
-      isPopular: true,
-      features: [
-        t('pricing.plus.feature1'),
-        t('pricing.plus.feature2'),
-        t('pricing.plus.feature6'),
-      ]
-    }
-  }
+  const plans: Plans = useMemo<Plans>(
+    () => ({
+      basic: {
+        name: t('pricing.basic.name'),
+        description: t('pricing.basic.description'),
+        price: { yearly: 0, quarterly: 0, monthly: 0, lifetime: 0 },
+        features: [
+          t('pricing.basic.feature1'),
+          t('pricing.basic.feature2'),
+          t('pricing.basic.feature3'),
+          t('pricing.basic.feature6'),
+          t('pricing.basic.feature7'),
+          t('pricing.basic.feature8'),
+          t('pricing.basic.feature9'),
+          t('pricing.basic.feature10'),
+          t('pricing.basic.feature11'),
+          t('pricing.basic.feature12'),
+        ],
+      },
+      plus: {
+        name: t('pricing.plus.name'),
+        description: t('pricing.plus.description'),
+        price: pricing,
+        isPopular: true,
+        features: [
+          t('pricing.plus.feature1'),
+          t('pricing.plus.feature2'),
+          t('pricing.plus.feature6'),
+        ],
+      },
+    }),
+    [t, pricing],
+  )
 
   const formatPrice = (value: number, {
     withMonthSuffix = false,
@@ -294,7 +303,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
     const t = useI18n()
     return (
       <div className="relative">
-        <Card className="relative bg-background h-full">
+        <Card className="relative bg-card h-full border-border">
           <CardHeader>
             <CardTitle>{plan.name}</CardTitle>
             <CardDescription>{plan.description}</CardDescription>
@@ -363,30 +372,66 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
 
     const t = useI18n()
 
-    const recurringBillingOptions = [
-      {
-        key: 'monthly' as BillingPeriod,
-        label: t('pricing.monthly'),
-        description: t('pricing.monthlyFlexibility')
-      },
-      {
-        key: 'quarterly' as BillingPeriod,
-        label: t('pricing.quarterly'),
-        description: `${symbol}${plan.price.quarterly} billed quarterly (${symbol}${(plan.price.quarterly / 3).toFixed(2)}/month)`
-      },
-      {
-        key: 'yearly' as BillingPeriod,
-        label: t('pricing.yearly'),
-        description: `${symbol}${plan.price.yearly} billed yearly (${symbol}${(plan.price.yearly / 12).toFixed(2)}/month)`
+    const recurringBillingOptions = useMemo(
+      () => [
+        {
+          key: 'monthly' as BillingPeriod,
+          label: t('pricing.monthly'),
+          description: t('pricing.monthlyFlexibility'),
+        },
+        {
+          key: 'quarterly' as BillingPeriod,
+          label: t('pricing.quarterly'),
+          description: `${symbol}${plan.price.quarterly} billed quarterly (${symbol}${(plan.price.quarterly / 3).toFixed(2)}/month)`,
+        },
+        {
+          key: 'yearly' as BillingPeriod,
+          label: t('pricing.yearly'),
+          description: `${symbol}${plan.price.yearly} billed yearly (${symbol}${(plan.price.yearly / 12).toFixed(2)}/month)`,
+        },
+      ],
+      [t, symbol, plan.price],
+    )
+
+    const lookupKey = `plus_${billingPeriod}_${currency.toLowerCase()}`
+    const isCurrent = isCurrentPlan(lookupKey)
+    const isBlockedRecurring = isBlockedFromRecurring(lookupKey)
+    const isBlockedLifetime = isBlockedFromLifetime(lookupKey)
+    const isBlocked = isBlockedRecurring || isBlockedLifetime
+    const shouldShowLifetimeConfirmation = billingPeriod === 'lifetime' && !isCurrent
+
+    const handlePrimaryClick = () => {
+      if (isBlocked) {
+        return
       }
-    ]
+      if (shouldShowLifetimeConfirmation) {
+        setPendingLookupKey(lookupKey)
+        setShowLifetimeConfirm(true)
+        return
+      }
+      handlePlanSwitch(lookupKey)
+    }
+
+    const primaryButtonText = isLoading
+      ? billingPeriod === 'lifetime'
+        ? t('billing.lifetimeUpgrade')
+        : t('billing.switching')
+      : isCurrent
+        ? t('billing.currentPlan')
+        : isBlockedLifetime
+          ? t('billing.lifetimeOwned')
+          : isBlockedRecurring
+            ? t('billing.lifetimeActive')
+            : currentSubscription
+              ? billingPeriod === 'lifetime'
+                ? t('pricing.upgradeToLifetime')
+                : t('billing.changePlan')
+              : t('pricing.trialPeriod')
 
     return (
       <div className="relative z-10 w-full">
-        <span className="absolute inset-[-8px] bg-[hsl(var(--chart-1)/0.15)] dark:bg-[hsl(var(--chart-1)/0.15)] rounded-[14.5867px] -z-10"></span>
-        <span className="absolute inset-[-4px] bg-[hsl(var(--chart-1)/0.25)] dark:bg-[hsl(var(--chart-1)/0.25)] rounded-[14.5867px] -z-20"></span>
-        <span className="absolute inset-0 shadow-[0_18.2333px_27.35px_-5.47px_hsl(var(--background)/0.1),0_7.29333px_10.94px_-7.29333px_hsl(var(--background)/0.1)] dark:shadow-[0_18.2333px_27.35px_-5.47px_hsl(var(--chart-1)/0.1),0_7.29333px_10.94px_-7.29333px_hsl(var(--chart-1)/0.1)] rounded-[14.5867px] -z-30"></span>
-        <Card className="relative bg-background h-full">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-xl -z-10" />
+        <Card className="relative bg-card h-full border-border">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2">
             <span className="bg-primary text-primary-foreground text-sm font-medium px-3 py-1 rounded-full whitespace-nowrap">
               {t('pricing.fullVersion')}
@@ -397,13 +442,13 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             <CardDescription>{plan.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-muted rounded-lg p-4 mb-4 space-y-3 dark:bg-muted/50">
+            <div className="bg-muted/50 rounded-lg p-4 mb-4 space-y-3">
               <span className="text-sm font-medium block text-center">
                 {t('pricing.billingPeriod')}
               </span>
 
               {/* Toggle group for recurring billing options */}
-              <div className="grid grid-cols-3 gap-1 p-1 bg-background rounded-md">
+              <div className="grid grid-cols-3 gap-1 p-1 bg-card rounded-md border border-border/50">
                 {recurringBillingOptions.map((option) => (
                   <Button
                     key={option.key}
@@ -434,7 +479,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
                   {t('pricing.lifetimeAccess')}
                   <Badge
                     variant="secondary"
-                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-semantic-warning-bg/10 text-semantic-warning dark:bg-white/10 dark:text-foreground border border-semantic-warning-border/40 dark:border-white/20"
+                    className="uppercase tracking-wide text-[9px] px-1.5 py-0.5 bg-semantic-warning-bg text-semantic-warning border border-semantic-warning-border"
                   >
                     {t('pricing.limitedTimeOffer')}
                   </Badge>
@@ -512,32 +557,14 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-3">
-            {(() => {
-              const lookupKey = `plus_${billingPeriod}_${currency.toLowerCase()}`
-              const isCurrent = isCurrentPlan(lookupKey)
-              const isBlockedRecurring = isBlockedFromRecurring(lookupKey)
-              const isBlockedLifetime = isBlockedFromLifetime(lookupKey)
-              const isBlocked = isBlockedRecurring || isBlockedLifetime
-
-              return (
-                <Button
-                  onClick={() => handlePlanSwitch(lookupKey)}
-                  disabled={isLoading || isCurrent || isBlocked}
-                  variant={isCurrent || isBlocked ? "outline" : "default"}
-                  className="w-full"
-                >
-                  {isLoading ? (
-                    billingPeriod === 'lifetime' ? t('billing.lifetimeUpgrade') : t('billing.switching')
-                  ) :
-                    isCurrent ? t('billing.currentPlan') :
-                      isBlockedLifetime ? t('billing.lifetimeOwned') :
-                        isBlockedRecurring ? t('billing.lifetimeActive') :
-                          currentSubscription ? (
-                            billingPeriod === 'lifetime' ? t('pricing.upgradeToLifetime') || 'Upgrade to Lifetime' : t('billing.changePlan')
-                          ) : t('pricing.trialPeriod')}
-                </Button>
-              )
-            })()}
+            <Button
+              onClick={handlePrimaryClick}
+              disabled={isLoading || isCurrent || isBlocked}
+              variant={isCurrent || isBlocked ? "outline" : "default"}
+              className="w-full"
+            >
+              {primaryButtonText}
+            </Button>
 
             <p className="text-xs text-center text-muted-foreground">
               {t('terms.pricing.disclaimer')}
@@ -568,14 +595,14 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="bg-semantic-warning-bg dark:bg-semantic-warning-bg/20 border border-semantic-warning-border dark:border-semantic-warning-border rounded-lg p-4">
+            <div className="bg-semantic-warning-bg border border-semantic-warning-border rounded-lg p-4">
               <div className="flex items-start">
-                <AlertCircle className="h-5 w-5 text-semantic-warning dark:text-semantic-warning mr-3 mt-0.5 shrink-0" />
+                <AlertCircle className="h-5 w-5 text-semantic-warning mr-3 mt-0.5 shrink-0" />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-semantic-warning dark:text-semantic-warning">
+                  <p className="text-sm font-medium text-semantic-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-semantic-warning dark:text-semantic-warning">
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-semantic-warning">
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.currentPlan')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.immediateCancel')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.oneTimePayment')}</li>

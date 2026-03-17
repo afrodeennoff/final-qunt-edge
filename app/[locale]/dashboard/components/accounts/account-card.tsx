@@ -83,7 +83,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                 </div>
               </CardTitle>
               <p className={cn(
-                "text-muted-foreground/70 truncate font-mono",
+                "text-muted-foreground truncate font-mono",
                 size === 'small' || size === 'small-long' ? "text-[10px]" : "text-[10px]"
               )}>
                 {account.number}
@@ -175,7 +175,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                   <span className="text-muted-foreground">{t('propFirm.card.consistency')}</span>
                   <span className={cn(
                     "font-black",
-                    !metrics.hasProfitableData ? "text-muted-foreground/50 italic" :
+                    !metrics.hasProfitableData ? "text-muted-foreground italic" :
                       (metrics.isConsistent || consistencyPercentage === 100) ? "metric-positive" : "metric-negative"
                   )}>
                     {!metrics.hasProfitableData ? t('propFirm.status.unprofitable') :
@@ -201,7 +201,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                     )}>
                       {metrics.validTradingDays}/{metrics.totalTradingDays}
                       {minPnlToCountAsDay > 0 && (
-                        <span className="ml-1 text-[9px] opacity-40">
+                        <span className="ml-1 text-[9px] text-muted-foreground">
                           (≥${minPnlToCountAsDay})
                         </span>
                       )}
@@ -213,7 +213,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
           </div>
         ) : (
           <p className={cn(
-            "text-muted-foreground/50 text-center pt-2 font-medium italic",
+            "pt-2 text-center font-medium italic text-muted-foreground",
             size === 'small' || size === 'small-long' ? "text-[10px]" : "text-xs"
           )}>
             {t('propFirm.card.needsConfiguration')}

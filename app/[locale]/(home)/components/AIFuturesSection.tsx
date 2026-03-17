@@ -42,18 +42,23 @@ const automationFeatures = [
 
 function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => {
         const Icon = item.icon
         return (
           <div key={item.title}>
-            <Card variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.3)]">
-              <CardHeader>
-                <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.75)] text-[hsl(var(--brand-primary))]">
+            <Card
+              variant="glass"
+              className="h-full rounded-[28px] border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)]"
+            >
+              <CardHeader className="space-y-3 px-0 pb-0">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.14)] text-foreground">
                   <Icon className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-lg tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</CardTitle>
-                <CardDescription className="text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">
+                <CardTitle className="text-base font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
+                  {item.title}
+                </CardTitle>
+                <CardDescription className="text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">
                   {item.description}
                 </CardDescription>
               </CardHeader>
@@ -67,42 +72,57 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
 
 export default function AIFuturesSection() {
   return (
-    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 text-center sm:mb-12">
-          <Badge variant="outline" className="px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
+        <div className="space-y-3 text-center">
+          <Badge
+            variant="outline"
+            className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
+          >
             Must-Have AI Features
           </Badge>
-          <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
+          <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             AI that improves
-            <span className="block text-[hsl(var(--brand-primary))]">decision quality, not just reporting</span>
+            <span className="block text-foreground">decision quality, not just reporting</span>
           </h2>
         </div>
 
         <Tabs defaultValue="intelligence" className="w-full">
-          <TabsList className="h-auto w-full justify-start rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface-muted)/0.55)] p-1">
-            <TabsTrigger value="intelligence" className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+          <TabsList className="h-auto w-full justify-start rounded-[28px] border border-border/70 bg-card/70 p-1">
+            <TabsTrigger
+              value="intelligence"
+              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+            >
               Intelligence
             </TabsTrigger>
-            <TabsTrigger value="automation" className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+            <TabsTrigger
+              value="automation"
+              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+            >
               Automation
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="intelligence" className="mt-5">
+          <TabsContent value="intelligence" className="mt-6">
             <FeatureGrid items={intelligenceFeatures} />
           </TabsContent>
-          <TabsContent value="automation" className="mt-5">
+          <TabsContent value="automation" className="mt-6">
             <FeatureGrid items={automationFeatures} />
           </TabsContent>
         </Tabs>
 
-        <Card variant="glass" className="mt-6 rounded-2xl border-[hsl(var(--mk-border)/0.3)]">
-          <CardContent className="flex flex-col gap-2 p-5 text-sm text-[hsl(var(--mk-text-muted))] sm:flex-row sm:items-center sm:justify-between [font-family:var(--home-copy)]">
-            <p>
+        <Card
+          variant="glass"
+          className="mt-6 rounded-[28px] border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
+        >
+          <CardContent className="flex flex-col gap-3 p-6 text-sm text-muted-foreground [font-family:var(--home-copy)] sm:flex-row sm:items-center sm:justify-between">
+            <p className="leading-relaxed">
               AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
             </p>
-            <Badge variant="outline" className="w-fit border-[hsl(var(--brand-primary)/0.35)] bg-[hsl(var(--brand-primary)/0.08)]">
+            <Badge
+              variant="outline"
+              className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
+            >
               Explainable AI
             </Badge>
           </CardContent>

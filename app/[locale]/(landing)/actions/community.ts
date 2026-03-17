@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@/server/auth'
+import { createClient, getDatabaseUserId } from '@/server/auth'
 import { PostType, PostStatus, VoteType } from '@/prisma/generated/prisma'
 
 import { revalidatePath } from 'next/cache'
@@ -14,17 +14,92 @@ import CommentNotificationEmail from '@/components/emails/blog/comment-notificat
 // resend will be initialized inside functions that need it
 const POST_NOT_FOUND_SENTINEL = "__POST_NOT_FOUND__"
 
+type CommunityUser = {
+  id: string
+  displayName: string
+}
+
+type RawPrismaComment = {
+  id: string
+  content: string
+  createdAt: Date
+  updatedAt: Date
+  postId: string
+  parentId: string | null
+  userId: string
+  user: { id: string; email?: string | null }
+  replies?: RawPrismaComment[]
+}
+
+type SanitizedComment = Omit<RawPrismaComment, 'user' | 'replies'> & {
+  user: CommunityUser
+  replies: SanitizedComment[]
+}
+
+function getCommunityDisplayName(email?: string | null) {
+  if (!email) return 'User'
+  const localPart = email.split('@')[0].trim()
+  return localPart || 'User'
+}
+
+function sanitizeCommunityUser(user: { id: string; email?: string | null }): CommunityUser {
+  return {
+    id: user.id,
+    displayName: getCommunityDisplayName(user.email ?? null)
+  }
+}
+
+function sanitizeComment(comment: {
+  id: string
+  content: string
+  createdAt: Date
+  updatedAt: Date
+  postId: string
+  parentId: string | null
+  userId: string
+  user?: { id: string; email?: string | null }
+  replies?: unknown[]
+}): SanitizedComment {
+  const normalizedReplies = Array.isArray(comment.replies)
+    ? comment.replies
+        .filter((reply): reply is Parameters<typeof sanitizeComment>[0] => typeof reply === 'object' && reply !== null)
+        .map(sanitizeComment)
+    : []
+
+  return {
+    ...comment,
+    user: sanitizeCommunityUser(comment.user ?? { id: comment.userId, email: null }),
+    replies: normalizedReplies
+  }
+}
+
 // Helper function to check if user is admin
 async function isAdmin(userId: string) {
   return userId === process.env.ALLOWED_ADMIN_USER_ID
 }
 
+async function requireCommunityActor() {
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+  if (authError || !user) {
+    throw new Error('Unauthorized')
+  }
+
+  const databaseUserId = await getDatabaseUserId()
+  return { authUser: user, databaseUserId }
+}
+
 // Get all posts with votes and user information
 export async function getPosts() {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const currentUserId = user?.id
+    let currentUserId: string | null = null
+    try {
+      const { databaseUserId } = await requireCommunityActor()
+      currentUserId = databaseUserId
+    } catch {
+      currentUserId = null
+    }
 
     const posts = await prisma.post.findMany({
       include: {
@@ -60,10 +135,11 @@ export async function getPosts() {
       }, 0)
 
       // Remove the comments array from the post object since we only need the count
-      const { comments, ...postWithoutComments } = post
+      const { comments, user, ...postWithoutComments } = post
       void comments
       return {
         ...postWithoutComments,
+        user: sanitizeCommunityUser(user),
         _count: {
           comments: totalComments
         },
@@ -80,16 +156,14 @@ export async function getPosts() {
 
 // Get current user's permissions for a post
 export async function getPostPermissions(postUserId: string) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
+  try {
+    const { authUser, databaseUserId } = await requireCommunityActor()
+    return {
+      canDelete: postUserId === databaseUserId,
+      canChangeStatus: await isAdmin(authUser.id)
+    }
+  } catch {
     return { canDelete: false, canChangeStatus: false }
-  }
-
-  return {
-    canDelete: postUserId === user.id,
-    canChangeStatus: await isAdmin(user.id)
   }
 }
 
@@ -100,12 +174,7 @@ export async function createPost(formData: {
   type: PostType
   screenshots?: string[]
 }) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
     // Process screenshots if they exist
@@ -138,7 +207,7 @@ export async function createPost(formData: {
       data: {
         ...formData,
         screenshots: processedScreenshots.filter(Boolean) as string[],
-        userId: user.id,
+        userId: databaseUserId,
         status: PostStatus.OPEN,
       },
     })
@@ -153,15 +222,10 @@ export async function createPost(formData: {
 
 // Update post status (only for admins)
 export async function updatePostStatus(id: string, status: PostStatus) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { authUser } = await requireCommunityActor()
 
   // Allow status changes in development or if user is admin
-  if (process.env.NODE_ENV !== 'development' && !await isAdmin(user.id)) {
+  if (process.env.NODE_ENV !== 'development' && !await isAdmin(authUser.id)) {
     throw new Error('Only administrators can change post status')
   }
 
@@ -181,12 +245,7 @@ export async function updatePostStatus(id: string, status: PostStatus) {
 
 // Delete post (only for post owner)
 export async function deletePost(id: string) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
     const post = await prisma.post.findUnique({
@@ -194,7 +253,7 @@ export async function deletePost(id: string) {
       select: { userId: true }
     })
 
-    if (!post || post.userId !== user.id) {
+    if (!post || post.userId !== databaseUserId) {
       throw new Error('Only the author can delete this post')
     }
 
@@ -212,12 +271,7 @@ export async function deletePost(id: string) {
 
 // Vote on a post
 export async function votePost(postId: string, voteType: VoteType) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
 
@@ -226,7 +280,7 @@ export async function votePost(postId: string, voteType: VoteType) {
       where: {
         postId_userId: {
           postId,
-          userId: user.id
+          userId: databaseUserId
         }
       }
     })
@@ -238,7 +292,7 @@ export async function votePost(postId: string, voteType: VoteType) {
           where: {
             postId_userId: {
               postId,
-              userId: user.id
+              userId: databaseUserId
             }
           }
         })
@@ -248,7 +302,7 @@ export async function votePost(postId: string, voteType: VoteType) {
           where: {
             postId_userId: {
               postId,
-              userId: user.id
+              userId: databaseUserId
             }
           },
           data: { type: voteType }
@@ -260,7 +314,7 @@ export async function votePost(postId: string, voteType: VoteType) {
         data: {
           type: voteType,
           postId,
-          userId: user.id
+          userId: databaseUserId
         }
       })
     }
@@ -276,9 +330,13 @@ export async function votePost(postId: string, voteType: VoteType) {
 // Get post by ID with votes and user information
 export async function getPost(id: string) {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const currentUserId = user?.id
+    let currentUserId: string | null = null
+    try {
+      const { databaseUserId } = await requireCommunityActor()
+      currentUserId = databaseUserId
+    } catch {
+      currentUserId = null
+    }
 
     const post = await prisma.post.findUnique({
       where: { id },
@@ -289,15 +347,7 @@ export async function getPost(id: string) {
             id: true,
           }
         },
-        votes: {
-          include: {
-            user: {
-              select: {
-                email: true,
-              }
-            }
-          }
-        },
+        votes: true,
       },
     })
 
@@ -305,6 +355,7 @@ export async function getPost(id: string) {
 
     return {
       ...post,
+      user: sanitizeCommunityUser(post.user),
       isAuthor: currentUserId ? (post.userId === currentUserId || process.env.NODE_ENV === 'development') : false
     }
   } catch (error) {
@@ -367,7 +418,7 @@ export async function getComments(postId: string) {
       }
     })
 
-    return comments
+    return comments.map(sanitizeComment)
   } catch (error) {
     console.error('Failed to fetch comments:', error)
     throw new Error('Failed to fetch comments')
@@ -426,12 +477,7 @@ async function sendCommentNotificationEmail({
 
 // Add a comment
 export async function addComment(postId: string, content: string, parentId: string | null = null) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { authUser, databaseUserId } = await requireCommunityActor()
 
   try {
     // Get the post and its author
@@ -456,7 +502,7 @@ export async function addComment(postId: string, content: string, parentId: stri
       data: {
         content,
         postId,
-        userId: user.id,
+        userId: databaseUserId,
         parentId
       },
       include: {
@@ -467,17 +513,17 @@ export async function addComment(postId: string, content: string, parentId: stri
           }
         }
       }
-    })
+    }) as RawPrismaComment
 
     // Send email notification to post author if it's not their own comment
-    if (post.user.id !== user.id) {
+    if (post.user.id !== databaseUserId) {
       try {
         await sendCommentNotificationEmail({
           recipientEmail: post.user.email,
           recipientName: post.user.email,
           postTitle: post.title,
           postId: post.id,
-          commentAuthor: user.email ?? 'Anonymous User',
+          commentAuthor: authUser.email ?? 'Anonymous User',
           commentContent: content,
           commentDate: comment.createdAt,
           language: post.user.language ?? 'en'
@@ -489,7 +535,11 @@ export async function addComment(postId: string, content: string, parentId: stri
     }
 
     revalidatePath('/community')
-    return comment
+    return {
+      ...comment,
+      user: sanitizeCommunityUser(comment.user),
+      replies: [],
+    }
   } catch (error) {
     console.error('Failed to add comment:', error)
     throw new Error('Failed to add comment')
@@ -498,12 +548,7 @@ export async function addComment(postId: string, content: string, parentId: stri
 
 // Edit a comment
 export async function editComment(commentId: string, content: string) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
     const comment = await prisma.comment.findUnique({
@@ -511,7 +556,7 @@ export async function editComment(commentId: string, content: string) {
       select: { userId: true }
     })
 
-    if (!comment || comment.userId !== user.id) {
+    if (!comment || comment.userId !== databaseUserId) {
       throw new Error('Only the author can edit this comment')
     }
 
@@ -530,12 +575,7 @@ export async function editComment(commentId: string, content: string) {
 
 // Delete a comment
 export async function deleteComment(commentId: string) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
     const comment = await prisma.comment.findUnique({
@@ -543,7 +583,7 @@ export async function deleteComment(commentId: string) {
       select: { userId: true }
     })
 
-    if (!comment || comment.userId !== user.id) {
+    if (!comment || comment.userId !== databaseUserId) {
       throw new Error('Only the author can delete this comment')
     }
 
@@ -561,12 +601,7 @@ export async function deleteComment(commentId: string) {
 
 // Edit a post (only for post owner)
 export async function editPost(id: string, content: string) {
-  const supabase = await createClient()
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    throw new Error('Unauthorized')
-  }
+  const { databaseUserId } = await requireCommunityActor()
 
   try {
     const post = await prisma.post.findUnique({
@@ -579,7 +614,7 @@ export async function editPost(id: string, content: string) {
     }
 
     // Allow editing in development or if user is the author
-    if (process.env.NODE_ENV !== 'development' && post.userId !== user.id) {
+    if (process.env.NODE_ENV !== 'development' && post.userId !== databaseUserId) {
       throw new Error('Only the author can edit this post')
     }
 

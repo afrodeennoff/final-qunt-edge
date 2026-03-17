@@ -59,7 +59,7 @@ const formatCount = (value: number) => {
   return value.toString();
 };
 
-export default function TickDistributionChart({
+export default React.memo(function TickDistributionChart({
   size = "medium",
 }: TickDistributionProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -121,11 +121,11 @@ export default function TickDistributionChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
             <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.ticks}</span>
           </div>
           <div className="flex justify-between items-center pt-1.5">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
             <span className="font-black text-foreground text-[11px] tabular-nums">
               {data.count}
             </span>
@@ -159,7 +159,7 @@ export default function TickDistributionChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -174,7 +174,7 @@ export default function TickDistributionChart({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground/70 hover:text-foreground hover:bg-secondary/22"
+              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setTickFilter({ value: null })}
             >
               {t("tickDistribution.clearFilter")}
@@ -222,7 +222,7 @@ export default function TickDistributionChart({
                           y={0}
                           dy={size === "small" ? 8 : 4}
                           textAnchor="middle"
-                          fill="var(--fg-muted)"
+                          fill="hsl(var(--text-secondary))"
                           fontSize={size === "small" ? 9 : 10}
                           transform={
                             size === "small" ? "rotate(-45)" : "rotate(0)"
@@ -244,12 +244,12 @@ export default function TickDistributionChart({
                   tickFormatter={formatCount}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="count"
@@ -261,16 +261,20 @@ export default function TickDistributionChart({
                   {chartData.map((entry) => (
                     <Cell
                       key={`cell-${entry.ticks}`}
-                      fill="hsl(var(--foreground))"
+                      fill={
+                        parseInt(entry.ticks) >= 0
+                          ? "hsl(var(--chart-1))"
+                          : "hsl(var(--chart-4))"
+                      }
                       fillOpacity={
                         tickFilter.value === entry.ticks
                           ? 1
                           : tickFilter.value
-                            ? 0.1
-                            : parseInt(entry.ticks) >= 0 ? 0.98 : 0.22
+                            ? 0.22
+                            : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
                       }
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={parseInt(entry.ticks) >= 0 ? 0.42 : 0.06}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.55}
                       strokeWidth={1}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",
@@ -282,7 +286,7 @@ export default function TickDistributionChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -290,4 +294,4 @@ export default function TickDistributionChart({
       </div>
     </ChartSurface>
   );
-}
+})

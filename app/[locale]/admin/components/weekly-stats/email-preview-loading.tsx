@@ -56,7 +56,7 @@ export function EmailPreviewLoading({ stage }: EmailPreviewLoadingProps) {
           </AnimatePresence>
         </div>
 
-        <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-secondary rounded-full overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 h-full bg-semantic-info-bg"
             initial={{ width: 0 }}

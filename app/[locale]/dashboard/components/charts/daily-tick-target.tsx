@@ -34,7 +34,7 @@ interface DailyTickTargetProps {
   size?: WidgetSize
 }
 
-export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTargetProps) {
+export default React.memo(function DailyTickTargetChart({ size = 'medium' }: DailyTickTargetProps) {
   const { formattedTrades: trades } = useDashboardStats()
   const { dateRange } = useDashboardFilters()
   const t = useI18n()
@@ -191,7 +191,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4"
                     )}
                   />
@@ -211,7 +211,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                       <span
                         className={cn(
                           "text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
-                          displayMode === "ticks" ? "text-foreground drop-shadow-none" : "text-muted-foreground/70 hover:text-muted-foreground/70"
+                          displayMode === "ticks" ? "text-foreground drop-shadow-none" : "text-muted-foreground hover:text-muted-foreground"
                         )}
                         onClick={() => setDisplayMode("ticks")}
                       >
@@ -221,7 +221,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                       <span
                         className={cn(
                           "text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
-                          displayMode === "points" ? "text-foreground drop-shadow-none" : "text-muted-foreground/70 hover:text-muted-foreground/70"
+                          displayMode === "points" ? "text-foreground drop-shadow-none" : "text-muted-foreground hover:text-muted-foreground"
                         )}
                         onClick={() => setDisplayMode("points")}
                       >
@@ -243,7 +243,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(-1)}
-              className="h-6 w-6 p-0 hover:bg-secondary/22 text-fg-muted hover:text-fg-primary rounded-full transition-colors"
+              className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Minus className="h-3 w-3" />
             </Button>
@@ -251,7 +251,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(1)}
-              className="h-6 w-6 p-0 hover:bg-secondary/22 text-fg-muted hover:text-fg-primary rounded-full transition-colors"
+              className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Plus className="h-3 w-3" />
             </Button>
@@ -262,21 +262,21 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 hover:bg-secondary/30 text-fg-muted hover:text-foreground rounded-full transition-colors"
+                  className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground rounded-full transition-colors"
                 >
                   <Target className="h-3 w-3" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="border-border/55 bg-background/95 backdrop-blur-xl">
                 <DialogHeader>
-                  <DialogTitle className="text-fg-primary">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
-                  <DialogDescription className="text-fg-secondary">
+                  <DialogTitle className="text-foreground">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
                     {t("widgets.dailyTickTarget.setTargetDescription")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-fg-secondary">
+                    <label className="text-sm font-medium text-muted-foreground">
                       {t("widgets.dailyTickTarget.target")} (
                       {displayMode === "points"
                         ? t("widgets.dailyTickTarget.displayMode.points")
@@ -288,14 +288,14 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                       value={targetValue}
                       onChange={(e) => setTargetValue(e.target.value)}
                       placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
-                      className="bg-secondary/22 border-border/55 text-fg-primary placeholder:text-fg-muted focus:border-border/65 focus:ring-white/20 transition-all"
+                      className="bg-secondary/22 border-border/55 text-foreground placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-all"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-fg-secondary">
+                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
                       {t("common.cancel")}
                     </Button>
-                    <Button onClick={handleSaveTarget} className="bg-white hover:bg-white/90 text-black font-bold">
+                    <Button onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
                       {t("common.save")}
                     </Button>
                   </div>
@@ -317,7 +317,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
             <div className="flex flex-col items-center gap-1">
               <span
                 className={cn(
-                  "text-muted-foreground/70 uppercase tracking-[0.2em] font-black",
+                  "text-muted-foreground uppercase tracking-[0.2em] font-black",
                   size === "small" ? "text-[8px]" : "text-[9px]"
                 )}
               >
@@ -331,7 +331,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                 )}
               >
                 {Math.round(convertToDisplayValue(progress.current))}
-                <span className="text-[10px] font-black ml-1 text-muted-foreground/70 uppercase tracking-widest">
+                <span className="text-[10px] font-black ml-1 text-muted-foreground uppercase tracking-widest">
                   {getDisplayUnit()}
                   {progress.current !== 1 ? "s" : ""}
                 </span>
@@ -343,7 +343,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
             <div className="flex flex-col items-center gap-1">
               <span
                 className={cn(
-                  "text-muted-foreground/70 uppercase tracking-[0.2em] font-black",
+                  "text-muted-foreground uppercase tracking-[0.2em] font-black",
                   size === "small" ? "text-[8px]" : "text-[9px]"
                 )}
               >
@@ -351,12 +351,12 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               </span>
               <span
                 className={cn(
-                  "font-black tracking-tighter tabular-nums text-muted-foreground/70",
+                  "font-black tracking-tighter tabular-nums text-muted-foreground",
                   size === "small" ? "text-2xl" : "text-4xl"
                 )}
               >
                 {Math.round(convertToDisplayValue(progress.target))}
-                <span className="text-[10px] font-black ml-1 text-muted-foreground/55 uppercase tracking-widest">
+                <span className="text-[10px] font-black ml-1 text-muted-foreground uppercase tracking-widest">
                   {getDisplayUnit()}
                   {progress.target !== 1 ? "s" : ""}
                 </span>
@@ -370,7 +370,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               <div className="flex flex-col">
                 <span
                   className={cn(
-                    "text-[10px] uppercase font-bold tracking-wider text-foreground/80",
+                    "text-[10px] uppercase font-bold tracking-wider text-foreground",
                   )}
                 >
                   {t("widgets.dailyTickTarget.positive")}
@@ -391,7 +391,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               <div className="flex flex-col">
                 <span
                   className={cn(
-                    "text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70",
+                    "text-[10px] uppercase font-bold tracking-wider text-muted-foreground",
                   )}
                 >
                   {t("widgets.dailyTickTarget.negative")}
@@ -415,7 +415,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
               <div className="flex justify-between items-center">
                 <span
                   className={cn(
-                    "text-muted-foreground/70 text-[10px] uppercase font-bold tracking-wider",
+                    "text-muted-foreground text-[10px] uppercase font-bold tracking-wider",
                   )}
                 >
                   {t("widgets.dailyTickTarget.progress")}
@@ -423,7 +423,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                 <span
                   className={cn(
                     "font-black tabular-nums transition-all",
-                    isOverTarget ? "text-foreground text-lg scale-110 drop-shadow-none" : "text-muted-foreground/85",
+                    isOverTarget ? "text-foreground text-lg scale-110 drop-shadow-none" : "text-muted-foreground",
                     size === "small" ? "text-xs" : "text-sm"
                   )}
                 >
@@ -438,7 +438,7 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
                 )}
                 indicatorClassName={cn(
                   "transition-all duration-700",
-                  isOverTarget ? "bg-white shadow-none" : "bg-white/40"
+                  isOverTarget ? "bg-card shadow-none" : "bg-card/40"
                 )}
               />
             </div>
@@ -462,4 +462,4 @@ export default function DailyTickTargetChart({ size = 'medium' }: DailyTickTarge
       </div>
     </div>
   )
-}
+})

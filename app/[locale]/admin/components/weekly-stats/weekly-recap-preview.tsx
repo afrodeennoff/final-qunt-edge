@@ -288,7 +288,7 @@ export function WeeklyRecapPreview() {
             </div>
 
             {/* Preview - Shows loading animation, error, or iframe */}
-            <div className="relative bg-gray-50 overflow-hidden">
+            <div className="relative bg-muted overflow-hidden">
               {loadingState !== "complete" ? (
                 <EmailPreviewLoading stage={loadingState === "analyzing" ? "analyzing" : "generating"} />
               ) : error ? (

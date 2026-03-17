@@ -5,15 +5,21 @@ import { getAiTrades, clearTradeAccessCache, type TradeAccessProfile } from '@/l
 vi.mock('@/lib/ai/get-all-trades', () => ({
   getAllTradesForAi: vi.fn(),
 }))
+vi.mock('@/server/auth', () => ({
+  getUserId: vi.fn(),
+}))
 
 import { getAllTradesForAi } from '@/lib/ai/get-all-trades'
+import { getUserId } from '@/server/auth'
 
 const mockGetAllTradesForAi = getAllTradesForAi as ReturnType<typeof vi.fn>
+const mockGetUserId = getUserId as ReturnType<typeof vi.fn>
 
 describe('trade-access', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     clearTradeAccessCache()
+    mockGetUserId.mockResolvedValue('test')
   })
 
   describe('getAiTrades', () => {
@@ -73,7 +79,8 @@ describe('trade-access', () => {
 
       const result = await getAiTrades({ userId: 'test', profile: 'summary' })
 
-      expect(result.trades).toBeUndefined()
+      expect(result.profile).toBe('summary')
+      expect('trades' in result).toBe(false)
       expect(result.aggregates).toBeDefined()
       expect(result.aggregates?.count).toBe(2)
       expect(result.aggregates?.totalPnl).toBe(500) // 1000 + (-500)
@@ -89,6 +96,7 @@ describe('trade-access', () => {
 
       const result = await getAiTrades({ userId: 'test', profile: 'analysis' })
 
+      expect(result.profile).toBe('analysis')
       expect(result.trades).toBeDefined()
       expect(result.trades?.length).toBe(2)
 
@@ -123,6 +131,7 @@ describe('trade-access', () => {
 
       const result = await getAiTrades({ userId: 'test', profile: 'detail' })
 
+      expect(result.profile).toBe('detail')
       expect(result.trades).toBeDefined()
       expect(result.trades?.length).toBe(2)
 
@@ -171,11 +180,22 @@ describe('trade-access', () => {
         fetchedPages: 1,
       })
 
+      mockGetUserId
+        .mockResolvedValueOnce('user1')
+        .mockResolvedValueOnce('user2')
       await getAiTrades({ userId: 'user1', profile: 'detail' })
       await getAiTrades({ userId: 'user2', profile: 'detail' })
 
       // Should fetch twice because different users
       expect(mockGetAllTradesForAi).toHaveBeenCalledTimes(2)
+    })
+
+    it('rejects user context mismatch between explicit and session user', async () => {
+      mockGetUserId.mockResolvedValue('session-user')
+
+      await expect(
+        getAiTrades({ userId: 'other-user', profile: 'detail' })
+      ).rejects.toThrow('FORBIDDEN_USER_CONTEXT_MISMATCH')
     })
 
     it('passes through truncated and dataQualityWarning', async () => {

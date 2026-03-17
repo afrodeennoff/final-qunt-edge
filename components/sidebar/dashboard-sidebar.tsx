@@ -100,6 +100,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             group: "Community"
         },
         {
+            href: `/${locale}/prop-firm-deals`,
+            icon: <Globe className="size-4" />,
+            label: "Deals",
+            group: "Community"
+        },
+        {
             href: `/${locale}/dashboard/data`,
             icon: <Database className="size-4" />,
             label: "Data",

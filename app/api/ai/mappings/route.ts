@@ -8,9 +8,12 @@ import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetr
 import { apiError } from "@/lib/api-response";
 import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
+import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 
 export const maxDuration = 30;
 const mappingsRateLimit = rateLimit({ limit: 20, window: 60_000, identifier: "ai-mappings" });
+
+type MappingGeneratorResult = Awaited<ReturnType<typeof generateObject>>;
 
 const MappingOnlySchema = mappingSchema.omit({ quality: true });
 type MappingOnly = z.infer<typeof MappingOnlySchema>;
@@ -247,7 +250,7 @@ function buildPrompt(fieldColumns: string[], firstRows: Array<Record<string, str
   );
 }
 
-async function requestMapping(prompt: string, temperature: number): Promise<{ object: MappingOnly; usage: any }> {
+async function requestMapping(prompt: string, temperature: number): Promise<{ object: MappingOnly; usage: MappingGeneratorResult["usage"] }> {
   const result = await generateObject({
     model: getAiLanguageModel("mappings"),
     schema: MappingOnlySchema,
@@ -313,6 +316,7 @@ export async function POST(req: NextRequest) {
     };
 
     void logAiRequest({
+      userId,
       route: "/api/ai/mappings",
       feature: "mappings",
       model: policy.model,
@@ -330,13 +334,20 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      return apiError("VALIDATION_FAILED", "Invalid mappings request payload", 400, error.errors);
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
     }
 
-    console.error("Error in mappings route:", error);
+    if (error instanceof z.ZodError) {
+      return apiError("VALIDATION_FAILED", "Invalid mappings request payload", 400, {
+        issues: error.errors,
+      });
+    }
+
+    logAiError("Error in mappings route", error, { userId });
 
     void logAiRequest({
+      userId,
       route: "/api/ai/mappings",
       feature: "mappings",
       model: policy.model,
@@ -344,7 +355,7 @@ export async function POST(req: NextRequest) {
       latencyMs: Date.now() - startedAt,
       success: false,
       errorCategory: categorizeAiError(error),
-      errorCode: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code ?? "") || null : null,
+      errorCode: getAiErrorCode(error),
       sampleRate: 1,
     });
 

@@ -40,7 +40,7 @@ function CommissionsTooltip({
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
         <div className="flex flex-col mb-2 border-b border-border/55 pb-1">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.type")}
           </span>
           <span className="font-black text-foreground text-[11px] uppercase tracking-widest">
@@ -48,7 +48,7 @@ function CommissionsTooltip({
           </span>
         </div>
         <div className="flex flex-col mb-2">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.amount")}
           </span>
           <span className={cn(
@@ -57,10 +57,10 @@ function CommissionsTooltip({
           )}>{formatCurrency(data.raw)}</span>
         </div>
         <div className="flex flex-col pt-2 border-t border-border/55">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.percentage")}
           </span>
-          <span className="font-black text-muted-foreground/85 text-[11px]">
+          <span className="font-black text-muted-foreground text-[11px]">
             {data.value.toFixed(2)}%</span>
         </div>
       </div>
@@ -73,11 +73,11 @@ function CommissionsTooltip({
 const chartConfig = {
   pnl: {
     label: "Net P/L",
-    color: "hsl(var(--foreground))",
+    color: "hsl(var(--chart-1))",
   },
   commissions: {
     label: "Commissions",
-    color: "hsl(var(--foreground) / 0.35)",
+    color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
@@ -93,7 +93,7 @@ const formatCenterCurrency = (value: number) => {
   })
 }
 
-export default function CommissionsPnLChart({
+export default React.memo(function CommissionsPnLChart({
   size = "medium",
 }: CommissionsPnLChartProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -150,7 +150,7 @@ export default function CommissionsPnLChart({
           <div className="flex items-center gap-1.5">
             <CardTitle
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-fg-primary",
+                "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === 'small' ? "text-sm" : "text-base"
               )}
             >
@@ -160,7 +160,7 @@ export default function CommissionsPnLChart({
               <UITooltip>
                 <TooltipTrigger asChild>
                   <Info className={cn(
-                    "text-fg-muted hover:text-fg-primary transition-colors cursor-help",
+                    "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                     size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
                   )} />
                 </TooltipTrigger>
@@ -199,8 +199,8 @@ export default function CommissionsPnLChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.name === "NET P/L" ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.35)"}
-                      fillOpacity={entry.name === "NET P/L" ? 0.98 : 0.24}
+                      fill={entry.name === "NET P/L" ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
+                      fillOpacity={entry.name === "NET P/L" ? 0.94 : 0.84}
                       className={cn(
                         "transition-all duration-300 ease-in-out hover:fill-opacity-100",
                         entry.name === "NET P/L" ? "chart-positive-emphasis" : "chart-negative-muted"
@@ -208,22 +208,22 @@ export default function CommissionsPnLChart({
                     />
                   ))}
                   <text x="50%" y={pieLayout.cy} textAnchor="middle" dominantBaseline="central">
-                    <tspan x="50%" dy="-0.1em" className="fill-white font-black text-2xl">
+                    <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl">
                       {formatCenterCurrency(chartData[0]?.raw ?? 0)}
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-white/55 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground text-[10px] uppercase font-black tracking-[0.16em]">
                       NET P/L
                     </tspan>
                   </text>
                 </Pie>
                 <Tooltip
                   content={<CommissionsTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -231,4 +231,4 @@ export default function CommissionsPnLChart({
       </div>
     </ChartSurface>
   );
-}
+})

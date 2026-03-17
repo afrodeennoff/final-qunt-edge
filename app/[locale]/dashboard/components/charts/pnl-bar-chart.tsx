@@ -66,8 +66,8 @@ const formatCurrency = (value: number) => {
   return `${value < 0 ? "-" : ""}$${absValue.toFixed(0)}`;
 };
 
-const positiveColor = "hsl(var(--foreground))";
-const negativeColor = "hsl(var(--foreground) / 0.35)";
+const positiveColor = "hsl(var(--chart-1))";
+const negativeColor = "hsl(var(--chart-4))";
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   const t = useI18n();
@@ -80,25 +80,25 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const date = new Date(data.date + "T00:00:00Z");
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-        <p className="font-black text-muted-foreground/70 text-[10px] uppercase tracking-widest mb-2 border-b border-border/55 pb-1">
+        <p className="font-black text-muted-foreground text-[10px] uppercase tracking-widest mb-2 border-b border-border/55 pb-1">
           {formatInTimeZone(date, timezone, "MMM d, yyyy", {
             locale: dateLocale,
           })}
         </p>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
+          <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnl.tooltip.pnl")}</span>
           <span className={cn("font-black text-sm tabular-nums", data.pnl >= 0 ? "metric-positive" : "metric-negative")}>
             {formatCurrency(data.pnl)}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-border/55">
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-wider">{t("pnl.tooltip.longTrades")}</span>
-            <span className="text-[11px] font-black text-muted-foreground/85">{data.longNumber}</span>
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.longTrades")}</span>
+            <span className="text-[11px] font-black text-muted-foreground">{data.longNumber}</span>
           </div>
           <div className="flex flex-col text-right">
-            <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
-            <span className="text-[11px] font-black text-muted-foreground/85">{data.shortNumber}</span>
+            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
+            <span className="text-[11px] font-black text-muted-foreground">{data.shortNumber}</span>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   return null;
 };
 
-export default function PNLChart({ size = "medium" }: PNLChartProps) {
+export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) {
   const { calendarData } = useDashboardStats();
   const t = useI18n();
   const locale = useCurrentLocale();
@@ -155,7 +155,7 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-fg-primary",
+                "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -166,7 +166,7 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-fg-muted hover:text-fg-primary transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -202,7 +202,7 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   minTickGap={size === "small" ? 30 : 50}
                   tickFormatter={(value) => {
@@ -219,13 +219,13 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="pnl"
@@ -237,9 +237,9 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.pnl >= 0 ? positiveColor : negativeColor}
-                      fillOpacity={entry.pnl >= 0 ? 0.98 : 0.24}
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={entry.pnl >= 0 ? 0.42 : 0.06}
+                      fillOpacity={entry.pnl >= 0 ? 0.94 : 0.86}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.55}
                       strokeWidth={1}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",
@@ -251,7 +251,7 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -259,4 +259,4 @@ export default function PNLChart({ size = "medium" }: PNLChartProps) {
       </div>
     </ChartSurface>
   );
-}
+})

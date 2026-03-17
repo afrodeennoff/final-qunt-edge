@@ -1,7 +1,7 @@
 "use client";
 
 import type { ImportTradeDraft } from "@/lib/trade-types";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,7 +14,6 @@ import { format, isValid } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils"; // Assuming you have a utility for className merging
 import { Button } from "@/components/ui/button";
-import { ArrowDownToLine, ChevronDown } from "lucide-react";
 import { parsePositionTime } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -24,11 +23,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
 import { experimental_useObject as useObject } from '@ai-sdk/react'
 import { tradeSchema } from '@/app/api/ai/format-trades/schema'
 import { z } from 'zod/v3';
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -45,13 +42,6 @@ interface FormatPreviewProps {
   isLoading: boolean;
   headers: string[];
   mappings: { [key: string]: string };
-}
-
-function transformHeaders(headers: string[], mappings: { [key: string]: string }): string[] {
-  return headers.map(header => {
-    const mappingKey = Object.keys(mappings).find(key => key === header);
-    return mappingKey ? mappings[mappingKey] : header;
-  });
 }
 
 function transformRowData(rows: string[][], headers: string[], mappings: { [key: string]: string }): string[][] {
@@ -75,7 +65,7 @@ function transformRowData(rows: string[][], headers: string[], mappings: { [key:
     
     // For each destination column, find the corresponding data using the unique ID
     destinationColumns.forEach(destColumn => {
-      const mapping = Object.entries(uniqueIdToMapping).find(([_, mapping]) => mapping.destination === destColumn);
+      const mapping = Object.entries(uniqueIdToMapping).find(([, mapping]) => mapping.destination === destColumn);
       if (mapping) {
         const [, { sourceIndex }] = mapping;
         transformedRow.push(row[sourceIndex] || '');
@@ -94,7 +84,6 @@ export function FormatPreview({
   processedTrades,
   setProcessedTrades,
   setIsLoading,
-  isLoading,
   headers,
   mappings,
 }: FormatPreviewProps) {
@@ -114,9 +103,7 @@ export function FormatPreview({
   );
 
   const [error, setError] = useState<string | null>(null);
-  const [currentBatch, setCurrentBatch] = useState(0);
-  const [processedBatches, setProcessedBatches] = useState<Set<number>>(new Set());
-  const [processingBatches, setProcessingBatches] = useState<Set<number>>(new Set());
+  const [processingBatches] = useState<Set<number>>(new Set());
   const [isAutoProcessing, setIsAutoProcessing] = useState(false);
   const [isStopped, setIsStopped] = useState(false);
   const [completedBatches, setCompletedBatches] = useState<Set<number>>(new Set());
@@ -125,6 +112,8 @@ export function FormatPreview({
   const [currentBatchIndex1, setCurrentBatchIndex1] = useState(0);
   const [currentBatchIndex2, setCurrentBatchIndex2] = useState(0);
   const batchSize = 5;
+  const MAX_RETRIES_PER_BATCH = 3;
+  const RETRY_BASE_DELAY_MS = 1200;
   const totalBatches = Math.ceil(validTrades.length / batchSize);
 
   // Use refs to avoid infinite loops in useEffect
@@ -136,6 +125,9 @@ export function FormatPreview({
   const currentBatchIndex2Ref = useRef<number>(currentBatchIndex2);
   const isAutoProcessingRef = useRef<boolean>(isAutoProcessing);
   const isStoppedRef = useRef<boolean>(isStopped);
+  const retryCountSet1Ref = useRef<Map<number, number>>(new Map());
+  const retryCountSet2Ref = useRef<Map<number, number>>(new Map());
+  const scheduledTimeoutsRef = useRef<Set<number>>(new Set());
   
   // Update refs when state changes
   useEffect(() => {
@@ -170,6 +162,28 @@ export function FormatPreview({
     isStoppedRef.current = isStopped;
   }, [isStopped]);
 
+  const scheduleManagedTimeout = useCallback((fn: () => void, delayMs: number) => {
+    const id = window.setTimeout(() => {
+      scheduledTimeoutsRef.current.delete(id);
+      fn();
+    }, delayMs);
+    scheduledTimeoutsRef.current.add(id);
+  }, []);
+
+  const clearManagedTimeouts = useCallback(() => {
+    for (const timeoutId of scheduledTimeoutsRef.current) {
+      clearTimeout(timeoutId);
+    }
+    scheduledTimeoutsRef.current.clear();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearManagedTimeouts();
+      setIsLoading(false);
+    };
+  }, [clearManagedTimeouts, setIsLoading]);
+
   // Split batches into two sets
   const splitBatches = () => {
     const allBatches = Array.from({ length: totalBatches }, (_, i) => i);
@@ -188,6 +202,50 @@ export function FormatPreview({
     setBatchSet2(set2);
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
+    retryCountSet1Ref.current.clear();
+    retryCountSet2Ref.current.clear();
+  };
+
+  const parseAiErrorMessage = (rawMessage: string): string => {
+    if (!rawMessage) return "Unknown AI error";
+    try {
+      const parsed = JSON.parse(rawMessage) as { error?: { message?: string } };
+      return parsed?.error?.message ?? rawMessage;
+    } catch {
+      return rawMessage;
+    }
+  };
+
+  const parseAiErrorCode = (rawMessage: string): string | null => {
+    try {
+      const parsed = JSON.parse(rawMessage) as { error?: { code?: string } };
+      return parsed?.error?.code ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const scheduleRetryForSet = (setNumber: 1 | 2, batchIndex: number) => {
+    if (isStoppedRef.current) return;
+
+    const retryMap = setNumber === 1 ? retryCountSet1Ref.current : retryCountSet2Ref.current;
+    const attempt = (retryMap.get(batchIndex) ?? 0) + 1;
+    retryMap.set(batchIndex, attempt);
+
+    if (attempt > MAX_RETRIES_PER_BATCH) {
+      setIsAutoProcessing(false);
+      return;
+    }
+
+    const delayMs = RETRY_BASE_DELAY_MS * attempt;
+    scheduleManagedTimeout(() => {
+      if (!isAutoProcessingRef.current || isStoppedRef.current) return;
+      if (setNumber === 1) {
+        processNextBatchInSet1();
+      } else {
+        processNextBatchInSet2();
+      }
+    }, delayMs);
   };
 
   // First useObject instance - processes batchSet1
@@ -200,11 +258,27 @@ export function FormatPreview({
     schema: z.array(tradeSchema),
     onError(error) {
       console.error('Error processing batch set 1:', error);
-      setError(`Failed to process batch set 1: ${error.message}`);
+      const message = parseAiErrorMessage(error.message);
+      const code = parseAiErrorCode(error.message);
+      const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
+      const isRetryable = code === "SERVICE_UNAVAILABLE" || code === "RATE_LIMITED";
+
+      if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
+        const currentAttempt = (retryCountSet1Ref.current.get(currentBatch) ?? 0) + 1;
+        setError(
+          `Batch set 1 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
+        );
+        scheduleRetryForSet(1, currentBatch);
+        return;
+      }
+
+      setError(`Failed to process batch set 1: ${message}`);
+      setIsAutoProcessing(false);
     },
     onFinish() {
       const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
       if (currentBatch !== undefined) {
+        retryCountSet1Ref.current.delete(currentBatch);
         setCompletedBatches(prev => {
           return new Set([...prev, currentBatch]);
         });
@@ -219,7 +293,7 @@ export function FormatPreview({
           setIsAutoProcessing(false);
         } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
           // Process next batch in set 1 if available and not stopped
-          setTimeout(() => {
+          scheduleManagedTimeout(() => {
             processNextBatchInSet1();
           }, 500);
         }
@@ -237,11 +311,27 @@ export function FormatPreview({
     schema: z.array(tradeSchema),
     onError(error) {
       console.error('Error processing batch set 2:', error);
-      setError(`Failed to process batch set 2: ${error.message}`);
+      const message = parseAiErrorMessage(error.message);
+      const code = parseAiErrorCode(error.message);
+      const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
+      const isRetryable = code === "SERVICE_UNAVAILABLE" || code === "RATE_LIMITED";
+
+      if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
+        const currentAttempt = (retryCountSet2Ref.current.get(currentBatch) ?? 0) + 1;
+        setError(
+          `Batch set 2 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
+        );
+        scheduleRetryForSet(2, currentBatch);
+        return;
+      }
+
+      setError(`Failed to process batch set 2: ${message}`);
+      setIsAutoProcessing(false);
     },
     onFinish() {
       const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
       if (currentBatch !== undefined) {
+        retryCountSet2Ref.current.delete(currentBatch);
         setCompletedBatches(prev => {
           return new Set([...prev, currentBatch]);
         });
@@ -256,7 +346,7 @@ export function FormatPreview({
           setIsAutoProcessing(false);
         } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
           // Process next batch in set 2 if available and not stopped
-          setTimeout(() => {
+          scheduleManagedTimeout(() => {
             processNextBatchInSet2();
           }, 500);
         }
@@ -266,8 +356,13 @@ export function FormatPreview({
 
   const isProcessing = isProcessing1 || isProcessing2;
 
+  useEffect(() => {
+    setIsLoading(isProcessing || isAutoProcessing);
+  }, [isProcessing, isAutoProcessing, setIsLoading]);
+
   // Process next batch in set 1
   const processNextBatchInSet1 = () => {
+    if (isStoppedRef.current || !isAutoProcessingRef.current) return;
     const currentIndex = currentBatchIndex1Ref.current;
     const batchSet = batchSet1Ref.current;
 
@@ -283,6 +378,7 @@ export function FormatPreview({
 
   // Process next batch in set 2
   const processNextBatchInSet2 = () => {
+    if (isStoppedRef.current || !isAutoProcessingRef.current) return;
     const currentIndex = currentBatchIndex2Ref.current;
     const batchSet = batchSet2Ref.current;
 
@@ -297,11 +393,12 @@ export function FormatPreview({
   };
 
   const startProcessing = () => {
+    clearManagedTimeouts();
     setIsAutoProcessing(true);
     setIsStopped(false);
     splitBatches();
     // Start both instances with their first batches after a small delay to ensure state is updated
-    setTimeout(() => {
+    scheduleManagedTimeout(() => {
       processNextBatchInSet1();
       processNextBatchInSet2();
     }, 100);
@@ -310,15 +407,16 @@ export function FormatPreview({
   const stopProcessing = () => {
     setIsAutoProcessing(false);
     setIsStopped(true);
+    clearManagedTimeouts();
 
     // Don't mark currently processing batches as completed - let them finish naturally
     // The onFinish callbacks will handle completion when they finish streaming
   };
 
   const resetProcessing = () => {
+    clearManagedTimeouts();
     setIsAutoProcessing(false);
     setIsStopped(false);
-    setCurrentBatch(0);
     setProcessedTrades([]);
     setCompletedBatches(new Set());
     setBatchSet1([]);
@@ -326,6 +424,9 @@ export function FormatPreview({
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
     processedTradesRef.current = [];
+    retryCountSet1Ref.current.clear();
+    retryCountSet2Ref.current.clear();
+    setIsLoading(false);
   };
 
   const getBatchData = (batchIndex: number) => {
@@ -335,67 +436,67 @@ export function FormatPreview({
     return transformRowData(batchRows, headers, mappings);
   };
 
-  const batchToProcess = useMemo(() => {
-    const startIndex = currentBatch * batchSize;
-    const endIndex = Math.min(startIndex + batchSize, validTrades.length);
-    return validTrades.slice(startIndex, endIndex);
-  }, [currentBatch, validTrades, batchSize]);
+  const scrollToBottom = useCallback(() => {
+    if (!tableContainerRef.current) return;
 
+    const scrollContainer = tableContainerRef.current.querySelector<HTMLElement>(
+      '[data-radix-scroll-area-viewport]'
+    );
+
+    if (!scrollContainer) return;
+
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, []);
+
+
+  const appendUniqueTrades = useCallback((incomingTrades: Partial<ImportTradeDraft>[]) => {
+    const uniqueTrades = incomingTrades.filter(newTrade =>
+      !processedTradesRef.current.some(existingTrade =>
+        existingTrade.entryDate === newTrade.entryDate &&
+        existingTrade.instrument === newTrade.instrument &&
+        existingTrade.quantity === newTrade.quantity &&
+        existingTrade.side === newTrade.side &&
+        existingTrade.entryPrice === newTrade.entryPrice &&
+        existingTrade.closePrice === newTrade.closePrice &&
+        existingTrade.pnl === newTrade.pnl &&
+        existingTrade.commission === newTrade.commission &&
+        existingTrade.timeInPosition === newTrade.timeInPosition
+      )
+    );
+
+    if (uniqueTrades.length === 0) return;
+
+    const mergedTrades = [...processedTradesRef.current, ...uniqueTrades];
+    processedTradesRef.current = mergedTrades;
+    setProcessedTrades(mergedTrades);
+    scheduleManagedTimeout(() => {
+      scrollToBottom();
+    }, 100);
+  }, [scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
 
   // Handle streaming results from first useObject
   useEffect(() => {
     if (object1) {
       const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-      const uniqueTrades = newTrades.filter(newTrade =>
-        !processedTradesRef.current.some(existingTrade =>
-          existingTrade.entryDate === newTrade.entryDate &&
-          existingTrade.instrument === newTrade.instrument &&
-          existingTrade.quantity === newTrade.quantity &&
-          existingTrade.side === newTrade.side &&
-          existingTrade.entryPrice === newTrade.entryPrice &&
-          existingTrade.closePrice === newTrade.closePrice &&
-          existingTrade.pnl === newTrade.pnl &&
-          existingTrade.commission === newTrade.commission &&
-          existingTrade.timeInPosition === newTrade.timeInPosition
-        )
-      );
-      setProcessedTrades([...processedTradesRef.current, ...uniqueTrades]);
-      
-      setTimeout(() => {
-        scrollToBottom()
-      }, 100)
+      appendUniqueTrades(newTrades);
     }
-  }, [object1])
+  }, [object1, appendUniqueTrades])
 
   // Handle streaming results from second useObject
   useEffect(() => {
     if (object2) {
       const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-      const uniqueTrades = newTrades.filter(newTrade =>
-        !processedTradesRef.current.some(existingTrade =>
-          existingTrade.entryDate === newTrade.entryDate &&
-          existingTrade.instrument === newTrade.instrument &&
-          existingTrade.quantity === newTrade.quantity &&
-          existingTrade.side === newTrade.side &&
-          existingTrade.entryPrice === newTrade.entryPrice &&
-          existingTrade.closePrice === newTrade.closePrice &&
-          existingTrade.pnl === newTrade.pnl &&
-          existingTrade.commission === newTrade.commission &&
-          existingTrade.timeInPosition === newTrade.timeInPosition
-        )
-      );
-      setProcessedTrades([...processedTradesRef.current, ...uniqueTrades]);
-      
-      setTimeout(() => {
-        scrollToBottom()
-      }, 100)
+      appendUniqueTrades(newTrades);
     }
-  }, [object2])
+  }, [object2, appendUniqueTrades])
 
   const columns = useMemo<ColumnDef<Partial<ImportTradeDraft>>[]>(() => [
     {
       accessorKey: "entryDate",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.entryDate')}</div>
       ),
       cell: ({ row }) => {
@@ -420,7 +521,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "instrument",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.instrument')}</div>
       ),
       cell: ({ row }) => {
@@ -444,7 +545,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "side",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.direction')}</div>
       ),
       cell: ({ row }) => {
@@ -468,7 +569,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "quantity",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.quantity')}</div>
       ),
       cell: ({ row }) => {
@@ -492,7 +593,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "entryPrice",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.entryPrice')}</div>
       ),
       cell: ({ row }) => {
@@ -516,7 +617,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "closePrice",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.exitPrice')}</div>
       ),
       cell: ({ row }) => {
@@ -540,7 +641,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "pnl",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.pnl')}</div>
       ),
       cell: ({ row }) => {
@@ -554,7 +655,7 @@ export function FormatPreview({
             <Tooltip>
               <TooltipTrigger>
                 <div className="flex items-center gap-1">
-                  <span className={pnl >= 0 ? "text-white" : "text-semantic-error"}>
+                  <span className={pnl >= 0 ? "text-foreground" : "text-semantic-error"}>
                     ${pnl.toFixed(2)}
                   </span>
                   {isMismatch && (
@@ -584,7 +685,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "commission",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('calendar.modal.commission')}</div>
       ),
       cell: ({ row }) => {
@@ -609,7 +710,7 @@ export function FormatPreview({
     },
     {
       accessorKey: "timeInPosition",
-      header: ({ column }) => (
+      header: () => (
         <div className="font-medium">{t('trade-table.positionTime')}</div>
       ),
       cell: ({ row }) => {
@@ -643,18 +744,6 @@ export function FormatPreview({
     },
   });
 
-  const scrollToBottom = () => {
-    if (tableContainerRef.current) {
-      const scrollContainer = tableContainerRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      if (scrollContainer) {
-        scrollContainer.scrollTo({
-          top: scrollContainer.scrollHeight,
-          behavior: 'smooth'
-        });
-      }
-    }
-  };
-
   // Calculate totals for footer
   const totals = useMemo(() => {
     const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
@@ -668,18 +757,13 @@ export function FormatPreview({
     };
   }, [processedTrades]);
 
-
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-semantic-error">{error}</div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4 h-full">
+      {error && (
+        <div className="rounded-md border border-semantic-error-border bg-semantic-error-bg px-3 py-2 text-sm text-semantic-error">
+          {error}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex flex-col gap-1">
@@ -693,14 +777,14 @@ export function FormatPreview({
           </div>
           {isAutoProcessing && (
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-white/10 rounded-full animate-pulse"></div>
-              <span className="text-xs text-white font-medium">{t('import.processing.autoProcessing')}</span>
+              <div className="w-2 h-2 bg-muted/50 rounded-full animate-pulse"></div>
+              <span className="text-xs text-foreground font-medium">{t('import.processing.autoProcessing')}</span>
             </div>
           )}
           {!isAutoProcessing && completedBatches.size === totalBatches && totalBatches > 0 && (
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-white/10 rounded-full"></div>
-              <span className="text-xs text-white font-medium">{t('import.processing.allBatchesCompleted')}</span>
+              <div className="w-2 h-2 bg-muted/50 rounded-full"></div>
+              <span className="text-xs text-foreground font-medium">{t('import.processing.allBatchesCompleted')}</span>
             </div>
           )}
         </div>
@@ -709,7 +793,7 @@ export function FormatPreview({
             <Button
               onClick={startProcessing}
               disabled={isProcessing}
-              className="bg-white/10 hover:bg-white/10 text-white"
+              className="bg-muted/50 hover:bg-muted/50 text-foreground"
             >
               {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
             </Button>
@@ -848,7 +932,7 @@ export function FormatPreview({
                       {t('trade-table.footer.totalPnl')}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.totalPnl >= 0 ? "text-white" : "text-semantic-error"}>
+                      <span className={totals.totalPnl >= 0 ? "text-foreground" : "text-semantic-error"}>
                         ${totals.totalPnl.toFixed(2)}
                       </span>
                     </TableCell>
@@ -862,7 +946,7 @@ export function FormatPreview({
                       {t('trade-table.footer.netPnl')}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.netPnl >= 0 ? "text-white" : "text-semantic-error"}>
+                      <span className={totals.netPnl >= 0 ? "text-foreground" : "text-semantic-error"}>
                         ${totals.netPnl.toFixed(2)}
                       </span>
                     </TableCell>

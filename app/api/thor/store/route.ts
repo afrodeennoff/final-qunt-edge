@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { saveTradesAction } from '@/server/database';
+import { saveTradesForUserAction } from '@/server/database';
 import type { ImportTradeDraft } from '@/lib/trade-types';
 import { verifySecureToken } from '@/lib/api-auth';
+import { apiError } from '@/lib/api-response';
 import { z } from 'zod'
 import { createRateLimitResponse, rateLimit } from '@/lib/rate-limit'
 import { parseJson, parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate'
@@ -53,10 +54,9 @@ async function authenticateRequest(req: NextRequest) {
   const authHeader = req.headers.get('authorization');
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return { 
-      authenticated: false, 
+    return {
+      authenticated: false,
       error: {
-        message: 'No valid authorization token found',
         status: 401
       }
     };
@@ -68,10 +68,9 @@ async function authenticateRequest(req: NextRequest) {
     const user = await verifySecureToken(token, 'thor')
     
     if (!user) {
-      return { 
-        authenticated: false, 
+      return {
+        authenticated: false,
         error: {
-          message: 'No user found with the provided token',
           status: 401
         }
       };
@@ -82,8 +81,7 @@ async function authenticateRequest(req: NextRequest) {
     return {
       authenticated: false,
       error: {
-        message: 'Database error during authentication',
-        status: 500
+        status: 401
       }
     };
   }
@@ -103,16 +101,13 @@ export async function POST(req: NextRequest) {
 
     const contentLength = Number(req.headers.get('content-length') || 0)
     if (Number.isFinite(contentLength) && contentLength > MAX_THOR_BODY_BYTES) {
-      return NextResponse.json({ error: 'Request payload is too large', requestId }, { status: 413 })
+      return apiError('PAYLOAD_TOO_LARGE', 'Request payload is too large', 413, { requestId })
     }
 
     const auth = await authenticateRequest(req);
     
     if (!auth.authenticated) {
-      return NextResponse.json({ 
-        error: 'Unauthorized', 
-        message: auth.error?.message 
-      }, { status: auth.error?.status || 401 });
+      return apiError('UNAUTHORIZED', 'Unauthorized', auth.error?.status || 401)
     }
     
     const user = auth.user!;
@@ -122,13 +117,10 @@ export async function POST(req: NextRequest) {
       ? data.dates.reduce((sum, dateData) => sum + (Array.isArray(dateData?.trades) ? dateData.trades.length : 0), 0)
       : 0
     if (totalTrades === 0) {
-      return NextResponse.json({ error: 'Invalid payload: no trades provided' }, { status: 400 })
+      return apiError('VALIDATION_FAILED', 'Invalid payload: no trades provided', 400)
     }
     if (totalTrades > MAX_THOR_TRADES) {
-      return NextResponse.json(
-        { error: `Too many trades. Maximum is ${MAX_THOR_TRADES}.` },
-        { status: 413 }
-      )
+      return apiError('PAYLOAD_TOO_LARGE', `Too many trades. Maximum is ${MAX_THOR_TRADES}.`, 413)
     }
     
     // Transform the data to match the Trade schema
@@ -148,7 +140,7 @@ export async function POST(req: NextRequest) {
           entryPrice: trade.entry_price,
           closePrice: trade.exit_price,
           quantity: Math.abs(trade.quantity),
-          side: trade.quantity > 0 ? 'Long' : 'Short',
+          side: trade.side === 'Buy' ? 'Long' : 'Short',
           pnl: trade.pnl,
           timeInPosition,
           commission: 0,
@@ -164,14 +156,11 @@ export async function POST(req: NextRequest) {
       })
     )
 
-    const result = await saveTradesAction(trades, { userId: user.id })
+    const result = await saveTradesForUserAction(trades, user.id)
 
     // Handle duplicate trades as success, but return errors for other cases
     if (result.error && result.error !== 'DUPLICATE_TRADES') {
-      return NextResponse.json(
-        { error: result.error, details: result.details },
-        { status: 400 }
-      )
+      return apiError('BAD_REQUEST', result.error, 400, result.details)
     }
 
     return NextResponse.json({
@@ -183,10 +172,7 @@ export async function POST(req: NextRequest) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
     console.error('[thor/store] Error processing request:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', requestId },
-      { status: 500 }
-    )
+    return apiError('INTERNAL_ERROR', 'Internal server error', 500, { requestId })
   }
 }
 
@@ -205,10 +191,7 @@ export async function GET(req: NextRequest) {
     const auth = await authenticateRequest(req);
     
     if (!auth.authenticated) {
-      return NextResponse.json({ 
-        error: 'Unauthorized', 
-        message: auth.error?.message 
-      }, { status: auth.error?.status || 401 });
+      return apiError('UNAUTHORIZED', 'Unauthorized', auth.error?.status || 401)
     }
     
     const user = auth.user!;
@@ -272,10 +255,7 @@ export async function GET(req: NextRequest) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
     console.error('[thor/store] Error retrieving trades:', error);
-    return NextResponse.json({ 
-      error: 'Failed to retrieve trades',
-      requestId,
-    }, { status: 500 });
+    return apiError('INTERNAL_ERROR', 'Failed to retrieve trades', 500, { requestId })
   }
 }
 
@@ -294,10 +274,7 @@ export async function DELETE(req: NextRequest) {
     const auth = await authenticateRequest(req);
     
     if (!auth.authenticated) {
-      return NextResponse.json({ 
-        error: 'Unauthorized', 
-        message: auth.error?.message 
-      }, { status: auth.error?.status || 401 });
+      return apiError('UNAUTHORIZED', 'Unauthorized', auth.error?.status || 401)
     }
     
     const user = auth.user!;
@@ -320,9 +297,6 @@ export async function DELETE(req: NextRequest) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
     console.error('[thor/store] Error deleting trades:', error);
-    return NextResponse.json({ 
-      error: 'Failed to delete trades',
-      requestId,
-    }, { status: 500 });
+    return apiError('INTERNAL_ERROR', 'Failed to delete trades', 500, { requestId })
   }
 }

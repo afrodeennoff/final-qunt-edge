@@ -1,3 +1,232 @@
+## Task: Branch sync to `a442c69` (2026-03-18)
+
+- [x] Reset local branch `fix/dashboard-sync-context-crash-pr2` to commit `a442c69`.
+- [x] Force-pushed `origin/fix/dashboard-sync-context-crash-pr2` back to commit `a442c69`.
+- [x] Verified local and remote hashes match exactly.
+
+Verification:
+- Local `HEAD`: `a442c69e02ba9939d2926a294080f15a4f53d16e`
+- Remote `origin/fix/dashboard-sync-context-crash-pr2`: `a442c69e02ba9939d2926a294080f15a4f53d16e`
+
+## Task: Theme branch sync + deploy trigger status (2026-03-17)
+
+- [x] Reset branch `fix/dashboard-sync-context-crash-pr2` to commit `087eaa8` as requested.
+- [x] Force-pushed remote branch to match `087eaa8` and verified local/remote hashes are identical.
+- [x] Attempted Vercel deploy trigger from CLI.
+- [ ] Complete deployment trigger after Vercel authentication (`vercel login` or `--token`).
+
+Verification:
+- Branch hash check: local `087eaa8cbb068b88583ee9d88becabf5e706bd1b` and remote `origin/fix/dashboard-sync-context-crash-pr2` match.
+- Vercel CLI result: `No existing credentials found. Please run vercel login or pass --token`.
+
+## Task: Dashboard non-chart widget/card token + contrast polish (2026-03-17)
+
+- [x] Audit non-chart widget/card components under `app/[locale]/dashboard/components/{widgets,statistics,accounts}` for low-contrast text and inconsistent semantic token usage.
+- [x] Replace overly faint foreground variants and non-semantic opacity-based text styling with semantic token classes while preserving layout/behavior.
+- [x] Run `npx eslint` on touched files and capture results.
+- [x] Record changed files and verification summary in this checklist.
+
+Verification: `npx eslint app/[locale]/dashboard/components/widgets/smart-insights-widget.tsx app/[locale]/dashboard/components/widgets/propfirm-catalogue-widget.tsx app/[locale]/dashboard/components/widgets/trading-score-widget.tsx app/[locale]/dashboard/components/widgets/risk-metrics-widget.tsx app/[locale]/dashboard/components/statistics/profit-factor-card.tsx app/[locale]/dashboard/components/statistics/risk-reward-ratio-card.tsx app/[locale]/dashboard/components/statistics/winning-streak-card.tsx app/[locale]/dashboard/components/statistics/trade-performance-card.tsx app/[locale]/dashboard/components/statistics/average-position-time-card.tsx app/[locale]/dashboard/components/statistics/long-short-card.tsx app/[locale]/dashboard/components/statistics/cumulative-pnl-card.tsx app/[locale]/dashboard/components/statistics/statistics-widget.tsx app/[locale]/dashboard/components/accounts/account-card.tsx` (0 errors, warnings only from existing complexity/unused vars).
+
+## Task: Root layout font + metadata refresh (2026-03-14)
+
+- [x] Review `app/layout.tsx`, `app/globals.css`, and `tailwind.config.ts` to understand the current font wiring, inline variables, and metadata defaults.
+- [x] Import and configure the three `next/font` families (`fontSans`, `fontSerif`, `fontMono`), apply their `variable` classes, and remove the outdated inline font variable definitions.
+- [x] Update the Qunt Edge metadata (title template, description, keywords, open graph, Twitter cards, etc.) so the root layout is branded and removes any “Create Next App” defaults.
+- [x] Adjust the shared CSS/tailwind font stacks to use the new `--font-sans`/`--font-mono` variables while keeping backward-compatible aliases for `--font-geist`/`--font-ibm-mono`.
+- [x] Run targeted lint(s) covering `app/layout.tsx`, `app/globals.css`, and `tailwind.config.ts` (e.g., `npm run lint -- app/layout.tsx tailwind.config.ts app/globals.css`) to confirm the changes compile.
+- [x] Summarize the verification results and changed files in this checklist.
+
+Verification: `npm run lint -- app/layout.tsx tailwind.config.ts app/globals.css` (ESLint warns `app/globals.css` is ignored because no matching config is supplied; layout and config files pass).
+
+## Task: Accessibility polish – user menu & settings (2026-03-16)
+
+- [x] Audit `app/[locale]/dashboard/components/user-menu.tsx` and `app/[locale]/dashboard/settings/page.tsx` for ARIA names, keyboard focus visibility, and theme selector clarity.
+- [x] Implement minimal fixes: make menu trigger keyboard-focusable with visible focus ring, add aria-labels to sliders/icon buttons, and ensure theme radio/swatches have descriptive labels.
+- [x] Re-verify keyboard navigation/focus order for theme and timezone/language pickers; document changed lines/files.
+
+## Task: Theme UX accessibility tests (2026-03-16)
+
+- [x] Review existing theme provider and theme switcher tests to confirm coverage gaps for ARIA labels and non-dashboard lock behavior.
+- [x] Add targeted tests around theme UX accessibility: verify accessible label on the theme switcher trigger and confirm non-dashboard scope locks theme mutations.
+- [x] Run `npx vitest run tests/theme-provider.test.tsx` and capture the results.
+- [x] Summarize test coverage and verification output in this checklist.
+
+Verification: `npx vitest run tests/theme-provider.test.tsx` (pass).
+Review: Added theme UX tests for non-dashboard lock behavior and theme switcher accessible labeling in `tests/theme-provider.test.tsx`.
+
+## Task: Color token cleanup (2026-03-15)
+
+- [x] Save the color token cleanup plan in `docs/superpowers/plans/2026-03-15-color-token-cleanup.md` and confirm the targets.
+- [x] Replace remaining `white/black/gray` utilities in the import tutorial panels and propfirms landing controls/chart with semantic tokens per the plan.
+- [x] Refresh the landing FAQ surface/CTA so it relies on `bg-card`, `border-border`, and `text-foreground` tokens instead of literal colors.
+- [x] Run `npx eslint app/[locale]/dashboard/components/import/components/platform-tutorial.tsx app/[locale]/dashboard/components/import/thor/thor-sync.tsx app/[locale]/dashboard/components/import/etp/etp-sync.tsx app/[locale]/(landing)/propfirms/components/timeframe-controls.tsx app/[locale]/(landing)/propfirms/components/sort-controls.tsx app/[locale]/(landing)/propfirms/components/accounts-bar-chart.tsx app/[locale]/(landing)/faq/page.tsx` and record warnings-only output for the summary.
+
+## Task: Dashboard semantic token migration (2026-03-15)
+
+- [x] Assess the current hardcoded `white/black/gray/zinc/neutral` utility usage in the assigned dashboard files.
+- [x] Replace each occurrence with the relevant semantic token classes (`bg-card`, `bg-background`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-primary`, etc.) without altering layout or behavior.
+- [x] Run `npx eslint` on the touched files to confirm there are no new warnings/errors and capture the results.
+- [x] Summarize the touched files and ESLint output in this checklist (replaced color utilities with semantic tokens, ESLint reported existing warnings only).
+
+Verification: `npx eslint app/[locale]/dashboard/trader-profile/page-client.tsx app/[locale]/dashboard/components/widget-canvas.tsx app/[locale]/dashboard/components/accounts/trade-progress-chart.tsx app/[locale]/dashboard/components/charts/daily-tick-target.tsx app/[locale]/dashboard/components/charts/pnl-by-side.tsx app/[locale]/dashboard/components/charts/pnl-per-contract-daily.tsx app/[locale]/dashboard/config/widget-registry.tsx app/[locale]/dashboard/settings/page.tsx`
+
+## Task: Fix `daily-summary-modal` complexity lint (2026-03-15)
+
+- [x] Inspect `app/[locale]/dashboard/components/daily-summary-modal.tsx` to pinpoint the branch or loop triggering the ESLint complexity warning.
+- [x] Refactor the troubling logic by extracting helper functions or consolidating conditions while keeping UI/behavior exactly the same.
+- [x] Run `npx eslint app/[locale]/dashboard/components/daily-summary-modal.tsx` to confirm the complexity warning is resolved.
+- [x] Record the diff summary and verification notes in this checklist.
+
+Verification: `npx eslint app/[locale]/dashboard/components/daily-summary-modal.tsx`
+
+## Task: Reduce dashboard header widget controls complexity (2026-03-15)
+
+- [x] Review `app/[locale]/dashboard/components/dashboard-header-widget-controls.tsx` to understand the branching that triggers the lint warning.
+- [x] Refactor the component by breaking out helper render fragments (e.g., alert dialogs, autosave indicator) to cut the cyclomatic complexity without changing behavior.
+- [x] Run `npx eslint app/[locale]/dashboard/components/dashboard-header-widget-controls.tsx` to ensure the complexity warning is gone.
+- [x] Capture a diff summary and verification notes for this checklist.
+
+Verification: `npx eslint app/[locale]/dashboard/components/dashboard-header-widget-controls.tsx`
+
+## Task: Data-debug lint cleanup (2026-03-15)
+
+- [x] Inspect `app/[locale]/dashboard/components/data-debug.tsx` to confirm the lint warnings we need to target.
+- [x] Remove the unused `Database` icon import and replace the mount guard with a lint-friendly client-only check while keeping behavior identical.
+- [x] Run `npx eslint app/[locale]/dashboard/components/data-debug.tsx` to verify warnings are gone and capture the outcome in this checklist (complexity warning left from before).
+
+Verification: `npx eslint app/[locale]/dashboard/components/data-debug.tsx` (still reports a pre-existing complexity warning on line 17; the unused import and set-state-in-effect warnings are cleared).
+
+## Task: Tailwind v4 semantic tokens foundation (2026-03-14)
+
+- [ ] Review `app/globals.css` to capture the current root/dark token definitions and base styles.
+- [ ] Implement the Tailwind v4 semantic token foundation: `:root`, `.dark`, `@theme` inline mappings (colors/fonts/radius/shadow/sidebar/chart), and base defaults with `*` and `body` selectors.
+- [ ] Preserve any existing project-specific tokens needed for current classes and keep the file structured and maintainable.
+- [ ] Run `npm run lint -- app/globals.css` (or the equivalent style check) and note any issues.
+- [ ] Summarize the verification results and changed lines for this task.
+
+## Task: Admin newsletter + ATAS semantic colors (2026-03-15)
+
+- [ ] Review `app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx`, `app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx`, and `app/[locale]/dashboard/components/import/atas/atas-processor.tsx` to catalog hardcoded `gray`, `white`, and `black` utility classes.
+- [ ] Replace the hardcoded color utilities with the appropriate semantic tokens (e.g., `bg-card`, `text-foreground`, `border-border`, `text-muted-foreground`, `bg-background`) without changing the existing behavior.
+- [ ] Run `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` and capture warnings/errors output.
+- [ ] Record the touched files and ESLint results in this checklist after completion.
+
+Verification: `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` (document warnings/errors per instructions).
+
+## Task: Landing semantic token migration (2026-03-15)
+
+- [x] Document the existing `gray/zinc/neutral/white/black` utility usage in the landing files to understand the required replacements.
+- [x] Replace each hardcoded color utility with the appropriate semantic token (e.g., `bg-background`, `text-foreground`, `border-border`, `text-muted-foreground`, `bg-card`, `text-muted-foreground` as needed) while keeping the visual hierarchy intact.
+- [x] Run `npx eslint` on the touched landing files to confirm there are no new errors or warnings.
+- [x] Record the results (changed files plus any ESLint warnings/errors) in this checklist before closing the task.
+Verification: `npx eslint app/[locale]/(landing)/propfirms/page.tsx app/[locale]/(landing)/components/problem-statement.tsx app/[locale]/(landing)/referral/page-client.tsx app/[locale]/(landing)/components/completed-timeline.tsx app/[locale]/(landing)/_updates/[slug]/page.tsx app/[locale]/(landing)/components/how-it-works.tsx app/[locale]/(landing)/components/faq.tsx app/[locale]/(landing)/components/qualification.tsx` (warnings: `propfirms` arrow functions and `_updates/[slug]/page.tsx` `Page` complexity remain at 21, 15, and 12; no new errors).
+
+## Task: Propfirm + import semantic color migration (2026-03-15)
+
+- [x] Review `app/[locale]/dashboard/components/import/components/platform-tutorial.tsx`, `app/[locale]/dashboard/components/import/thor/thor-sync.tsx`, `app/[locale]/dashboard/components/import/etp/etp-sync.tsx`, `app/[locale]/(landing)/propfirms/components/timeframe-controls.tsx`, `app/[locale]/(landing)/propfirms/components/sort-controls.tsx`, `app/[locale]/(landing)/propfirms/components/accounts-bar-chart.tsx`, and `app/[locale]/(landing)/faq/page.tsx` to inventory legacy color utilities.
+- [x] Replace the legacy `white/black/gray/zinc/neutral` utility classes with their semantic token counterparts (`bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-background`, etc.) without changing visual behavior.
+- [x] Run `npx eslint` on the modified files and capture any warnings/errors.
+- [x] Update this checklist with the verification results (command output summary).
+Verification: `npx eslint app/[locale]/dashboard/components/import/components/platform-tutorial.tsx app/[locale]/dashboard/components/import/thor/thor-sync.tsx app/[locale]/dashboard/components/import/etp/etp-sync.tsx app/[locale]/(landing)/propfirms/components/timeframe-controls.tsx app/[locale]/(landing)/propfirms/components/sort-controls.tsx app/[locale]/(landing)/propfirms/components/accounts-bar-chart.tsx app/[locale]/(landing)/faq/page.tsx` (warnings: `AccountsBarChart` complexity 11 and unused `cn`/`setIsOpen`/`error` variables remain).
+
+## Task: Worker H legacy color token replacement (2026-03-15)
+
+- [ ] Review `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx`, `app/[locale]/teams/join/page.tsx`, `app/[locale]/(landing)/newsletter/page.tsx`, `app/[locale]/(landing)/disclaimers/page.tsx`, `app/[locale]/(home)/loading.tsx`, and `app/[locale]/(landing)/community/post/[id]/loading.tsx` to catalog the remaining hardcoded color utilities (e.g., `text-white`, `bg-black`, `bg-neutral-900`, `border-zinc-700`).
+- [ ] Replace those legacy classes with the appropriate semantic tokens (`text-foreground`, `text-muted-foreground`, `bg-card`, `bg-background`, `border-border`, etc.) without altering layout or spacing.
+- [ ] Run `npx eslint` across the touched files after the replacement to verify there are no new lint errors.
+- [ ] Summarize the changed files plus the ESLint output for this task in the checklist.
+Verification: `npx eslint app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx app/[locale]/teams/join/page.tsx app/[locale]/(landing)/newsletter/page.tsx app/[locale]/(landing)/disclaimers/page.tsx app/[locale]/(home)/loading.tsx app/[locale]/(landing)/community/post/[id]/loading.tsx` (document warnings/errors if any).
+
+
+## Task: Harden community/public data (2026-03-14)
+
+- [x] Document the sanitization/test plan for community read responses and ownership flags (this entry).
+- [ ] Update `app/[locale]/(landing)/actions/community.ts` to expose only safe display identifiers while keeping ownership guards intact.
+- [ ] Adapt the community UI/types to the new display-only user payloads so the rendered handles stay the same.
+- [ ] Add regression tests covering the no-email contract and `isAuthor` detection, then run `npx vitest tests/community-actions.test.ts` for verification.
+
+## Task: Audit API delete handlers (2026-03-14)
+
+- [x] Capture the audit plan (this entry) for auth/ownership/tenant isolation in `app/api/**` delete routes.
+- [ ] Update the synchronizations/delete helpers to return deletion counts and fail when the requested record isn’t owned by the current session.
+- [ ] Add owner-delete + unauthorized-delete tests for the rithmic/tradovate/etp/thor delete endpoints.
+- [ ] Run targeted `npx vitest` + `npx eslint` on the touched API routes and capture the results.
+
+## Task: Delete authorization/ownership hardening (2026-03-14)
+
+- [ ] Inventory `server/*.ts` delete handlers, `app/api/**` delete routes, Prisma schema relations, and tests for auth/ownership coverage.
+- [ ] Reproduce delete failures or missing guards via targeted inspection/test runs, documenting missing ownership defenses or FK/cascade issues.
+- [ ] Implement fixes enforcing owner deletes, rejecting unauthorized deletes, and maintaining FK/cascade-safe behavior when related rows exist.
+- [ ] Add/update tests proving owner delete success, unauthorized delete blocked, and safe relational behavior for dependent records.
+- [ ] Run targeted `npx vitest` suites plus `npx eslint`/`npm run -s typecheck` on touched files; capture outputs for the report.
+
+## Task: Semantic color migration (2026-03-14)
+
+- [ ] Inventory the highest-impact hardcoded color utility classes under `app/**` and `components/**`, focusing on shared or high-traffic surfaces.
+- [ ] Replace those classes with semantic tokens (`bg-background`, `text-foreground`, `border-border`, `text-muted-foreground`, `text-accent`, etc.) while keeping contrast and theme compatibility intact.
+- [ ] Run `npx eslint` on every touched file and record the output for verification.
+- [ ] Summarize the migration in a report listing files changed and the counts of replacements applied.
+
+## Task: Competitor Benchmark + Home Funnel Upgrade (2026-03-14)
+
+## Task: Delete UI state fixes (2026-03-14)
+
+- [ ] Inspect delete/mutation paths across dashboard/community/admin surfaces and document where stale state or missing cache invalidation occurs.
+- [ ] Implement minimal fixes to serialization/mutation handlers to invalidate cached data or run refresh hooks so deleted rows/cards disappear, surfacing server errors.
+- [ ] Add or update targeted frontend tests (unit or integration) to cover the delete paths.
+- [ ] Run ESLint and the targeted Vitest suite for the touched files and summarize the verification.
+
+## Task: /deals verification (2026-03-14)
+
+- [x] Run `npx eslint app/[locale]/(landing)/deals/page.tsx`
+- [x] Run `npm run -s typecheck`
+- [x] Run `npm run -s build`
+- [x] Document accessibility/SEO sanity pass for `app/[locale]/(landing)/deals/page.tsx`
+- [x] Capture final verification summary
+
+## Task: Security Logging Hardening (2026-03-14)
+
+- [x] Review existing console logs in the five targeted routes for PII leakage.
+- [x] Replace raw PII/error body logs with sanitized structured output.
+- [x] Run `npm run lint -- app/api/cron/route.ts app/api/cron/renewal-notice/route.ts app/api/email/format-name/route.ts app/api/email/weekly-summary/[userid]/route.ts app/api/trader-profile/benchmark/route.ts`.
+- [x] Document results and reference the new plan at `docs/superpowers/plans/2026-03-14-security-logging-hardening.md`.
+
+## Current Task: Extend verification for CRUD/auth/state-sync
+
+- [x] Audit existing tests for CRUD/auth/state-sync paths, noting coverage gaps and risky areas.
+- [x] Add or adjust deterministic tests/scripts focused on missing coverage.
+- [x] Run the targeted verification suites and capture exact command outputs.
+- [x] Document remaining risky untested paths and verification results.
+
+## Task: API Error Envelope Standardization (2026-03-14)
+
+- [x] Write the implementation plan in `docs/superpowers/plans/2026-03-14-envelope-standardization.md`.
+- [x] Update `app/api/_utils/validate.ts` and `lib/api-response.ts` so that validation failures and helper errors produce `{ error: { code, message, details? } }` envelopes via `apiError`.
+- [x] Replace inline error `NextResponse.json` calls in the targeted team and Rithmic endpoints with `apiError(...)` while preserving logging and requestId details.
+- [x] Create regression tests covering `apiError` and `toValidationErrorResponse`, then run `npx vitest tests/lib/api-response.test.ts tests/app/api/_utils/validate.test.ts`.
+- [x] Run `npm run -s typecheck` to confirm no new type issues (fails currently in `app/[locale]/(landing)/actions/community.ts`).
+- [x] Summarize verification results for these helpers/routes in this checklist.
+
+## Review
+- Verification: `npx vitest run tests/lib/api-response.test.ts tests/app/api/_utils/validate.test.ts` (pass). `npm run -s typecheck` fails upstream due to `app/[locale]/(landing)/actions/community.ts` referencing missing `user`/`replies`.
+- Risks: Surface-level helpers are verified, but existing type errors prevent a clean typecheck.
+- Follow-ups: The community actions typing issues need resolution before typecheck can pass.
+
+## Immediate AI verification run (2026-03-14)
+- [ ] Run `npx vitest run tests/api/ai-*.test.ts tests/lib/ai-router-integration.test.ts lib/__tests__/ai-support-route.test.ts tests/lib/ai-trade-access.test.ts tests/lib/ai-router-fallback-order.test.ts tests/lib/ai-client-router-propagation.test.ts`
+- [ ] Run `npm run -s typecheck`
+- [ ] Run `npx eslint <touched AI files>`
+- [ ] Run `npm run -s build`
+- [ ] Capture/finalize verification summary (pass/fail + key outputs)
+
+## Task: Trade image editor lint cleanup (2026-03-14)
+
+- [x] Capture the current ESLint output for `app/[locale]/dashboard/components/tables/trade-image-editor.tsx` (`npx eslint ...`).
+- [x] Update the component to drop unused state/imports, tighten `trade`/update payload typing, and clean the upload effect/dependency handling without altering auth/ownership guards.
+- [x] Re-run `npx eslint app/[locale]/dashboard/components/tables/trade-image-editor.tsx` to confirm the earlier warnings are gone.
+- [x] Document the lint-before/after results along with a short summary of the code-quality improvements.
+
 ## Current Task: Commit and push current changes
 
 - [x] Review git status/diff to confirm staged scope
@@ -5,6 +234,14 @@
 - [x] Commit with a clear summary message
 - [x] Push to the current branch
 - [x] Record verification results (not run)
+
+## Verification Run (2026-03-13)
+
+- [x] Run the requested AI-focused `vitest` command
+- [ ] Run `npm run -s typecheck` (failed: format-preview.tsx block scope + ai chat tool typing)
+- [x] Run ESLint on the AI files touched by the implementation worker (warnings only)
+- [ ] Run `npm run -s build` (failed: missing .next/static/.../_buildManifest.js.tmp)
+- [ ] Capture and report outcomes (failures, traces, suspects)
 
 ## Review
 - Verification: Not run (commit-only request).
@@ -158,6 +395,14 @@
 - Root cause addressed: broad dashboard context subscriptions and client-heavy route shells causing unnecessary rerenders/hydration work.
 - Trader profile now follows server-wrapper pattern (`page.tsx` -> `page-client.tsx`) to reduce client entrypoint overhead.
 - Dashboard now has zero `useDashboardTrades()` callsites under `app/[locale]/dashboard`.
+
+## Format Preview Cleanup Plan (2026-03-13)
+
+- [ ] Audit `app/[locale]/dashboard/components/import/components/format-preview.tsx` for unused imports/variables and missing hook dependencies introduced by the batching/autoprocessing logic.
+- [ ] Stabilize the timeout helpers (`scheduleManagedTimeout`, `clearManagedTimeouts`) and the streaming effects so they clean up properly without changing UI behavior.
+- [ ] Run `npx eslint app/[locale]/dashboard/components/import/components/format-preview.tsx` and record its output once the fix is in place.
+- Notes: Logged this cleanup plan on 2026-03-13 per worker A’s scope and lint expectations.
+
 - Verification:
   - `npx eslint app/[locale]/dashboard/trader-profile/page.tsx app/[locale]/dashboard/trader-profile/page-client.tsx` -> 0 errors (warnings only).
   - `npm run -s typecheck` -> exits `0`.
@@ -233,5 +478,132 @@
 - [ ] Summarize recent edits for the user.
 - [ ] Note verification or follow-up if needed.
 
+## Task: AI backend lint cleanup (2026-03-13)
+- [x] Inspect the listed AI backend routes/libraries for clearly unused imports/vars introduced in the current state and note any obvious lint fixes.
+- [x] Remove only the safe, behavior-preserving cruft from those backend files and keep changes minimal per scope.
+- [x] Run `npx eslint app/api/ai/format-trades/route.ts app/api/ai/chat/route.ts app/api/ai/mappings/route.ts app/api/ai/support/route.ts lib/rate-limit.ts lib/ai/trade-access.ts lib/ai/client.ts` and capture the output.
+- [x] Summarize the cleanup, lint results, and any follow-up notes in this file (including verification details).
+
+## Review (AI backend lint cleanup)
+- Verification: `npx eslint app/api/ai/format-trades/route.ts app/api/ai/chat/route.ts app/api/ai/mappings/route.ts app/api/ai/support/route.ts lib/rate-limit.ts lib/ai/trade-access.ts lib/ai/client.ts` (warnings limited to complexity).
+- Summary: Added userId telemetry to `/api/ai/format-trades` and tightened the chat tool guard/mappings helper types to avoid explicit `any`.
+- Follow-up: Complexity warnings persist for large `POST` handlers, router helpers, rate limit helpers, and trade-access aggregates; they predate this cleanup and were left untouched to stay behavior-preserving.
+
+## Task: Harden trade image ownership guard (2026-03-14)
+
+- [x] Review the current `ensureOwnedImagePath` logic and `tests/trade-image-editor.test.ts` coverage to understand normalization/ownership expectations.
+- [x] Extend `ensureOwnedImagePath` with stricter normalization (POSIX slash normalization, trimmed leading/trailing separators, prefix normalization) and traversal/absolute path checks.
+- [x] Expand the Vitest suite to cover new normalization behaviors, prefix normalization, blocked relative/absolute/bad characters, and ensure existing guards still trigger.
+- [x] Run `npx vitest run tests/trade-image-editor.test.ts` and note the output.
+- [x] Record verification results and any residual risks/new follow-ups.
+
+- Verification: `npx vitest run tests/trade-image-editor.test.ts` -> passes (9 tests, 0 failures).
+- Risks: Normalization helpers assume slash-based segments; future non-UTF-8 prefixes might need reevaluation.
+- Follow-ups: Watch for new path representations in other cleanup flows to keep this guard aligned.
+
+## AI Implementation Worker (2026-03-14)
+
+- [x] Inventory the AI-specific tests/lint that currently fail in this workspace and confirm the scope before making changes.
+- [x] Fix the identified AI logic/tests within the AI subsystem without touching unrelated areas, documenting the root cause.
+- [x] Run the targeted AI tests, `npm run -s typecheck`, ESLint on touched AI files, and `npm run -s build` until they all pass for the touched scope.
+- [x] Summarize verification results and file changes for review.
+- [x] Document the verification design (docs/superpowers/specs/2026-03-14-ai-verification-design.md).
+- [x] Create the implementation plan (docs/superpowers/plans/2026-03-14-ai-verification-plan.md).
+
+## Backend CRUD Audit (2026-03-14)
+
+- [x] Review server/, app/api/, and lib/ backend CRUD/data-handling/auth flow code to understand current ownership and validation behavior.
+- [x] Identify at least two concrete issues around create/read/update/delete scoping, error contracts, or auth guards needing fixes.
+- [x] Implement minimal code changes to address the issues and add regression tests exercising those flows.
+- [x] Run relevant vitest/ESLint/typecheck subsets for modified files and capture outputs.
+- [x] Summarize findings, changes, and residual risks for the user.
+## Full-Stack CRUD/Auth/State Sync Hardening Sweep (2026-03-14)
+
+- [x] Run parallel specialist audits (frontend/backend/security/testing) and collect actionable findings.
+- [x] Fix frontend CRUD + UI state-sync issues (create/read/update/delete flows, optimistic updates, validation UX).
+- [x] Fix backend CRUD + validation/auth/permission issues (ownership enforcement + error contract consistency).
+- [x] Add or update regression tests for each fix.
+- [x] Run verification loop until clean:
+  - [x] targeted tests for touched flows
+  - [x] `npm run -s typecheck`
+  - [x] lint on touched files
+  - [x] `npm run -s build`
+- [x] Perform manual CRUD flow validation checks and document outcomes.
+- [x] Document full issue/fix report, changed files, verification evidence, and residual risks.
+
+## Review (Full-Stack CRUD/Auth/State Sync Hardening Sweep)
+
+- Parallel specialists completed frontend, backend, security ownership, and verification scopes with implemented code changes (not report-only).
+- Verified affected CRUD/auth/state-sync/security tests pass:
+  - `npx vitest run tests/trade-image-editor.test.ts tests/context/data-provider-utils.test.ts tests/server/team-analytics.test.ts lib/__tests__/team-analytics-route.test.ts tests/server/shared.test.ts`
+  - `npx vitest run tests/context/data-provider-utils.test.ts tests/server/team-analytics.test.ts lib/__tests__/team-analytics-route.test.ts tests/server/shared.test.ts tests/trade-image-editor.test.ts tests/server/accounts-isolation.test.ts tests/server/layout-isolation.test.ts tests/server/optimized-trades-isolation.test.ts`
+- Verified project-level checks:
+  - `npm run -s typecheck` -> passes
+  - `npx eslint <touched files>` -> 0 errors (warnings-only baseline)
+  - `npm run -s build` -> passes
+- Manual runtime sanity checks captured:
+  - account-delete state-sync helper removes deleted account references from every group
+  - trade-image ownership guard allows actor-owned paths and blocks relative-segment traversal attempts
+
+## Frontend CRUD State Sync Sweep (2026-03-14)
+
+- [ ] Investigate how deleting an account leaves stale references in `groups` and confirm the broken UI symptoms.
+- [ ] Update the dashboard data provider to purge deleted accounts from paired `groups` state while keeping rollback paths intact.
+- [ ] Add a reusable helper + targeted Vitest to confirm the cleanup logic and keep `context/data-provider.tsx` lint-clean.
+- [ ] Run `npx vitest run tests/context/data-provider-utils.test.ts` and `npx eslint context/data-provider.tsx` and capture the outputs.
+- [ ] Summarize the fix, list touched files, mention verification, and call out any remaining risks around shared views or auth.
+
+## Security CRUD Audit Plan (2026-03-14)
+
+- [x] Step 1: Inventory auth-sensitive CRUD endpoints/actions (app/api, server/, lib/) and confirm userId/file-path resolution is scoped to the authenticated actor.
+- [x] Step 2: Fail-closed: tighten authn/authz/input validation guards and ownership assertions for create/read/update/delete handlers, including path-delete flows.
+- [x] Step 3: Add regression tests that prove ownership boundaries (blocked cross-user action). Target vitest suites near touched routes.
+- [x] Step 4: Run targeted security-relevant tests (relevant vitest subsets + ESLint/typecheck if those files change) and log output.
+- [x] Step 5: Document what was fixed, changed files, and verification steps for the final report.
+## Verification Run (2026-03-14 B)
+
+- [x] Identify touched files for this scope and note them in the report.
+- [x] Run targeted `vitest` suites covering the files touched in this session.
+- [x] Run `npx eslint` on the touched files.
+- [x] Run `npm run -s typecheck`.
+- [x] Run `npm run -s build`.
+- [x] Capture command outputs and summarize pass/fail fate.
+
+## Task: Architecture modernization program kickoff (2026-03-15)
+
+- [x] Run parallel specialist audits across frontend topology, dashboard/charts, API layering, AI boundaries, import integrations, and DB/repository boundaries.
+- [x] Produce a consolidated architecture audit with before/after structure and migration batches in `docs/audits/architecture-refactor-program-2026-03-15.md`.
+- [x] Execute the first low-risk refactor slice: remove API -> UI import coupling for sync actions by moving import actions to `server/imports/*` with compatibility shims.
+- [x] Update affected API route imports to server-owned modules.
+- [x] Run verification gates for touched scope (`npx eslint ...`, `npm run -s typecheck`).
+
 ## Review
-- [ ] Pending.
+- `npx eslint` on touched files: 0 errors, warnings-only baseline.
+- `npm run -s typecheck`: pass (exit 0).
+- Behavior-preserving move completed; no route contract changes introduced in this batch.
+
+## Task: VTRON app-wide color unification (2026-03-15)
+
+- [x] Extract and map the VTRON reference semantic token palette (light/dark) into the app theme foundation.
+- [x] Normalize global token authority in `app/globals.css` and align sidebar/ring/chart semantic tokens.
+- [x] Replace high-impact hardcoded color classes with semantic tokens across auth, dashboard, admin/newsletter, marketing/docs/community, and shared UI primitives.
+- [x] Run targeted lint on all touched files and verify warnings-only baseline (0 errors).
+- [x] Run `npm run -s typecheck`, `npm run -s build`, and `npm run -s check:color-contract`.
+- [x] Perform manual visual QA on key pages in light/dark mode (`/en/authentication`, `/en/docs`, `/en/dashboard` redirect flow).
+
+## Review (VTRON app-wide color unification)
+
+- Verification:
+  - `npx eslint <touched files>`: passes with warnings-only baseline, 0 errors.
+  - `npm run -s typecheck`: passes.
+  - `npm run -s build`: passes (full route generation).
+  - `npm run -s check:color-contract`: passes after replacing literal swatches in `components/theme-switcher.tsx`.
+  - Manual QA: light/dark walkthrough via local app + browser automation on authentication and docs surfaces; dashboard auth redirect path also checked.
+- Residual risk:
+  - Some legacy color classes remain in untouched files outside this migration batch (notably email templates and additional long-tail route components).
+## Task: TweakCN theme extraction (2026-03-16)
+
+- [ ] Locate the online TweakCN interface or API endpoint that shows the requested theme slugs so I know where to grab the CSS variables from.
+- [ ] Use Playwright automation to visit each theme page, extract the `:root`, `.dark`, and any inline `@theme` variable blocks, and note any chart/sidebar overrides.
+- [ ] Normalize each theme into discrete light/dark/chart/sidebar sections, ensuring commentary if a section is absent.
+- [ ] Compile the clean report listing each slug with its extracted blocks and specify verification details (Playwright captures) before closing the task.

@@ -15,7 +15,7 @@ export function CardShowcase() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold">Card Component System</h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="text-foreground/80 text-lg">
           Modern, accessible, and responsive card components with multiple variants
         </p>
       </div>
@@ -30,7 +30,7 @@ export function CardShowcase() {
               <CardDescription>Standard card with border and shadow</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 This is the default card variant with a subtle border and shadow effect.
               </p>
             </CardContent>
@@ -42,7 +42,7 @@ export function CardShowcase() {
               <CardDescription>Glass morphism with backdrop blur</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Glass morphism effect with subtle transparency and blur.
               </p>
             </CardContent>
@@ -54,7 +54,7 @@ export function CardShowcase() {
               <CardDescription>Higher elevation for emphasis</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Elevated card with stronger shadow for important content.
               </p>
             </CardContent>
@@ -66,7 +66,7 @@ export function CardShowcase() {
               <CardDescription>2px border, no background</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Subtle boundary without background fill.
               </p>
             </CardContent>
@@ -78,7 +78,7 @@ export function CardShowcase() {
               <CardDescription>No border or shadow</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Minimal card with no visual decoration.
               </p>
             </CardContent>
@@ -87,7 +87,7 @@ export function CardShowcase() {
           <GlassCard variant="strong" hover>
             <div className="p-4">
               <h3 className="font-semibold mb-2">Strong Glass</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Enhanced glass effect with stronger backdrop.
               </p>
             </div>
@@ -264,7 +264,7 @@ export function CardShowcase() {
               <CardDescription>Try hovering and clicking</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 This card has both hover effects and clickable interaction.
               </p>
             </CardContent>
@@ -273,7 +273,7 @@ export function CardShowcase() {
           <GlassCard variant="default" hover clickable>
             <div className="p-6 space-y-2">
               <h3 className="font-semibold">Interactive Glass Card</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/80">
                 Glass morphism with smooth hover and click animations.
               </p>
             </div>
@@ -296,16 +296,16 @@ export function CardShowcase() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Revenue</span>
+                  <span className="text-foreground/80">Revenue</span>
                   <span className="font-medium">$45,231</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Growth</span>
-                  <span className="font-medium text-white">+12.5%</span>
+                  <span className="text-foreground/80">Growth</span>
+                  <span className="font-medium text-foreground">+12.5%</span>
                 </div>
               </div>
               <div className="h-32 bg-muted rounded-lg flex items-center justify-center">
-                <span className="text-muted-foreground text-sm">Chart Placeholder</span>
+                <span className="text-foreground/80 text-sm">Chart Placeholder</span>
               </div>
             </CardContent>
             <CardFooter>
@@ -325,16 +325,16 @@ export function CardShowcase() {
                 </div>
                 <div>
                   <p className="font-semibold">John Doe</p>
-                  <p className="text-sm text-muted-foreground">john@example.com</p>
+                  <p className="text-sm text-foreground/80">john@example.com</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Member since</span>
+                  <span className="text-foreground/80">Member since</span>
                   <span>Jan 2024</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Plan</span>
+                  <span className="text-foreground/80">Plan</span>
                   <Badge variant="secondary">Enterprise</Badge>
                 </div>
               </div>
@@ -348,7 +348,7 @@ export function CardShowcase() {
       </section>
 
       {/* Footer */}
-      <div className="text-center text-sm text-muted-foreground">
+      <div className="text-center text-sm text-foreground/80">
         <p>Card Component System - Built with accessibility and responsive design in mind</p>
       </div>
     </div>

@@ -40,10 +40,15 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
       const storedMoodData = localStorage.getItem(STORAGE_KEY)
       
       if (storedMoodData) {
-        const storedMood = JSON.parse(storedMoodData)
-        if (storedMood.date === focusedDay) {
-          setSelectedMood(storedMood.mood)
-          return
+        try {
+          const storedMood = JSON.parse(storedMoodData)
+          if (storedMood.date === focusedDay) {
+            setSelectedMood(storedMood.mood)
+            return
+          }
+        } catch (error) {
+          // Invalid JSON in localStorage, clear and continue
+          localStorage.removeItem(STORAGE_KEY)
         }
       }
 
@@ -133,7 +138,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 <Button
                   variant="ghost"
                   size="lg"
-                  className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-white' : ''}`}
+                  className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
                   onClick={() => handleMoodSelect('great')}
                   disabled={isLoading !== null}
                 >
@@ -191,7 +196,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
               <Button
                 variant="ghost"
                 size="lg"
-                className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-white' : ''}`}
+                className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
                 onClick={() => handleMoodSelect('great')}
                 disabled={isLoading !== null}
               >

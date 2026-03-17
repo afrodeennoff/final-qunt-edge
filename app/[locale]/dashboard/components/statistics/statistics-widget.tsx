@@ -1,15 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useDashboardStats } from "@/context/data-provider"
-import { Clock, PiggyBank, Award, BarChart, Info } from "lucide-react"
+import { BarChart, Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn, calculateStatistics } from "@/lib/utils"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { Progress } from "@/components/ui/progress"
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { Trade } from "@/lib/data-types"
+import { WidgetShell } from "@/components/ui/widget-shell"
 
 interface StatisticsWidgetProps {
   size?: 'tiny' | 'small' | 'medium' | 'large' | 'small-long' | 'extra-large'
@@ -175,76 +175,43 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
   }, [])
 
   return (
-    <Card variant="matte" className="h-full flex flex-col" ref={cardRef}>
-      <CardHeader
-        className={cn(
-          "flex-none border-b border-border/55",
-          size === 'tiny'
-            ? "py-1 px-2"
-            : (size === 'small' || size === 'small-long')
-              ? "py-2 px-3"
-              : "py-3 px-4"
-        )}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle
-              className={cn(
-                "line-clamp-1 font-terminal uppercase tracking-[0.08em]",
-                size === 'tiny'
-                  ? "text-xs"
-                  : (size === 'small' || size === 'small-long')
-                    ? "text-sm"
-                    : "text-base"
-              )}
-            >
-              {t('statistics.title')}
-            </CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="h-3.5 w-3.5 text-muted-foreground/70" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t('statistics.tooltip')}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <BarChart className="h-3.5 w-3.5 text-muted-foreground/70" />
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 p-0">
-        <div className="grid h-full grid-cols-2">
+    <WidgetShell
+      title={t('statistics.title')}
+      icon={<BarChart className="h-3.5 w-3.5 text-muted-foreground" />}
+      info={t('statistics.tooltip')}
+      className={cn("h-full flex flex-col", size === 'tiny' ? "text-xs" : (size === 'small' || size === 'small-long') ? "text-sm" : "text-base")}
+      contentClassName="flex-1 p-0"
+    >
+      <div className="grid h-full grid-cols-2">
           {/* Profit/Loss Section */}
           <div className={cn(
             "flex flex-col border-r border-b",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
-            <h3 className="font-terminal text-[10px] font-bold uppercase tracking-widest mb-1.5 text-muted-foreground/70">{t('statistics.profitLoss.title')}</h3>
+            <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.profitLoss.title')}</h3>
             <div className="flex-1 flex flex-col justify-center gap-0.5">
               {/* Profits */}
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">{t('statistics.profitLoss.profits')}</span>
+                <span className="text-xs text-muted-foreground">{t('statistics.profitLoss.profits')}</span>
                 <span className="text-xs font-medium font-terminal metric-positive">{formatCurrency(grossWin)}</span>
               </div>
 
               {/* Losses */}
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">- {t('statistics.profitLoss.losses')}</span>
+                <span className="text-xs text-muted-foreground">- {t('statistics.profitLoss.losses')}</span>
                 <span className="text-xs font-medium metric-negative font-terminal">{formatCurrency(grossLosses)}</span>
               </div>
 
               {/* Fees */}
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">- {t('statistics.profitLoss.fees')}</span>
-                <span className="text-xs font-medium text-muted-foreground/70 font-terminal">{formatCurrency(cumulativeFees)}</span>
+                <span className="text-xs text-muted-foreground">- {t('statistics.profitLoss.fees')}</span>
+                <span className="font-terminal text-xs font-medium text-foreground">{formatCurrency(cumulativeFees)}</span>
               </div>
 
               {/* Payouts */}
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">- {t('statistics.profitLoss.payouts')} ({nbPayouts})</span>
-                <span className="text-xs font-medium text-muted-foreground/70 font-terminal">{formatCurrency(totalPayouts)}</span>
+                <span className="text-xs text-muted-foreground">- {t('statistics.profitLoss.payouts')} ({nbPayouts})</span>
+                <span className="font-terminal text-xs font-medium text-foreground">{formatCurrency(totalPayouts)}</span>
               </div>
 
               {/* Divider */}
@@ -252,7 +219,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
 
               {/* Net Result */}
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs font-medium">{t('statistics.profitLoss.net')}</span>
+                <span className="text-xs font-medium text-muted-foreground">{t('statistics.profitLoss.net')}</span>
                 <span className={cn(
                   "text-sm font-bold font-terminal",
                   netPnlWithPayouts > 0 ? "metric-positive" : "metric-negative"
@@ -268,19 +235,19 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
             "flex flex-col border-b",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
-            <h3 className="font-terminal text-[10px] font-bold uppercase tracking-widest mb-1.5 text-muted-foreground/70">{t('statistics.performance.title')}</h3>
+            <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.performance.title')}</h3>
             <div className="flex-1 flex flex-col justify-center gap-1.5">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">{t('statistics.performance.winRate')}</span>
+                <span className="text-xs text-muted-foreground">{t('statistics.performance.winRate')}</span>
                 <span className="text-sm font-medium font-terminal metric-positive">{winRate}%</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-1">
-                  <span className="text-muted-foreground/70 text-xs">{t('statistics.performance.avgWin')}</span>
+                  <span className="text-xs text-muted-foreground">{t('statistics.performance.avgWin')}</span>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        <Info className="h-3 w-3 text-muted-foreground/70" />
+                        <Info className="h-3 w-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>{t('statistics.performance.avgWinTooltip')}</p>
@@ -293,11 +260,11 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
               {size !== 'tiny' && (
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-1">
-                    <span className="text-muted-foreground/70 text-xs">{t('statistics.performance.avgLoss')}</span>
+                    <span className="text-xs text-muted-foreground">{t('statistics.performance.avgLoss')}</span>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <Info className="h-3 w-3 text-muted-foreground/70" />
+                          <Info className="h-3 w-3 text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t('statistics.performance.avgLossTooltip')}</p>
@@ -316,20 +283,20 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
             "flex flex-col border-r",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
-            <h3 className="font-terminal text-[10px] font-bold uppercase tracking-widest mb-1.5 text-muted-foreground/70">{t('statistics.activity.title')}</h3>
+            <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.activity.title')}</h3>
             <div className="flex-1 flex flex-col justify-center gap-1.5">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">{t('statistics.activity.totalTrades')}</span>
-                <span className="text-sm font-medium font-terminal">{nbTrades}</span>
+                <span className="text-xs text-muted-foreground">{t('statistics.activity.totalTrades')}</span>
+                <span className="text-sm font-medium text-foreground font-terminal">{nbTrades}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground/70 text-xs">{t('statistics.activity.winningTrades')}</span>
+                <span className="text-xs text-muted-foreground">{t('statistics.activity.winningTrades')}</span>
                 <span className="text-sm font-medium text-foreground font-terminal">{nbWin}</span>
               </div>
               {size !== 'tiny' && (
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70 text-xs">{t('statistics.activity.avgDuration')}</span>
-                  <span className="text-sm font-medium font-terminal">{averagePositionTime}</span>
+                  <span className="text-xs text-muted-foreground">{t('statistics.activity.avgDuration')}</span>
+                  <span className="text-sm font-medium text-foreground font-terminal">{averagePositionTime}</span>
                 </div>
               )}
             </div>
@@ -340,39 +307,38 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
             "flex flex-col",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
-            <h3 className="font-terminal text-[10px] font-bold uppercase tracking-widest mb-1.5 text-muted-foreground/70">{t('statistics.distribution.title')}</h3>
+            <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.distribution.title')}</h3>
             <div className="flex-1 flex flex-col justify-center gap-1.5">
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70 text-xs">{t('statistics.distribution.long')}</span>
+                  <span className="text-xs text-muted-foreground">{t('statistics.distribution.long')}</span>
                   <span className="text-sm font-medium font-terminal metric-positive">{longRate}%</span>
                 </div>
-                <Progress value={longRate} className="h-1 bg-secondary/30" indicatorClassName="bg-white chart-positive-emphasis" />
+                <Progress value={longRate} className="h-1 bg-card/10" indicatorClassName="bg-primary/80 chart-positive-emphasis" />
               </div>
               {size !== 'tiny' ? (
                 <>
                   <div className="space-y-1">
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground/70 text-xs">{t('statistics.distribution.short')}</span>
+                      <span className="text-xs text-muted-foreground">{t('statistics.distribution.short')}</span>
                       <span className="text-sm font-medium font-terminal metric-negative">{shortRate}%</span>
                     </div>
-                    <Progress value={shortRate} className="h-1 bg-secondary/30" indicatorClassName="bg-white/30 chart-negative-muted" />
+                     <Progress value={shortRate} className="h-1 bg-card/10" indicatorClassName="bg-destructive/70 chart-negative-muted" />
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground/70 text-xs">{t('statistics.distribution.winningStreak')}</span>
+                    <span className="text-xs text-muted-foreground">{t('statistics.distribution.winningStreak')}</span>
                     <span className="text-sm font-medium font-terminal">{winningStreak}</span>
                   </div>
                 </>
               ) : (
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70 text-xs">{t('statistics.distribution.winningStreak')}</span>
+                  <span className="text-xs text-muted-foreground">{t('statistics.distribution.winningStreak')}</span>
                   <span className="text-sm font-medium font-terminal">{winningStreak}</span>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+    </WidgetShell>
   )
 } 

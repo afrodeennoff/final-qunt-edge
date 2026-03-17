@@ -40,27 +40,27 @@ interface AccountsBarChartProps {
 const chartConfig = {
   paidAmount: {
     label: "Paid",
-    color: "hsl(var(--chart-1) / 0.70)",
+    color: "var(--color-chart-1)",
   },
   pendingAmount: {
     label: "Pending",
-    color: "hsl(var(--chart-2) / 0.38)",
+    color: "var(--color-chart-2)",
   },
   refusedAmount: {
     label: "Refused",
-    color: "hsl(var(--chart-3) / 0.26)",
+    color: "var(--color-chart-3)",
   },
   totalAccountValue: {
     label: "Total Account Value",
-    color: "hsl(var(--chart-1))",
+    color: "var(--color-chart-1)",
   },
   accountsCount: {
     label: "Registered Accounts",
-    color: "hsl(var(--chart-2))",
+    color: "var(--color-chart-2)",
   },
   sizedAccountsCount: {
     label: "Sized Accounts",
-    color: "hsl(var(--chart-3))",
+    color: "var(--color-chart-3)",
   },
 } satisfies ChartConfig
 
@@ -97,7 +97,8 @@ export function AccountsBarChart({
       return anyMoney || anyCounts
     })
 
-    const base = showZeroFirms ? sortedData : nonZero
+    // Keep chart visible even when all firms are at zero by falling back to the full set.
+    const base = showZeroFirms || nonZero.length === 0 ? sortedData : nonZero
     // Keep the chart readable; the grid below has the full list anyway.
     return base.slice(0, 14)
   }, [showZeroFirms, sortedData])
@@ -112,11 +113,11 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern">
+    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
-          <p className="text-xs text-white/50">Minimal view. Add layers if you need more detail.</p>
+          <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Button
@@ -126,8 +127,10 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showPayoutBars && "opacity-55"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showPayoutBars
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Payouts
@@ -139,8 +142,10 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showAccountValue && "opacity-55"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showAccountValue
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Value
@@ -152,8 +157,10 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showRegistered && "opacity-55"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showRegistered
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Reg
@@ -165,8 +172,10 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showSized && "opacity-55"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showSized
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             Sized
@@ -178,15 +187,17 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 text-[11px] tracking-wide",
-              !showZeroFirms && "opacity-55"
+              "h-7 px-2 border-border/70 text-[11px] tracking-wide",
+              showZeroFirms
+                ? "border-primary/60 bg-primary/20 text-foreground"
+                : "text-foreground/80 hover:bg-card/80 hover:text-foreground"
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="border-t border-border/70 pt-4">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
@@ -195,8 +206,7 @@ export function AccountsBarChart({
             <CartesianGrid
               vertical={false}
               strokeDasharray="2 10"
-              opacity={0.32}
-              className="stroke-muted"
+              stroke="hsl(var(--chart-grid) / 0.78)"
             />
             <XAxis
               dataKey="propfirmName"
@@ -211,7 +221,7 @@ export function AccountsBarChart({
               tickFormatter={(value: string) => (value.length > 12 ? `${value.slice(0, 12)}…` : value)}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
             />
             <YAxis
@@ -233,7 +243,7 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
               tickFormatter={(value) => compactCurrency.format(value)}
             />
@@ -255,14 +265,16 @@ export function AccountsBarChart({
               ]}
               tick={{
                 fontSize: 11,
-                fill: "currentColor",
+                fill: "hsl(var(--mk-text) / 0.9)",
               }}
               tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip
+              cursor={{ stroke: "hsl(var(--chart-axis) / 0.8)", strokeWidth: 1, strokeDasharray: "4 8" }}
               content={
                 <ChartTooltipContent
-                  labelFormatter={(label) => <span className="font-semibold text-white">{String(label)}</span>}
+                  className="border-[hsl(var(--chart-tooltip-border))] bg-[hsl(var(--chart-tooltip)/0.96)] text-foreground"
+                  labelFormatter={(label) => <span className="font-semibold text-foreground">{String(label)}</span>}
                   formatter={(value, name, item) => {
                     const key = String(name)
                     if (key === "totalAccountValue" || key === "paidAmount" || key === "pendingAmount" || key === "refusedAmount") {
@@ -299,6 +311,8 @@ export function AccountsBarChart({
                   dataKey="refusedAmount"
                   stackId="payouts"
                   fill="var(--color-refusedAmount)"
+                  fillOpacity={0.62}
+                  minPointSize={2}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -307,6 +321,8 @@ export function AccountsBarChart({
                   dataKey="pendingAmount"
                   stackId="payouts"
                   fill="var(--color-pendingAmount)"
+                  fillOpacity={0.72}
+                  minPointSize={2}
                   radius={[0, 0, 0, 0]}
                   maxBarSize={44}
                 />
@@ -315,6 +331,8 @@ export function AccountsBarChart({
                   dataKey="paidAmount"
                   stackId="payouts"
                   fill="var(--color-paidAmount)"
+                  fillOpacity={0.86}
+                  minPointSize={2}
                   radius={[4, 4, 0, 0]}
                   maxBarSize={44}
                 />

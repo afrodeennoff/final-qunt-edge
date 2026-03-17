@@ -29,7 +29,7 @@ const logs = [
 const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), {
   ssr: false,
   loading: () => (
-    <div className="h-full w-full animate-pulse rounded-2xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.65)]" />
+    <div className="h-full w-full animate-pulse rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.65)]" />
   ),
 })
 
@@ -50,70 +50,70 @@ export default function AnalysisDemo() {
   const activeLog = isMobile ? logs[0] : logs[logIndex]
 
   return (
-    <section className="relative px-4 py-16 sm:px-6 sm:py-28 lg:px-8">
+    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/80 [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
             <h2 className="mt-2 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
               Real-time review for
-              <span className="block text-[hsl(var(--brand-primary))]">process over outcome</span>
+              <span className="block text-foreground">process over outcome</span>
             </h2>
           </div>
-          <p className="max-w-md text-[15px] leading-[1.78] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">
+          <p className="max-w-md text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
             Old journal context stays intact while the interface mirrors a modern SaaS presentation style.
           </p>
         </div>
 
         <div className="marketing-panel overflow-hidden rounded-[28px]">
           <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
-            <div className="border-b border-[hsl(var(--mk-border)/0.24)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
+            <div className="border-b border-[hsl(var(--mk-border)/0.3)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <div className="mb-6 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Execution Stream</p>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Execution Stream</p>
                   <p className="mt-1 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
                 </div>
-                <span className="rounded-full border border-[hsl(var(--brand-primary)/0.35)] bg-[hsl(var(--brand-primary)/0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--brand-primary))] [font-family:var(--home-copy)]">
+                <span className="rounded-full border border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
                   +1.27%
                 </span>
               </div>
 
               {isMobile ? (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Plan Adherence</p>
+                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Plan Adherence</p>
                     <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">87%</p>
                   </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Risk Drift</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[hsl(var(--brand-primary))] [font-family:var(--home-display)]">-22%</p>
+                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Risk Drift</p>
+                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">-22%</p>
                   </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Review SLA</p>
+                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Review SLA</p>
                     <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">9m</p>
                   </div>
                 </div>
               ) : (
-                <div className="h-[300px] overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.8)] p-3">
+                <div className="h-[300px] overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] p-3">
                   <AnalysisDemoChart data={mockData} />
                 </div>
               )}
             </div>
 
             <div className="bg-[hsl(var(--mk-surface-muted)/0.42)] p-5 sm:p-6">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Journal Signals</p>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Journal Signals</p>
               <div className={cn("mt-4 space-y-3", isMobile ? "min-h-0" : "min-h-[220px]")}>
-                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm leading-relaxed text-[hsl(var(--mk-text))] [font-family:var(--home-copy)]">
+                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">
                   {activeLog}
                 </div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface)/0.72)] p-4">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Anomaly Probability</p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.22)]">
+              <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Anomaly Probability</p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.3)]">
                   <div
                     style={{ width: '72%' }}
-                    className="h-full rounded-full bg-[hsl(var(--brand-primary))]"
+                    className="h-full rounded-full bg-[hsl(var(--primary))]"
                   />
                 </div>
               </div>

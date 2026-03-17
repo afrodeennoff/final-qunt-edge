@@ -12,6 +12,7 @@ import { WidgetSize } from '../../types/dashboard'
 import { Scale, HelpCircle } from "lucide-react"
 import { useI18n } from '@/locales/client'
 import { useMemo } from "react"
+import { WidgetShell } from "@/components/ui/widget-shell"
 
 interface RiskRewardRatioCardProps {
   size?: WidgetSize
@@ -53,17 +54,20 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
 
   if (isCompact) {
     return (
-      <div className="flex h-full items-center justify-center bg-transparent px-2 py-1">
+      <WidgetShell
+        className="h-full"
+        contentClassName="flex h-full items-center justify-center px-2 py-1"
+      >
         <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
-          <Scale className="h-4 w-4 shrink-0 text-foreground/90" />
-          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/85">RR</span>
-          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground/90">
+          <Scale className="h-4 w-4 shrink-0 text-foreground" />
+          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
             {riskRewardRatio.toFixed(2)}
           </span>
           <TooltipProvider delayDuration={100}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground/70 hover:text-muted-foreground/85 transition-colors" />
+                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
                 {t('widgets.riskRewardRatio.tooltip')}
@@ -71,44 +75,33 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
             </Tooltip>
           </TooltipProvider>
         </div>
-      </div>
+      </WidgetShell>
     )
   }
 
   return (
-    <div className="h-full flex flex-col justify-between gap-2 p-3 bg-transparent">
-      <div className="flex items-center justify-between">
-        <div className="inline-flex items-center gap-1.5 rounded-md border border-border/55 bg-secondary/22 px-2.5 py-1">
-          <Scale className="h-3.5 w-3.5 text-foreground/90" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/85">Risk/Reward</span>
-        </div>
-        <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/70 cursor-help" />
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
-              {t('widgets.riskRewardRatio.tooltip')}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-
+    <WidgetShell
+      title="Risk/Reward"
+      icon={<Scale className="h-3.5 w-3.5 text-muted-foreground" />}
+      info={t('widgets.riskRewardRatio.tooltip')}
+      className="h-full"
+      contentClassName="flex flex-col justify-between gap-2 p-3"
+    >
       <div className="flex items-end justify-center gap-2 px-1">
-        <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/78">RR</span>
-        <span className="micro-sans text-[24px] font-black leading-none tracking-tight text-foreground/90">
+        <span className="micro-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">RR</span>
+        <span className="micro-sans text-[24px] font-black leading-none tracking-tight text-foreground">
           {riskRewardRatio.toFixed(2)}
         </span>
       </div>
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
-          <span className="text-muted-foreground/70">Avg Win</span>
-          <span className="text-foreground/90">${avgWin.toFixed(2)}</span>
+          <span className="text-muted-foreground">Avg Win</span>
+          <span className="text-foreground">${avgWin.toFixed(2)}</span>
         </div>
         <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
-          <span className="text-muted-foreground/70">Avg Loss</span>
-          <span className="text-muted-foreground/85">${avgLoss.toFixed(2)}</span>
+          <span className="text-muted-foreground">Avg Loss</span>
+          <span className="text-muted-foreground">${avgLoss.toFixed(2)}</span>
         </div>
         <TooltipProvider delayDuration={100}>
           <Tooltip>
@@ -117,7 +110,7 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
                 <Progress
                   value={profitPercentage}
                   className="h-1.5 bg-secondary/22"
-                  indicatorClassName="bg-white chart-positive-emphasis"
+                   indicatorClassName="bg-surface-subtle chart-positive-emphasis"
                 />
               </div>
             </TooltipTrigger>
@@ -130,6 +123,6 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
           </Tooltip>
         </TooltipProvider>
       </div>
-    </div>
+    </WidgetShell>
   )
-} 
+}

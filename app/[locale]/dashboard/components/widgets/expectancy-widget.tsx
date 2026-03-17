@@ -28,10 +28,10 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
         >
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="flex flex-col items-center justify-center">
-                    <span className="text-[11px] font-medium tracking-tight text-muted-foreground/70 mb-3">Value per trade</span>
+                    <span className="text-[11px] font-medium tracking-tight text-muted-foreground mb-3">Value per trade</span>
                     <div className={cn(
                         "text-4xl font-semibold tracking-tight tabular-nums",
-                        expectancy > 0 ? "metric-positive" : expectancy < 0 ? "metric-negative" : "text-muted-foreground/70"
+                        expectancy > 0 ? "metric-positive" : expectancy < 0 ? "metric-negative" : "text-muted-foreground"
                     )}>
                         {expectancy > 0 ? '+' : ''}{formattedExpectancy}
                     </div>
@@ -39,10 +39,10 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
                         <div className={cn(
                             "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
                             expectancy > 0
-                                ? "bg-secondary/30 metric-positive border border-border/60"
+                                ? "bg-secondary/30 metric-positive border border-border/55"
                                 : expectancy < 0
                                     ? "bg-secondary/22 metric-negative border border-border/55"
-                                    : "bg-secondary/22 text-muted-foreground/70 border border-border/55"
+                                    : "bg-secondary/22 text-muted-foreground border border-border/55"
                         )}>
                             {expectancy > 0 ? "Positive edge" : expectancy < 0 ? "Negative edge" : "Neutral"}
                         </div>

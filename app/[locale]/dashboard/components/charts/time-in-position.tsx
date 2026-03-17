@@ -48,7 +48,7 @@ const formatTime = (minutes: number) => {
   return `${mins}m`;
 };
 
-export default function TimeInPositionChart({
+export default React.memo(function TimeInPositionChart({
   size = "medium",
 }: TimeInPositionChartProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -94,15 +94,15 @@ export default function TimeInPositionChart({
       return (
         <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("timeInPosition.tooltip.time")}
             </span>
-            <span className="font-bold text-fg-primary text-xs">
+            <span className="font-bold text-foreground text-xs">
               {`${label}:00 - ${(label + 1) % 24}:00`}
             </span>
           </div>
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("timeInPosition.tooltip.averageDuration")}
             </span>
             <span className={cn("font-bold text-xs", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
@@ -110,7 +110,7 @@ export default function TimeInPositionChart({
             </span>
           </div>
           <div className="flex flex-col pt-2 border-t border-border/55">
-            <span className="text-[10px] uppercase text-fg-muted font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
               {t("timeInPosition.tooltip.trades")}
             </span>
             <span className={cn("font-bold text-xs", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
@@ -138,7 +138,7 @@ export default function TimeInPositionChart({
           <div className="flex items-center gap-1.5">
             <CardTitle
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-fg-primary",
+                "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -149,7 +149,7 @@ export default function TimeInPositionChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-fg-muted hover:text-fg-primary transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -192,7 +192,7 @@ export default function TimeInPositionChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `${value}h`}
                   ticks={
@@ -208,13 +208,13 @@ export default function TimeInPositionChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={formatTime}
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="avgTimeInPosition"
@@ -225,8 +225,8 @@ export default function TimeInPositionChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill="hsl(var(--foreground))"
-                      fillOpacity={entry.tradeCount > 0 ? 0.9 : 0.15}
+                      fill="hsl(var(--chart-1))"
+                      fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",
                         entry.tradeCount > 0 ? "chart-positive-emphasis" : "chart-negative-muted"
@@ -237,7 +237,7 @@ export default function TimeInPositionChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -245,4 +245,4 @@ export default function TimeInPositionChart({
       </div>
     </ChartSurface>
   );
-}
+})

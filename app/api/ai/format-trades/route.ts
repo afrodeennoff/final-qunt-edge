@@ -19,7 +19,7 @@ const requestSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const policy = getAiPolicy("mappings");
+  const policy = getAiPolicy("format-trades");
   const startedAt = Date.now();
 
   const guard = await guardAiRequest(req, 'format-trades', formatTradesRateLimit);
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const { headers, rows } = requestSchema.parse(body);
 
     const result = streamObject({
-      model: getAiLanguageModel("mappings"),
+      model: getAiLanguageModel("format-trades"),
       schema: tradeSchema,
       output: 'array',
       system:`
@@ -127,8 +127,9 @@ export async function POST(req: NextRequest) {
     });
 
     void logAiRequest({
+      userId,
       route: "/api/ai/format-trades",
-      feature: "mappings",
+      feature: "format-trades",
       model: policy.model,
       provider: policy.provider,
       latencyMs: Date.now() - startedAt,
@@ -139,15 +140,22 @@ export async function POST(req: NextRequest) {
 
     return result.toTextStreamResponse();
   } catch (error: unknown) {
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
+    }
+
     if (error instanceof z.ZodError) {
-      return apiError("VALIDATION_FAILED", "Invalid request format", 400, error.errors);
+      return apiError("VALIDATION_FAILED", "Invalid request format", 400, {
+        issues: error.errors,
+      });
     }
 
     const err = error as { statusCode?: number; type?: string; code?: unknown };
 
     void logAiRequest({
+      userId,
       route: "/api/ai/format-trades",
-      feature: "mappings",
+      feature: "format-trades",
       model: policy.model,
       provider: policy.provider,
       latencyMs: Date.now() - startedAt,

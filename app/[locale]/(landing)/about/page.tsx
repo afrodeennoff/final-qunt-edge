@@ -1,11 +1,38 @@
+import type { Metadata } from "next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, Code, LineChart, GraduationCap } from "lucide-react"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
+import Link from "next/link"
 
 export const revalidate = 1800
+const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const PAGE_PATH = "/about";
 
-export default function AboutPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
+
+  return {
+    title: "About Qunt Edge | Trading Performance Intelligence",
+    description:
+      "Learn how Qunt Edge helps discretionary traders improve execution quality, risk discipline, and decision consistency.",
+    alternates: {
+      canonical,
+      languages: {
+        "en-US": `${SITE_ORIGIN}/en${PAGE_PATH}`,
+        "fr-FR": `${SITE_ORIGIN}/fr${PAGE_PATH}`,
+      },
+    },
+  };
+}
+
+export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const founderSkills = [
     { name: "Order Book Trading", icon: <BookOpen className="w-4 h-4" /> },
     { name: "Volume Profile", icon: <LineChart className="w-4 h-4" /> },
@@ -15,8 +42,22 @@ export default function AboutPage() {
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+      <header className="mb-6 rounded-2xl border border-border/60 bg-card/70 p-6">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
+          Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href={`/${locale}/pricing`} className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">
+            View Pricing
+          </Link>
+          <Link href={`/${locale}/support`} className="rounded-full border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground hover:bg-accent/50">
+            Contact Support
+          </Link>
+        </div>
+      </header>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="border-white/10 bg-black/40">
+        <Card className="border-border/60 bg-card/70">
           <CardHeader>
             <CardTitle className="text-2xl">Our Mission</CardTitle>
           </CardHeader>
@@ -29,7 +70,7 @@ export default function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-black/40">
+        <Card className="border-border/60 bg-card/70">
           <CardHeader>
             <CardTitle className="text-2xl">THE TRADER BEHIND TIMON|</CardTitle>
           </CardHeader>
@@ -43,14 +84,14 @@ export default function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-black/40 md:col-span-2">
+        <Card className="border-border/60 bg-card/70 md:col-span-2">
           <CardHeader>
             <CardTitle className="text-2xl">Founder&apos;s Expertise</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {founderSkills.map((skill, index) => (
-                <Badge key={index} variant="secondary" className="border-white/15 bg-white/10 text-sm py-1 px-2 flex items-center gap-1">
+                <Badge key={index} variant="secondary" className="border-border/60 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
                   {skill.icon}
                   {skill.name}
                 </Badge>
@@ -59,7 +100,7 @@ export default function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-black/40 md:col-span-2">
+        <Card className="border-border/60 bg-card/70 md:col-span-2">
           <CardHeader>
             <CardTitle className="text-2xl">Why Qunt Edge?</CardTitle>
           </CardHeader>

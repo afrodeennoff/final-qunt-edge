@@ -37,6 +37,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
         { name: t('footer.product.features'), href: `/${locale}/#features` },
         { name: t('footer.product.pricing'), href: `/${locale}/pricing` },
         { name: t('landing.navbar.propFirms'), href: `/${locale}/propfirms` },
+        { name: t('landing.navbar.propFirmPerk'), href: `/${locale}/deals` },
         { name: t('footer.product.teams'), href: `/${locale}/teams` },
         { name: t('footer.product.support'), href: `/${locale}/support` },
         { name: t('footer.company.about'), href: `/${locale}/about` },
@@ -51,8 +52,8 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
                 scrolled
-                    ? 'bg-background/80 backdrop-blur-xl border-b border-border/40 py-4'
-                    : 'bg-transparent py-6'
+                    ? 'bg-background/90 backdrop-blur-2xl border-b border-border py-3'
+                    : 'bg-background/55 backdrop-blur-md border-b border-border/70 py-4'
             )}
         >
             <div className="container-fluid flex items-center justify-between">
@@ -64,7 +65,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                             <circle cx="16" cy="16" r="4" fill="currentColor" className="opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </svg>
                     </div>
-                    <span className="text-lg font-bold tracking-tighter text-foreground group-hover:text-foreground/80 transition-colors uppercase">
+                    <span className="text-[15px] font-semibold uppercase tracking-[0.16em] text-foreground transition-colors group-hover:text-foreground/80 [font-family:var(--home-copy)]">
                         Qunt Edge
                     </span>
                 </Link>
@@ -75,7 +76,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors relative group py-2"
+                            className="group relative py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/80 transition-colors hover:text-foreground [font-family:var(--home-copy)]"
                         >
                             {link.name}
                             <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-foreground transition-all duration-300 group-hover:w-full"></span>
@@ -90,19 +91,20 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                 <Button
                                     variant="ghost"
                                     onClick={onAccessPortal}
-                                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground hover:bg-transparent"
+                                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground hover:bg-transparent"
+                                    
                                 >
                                     {t('landing.navbar.signIn')}
                                 </Button>
                                 <Button
                                     onClick={onAccessPortal}
-                                    className="h-9 px-6 text-[11px] font-bold uppercase tracking-[0.15em] rounded-lg shadow-sm"
+                                    className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90"
                                 >
                                     {t('landing.cta')}
                                 </Button>
                             </>
                         ) : (
-                            <Button asChild className="h-9 px-6 text-[11px] font-bold uppercase tracking-[0.15em] rounded-lg shadow-sm">
+                            <Button asChild className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90">
                                 <Link href={`/${locale}/dashboard`}>
                                     {t('landing.navbar.dashboard')}
                                 </Link>
@@ -117,7 +119,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                 <Menu className="w-6 h-6" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px] bg-background/95 backdrop-blur-xl border-border/40 p-0 flex flex-col justify-between">
+                        <SheetContent side="right" className="w-[min(88vw,360px)] border-border/50 bg-background/95 p-0 backdrop-blur-xl flex flex-col justify-between">
                             <div className="flex flex-col h-full pt-16 px-6 pb-8">
                                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                                 <SheetDescription className="sr-only">
@@ -129,14 +131,14 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                             key={link.name}
                                             href={link.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="block text-2xl font-bold tracking-tight text-muted-foreground hover:text-foreground transition-colors"
+                                            className="block text-2xl font-bold tracking-tight text-foreground/85 hover:text-foreground transition-colors"
                                         >
                                             {link.name}
                                         </Link>
                                     ))}
                                 </div>
 
-                                <div className="mt-auto space-y-4 pt-8 border-t border-border/10">
+                                <div className="mt-auto space-y-4 border-t border-border/50 pt-8">
                                     {!user ? (
                                         <>
                                             <Button
@@ -154,13 +156,13 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                                     setIsOpen(false);
                                                     onAccessPortal();
                                                 }}
-                                                className="w-full h-12 text-xs font-bold uppercase tracking-widest shadow-lg"
+                                                className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90"
                                             >
                                                 {t('landing.cta')}
                                             </Button>
                                         </>
                                     ) : (
-                                        <Button asChild className="w-full h-12 text-xs font-bold uppercase tracking-widest shadow-lg">
+                                        <Button asChild className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90">
                                             <Link
                                                 href={`/${locale}/dashboard`}
                                                 onClick={() => setIsOpen(false)}
@@ -170,7 +172,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                         </Button>
                                     )}
                                     <div className="pt-4 text-center">
-                                        <p className="text-[10px] text-muted-foreground font-mono uppercase">
+                                        <p className="text-[10px] font-mono uppercase text-foreground/80">
                                             Qunt Edge Mobile
                                         </p>
                                     </div>

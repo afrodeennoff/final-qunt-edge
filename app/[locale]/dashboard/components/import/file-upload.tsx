@@ -35,31 +35,172 @@ export default function FileUpload({
   const [parsedFiles, setParsedFiles] = useState<string[][][]>([])
   const t = useI18n()
 
+  // Security: File size and type validation
+  const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+  const ALLOWED_TYPES = [
+    'text/csv',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ]
+  const ALLOWED_EXTENSIONS = ['.csv', '.xls', '.xlsx']
+
+  // Security: Enhanced file validation function
+  const validateFile = (file: File): { valid: boolean; error?: string } => {
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        error: `File size exceeds 5MB limit. Current size: ${(file.size / 1024 / 1024).toFixed(2)}MB`
+      }
+    }
+
+    // Check file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return {
+        valid: false,
+        error: `Invalid file type: ${file.type}. Only CSV and Excel files are allowed.`
+      }
+    }
+
+    // Check file extension
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
+    if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
+      return {
+        valid: false,
+        error: `Invalid file extension: ${fileExtension}. Only .csv, .xls, and .xlsx files are allowed.`
+      }
+    }
+
+    // Check for potentially malicious file names
+    const maliciousPatterns = [
+      /<script/i,
+      /javascript:/i,
+      /vbscript:/i,
+      /onload=/i,
+      /onerror=/i,
+      /alert\(/i,
+      /eval\(/i
+    ]
+    
+    for (const pattern of maliciousPatterns) {
+      if (pattern.test(file.name)) {
+        return {
+          valid: false,
+          error: 'File name contains potentially malicious content.'
+        }
+      }
+    }
+
+    return { valid: true }
+  }
+
   const processFile = useCallback((file: File, index: number) => {
     return new Promise<void>((resolve, reject) => {
-      // First read the first line to detect delimiter
+      // Security: Enhanced file validation
+      const validation = validateFile(file)
+      if (!validation.valid) {
+        reject(new Error(validation.error))
+        return
+      }
+
+       // Security: Read file content for validation
       const reader = new FileReader();
       reader.onload = (e) => {
-        const firstLine = e.target?.result?.toString().split('\n')[0] || '';
+        const content = e.target?.result?.toString() || '';
+        const firstLine = content.split('\n')[0] || '';
         const delimiter = firstLine.includes(';') ? ';' : ',';
-        
+
+        // Security: Check for potentially malicious content in file
+        const maliciousContentPatterns = [
+          /<script[^>]*>.*?<\/script>/i,
+          /javascript:/i,
+          /vbscript:/i,
+          /data:\s*text\/html/i,
+          /<iframe/i,
+          /<object/i,
+          /<embed/i,
+          /<applet/i,
+          /<meta/i,
+          /<base/i,
+          /<form/i,
+          /<input/i,
+          /<button/i,
+          /onclick=/i,
+          /onload=/i,
+          /onerror=/i,
+          /alert\(/i,
+          /confirm\(/i,
+          /prompt\(/i,
+          /eval\(/i,
+          /exec\(/i,
+          /setTimeout/i,
+          /setInterval/i,
+          /document\./i,
+          /window\./i,
+          /\.cookie/i,
+          /\.location/i
+        ];
+
+        for (const pattern of maliciousContentPatterns) {
+          if (pattern.test(content)) {
+            reject(new Error('File contains potentially malicious content and cannot be processed.'))
+            return
+          }
+        }
+
+        // Security: Validate CSV structure
+        const lines = content.split('\n').filter(line => line.trim())
+        if (lines.length === 0) {
+          reject(new Error('File is empty or contains no valid data.'))
+          return
+        }
+
+        // Check if first line contains headers (basic validation)
+        const headers = lines[0].split(delimiter)
+        if (headers.length < 2) {
+          reject(new Error('File does not appear to be a valid CSV format.'))
+          return
+        }
+
         Papa.parse(file, {
           delimiter,
+          skipEmptyLines: true,
           complete: (result) => {
-            if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-              setParsedFiles(prevFiles => {
-                const newFiles = [...prevFiles]
-                newFiles[index] = result.data as string[][]
-                return newFiles
-              })
-              setError(null)
-              resolve()
-            } else {
-              reject(new Error("The CSV file appears to be empty or invalid."))
+            // Security: Validate parsed data
+            if (!result.data || !Array.isArray(result.data)) {
+              reject(new Error("Invalid CSV data format."))
+              return
             }
+
+            if (result.data.length === 0) {
+              reject(new Error("The CSV file appears to be empty or contains no valid data."))
+              return
+            }
+
+            // Security: Check for data that might be too large (potential DoS)
+            if (result.data.length > 100000) {
+              reject(new Error("CSV file contains too many rows (max 100,000)."))
+              return
+            }
+
+            // Security: Validate that each row is an array
+            for (let i = 0; i < Math.min(result.data.length, 100); i++) {
+              if (!Array.isArray(result.data[i])) {
+                reject(new Error(`Invalid data format at row ${i + 1}.`))
+                return
+              }
+            }
+
+            setParsedFiles(prevFiles => {
+              const newFiles = [...prevFiles]
+              newFiles[index] = result.data as string[][]
+              return newFiles
+            })
+            setError(null)
+            resolve()
           },
           error: (error) => {
-            reject(new Error(`Error parsing CSV: ${error.message}`))
+            reject(new Error(`Error parsing CSV: ${error.message || 'Unknown parsing error'}`))
           }
         })
       };
@@ -68,13 +209,22 @@ export default function FileUpload({
       };
       reader.readAsText(file);
     })
-  }, [setError])
+  }, [setError, MAX_FILE_SIZE, ALLOWED_TYPES])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploadedFiles(prevFiles => [...prevFiles, ...acceptedFiles])
     acceptedFiles.forEach((file, index) => {
       const totalIndex = uploadedFiles.length + index
       setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
+      
+      // Security: Validate file before processing
+      const validation = validateFile(file)
+      if (!validation.valid) {
+        setError(validation.error ?? 'Validation failed')
+        setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
+        return
+      }
+      
       processFile(file, totalIndex)
         .then(() => {
           setUploadProgress(prev => ({ ...prev, [file.name]: 100 }))
@@ -84,9 +234,18 @@ export default function FileUpload({
           setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
         })
     })
-  }, [processFile, setError, uploadedFiles.length])
+  }, [processFile, setError, uploadedFiles.length, validateFile])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    // Security: Validate files at dropzone level
+    maxSize: MAX_FILE_SIZE,
+    accept: {
+      'text/csv': ['.csv'],
+      'application/vnd.ms-excel': ['.xls'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
+    }
+  })
 
   const removeFile = (index: number) => {
     setUploadedFiles(prevFiles => prevFiles.filter((_, i) => i !== index))
@@ -156,7 +315,7 @@ export default function FileUpload({
           "hover:border-primary/50 group relative",
           isDragActive 
             ? "border-primary bg-primary/5 scale-[0.99]" 
-            : "border-gray-300 hover:bg-gray-50/50 dark:hover:bg-gray-900/50",
+            : "border-border hover:bg-muted/50 ",
           "cursor-pointer flex items-center justify-center"
         )}
       >
@@ -200,8 +359,8 @@ export default function FileUpload({
               key={index} 
               className={cn(
                 "flex items-center justify-between",
-                "bg-gray-100 dark:bg-gray-800 rounded-lg",
-                "p-3 hover:bg-gray-200 dark:hover:bg-gray-700",
+                "bg-muted  rounded-lg",
+                "p-3 hover:bg-muted ",
                 "transition-all duration-200 ease-in-out",
                 "animate-in slide-in-from-bottom fade-in",
                 "group"

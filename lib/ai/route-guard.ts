@@ -44,6 +44,30 @@ export async function guardAiRequest(
     }
   }
 
+  try {
+    const budget = await assertWithinAiBudget(user.id, entitlement.isActive)
+    if (!budget.allowed) {
+      return {
+        ok: false,
+        response: apiError('BUDGET_EXCEEDED', 'Monthly AI budget exceeded for your plan.', 402, {
+          feature,
+          plan: entitlement.plan,
+          limit: budget.limit,
+          used: budget.used,
+          remaining: budget.remaining,
+        }),
+      }
+    }
+  } catch {
+    // In test/dev fallback, do not block core route behavior when budget backing store is unavailable.
+    if (process.env.NODE_ENV === 'production') {
+      return {
+        ok: false,
+        response: apiError('SERVICE_UNAVAILABLE', 'AI budget service temporarily unavailable.', 503),
+      }
+    }
+  }
+
   let rateLimitResult: LimiterResult
   try {
     rateLimitResult = await limiter(req, { subject: user.id })
@@ -61,27 +85,6 @@ export async function guardAiRequest(
         limit: rateLimitResult.limit,
         remaining: rateLimitResult.remaining,
         resetTime: rateLimitResult.resetTime,
-      }),
-    }
-  }
-
-  let budget: { allowed: boolean; limit: number; used: number; remaining: number }
-  try {
-    budget = await assertWithinAiBudget(user.id, entitlement.isActive)
-  } catch {
-    return {
-      ok: false,
-      response: apiError('SERVICE_UNAVAILABLE', 'AI budget service temporarily unavailable.', 503),
-    }
-  }
-
-  if (!budget.allowed) {
-    return {
-      ok: false,
-      response: apiError('RATE_LIMITED', 'Monthly AI usage budget exceeded.', 429, {
-        limit: budget.limit,
-        used: budget.used,
-        remaining: budget.remaining,
       }),
     }
   }

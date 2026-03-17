@@ -70,7 +70,7 @@ const formatWinRate = (wins: number, total: number) => {
   return ((wins / total) * 100).toFixed(1)
 }
 
-export default function PnLPerContractDailyChart({
+export default React.memo(function PnLPerContractDailyChart({
   size = "medium",
 }: PnLPerContractDailyChartProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -155,32 +155,32 @@ export default function PnLPerContractDailyChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[160px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
-            <span className="font-black text-muted-foreground/85 text-[10px] uppercase tracking-widest">{data.date}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.date")}</span>
+            <span className="font-black text-muted-foreground text-[10px] uppercase tracking-widest">{data.date}</span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.averagePnl")}</span>
               <span className={cn(
                 "font-black text-[13px] tabular-nums",
                 data.averagePnl >= 0 ? "metric-positive" : "metric-negative"
               )}>{formatCurrency(data.averagePnl)}</span>
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
-              <span className="font-black text-muted-foreground/85 text-[10px]">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalPnl")}</span>
+              <span className="font-black text-muted-foreground text-[10px]">
                 {formatCurrency(data.totalPnl)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
-              <span className="font-black text-muted-foreground/85 text-[10px]">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.trades")}</span>
+              <span className="font-black text-muted-foreground text-[10px]">
                 {data.tradeCount} ({formatWinRate(data.winCount, data.tradeCount)}% WR)
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
-              <span className="font-black text-muted-foreground/85 text-[10px]">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContractDaily.tooltip.totalContracts")}</span>
+              <span className="font-black text-muted-foreground text-[10px]">
                 {data.totalContracts}
               </span>
             </div>
@@ -214,7 +214,7 @@ export default function PnLPerContractDailyChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -243,7 +243,7 @@ export default function PnLPerContractDailyChart({
               </SelectTrigger>
               <SelectContent className="bg-card/96 backdrop-blur-xl border-border/55">
                 {availableInstruments.map((instrument) => (
-                  <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/85 focus:text-foreground">
+                  <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground">
                     {instrument}
                   </SelectItem>
                 ))}
@@ -325,18 +325,18 @@ export default function PnLPerContractDailyChart({
                         tick={false}
                         domain={[domainMin, domainMax]}
                       />
-                      <ReferenceLine y={0} stroke="hsl(var(--foreground) / 0.35)" />
+                      <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
                       <Bar
                         dataKey="averagePnl"
                         radius={[2, 2, 2, 2]}
                         maxBarSize={size === "small" ? 25 : 40}
                         className="transition-none"
-                        fill="hsl(var(--foreground) / 0.35)"
+                        fill="hsl(var(--chart-axis))"
                       >
                         {loadingMockData.map((_, index) => (
                           <Cell
                             key={`skeleton-cell-${index}`}
-                            fill="hsl(var(--foreground) / 0.35)"
+                            fill="hsl(var(--chart-axis))"
                           />
                         ))}
                       </Bar>
@@ -368,7 +368,7 @@ export default function PnLPerContractDailyChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   minTickGap={size === "small" ? 30 : 50}
                   tickFormatter={(value) => {
@@ -385,7 +385,7 @@ export default function PnLPerContractDailyChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                   domain={[
@@ -393,10 +393,10 @@ export default function PnLPerContractDailyChart({
                     Math.max(maxPnL * 1.1, 0),
                   ]}
                 />
-                <ReferenceLine y={0} stroke="hsl(var(--foreground) / 0.35)" />
+                <ReferenceLine y={0} stroke="hsl(var(--chart-axis))" />
                 <Tooltip
                   content={renderTooltip}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
+                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
                   dataKey="averagePnl"
@@ -407,10 +407,10 @@ export default function PnLPerContractDailyChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.averagePnl >= 0 ? "hsl(var(--foreground))" : "hsl(var(--foreground))"}
-                      stroke={entry.averagePnl >= 0 ? "hsl(var(--foreground))" : "hsl(var(--foreground))"}
-                      strokeOpacity={entry.averagePnl >= 0 ? 0.42 : 0.06}
-                      fillOpacity={entry.averagePnl >= 0 ? 0.98 : 0.22}
+                      fill={entry.averagePnl >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--chart-4))"}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.55}
+                      fillOpacity={entry.averagePnl >= 0 ? 0.94 : 0.84}
                       className={cn(
                         "hover:fill-opacity-100 transition-all duration-300",
                         entry.averagePnl >= 0 ? "chart-positive-emphasis" : "chart-negative-muted"
@@ -421,7 +421,7 @@ export default function PnLPerContractDailyChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-full text-muted-foreground/70 text-[10px] font-black uppercase tracking-widest">
+            <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-widest">
               {config.selectedInstrument
                 ? t("pnlPerContractDaily.noData")
                 : t("pnlPerContractDaily.selectInstrument")}
@@ -431,4 +431,4 @@ export default function PnLPerContractDailyChart({
       </div>
     </ChartSurface>
   );
-}
+})

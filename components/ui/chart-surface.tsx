@@ -43,7 +43,7 @@ export function ChartSurface({
   const renderBody = () => {
     if (state === "loading") {
       return (
-        <div className="space-y-3 p-3">
+        <div className="space-y-[var(--space-3)] p-[var(--space-3)]">
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-[220px] w-full" />
         </div>
@@ -52,7 +52,7 @@ export function ChartSurface({
 
     if (state === "error") {
       return (
-        <div className="flex h-full min-h-[160px] items-center justify-center p-3 text-xs text-destructive">
+        <div className="flex h-full min-h-[160px] items-center justify-center p-[var(--space-3)] text-xs text-destructive">
           {errorMessage}
         </div>
       )
@@ -60,7 +60,7 @@ export function ChartSurface({
 
     if (state === "empty") {
       return (
-        <div className="flex h-full min-h-[160px] items-center justify-center p-3 text-xs text-white/55">
+        <div className="flex h-full min-h-[160px] items-center justify-center p-[var(--space-3)] text-xs text-muted-foreground">
           {emptyMessage}
         </div>
       )
@@ -72,18 +72,18 @@ export function ChartSurface({
   return (
     <div
       data-chart-surface="v2"
-      className={cn("h-full flex flex-col overflow-hidden rounded-xl bg-transparent", className)}
+      className={cn("h-full flex flex-col overflow-hidden rounded-[var(--radius)] bg-transparent", className)}
     >
       {hasHeader && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-b border-white/10",
+            "flex shrink-0 items-center border-b border-border-subtle",
             isSmall ? "h-10 px-2.5" : "h-12 px-3.5",
             headerClassName
           )}
         >
-          <div className="flex w-full items-center justify-between gap-2">
-            <div className="min-w-0 flex items-center gap-1.5">
+          <div className="flex w-full items-center justify-between gap-[var(--space-2)]">
+            <div className="min-w-0 flex items-center gap-[var(--space-2)]">
               {title ? (
                 <span
                   className={cn(

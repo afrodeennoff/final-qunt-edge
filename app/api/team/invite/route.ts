@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma"
 import { createRouteClient } from "@/lib/supabase/route-client"
 import { createRateLimitResponse, rateLimit } from "@/lib/rate-limit"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
+import { apiError } from "@/lib/api-response"
 
 export const dynamic = 'force-dynamic'
 const inviteRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "team-invite" })
@@ -15,10 +16,29 @@ const inviteSchema = z.object({
   email: z.string().email(),
 })
 
+const SUPPORTED_LOCALES = new Set([
+  "en",
+  "fr",
+  "de",
+  "es",
+  "it",
+  "pt",
+  "vi",
+  "hi",
+  "ja",
+  "zh",
+  "yo",
+])
+
+// Security: Use environment-configured reply-to address
+const getReplyToEmail = (): string => {
+  return process.env.TEAM_INVITE_REPLY_TO || 'team@qunt-edge.com'
+}
+
 export async function POST(req: Request) {
   if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is missing')
-    return NextResponse.json({ error: 'Missing API key' }, { status: 500 })
+    return apiError("INTERNAL_ERROR", "Missing API key", 500)
   }
   const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -37,10 +57,7 @@ export async function POST(req: Request) {
     const supabase = createRouteClient(req)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user?.id || !user.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError("UNAUTHORIZED", "Unauthorized", 401)
     }
 
     const inviter = await prisma.user.findUnique({
@@ -49,10 +66,7 @@ export async function POST(req: Request) {
     })
 
     if (!inviter) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError("UNAUTHORIZED", "Unauthorized", 401)
     }
 
     const team = await prisma.team.findUnique({
@@ -69,19 +83,13 @@ export async function POST(req: Request) {
     })
 
     if (!team) {
-      return NextResponse.json(
-        { error: 'Team not found' },
-        { status: 404 }
-      )
+      return apiError("NOT_FOUND", "Team not found", 404)
     }
 
     const isOwner = team.userId === inviter.id
     const isAdminManager = team.managers.length > 0
     if (!isOwner && !isAdminManager) {
-      return NextResponse.json(
-        { error: 'Forbidden' },
-        { status: 403 }
-      )
+      return apiError("FORBIDDEN", "Forbidden", 403)
     }
 
     // Check if user is already a trader in this team
@@ -90,9 +98,10 @@ export async function POST(req: Request) {
     })
 
     if (existingUser && team.traderIds.includes(existingUser.id)) {
-      return NextResponse.json(
-        { error: 'User is already a member of this team' },
-        { status: 400 }
+      return apiError(
+        "BAD_REQUEST",
+        "User is already a member of this team",
+        400
       )
     }
 
@@ -107,9 +116,10 @@ export async function POST(req: Request) {
     })
 
     if (existingInvitation && existingInvitation.status === 'PENDING') {
-      return NextResponse.json(
-        { error: 'An invitation has already been sent to this email' },
-        { status: 400 }
+      return apiError(
+        "BAD_REQUEST",
+        "An invitation has already been sent to this email",
+        400
       )
     }
 
@@ -137,7 +147,12 @@ export async function POST(req: Request) {
 
     // Generate join URL
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin
-    const joinUrl = `${appUrl}/teams/join?invitation=${invitation.id}`
+    const inviteLocale =
+      existingUser?.language && SUPPORTED_LOCALES.has(existingUser.language)
+        ? existingUser.language
+        : "en"
+
+    const joinUrl = `${appUrl}/${inviteLocale}/teams/join?invitation=${invitation.id}`
 
     // Render email
     const emailHtml = await render(
@@ -159,14 +174,16 @@ export async function POST(req: Request) {
         ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
         : `Invitation to join ${team.name} on Qunt Edge`,
       html: emailHtml,
-      replyTo: 'hugo.demenez@qunt-edge.vercel.app',
+      replyTo: getReplyToEmail(),
     })
 
     if (error) {
-      console.error('Error sending invitation email:', error)
-      return NextResponse.json(
-        { error: 'Failed to send invitation email' },
-        { status: 500 }
+      // Security: Log only non-sensitive error info
+      console.error('Error sending invitation email:', error.name, error.message)
+      return apiError(
+        "INTERNAL_ERROR",
+        'Failed to send invitation email',
+        500
       )
     }
 
@@ -178,10 +195,13 @@ export async function POST(req: Request) {
   } catch (error) {
     const validationResponse = toValidationErrorResponse(error)
     if (validationResponse.status !== 500) return validationResponse
-    console.error('Error sending team invitation:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', requestId: crypto.randomUUID() },
-      { status: 500 }
+    // Security: Log only error type, not full error object which may contain sensitive data
+    console.error('Error sending team invitation:', error instanceof Error ? error.message : 'Unknown error')
+    return apiError(
+      "INTERNAL_ERROR",
+      "Internal server error",
+      500,
+      { requestId: crypto.randomUUID() }
     )
   }
 } 

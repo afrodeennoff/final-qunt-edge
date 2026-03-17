@@ -44,7 +44,7 @@ const formatWinRate = (wins: number, total: number) => {
   return ((wins / total) * 100).toFixed(1)
 }
 
-export default function PnLBySideChart({
+export default React.memo(function PnLBySideChart({
   size = "medium",
 }: PnLBySideChartProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -77,7 +77,7 @@ export default function PnLBySideChart({
         winCount: longWins,
         isAverage: showAverage,
         value: 0,
-        color: "hsl(var(--foreground))",
+        color: "hsl(var(--chart-1))",
       },
       {
         side: "Short",
@@ -90,7 +90,7 @@ export default function PnLBySideChart({
         winCount: shortWins,
         isAverage: showAverage,
         value: 0,
-        color: "hsl(var(--foreground) / 0.35)",
+        color: "hsl(var(--chart-4))",
       },
     ];
 
@@ -117,12 +117,12 @@ export default function PnLBySideChart({
       return (
         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
           <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.side")}</span>
+            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.side")}</span>
             <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.side}</span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">
                 {data.isAverage ? t("pnlBySide.tooltip.averageTotal") : "Total"} P/L
               </span>
               <span className={cn(
@@ -131,14 +131,14 @@ export default function PnLBySideChart({
               )}>{formatCurrency(data.pnl)}</span>
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.winRate")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.winRate")}</span>
+              <span className="font-black text-muted-foreground text-[11px]">
                 {formatWinRate(data.winCount, data.tradeCount)}%
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.trades")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlBySide.tooltip.trades")}</span>
+              <span className="font-black text-muted-foreground text-[11px]">
                 {data.tradeCount}
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function PnLBySideChart({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-fg-primary",
+                "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -172,7 +172,7 @@ export default function PnLBySideChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-fg-muted hover:text-fg-primary transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -186,7 +186,7 @@ export default function PnLBySideChart({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "text-[10px] uppercase font-bold tracking-wider text-fg-muted",
+                "text-[10px] uppercase font-bold tracking-wider text-muted-foreground",
               )}
             >
               {t("pnlBySide.toggle.showAverage")}
@@ -194,7 +194,7 @@ export default function PnLBySideChart({
             <Switch
               checked={showAverage}
               onCheckedChange={setShowAverage}
-              className="data-[state=checked]:bg-white"
+              className="data-[state=checked]:bg-card"
             />
           </div>
         </div>
@@ -225,15 +225,15 @@ export default function PnLBySideChart({
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.color}
-                      fillOpacity={entry.side === "Long" ? 0.98 : 0.26}
+                      fillOpacity={entry.side === "Long" ? 0.94 : 0.84}
                       className="transition-all duration-300 ease-in-out hover:fill-opacity-100"
                     />
                   ))}
                   <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central">
-                    <tspan x="50%" dy="-0.1em" className="fill-white font-black text-2xl">
+                    <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl">
                       {dominantSide.label}
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-white/55 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground text-[10px] uppercase font-black tracking-[0.16em]">
                       {dominantSide.trades} TRADES
                     </tspan>
                   </text>
@@ -242,7 +242,7 @@ export default function PnLBySideChart({
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -250,4 +250,4 @@ export default function PnLBySideChart({
       </div>
     </ChartSurface>
   );
-}
+})

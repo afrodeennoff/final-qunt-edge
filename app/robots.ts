@@ -6,11 +6,17 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       disallow: [
-        '/dashboard/',
         '/api/',
-        '/authentication/',
+        '/dashboard',
+        '/*/dashboard',
+        '/admin',
+        '/*/admin',
+        '/teams/dashboard',
+        '/*/teams/dashboard',
+        '/authentication',
+        '/*/authentication',
       ],
     },
     sitemap: 'https://qunt-edge.vercel.app/sitemap.xml',
   }
-} 
+}

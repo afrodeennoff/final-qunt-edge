@@ -1,21 +1,28 @@
-import { convertToModelMessages, streamText, UIMessage } from "ai";
+import {
+  convertToModelMessages,
+  streamText,
+  UIMessage,
+} from "ai";
 import { NextRequest } from "next/server";
 import { askForEmailForm } from "./tools/ask-for-email-form";
-import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod/v3";
 import { rateLimit } from "@/lib/rate-limit";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { apiError } from "@/lib/api-response";
 import { guardAiRequest } from "@/lib/ai/route-guard";
-
-const customOpenai = createOpenAI({
-  baseURL: "https://api.z.ai/api/paas/v4",
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
+import { getAiLanguageModelById } from "@/lib/ai/client";
+import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
+import {
+  estimateTokenCountFromMessages,
+  getAiErrorCode,
+  logAiError,
+  sanitizeAiError,
+} from "@/lib/ai/error-utils";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 const supportRateLimit = rateLimit({ limit: 12, window: 60_000, identifier: "ai-support" });
+const MAX_SUPPORT_BODY_BYTES = 512 * 1024;
+const MAX_SUPPORT_MESSAGES = 80;
 const requestSchema = z.object({
   messages: z.array(z.custom<UIMessage>()).min(1),
   model: z.string().optional(),
@@ -29,31 +36,56 @@ const SUPPORT_MODEL_ALLOWLIST = new Set([
 ]);
 
 export async function POST(req: NextRequest) {
-  // Apply AI route guard (auth + entitlements + rate limit + budget)
+  const policy = getAiPolicy("support");
+  const startedAt = Date.now();
+  let selectedModel = policy.model;
+
+  // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'support', supportRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
 
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return apiError("SERVICE_UNAVAILABLE", "Support AI service is not configured", 503);
+    const lengthHeader = req.headers.get("content-length");
+    const contentLength = lengthHeader ? Number(lengthHeader) : 0;
+    if (Number.isFinite(contentLength) && contentLength > MAX_SUPPORT_BODY_BYTES) {
+      return apiError(
+        "PAYLOAD_TOO_LARGE",
+        `Request body exceeds ${Math.round(MAX_SUPPORT_BODY_BYTES / 1024)}KB.`,
+        413,
+      );
     }
 
     const body = await req.json();
     const { messages, model, webSearch } = requestSchema.parse(body);
-    const policy = getAiPolicy("chat");
-    const selectedModel = model && SUPPORT_MODEL_ALLOWLIST.has(model) ? model : policy.model;
+    if (messages.length > MAX_SUPPORT_MESSAGES) {
+      return apiError("PAYLOAD_TOO_LARGE", `Too many messages. Maximum is ${MAX_SUPPORT_MESSAGES}.`, 413);
+    }
+
+    selectedModel = model && SUPPORT_MODEL_ALLOWLIST.has(model) ? model : policy.model;
     const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
     const webSearchFallback = webSearch && !webSearchModel;
+    if (!process.env.OPENROUTER_API_KEY) {
+      return apiError("SERVICE_UNAVAILABLE", "Support AI service is not configured", 503);
+    }
 
     // Remove first message if it's assistant message
     if (messages.length > 0 && messages[0].role === "assistant") {
       messages.shift();
     }
 
+    const supportMessagesForEstimate = messages.map((message) => {
+      const textParts =
+        message.parts?.filter(
+          (part): part is { type: "text"; text: string } =>
+            part?.type === "text" && typeof part?.text === "string",
+        ) ?? [];
+      return { content: textParts.map((part) => part.text).join("\n") };
+    });
+
     const modelMessages = await convertToModelMessages(messages);
     const result = streamText({
-      model: webSearch && webSearchModel ? customOpenai(webSearchModel) : customOpenai(selectedModel),
+      model: webSearch && webSearchModel ? getAiLanguageModelById(webSearchModel) : getAiLanguageModelById(selectedModel),
       system: `${webSearchFallback ? "[WEB_SEARCH_FALLBACK_ACTIVE] Web search is unavailable for this environment; answer without external browsing.\n\n" : ""}You are an AI chatbot support assistant for Qunt Edge, a trading journaling platform. Your role is to gather information and direct users to the appropriate support channels.
 
 ## CRITICAL LIMITATIONS
@@ -128,6 +160,37 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
         askForEmailForm,
       },
       temperature: 0.3,
+      onFinish: (finalResult) => {
+        const extractedText = finalResult.text ?? "";
+        void logAiRequest({
+          userId,
+          route: "/api/ai/support",
+          feature: "support",
+          model: selectedModel,
+          provider: policy.provider,
+          usage: extractUsage(finalResult.usage) ?? {
+            totalTokens: estimateTokenCountFromMessages(supportMessagesForEstimate, extractedText),
+          },
+          latencyMs: Date.now() - startedAt,
+          finishReason: finalResult.finishReason ?? null,
+          success: true,
+          sampleRate: policy.logSampleRate,
+        });
+      },
+      onError: ({ error }) => {
+        void logAiRequest({
+          userId,
+          route: "/api/ai/support",
+          feature: "support",
+          model: selectedModel,
+          provider: policy.provider,
+          latencyMs: Date.now() - startedAt,
+          success: false,
+          errorCategory: categorizeAiError(error),
+          errorCode: getAiErrorCode(error),
+          sampleRate: 1,
+        });
+      },
     });
 
     return result.toUIMessageStreamResponse({
@@ -135,66 +198,62 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
       sendReasoning: false,
     });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      return apiError("VALIDATION_FAILED", "Invalid support request payload", 400, error.errors);
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
     }
 
-    const err = error as { statusCode?: number; type?: string };
+    if (error instanceof z.ZodError) {
+      return apiError("VALIDATION_FAILED", "Invalid support request payload", 400, {
+        issues: error.errors,
+      });
+    }
 
-    console.error("Support API Error:", error);
+    void logAiRequest({
+      userId,
+      route: "/api/ai/support",
+      feature: "support",
+      model: selectedModel,
+      provider: policy.provider,
+      latencyMs: Date.now() - startedAt,
+      success: false,
+      errorCategory: categorizeAiError(error),
+      errorCode: getAiErrorCode(error),
+      sampleRate: 1,
+    });
+
+    const err = sanitizeAiError(error);
+    logAiError("Support API Error", error, { userId });
 
     // Handle rate limit errors specifically
-    if (err?.statusCode === 429 || err?.type === "rate_limit_exceeded") {
-      return new Response(
-        JSON.stringify({
-          error: "Rate limit exceeded",
-          message:
-            "We are experiencing high demand. Please try again in a few minutes or contact support directly.",
-          type: "rate_limit_exceeded",
-          retryAfter: 300, // 5 minutes
-        }),
+    if (err.statusCode === 429 || err.type === "rate_limit_exceeded") {
+      return apiError(
+        "RATE_LIMITED",
+        "We are experiencing high demand. Please try again in a few minutes or contact support directly.",
+        429,
         {
-          status: 429,
-          headers: {
-            "Content-Type": "application/json",
-            "Retry-After": "300",
-          },
+          type: "rate_limit_exceeded",
+          retryAfter: 300,
         },
+        { "Retry-After": "300" },
       );
     }
 
     // Handle other AI/API errors
-    if (typeof err?.statusCode === "number" && err.statusCode >= 400 && err.statusCode < 500) {
-      return new Response(
-        JSON.stringify({
-          error: "Service temporarily unavailable",
-          message:
-            "Our AI service is temporarily unavailable. Please try again later or contact support directly.",
-          type: "service_unavailable",
-        }),
-        {
-          status: 503,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
+    if (typeof err.statusCode === "number" && err.statusCode >= 400 && err.statusCode < 500) {
+      return apiError(
+        "SERVICE_UNAVAILABLE",
+        "Our AI service is temporarily unavailable. Please try again later or contact support directly.",
+        503,
+        { type: "service_unavailable" },
       );
     }
 
     // Handle server errors
-    return new Response(
-      JSON.stringify({
-        error: "Internal server error",
-        message:
-          "An unexpected error occurred. Please try again later or contact support.",
-        type: "internal_error",
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+    return apiError(
+      "INTERNAL_ERROR",
+      "An unexpected error occurred. Please try again later or contact support.",
+      500,
+      { type: "internal_error" },
     );
   }
 }

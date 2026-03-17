@@ -1,14 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { logger } from '@/lib/logger'
-import { assertAdminAccess, toErrorResponse } from '@/server/authz'
+import { assertAdminAccess } from '@/server/authz'
+import { apiError } from '@/lib/api-response'
+import { parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate'
+import { z } from 'zod'
 
 type DateFilter = { gte?: Date; lte?: Date }
 
-function buildDateFilter(startDate: string | null, endDate: string | null): DateFilter {
+const reportTypeSchema = z.enum([
+  'overview',
+  'revenue',
+  'churn',
+  'subscriptions',
+  'transactions',
+])
+
+const adminReportsQuerySchema = z.object({
+  type: reportTypeSchema.default('overview'),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+})
+
+function parseDateParam(value: string | null | undefined): Date | null {
+  if (!value) return null
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? null : parsed
+}
+
+function buildDateFilter(
+  startDate: string | null | undefined,
+  endDate: string | null | undefined,
+): DateFilter {
   const dateFilter: DateFilter = {}
-  if (startDate) dateFilter.gte = new Date(startDate)
-  if (endDate) dateFilter.lte = new Date(endDate)
+  const parsedStartDate = parseDateParam(startDate)
+  const parsedEndDate = parseDateParam(endDate)
+  if (parsedStartDate) dateFilter.gte = parsedStartDate
+  if (parsedEndDate) dateFilter.lte = parsedEndDate
   return dateFilter
 }
 
@@ -17,12 +45,25 @@ export async function GET(req: NextRequest) {
   try {
     await assertAdminAccess(requestId)
 
-    const { searchParams } = new URL(req.url)
-    const reportType = searchParams.get('type') || 'overview'
-    const startDate = searchParams.get('startDate')
-    const endDate = searchParams.get('endDate')
+    const {
+      type: reportType,
+      startDate,
+      endDate,
+    } = parseQuery(req.nextUrl.searchParams, adminReportsQuerySchema)
+
+    if (startDate && !parseDateParam(startDate)) {
+      return apiError('BAD_REQUEST', 'Invalid startDate', 400, { requestId })
+    }
+
+    if (endDate && !parseDateParam(endDate)) {
+      return apiError('BAD_REQUEST', 'Invalid endDate', 400, { requestId })
+    }
 
     const dateFilter = buildDateFilter(startDate, endDate)
+
+    if (dateFilter.gte && dateFilter.lte && dateFilter.gte > dateFilter.lte) {
+      return apiError('BAD_REQUEST', 'startDate must be before endDate', 400, { requestId })
+    }
 
     switch (reportType) {
       case 'overview':
@@ -36,14 +77,29 @@ export async function GET(req: NextRequest) {
       case 'transactions':
         return await generateTransactionReport(dateFilter)
       default:
-        return NextResponse.json(
-          { error: 'Invalid report type', code: 'INVALID_REPORT_TYPE', requestId },
-          { status: 400 }
-        )
+        return apiError('BAD_REQUEST', 'Invalid report type', 400, { requestId })
     }
   } catch (error) {
+    const validationResponse = toValidationErrorResponse(error)
+    if (validationResponse.status !== 500) return validationResponse
+
+    if (
+      error &&
+      typeof error === 'object' &&
+      'status' in error &&
+      'code' in error &&
+      'message' in error
+    ) {
+      const status = Number((error as { status: unknown }).status)
+      const code = String((error as { code: unknown }).code)
+      const message = String((error as { message: unknown }).message)
+      if (Number.isFinite(status) && status >= 400 && status <= 599) {
+        return apiError(code, message, status, { requestId })
+      }
+    }
+
     logger.error('[Admin Reports] Failed to generate report', { error })
-    return toErrorResponse(error)
+    return apiError('INTERNAL_ERROR', 'Internal server error', 500, { requestId })
   }
 }
 
@@ -93,10 +149,15 @@ async function generateOverviewReport(dateFilter: DateFilter) {
     }),
   ])
 
-  const mrr = await calculateMRR()
-  const arr = await calculateARR()
-  const arpu = await calculateARPU()
-  const ltv = await calculateLTV()
+  // Run independent calculations in parallel, then derive dependent values
+  const [mrr, arpu] = await Promise.all([
+    calculateMRR(),
+    calculateARPU(),
+  ])
+
+  // ARR = MRR * 12, LTV = ARPU / churnRate (0.05)
+  const arr = mrr * 12
+  const ltv = arpu / 0.05
 
   return NextResponse.json({
     overview: {
@@ -124,34 +185,96 @@ async function generateRevenueReport(dateFilter: DateFilter) {
     orderBy: { createdAt: 'asc' },
   })
 
-  const revenueByPlan = await prisma.$queryRaw`
-    SELECT 
-      s.plan,
-      COUNT(DISTINCT s.userId) as unique_users,
-      SUM(pt.amount) as total_revenue
-    FROM "Subscription" s
-    INNER JOIN "PaymentTransaction" pt ON pt.userId = s.userId
-    WHERE pt.status = 'COMPLETED' 
-      AND pt.createdAt >= ${dateFilter.gte || new Date(0)}
-      AND pt.createdAt <= ${dateFilter.lte || new Date()}
-    GROUP BY s.plan
-  `
+  // Security: Use type-safe Prisma queries instead of raw SQL
+  const revenueByPlan = await prisma.subscription.groupBy({
+    by: ['plan'],
+    where: {
+      user: {
+        paymentTransactions: {
+          some: {
+            status: 'COMPLETED',
+            createdAt: dateFilter,
+          }
+        }
+      }
+    },
+    _count: {
+      userId: true,
+    },
+  })
 
-  const revenueByMonth = await prisma.$queryRaw`
-    SELECT 
-      DATE_TRUNC('month', createdAt) as month,
-      SUM(amount) as revenue
-    FROM "PaymentTransaction"
-    WHERE status = 'COMPLETED'
-      AND createdAt >= ${dateFilter.gte || new Date(0)}
-      AND createdAt <= ${dateFilter.lte || new Date()}
-    GROUP BY DATE_TRUNC('month', createdAt)
-    ORDER BY month
-  `
+  // Get total revenue per plan using aggregations
+  const transactionsForRevenue = await prisma.paymentTransaction.groupBy({
+    by: ['userId'],
+    where: {
+      status: 'COMPLETED',
+      createdAt: dateFilter,
+    },
+    _sum: {
+      amount: true,
+    },
+  })
+
+  // Map subscriptions to their plans
+  const subscriptions = await prisma.subscription.findMany({
+    where: {
+      user: {
+        paymentTransactions: {
+          some: {
+            status: 'COMPLETED',
+            createdAt: dateFilter,
+          }
+        }
+      }
+    },
+    select: {
+      plan: true,
+      userId: true,
+    },
+  })
+
+  // Calculate revenue by plan
+  const planRevenueMap = new Map<string, number>()
+  subscriptions.forEach(sub => {
+    const userRevenue = transactionsForRevenue.find(t => t.userId === sub.userId)?._sum.amount || 0
+    planRevenueMap.set(sub.plan, (planRevenueMap.get(sub.plan) || 0) + Number(userRevenue))
+  })
+
+  const revenueByPlanFormatted = Array.from(planRevenueMap.entries()).map(([plan, revenue]) => ({
+    plan,
+    unique_users: revenueByPlan.find(r => r.plan === plan)?._count.userId || 0,
+    total_revenue: revenue,
+  }))
+
+  // Revenue by month using Prisma aggregate with date extraction
+  // Group by month manually since Prisma doesn't support DATE_TRUNC
+  const allTransactions = await prisma.paymentTransaction.findMany({
+    where: {
+      status: 'COMPLETED',
+      createdAt: dateFilter,
+    },
+    select: {
+      createdAt: true,
+      amount: true,
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  // Group by month in JavaScript (safe - no raw SQL)
+  const monthlyRevenue = new Map<string, number>()
+  for (const tx of allTransactions) {
+    const monthKey = `${tx.createdAt.getFullYear()}-${String(tx.createdAt.getMonth() + 1).padStart(2, '0')}`
+    monthlyRevenue.set(monthKey, (monthlyRevenue.get(monthKey) || 0) + Number(tx.amount))
+  }
+
+  const revenueByMonth = Array.from(monthlyRevenue.entries()).map(([month, revenue]) => ({
+    month: new Date(month + '-01'),
+    revenue,
+  }))
 
   return NextResponse.json({
     transactions,
-    revenueByPlan,
+    revenueByPlan: revenueByPlanFormatted,
     revenueByMonth,
   })
 }

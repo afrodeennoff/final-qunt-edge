@@ -107,7 +107,7 @@ export function WelcomeEmailPreview() {
             </div>
 
             {/* Preview */}
-            <div className="relative bg-gray-50 overflow-hidden">
+            <div className="relative bg-muted overflow-hidden">
               {isLoading ? (
                 <div className="flex items-center justify-center h-full">
                   <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />

@@ -56,8 +56,8 @@ export function ImportanceFilter({ value, onValueChange, className }: Importance
       return distance === 0 ? "text-semantic-warning" : "text-semantic-warning"
     }
     
-    // Default gray
-    return "text-gray-300"
+    // Default muted
+    return "text-muted-foreground"
   }
 
   const getStarFill = (level: ImpactLevel) => {

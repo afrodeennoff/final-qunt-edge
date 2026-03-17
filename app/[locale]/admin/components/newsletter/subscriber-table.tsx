@@ -12,12 +12,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Newsletter } from "@/prisma/generated/prisma"
 import { deleteSubscriber, getSubscribers, importSubscribers, sendTestNewsletter } from "@/app/[locale]/admin/actions/newsletter"
 import { useNewsletter } from "./newsletter-context"
-import { Brain, Loader2, Filter, Eye, X } from "lucide-react"
+import { Brain, Loader2, Filter, Eye } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
@@ -217,9 +214,9 @@ export function SubscriberTable() {
           <div className="flex items-center gap-2">
             <span>Subscribers</span>
             {loading ? (
-              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-gray-900" />
+              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary" />
             ) : (
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 ({filteredSubscribers.length}{showOnlyTraders ? ` of ${subscribers.length}` : ''})
               </span>
             )}
@@ -291,22 +288,22 @@ export function SubscriberTable() {
                   </DialogHeader>
                   <div className="space-y-4">
                     {/* Summary */}
-                    <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="grid grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-semantic-info">{lastInferenceResults.summary.totalProcessed}</div>
-                        <div className="text-sm text-gray-600">Processed</div>
+                        <div className="text-sm text-muted-foreground">Processed</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-white">{lastInferenceResults.summary.totalUpdated}</div>
-                        <div className="text-sm text-gray-600">Updated</div>
+                        <div className="text-2xl font-bold text-foreground">{lastInferenceResults.summary.totalUpdated}</div>
+                        <div className="text-sm text-muted-foreground">Updated</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-semantic-warning">{lastInferenceResults.summary.totalSkipped}</div>
-                        <div className="text-sm text-gray-600">Skipped</div>
+                        <div className="text-sm text-muted-foreground">Skipped</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-semantic-error">{lastInferenceResults.summary.totalErrors}</div>
-                        <div className="text-sm text-gray-600">Errors</div>
+                        <div className="text-sm text-muted-foreground">Errors</div>
                       </div>
                     </div>
 
@@ -320,12 +317,12 @@ export function SubscriberTable() {
                               <div className="flex-1">
                                 <div className="font-medium">{result.email}</div>
                                 {result.status === 'updated' && (
-                                  <div className="text-sm text-gray-600">
+                                  <div className="text-sm text-muted-foreground">
                                     {result.oldName} → {result.newName}
                                   </div>
                                 )}
                                 {result.status === 'skipped' && (
-                                  <div className="text-sm text-gray-600">
+                                  <div className="text-sm text-muted-foreground">
                                     Inferred: {result.inferredName} (Confidence: {result.confidence})
                                   </div>
                                 )}
@@ -374,10 +371,10 @@ export function SubscriberTable() {
       <CardContent>
         {loading ? (
           <div className="flex items-center justify-center py-6">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         ) : filteredSubscribers.length === 0 ? (
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-6 text-muted-foreground">
             {showOnlyTraders 
               ? t('newsletter.admin.filter.noTradersFound')
               : "No subscribers found. Import some using CSV or add them manually."
@@ -418,12 +415,12 @@ export function SubscriberTable() {
                           {subscriber.firstName} {subscriber.lastName || ''}
                         </span>
                       ) : (
-                        <span className="text-sm text-gray-400 italic">{t('newsletter.admin.noName')}</span>
+                        <span className="text-sm text-muted-foreground italic">{t('newsletter.admin.noName')}</span>
                       )}
                     </TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${
-                        subscriber.isActive ? "bg-white/10 text-white" : "bg-semantic-error-bg text-semantic-error"
+                        subscriber.isActive ? "bg-accent/70 text-foreground" : "bg-semantic-error-bg text-semantic-error"
                       }`}>
                         {subscriber.isActive ? "Active" : "Inactive"}
                       </span>

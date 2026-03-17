@@ -46,8 +46,8 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
     if (value < 20) return 'bg-semantic-error-bg'
     if (value < 40) return 'bg-semantic-warning-bg'
     if (value < 60) return 'bg-semantic-warning-bg'
-    if (value < 80) return 'bg-white/80'
-    return 'bg-white'
+    if (value < 80) return 'bg-foreground/80'
+    return 'bg-foreground'
   }
 
   const handleDeleteClick = (e: React.MouseEvent, date: Date) => {

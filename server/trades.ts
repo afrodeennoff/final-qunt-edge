@@ -2,7 +2,7 @@
 
 import { Trade as PrismaTrade, Prisma } from '@/prisma/generated/prisma'
 import { Trade as NormalizedTrade } from '@/lib/data-types'
-import { revalidateTag, updateTag, unstable_cache } from 'next/cache'
+import { updateTag, unstable_cache } from 'next/cache'
 import { getDatabaseUserId, getUserId } from './auth'
 import { isAfter } from 'date-fns'
 import { prisma } from '@/lib/prisma'
@@ -172,12 +172,11 @@ function generateTradeUUID(trade: Partial<PrismaTrade> | any): string {
   return uuidv5(tradeSignature, TRADE_NAMESPACE)
 }
 
-export async function saveTradesAction(
+async function saveTradesForResolvedUser(
   data: any[],
-  options?: { userId?: string }
+  userId: string,
+  rawUserId: string
 ): Promise<TradeResponse> {
-  const rawUserId = options?.userId ?? await getUserId()
-  const userId = await resolveWritableUserId(rawUserId)
   logger.info(`[saveTrades] Saving trades`, { count: data.length, userId, rawUserId })
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -303,6 +302,23 @@ export async function saveTradesAction(
   }
 }
 
+export async function saveTradesAction(
+  data: any[],
+  _options?: { userId?: string }
+): Promise<TradeResponse> {
+  const rawUserId = await getUserId()
+  const userId = await resolveWritableUserId(rawUserId)
+  return saveTradesForResolvedUser(data, userId, rawUserId)
+}
+
+export async function saveTradesForUserAction(
+  data: any[],
+  rawUserId: string
+): Promise<TradeResponse> {
+  const userId = await resolveWritableUserId(rawUserId)
+  return saveTradesForResolvedUser(data, userId, rawUserId)
+}
+
 // Pre-computed statistics type
 export interface PrecomputedStats {
   cumulativeFees: number;
@@ -412,8 +428,18 @@ export async function getTradesAction(
   forceRefresh: boolean = false,
   includeStats: boolean = true
 ): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
-  const currentUserId = await resolveWritableUserId(userId || await getUserId())
-  if (!currentUserId) throw new Error('User not found')
+  const authenticatedUserId = await getDatabaseUserId()
+  if (!authenticatedUserId) throw new Error('User not found')
+
+  let currentUserId = authenticatedUserId
+
+  if (userId) {
+    const resolvedUserId = await resolveWritableUserId(userId)
+    if (resolvedUserId !== authenticatedUserId) {
+      throw new Error('Forbidden')
+    }
+    currentUserId = resolvedUserId
+  }
 
   const tag = `trades-${currentUserId}`
 
@@ -534,6 +560,14 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
   if (!userId) return 0
 
   try {
+    const ownedTrades = await prisma.trade.findMany({
+      where: { id: { in: tradesIds }, userId },
+      select: { id: true }
+    })
+    if (ownedTrades.length !== tradesIds.length) {
+      throw new Error('Forbidden')
+    }
+
     if (update.entryDateOffset || update.closeDateOffset || update.instrumentTrim || update.instrumentPrefix || update.instrumentSuffix) {
       const trades = await prisma.trade.findMany({
         where: { id: { in: tradesIds }, userId },
@@ -589,14 +623,17 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
       if (standardUpdates.quantity !== undefined) data.quantity = new Prisma.Decimal(standardUpdates.quantity)
       if (standardUpdates.timeInPosition !== undefined) data.timeInPosition = standardUpdates.timeInPosition !== null ? new Prisma.Decimal(standardUpdates.timeInPosition) : null
 
-      await prisma.trade.updateMany({
+      const updated = await prisma.trade.updateMany({
         where: { id: { in: tradesIds }, userId },
         data,
       })
+      if (updated.count !== tradesIds.length) {
+        throw new Error('Forbidden')
+      }
     }
 
     await invalidateTradeRelatedCaches(userId)
-    return tradesIds.length
+    return ownedTrades.length
   } catch (error) {
     logger.error('[updateTrades] Error', { error })
     throw error
@@ -641,18 +678,13 @@ export async function updateTradeVideoUrlAction(tradeId: string, videoUrl: strin
 
 export async function addTagToTrade(tradeId: string, tag: string) {
   const userId = await getDatabaseUserId()
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
   try {
-    const trade = await prisma.trade.findFirst({
-      where: { id: tradeId, userId },
-      select: { tags: true }
-    })
-
-    if (!trade) {
-      throw new Error('Trade not found')
-    }
-
+    // Use update instead of updateMany to get the updated record directly
     const updatedTrade = await prisma.trade.update({
-      where: { id: tradeId },
+      where: { id: tradeId, userId },
       data: {
         tags: {
           push: tag.trim()
@@ -670,7 +702,11 @@ export async function addTagToTrade(tradeId: string, tag: string) {
 
 export async function removeTagFromTrade(tradeId: string, tagToRemove: string) {
   const userId = await getDatabaseUserId()
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
   try {
+    // First get current tags to filter
     const trade = await prisma.trade.findFirst({
       where: { id: tradeId, userId },
       select: { tags: true }
@@ -680,8 +716,9 @@ export async function removeTagFromTrade(tradeId: string, tagToRemove: string) {
       throw new Error('Trade not found')
     }
 
+    // Use update instead of updateMany to return the updated record directly
     const updatedTrade = await prisma.trade.update({
-      where: { id: tradeId },
+      where: { id: tradeId, userId },
       data: {
         tags: {
           set: trade.tags.filter(tag => tag !== tagToRemove)
@@ -699,32 +736,21 @@ export async function removeTagFromTrade(tradeId: string, tagToRemove: string) {
 
 export async function deleteTagFromAllTrades(tag: string) {
   const userId = await getDatabaseUserId()
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
   try {
-    const trades = await prisma.trade.findMany({
-      where: {
-        userId,
-        tags: {
-          has: tag
-        }
-      }
-    })
-
-    await Promise.all(
-      trades.map(trade =>
-        prisma.trade.update({
-          where: { id: trade.id },
-          data: {
-            tags: {
-              set: trade.tags.filter(t => t !== tag)
-            }
-          }
-        })
-      )
-    )
+    // Use single executeRaw to remove tag from all trades that have it
+    // This eliminates the N+1 query pattern
+    const result = await prisma.$executeRaw`
+      UPDATE "public"."Trade" 
+      SET tags = tags - ${tag}
+      WHERE "userId" = ${userId} 
+      AND tags @> ${JSON.stringify([tag])}
+    `
 
     await invalidateTradeRelatedCaches(userId)
-    revalidateTag(userId, { expire: 0 })
-    return { success: true }
+    return { success: true, tradesUpdated: Number(result) }
   } catch (error) {
     console.error('Failed to delete tag:', error)
     throw error
@@ -737,6 +763,9 @@ export async function updateTradeImage(
   field: 'imageBase64' | 'imageBase64Second' = 'imageBase64'
 ) {
   const userId = await getDatabaseUserId()
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
   try {
     const trades = await prisma.trade.findMany({
       where: { id: { in: tradeIds }, userId }
@@ -763,47 +792,30 @@ export async function updateTradeImage(
 
 export async function addTagsToTradesForDay(date: string, tags: string[]) {
   const userId = await getDatabaseUserId()
+  if (!userId) {
+    throw new Error('Unauthorized')
+  }
   try {
     const targetDate = new Date(date + 'T00:00:00Z')
     const nextDay = new Date(targetDate)
     nextDay.setUTCDate(nextDay.getUTCDate() + 1)
     const nextDayStr = nextDay.toISOString().split('T')[0]
 
-    const trades = await prisma.trade.findMany({
-      where: {
-        userId,
-        OR: [
-          {
-            entryDate: {
-              gte: date,
-              lt: nextDayStr
-            }
-          },
-          {
-            closeDate: {
-              gte: date,
-              lt: nextDayStr
-            }
-          }
-        ]
-      }
-    })
-
-    await Promise.all(
-      trades.map(trade =>
-        prisma.trade.update({
-          where: { id: trade.id },
-          data: {
-            tags: {
-              set: Array.from(new Set([...trade.tags, ...tags]))
-            }
-          }
-        })
+    // Use single executeRaw to add tags to all trades for the day
+    // This eliminates the N+1 query pattern by using bulk array concatenation
+    const result = await prisma.$executeRaw`
+      UPDATE "public"."Trade" 
+      SET tags = tags || ${JSON.stringify(tags)}::jsonb
+      WHERE "userId" = ${userId} 
+      AND (
+        ("entryDate" >= ${date} AND "entryDate" < ${nextDayStr})
+        OR
+        ("closeDate" >= ${date} AND "closeDate" < ${nextDayStr})
       )
-    )
+    `
 
     await invalidateTradeRelatedCaches(userId)
-    return { success: true, tradesUpdated: trades.length }
+    return { success: true, tradesUpdated: Number(result) }
   } catch (error) {
     console.error('Failed to add tags to trades for day:', error)
     throw error

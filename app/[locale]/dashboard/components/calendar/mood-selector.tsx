@@ -38,10 +38,15 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
       const storedMoodData = localStorage.getItem(STORAGE_KEY)
       
       if (storedMoodData) {
-        const storedMood: StoredMood = JSON.parse(storedMoodData)
-        if (storedMood.date === today) {
-          setSelectedMood(storedMood.mood)
-          return
+        try {
+          const storedMood: StoredMood = JSON.parse(storedMoodData)
+          if (storedMood.date === today) {
+            setSelectedMood(storedMood.mood)
+            return
+          }
+        } catch (error) {
+          // Invalid JSON in localStorage, clear and continue
+          localStorage.removeItem(STORAGE_KEY)
         }
       }
 
@@ -98,7 +103,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
       switch (moodType) {
         case 'bad': return 'text-semantic-error'
         case 'okay': return 'text-semantic-warning'
-        case 'great': return 'text-white'
+        case 'great': return 'text-foreground'
       }
     }
     return ''
@@ -153,7 +158,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`h-6 w-6 p-0 hover:text-white ${getMoodButtonStyle('great')}`}
+                  className={`h-6 w-6 p-0 hover:text-foreground ${getMoodButtonStyle('great')}`}
                   onClick={() => handleMoodSelect('great')}
                   disabled={isLoading !== null}
                 >

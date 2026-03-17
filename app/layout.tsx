@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { Cormorant_Garamond, Geist, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
@@ -7,6 +8,111 @@ import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
 import { getUiVariant } from "@/lib/ui-v2";
 
 const siteOrigin = "https://qunt-edge.vercel.app";
+
+const fontSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const fontSerif = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const fontMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const siteMetadata: Metadata = {
+  metadataBase: new URL(siteOrigin),
+  title: {
+    default: "Qunt Edge",
+    template: "%s | Qunt Edge",
+  },
+  description:
+    "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+  keywords: [
+    "trading analytics",
+    "real-time trades",
+    "trading dashboard",
+    "portfolio insight",
+    "Qunt Edge",
+  ],
+  alternates: {
+    canonical: siteOrigin,
+    languages: {
+      "en-US": siteOrigin,
+      "fr-FR": `${siteOrigin}/fr`,
+    },
+  },
+  openGraph: {
+    title: "Qunt Edge",
+    description:
+      "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+    url: siteOrigin,
+    siteName: "Qunt Edge",
+    type: "website",
+    locale: "en-US",
+    images: [
+      {
+        url: `${siteOrigin}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Qunt Edge Open Graph Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Qunt Edge",
+    description:
+      "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+    images: [`${siteOrigin}/twitter-image.png`],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "black" },
+      {
+        rel: "android-chrome",
+        sizes: "192x192",
+        url: "/android-chrome-192x192.png",
+      },
+      {
+        rel: "android-chrome",
+        sizes: "512x512",
+        url: "/android-chrome-512x512.png",
+      },
+    ],
+  },
+  manifest: "/manifest.json",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  other: { google: "notranslate" },
+  authors: [{ name: "Qunt Edge Team" }],
+  creator: "Qunt Edge",
+  publisher: "Qunt Edge",
+  formatDetection: { email: false, address: false, telephone: false },
+};
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -21,85 +127,7 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Qunt Edge",
-    description: "Next generation trading dashboard",
-    metadataBase: new URL(siteOrigin),
-    alternates: {
-      canonical: siteOrigin,
-      languages: {
-        "en-US": siteOrigin,
-        "fr-FR": `${siteOrigin}/fr`,
-      },
-    },
-    // ---------- OPEN GRAPH ----------
-    openGraph: {
-      title: "Qunt Edge",
-      description:
-        "Qunt Edge is a next generation trading dashboard that provides real-time insights and analytics for traders.",
-      images: [
-        {
-          url: "/opengraph-image.png",
-          width: 1200,
-          height: 630,
-          alt: "Qunt Edge Open Graph Image",
-        },
-      ],
-    },
-
-    // ---------- TWITTER ----------
-    twitter: {
-      card: "summary_large_image",
-      title: "Qunt Edge",
-      description: "Next generation trading dashboard",
-      images: ["/twitter-image.png"],
-    },
-
-    // ---------- ICONS ----------
-    icons: {
-      icon: [
-        { url: "/favicon.ico", sizes: "any" },
-        { url: "/icon.png", type: "image/png", sizes: "32x32" },
-      ],
-      apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-      other: [
-        { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "black" },
-        {
-          rel: "android-chrome",
-          sizes: "192x192",
-          url: "/android-chrome-192x192.png",
-        },
-        {
-          rel: "android-chrome",
-          sizes: "512x512",
-          url: "/android-chrome-512x512.png",
-        },
-      ],
-    },
-
-    // ---------- PWA ----------
-    manifest: "/manifest.json",
-
-    // ---------- ROBOTS ----------
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-
-    // ---------- OTHER ----------
-    other: { google: "notranslate" },
-    authors: [{ name: "TIMON" }],
-    creator: "TIMON",
-    publisher: "TIMON",
-    formatDetection: { email: false, address: false, telephone: false },
-  };
+  return siteMetadata;
 }
 
 export default async function RootLayout({
@@ -107,7 +135,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const requestNonce = (await headers()).get("x-nonce");
+  const cspNonceEnabled = process.env.ENABLE_CSP_NONCE === "true";
+  const requestNonce = cspNonceEnabled ? (await headers()).get("x-nonce") : null;
   const nonce = requestNonce && requestNonce.trim().length > 0 ? requestNonce : null;
   const isProduction = process.env.NODE_ENV === "production";
   const isVercelRuntime = process.env.VERCEL === "1";
@@ -117,17 +146,11 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className="bg-background"
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background dark`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
-      style={{
-        ["--theme-intensity" as string]: "100%",
-        ["--font-geist" as string]: "system-ui, -apple-system, Segoe UI, sans-serif",
-        ["--font-inter" as string]: "system-ui, -apple-system, Segoe UI, sans-serif",
-        ["--font-manrope" as string]: "system-ui, -apple-system, Segoe UI, sans-serif",
-        ["--font-ibm-mono" as string]: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-      }}
+      style={{ "--theme-intensity": "100%" } as React.CSSProperties}
     >
       <head>
         {/* Resource Hinting for Performance */}
@@ -145,37 +168,78 @@ export default async function RootLayout({
         <meta name="robots" content="index, follow" />
 
         {/* Apply stored theme before paint to avoid blank flash */}
-        {nonce ? (
-          <script
-            id="init-theme"
-            nonce={nonce}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: `
+        <script
+          id="init-theme"
+          nonce={nonce ?? undefined}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
             (function() {
               try {
                 var root = document.documentElement;
-                var savedTheme = localStorage.getItem('theme');
-                var resolvedTheme = savedTheme === 'dark'
-                  ? 'dark'
-                  : savedTheme === 'light'
-                    ? 'light'
-                    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                var pathname = window.location.pathname || '/';
+                var isDashboardRoute = /^\\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\\/dashboard(?:\\/|$)/i.test(pathname);
+                var dashboardThemeClasses = [
+                  'dashboard-theme-blue',
+                  'dashboard-theme-violet',
+                  'dashboard-theme-emerald',
+                  'dashboard-theme-amber',
+                  'dashboard-theme-rose'
+                ];
 
+                var removeDashboardThemes = function() {
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.removeAttribute('data-dashboard-theme');
+                };
+
+                var clampIntensity = function(value) {
+                  var parsed = Number(value);
+                  return Number.isFinite(parsed)
+                    ? Math.min(100, Math.max(90, Math.round(parsed)))
+                    : 100;
+                };
+
+                var resolveTheme = function(savedTheme) {
+                  if (savedTheme === 'dark' || savedTheme === 'light') {
+                    return savedTheme;
+                  }
+                  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                };
+
+                var resolveDashboardTheme = function(value) {
+                  return value === 'violet' || value === 'emerald' || value === 'amber' || value === 'rose' ? value : 'blue';
+                };
+
+                if (!isDashboardRoute) {
+                  root.classList.remove('light', 'dark');
+                  root.classList.add('dark');
+                  root.style.setProperty('--theme-intensity', '100%');
+                  removeDashboardThemes();
+                  root.removeAttribute('data-theme');
+                  return;
+                }
+
+                var resolvedTheme = resolveTheme(localStorage.getItem('theme'));
                 root.classList.remove('light', 'dark');
                 root.classList.add(resolvedTheme);
 
-                var savedIntensity = localStorage.getItem('intensity');
-                var intensity = savedIntensity ? Number(savedIntensity) : 100;
+                var intensity = clampIntensity(localStorage.getItem('intensity'));
                 root.style.setProperty('--theme-intensity', intensity + '%');
+
+                removeDashboardThemes();
+                var savedDashboardTheme = resolveDashboardTheme(localStorage.getItem('dashboard-theme'));
+                if (savedDashboardTheme !== 'blue') {
+                  root.classList.add('dashboard-theme-' + savedDashboardTheme);
+                  root.setAttribute('data-dashboard-theme', savedDashboardTheme);
+                }
+                root.removeAttribute('data-theme');
               } catch (e) {
                 // Fail silently to avoid blocking render
               }
             })();
           `,
-            }}
-          />
-        ) : null}
+          }}
+        />
 
         {/* PostHog Analytics */}
         {/*{process.env.NODE_ENV === "production" && (
@@ -206,10 +270,18 @@ export default async function RootLayout({
         className="font-sans antialiased text-foreground"
         data-ui-variant={uiVariant}
       >
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
+        >
+          Skip to main content
+        </a>
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        {children}
+        <main id="main-content">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -36,7 +36,7 @@ interface TooltipProps {
   payload?: TooltipPayload[]
 }
 
-export default function TradeDistributionChart({ size = 'medium' }: TradeDistributionProps) {
+export default React.memo(function TradeDistributionChart({ size = 'medium' }: TradeDistributionProps) {
   const { statistics: { nbWin, nbLoss, nbBe, nbTrades } } = useDashboardStats()
   const t = useI18n()
   const hasData = nbTrades > 0
@@ -55,8 +55,8 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
 
     return [
       { name: `WINNING TRADES (${nbWin}/${nbTrades})`, value: winRate, color: 'hsl(var(--chart-1))', count: nbWin, total: nbTrades },
-      { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-5))', count: nbBe, total: nbTrades },
-      { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-6))', count: nbLoss, total: nbTrades },
+      { name: `BREAKEVEN TRADES (${nbBe}/${nbTrades})`, value: beRate, color: 'hsl(var(--chart-3))', count: nbBe, total: nbTrades },
+      { name: `LOSING TRADES (${nbLoss}/${nbTrades})`, value: lossRate, color: 'hsl(var(--chart-4))', count: nbLoss, total: nbTrades },
     ]
   }, [nbWin, nbLoss, nbBe, nbTrades])
 
@@ -79,7 +79,7 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
     return (
       <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
         <div className="flex flex-col mb-1 border-b border-border/55 pb-1">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t('tradeDistribution.tooltip.type')}
           </span>
           <span className="font-black text-foreground text-[11px] uppercase tracking-widest">
@@ -87,10 +87,10 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[8px] uppercase text-muted-foreground/70 font-black tracking-widest">
+          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t('tradeDistribution.tooltip.percentage')}
           </span>
-          <span className={cn('font-black text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground/55')}>
+          <span className={cn('font-black text-sm tabular-nums', data.count > 0 ? 'text-foreground' : 'text-muted-foreground')}>
             {data.value.toFixed(2)}%
           </span>
         </div>
@@ -121,7 +121,7 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      'text-muted-foreground/70 hover:text-foreground transition-colors cursor-help',
+                      'text-muted-foreground hover:text-foreground transition-colors cursor-help',
                       size === 'small' ? 'h-3.5 w-3.5' : 'h-4 w-4'
                     )}
                   />
@@ -161,7 +161,7 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
                     <Cell
                       key={`cell-${index}`}
                       fill={entry.color}
-                      fillOpacity={entry.color === 'hsl(var(--chart-1))' ? 0.95 : 1}
+                      fillOpacity={0.92}
                       className={cn(
                         "transition-all duration-300 ease-in-out hover:fill-opacity-100",
                         entry.color === "hsl(var(--chart-1))" ? "chart-positive-emphasis" : "chart-negative-muted"
@@ -169,10 +169,10 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
                     />
                   ))}
                   <text x="50%" y={pieLayout.cy} textAnchor="middle" dominantBaseline="central">
-                    <tspan x="50%" dy="-0.1em" className="fill-white font-black text-2xl chart-positive-emphasis">
+                    <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl chart-positive-emphasis">
                       {chartData[0].value.toFixed(0)}%
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-white/55 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground text-[10px] uppercase font-black tracking-[0.16em]">
                       WIN RATE
                     </tspan>
                   </text>
@@ -181,12 +181,12 @@ export default function TradeDistributionChart({ size = 'medium' }: TradeDistrib
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
         </div>
       </div>
     </ChartSurface>
-  )
-}
+  );
+})

@@ -243,7 +243,7 @@ function TagsColumnHeader() {
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleClearFilter}>
-              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               {t("widgets.tags.clearFilter")} ({tagFilter.tags.length})
             </DropdownMenuItem>
           </>
@@ -1425,7 +1425,10 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       )}
       <CardContent
         ref={tableViewportRef}
-        className="min-h-0 flex-1 overflow-auto p-0"
+        className="min-h-0 flex-1 overflow-x-auto overflow-y-auto p-0"
+        role="region"
+        aria-label="Trade data table"
+        tabIndex={0}
         onScroll={(event) => {
           const nextScrollTop = event.currentTarget.scrollTop;
           if (scrollRafRef.current !== null) return;

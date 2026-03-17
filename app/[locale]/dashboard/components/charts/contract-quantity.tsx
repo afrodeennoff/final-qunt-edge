@@ -45,7 +45,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function ContractQuantityChart({
+export default React.memo(function ContractQuantityChart({
   size = "medium",
 }: ContractQuantityChartProps) {
   const { formattedTrades: trades } = useDashboardStats();
@@ -81,37 +81,54 @@ export default function ContractQuantityChart({
   const maxTradeCount = Math.max(...chartData.map((data) => data.tradeCount));
   const hasData = chartData.some((data) => data.tradeCount > 0);
 
-  const getColor = (count: number) => {
-    const intensity = Math.max(0.2, count / maxTradeCount);
-    return `hsl(var(--chart-loss) / ${intensity})`;
-  };
+   const getColor = (count: number) => {
+     const intensity = Math.max(0.2, count / maxTradeCount);
+     return `hsl(var(--chart-loss) / ${intensity})`;
+   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-          <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.time")}</span>
-            <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
-          </div>
-          <div className="space-y-1.5">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.totalContracts")}</span>
-              <span className="font-black text-foreground text-[11px] tabular-nums">{data.totalQuantity}</span>
+   // Custom tooltip component - using flexible typing for Recharts payload
+   interface CustomTooltipProps {
+     active?: boolean;
+     payload?: Array<{
+       payload?: {
+         totalQuantity: number;
+         tradeCount: number;
+         hour: number;
+       };
+     }>;
+     label?: string | number;
+   }
+
+   const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+      if (active && payload && payload.length) {
+        const data = payload[0]?.payload;
+        const totalQuantity = typeof data?.totalQuantity === "number" ? data.totalQuantity : 0
+        const tradeCount = typeof data?.tradeCount === "number" ? data.tradeCount : 0
+        const parsedLabel = typeof label === "number" ? label : parseInt(label ?? "0", 10)
+        const hourLabel = Number.isFinite(parsedLabel) ? parsedLabel : 0
+       return (
+         <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
+            <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
+              <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.time")}</span>
+              <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{`${hourLabel}:00 - ${(hourLabel + 1) % 24}:00`}</span>
             </div>
-            <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
-              <span className="text-muted-foreground/70 text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.numberOfTrades")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
-                {data.tradeCount}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+           <div className="space-y-1.5">
+             <div className="flex justify-between items-center">
+               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.totalContracts")}</span>
+               <span className="font-black text-foreground text-[11px] tabular-nums">{totalQuantity}</span>
+             </div>
+             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
+               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.numberOfTrades")}</span>
+               <span className="font-black text-muted-foreground text-[11px]">
+                 {tradeCount}
+               </span>
+             </div>
+           </div>
+         </div>
+       );
+     }
+     return null;
+   };
 
   return (
     <ChartSurface>
@@ -136,7 +153,7 @@ export default function ContractQuantityChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground/70 hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -179,7 +196,7 @@ export default function ContractQuantityChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value: number) => `${value}h`}
                   ticks={
@@ -195,14 +212,21 @@ export default function ContractQuantityChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value: number) => value.toFixed(0)}
                 />
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.35)' }}
-                />
+                 <Tooltip
+                    content={({ active, payload, label }) => (
+                      <CustomTooltip
+                        active={active}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        payload={payload as any}
+                        label={label}
+                      />
+                    )}
+                    cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+                  />
                 <Bar
                   dataKey="totalQuantity"
                   radius={[2, 2, 2, 2]}
@@ -212,10 +236,10 @@ export default function ContractQuantityChart({
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill="hsl(var(--foreground))"
-                      fillOpacity={0.4}
-                      stroke="hsl(var(--foreground))"
-                      strokeOpacity={0.2}
+                      fill="hsl(var(--chart-3))"
+                      fillOpacity={entry.tradeCount > 0 ? 0.92 : 0.5}
+                      stroke="hsl(var(--chart-axis))"
+                      strokeOpacity={0.55}
                       strokeWidth={1}
                       className="hover:fill-opacity-100 transition-all duration-300"
                     />
@@ -224,7 +248,7 @@ export default function ContractQuantityChart({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-fg-muted">
+            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
               {t("widgets.emptyState") ?? "No trades yet."}
             </div>
           )}
@@ -232,4 +256,4 @@ export default function ContractQuantityChart({
       </div>
     </ChartSurface>
   );
-}
+})

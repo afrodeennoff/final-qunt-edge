@@ -30,7 +30,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const isInteractive = clickable || typeof onClick === "function"
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (clickable && (e.key === "Enter" || e.key === " ")) {
+      if (isInteractive && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault()
         onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>)
       }
@@ -39,14 +39,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        role={clickable ? "button" : undefined}
-        tabIndex={clickable ? 0 : undefined}
+        role={isInteractive ? "button" : undefined}
+        tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "relative rounded-xl border bg-card text-card-foreground shadow-sm",
+          "relative rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm",
           {
             "border-border bg-card": variant === "default",
-            "border-border/70 bg-white/5 backdrop-blur-md": variant === "glass",
+            "border-border-subtle bg-secondary/22 backdrop-blur-md": variant === "glass",
             "border-border bg-card shadow-md": variant === "elevated",
             "border-2 border-border bg-transparent shadow-none": variant === "outlined",
             "border-0 bg-transparent shadow-none": variant === "flat",
@@ -55,9 +55,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           },
           {
             "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md": hover,
-            "cursor-pointer": clickable,
+            "cursor-pointer": isInteractive,
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2":
-              clickable,
+              isInteractive,
           },
           {
             "text-sm": size === "sm",
@@ -70,13 +70,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {status && (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-2 py-0.5 backdrop-blur-sm">
+          <div className="absolute right-[var(--space-3)] top-[var(--space-3)] z-20 flex items-center gap-[var(--space-2)] rounded-full border border-border-muted bg-background/80 px-[var(--space-2)] py-[var(--space-1)] backdrop-blur-sm">
             <div className={cn(
               "status-dot",
-              status === "live" && "bg-white",
-              status === "synced" && "bg-zinc-300",
-              status === "idle" && "bg-slate-500",
-              status === "error" && "bg-semantic-error-bg"
+              status === "live" && "status-dot-live",
+              status === "synced" && "status-dot-synced",
+              status === "idle" && "status-dot-idle",
+              status === "error" && "status-dot-error"
             )} />
             <span className="text-[10px] font-semibold uppercase leading-none tracking-widest text-muted-foreground">
               {status}
@@ -85,7 +85,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
 
         {variant === "matte" && (
-          <div className="absolute inset-0 pointer-events-none border border-white/[0.03] rounded-xl" />
+          <div className="absolute inset-0 pointer-events-none border border-border/40 rounded-[var(--radius)]" />
         )}
 
         <div className="relative z-10">
@@ -106,18 +106,18 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, size = "md", statusDot, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        "relative flex flex-col space-y-1.5",
-        {
-          "p-4": size === "sm",
-          "p-6": size === "md",
-          "p-8": size === "lg",
-        },
-        className
-      )}
+        className={cn(
+          "relative flex flex-col space-y-[var(--space-2)]",
+          {
+            "p-[var(--space-4)]": size === "sm",
+            "p-[var(--space-6)]": size === "md",
+            "p-[var(--space-8)]": size === "lg",
+          },
+          className
+        )}
       {...props}
     >
-      {statusDot ? <div className="absolute right-3 top-3">{statusDot}</div> : null}
+      {statusDot ? <div className="absolute right-[var(--space-3)] top-[var(--space-3)]">{statusDot}</div> : null}
       {children}
     </div>
   )
@@ -195,9 +195,9 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
       ref={ref}
       className={cn(
         {
-          "p-4 pt-0": size === "sm",
-          "p-6 pt-0": size === "md",
-          "p-8 pt-0": size === "lg",
+          "p-[var(--space-4)] pt-0": size === "sm",
+          "p-[var(--space-6)] pt-0": size === "md",
+          "p-[var(--space-8)] pt-0": size === "lg",
         },
         className
       )}
@@ -218,9 +218,9 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
       className={cn(
         "flex items-center",
         {
-          "p-4 pt-0": size === "sm",
-          "p-6 pt-0": size === "md",
-          "p-8 pt-0": size === "lg",
+          "p-[var(--space-4)] pt-0": size === "sm",
+          "p-[var(--space-6)] pt-0": size === "md",
+          "p-[var(--space-8)] pt-0": size === "lg",
         },
         className
       )}

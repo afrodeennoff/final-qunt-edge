@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { upsert, verifySecureToken } = vi.hoisted(() => ({
+const { upsert, deleteMany, verifySecureToken } = vi.hoisted(() => ({
   upsert: vi.fn(),
+  deleteMany: vi.fn(),
   verifySecureToken: vi.fn(),
 }))
 
@@ -12,7 +13,7 @@ vi.mock('@/lib/prisma', () => ({
       upsert,
       findMany: vi.fn(),
       count: vi.fn(),
-      deleteMany: vi.fn(),
+      deleteMany,
     },
   },
 }))
@@ -21,7 +22,7 @@ vi.mock('@/lib/api-auth', () => ({
   verifySecureToken,
 }))
 
-import { POST } from '@/app/api/etp/v1/store/route'
+import { DELETE, POST } from '@/app/api/etp/v1/store/route'
 
 describe('/api/etp/v1/store POST', () => {
   beforeEach(() => {
@@ -82,5 +83,59 @@ describe('/api/etp/v1/store POST', () => {
 
     const response = await POST(request)
     expect(response.status).toBe(413)
+    const payload = await response.json()
+    expect(payload).toMatchObject({
+      error: {
+        code: 'PAYLOAD_TOO_LARGE',
+        message: 'Request payload is too large',
+      },
+    })
+  })
+})
+
+describe('/api/etp/v1/store DELETE', () => {
+  beforeEach(() => {
+    deleteMany.mockReset()
+    verifySecureToken.mockReset()
+    verifySecureToken.mockResolvedValue({ id: 'user_1' })
+    deleteMany.mockResolvedValue({ count: 1 })
+  })
+
+  it('deletes orders belonging to the authenticated user', async () => {
+    const request = {
+      method: 'DELETE',
+      nextUrl: new URL('http://localhost/api/etp/v1/store?accountNumber=ACC-1'),
+      headers: new Headers({ authorization: 'Bearer token' }),
+    } as unknown as NextRequest
+
+    const response = await DELETE(request)
+
+    expect(response.status).toBe(200)
+    expect(deleteMany).toHaveBeenCalledWith({
+      where: {
+        userId: 'user_1'
+      }
+    })
+  })
+
+  it('rejects unauthorized delete calls', async () => {
+    verifySecureToken.mockResolvedValue(null)
+    const request = {
+      method: 'DELETE',
+      nextUrl: new URL('http://localhost/api/etp/v1/store?accountNumber=ACC-1'),
+      headers: new Headers({ authorization: 'Bearer token' }),
+    } as unknown as NextRequest
+
+    const response = await DELETE(request)
+
+    expect(response.status).toBe(401)
+    const payload = await response.json()
+    expect(payload).toEqual({
+      error: {
+        code: 'UNAUTHORIZED',
+        message: 'Unauthorized',
+      },
+    })
+    expect(deleteMany).not.toHaveBeenCalled()
   })
 })

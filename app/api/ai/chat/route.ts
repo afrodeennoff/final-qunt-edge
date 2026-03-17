@@ -1,4 +1,4 @@
-import { streamText, stepCountIs, convertToModelMessages } from "ai";
+import { streamText, stepCountIs, convertToModelMessages, type ToolSet } from "ai";
 import { NextRequest } from "next/server";
 import { z } from "zod/v3";
 import { getFinancialNews } from "./tools/get-financial-news";
@@ -20,7 +20,8 @@ import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetr
 import { apiError } from "@/lib/api-response";
 import { rateLimit } from "@/lib/rate-limit";
 import { guardAiRequest } from "@/lib/ai/route-guard";
-import { enforcePromptSafety, sanitizeUserMessages } from "@/lib/ai/prompt-safety";
+import { SAFETY_PREAMBLE, enforcePromptSafety, sanitizeUserMessages } from "@/lib/ai/prompt-safety";
+import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
 
 export const maxDuration = 60;
 const MAX_CHAT_BODY_BYTES = 1024 * 1024;
@@ -48,13 +49,21 @@ const chatRequestSchema = z.object({
 type ParsedChatRequest = z.infer<typeof chatRequestSchema>;
 type ParsedChatMessage = ParsedChatRequest["messages"][number];
 
-function getErrorCode(error: unknown): string | null {
-  if (!error || typeof error !== 'object') return null
-  if (!('code' in error)) return null
-  const value = (error as { code?: unknown }).code
-  if (value == null) return null
-  return String(value)
-}
+const availableChatTools = {
+  getJournalEntries,
+  getPreviousConversation,
+  getMostTradedInstruments,
+  getLastTradesData,
+  getTradesDetails,
+  getTradesSummary,
+  getCurrentWeekSummary,
+  getPreviousWeekSummary,
+  getWeekSummaryForDate,
+  getFinancialNews,
+  generateEquityChart,
+} satisfies ToolSet;
+
+type ChatToolName = keyof typeof availableChatTools;
 
 function extractLastUserText(messages: ParsedChatMessage[]): string {
   const lastUserMessage = [...messages].reverse().find((message) => message?.role === "user");
@@ -109,69 +118,85 @@ function getToolingPolicy(intent: ChatIntent) {
         "getPreviousWeekSummary",
         "getWeekSummaryForDate",
         "generateEquityChart",
-        "getPerformanceTrends",
-        "getOverallPerformanceMetrics",
-        "getInstrumentPerformance",
-        "getTimeOfDayPerformance",
-      ],
+      ] as ChatToolName[],
     };
   }
 
   if (intent === "news_context") {
     return {
       requiresTool: true,
-      allowedToolNames: ["getFinancialNews"],
+      allowedToolNames: ["getFinancialNews"] as ChatToolName[],
     };
   }
 
   return {
     requiresTool: false,
-    allowedToolNames: null as string[] | null,
+    allowedToolNames: null as ChatToolName[] | null,
   };
 }
 
-function withToolGuards(tools: Record<string, any>, maxCallsPerTool = 2) {
+function withToolGuards<T extends ToolSet>(tools: T, maxCallsPerTool = 2): T {
   const callCount = new Map<string, number>();
   const seenArgs = new Set<string>();
+  const guarded = {} as Partial<T>;
 
-  return Object.fromEntries(
-    Object.entries(tools).map(([name, definition]) => {
-      const execute = definition?.execute;
-      if (!definition || typeof execute !== "function") {
-        return [name, definition];
-      }
+  for (const [name, definition] of Object.entries(tools) as Array<[keyof T & string, T[keyof T & string]]>) {
+    if (!definition || typeof definition.execute !== "function") {
+      guarded[name] = definition;
+      continue;
+    }
 
-      return [
-        name,
-        {
-          ...definition,
-          execute: async (args: unknown, context: unknown) => {
-            const currentCount = (callCount.get(name) ?? 0) + 1;
-            if (currentCount > maxCallsPerTool) {
-              throw new Error(`Tool call limit reached for ${name}`);
-            }
+    const execute = definition.execute;
 
-            const signature = `${name}:${JSON.stringify(args ?? {})}`;
-            if (seenArgs.has(signature)) {
-              throw new Error(`Duplicate tool call blocked for ${name}`);
-            }
+    guarded[name] = {
+      ...definition,
+      execute: async (...params: Parameters<typeof execute>) => {
+        const currentCount = (callCount.get(name) ?? 0) + 1;
+        if (currentCount > maxCallsPerTool) {
+          throw new Error(`Tool call limit reached for ${name}`);
+        }
 
-            callCount.set(name, currentCount);
-            seenArgs.add(signature);
+        const signature = `${name}:${JSON.stringify(params[0] ?? {})}`;
+        if (seenArgs.has(signature)) {
+          throw new Error(`Duplicate tool call blocked for ${name}`);
+        }
 
-            return execute(args, context);
-          },
-        },
-      ];
-    }),
-  );
+        callCount.set(name, currentCount);
+        seenArgs.add(signature);
+
+        return execute(...params);
+      },
+    } as T[keyof T & string];
+  }
+
+  return guarded as T;
+}
+
+function scopeTools<T extends ToolSet>(
+  tools: T,
+  allowedToolNames: ReadonlyArray<keyof T & string> | null,
+): T {
+  if (allowedToolNames === null) {
+    return tools;
+  }
+
+  const allowed = new Set<string>(allowedToolNames);
+  const scoped = {} as Partial<T>;
+
+  for (const [toolName, definition] of Object.entries(tools) as Array<[keyof T & string, T[keyof T & string]]>) {
+    if (allowed.has(toolName)) {
+      scoped[toolName] = definition;
+    }
+  }
+
+  return scoped as T;
 }
 
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("chat");
   const startedAt = Date.now();
 
-  // Apply AI route guard (auth + entitlements + rate limit + budget)
+  // Apply AI route guard (auth + entitlements + rate limit)
   const guard = await guardAiRequest(req, 'chat', chatRateLimit)
   if (!guard.ok) return guard.response
   const { userId } = guard
@@ -189,21 +214,22 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    
-    // Apply prompt safety checks to user messages
+    let promptSafetyPreamble = "";
+
+    // Apply prompt safety checks without mutating original message structure.
     if (body.messages) {
       const sanitized = sanitizeUserMessages(body.messages)
       const safety = enforcePromptSafety(sanitized)
       if (!safety.safe) {
-        return new Response(
-          JSON.stringify(safety.response!.body),
-          { 
-            status: safety.response!.status,
-            headers: { 'Content-Type': 'application/json' }
-          }
-        )
+        return apiError(
+          safety.response?.body.error.code ?? "PROMPT_INJECTION",
+          safety.response?.body.error.message ?? "Potential prompt injection detected. Request blocked.",
+          safety.response?.status ?? 400,
+        );
       }
-      body.messages = safety.messages as typeof body.messages
+      if (safety.preambleAdded) {
+        promptSafetyPreamble = SAFETY_PREAMBLE;
+      }
     }
 
     const { messages, username, locale, timezone } = chatRequestSchema.parse(body);
@@ -250,35 +276,16 @@ export async function POST(req: NextRequest) {
     const dataQualityPrompt =
       `\n\nDATA QUALITY RULE: If a tool output contains 'dataQualityWarning' or 'truncated: true', clearly disclose that the analysis may be incomplete.`;
 
-    const availableTools = withToolGuards({
-      getJournalEntries,
-      getPreviousConversation,
-      getMostTradedInstruments,
-      getLastTradesData,
-      getTradesDetails,
-      getTradesSummary,
-      getCurrentWeekSummary,
-      getPreviousWeekSummary,
-      getWeekSummaryForDate,
-      getFinancialNews,
-      generateEquityChart,
-    });
+    const availableTools = withToolGuards(availableChatTools);
 
-    const scopedTools =
-      toolPolicy.allowedToolNames === null
-        ? availableTools
-        : Object.fromEntries(
-            Object.entries(availableTools).filter(([toolName]) =>
-              toolPolicy.allowedToolNames?.includes(toolName),
-            ),
-          );
+    const scopedTools = scopeTools(availableTools, toolPolicy.allowedToolNames);
 
     let toolCallsCount = 0;
 
     const result = streamText({
       model: getAiLanguageModel("chat"),
       messages: convertedMessages,
-      system: `${systemPrompt}${intentPrompt}${dataQualityPrompt}`,
+      system: `${systemPrompt}${intentPrompt}${dataQualityPrompt}${promptSafetyPreamble}`,
       temperature: policy.temperature,
       stopWhen: stepCountIs(policy.maxSteps),
       tools: scopedTools,
@@ -289,6 +296,7 @@ export async function POST(req: NextRequest) {
       },
       onError: ({ error }) => {
         void logAiRequest({
+          userId,
           route: "/api/ai/chat",
           feature: "chat",
           model: policy.model,
@@ -296,13 +304,14 @@ export async function POST(req: NextRequest) {
           latencyMs: Date.now() - startedAt,
           success: false,
           errorCategory: categorizeAiError(error),
-          errorCode: getErrorCode(error),
+          errorCode: getAiErrorCode(error),
           toolCallsCount,
           sampleRate: 1,
         });
       },
       onFinish: (finalResult) => {
         void logAiRequest({
+          userId,
           route: "/api/ai/chat",
           feature: "chat",
           model: policy.model,
@@ -319,16 +328,23 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse({
       onError: (error) => {
-        console.error("[Chat Route] UI Stream error:", error);
+        logAiError("[Chat Route] UI Stream error", error, { userId });
         return "An error occurred during the chat response";
       },
     });
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
+    }
+
     if (error instanceof z.ZodError) {
-      return apiError("VALIDATION_FAILED", "Invalid chat request payload", 400, error.errors);
+      return apiError("VALIDATION_FAILED", "Invalid chat request payload", 400, {
+        issues: error.errors,
+      });
     }
 
     void logAiRequest({
+      userId,
       route: "/api/ai/chat",
       feature: "chat",
       model: policy.model,
@@ -336,11 +352,11 @@ export async function POST(req: NextRequest) {
       latencyMs: Date.now() - startedAt,
       success: false,
       errorCategory: categorizeAiError(error),
-      errorCode: getErrorCode(error),
+      errorCode: getAiErrorCode(error),
       sampleRate: 1,
     });
 
-    console.error("Error in chat route:", error);
+    logAiError("Error in chat route", error, { userId });
     return apiError("INTERNAL_ERROR", "Failed to process chat", 500);
   }
 }

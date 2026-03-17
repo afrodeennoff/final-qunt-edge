@@ -210,12 +210,12 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="font-semibold text-sm sm:text-base text-foreground truncate">{t('propFirm.renewal.title')}</h3>
-              <p className="text-xs text-muted-foreground/70">{renewals.length} {renewals.length === 1 ? t('propFirm.renewal.account') : t('propFirm.renewal.accounts')}</p>
+              <p className="text-xs text-muted-foreground">{renewals.length} {renewals.length === 1 ? t('propFirm.renewal.account') : t('propFirm.renewal.accounts')}</p>
             </div>
           </div>
 
           {/* Account List with max height and scrolling */}
-          <div className="space-y-2 sm:space-y-3 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <div className="space-y-2 sm:space-y-3 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border/70 scrollbar-track-transparent">
             {renewals.map((account, index) => (
               <div
                 key={account.id}
@@ -245,13 +245,13 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground/70">
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground">
                       <div className="px-2 py-1 bg-secondary/22 text-foreground/80 rounded-md font-medium whitespace-nowrap border border-border/55">
                         {account.paymentFrequency?.toLowerCase()} {t('propFirm.renewal.frequency')}
                       </div>
                       {account.autoRenewal && (
                         <div className="flex items-center gap-1 px-2 py-1 bg-secondary/30 text-foreground rounded-md whitespace-nowrap border border-border/55">
-                          <div className="w-1.5 h-1.5 bg-white rounded-full shrink-0 animate-pulse"></div>
+                          <div className="w-1.5 h-1.5 bg-foreground rounded-full shrink-0 animate-pulse"></div>
                           <span className="text-xs font-medium">{t('propFirm.renewal.notification')}</span>
                         </div>
                       )}
@@ -263,14 +263,14 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                     <div className="font-bold text-base sm:text-lg text-foreground mb-1">
                       {account.price != null && formatCurrency(account.price, { maximumFractionDigits: 2 })}
                     </div>
-                    <div className="text-xs text-muted-foreground/70">
+                    <div className="text-xs text-muted-foreground">
                       {account.paymentFrequency?.toLowerCase()}
                     </div>
                   </div>
                 </div>
 
                 {/* Subtle hover effect line */}
-                <div className="absolute bottom-0 left-3 right-3 sm:left-4 sm:right-4 h- px-bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                <div className="absolute bottom-0 left-3 right-3 sm:left-4 sm:right-4 h-px bg-linear-to-r from-transparent via-border/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               </div>
             ))}
           </div>
@@ -643,7 +643,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
 
                 return (
                   <React.Fragment key={dateString}>
-                    <div
+                    <button
+                      type="button"
                       className={cn(
                         "group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-all duration-200",
                         "hover:-translate-y-[1px] hover:shadow-md",
@@ -658,6 +659,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                       onClick={() => {
                         setSelectedDate(date)
                       }}
+                      aria-label={`Open day ${format(date, 'yyyy-MM-dd')}`}
                     >
                       <div
                         className={cn(
@@ -729,11 +731,12 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                           </>
                         )}
                       </div>
-                    </div>
+                    </button>
                     {isLastDayOfWeek && (() => {
                       const weeklyTotal = calculateWeeklyTotal(index, calendarDays, calendarData)
                       return (
-                        <div
+                        <button
+                          type="button"
                           className={cn(
                             "flex h-full cursor-pointer items-center justify-center rounded-lg border border-border/55 bg-card/92 px-1 transition-all",
                             "hover:bg-secondary/50 hover:border-primary/40",
@@ -741,6 +744,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                             index === 41 && "rounded-br-xl"
                           )}
                           onClick={() => setSelectedWeekDate(date)}
+                          aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
                         >
                           <div className={cn(
                             "truncate px-1 text-[10px] font-bold",
@@ -750,7 +754,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                           )}>
                             {formatCurrency(weeklyTotal)}
                           </div>
-                        </div>
+                        </button>
                       )
                     })()}
                   </React.Fragment>

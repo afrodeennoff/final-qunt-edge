@@ -136,25 +136,30 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         },
     })
 
+    // Helper function to determine the next URL for redirect after authentication
+    function getRedirectNextUrl(isSubscription: boolean, plan: string | null, nextUrl: string | null, lookupKey: string | null, referralCode: string | null, promoCode: string | null, locale: string): string | null {
+        if (isSubscription) {
+            const planPath = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout'
+            const searchParams = new URLSearchParams()
+            if (lookupKey) searchParams.set('lookup_key', lookupKey)
+            if (referralCode) searchParams.set('referral', referralCode)
+            if (promoCode) searchParams.set('promo_code', promoCode)
+            if (locale) searchParams.set('locale', locale)
+            const qs = searchParams.toString()
+            return `${planPath}${qs ? `?${qs}` : ''}`
+        } else if (nextUrl) {
+            return withLocalePrefix(nextUrl, locale)
+        }
+        return null
+    }
+
     async function onSubmitEmail(values: z.infer<typeof formSchema>) {
         if (countdown > 0) return
 
         setIsLoading(true)
         setAuthMethod('email')
         try {
-            let next = nextUrl
-            if (isSubscription) {
-                const planPath = plan === 'team' ? '/api/whop/checkout-team' : '/api/whop/checkout'
-                const searchParams = new URLSearchParams()
-                if (lookupKey) searchParams.set('lookup_key', lookupKey)
-                if (referralCode) searchParams.set('referral', referralCode)
-                if (promoCode) searchParams.set('promo_code', promoCode)
-                if (locale) searchParams.set('locale', locale)
-                const qs = searchParams.toString()
-                next = `${planPath}${qs ? `?${qs}` : ''}`
-            } else if (nextUrl) {
-                next = withLocalePrefix(nextUrl, locale)
-            }
+            const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
             await signInWithEmail(values.email, next, locale)
             setIsEmailSent(true)
             setShowOtpInput(true)
@@ -174,7 +179,27 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         }
 
         const errorMessage = error.message.toLowerCase()
-
+        
+        // Check password-related errors first
+        const passwordError = parsePasswordError(errorMessage)
+        if (passwordError) {
+            return passwordError
+        }
+        
+        // Check email-related errors
+        const emailError = parseEmailError(errorMessage)
+        if (emailError) {
+            return emailError
+        }
+        
+        // Default: return the original error message but make it more user-friendly
+        return {
+            message: error.message || t('auth.errors.signInFailed')
+        }
+    }
+    
+    // Helper function to parse password-related errors
+    function parsePasswordError(errorMessage: string): { message: string; field: 'password' } | null {
         // Password validation errors
         if (errorMessage.includes('password should contain') ||
             errorMessage.includes('password must contain') ||
@@ -212,6 +237,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
         }
 
+        return null
+    }
+    
+    // Helper function to parse email-related errors
+    function parseEmailError(errorMessage: string): { message: string; field: 'email' } | null {
         if (errorMessage.includes('email not confirmed') ||
             errorMessage.includes('email_not_confirmed')) {
             return {
@@ -247,17 +277,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
         }
 
-        // Default: return the original error message but make it more user-friendly
-        return {
-            message: error.message || t('auth.errors.signInFailed')
-        }
+        return null
     }
 
     async function onSubmitPassword(values: z.infer<typeof formSchema>) {
         setIsLoading(true)
         setAuthMethod('email')
         try {
-            await signInWithPasswordAction(values.email, values.password || '')
+            const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
+            await signInWithPasswordAction(values.email, values.password || '', next, locale)
             toast.success(t('success'), { description: t('auth.signIn') })
             router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
             setLastAuthPreference('password')
@@ -365,38 +393,47 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         }
     }
 
+    // Helper to find the appropriate mail client URL for a domain
+    function getMailClientUrl(domain: string): string | null {
+        const domainLower = domain.toLowerCase()
+
+        // Domain mappings for mail clients
+        const mailClientDomains: Record<string, string> = {
+            'gmail.com': 'https://mail.google.com',
+            'outlook.com': 'https://outlook.live.com',
+            'hotmail.com': 'https://outlook.live.com',
+            'live.com': 'https://outlook.live.com',
+            'msn.com': 'https://outlook.live.com',
+            'office365.com': 'https://outlook.live.com',
+            'proton.me': 'https://mail.proton.me',
+            'protonmail.com': 'https://mail.proton.me',
+            'pm.me': 'https://mail.proton.me',
+            'icloud.com': 'https://www.icloud.com/mail',
+            'me.com': 'https://www.icloud.com/mail',
+            'mac.com': 'https://www.icloud.com/mail',
+            'yahoo.com': 'https://mail.yahoo.com',
+            'aol.com': 'https://mail.aol.com',
+            'zoho.com': 'https://mail.zoho.com',
+        }
+
+        // Check for direct match or partial domain match
+        for (const [mailDomain, mailUrl] of Object.entries(mailClientDomains)) {
+            if (domainLower.includes(mailDomain)) {
+                return mailUrl
+            }
+        }
+
+        return null
+    }
+
     function openMailClient() {
         const email = form.getValues('email')
-        const domain = email.split('@')[1]?.toLowerCase()
+        const domain = email.split('@')[1] ?? ''
 
-        if (domain?.includes('gmail.com')) {
-            window.open('https://mail.google.com', '_blank', 'noopener,noreferrer')
-        } else if (
-            domain?.includes('outlook.com') ||
-            domain?.includes('hotmail.com') ||
-            domain?.includes('live.com') ||
-            domain?.includes('msn.com') ||
-            domain?.includes('office365.com')
-        ) {
-            window.open('https://outlook.live.com', '_blank', 'noopener,noreferrer')
-        } else if (
-            domain?.includes('proton.me') ||
-            domain?.includes('protonmail.com') ||
-            domain?.includes('pm.me')
-        ) {
-            window.open('https://mail.proton.me', '_blank', 'noopener,noreferrer')
-        } else if (
-            domain?.includes('icloud.com') ||
-            domain?.includes('me.com') ||
-            domain?.includes('mac.com')
-        ) {
-            window.open('https://www.icloud.com/mail', '_blank', 'noopener,noreferrer')
-        } else if (domain?.includes('yahoo.com')) {
-            window.open('https://mail.yahoo.com', '_blank', 'noopener,noreferrer')
-        } else if (domain?.includes('aol.com')) {
-            window.open('https://mail.aol.com', '_blank', 'noopener,noreferrer')
-        } else if (domain?.includes('zoho.com')) {
-            window.open('https://mail.zoho.com', '_blank', 'noopener,noreferrer')
+        const mailClientUrl = getMailClientUrl(domain)
+
+        if (mailClientUrl) {
+            window.open(mailClientUrl, '_blank', 'noopener,noreferrer')
         } else {
             // Default to mailto: for unknown domains
             window.location.href = `mailto:${email}`
@@ -406,21 +443,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     return (
         <div className={cn("grid gap-5", className)} {...props}>
             <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
-                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-1">
+                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/60 bg-card/50 p-1">
                     <TabsTrigger
                         value="magic"
-                        className="h-9 rounded-lg text-xs font-semibold text-zinc-300 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-none"
+                        className="h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                         <span className="truncate">{t('auth.tabs.magic')}</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="password"
-                        className="relative h-9 rounded-lg text-xs font-semibold text-zinc-300 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-none"
+                        className="relative h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                         <span className="truncate">{t('auth.tabs.password')}</span>
                         <Badge
                             variant="secondary"
-                            className="absolute -right-1.5 -top-1.5 border border-white/20 bg-white/10 px-1 py-0 text-[8px] text-zinc-200"
+                            className="absolute -right-1.5 -top-1.5 border border-border/70 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
                         >
                             {t('auth.new')}
                         </Badge>
@@ -445,7 +482,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 autoComplete="email"
                                                 autoCorrect="off"
                                                 disabled={isLoading || (isEmailSent || authMethod === 'discord' || authMethod === 'google')}
-                                                className="h-11 rounded-xl border-white/15 bg-white/[0.03] px-4 text-sm text-white placeholder:text-zinc-500 focus-visible:ring-white/40 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -457,7 +494,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 <Button
                                     disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
                                     type="submit"
-                                    className="h-11 rounded-xl bg-white font-semibold text-black shadow-sm hover:bg-zinc-200"
+                                    className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
                                 >
                                     {isLoading && authMethod === 'email' && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -469,7 +506,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <Button
                                         type="button"
                                         variant="outline"
-                                        className="h-11 w-full rounded-xl border-white/15 bg-white/[0.03] text-zinc-100 hover:bg-white/[0.09] hover:text-white"
+                                        className="h-11 w-full rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
                                         onClick={openMailClient}
                                         disabled={authMethod === 'discord' || authMethod === 'google'}
                                     >
@@ -479,7 +516,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <Button
                                         type="submit"
                                         variant="ghost"
-                                        className="h-10 w-full rounded-xl text-zinc-300 hover:bg-white/[0.06] hover:text-white"
+                                        className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                                         disabled={countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
                                     >
                                         {countdown > 0 ? (
@@ -494,13 +531,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     </Form>
                     {showOtpInput && (
                         <Form {...otpForm}>
-                            <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                            <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/60 bg-card/40 p-4">
                                 <FormField
                                     control={otpForm.control}
                                     name="otp"
                                     render={({ field }) => (
                                         <FormItem className="space-y-2">
-                                            <FormLabel className="block text-center text-xs font-semibold uppercase tracking-[0.16em] text-zinc-400">
+                                            <FormLabel className="block text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                                                 {t('auth.verificationCode')}
                                             </FormLabel>
                                             <FormControl>
@@ -531,7 +568,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 />
                                 <Button
                                     type="submit"
-                                    className="h-11 w-full rounded-xl bg-white font-semibold text-black hover:bg-zinc-200"
+                                    className="h-11 w-full rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
                                     disabled={isLoading}
                                 >
                                     {isLoading ? (
@@ -562,7 +599,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 autoComplete="email"
                                                 autoCorrect="off"
                                                 disabled={isLoading}
-                                                className="h-11 rounded-xl border-white/15 bg-white/[0.03] px-4 text-sm text-white placeholder:text-zinc-500 focus-visible:ring-white/40 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -583,7 +620,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 type="password"
                                                 autoComplete="current-password"
                                                 disabled={isLoading}
-                                                className="h-11 rounded-xl border-white/15 bg-white/[0.03] px-4 text-sm text-white placeholder:text-zinc-500 focus-visible:ring-white/40 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -594,7 +631,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             <Button
                                 disabled={isLoading}
                                 type="submit"
-                                className="h-11 rounded-xl bg-white font-semibold text-black shadow-sm hover:bg-zinc-200"
+                                className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
                             >
                                 {isLoading && authMethod === 'email' && (
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -608,10 +645,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
             <div className="relative py-1">
                 <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-white/10" />
+                    <span className="w-full border-t border-border/60" />
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
-                    <span className="bg-card px-2 text-zinc-500">
+                    <span className="bg-card px-2 text-muted-foreground">
                         {t('auth.continueWith')}
                     </span>
                 </div>
@@ -622,7 +659,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
                 onClick={onSubmitDiscord}
-                className="h-11 rounded-xl border-white/15 bg-white/[0.03] text-zinc-100 hover:bg-white/[0.09] hover:text-white"
+                className="h-11 rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
             >
                 {isLoading && authMethod === 'discord' ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -636,7 +673,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
                 onClick={onSubmitGoogle}
-                className="h-11 rounded-xl border-white/15 bg-white/[0.03] text-zinc-100 hover:bg-white/[0.08] hover:text-white"
+                className="h-11 rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
             >
                 {isLoading && authMethod === 'google' ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

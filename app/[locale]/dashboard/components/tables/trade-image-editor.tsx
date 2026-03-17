@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -40,6 +39,7 @@ import {
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { withSupabaseImageTransform } from "@/lib/supabase-storage";
+import { ensureOwnedImagePath, extractTradeImagePath } from "@/lib/trade-image-path";
 
 const supabase = createClient();
 
@@ -53,29 +53,43 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-function extractTradeImagePath(imageReference: string): string | null {
-  if (!imageReference) return null;
-
-  const publicMarker = "/storage/v1/object/public/trade-images/";
-  const signedMarker = "/storage/v1/object/sign/trade-images/";
-
-  if (imageReference.includes(publicMarker)) {
-    return imageReference.split(publicMarker)[1]?.split("?")[0] ?? null;
-  }
-
-  if (imageReference.includes(signedMarker)) {
-    return imageReference.split(signedMarker)[1]?.split("?")[0] ?? null;
-  }
-
-  if (imageReference.startsWith("http://") || imageReference.startsWith("https://")) {
-    return null;
-  }
-
-  return imageReference.replace(/^\/+/, "");
+interface TradeWithImages {
+  id: string;
+  images?: string[];
+  imageBase64?: string | null;
+  imageBase64Second?: string | null;
 }
 
+type ImageUpdatePayload = {
+  images: string[];
+  imageBase64: string | null;
+  imageBase64Second: string | null;
+};
+
+const buildImageUpdatePayload = (images: string[]): ImageUpdatePayload => ({
+  images,
+  imageBase64: images[0] ?? null,
+  imageBase64Second: images[1] ?? null,
+});
+
+const isNonEmptyString = (
+  value: string | null | undefined,
+): value is string => Boolean(value);
+
+const getCurrentImageList = (
+  images?: string[],
+  imageBase64?: string | null,
+  imageBase64Second?: string | null,
+): string[] => {
+  if (images && images.length > 0) {
+    return [...images];
+  }
+
+  return [imageBase64, imageBase64Second].filter(isNonEmptyString);
+};
+
 interface TradeImageEditorProps {
-  trade: any;
+  trade: TradeWithImages;
   tradeIds: string[];
 }
 
@@ -88,7 +102,6 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [imageToDelete, setImageToDelete] = useState<number | null>(null);
   const [localImages, setLocalImages] = useState<{ imageBase64: string | null; imageBase64Second: string | null } | null>(null);
   const [resolvedImageUrls, setResolvedImageUrls] = useState<string[]>([]);
   const [isLoadingImages, setIsLoadingImages] = useState(false);
@@ -103,17 +116,32 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
     maxFiles: MAX_IMAGES,
   });
 
-  // Determine if we have images (either URLs or legacy base64 fields)
-  const hasImages = (trade.images && trade.images.length > 0) || trade.imageBase64 || trade.imageBase64Second;
+  const {
+    errors: uploadErrors,
+    isSuccess: uploadSuccess,
+    setErrors: resetUploadErrors,
+    setFiles: resetUploadFiles,
+    uploadedPaths,
+  } = uploadProps;
 
+  const actorImagePrefix =
+    supabaseUser?.id
+      ? `${supabaseUser.id}/`
+      : user?.auth_user_id
+        ? `${user.auth_user_id}/`
+        : null
+
+  // Determine if we have images (either URLs or legacy base64 fields)
   // Source images from local state (fetched on demand) or from the trade object itself
   const resolvedImageBase64 = localImages?.imageBase64 || trade.imageBase64;
   const resolvedImageBase64Second = localImages?.imageBase64Second || trade.imageBase64Second;
 
-  const imageArray =
+  const imageArray: string[] =
     trade.images && trade.images.length > 0
-      ? trade.images
-      : [resolvedImageBase64, resolvedImageBase64Second].filter(Boolean);
+      ? trade.images.filter((image): image is string => typeof image === "string" && image.length > 0)
+      : [resolvedImageBase64, resolvedImageBase64Second].filter(
+          (image): image is string => typeof image === "string" && image.length > 0,
+        );
 
   useEffect(() => {
     let cancelled = false;
@@ -190,55 +218,65 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
     }
   }, [trade.id, trade.images, trade.imageBase64, trade.imageBase64Second, localImages, isLoadingImages, getTradeImages]);
 
-  const uploadCallback = useCallback(async () => {
-    if (uploadProps.isSuccess && uploadProps.uploadedPaths.length > 0) {
-      await handleUpdateImages(uploadProps.uploadedPaths);
-      setUploadDialogOpen(false);
-      toast.success(t("trade-table.imageUploadSuccess"));
-
-      // Reset upload state
-      uploadProps.setFiles([]);
-      uploadProps.setErrors([]);
-    } else if (uploadProps.errors.length > 0) {
-      const error = uploadProps.errors[0].message;
-      toast.error(t("trade-table.imageUploadError", { error }));
-    }
-  }, [uploadProps.isSuccess, uploadProps.uploadedPaths, uploadProps.errors]);
-
-  // Listen for successful uploads
   useEffect(() => {
-    uploadCallback();
-  }, [uploadProps.isSuccess, uploadProps.uploadedPaths, uploadProps.errors]);
+    if (!uploadSuccess && uploadErrors.length === 0) {
+      return;
+    }
+
+    const processUploadResult = async () => {
+      if (uploadSuccess && uploadedPaths.length > 0) {
+        const currentImages = getCurrentImageList(
+          trade.images,
+          trade.imageBase64,
+          trade.imageBase64Second,
+        );
+        const updatedImages = [...currentImages, ...uploadedPaths];
+        const update = buildImageUpdatePayload(updatedImages);
+
+        await updateTrades(tradeIds, update);
+        setUploadDialogOpen(false);
+        toast.success(t("trade-table.imageUploadSuccess"));
+        resetUploadFiles([]);
+        resetUploadErrors([]);
+        return;
+      }
+
+      if (uploadErrors.length > 0) {
+        const errorMessage = uploadErrors[0].message;
+        toast.error(t("trade-table.imageUploadError", { error: errorMessage }));
+      }
+    };
+
+    void processUploadResult();
+  }, [
+    uploadSuccess,
+    uploadedPaths,
+    uploadErrors,
+    trade.imageBase64,
+    trade.imageBase64Second,
+    trade.images,
+    tradeIds,
+    updateTrades,
+    setUploadDialogOpen,
+    resetUploadFiles,
+    resetUploadErrors,
+    t,
+  ]);
 
   const handleRemoveImage = async (imageIndex: number) => {
     try {
-      // Get current images array or create from legacy fields
-      const currentImages =
-        trade.images && trade.images.length > 0
-          ? [...trade.images]
-          : [trade.imageBase64, trade.imageBase64Second].filter(Boolean);
+      const currentImages = getCurrentImageList(
+        trade.images,
+        trade.imageBase64,
+        trade.imageBase64Second,
+      );
 
       const imageUrl = currentImages[imageIndex];
 
       // Update the images array by filtering out the removed image
-      const newImages = currentImages.filter(
-        (_, index) => index !== imageIndex,
-      );
+      const newImages = currentImages.filter((_, index) => index !== imageIndex);
+      const update = buildImageUpdatePayload(newImages);
 
-      // Update both new and legacy fields for backward compatibility
-      const update: any = {
-        images: newImages,
-      };
-
-      // Also update legacy fields if we're removing the first or second image
-      if (imageIndex === 0) {
-        update.imageBase64 = newImages[0] || null;
-      }
-      if (imageIndex === 1 || (imageIndex === 0 && trade.imageBase64Second)) {
-        update.imageBase64Second = newImages[1] || null;
-      }
-
-      // Update trades
       await updateTrades(tradeIds, update);
 
       // Remove the image from Supabase storage
@@ -246,12 +284,12 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
         // Extract the path from the full URL
         const path = extractTradeImagePath(imageUrl);
         if (path) {
-          await supabase.storage.from("trade-images").remove([path]);
+          const ownedPath = ensureOwnedImagePath(path, actorImagePrefix);
+          await supabase.storage.from("trade-images").remove([ownedPath]);
         }
       }
 
       toast.success("Image deleted successfully");
-      setImageToDelete(null);
     } catch (error) {
       console.error("Error removing image:", error);
       toast.error("Failed to delete image");
@@ -260,12 +298,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
 
   const handleRemoveAllImages = async () => {
     try {
-      // Update both new and legacy fields
-      const update: any = {
-        images: [],
-        imageBase64: null,
-        imageBase64Second: null,
-      };
+      const update = buildImageUpdatePayload([]);
       await updateTrades(tradeIds, update);
 
       // Get all images to remove from both new and legacy fields
@@ -290,32 +323,32 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
       }
 
       if (imagesToRemove.length > 0) {
-        await supabase.storage.from("trade-images").remove(imagesToRemove);
+        const ownedPaths: string[] = [];
+        const unauthorized: string[] = [];
+
+        imagesToRemove.forEach((path) => {
+          try {
+            ownedPaths.push(ensureOwnedImagePath(path, actorImagePrefix));
+          } catch {
+            unauthorized.push(path);
+          }
+        });
+
+        if (unauthorized.length > 0) {
+          console.error("Blocked deletion of image paths outside actor prefix", {
+            unauthorized,
+          });
+          toast.error("Failed to delete image");
+          return;
+        }
+
+        if (ownedPaths.length > 0) {
+          await supabase.storage.from("trade-images").remove(ownedPaths);
+        }
       }
     } catch (error) {
       console.error("Error removing all images:", error);
     }
-  };
-
-  const handleUpdateImages = async (newUrls: string[]) => {
-    console.error("handleUpdateImages called");
-    // Get current images array or create from legacy fields
-    const currentImages =
-      trade.images && trade.images.length > 0
-        ? [...trade.images]
-        : [trade.imageBase64, trade.imageBase64Second].filter(Boolean);
-
-    // Add new URLs to existing images
-    const updatedImages = [...currentImages, ...newUrls];
-
-    // Update both new and legacy fields for backward compatibility
-    const update: any = {
-      images: updatedImages,
-      imageBase64: updatedImages[0] || null,
-      imageBase64Second: updatedImages[1] || null,
-    };
-
-    await updateTrades(tradeIds, update);
   };
 
   const handleUploadClick = () => {
@@ -329,10 +362,10 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
   // Reset upload state when dialog closes
   useEffect(() => {
     if (!uploadDialogOpen) {
-      uploadProps.setFiles([]);
-      uploadProps.setErrors([]);
+      resetUploadFiles([]);
+      resetUploadErrors([]);
     }
-  }, [uploadDialogOpen]);
+  }, [uploadDialogOpen, resetUploadFiles, resetUploadErrors]);
 
   const handleThumbnailClick = (index: number) => {
     setSelectedImageIndex(index);
@@ -465,7 +498,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
             <DialogTitle>Image Gallery</DialogTitle>
           </DialogHeader>
 
-          <div className="relative h-[70vh] sm:h-[70vh] bg-neutral-50 p-4 sm:p-8">
+          <div className="relative h-[70vh] sm:h-[70vh] bg-muted/40 p-4 sm:p-8">
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0 }}
@@ -507,27 +540,27 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                         </div>
                       </TransformComponent>
 
-                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-secondary/220 backdrop-blur-xs z-50">
+                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/70 backdrop-blur-xs z-50">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="bg-linear-to-r from-white/95 to-white/90 hover:from-white hover:to-white shadow-lg border border-gray-200 ring-1 ring-gray-100 h-7 w-7 sm:h-8 sm:w-8"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => zoomOut()}
                           disabled={scale <= 0.5}
                         >
-                          <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4 text-gray-700" />
+                          <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
                         </Button>
-                        <span className="min-w-10 sm:min-w-12 text-center text-xs sm:text-sm font-medium text-gray-700">
+                        <span className="min-w-10 sm:min-w-12 text-center text-xs sm:text-sm font-medium text-foreground">
                           {Math.round(scale * 100)}%
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="bg-linear-to-r from-white/95 to-white/90 hover:from-white hover:to-white shadow-lg border border-gray-200 ring-1 ring-gray-100 h-7 w-7 sm:h-8 sm:w-8"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => zoomIn()}
                           disabled={scale >= 3}
                         >
-                          <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 text-gray-700" />
+                          <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
                         </Button>
                       </div>
                     </>
@@ -542,9 +575,12 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
               <CarouselContent className="w-full flex items-center justify-center gap-2">
                 {displayImageArray.map((image: string, index: number) => (
                   <CarouselItem key={index} className="basis-auto">
-                    <div
+                    <button
+                      type="button"
                       className="relative aspect-square cursor-pointer"
                       onClick={() => handleThumbnailClick(index)}
+                      aria-label={`Select image ${index + 1}`}
+                      aria-pressed={selectedImageIndex === index}
                     >
                       <Image
                         src={withSupabaseImageTransform(image, {
@@ -562,7 +598,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                             : "hover:ring-2 hover:ring-primary/50",
                         )}
                       />
-                    </div>
+                    </button>
                   </CarouselItem>
                 ))}
                 {imageArray.length < MAX_IMAGES && (
@@ -657,12 +693,11 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
             </AnimatePresence>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2 border-t pt-4">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowDeleteConfirm(false);
-                setImageToDelete(null);
-              }}
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                }}
               className="w-full sm:w-auto transition-colors duration-200"
             >
               Close

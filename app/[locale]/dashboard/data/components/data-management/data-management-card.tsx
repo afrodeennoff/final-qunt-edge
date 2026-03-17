@@ -114,7 +114,7 @@ export function DataManagementCard() {
 
   const handleDeleteInstrument = useCallback(async (accountNumber: string, instrumentGroup: string) => {
     try {
-      await deleteInstrumentGroupAction(accountNumber, instrumentGroup, user!.id)
+      await deleteInstrumentGroupAction(accountNumber, instrumentGroup)
       // Optimistically drop matching trades locally
       setTradesStore(
         trades.filter(
@@ -134,7 +134,7 @@ export function DataManagementCard() {
         description: t('dataManagement.toast.deleteErrorDesc'),
       })
     }
-  }, [user, trades, refreshTradesOnly, setTradesStore, t])
+  }, [trades, refreshTradesOnly, setTradesStore, t])
 
   const [commissionLoading, setCommissionLoading] = useState<Record<string, boolean>>({})
   const [pendingCommissionUpdates, setPendingCommissionUpdates] = useState<Record<string, { accountNumber: string; instrumentGroup: string; newCommission: number }>>({})
@@ -464,7 +464,7 @@ export function DataManagementCard() {
               {expandedAccounts[accountNumber] && (
                 <div id={`account-${accountNumber}`} className="space-y-4 pl-2 sm:pl-4">
                   {Object.entries(instruments).map(([instrumentGroup, trades]) => (
-                    <div key={instrumentGroup} className="bg-gray-100 dark:bg-white/5 p-3 sm:p-4 rounded-lg">
+                    <div key={instrumentGroup} className="bg-muted  p-3 sm:p-4 rounded-lg">
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex items-center gap-2">
                           <h3 className="text-md font-medium">

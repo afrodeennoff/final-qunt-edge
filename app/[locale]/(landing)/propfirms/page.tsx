@@ -13,13 +13,38 @@ import type { PropfirmCatalogueStats } from './actions/types'
 // Keep the translator type intentionally light to avoid "union too complex" TS errors.
 type Translator = (key: string, params?: Record<string, unknown>) => string
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getI18n()
 
   return {
-    title: `${t('landing.propfirms.title')} - Qunt Edge`,
+    title: `${t('landing.propfirms.title')} | Qunt Edge`,
     description: t('landing.propfirms.description'),
-  }
+    openGraph: {
+      title: `${t('landing.propfirms.title')} | Qunt Edge`,
+      description: t('landing.propfirms.description'),
+      url: `https://quntedge.com/${locale}/propfirms`,
+      siteName: "Qunt Edge",
+      locale: locale,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${t('landing.propfirms.title')} | Qunt Edge`,
+      description: t('landing.propfirms.description'),
+    },
+    alternates: {
+      canonical: `./${locale}/propfirms`,
+      languages: {
+        'x-default': `./en/propfirms`,
+        'en': `./en/propfirms`,
+      },
+    },
+  };
 }
 
 // Format currency with $ symbol (always USD)
@@ -55,42 +80,42 @@ function renderPropfirmCard(
   const refusedCount = stat.payouts.refusedCount
 
   return (
-    <Card key={propfirmName} className="h-full">
-      <CardHeader className="space-y-3">
+    <Card key={propfirmName} className="h-full border-border/70 bg-card/90">
+      <CardHeader className="space-y-3 border-b border-border/70 pb-4">
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
           <div className="text-right">
-            <div className="text-xs uppercase tracking-[0.22em] text-white/60">
-              Registered
-            </div>
-            <p className="text-3xl font-black text-white leading-none tabular-nums">
+          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+            Registered
+          </div>
+            <p className="text-3xl font-black text-foreground leading-none tabular-nums">
               {stat.accountsCount.toLocaleString()}
             </p>
           </div>
         </div>
         {/* Unified (non-rainbow) KPI strip + remove duplicate "registered" blocks */}
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="border-white/10 bg-white/5 text-white/80">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Paid:{' '}
-            <span className="ml-1 font-semibold text-white tabular-nums">
+            <span className="ml-1 font-semibold text-foreground tabular-nums">
               {formatCompactCurrency(paidAmount)}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-white/10 bg-white/5 text-white/80">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Account Value:{' '}
-            <span className="ml-1 font-semibold text-white tabular-nums">
+            <span className="ml-1 font-semibold text-foreground tabular-nums">
               {formatCompactCurrency(stat.totalAccountValue)}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-white/10 bg-white/5 text-white/80">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Size Mix:{' '}
-            <span className="ml-1 font-semibold text-white">
+            <span className="ml-1 font-semibold text-foreground">
               {stat.sizeBreakdown}
             </span>
           </Badge>
-          <Badge variant="outline" className="border-white/10 bg-white/5 text-white/80">
+          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
             Sized:{' '}
-            <span className="ml-1 font-semibold text-white tabular-nums">
+            <span className="ml-1 font-semibold text-foreground tabular-nums">
               {stat.sizedAccountsCount.toLocaleString()}
             </span>
           </Badge>
@@ -98,49 +123,49 @@ function renderPropfirmCard(
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-semibold mb-3">{t('landing.propfirms.payouts.title')}</h3>
+          <h3 className="mb-3 border-b border-border/70 pb-2 text-sm font-semibold text-foreground">{t('landing.propfirms.payouts.title')}</h3>
           <div className="space-y-3">
             {/* Paid */}
-            <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.paid.label')}
                 </span>
-                <span className="text-sm font-bold text-white">
+                <span className="text-sm font-bold text-foreground">
                   {formatCurrency(paidAmount)}
                 </span>
               </div>
-              <p className="text-xs text-white/60">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: paidCount })}
               </p>
             </div>
 
             {/* Pending */}
-            <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.pending.label')}
                 </span>
-                <span className="text-sm font-bold text-white">
+                <span className="text-sm font-bold text-foreground">
                   {formatCurrency(pendingAmount)}
                 </span>
               </div>
-              <p className="text-xs text-white/60">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: pendingCount })}
               </p>
             </div>
 
             {/* Refused */}
-            <div className="p-3 rounded-lg border border-white/10 bg-white/5">
+            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('landing.propfirms.payouts.refused.label')}
                 </span>
-                <span className="text-sm font-bold text-white">
+                <span className="text-sm font-bold text-foreground">
                   {formatCurrency(refusedAmount)}
                 </span>
               </div>
-              <p className="text-xs text-white/60">
+              <p className="text-xs text-muted-foreground">
                 {t('landing.propfirms.payouts.count', { count: refusedCount })}
               </p>
             </div>
@@ -222,7 +247,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
       <div className="mx-auto w-full max-w-[1280px] px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">{t('landing.propfirms.title')}</h1>
-          <p className="text-lg text-muted-foreground max-w-3xl">
+          <p className="max-w-3xl text-lg text-muted-foreground">
             {t('landing.propfirms.description')}
           </p>
         </div>
@@ -253,7 +278,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
         </div>
 
         {/* Controls */}
-        <div className="mb-6 flex justify-between items-center gap-4 flex-wrap">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border/70 bg-card/30 px-3 py-2">
           <TimeframeControls
             timeframeLabel={t('landing.propfirms.timeframe.label')}
             timeframeOptions={{

@@ -34,7 +34,7 @@ export default function Differentiators() {
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-primary">Why Qunt Edge</p>
           <h2 className="mt-3 text-fluid-2xl font-black tracking-tight sm:text-fluid-4xl">
             Built For Traders Who
-            <span className="text-muted-foreground"> Respect Process</span>
+            <span className="text-foreground/80"> Respect Process</span>
           </h2>
         </div>
 
@@ -54,7 +54,7 @@ export default function Differentiators() {
                   <Icon className="h-4.5 w-4.5" />
                 </div>
                 <h3 className="text-xl font-black tracking-tight text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/80">{item.desc}</p>
               </motion.article>
             )
           })}

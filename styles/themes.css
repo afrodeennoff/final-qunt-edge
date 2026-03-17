@@ -1,0 +1,42 @@
+/* styles/themes.css */
+/* base tokens used when no theme class is set */
+:root {
+  /* fallback variables — optional */
+  --background: 0 0% 100%;
+  --foreground: 220 15% 10%;
+  --primary: 240 100% 50%;
+  --radius: 0.5rem;
+}
+
+/* Theme 1 — Efferd (paste the real block from TweakCN here) */
+.theme-efferd {
+  /* example format from TweakCN — replace with actual lines */
+  /* --background: 240 10% 4%; */
+  /* --foreground: 0 0% 98%; */
+  /* --primary: 262 83% 58%; */
+}
+
+/* Theme 2 — cwh-learning */
+.theme-cwh {
+  /* paste this theme's variables from TweakCN */
+}
+
+/* Theme 3 — Light Green */
+.theme-light-green {
+  /* paste this theme's variables from TweakCN */
+}
+
+/* Theme 4 — VTRON */
+.theme-vtron {
+  /* paste this theme's variables from TweakCN */
+}
+
+/* Theme 5 — Lara */
+.theme-lara {
+  /* paste this theme's variables from TweakCN */
+}
+
+/* Utility: if you want dark mode variants inside each theme, TweakCN sometimes provides both. */
+.theme-efferd.dark {
+  /* dark overrides if provided */
+}
