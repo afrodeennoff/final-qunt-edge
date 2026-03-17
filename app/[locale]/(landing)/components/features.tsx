@@ -76,14 +76,14 @@ export default function Features() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
           <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/85 [font-family:var(--home-copy)]">Platform Weapons</p>
-          <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] text-[hsl(var(--mk-text))] [font-family:var(--home-display)]">
+          <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
             {t("landing.features.heading")}
           </h2>
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] sm:mt-4 sm:text-base md:text-lg">
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base md:text-lg">
             {t("landing.features.subheading")}
           </p>
         </div>
-        <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
+        <div className="mb-6 h-px bg-border/40 sm:mb-8" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 sm:gap-5 md:gap-6">
         {features.map((feature, index) => (
           <Card
@@ -94,15 +94,15 @@ export default function Features() {
               index === 2 ? 'lg:col-span-4' : 'lg:col-span-2'
             }`}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-[hsl(var(--mk-border)/0.32)] pb-4">
-              <CardTitle className="text-base font-medium text-[hsl(var(--mk-text))] sm:text-lg">{feature.title}</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-border/60 pb-4">
+              <CardTitle className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardTitle>
               {feature.icon}
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-3 sm:space-y-4">
                 <div>
-                  <div className="text-xl font-bold text-[hsl(var(--mk-text))] sm:text-2xl">{feature.stat}</div>
-                  <p className="mt-2 text-xs text-[hsl(var(--mk-text-muted))] sm:text-sm">
+                  <div className="text-xl font-bold text-foreground sm:text-2xl">{feature.stat}</div>
+                  <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
                     {feature.description}
                   </p>
                 </div>

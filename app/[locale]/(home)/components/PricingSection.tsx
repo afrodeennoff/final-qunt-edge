@@ -92,8 +92,8 @@ function getSavingsPerMonth(plan: (typeof plans)[number]): number {
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'marketing-panel flex w-full flex-col rounded-3xl border-[hsl(var(--mk-border)/0.32)] transition-all duration-300 hover:border-[hsl(var(--brand-primary)/0.35)]',
-    popular && 'relative overflow-hidden border-[hsl(var(--brand-primary)/0.45)]'
+    'marketing-panel flex w-full flex-col rounded-3xl border-[hsl(var(--mk-border)/0.32)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.35)]',
+    popular && 'relative overflow-hidden border-[hsl(var(--primary)/0.45)]'
   )
 }
 
@@ -120,7 +120,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
 function PlanSavingsNote({ show, savings }: { show: boolean; savings: number }) {
   if (!show) return null
   return (
-    <p className="mt-2 text-xs text-[hsl(var(--brand-primary))] [font-family:var(--home-copy)]">
+    <p className="mt-2 text-xs text-foreground [font-family:var(--home-copy)]">
       Save ${savings}/month with annual billing
     </p>
   )
@@ -172,7 +172,7 @@ function PlanCard({
                 key={feature}
                 className="flex items-start gap-3 text-sm text-foreground/80 [font-family:var(--home-copy)]"
               >
-                <Check className="h-5 w-5 shrink-0 text-[hsl(var(--brand-primary))]" />
+                <Check className="h-5 w-5 shrink-0 text-foreground" />
                 <span>{feature}</span>
               </li>
             ))}
@@ -205,12 +205,12 @@ export default function PricingSection() {
     <section id="pricing" className="relative border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <Badge variant="outline" className="mb-4 border-[hsl(var(--brand-primary)/0.32)] bg-[hsl(var(--brand-primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="mb-4 border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Pricing
           </Badge>
           <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Choose your
-            <span className="block text-[hsl(var(--brand-primary))]">performance operating system</span>
+            <span className="block text-foreground">performance operating system</span>
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.78] text-foreground/85 sm:text-[18px] [font-family:var(--home-copy)]">
             Start free. Upgrade when you want deeper diagnostics, tighter coaching loops, and desk-grade review workflows.
@@ -221,7 +221,7 @@ export default function PricingSection() {
               onClick={() => setBillingMode('monthly')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/80 hover:text-foreground'
+                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-foreground' : 'text-foreground/80 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'monthly'}
             >
@@ -232,7 +232,7 @@ export default function PricingSection() {
               onClick={() => setBillingMode('annual')}
               className={cn(
                 'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-[hsl(var(--mk-text))]' : 'text-foreground/80 hover:text-foreground'
+                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-foreground' : 'text-foreground/80 hover:text-foreground'
               )}
               aria-pressed={billingMode === 'annual'}
             >

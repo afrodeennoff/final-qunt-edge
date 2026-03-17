@@ -27,15 +27,15 @@ export default function ProblemStatement() {
             <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">The Gap</p>
             <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.94] tracking-[-0.02em] [font-family:var(--home-display)]">
               Results tell you
-              <span className="block text-[hsl(var(--brand-primary))]">if you were paid, not if you were good.</span>
+              <span className="block text-foreground">if you were paid, not if you were good.</span>
             </h2>
             <p className="mt-4 max-w-xl text-[15px] leading-[1.75] text-foreground/85 [font-family:var(--home-copy)]">
               Average traders celebrate outcomes. Elite traders audit decisions. Qunt Edge turns your raw trade history
               into a repeatable performance system.
             </p>
 
-            <div className="mt-6 rounded-2xl border border-[hsl(var(--brand-primary)/0.3)] bg-[hsl(var(--brand-primary)/0.08)] p-4">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text))] [font-family:var(--home-copy)]">Mindset Upgrade</p>
+            <div className="mt-6 rounded-2xl border border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] p-4">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-foreground [font-family:var(--home-copy)]">Mindset Upgrade</p>
               <p className="mt-1 text-sm text-foreground/85 [font-family:var(--home-copy)]">
                 Promote process to first-class data. Let profit follow your standards.
               </p>
@@ -50,7 +50,7 @@ export default function ProblemStatement() {
                    key={item.title}
                    className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.7)] p-5"
                  >
-                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-[hsl(var(--brand-primary)/0.28)] bg-[hsl(var(--brand-primary)/0.08)] text-[hsl(var(--brand-primary))]">
+                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-foreground">
                      <Icon className="h-4 w-4" />
                    </div>
                    <h3 className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</h3>

@@ -11,7 +11,7 @@ export default function CTA() {
         <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/80 [font-family:var(--home-copy)]">Your Next Edge</p>
         <h2 className="mt-2 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[0.9] tracking-[-0.028em] [font-family:var(--home-display)]">
           Keep your strategy.
-          <span className="block text-[hsl(var(--brand-primary))]">Raise the standard of your decisions.</span>
+          <span className="block text-foreground">Raise the standard of your decisions.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-[15px] leading-[1.78] text-foreground/85 sm:text-base [font-family:var(--home-copy)]">
           Join in minutes and receive your first AI-backed performance audit before your next session opens.

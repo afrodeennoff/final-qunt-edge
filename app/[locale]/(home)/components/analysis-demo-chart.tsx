@@ -71,7 +71,7 @@ function AnalysisChartTooltip({
       style={{
         background: 'hsl(var(--mk-surface)/0.96)',
         borderColor: 'hsl(var(--mk-border)/0.72)',
-        color: 'hsl(var(--mk-text))',
+        color: 'hsl(var(--foreground))',
       }}
     >
       <div className="mb-1 border-b pb-1 text-[11px] font-semibold" style={{ borderColor: 'hsl(var(--mk-border)/0.45)' }}>
@@ -82,7 +82,7 @@ function AnalysisChartTooltip({
           const key = String(entry.dataKey ?? entry.name ?? '')
           return (
             <div key={key} className="flex items-center justify-between gap-3">
-              <span style={{ color: 'hsl(var(--mk-text-muted))' }}>{TOOLTIP_LABELS[key] ?? key}</span>
+              <span style={{ color: 'hsl(var(--foreground)/0.72)' }}>{TOOLTIP_LABELS[key] ?? key}</span>
               <span className="font-semibold">{formatTooltipValue(entry.value ?? '')}</span>
             </div>
           )
@@ -98,13 +98,13 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
       <ComposedChart data={data}>
         <defs>
           <linearGradient id="chartArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="hsl(var(--brand-primary))" stopOpacity={0.28} />
-            <stop offset="95%" stopColor="hsl(var(--brand-primary))" stopOpacity={0} />
+            <stop offset="5%" stopColor="hsl(var(--foreground))" stopOpacity={0.24} />
+            <stop offset="95%" stopColor="hsl(var(--foreground))" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke="hsl(var(--mk-border)/0.42)" strokeDasharray="3 3" />
-        <XAxis dataKey="time" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--mk-text-muted)/0.95)" />
-        <YAxis yAxisId="price" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--mk-text-muted)/0.95)" />
+        <XAxis dataKey="time" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
+        <YAxis yAxisId="price" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
         <YAxis yAxisId="volume" hide />
         <Tooltip
           cursor={{ stroke: 'hsl(var(--mk-border)/0.78)' }}
@@ -112,8 +112,8 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
         />
         <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.34} barSize={8} />
         <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#chartArea)" tooltipType="none" />
-        <Line yAxisId="price" dataKey="price" dot={false} stroke="hsl(var(--brand-primary))" strokeWidth={2} />
-        <Line yAxisId="price" dataKey="ema" dot={false} stroke="hsl(var(--mk-text-muted)/0.92)" strokeDasharray="6 4" strokeWidth={1.5} />
+        <Line yAxisId="price" dataKey="price" dot={false} stroke="hsl(var(--foreground))" strokeWidth={2} />
+        <Line yAxisId="price" dataKey="ema" dot={false} stroke="hsl(var(--foreground)/0.62)" strokeDasharray="6 4" strokeWidth={1.5} />
       </ComposedChart>
     </ResponsiveContainer>
   )

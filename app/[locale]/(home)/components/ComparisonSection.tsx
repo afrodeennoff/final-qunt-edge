@@ -35,12 +35,12 @@ export default function ComparisonSection() {
     <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center sm:mb-12">
-          <Badge variant="outline" className="border-[hsl(var(--brand-primary)/0.32)] bg-[hsl(var(--brand-primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
           </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.7vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Why we’re different
-            <span className="block text-[hsl(var(--brand-primary))]">from standard trading analytics tools</span>
+            <span className="block text-foreground">from standard trading analytics tools</span>
           </h2>
         </div>
 
@@ -53,9 +53,9 @@ export default function ComparisonSection() {
               <table className="w-full min-w-[680px] text-left">
                 <thead>
                   <tr className="border-b border-[hsl(var(--mk-border)/0.28)]">
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Capability</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Qunt Edge</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">Most Alternatives</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Capability</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Qunt Edge</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Most Alternatives</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -66,13 +66,13 @@ export default function ComparisonSection() {
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
                       <td className="px-4 py-4">
-                        <div className="flex items-center gap-2 text-sm text-[hsl(var(--mk-text))]">
-                          <Check className="h-4 w-4 text-[hsl(var(--brand-primary))]" />
+                        <div className="flex items-center gap-2 text-sm text-foreground">
+                          <Check className="h-4 w-4 text-foreground" />
                           <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex items-center gap-2 text-sm text-[hsl(var(--mk-text-muted))]">
+                        <div className="flex items-center gap-2 text-sm text-foreground/80">
                           <X className="h-4 w-4" />
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>

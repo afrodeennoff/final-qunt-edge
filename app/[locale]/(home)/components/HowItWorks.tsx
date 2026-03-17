@@ -11,10 +11,10 @@ export default function HowItWorks() {
     <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">How It Works</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">How It Works</p>
           <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] [font-family:var(--home-display)]">
             A repeatable pipeline
-            <span className="block text-[hsl(var(--brand-primary))]">from data to better decisions</span>
+            <span className="block text-foreground">from data to better decisions</span>
           </h2>
         </div>
 
@@ -25,11 +25,11 @@ export default function HowItWorks() {
               key={step.name}
               className="marketing-panel relative rounded-2xl p-5 text-center"
             >
-              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-sm font-semibold text-[hsl(var(--brand-primary))] [font-family:var(--home-display)]">
+              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-sm font-semibold text-foreground [font-family:var(--home-display)]">
                 0{i + 1}
               </div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.14em] [font-family:var(--home-copy)]">{step.name}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">{step.text}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{step.text}</p>
             </article>
           ))}
         </div>
