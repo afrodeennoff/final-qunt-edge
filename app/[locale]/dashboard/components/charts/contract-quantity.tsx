@@ -119,7 +119,7 @@ export default React.memo(function ContractQuantityChart({
              </div>
              <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
                <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("contracts.tooltip.numberOfTrades")}</span>
-               <span className="font-black text-muted-foreground/85 text-[11px]">
+               <span className="font-black text-muted-foreground text-[11px]">
                  {tradeCount}
                </span>
              </div>
@@ -196,7 +196,7 @@ export default React.memo(function ContractQuantityChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value: number) => `${value}h`}
                   ticks={
@@ -212,7 +212,7 @@ export default React.memo(function ContractQuantityChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value: number) => value.toFixed(0)}
                 />

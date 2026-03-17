@@ -60,7 +60,7 @@ function CommissionsTooltip({
           <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
             {t("commissions.tooltip.percentage")}
           </span>
-          <span className="font-black text-muted-foreground/85 text-[11px]">
+          <span className="font-black text-muted-foreground text-[11px]">
             {data.value.toFixed(2)}%</span>
         </div>
       </div>
@@ -211,7 +211,7 @@ export default React.memo(function CommissionsPnLChart({
                     <tspan x="50%" dy="-0.1em" className="fill-foreground font-black text-2xl">
                       {formatCenterCurrency(chartData[0]?.raw ?? 0)}
                     </tspan>
-                    <tspan x="50%" dy="1.35em" className="fill-foreground/85 text-[10px] uppercase font-black tracking-[0.16em]">
+                    <tspan x="50%" dy="1.35em" className="fill-foreground text-[10px] uppercase font-black tracking-[0.16em]">
                       NET P/L
                     </tspan>
                   </text>

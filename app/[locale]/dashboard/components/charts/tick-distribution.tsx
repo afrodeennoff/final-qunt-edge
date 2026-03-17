@@ -222,7 +222,7 @@ export default React.memo(function TickDistributionChart({
                           y={0}
                           dy={size === "small" ? 8 : 4}
                           textAnchor="middle"
-                          fill="var(--fg-muted)"
+                          fill="hsl(var(--text-secondary))"
                           fontSize={size === "small" ? 9 : 10}
                           transform={
                             size === "small" ? "rotate(-45)" : "rotate(0)"
@@ -244,7 +244,7 @@ export default React.memo(function TickDistributionChart({
                   tickFormatter={formatCount}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                 />
                 <Tooltip

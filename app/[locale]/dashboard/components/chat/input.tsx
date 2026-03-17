@@ -260,7 +260,7 @@ export function ChatInput({
           <div className="text-center">
             <Upload className="h-8 w-8 mx-auto mb-2 text-primary" />
             <p className="text-sm font-medium text-primary">Drop files here</p>
-            <p className="text-xs text-primary/70">Images, CSV, Excel</p>
+            <p className="text-xs text-primary">Images, CSV, Excel</p>
           </div>
         </div>
       )}

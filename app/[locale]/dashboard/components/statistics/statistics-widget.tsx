@@ -177,7 +177,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
   return (
     <WidgetShell
       title={t('statistics.title')}
-      icon={<BarChart className="h-3.5 w-3.5 text-fg-muted" />}
+      icon={<BarChart className="h-3.5 w-3.5 text-muted-foreground" />}
       info={t('statistics.tooltip')}
       className={cn("h-full flex flex-col", size === 'tiny' ? "text-xs" : (size === 'small' || size === 'small-long') ? "text-sm" : "text-base")}
       contentClassName="flex-1 p-0"

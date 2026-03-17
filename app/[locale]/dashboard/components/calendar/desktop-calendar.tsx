@@ -215,7 +215,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
           </div>
 
           {/* Account List with max height and scrolling */}
-          <div className="space-y-2 sm:space-y-3 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <div className="space-y-2 sm:space-y-3 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border/70 scrollbar-track-transparent">
             {renewals.map((account, index) => (
               <div
                 key={account.id}
@@ -270,7 +270,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
                 </div>
 
                 {/* Subtle hover effect line */}
-                <div className="absolute bottom-0 left-3 right-3 sm:left-4 sm:right-4 h- px-bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                <div className="absolute bottom-0 left-3 right-3 sm:left-4 sm:right-4 h-px bg-linear-to-r from-transparent via-border/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
               </div>
             ))}
           </div>

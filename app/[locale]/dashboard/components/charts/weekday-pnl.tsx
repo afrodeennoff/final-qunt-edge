@@ -247,7 +247,7 @@ export default React.memo(function WeekdayPNLChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => {
                     const dayName = translateWeekdayPnL(t, value);
@@ -261,7 +261,7 @@ export default React.memo(function WeekdayPNLChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                 />

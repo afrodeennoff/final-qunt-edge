@@ -540,7 +540,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                         </div>
                       </TransformComponent>
 
-                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-secondary/220 backdrop-blur-xs z-50">
+                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/70 backdrop-blur-xs z-50">
                         <Button
                           variant="ghost"
                           size="icon"

@@ -82,7 +82,7 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
   return (
     <WidgetShell
       title="Risk/Reward"
-      icon={<Scale className="h-3.5 w-3.5 text-fg-muted" />}
+      icon={<Scale className="h-3.5 w-3.5 text-muted-foreground" />}
       info={t('widgets.riskRewardRatio.tooltip')}
       className="h-full"
       contentClassName="flex flex-col justify-between gap-2 p-3"

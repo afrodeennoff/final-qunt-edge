@@ -265,11 +265,11 @@ export function TradeProgressChart({
                         <div className="space-y-1 pt-1 border-t border-border/5">
                           <div className="flex justify-between items-center">
                             <span className="text-foreground/65 uppercase font-bold tracking-wider">Drawdown</span>
-                            <span className="text-fg-muted font-medium">${data.drawdownLevel.toLocaleString()}</span>
+                            <span className="text-muted-foreground font-medium">${data.drawdownLevel.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-foreground/65 uppercase font-bold tracking-wider">ATH</span>
-                            <span className="text-fg-muted font-medium">${data.highestBalance.toLocaleString()}</span>
+                            <span className="text-muted-foreground font-medium">${data.highestBalance.toLocaleString()}</span>
                           </div>
                         </div>
                         {data.isReset && (

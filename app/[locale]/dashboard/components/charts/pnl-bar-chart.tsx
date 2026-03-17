@@ -94,11 +94,11 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
         <div className="grid grid-cols-2 gap-x-4 pt-2 border-t border-border/55">
           <div className="flex flex-col">
             <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.longTrades")}</span>
-            <span className="text-[11px] font-black text-muted-foreground/85">{data.longNumber}</span>
+            <span className="text-[11px] font-black text-muted-foreground">{data.longNumber}</span>
           </div>
           <div className="flex flex-col text-right">
             <span className="text-[8px] uppercase text-muted-foreground font-black tracking-wider">{t("pnl.tooltip.shortTrades")}</span>
-            <span className="text-[11px] font-black text-muted-foreground/85">{data.shortNumber}</span>
+            <span className="text-[11px] font-black text-muted-foreground">{data.shortNumber}</span>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@ export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) 
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   minTickGap={size === "small" ? 30 : 50}
                   tickFormatter={(value) => {
@@ -219,7 +219,7 @@ export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) 
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
                 />

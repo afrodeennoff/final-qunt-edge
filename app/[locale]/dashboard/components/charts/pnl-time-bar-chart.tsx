@@ -125,7 +125,7 @@ export default React.memo(function TimeOfDayTradeChart({
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
-              <span className="font-black text-muted-foreground/85 text-[10px]">
+              <span className="font-black text-muted-foreground text-[10px]">
                 {data.tradeCount}
               </span>
             </div>
@@ -217,7 +217,7 @@ export default React.memo(function TimeOfDayTradeChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `${value}h`}
                   ticks={
@@ -233,7 +233,7 @@ export default React.memo(function TimeOfDayTradeChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                 />

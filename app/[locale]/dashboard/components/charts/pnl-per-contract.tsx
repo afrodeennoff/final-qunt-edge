@@ -127,19 +127,19 @@ export default React.memo(function PnLPerContractChart({
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/55">
               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContract.tooltip.totalPnl")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
+              <span className="font-black text-muted-foreground text-[11px]">
                 {formatCurrency(data.totalPnl)}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContract.tooltip.trades")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
+              <span className="font-black text-muted-foreground text-[11px]">
                 {data.tradeCount} ({formatWinRate(data.winCount, data.tradeCount)}% WR)
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("pnlPerContract.tooltip.totalContracts")}</span>
-              <span className="font-black text-muted-foreground/85 text-[11px]">
+              <span className="font-black text-muted-foreground text-[11px]">
                 {data.totalContracts}
               </span>
             </div>
@@ -216,7 +216,7 @@ export default React.memo(function PnLPerContractChart({
                   tickMargin={size === "small" ? 4 : 8}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   angle={size === "small" ? -45 : -45}
                   textAnchor="end"
@@ -228,7 +228,7 @@ export default React.memo(function PnLPerContractChart({
                   tickMargin={4}
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
-                    fill: "var(--fg-muted)",
+                    fill: "hsl(var(--text-secondary))",
                   }}
                   tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                   domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}

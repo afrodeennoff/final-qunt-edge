@@ -316,7 +316,7 @@ const OptimizedTooltip = React.memo(
             <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
               {t("equity.tooltip.date")}
             </span>
-            <span className="font-black text-muted-foreground/85 text-[10px] uppercase tracking-widest">
+            <span className="font-black text-muted-foreground text-[10px] uppercase tracking-widest">
               {format(new Date(data.date), "MMM d, yyyy", {
                 locale: dateLocale,
               })}
@@ -376,7 +376,7 @@ const OptimizedTooltip = React.memo(
                             generateAccountColor(account),
                         }}
                       />
-                      <span className="text-[10px] font-black text-foreground/80 uppercase tracking-widest leading-none">
+                      <span className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none">
                         {account}
                       </span>
                     </div>
@@ -906,7 +906,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                 onCheckedChange={setShowIndividualConfig}
                 className="shrink-0 scale-75"
               />
-              <Label htmlFor="view-mode" className="text-xs text-token-secondary cursor-pointer">
+              <Label htmlFor="view-mode" className="text-xs text-muted-foreground cursor-pointer">
                 {t("equity.toggle.individual")}
               </Label>
             </div>
@@ -953,7 +953,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                       minTickGap={30}
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
-                        fill: "var(--fg-muted)",
+                        fill: "hsl(var(--text-secondary))",
                       }}
                       tickFormatter={(value) =>
                         format(new Date(value), "MMM d", { locale: dateLocale })
@@ -967,7 +967,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                       tickMargin={4}
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
-                        fill: "var(--fg-muted)",
+                        fill: "hsl(var(--text-secondary))",
                       }}
                       tickFormatter={(value) => `$${(value / 1000).toFixed(1)}k`}
                     />
