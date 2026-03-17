@@ -41,7 +41,7 @@ export default function Features() {
           <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/85 [font-family:var(--home-copy)]">Platform Weapons</p>
           <h2 className="mt-2 text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] [font-family:var(--home-display)]">
             Built for traders who
-            <span className="block text-[hsl(var(--brand-primary))]">want standards, not excuses</span>
+            <span className="block text-foreground">want standards, not excuses</span>
           </h2>
         </div>
         <div className="mb-6 h-px bg-[hsl(var(--mk-border)/0.34)] sm:mb-8" />
@@ -59,7 +59,7 @@ export default function Features() {
                    <Icon className="h-5 w-5" />
                  </div>
                  <h3 className="text-lg font-semibold tracking-[-0.01em] text-[hsl(var(--mk-text))] [font-family:var(--home-display)]">{item.title}</h3>
-                 <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">{item.desc}</p>
+                 <p className="mt-2 text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">{item.desc}</p>
                </article>
              )
            })}

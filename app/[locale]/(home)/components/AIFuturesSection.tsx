@@ -53,7 +53,7 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
                   <Icon className="h-5 w-5" />
                 </div>
                 <CardTitle className="text-lg tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</CardTitle>
-                <CardDescription className="text-sm leading-relaxed text-[hsl(var(--mk-text-muted))] [font-family:var(--home-copy)]">
+                <CardDescription className="text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">
                   {item.description}
                 </CardDescription>
               </CardHeader>
@@ -75,7 +75,7 @@ export default function AIFuturesSection() {
           </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             AI that improves
-            <span className="block text-[hsl(var(--brand-primary))]">decision quality, not just reporting</span>
+            <span className="block text-foreground">decision quality, not just reporting</span>
           </h2>
         </div>
 
@@ -98,7 +98,7 @@ export default function AIFuturesSection() {
         </Tabs>
 
         <Card variant="glass" className="mt-6 rounded-2xl border-[hsl(var(--mk-border)/0.3)]">
-          <CardContent className="flex flex-col gap-2 p-5 text-sm text-[hsl(var(--mk-text-muted))] sm:flex-row sm:items-center sm:justify-between [font-family:var(--home-copy)]">
+          <CardContent className="flex flex-col gap-2 p-5 text-sm text-foreground/85 sm:flex-row sm:items-center sm:justify-between [font-family:var(--home-copy)]">
             <p>
               AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
             </p>
