@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Search, Filter, Star, ChevronDown, ChevronUp, CheckCircle2, Clock, TrendingUp, Shield } from 'lucide-react'
 import type {
   DealItem,
   DrawdownType,
@@ -135,124 +136,209 @@ export function PropFirmDealsExperience({ locale, deals, firms, faqs, lastUpdate
 
   const sortLabel = (key: SortKey) => {
     if (sortKey !== key) return ''
-    return sortDirection === 'asc' ? ' (ascending)' : ' (descending)'
+    return sortDirection === 'asc' ? 'ascending' : 'descending'
   }
 
   return (
-    <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-8">
-        <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
-        <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+    <div className="space-y-10">
+      {/* Hero Section with Enhanced Glassmorphism */}
+      <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/60 p-8 sm:p-12">
+        {/* Ambient background effects */}
+        <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/15 blur-[100px]" />
+        <div className="pointer-events-none absolute right-0 bottom-0 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
+        <div className="pointer-events-none absolute top-1/2 left-1/3 h-32 w-32 rounded-full bg-primary/8 blur-[60px]" />
 
-        <div className="relative grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div>
-            <p className="inline-flex rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+              <Star className="h-3.5 w-3.5" />
               Prop Firm Deals & Comparison
-            </p>
-            <h1 className="mt-4 text-4xl font-black tracking-tight text-foreground sm:text-5xl">
-              Find verified discounts and compare firms fast
+            </span>
+            <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Find verified{' '}
+              <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                discounts
+              </span>{' '}
+              and compare firms fast
             </h1>
-            <p className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+            <p className="mt-5 max-w-2xl text-lg text-muted-foreground leading-relaxed">
               Explore fresh promo codes, filter by your preferred rule set, and evaluate firm structures before committing.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#deals-grid" className="inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90">
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a 
+                href="#deals-grid" 
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
+              >
                 Browse Deals
+                <ChevronDown className="h-4 w-4" />
               </a>
-              <a href="#comparison-table" className="inline-flex rounded-full border border-border bg-background/70 px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted">
+              <a 
+                href="#comparison-table" 
+                className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-card/50 px-6 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-card/80"
+              >
                 Compare Firms
               </a>
             </div>
           </div>
-          <div className="rounded-2xl border border-border bg-background/60 p-4">
-            <ul className="space-y-3 text-sm">
-              <li className="rounded-xl border border-border bg-card px-3 py-2 text-foreground">Tracked Firms: {firms.length}</li>
-              <li className="rounded-xl border border-border bg-card px-3 py-2 text-foreground">Live Deals: {deals.length}</li>
-              <li className="rounded-xl border border-border bg-card px-3 py-2 text-foreground">Last Updated: {lastUpdated}</li>
-            </ul>
+          
+          {/* Stats Panel with Glass Effect */}
+          <div className="rounded-2xl border border-primary/20 bg-card/40 p-6 backdrop-blur-xl">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
+                  <Shield className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Tracked Firms</p>
+                  <p className="text-2xl font-bold text-foreground">{firms.length}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Live Deals</p>
+                  <p className="text-2xl font-bold text-foreground">{deals.length}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
+                  <Clock className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Last Updated</p>
+                  <p className="text-lg font-semibold text-foreground">{lastUpdated}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5">
-        <h2 className="text-lg font-semibold text-foreground">Filter and Search</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <label className="space-y-1 text-sm">
-            <span className="text-muted-foreground">Search firm</span>
+      {/* Enhanced Filter Section with Glassmorphism */}
+      <section className="rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl sm:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
+            <Filter className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">Filter and Search</h2>
+            <p className="text-sm text-muted-foreground">Narrow down to find your perfect match</p>
+          </div>
+        </div>
+        
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Search Input with Icon */}
+          <div className="relative sm:col-span-2 lg:col-span-3">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Type firm name"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-foreground/40"
+              placeholder="Search for a firm name..."
+              className="w-full rounded-xl border border-primary/20 bg-background/80 px-12 py-3 text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
             />
-          </label>
+          </div>
           <FilterSelect label="Market Type" value={market} onChange={setMarket} options={marketOptions} />
           <FilterSelect label="Platform" value={platform} onChange={setPlatform} options={platformOptions} />
           <FilterSelect label="Payout Model" value={payout} onChange={setPayout} options={payoutOptions} />
           <FilterSelect label="Drawdown Type" value={drawdown} onChange={setDrawdown} options={drawdownOptions} />
-          <label className="space-y-1 text-sm">
+          <label className="space-y-2 text-sm">
             <span className="text-muted-foreground">Price Range</span>
-            <select
-              value={priceRange}
-              onChange={(event) => setPriceRange(event.target.value)}
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-foreground/40"
-            >
-              <option value="all">All prices</option>
-              <option value="0-99">$0 - $99</option>
-              <option value="100-199">$100 - $199</option>
-              <option value="200+">$200+</option>
-            </select>
+            <div className="relative">
+              <select
+                value={priceRange}
+                onChange={(event) => setPriceRange(event.target.value)}
+                className="w-full appearance-none rounded-xl border border-primary/20 bg-background/80 px-4 py-3 text-foreground outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="all">All prices</option>
+                <option value="0-99">$0 - $99</option>
+                <option value="100-199">$100 - $199</option>
+                <option value="200+">$200+</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            </div>
           </label>
         </div>
       </section>
 
-      <section id="deals-grid" className="space-y-3">
+      {/* Featured Deals Section with Enhanced Cards */}
+      <section id="deals-grid" className="space-y-6">
         <div className="flex items-end justify-between gap-3">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">Featured & Latest Deals</h2>
-          <p className="text-sm text-muted-foreground">{filteredDeals.length} results</p>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Featured & Latest Deals</h2>
+            <p className="mt-1 text-muted-foreground">Handpicked offers with exclusive discount codes</p>
+          </div>
+          <p className="rounded-full bg-primary/15 px-4 py-1.5 text-sm font-medium text-primary">
+            {filteredDeals.length} results
+          </p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredDeals.map((deal) => (
-            <article key={deal.id} className="rounded-2xl border border-border bg-card p-5 transition-transform duration-200 hover:-translate-y-0.5">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-xs font-semibold text-foreground">
-                    {deal.firmName.slice(0, 2).toUpperCase()}
+        
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredDeals.map((deal, index) => (
+            <article 
+              key={deal.id} 
+              className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              {/* Card shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              
+              <div className="relative">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 text-sm font-bold text-primary">
+                      {deal.firmName.slice(0, 2).toUpperCase()}
+                    </div>
+                    <p className="font-semibold text-foreground">{deal.firmName}</p>
                   </div>
-                  <p className="text-sm font-semibold text-foreground">{deal.firmName}</p>
+                  {deal.verified && (
+                    <span className="flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-primary">
+                      <CheckCircle2 className="h-3 w-3" />
+                      Verified
+                    </span>
+                  )}
                 </div>
-                {deal.verified && (
-                  <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-foreground">
-                    Verified
-                  </span>
-                )}
+                
+                <div className="mt-5">
+                  <p className="text-4xl font-black text-foreground">{deal.discountPercent}% OFF</p>
+                  <p className="mt-2 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-1.5 text-sm font-semibold text-foreground">
+                    <span className="text-primary">Code:</span> {deal.couponCode}
+                  </p>
+                </div>
+                
+                <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>Expires: {deal.expiryDate}</span>
+                </div>
+                
+                <a
+                  href={deal.claimUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
+                >
+                  Claim Deal
+                  <TrendingUp className="h-4 w-4" />
+                </a>
               </div>
-              <p className="mt-4 text-2xl font-black text-foreground">{deal.discountPercent}% OFF</p>
-              <p className="mt-2 inline-flex rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-foreground">
-                Code: {deal.couponCode}
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">Expires: {deal.expiryDate}</p>
-              <a
-                href={deal.claimUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-primary-foreground transition-opacity hover:opacity-90"
-              >
-                Claim Deal
-              </a>
             </article>
           ))}
         </div>
       </section>
 
-      <section id="comparison-table" className="rounded-2xl border border-border bg-card p-5">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">Comparison Table</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Sortable columns with mobile card fallback.</p>
+      {/* Enhanced Comparison Table */}
+      <section id="comparison-table" className="rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl sm:p-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Comparison Table</h2>
+          <p className="mt-1 text-muted-foreground">Sortable columns — click to reorder</p>
+        </div>
 
-        <div className="mt-4 hidden md:block">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-hidden rounded-xl border border-primary/20 bg-card/40">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-primary/20 bg-primary/5 hover:bg-primary/10">
                 <SortableHead label="Firm" onClick={() => onSort('name')} active={sortKey === 'name'} indicator={sortLabel('name')} />
                 <SortableHead label="Challenge Fee" onClick={() => onSort('challengeFee')} active={sortKey === 'challengeFee'} indicator={sortLabel('challengeFee')} />
                 <SortableHead label="Profit Split" onClick={() => onSort('profitSplit')} active={sortKey === 'profitSplit'} indicator={sortLabel('profitSplit')} />
@@ -264,76 +350,151 @@ export function PropFirmDealsExperience({ locale, deals, firms, faqs, lastUpdate
             </TableHeader>
             <TableBody>
               {filteredFirms.map((firm) => (
-                <TableRow key={firm.id}>
+                <TableRow key={firm.id} className="border-primary/10 transition-colors hover:bg-primary/5">
                   <TableCell className="font-semibold text-foreground">{firm.name}</TableCell>
-                  <TableCell className="text-muted-foreground">${firm.challengeFee}</TableCell>
-                  <TableCell className="text-muted-foreground">{firm.profitSplit}</TableCell>
-                  <TableCell className="text-muted-foreground">{firm.drawdownType}</TableCell>
-                  <TableCell className="text-muted-foreground">{firm.payoutFrequency}</TableCell>
-                  <TableCell className="text-muted-foreground">{firm.maxAllocation}</TableCell>
-                  <TableCell className="text-foreground">{firm.rating.toFixed(1)}</TableCell>
+                  <TableCell className="text-foreground">${firm.challengeFee}</TableCell>
+                  <TableCell className="text-foreground">{firm.profitSplit}</TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                      {firm.drawdownType}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-foreground">{firm.payoutFrequency}</TableCell>
+                  <TableCell className="text-foreground">{firm.maxAllocation}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 text-foreground">
+                      <Star className="h-4 w-4 fill-primary text-primary" />
+                      <span className="font-semibold">{firm.rating.toFixed(1)}</span>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
 
-        <div className="mt-4 grid gap-3 md:hidden">
+        {/* Mobile Cards */}
+        <div className="mt-4 grid gap-4 md:hidden">
           {filteredFirms.map((firm) => (
-            <article key={firm.id} className="rounded-xl border border-border bg-background/60 p-4">
-              <h3 className="text-lg font-semibold text-foreground">{firm.name}</h3>
-              <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
+            <article key={firm.id} className="rounded-xl border border-primary/20 bg-card/60 p-5 backdrop-blur-xl transition-all duration-200 hover:border-primary/40">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">{firm.name}</h3>
+                <div className="flex items-center gap-1 text-sm">
+                  <Star className="h-4 w-4 fill-primary text-primary" />
+                  <span className="font-semibold text-foreground">{firm.rating.toFixed(1)}</span>
+                </div>
+              </div>
+              <dl className="mt-4 grid grid-cols-2 gap-4">
                 <Term label="Challenge Fee" value={`$${firm.challengeFee}`} />
                 <Term label="Profit Split" value={firm.profitSplit} />
                 <Term label="Drawdown" value={firm.drawdownType} />
                 <Term label="Payout" value={firm.payoutFrequency} />
                 <Term label="Allocation" value={firm.maxAllocation} />
-                <Term label="Rating" value={firm.rating.toFixed(1)} />
+                <Term label="Platform" value={firm.platform} />
               </dl>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5">
+      {/* Trust Section with Icons */}
+      <section className="rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl sm:p-8">
         <h2 className="text-2xl font-bold tracking-tight text-foreground">How trust is built</h2>
-        <ol className="mt-3 grid gap-3 md:grid-cols-3">
-          <li className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">1. Deal link and code are reviewed.</li>
-          <li className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">2. Terms are validated against current checkout rules.</li>
-          <li className="rounded-xl border border-border bg-background/60 p-4 text-sm text-muted-foreground">3. Expired offers are removed from the board.</li>
-        </ol>
-        <p className="mt-4 text-xs text-muted-foreground">Last updated: {lastUpdated}</p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Affiliate disclosure: some claim links may include referral parameters. This does not increase your purchase cost.
-        </p>
+        
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="group relative overflow-hidden rounded-xl border border-primary/20 bg-card/40 p-5 transition-all duration-200 hover:border-primary/40">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 mb-4">
+              <Shield className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="font-semibold text-foreground">1. Deal Review</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Deal link and code are manually reviewed by our team.</p>
+          </div>
+          
+          <div className="group relative overflow-hidden rounded-xl border border-primary/20 bg-card/40 p-5 transition-all duration-200 hover:border-primary/40">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 mb-4">
+              <CheckCircle2 className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="font-semibold text-foreground">2. Terms Validation</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Terms are validated against current checkout rules.</p>
+          </div>
+          
+          <div className="group relative overflow-hidden rounded-xl border border-primary/20 bg-card/40 p-5 transition-all duration-200 hover:border-primary/40">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 mb-4">
+              <Clock className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="font-semibold text-foreground">3. Active Maintenance</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Expired offers are regularly removed from the board.</p>
+          </div>
+        </div>
+        
+        <div className="mt-6 flex flex-col gap-2 text-sm text-muted-foreground">
+          <p>Last updated: {lastUpdated}</p>
+          <p className="text-xs">
+            <span className="inline-flex items-center gap-1">
+              <span className="text-primary">●</span> Affiliate disclosure:
+            </span>{' '}
+            some claim links may include referral parameters. This does not increase your purchase cost.
+          </p>
+        </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <article className="rounded-2xl border border-border bg-card p-5">
-          <h3 className="text-xl font-semibold text-foreground">Join the community</h3>
-          <p className="mt-2 text-sm text-muted-foreground">Discuss rule changes, strategy fit, and new offers with other traders.</p>
-          <Link href={`/${locale}/community`} className="mt-4 inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-            Open Community
-          </Link>
+      {/* CTA Sections */}
+      <section className="grid gap-5 md:grid-cols-2">
+        <article className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl transition-all duration-300 hover:border-primary/40">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="relative">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 mb-4">
+              <Star className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold text-foreground">Join the community</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Discuss rule changes, strategy fit, and new offers with other traders.</p>
+            <Link 
+              href={`/${locale}/community`} 
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
+            >
+              Open Community
+              <ChevronDown className="h-4 w-4 -rotate-90" />
+            </Link>
+          </div>
         </article>
-        <article className="rounded-2xl border border-border bg-card p-5">
-          <h3 className="text-xl font-semibold text-foreground">Use trader tools</h3>
-          <p className="mt-2 text-sm text-muted-foreground">Launch your planner workflow with matchup and cost tools.</p>
-          <Link href={`/${locale}/deals/calculator`} className="mt-4 inline-flex rounded-xl border border-border px-4 py-2 text-sm font-semibold text-foreground">
-            Open Tracker / Calculator
-          </Link>
+        
+        <article className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl transition-all duration-300 hover:border-primary/40">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="relative">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 mb-4">
+              <TrendingUp className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold text-foreground">Use trader tools</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Launch your planner workflow with matchup and cost tools.</p>
+            <Link 
+              href={`/${locale}/deals/calculator`} 
+              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-card/50 px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-card/80"
+            >
+              Open Tracker / Calculator
+              <ChevronDown className="h-4 w-4 -rotate-90" />
+            </Link>
+          </div>
         </article>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">FAQ</h2>
-        <Accordion type="single" collapsible className="mt-3">
+      {/* Enhanced FAQ Accordion */}
+      <section className="rounded-2xl border border-primary/20 bg-card/60 p-6 backdrop-blur-xl sm:p-8">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Frequently Asked Questions</h2>
+        <p className="mt-1 text-muted-foreground">Everything you need to know about prop firm deals</p>
+        
+        <Accordion type="single" collapsible className="mt-6">
           {faqs.map((faq, index) => (
-            <AccordionItem key={faq.question} value={`item-${index}`} className="rounded-xl border border-border bg-background/60 px-4 mb-2">
-              <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
+            <AccordionItem 
+              key={faq.question} 
+              value={`item-${index}`} 
+              className="group rounded-xl border border-primary/20 bg-card/40 px-5 mb-3 transition-all duration-200 hover:border-primary/40"
+            >
+              <AccordionTrigger className="py-4 text-left font-semibold text-foreground hover:no-underline [&[data-state=open]>svg]:text-primary">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">{faq.answer}</AccordionContent>
+              <AccordionContent className="text-muted-foreground pb-4">
+                {faq.answer}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
@@ -358,11 +519,28 @@ function SortableHead({
       <button
         type="button"
         onClick={onClick}
-        className="inline-flex items-center gap-1 rounded px-1 py-0.5 text-left font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        aria-label={`Sort by ${label}${indicator}`}
+        className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-left font-semibold transition-all duration-200 ${
+          active 
+            ? 'text-primary bg-primary/10' 
+            : 'text-muted-foreground hover:text-foreground hover:bg-primary/5'
+        }`}
+        aria-label={`Sort by ${label}${indicator ? ` (${indicator})` : ''}`}
       >
         {label}
-        <span aria-hidden="true">{active ? (indicator.includes('ascending') ? '↑' : '↓') : '↕'}</span>
+        <span aria-hidden="true" className="flex flex-col">
+          {active ? (
+            indicator.includes('ascending') ? (
+              <ChevronUp className="h-3.5 w-3.5 text-primary" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5 text-primary" />
+            )
+          ) : (
+            <div className="flex flex-col -space-y-1">
+              <ChevronUp className="h-2.5 w-2.5 opacity-40" />
+              <ChevronDown className="h-2.5 w-2.5 opacity-40" />
+            </div>
+          )}
+        </span>
       </button>
     </TableHead>
   )
@@ -389,19 +567,22 @@ function FilterSelect<T extends string>({
   options: readonly T[]
 }) {
   return (
-    <label className="space-y-1 text-sm">
+    <label className="space-y-2 text-sm">
       <span className="text-muted-foreground">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value as T)}
-        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-foreground/40"
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value as T)}
+          className="w-full appearance-none rounded-xl border border-primary/20 bg-background/80 px-4 py-3 text-foreground outline-none transition-all duration-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+      </div>
     </label>
   )
 }
