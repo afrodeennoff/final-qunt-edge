@@ -5,9 +5,61 @@ import { ArrowRight, Sparkles, Zap, Target, TrendingDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { motion, useReducedMotion } from 'framer-motion'
-import { FloatingOrbs, AnimatedCounter } from '@/components/animation/enhanced-motion'
-import { GlowButton, SpringButton } from '@/components/animation/spring-button'
+import { motion, useReducedMotion, useInView } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+
+function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number; suffix?: string; prefix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-10%" })
+  const [count, setCount] = useState(0)
+  
+  useEffect(() => {
+    if (!isInView) return
+    const duration = 1500
+    const startTime = performance.now()
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * target))
+      if (progress < 1) requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+  }, [isInView, target])
+  
+  return <span ref={ref}>{prefix}{isInView ? count : 0}{suffix}</span>
+}
+
+function FloatingOrbs({ className, orbs }: { className?: string; orbs?: Array<{size: number, x: string, y: string, duration: number, delay: number, opacity: number, color: string}> }) {
+  const defaultOrbs = [
+    { size: 400, x: "5%", y: "15%", duration: 20, delay: 0, opacity: 0.12, color: "from-blue-500/20 to-purple-500/20" },
+    { size: 500, x: "75%", y: "5%", duration: 25, delay: 5, opacity: 0.1, color: "from-cyan-500/15 to-teal-500/15" },
+    { size: 300, x: "25%", y: "65%", duration: 18, delay: 2, opacity: 0.14, color: "from-indigo-500/20 to-violet-500/20" },
+    { size: 350, x: "85%", y: "55%", duration: 22, delay: 8, opacity: 0.08, color: "from-emerald-500/15 to-green-500/15" },
+    { size: 250, x: "55%", y: "85%", duration: 16, delay: 3, opacity: 0.11, color: "from-orange-500/20 to-amber-500/20" },
+  ]
+  const orbList = orbs || defaultOrbs
+  
+  return (
+    <div className={className}>
+      {orbList.map((orb, i) => (
+        <div
+          key={i}
+          className={`absolute rounded-full bg-gradient-to-br ${orb.color}`}
+          style={{
+            width: orb.size,
+            height: orb.size,
+            left: orb.x,
+            top: orb.y,
+            opacity: orb.opacity,
+            animation: `float ${orb.duration}s ease-in-out ${orb.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -167,20 +219,21 @@ export default function Hero({ locale }: { locale: string }) {
               className="absolute -inset-1 rounded-2xl opacity-50 blur-md transition-all duration-300 group-hover:opacity-75"
               style={{ background: 'linear-gradient(135deg, hsl(var(--primary) / 0.4), transparent)' }}
             />
-            <GlowButton 
+            <Button 
+              asChild
               variant="default"
               size="lg"
-              glowColor="rgba(255, 255, 255, 0.15)"
               className="relative h-13 w-full min-w-[240px] rounded-2xl bg-primary px-8 py-6 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-xl shadow-primary/25 transition-all duration-200 hover:bg-primary/95 hover:shadow-2xl hover:shadow-primary/30 sm:w-auto [font-family:var(--home-copy)]"
             >
               <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
                 <Zap className="mr-2.5 h-5 w-5" />
                 Start Free Audit
               </Link>
-            </GlowButton>
+            </Button>
           </div>
           
-          <SpringButton 
+          <Button 
+            asChild 
             variant="outline" 
             size="lg"
             className="h-13 w-full min-w-[240px] rounded-2xl border-primary/40 bg-card/50 px-8 py-6 text-sm font-semibold uppercase tracking-[0.14em] text-foreground backdrop-blur-sm transition-all duration-200 hover:border-primary/60 hover:bg-card/80 sm:w-auto [font-family:var(--home-copy)]"
@@ -189,7 +242,7 @@ export default function Hero({ locale }: { locale: string }) {
               See Pricing
               <ArrowRight className="ml-2.5 h-5 w-5" />
             </Link>
-          </SpringButton>
+          </Button>
         </motion.div>
 
         <motion.div

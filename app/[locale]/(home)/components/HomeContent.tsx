@@ -1,6 +1,5 @@
-import Hero from './Hero'
+import ClientHomeContent from './ClientHomeContent'
 import DeferredHomeSections from './DeferredHomeSections'
-import ProofStrip from './ProofStrip'
 
 export default function HomeContent({ locale }: { locale: string }) {
   return (
@@ -8,8 +7,7 @@ export default function HomeContent({ locale }: { locale: string }) {
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.2] sm:block" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_340px_at_10%_20%,hsl(var(--foreground)/0.05),transparent_70%),radial-gradient(700px_320px_at_92%_6%,hsl(var(--foreground)/0.04),transparent_70%)]" />
       <main className="relative z-10 mx-auto w-full max-w-[1360px]">
-        <Hero locale={locale} />
-        <ProofStrip />
+        <ClientHomeContent locale={locale} />
         <DeferredHomeSections />
       </main>
     </div>

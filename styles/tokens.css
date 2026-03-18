@@ -312,7 +312,6 @@
     --card-padding-md: var(--space-sm);
     --card-padding-lg: var(--space-md);
     --card-padding-xl: var(--space-lg);
-  }
 
     /* ===== EMOTION VISUALIZATION TOKENS ===== */
     --emotion-sad: 270 50% 60%;
@@ -336,14 +335,14 @@
     --journal-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --journal-glass-elevated-bg: 240 6% 4% / 0.85;
     --journal-glass-elevated-border: 35 20% 20% / 0.25;
-
-    /* .dark class inherits luxury theme from :root */
-    .dark {
-      /* Inherits all luxury tokens from :root for consistency */
-      /* Dark mode uses the same warm obsidian palette with gold accents */
-    }
   }
 
+  /* .dark class inherits luxury theme from :root */
+  .dark {
+    /* Inherits all luxury tokens from :root for consistency */
+    /* Dark mode uses the same warm obsidian palette with gold accents */
+  }
+}
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
