@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useCurrentLocale } from '@/locales/client';
 
 const FOOTER_LINK_CLASS =
-    'text-[hsl(var(--brand-ink))] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0';
+    'text-foreground transition-colors hover:text-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0';
 
 const Footer: React.FC = () => {
     const locale = useCurrentLocale();
@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
                     <span className="text-sm font-bold tracking-tighter uppercase mono text-foreground">Qunt Edge</span>
                 </div>
 
-                <div className="grid max-w-2xl grid-cols-2 gap-8 text-xs font-bold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] sm:grid-cols-3">
+                <div className="grid max-w-2xl grid-cols-2 gap-8 text-xs font-bold uppercase tracking-[0.12em] text-foreground sm:grid-cols-3">
                     <div className="flex flex-col gap-2">
                         <span className="mb-2 text-foreground">Product</span>
                         <Link href={`/${locale}/#features`} className={FOOTER_LINK_CLASS}>
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
                         </Link>
                     </div>
                 </div>
-                <div className="text-xs mono text-[hsl(var(--brand-ink))] md:text-right">
+                <div className="text-xs mono text-foreground md:text-right">
                     © {new Date().getFullYear()} Qunt Edge. All rights reserved. Professional trading analytics.
                 </div>
             </div>

@@ -1,6 +1,11 @@
+'use client'
+
+import { useRef } from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2 } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 const proofStats = [
   { label: 'Time To First Diagnostic', value: '< 7 min', note: 'from first sync to actionable process signal' },
@@ -37,11 +42,56 @@ const socialProof = [
   'Trusted for multi-account execution review',
 ]
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+  }
+}
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+}
+
 export default function WhyChooseUs() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start']
+  })
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
+  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 0.5, 0.5, 0.3])
+
   return (
-    <section id="why-us" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section 
+      id="why-us" 
+      ref={sectionRef}
+      className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-14 lg:px-8"
+    >
+      <motion.div 
+        className="pointer-events-none absolute inset-0 -z-10 opacity-30"
+        style={{ 
+          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.15), transparent)',
+          y: backgroundY,
+          opacity: backgroundOpacity
+        }}
+      />
+      
       <div className="mx-auto max-w-6xl space-y-10">
-        <div className="text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center"
+        >
           <Badge variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             Why Traders Choose Us
           </Badge>
@@ -52,31 +102,46 @@ export default function WhyChooseUs() {
           <p className="mx-auto mt-4 max-w-3xl text-[15px] leading-[1.78] text-foreground/80 sm:text-base [font-family:var(--home-copy)]">
             Qunt Edge merges execution analytics, journaling, and AI coaching into one weekly cadence so your process gets sharper, not noisier.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid gap-4 md:grid-cols-3"
+        >
           {proofStats.map((stat) => (
-            <div
+            <motion.div
               key={stat.label}
+              variants={itemVariants}
               className="marketing-panel rounded-2xl p-5"
             >
               <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">{stat.label}</p>
               <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">{stat.value}</p>
               <p className="mt-2 text-sm text-foreground/80 [font-family:var(--home-copy)]">{stat.note}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {reasons.map((reason) => {
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid gap-4 sm:grid-cols-2"
+        >
+          {reasons.map((reason, idx) => {
             const Icon = reason.icon
+            const isKeyBenefit = idx < 2
             return (
-              <div
+              <motion.div
                 key={reason.title}
+                variants={itemVariants}
               >
                 <Card variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)]">
                   <CardHeader>
-                    <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
+                    <div className={`mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground ${isKeyBenefit ? 'icon-glow-key' : 'icon-glow'}`}>
                       <Icon className="h-5 w-5" />
                     </div>
                     <CardTitle className="text-xl tracking-[-0.01em] [font-family:var(--home-display)]">{reason.title}</CardTitle>
@@ -85,24 +150,31 @@ export default function WhyChooseUs() {
                     </CardDescription>
                   </CardHeader>
                 </Card>
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid gap-3 sm:grid-cols-3"
+        >
           {socialProof.map((item, idx) => (
-            <div
+            <motion.div
               key={item}
+              variants={itemVariants}
               className="flex items-center gap-3 rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface)/0.7)] px-4 py-3 text-sm"
             >
               {idx === 0 && <Sparkles className="h-4 w-4 text-foreground" />}
               {idx === 1 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
               {idx === 2 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
               <span className="text-foreground/80 [font-family:var(--home-copy)]">{item}</span>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

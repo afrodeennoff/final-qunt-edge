@@ -34,6 +34,13 @@ interface DailyTickTargetProps {
   size?: WidgetSize
 }
 
+const formatLocalDate = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export default React.memo(function DailyTickTargetChart({ size = 'medium' }: DailyTickTargetProps) {
   const { formattedTrades: trades } = useDashboardStats()
   const { dateRange } = useDashboardFilters()
@@ -41,12 +48,15 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
   const tickDetails = useTickDetailsStore(state => state.tickDetails)
   const [targetValue, setTargetValue] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  // Add selectedDate state
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
+
+  const selectedDate = React.useMemo(() => {
+    if (dateRange?.from) {
+      return formatLocalDate(dateRange.from)
+    }
+    return formatLocalDate(new Date())
+  }, [dateRange])
 
   const {
-    getTodayTarget,
-    getTodayProgress,
     setTarget,
     updateCurrent,
     displayMode,
@@ -54,8 +64,8 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
     convertToDisplayValue,
     convertFromDisplayValue,
     getDisplayUnit,
-    getTarget, // Added getTarget
-    getProgress // Added getProgress
+    getTarget,
+    getProgress
   } = useDailyTickTargetStore()
 
   // Use selectedDate for fetching progress
@@ -70,29 +80,14 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
 
     if (dateRange && dateRange.from) {
       // If there's a date filter, use the date range
-      // Use local date formatting to avoid timezone issues
-      const formatLocalDate = (date: Date) => {
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-      }
-
       fromDate = formatLocalDate(dateRange.from)
       toDate = dateRange.to ? formatLocalDate(dateRange.to) : fromDate
     } else {
       // No date filter, use today's date
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = String(today.getMonth() + 1).padStart(2, '0')
-      const day = String(today.getDate()).padStart(2, '0')
-      const todayStr = `${year}-${month}-${day}`
+      const todayStr = formatLocalDate(new Date())
       fromDate = todayStr
       toDate = todayStr
     }
-
-    // Use the from date as the selected date for storage
-    setSelectedDate(fromDate)
 
     // Filter trades for the selected period (even if trades array is empty)
     const displayTrades = trades.filter(trade => {

@@ -152,7 +152,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         const grid = getNextWidgetPlacement(currentItems, type, effectiveSize, activeLayout)
 
         const newWidget: Widget = {
-            i: `widget${Date.now()}`,
+            i: `widget-${crypto.randomUUID()}`,
             type,
             size: effectiveSize,
             x: grid.x,

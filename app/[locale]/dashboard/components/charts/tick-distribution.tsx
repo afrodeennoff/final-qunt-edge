@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  type TooltipProps as RechartsTooltipProps,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
@@ -37,13 +38,7 @@ interface ChartDataPoint {
   count: number;
 }
 
-interface TooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    payload: ChartDataPoint;
-  }>;
-  label?: string;
-}
+interface TickDistributionTooltipProps extends RechartsTooltipProps<number, string> {}
 
 const chartConfig = {
   count: {
@@ -58,6 +53,29 @@ const formatCount = (value: number) => {
   }
   return value.toString();
 };
+
+function TickDistributionTooltip({ active, payload }: TickDistributionTooltipProps) {
+  const t = useI18n();
+  if (active && payload && payload.length) {
+    const data = payload[0]?.payload as ChartDataPoint | undefined;
+    if (!data) return null;
+    return (
+      <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
+        <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
+          <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+          <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.ticks}</span>
+        </div>
+        <div className="flex justify-between items-center pt-1.5">
+          <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+          <span className="font-black text-foreground text-[11px] tabular-nums">
+            {data.count}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
 
 export default React.memo(function TickDistributionChart({
   size = "medium",
@@ -115,26 +133,10 @@ export default React.memo(function TickDistributionChart({
     }
   };
 
-  const CustomTooltip = ({ active, payload }: TooltipProps) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-          <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
-            <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.ticks}</span>
-          </div>
-          <div className="flex justify-between items-center pt-1.5">
-            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
-            <span className="font-black text-foreground text-[11px] tabular-nums">
-              {data.count}
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+  const renderTooltip = React.useCallback(
+    (props: RechartsTooltipProps<number, string>) => <TickDistributionTooltip {...props} />,
+    [],
+  );
 
   return (
     <ChartSurface>
@@ -204,7 +206,8 @@ export default React.memo(function TickDistributionChart({
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  className="text-border dark:opacity-[0.1] opacity-[0.2]"
+                  stroke="hsl(var(--chart-grid))"
+                  strokeOpacity={0.3}
                   vertical={false}
                 />
                 <XAxis
@@ -248,7 +251,7 @@ export default React.memo(function TickDistributionChart({
                   }}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={renderTooltip}
                   cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar

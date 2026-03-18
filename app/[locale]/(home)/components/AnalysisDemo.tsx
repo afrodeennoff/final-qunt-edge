@@ -1,9 +1,63 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
+import { motion, useInView, useReducedMotion, AnimatePresence } from 'framer-motion'
+
+// Animated counter component
+function AnimatedCounter({
+  value,
+  duration = 1.2,
+  suffix = '',
+  className
+}: {
+  value: number
+  duration?: number
+  suffix?: string
+  className?: string
+}) {
+  const prefersReducedMotion = useReducedMotion()
+  const [count, setCount] = useState(() => (prefersReducedMotion ? value : 0))
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const hasStartedRef = useRef(false)
+
+  useEffect(() => {
+    if (!isInView || prefersReducedMotion || hasStartedRef.current) return
+    hasStartedRef.current = true
+
+    let startTime: number
+    let animationFrame: number
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
+      
+      // Ease out cubic
+      const easeOut = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(easeOut * value))
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate)
+      }
+    }
+
+    animationFrame = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame)
+    }
+  }, [isInView, value, duration, prefersReducedMotion])
+
+  return (
+    <span ref={ref} className={className}>
+      {count}
+      {suffix}
+    </span>
+  )
+}
 
 const mockData = [
   { time: '09:30', price: 4312, ema: 4308, volume: 32 },
@@ -65,13 +119,21 @@ export default function AnalysisDemo() {
           </p>
         </div>
 
-        <div className="marketing-panel overflow-hidden rounded-[28px]">
+        <motion.div
+          className="marketing-panel overflow-hidden rounded-[28px]"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
             <div className="border-b border-[hsl(var(--mk-border)/0.3)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Execution Stream</p>
-                  <p className="mt-1 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
+                  <p className="mt-1 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">
+                    <AnimatedCounter value={4367} suffix=".00" />
+                  </p>
                 </div>
                 <span className="rounded-full border border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
                   +1.27%
@@ -80,46 +142,101 @@ export default function AnalysisDemo() {
 
               {isMobile ? (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                  <motion.div
+                    className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                  >
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Plan Adherence</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">87%</p>
-                  </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">
+                      <AnimatedCounter value={87} suffix="%" />
+                    </p>
+                  </motion.div>
+                  <motion.div
+                    className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.25 }}
+                  >
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Risk Drift</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">-22%</p>
-                  </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+                      <AnimatedCounter value={-22} suffix="%" />
+                    </p>
+                  </motion.div>
+                  <motion.div
+                    className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                  >
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Review SLA</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">9m</p>
-                  </div>
+                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">
+                      <AnimatedCounter value={9} suffix="m" />
+                    </p>
+                  </motion.div>
                 </div>
               ) : (
-                <div className="h-[300px] overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] p-3">
+                <motion.div
+                  className="h-[300px] overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] p-3"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-5%" }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                >
                   <AnalysisDemoChart data={mockData} />
-                </div>
+                </motion.div>
               )}
             </div>
 
             <div className="bg-[hsl(var(--mk-surface-muted)/0.42)] p-5 sm:p-6">
               <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Journal Signals</p>
               <div className={cn("mt-4 space-y-3", isMobile ? "min-h-0" : "min-h-[220px]")}>
-                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">
-                  {activeLog}
-                </div>
+                <motion.div
+                  className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={logIndex}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.35 }}
+                    >
+                      {activeLog}
+                    </motion.p>
+                  </AnimatePresence>
+                </motion.div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4">
+              <motion.div
+                className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
                 <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Anomaly Probability</p>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.3)]">
-                  <div
-                    style={{ width: '72%' }}
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '72%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: "easeOut" }}
                     className="h-full rounded-full bg-[hsl(var(--primary))]"
                   />
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

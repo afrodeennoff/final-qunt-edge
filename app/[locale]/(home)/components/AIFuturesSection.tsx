@@ -1,8 +1,17 @@
 "use client"
+
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
+
+const springTransition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 30,
+}
 
 const intelligenceFeatures = [
   {
@@ -40,16 +49,26 @@ const automationFeatures = [
   },
 ]
 
-function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
+function FeatureGrid({ items, delay = 0 }: { items: typeof intelligenceFeatures; delay?: number }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => {
+      {items.map((item, index) => {
         const Icon = item.icon
         return (
-          <div key={item.title}>
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{
+              duration: 0.35,
+              delay: delay + index * 0.05,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
+          >
             <Card
               variant="glass"
-              className="h-full rounded-[28px] border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)]"
+              className="h-full rounded-[28px] border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)] transition-transform duration-300 hover:scale-[1.02]"
             >
               <CardHeader className="space-y-3 px-0 pb-0">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.14)] text-foreground">
@@ -63,7 +82,7 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
                 </CardDescription>
               </CardHeader>
             </Card>
-          </div>
+          </motion.div>
         )
       })}
     </div>
@@ -71,63 +90,98 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
 }
 
 export default function AIFuturesSection() {
+  const [activeTab, setActiveTab] = useState('intelligence')
+
   return (
     <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
-        <div className="space-y-3 text-center">
-          <Badge
-            variant="outline"
-            className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
-          >
-            Must-Have AI Features
-          </Badge>
-          <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
-            AI that improves
-            <span className="block text-foreground">decision quality, not just reporting</span>
-          </h2>
-        </div>
-
-        <Tabs defaultValue="intelligence" className="w-full">
-          <TabsList className="h-auto w-full justify-start rounded-[28px] border border-border/70 bg-card/70 p-1">
-            <TabsTrigger
-              value="intelligence"
-              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
-            >
-              Intelligence
-            </TabsTrigger>
-            <TabsTrigger
-              value="automation"
-              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
-            >
-              Automation
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="intelligence" className="mt-6">
-            <FeatureGrid items={intelligenceFeatures} />
-          </TabsContent>
-          <TabsContent value="automation" className="mt-6">
-            <FeatureGrid items={automationFeatures} />
-          </TabsContent>
-        </Tabs>
-
-        <Card
-          variant="glass"
-          className="mt-6 rounded-[28px] border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
-        >
-          <CardContent className="flex flex-col gap-3 p-6 text-sm text-muted-foreground [font-family:var(--home-copy)] sm:flex-row sm:items-center sm:justify-between">
-            <p className="leading-relaxed">
-              AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
-            </p>
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
+          <div className="space-y-3 text-center">
             <Badge
               variant="outline"
-              className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
+              className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
             >
-              Explainable AI
+              Must-Have AI Features
             </Badge>
-          </CardContent>
-        </Card>
-      </div>
+            <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
+              AI that improves
+              <span className="block text-foreground">decision quality, not just reporting</span>
+            </h2>
+          </div>
+
+          <Tabs defaultValue="intelligence" className="w-full" onValueChange={setActiveTab}>
+            <div className="relative">
+              <TabsList className="h-auto w-full justify-start rounded-[28px] border border-border/70 bg-card/70 p-1">
+                <TabsTrigger
+                  value="intelligence"
+                  className="relative rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+                >
+                  Intelligence
+                  {activeTab === 'intelligence' && (
+                    <motion.div
+                      layoutId="tab-indicator"
+                      className="absolute -bottom-px left-0 right-0 h-0.5 bg-foreground/80"
+                      transition={springTransition}
+                    />
+                  )}
+                </TabsTrigger>
+                <TabsTrigger
+                  value="automation"
+                  className="relative rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+                >
+                  Automation
+                  {activeTab === 'automation' && (
+                    <motion.div
+                      layoutId="tab-indicator"
+                      className="absolute -bottom-px left-0 right-0 h-0.5 bg-foreground/80"
+                      transition={springTransition}
+                    />
+                  )}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -12 }}
+                transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              >
+                <TabsContent value="intelligence" className="mt-6">
+                  <FeatureGrid items={intelligenceFeatures} delay={0} />
+                </TabsContent>
+                <TabsContent value="automation" className="mt-6">
+                  <FeatureGrid items={automationFeatures} delay={0} />
+                </TabsContent>
+              </motion.div>
+            </AnimatePresence>
+          </Tabs>
+
+          <Card
+            variant="glass"
+            className="mt-6 rounded-[28px] border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
+          >
+            <CardContent className="flex flex-col gap-3 p-6 text-sm text-muted-foreground [font-family:var(--home-copy)] sm:flex-row sm:items-center sm:justify-between">
+              <p className="leading-relaxed">
+                AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
+              </p>
+              <Badge
+                variant="outline"
+                className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
+              >
+                Explainable AI
+              </Badge>
+            </CardContent>
+          </Card>
+        </div>
+      </motion.div>
     </section>
   )
 }

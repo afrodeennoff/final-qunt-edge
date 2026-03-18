@@ -1,3 +1,8 @@
+'use client'
+
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
+
 const steps = [
   { name: 'Sync Data', text: 'Ingest broker fills, account history, and journal context into one timeline.' },
   { name: 'Define Rules', text: 'Capture your setup criteria, risk constraints, and expected behavior standards.' },
@@ -6,9 +11,37 @@ const steps = [
   { name: 'Improve Weekly', text: 'Turn findings into clear interventions and measure compliance momentum.' },
 ]
 
+const stepNumberVariants = {
+  hidden: { opacity: 0, scale: 0.5 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+  }
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+  }
+}
+
+const connectorVariants = {
+  hidden: { scaleX: 0 },
+  visible: { 
+    scaleX: 1,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+  }
+}
+
 export default function HowItWorks() {
+  const sectionRef = useRef<HTMLElement>(null)
+
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section ref={sectionRef} className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
           <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">How It Works</p>
@@ -19,18 +52,31 @@ export default function HowItWorks() {
         </div>
 
         <div className="relative grid gap-4 md:grid-cols-5">
-          <div className="pointer-events-none absolute left-[10%] right-[10%] top-6 hidden h-px bg-[hsl(var(--mk-border)/0.35)] md:block" />
+          <motion.div 
+            className="pointer-events-none absolute left-[10%] right-[10%] top-6 hidden h-px origin-left bg-[hsl(var(--mk-border)/0.35)] md:block"
+            variants={connectorVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0 }}
+          />
           {steps.map((step, i) => (
-            <article
+            <motion.article
               key={step.name}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
               className="marketing-panel relative rounded-2xl p-5 text-center"
             >
-              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-sm font-semibold text-foreground [font-family:var(--home-display)]">
+              <motion.div 
+                className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-sm font-semibold text-foreground [font-family:var(--home-display)]"
+                variants={stepNumberVariants}
+              >
                 0{i + 1}
-              </div>
+              </motion.div>
               <h3 className="text-xs font-semibold uppercase tracking-[0.14em] [font-family:var(--home-copy)]">{step.name}</h3>
               <p className="mt-2 text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{step.text}</p>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

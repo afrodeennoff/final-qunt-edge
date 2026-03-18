@@ -10,6 +10,7 @@ import {
   Tooltip,
   Cell,
   ResponsiveContainer,
+  type TooltipProps as RechartsTooltipProps,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
@@ -32,6 +33,10 @@ interface TimeInPositionChartProps {
   size?: WidgetSize;
 }
 
+interface TimeInPositionTooltipProps extends RechartsTooltipProps<number, string> {
+  t: ReturnType<typeof useI18n>;
+}
+
 const chartConfig = {
   avgTimeInPosition: {
     label: "Average Time in Position",
@@ -47,6 +52,45 @@ const formatTime = (minutes: number) => {
   }
   return `${mins}m`;
 };
+
+function TimeInPositionTooltip({ active, payload, label, t }: TimeInPositionTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0]?.payload as { avgTimeInPosition: number; tradeCount: number } | undefined;
+    if (!data) return null;
+    return (
+      <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
+        <div className="flex flex-col mb-2">
+          <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            {t("timeInPosition.tooltip.time")}
+          </span>
+          <span className="font-bold text-foreground text-xs">
+            {`${label}:00 - ${(Number(label) + 1) % 24}:00`}
+          </span>
+        </div>
+        <div className="flex flex-col mb-2">
+          <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            {t("timeInPosition.tooltip.averageDuration")}
+          </span>
+          <span className={cn("font-bold text-xs", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
+            {formatTime(data.avgTimeInPosition)}
+          </span>
+        </div>
+        <div className="flex flex-col pt-2 border-t border-border/55">
+          <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            {t("timeInPosition.tooltip.trades")}
+          </span>
+          <span className={cn("font-bold text-xs", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
+            {data.tradeCount}{" "}
+            {data.tradeCount !== 1
+              ? t("timeInPosition.tooltip.trades_plural")
+              : t("timeInPosition.tooltip.trade")}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
 
 export default React.memo(function TimeInPositionChart({
   size = "medium",
@@ -88,43 +132,12 @@ export default React.memo(function TimeInPositionChart({
     return `hsl(var(--chart-8) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
-          <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-              {t("timeInPosition.tooltip.time")}
-            </span>
-            <span className="font-bold text-foreground text-xs">
-              {`${label}:00 - ${(label + 1) % 24}:00`}
-            </span>
-          </div>
-          <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-              {t("timeInPosition.tooltip.averageDuration")}
-            </span>
-            <span className={cn("font-bold text-xs", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
-              {formatTime(data.avgTimeInPosition)}
-            </span>
-          </div>
-          <div className="flex flex-col pt-2 border-t border-border/55">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-              {t("timeInPosition.tooltip.trades")}
-            </span>
-            <span className={cn("font-bold text-xs", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
-              {data.tradeCount}{" "}
-              {data.tradeCount !== 1
-                ? t("timeInPosition.tooltip.trades_plural")
-                : t("timeInPosition.tooltip.trade")}
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+  const renderTooltip = React.useCallback(
+    (props: RechartsTooltipProps<number, string>) => (
+      <TimeInPositionTooltip {...props} t={t} />
+    ),
+    [t],
+  );
 
   return (
     <ChartSurface>
@@ -181,7 +194,8 @@ export default React.memo(function TimeInPositionChart({
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  className="text-border dark:opacity-[0.1] opacity-[0.2]"
+                  stroke="hsl(var(--chart-grid))"
+                  strokeOpacity={0.3}
                   vertical={false}
                 />
                 <XAxis
@@ -213,7 +227,7 @@ export default React.memo(function TimeInPositionChart({
                   tickFormatter={formatTime}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={renderTooltip}
                   cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar

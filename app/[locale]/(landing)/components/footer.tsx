@@ -122,7 +122,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
   const locale = useCurrentLocale()
   return (
     <div>
-      <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))]">{title}</h3>
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{title}</h3>
       <ul className="mt-3 space-y-2.5">
         {links.map((item, idx) => (
           <motion.li

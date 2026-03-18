@@ -191,7 +191,8 @@ export default React.memo(function PNLChart({ size = "medium" }: PNLChartProps) 
               <BarChart data={chartData} margin={getChartMargins()}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  className="text-border dark:opacity-[0.1] opacity-[0.2]"
+                  stroke="hsl(var(--chart-grid))"
+                  strokeOpacity={0.3}
                   vertical={false}
                 />
                 <XAxis

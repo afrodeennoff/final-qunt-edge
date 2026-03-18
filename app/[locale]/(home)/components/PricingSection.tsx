@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -92,17 +93,17 @@ function getSavingsPerMonth(plan: (typeof plans)[number]): number {
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'group relative flex w-full flex-col rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--card)/0.6)] backdrop-blur-sm transition-all duration-500',
-    'hover:border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--card)/0.85)] hover:shadow-[0_0_40px_-10px_hsl(var(--primary)/0.2)]',
+    'group relative flex w-full flex-col rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--card)/0.6)] backdrop-blur-sm transition-all duration-300',
+    'hover:-translate-y-1 hover:border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--card)/0.85)] hover:shadow-[0_20px_50px_-12px_hsl(var(--primary)/0.25)]',
     popular && 'border-[hsl(var(--primary)/0.5)] shadow-[0_0_35px_-12px_hsl(var(--primary)/0.3)]'
   )
 }
 
 function getPlanCtaClassName(popular: boolean): string {
   return cn(
-    'h-12 w-full rounded-xl text-[11px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 [font-family:var(--home-copy)]',
+    'h-12 w-full rounded-xl text-[11px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 overflow-hidden relative [font-family:var(--home-copy)]',
     popular
-      ? 'bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-luxury-hover))] text-[hsl(var(--primary-foreground))] shadow-[0_4px_20px_-6px_hsl(var(--primary)/0.5)] hover:shadow-[0_6px_28px_-4px_hsl(var(--primary)/0.6)] hover:brightness-110'
+      ? 'bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-luxury-hover))] text-[hsl(var(--primary-foreground))] shadow-[0_4px_20px_-6px_hsl(var(--primary)/0.5)] hover:shadow-[0_6px_35px_-4px_hsl(var(--primary)/0.6)] hover:brightness-110'
       : 'bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))] hover:bg-[hsl(var(--primary)/0.15)] hover:border-[hsl(var(--primary)/0.3)] border border-[hsl(var(--border)/0.3)]'
   )
 }
@@ -112,14 +113,80 @@ function shouldShowSavings(billingMode: BillingMode, monthlyPrice: number): bool
   return monthlyPrice > 0
 }
 
+function RippleButton({
+  children,
+  className,
+  onClick,
+}: {
+  children: React.ReactNode
+  className?: string
+  onClick?: () => void
+}) {
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([])
+  const radius = 60
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const newRipple = { x, y, id: Date.now() }
+    setRipples((prev) => [...prev, newRipple])
+
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== newRipple.id))
+    }, 600)
+
+    onClick?.()
+  }
+
+  return (
+    <Button
+      onClick={handleClick}
+      className={cn('relative overflow-hidden', className)}
+      asChild
+    >
+      <button type="button">
+        {ripples.map((ripple) => (
+        <span
+          key={ripple.id}
+          className="pointer-events-none absolute animate-button-ripple rounded-full bg-white/40"
+          style={{
+            left: ripple.x - radius,
+            top: ripple.y - radius,
+            width: radius * 2,
+            height: radius * 2,
+          }}
+        />
+        ))}
+        {children}
+      </button>
+    </Button>
+  )
+}
+
 function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
   return (
     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-      <Badge className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-luxury-hover))] px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--primary-foreground))] shadow-[0_4px_16px_-4px_hsl(var(--primary)/0.5)]">
-        <Sparkles className="mr-1.5 h-3 w-3" />
-        Most Popular
-      </Badge>
+      <motion.div
+        animate={{
+          boxShadow: [
+            '0 4px 16px -4px hsl(var(--primary) / 0.3)',
+            '0 6px 30px -4px hsl(var(--primary) / 0.5)',
+            '0 4px 16px -4px hsl(var(--primary) / 0.3)',
+          ],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      >
+        <Badge className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-luxury-hover))] px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--primary-foreground))] shadow-[0_4px_16px_-4px_hsl(var(--primary)/0.5)]">
+          <Sparkles className="mr-1.5 h-3 w-3 animate-pulse" />
+          Most Popular
+        </Badge>
+      </motion.div>
     </div>
   )
 }
@@ -143,12 +210,14 @@ function PlanCard({
   currency,
   locale,
   periodLabel,
+  index,
 }: {
   plan: (typeof plans)[number]
   billingMode: BillingMode
   currency: string
   locale: string
   periodLabel: string
+  index: number
 }) {
   const href = getPlanHref({ planName: plan.name, billingMode, currency, locale })
   const priceText = getPlanPriceText(plan, billingMode)
@@ -157,7 +226,19 @@ function PlanCard({
   const showSavings = shouldShowSavings(billingMode, plan.monthlyPrice)
 
   return (
-    <div className="flex">
+    <motion.div
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.1,
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+      }}
+      className="flex"
+    >
       <Card className={getPlanCardClassName(plan.popular)}>
         <PlanPopularBadge popular={plan.popular} />
 
@@ -199,16 +280,13 @@ function PlanCard({
         </CardContent>
 
         <CardFooter className="flex flex-col gap-3 pt-2">
-          <Button
-            asChild
-            className={getPlanCtaClassName(plan.popular)}
-          >
+          <RippleButton className={getPlanCtaClassName(plan.popular)}>
             <Link href={href}>{plan.cta}</Link>
-          </Button>
+          </RippleButton>
           <p className="text-center text-xs text-[hsl(var(--foreground)/0.6)] [font-family:var(--home-copy)]">{plan.note}</p>
         </CardFooter>
       </Card>
-    </div>
+    </motion.div>
   )
 }
 
@@ -292,7 +370,7 @@ export default function PricingSection() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
-          {plans.map((plan) => (
+          {plans.map((plan, index) => (
             <PlanCard
               key={plan.name}
               plan={plan}
@@ -300,6 +378,7 @@ export default function PricingSection() {
               currency={currency}
               locale={locale}
               periodLabel={periodLabel}
+              index={index}
             />
           ))}
         </div>

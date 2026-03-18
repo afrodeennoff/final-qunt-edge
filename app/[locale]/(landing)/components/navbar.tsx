@@ -42,7 +42,8 @@ export default function Navbar() {
   const isActive = (href: string): boolean => {
     if (href.startsWith('/#')) return isHomePath
     const normalized = href.split('#')[0]
-    return pathname === normalized || pathname.endsWith(normalized)
+    const withoutLocale = pathname.replace(/^\/[a-z]{2}(?:-[A-Za-z]{2})?(?=\/|$)/i, '')
+    return withoutLocale === normalized || withoutLocale.startsWith(`${normalized}/`)
   }
 
   return (
@@ -64,7 +65,7 @@ export default function Navbar() {
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface-muted)/0.85)]">
-              <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
+              <Logo className="h-4.5 w-4.5 fill-foreground" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight [font-family:var(--font-poppins)] sm:inline-flex">Qunt Edge</span>
           </Link>
@@ -78,8 +79,8 @@ export default function Navbar() {
                   className={cn(
                     'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-[hsl(var(--brand-primary)/0.14)] text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
-                      : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
+                      ? 'bg-[hsl(var(--brand-primary)/0.14)] text-foreground shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
+                      : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-foreground'
                   )}
                 >
                   {link.title}
@@ -95,7 +96,7 @@ export default function Navbar() {
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="h-10 w-10 rounded-full text-[hsl(var(--mk-text))] lg:hidden">
+                <Button variant="ghost" className="h-10 w-10 rounded-full text-foreground lg:hidden">
                   <Menu className="h-4.5 w-4.5" />
                 </Button>
               </SheetTrigger>
@@ -111,7 +112,7 @@ export default function Navbar() {
                         key={link.href}
                         href={`/${locale}${link.href}`}
                         onClick={() => setMobileOpen(false)}
-                        className="block rounded-xl px-3 py-2 text-sm text-[hsl(var(--mk-text))]"
+                        className="block rounded-xl px-3 py-2 text-sm text-foreground"
                       >
                         {link.title}
                       </Link>

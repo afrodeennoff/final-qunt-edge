@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PublicFlowShell } from './_components/public-flow-shell'
+import { FLOW_LINKS, isFlowLinkActive } from './_components/flow-links'
 import { DealsMarketIllustration } from './_components/deals-market-illustration'
 import { deals, faqItems, firms } from '../prop-firm-deals/data/mock-data'
 
@@ -54,14 +55,6 @@ const VALUE_PATHS = [
   },
 ]
 
-const FLOW_LINKS = [
-  { path: '/deals', label: 'Deals' },
-  { path: '/deals/compare', label: 'Matchup' },
-  { path: '/deals/guides', label: 'Playbooks' },
-  { path: '/deals/calculator', label: 'Cost Planner' },
-  { path: '/deals/faq', label: 'Help' },
-]
-
 function formatMoney(value: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -107,6 +100,7 @@ export default async function DealsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  const currentPathname = `/${locale}/deals`
   const featuredDeals = deals.slice(0, 6)
   const comparisonRows = firms.slice(0, 8)
   const topFaqs = faqItems.slice(0, 4)
@@ -148,7 +142,7 @@ export default async function DealsPage({
             <nav className="mt-5 flex flex-wrap gap-2" aria-label="Deals flow">
               {FLOW_LINKS.map((link) => {
                 const href = `/${locale}${link.path}`
-                const isActive = link.path === '/deals'
+                const isActive = isFlowLinkActive(currentPathname, link.path)
                 return (
                   <Link
                     key={link.path}

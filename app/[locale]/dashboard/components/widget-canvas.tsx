@@ -371,7 +371,7 @@ export default function WidgetCanvas() {
     if (!isWidgetClick && !isContextMenuClick && !isCustomizationSwitchClick && !isDialogClick && !isDialogTriggerClick) {
       setIsCustomizing(false)
     }
-  }, [])
+  }, [setIsCustomizing])
 
   const flushPendingLayoutSave = useCallback(async () => {
     if (!pendingSaveRef.current) return
@@ -398,9 +398,6 @@ export default function WidgetCanvas() {
       void flushPendingLayoutSave()
     }, LAYOUT_SAVE_DEBOUNCE_MS)
   }, [flushPendingLayoutSave])
-
-  const handleOutsideClickRef = useRef(handleOutsideClick)
-  handleOutsideClickRef.current = handleOutsideClick
 
   // Update handleLayoutChange with proper type handling and all dependencies
   const handleLayoutChange = useCallback((layout: LayoutItem[]) => {
@@ -515,13 +512,13 @@ export default function WidgetCanvas() {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      handleOutsideClickRef.current(e)
+      handleOutsideClick(e)
     }
     if (isCustomizing) {
       document.addEventListener('click', handleClick)
       return () => document.removeEventListener('click', handleClick)
     }
-  }, [isCustomizing]);
+  }, [isCustomizing, handleOutsideClick])
 
   useEffect(() => {
     if (!isCustomizing) {
