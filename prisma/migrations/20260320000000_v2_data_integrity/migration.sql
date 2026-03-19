@@ -1,9 +1,11 @@
 -- Migration: v2_data_integrity
--- 1) Create PayoutStatus enum
-CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PAID', 'REFUSED');
+-- 1) Create PayoutStatus enum (includes CANCELLED used by frontend)
+CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PAID', 'REFUSED', 'CANCELLED');
 
--- 2) Alter Payout.status to enum type
-ALTER TABLE "Payout" ALTER COLUMN "status" TYPE "PayoutStatus" USING status::text::"PayoutStatus";
+-- 2) Alter Payout.status to enum type — drop default first, then type, then re-set default
+ALTER TABLE "Payout" ALTER COLUMN "status" DROP DEFAULT;
+ALTER TABLE "Payout" ALTER COLUMN "status" TYPE "PayoutStatus" USING ("status"::text::"PayoutStatus");
+ALTER TABLE "Payout" ALTER COLUMN "status" SET DEFAULT 'PENDING'::"PayoutStatus";
 
 -- 3) Add propFirmId column to Account (nullable)
 ALTER TABLE "Account" ADD COLUMN "propFirmId" VARCHAR(255);
