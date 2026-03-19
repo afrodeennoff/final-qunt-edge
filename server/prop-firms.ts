@@ -1,19 +1,26 @@
 'use server'
 import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
 import { updateTag } from 'next/cache'
 
-export async function listPropFirms() {
+const _listPropFirms = async () => {
   return prisma.propFirm.findMany({
     where: { isActive: true },
     include: {
       coupons: { where: { isActive: true } },
-      _count: { select: { reviews: true } },
+      _count: { select: { reviews: true, coupons: true } },
     },
     orderBy: { name: 'asc' },
   })
 }
 
-export async function getPropFirmBySlug(slug: string) {
+export const listPropFirms = unstable_cache(
+  _listPropFirms,
+  ['prop-firms-list'],
+  { revalidate: 3600, tags: ['prop-firms'] }
+)
+
+const _getPropFirmBySlug = async (slug: string) => {
   return prisma.propFirm.findUnique({
     where: { slug },
     include: {
@@ -23,6 +30,12 @@ export async function getPropFirmBySlug(slug: string) {
     },
   })
 }
+
+export const getPropFirmBySlug = unstable_cache(
+  _getPropFirmBySlug,
+  ['prop-firm-by-slug'],
+  { revalidate: 3600, tags: ['prop-firms'] }
+)
 
 export async function createPropFirm(data: { slug: string; name: string; category: string; description?: string; shortDesc?: string; platform?: string; payoutModel?: string; drawdownType?: string; profitSplit?: string; maxAllocation?: string; referralUrl?: string; logoUrl?: string }) {
   const result = await prisma.propFirm.create({ data })

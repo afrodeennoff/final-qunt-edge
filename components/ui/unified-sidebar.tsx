@@ -153,10 +153,10 @@ export function UnifiedSidebar({
     }
     const extras: UnifiedSidebarItem[] = []
     if (!items?.some((it) => it.href?.includes('/leaderboard'))) {
-      extras.push({ href: withLocalePath('/leaderboard'), icon: <LeaderboardIcon size={4} />, label: 'Leaderboard' })
+      extras.push({ href: withLocalePath('/leaderboard'), icon: <LeaderboardIcon size={20} />, label: 'Leaderboard' })
     }
     if (!items?.some((it) => it.href?.includes('/deals-v2'))) {
-      extras.push({ href: withLocalePath('/deals-v2'), icon: <DealsIcon size={4} />, label: 'Deals V2' })
+      extras.push({ href: withLocalePath('/deals-v2'), icon: <DealsIcon size={20} />, label: 'Deals V2' })
     }
     return [...items, ...extras]
   }, [items, pathname])

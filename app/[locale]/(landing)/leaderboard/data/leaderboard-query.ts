@@ -8,7 +8,6 @@ export type LeaderboardEntry = {
   monthlyPnl: number
   totalTrades: number
   winRate: number
-  consistency: number
 }
 
 export async function getLeaderboardData(
@@ -18,33 +17,58 @@ export async function getLeaderboardData(
   startOfMonth.setDate(1)
   startOfMonth.setHours(0, 0, 0, 0)
 
-  // Aggregate trades by user for the current month
-  const monthlyAgg: any[] = await prisma.trade.groupBy({
+  const isMonthly = sort !== 'alltime_pnl'
+  const dateFilter = isMonthly ? { closeDate: { gte: startOfMonth } } : {}
+
+  const agg = await prisma.trade.groupBy({
     by: ['userId'],
     _sum: { pnl: true },
     _count: { id: true },
-    where: { closeDate: { gte: startOfMonth } },
-    orderBy: { _sum: { pnl: 'desc' } as any },
+    where: dateFilter,
+    orderBy: sort === 'winrate'
+      ? undefined
+      : { _sum: { pnl: 'desc' } },
     take: 100,
-  }) as any
-
-  // Fetch user metadata to map userId -> username
-  const userIds = monthlyAgg.map((a: any) => a.userId)
-  const users = await prisma.user.findMany({
-    where: { id: { in: userIds } },
-    select: { id: true, email: true },
   })
+
+  const userIds = agg.map((a) => a.userId)
+
+  const [users, winCounts] = await Promise.all([
+    prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, email: true },
+    }),
+    prisma.trade.groupBy({
+      by: ['userId'],
+      where: { userId: { in: userIds }, pnl: { gt: 0 }, ...dateFilter },
+      _count: { id: true },
+    }),
+  ])
+
   const userMap = Object.fromEntries(
-    users.map((u) => [u.id, u.email?.split('@')[0] ?? 'Trader'] as [string, string])
+    users.map((u) => [u.id, u.email?.split('@')[0] ?? 'Trader'])
   )
 
-  return monthlyAgg.map((entry, idx) => ({
-    rank: idx + 1,
-    userId: entry.userId,
-    username: userMap[entry.userId] || 'Anonymous',
-    monthlyPnl: Number(entry._sum.pnl ?? 0),
-    totalTrades: (entry._count?.id ?? 0),
-    winRate: 0,
-    consistency: 0,
-  }))
+  const winCountMap = Object.fromEntries(
+    winCounts.map((w) => [w.userId, w._count.id])
+  )
+
+  const entries: LeaderboardEntry[] = agg.map((entry) => {
+    const winCount = winCountMap[entry.userId] ?? 0
+    const total = entry._count.id
+    return {
+      rank: 0,
+      userId: entry.userId,
+      username: userMap[entry.userId] || 'Anonymous',
+      monthlyPnl: Number(entry._sum.pnl ?? 0),
+      totalTrades: total,
+      winRate: total > 0 ? Math.round((winCount / total) * 100) : 0,
+    }
+  })
+
+  if (sort === 'winrate') {
+    entries.sort((a, b) => b.winRate - a.winRate || b.monthlyPnl - a.monthlyPnl)
+  }
+
+  return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
 }

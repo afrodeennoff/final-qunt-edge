@@ -4,6 +4,11 @@ import { getDatabaseUserId } from '@/server/auth'
 
 export async function createFirmReview(data: { propfirmId: string; rating: number; title?: string; body?: string; avatarUrl?: string }) {
   const userId = await getDatabaseUserId()
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { email: true },
+  })
+  const username = user?.email?.split('@')[0] ?? 'Trader'
   return prisma.firmReview.create({
     data: {
       propfirmId: data.propfirmId,
@@ -12,7 +17,7 @@ export async function createFirmReview(data: { propfirmId: string; rating: numbe
       body: data.body,
       avatarUrl: data.avatarUrl,
       userId,
-      username: userId,
+      username,
     },
   })
 }
