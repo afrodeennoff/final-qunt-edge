@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { updateTag } from 'next/cache'
+import { assertAdminAccess } from '@/server/authz'
 
 const _listPropFirms = async () => {
   return prisma.propFirm.findMany({
@@ -37,13 +38,34 @@ export const getPropFirmBySlug = unstable_cache(
   { revalidate: 3600, tags: ['prop-firms'] }
 )
 
-export async function createPropFirm(data: { slug: string; name: string; category: string; description?: string; shortDesc?: string; platform?: string; payoutModel?: string; drawdownType?: string; profitSplit?: string; maxAllocation?: string; referralUrl?: string; logoUrl?: string }) {
+export type PropFirmCreateInput = {
+  slug: string
+  name: string
+  category: string
+  description?: string
+  shortDesc?: string
+  platform?: string
+  payoutModel?: string
+  drawdownType?: string
+  profitSplit?: string
+  maxAllocation?: string
+  referralUrl?: string
+  logoUrl?: string
+}
+
+export type PropFirmUpdateInput = PropFirmCreateInput & {
+  isActive?: boolean
+}
+
+export async function createPropFirm(data: PropFirmCreateInput) {
+  await assertAdminAccess()
   const result = await prisma.propFirm.create({ data })
   updateTag('prop-firms')
   return result
 }
 
-export async function updatePropFirm(id: string, data: Partial<{ name: string; description: string; shortDesc: string; platform: string; payoutModel: string; drawdownType: string; profitSplit: string; maxAllocation: string; referralUrl: string; logoUrl: string; isActive: boolean }>) {
+export async function updatePropFirm(id: string, data: PropFirmUpdateInput) {
+  await assertAdminAccess()
   const result = await prisma.propFirm.update({ where: { id }, data })
   updateTag('prop-firms')
   return result

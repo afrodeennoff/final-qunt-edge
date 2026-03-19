@@ -4,6 +4,37 @@ generator client {
   binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
+model Challenge {
+  id              String   @id @default(cuid())
+  propFirmId      String
+  propFirm        PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
+  
+  name            String   // e.g. "1-Step Challenge", "2-Step Evaluation"
+  phase           Int      @default(1) // Phase number (1, 2, 3)
+  accountSize     Decimal  @db.Decimal(18, 2)
+  
+  targetProfit    Decimal  @db.Decimal(18, 2)
+  maxDailyLoss    Decimal  @db.Decimal(18, 2)
+  maxTotalLoss    Decimal  @db.Decimal(18, 2)
+  minTradingDays  Int?
+  maxTradingDays  Int?
+  
+  profitSplit     Int      @default(80) // Percentage
+  payoutPolicy    String?
+  
+  price           Decimal  @db.Decimal(18, 2)
+  priceWithPromo  Decimal? @db.Decimal(18, 2)
+  
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([propFirmId])
+  @@index([propFirmId, accountSize])
+  @@map("challenge")
+  @@schema("public")
+}
+
 datasource db {
   provider = "postgresql"
   schemas  = ["public"]
@@ -239,6 +270,8 @@ model PropFirm {
 
   reviews  FirmReview[]  // relation to reviews
   coupons  FirmCoupon[]  // relation to coupons
+  accounts Account[]
+  challenges Challenge[]
 
   @@index([slug])
   @@map("prop_firm")
@@ -292,6 +325,8 @@ model Account {
   userId String
 
   propfirm        String  @default("")
+  propFirmId      String?
+  propFirm        PropFirm? @relation(fields: [propFirmId], references: [id], onDelete: SetNull)
   accountSize     String?
   accountSizeName String?
 
@@ -362,6 +397,7 @@ model Account {
   @@index([userId, number]) // Performance scan index
   @@index([userId, groupId])
   @@index([userId, propfirm]) // Composite for propfirm filtering
+  @@index([propFirmId])
   @@schema("public")
 }
 
@@ -431,13 +467,22 @@ model Group {
   @@schema("public")
 }
 
+enum PayoutStatus {
+  PENDING
+  PAID
+  REFUSED
+  CANCELLED
+
+  @@schema("public")
+}
+
 model Payout {
   id            String @id @default(uuid())
   accountId     String
   accountNumber String
 
   amount Decimal @db.Decimal(18, 2)
-  status String  @default("PENDING")
+  status PayoutStatus @default(PENDING)
 
   date      DateTime
   createdAt DateTime @default(now())

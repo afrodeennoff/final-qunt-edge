@@ -1,8 +1,11 @@
 /**
- * Centralized Design Token System - LUXURY EDITION
- * Replaces CDN-based Tailwind approach with token-based architecture
- * Premium color palette: Champagne Gold, Rose Gold, Deep Obsidian
- * All colors use HSL format for consistency and theme support
+ * DEPRECATED: This token file is deprecated.
+ * New code should use V2 tokens from tokens-v2.css (--v2-* namespace).
+ * This file is kept for backward compatibility with existing components.
+ * DO NOT add new tokens here — use tokens-v2.css instead.
+ * 
+ * Migration path: Components using --background, --primary, etc. 
+ * should gradually migrate to --v2-bg-base, --v2-accent, etc.
  */
 
 @layer base {

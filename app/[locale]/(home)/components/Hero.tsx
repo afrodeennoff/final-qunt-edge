@@ -39,7 +39,7 @@ export default function Hero({ locale }: { locale: string }) {
   }
 
   return (
-    <section className="relative min-h-[90vh] overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8">
+    <section className="relative min-h-[90vh] overflow-hidden px-4 py-40 sm:px-6 lg:px-8">
       {/* Clean V2 gradient background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
@@ -72,20 +72,14 @@ export default function Hero({ locale }: { locale: string }) {
         </div>
 
         {/* Single-line headline with subtle accent gradient */}
-        <h1 className="mx-auto mb-8 text-center font-sans font-semibold tracking-tight">
+        <h1 className="mx-auto mb-8 text-center font-sans font-light tracking-tight">
           <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
-            Build repeatable edge.
+            Build repeatable <span className="text-v2-accent">edge</span>.
           </span>
           <span 
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight"
-            style={{
-              background: 'linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 92% 65%) 50%, hsl(0 0% 97% / 0.8) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}
+            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight text-v2-text-primary"
           >
-            Eliminate emotional drift.
+            Eliminate emotional <span className="text-v2-accent">drift</span>.
           </span>
         </h1>
 
@@ -96,7 +90,7 @@ export default function Hero({ locale }: { locale: string }) {
 
         {/* Single CTA button with V2 Button */}
         <div className="mt-12 flex justify-center">
-          <ButtonV2 variant="solid" size="lg" className="min-w-[240px]">
+          <ButtonV2 variant="solid" size="lg" className="min-w-[240px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
             <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
               Start Free Audit
             </Link>
@@ -208,7 +202,7 @@ export default function Hero({ locale }: { locale: string }) {
 
 function HeroStatic({ locale }: { locale: string }) {
   return (
-    <section className="relative min-h-[90vh] overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8">
+    <section className="relative min-h-[90vh] overflow-hidden px-4 py-40 sm:px-6 lg:px-8">
       {/* Clean V2 gradient background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
@@ -241,20 +235,14 @@ function HeroStatic({ locale }: { locale: string }) {
         </div>
 
         {/* Single-line headline with subtle accent gradient */}
-        <h1 className="mx-auto mb-8 text-center font-sans font-semibold tracking-tight">
+        <h1 className="mx-auto mb-8 text-center font-sans font-light tracking-tight">
           <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
-            Build repeatable edge.
+            Build repeatable <span className="text-v2-accent">edge</span>.
           </span>
           <span 
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight"
-            style={{
-              background: 'linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 92% 65%) 50%, hsl(0 0% 97% / 0.8) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}
+            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight text-v2-text-primary"
           >
-            Eliminate emotional drift.
+            Eliminate emotional <span className="text-v2-accent">drift</span>.
           </span>
         </h1>
 
@@ -265,7 +253,7 @@ function HeroStatic({ locale }: { locale: string }) {
 
         {/* Single CTA button with V2 Button */}
         <div className="mt-12 flex justify-center">
-          <ButtonV2 variant="solid" size="lg" className="min-w-[240px]">
+          <ButtonV2 variant="solid" size="lg" className="min-w-[240px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
             <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
               Start Free Audit
             </Link>

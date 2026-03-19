@@ -10,4 +10,24 @@ const withMDX = createMDX({
   extension: /\.mdx?$/,
 });
 
-export default withMDX(nextConfig);
+const configWithRedirects: NextConfig = {
+  ...nextConfig,
+  async redirects() {
+    const existingRedirects = await nextConfig.redirects?.() ?? []
+    return [
+      ...existingRedirects,
+      {
+        source: '/:locale/deals-v2',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/prop-firm-deals',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+    ]
+  },
+}
+
+export default withMDX(configWithRedirects);

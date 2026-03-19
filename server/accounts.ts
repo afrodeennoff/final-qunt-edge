@@ -272,6 +272,7 @@ export async function setupAccountAction(account: Account): Promise<Account> {
 
   // Extract fields that should not be included in the database operation
   // Remove computed fields (metrics, dailyMetrics) and relation fields
+  // Also remove propFirmId (FK not set in current flow — keep for future use)
   const {
     id,
     userId: _,
@@ -285,6 +286,7 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     aboveBuffer,
     considerBuffer,
     trades,
+    propFirmId: _propFirmId,
     ...baseAccountData
   } = account
 

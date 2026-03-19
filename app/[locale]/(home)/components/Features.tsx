@@ -54,7 +54,7 @@ function FeatureCard({ item, index }: { item: typeof items[0]; index: number }) 
         delay: index * STAGGER_DELAY,
       }}
     >
-      <CardV2 className="group relative flex h-full flex-col gap-4 transition-all duration-300 hover:border-v2-accent/40">
+      <CardV2 className="group relative flex h-full flex-col gap-4 bg-white/[0.03] border-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 hover:border-v2-accent/30">
         <div className="inline-flex">
           <div className="flex h-11 w-11 items-center justify-center rounded-v2-lg bg-v2-accent-subtle p-v2-3 text-v2-accent transition-colors duration-300 group-hover:bg-v2-accent/20">
             <Icon size={20} strokeWidth={1.5} />
@@ -91,7 +91,7 @@ function FeaturesAnimated() {
   return (
     <section
       id="features"
-      className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative px-4 py-40 sm:px-6 lg:px-8"
     >
       <div className="relative mx-auto max-w-6xl">
         <motion.div
@@ -104,7 +104,7 @@ function FeaturesAnimated() {
           <p className="text-[11px] uppercase tracking-[0.25em] text-v2-accent">
             Platform Weapons
           </p>
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
+          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-light leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
             Built for traders who{' '}
             <span className="block text-v2-accent">want standards, not excuses</span>
           </h2>
@@ -124,14 +124,14 @@ function FeaturesStatic() {
   return (
     <section
       id="features"
-      className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative px-4 py-40 sm:px-6 lg:px-8"
     >
       <div className="relative mx-auto max-w-6xl">
         <div className="space-y-4 text-center sm:space-y-5">
           <p className="text-[11px] uppercase tracking-[0.25em] text-v2-accent">
             Platform Weapons
           </p>
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
+          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-light leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
             Built for traders who{' '}
             <span className="block text-v2-accent">want standards, not excuses</span>
           </h2>
