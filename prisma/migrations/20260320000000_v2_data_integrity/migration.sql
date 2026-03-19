@@ -14,8 +14,8 @@ ALTER TABLE "Payout" ALTER COLUMN "status" SET DEFAULT 'PENDING'::"PayoutStatus"
 -- 3) Add propFirmId column to Account (nullable)
 ALTER TABLE "Account" ADD COLUMN "propFirmId" VARCHAR(255);
 
--- 4) Add FK constraint for propFirmId
-ALTER TABLE "Account" ADD CONSTRAINT "Account_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "PropFirm"("id") ON DELETE SET NULL;
+-- 4) Add FK constraint for propFirmId (table is "prop_firm" per @@map in schema)
+ALTER TABLE "Account" ADD CONSTRAINT "Account_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "prop_firm"("id") ON DELETE SET NULL;
 
 -- 5) Add index on propFirmId
 CREATE INDEX "Account_propFirmId_idx" ON "Account" ("propFirmId");
