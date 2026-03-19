@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import ProblemStatement from './ProblemStatement'
 import Features from './Features'
+import TrustStats from './TrustStats'
 import TrustAndProof from './TrustAndProof'
 import OnboardingJourney from './OnboardingJourney'
 
@@ -19,6 +20,7 @@ export default function DeferredHomeSections() {
     <>
       <ProblemStatement />
       <Features />
+      <TrustStats />
       <HowItWorks />
       <OnboardingJourney />
       <AnalysisDemo />

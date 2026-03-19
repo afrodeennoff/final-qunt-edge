@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
+import { LeaderboardIcon, DealsIcon } from "@/components/icons/svg-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -144,6 +145,21 @@ export function UnifiedSidebar({
   const { isQueryParamOnly } = useNavigationHelper()
   const debugCache = process.env.NEXT_PUBLIC_CACHE_DEBUG === "true"
   const pathname = usePathname()
+  const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
+    const withLocalePath = (p: string) => {
+      const m = pathname?.match(/^\/([a-z]{2})(?:-[A-Za-z]{2})?/)
+      const locale = m?.[1] ?? 'en'
+      return `/${locale}${p.startsWith('/') ? p : '/' + p}`
+    }
+    const extras: UnifiedSidebarItem[] = []
+    if (!items?.some((it) => it.href?.includes('/leaderboard'))) {
+      extras.push({ href: withLocalePath('/leaderboard'), icon: <LeaderboardIcon size={4} />, label: 'Leaderboard' })
+    }
+    if (!items?.some((it) => it.href?.includes('/deals-v2'))) {
+      extras.push({ href: withLocalePath('/deals-v2'), icon: <DealsIcon size={4} />, label: 'Deals V2' })
+    }
+    return [...items, ...extras]
+  }, [items, pathname])
   const [pendingHref, setPendingHref] = useState<string | null>(null)
   const navigationFallbackTimerRef = useRef<number | null>(null)
 
@@ -181,7 +197,7 @@ export function UnifiedSidebar({
     const order: string[] = []
     const groups: Record<string, UnifiedSidebarItem[]> = {}
 
-    items.forEach((item) => {
+    extendedItems.forEach((item) => {
       const group = item.group || "Settings"
       if (!groups[group]) {
         groups[group] = []
@@ -211,7 +227,7 @@ export function UnifiedSidebar({
     })
 
     return { groups, order: sortedOrder }
-  }, [items])
+  }, [extendedItems])
 
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User"
   const initials = useMemo(() => getUserInitials(user), [user])

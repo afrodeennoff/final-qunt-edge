@@ -1,12 +1,11 @@
 "use client"
 
 import Link from 'next/link'
-import { Sparkles, Zap, Target, TrendingDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { motion, useReducedMotion, useInView } from 'framer-motion'
+import { useReducedMotion, useInView } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
+import { ButtonV2 } from '@/components/ui/v2'
+import { cn } from '@/lib/utils'
+import { ChartIcon, ProfileIcon } from '@/components/icons/svg-icons'
 
 function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number; suffix?: string; prefix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -31,35 +30,6 @@ function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number;
   return <span ref={ref}>{prefix}{isInView ? count : 0}{suffix}</span>
 }
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
-  }
-}
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1
-    }
-  }
-}
-
-const staggerItem = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
-  }
-}
-
 export default function Hero({ locale }: { locale: string }) {
   const prefersReducedMotion = useReducedMotion()
 
@@ -70,274 +40,46 @@ export default function Hero({ locale }: { locale: string }) {
 
   return (
     <section className="relative min-h-[90vh] overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8">
-      {/* Minimal background - single subtle gradient */}
+      {/* Clean V2 gradient background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
           <div 
-            className="absolute inset-0 rounded-full opacity-20 blur-[100px]"
+            className="absolute inset-0 rounded-full opacity-[0.08] blur-[100px]"
             style={{
-              background: 'radial-gradient(circle, hsl(var(--primary) / 0.3) 0%, transparent 70%)'
+              background: 'radial-gradient(circle, hsl(217 91% 60%) 0%, transparent 70%)'
             }}
           />
         </div>
       </div>
 
       <div className="relative z-10 mx-auto max-w-5xl">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="mb-10 flex justify-center"
-        >
-          <motion.div variants={staggerItem} className="group relative">
-            <div 
-              className="absolute -inset-0.5 rounded-full opacity-20 blur-sm transition-all duration-300 group-hover:opacity-30"
-              style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent-luxury)))' }}
-            />
-            <Badge 
-              variant="secondary" 
-              className="relative border border-primary/20 bg-card/80 px-5 py-2 backdrop-blur-md [font-family:var(--home-copy)]"
-            >
-              <Sparkles className="mr-2.5 h-4 w-4 text-primary" />
-              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-sm font-medium tracking-wide text-transparent">
-                Live decision telemetry for discretionary traders
-              </span>
-            </Badge>
-          </motion.div>
-        </motion.div>
-
-        {/* Single-line headline with minimal gradient */}
-        <motion.h1
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="mx-auto mb-8 text-center tracking-tight [font-family:var(--home-display)]"
-        >
-          <motion.span 
-            variants={staggerItem}
-            className="block text-[clamp(2.75rem,8vw,5.5rem)] font-semibold leading-[0.95] text-foreground"
-          >
-            Build repeatable edge.
-          </motion.span>
-          <motion.span 
-            variants={staggerItem}
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] font-semibold leading-[0.95] tracking-tight"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent-luxury-hover)) 50%, hsl(var(--foreground) / 0.8) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}
-          >
-            Eliminate emotional drift.
-          </motion.span>
-        </motion.h1>
-
-        <motion.p
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-muted-foreground sm:text-[19px] [font-family:var(--home-copy)]"
-        >
-          Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
-          Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
-        </motion.p>
-
-        {/* Single CTA button */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-12 flex justify-center"
-        >
-          <Button 
-            asChild
-            variant="default"
-            size="lg"
-            className="h-13 w-full min-w-[240px] rounded-2xl bg-primary px-8 py-6 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-xl shadow-primary/25 transition-all duration-200 hover:bg-primary/95 hover:shadow-2xl hover:shadow-primary/30 sm:w-auto [font-family:var(--home-copy)]"
-          >
-            <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
-              <Zap className="mr-2.5 h-5 w-5" />
-              Start Free Audit
-            </Link>
-          </Button>
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground [font-family:var(--home-copy)]"
-        >
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            No credit card required
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            First audit in minutes
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            Built for discretionary futures traders
-          </span>
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="mt-16"
-        >
-          <Card className="relative overflow-hidden border-primary/10 bg-card/60 shadow-2xl shadow-black/20 backdrop-blur-xl">
-            <div 
-              className="absolute inset-0 opacity-20"
-              style={{
-                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(var(--primary) / 0.15), transparent)'
-              }}
-            />
-            
-            <CardContent className="relative p-5 sm:p-7">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <motion.div
-                  variants={staggerItem}
-                  className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55"
-                >
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Target className="h-5 w-5 text-primary" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
-                    Session Grade Confidence
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
-                    <AnimatedCounter target={94} suffix="%" />
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  variants={staggerItem}
-                  className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55"
-                >
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <TrendingDown className="h-5 w-5 text-primary" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
-                    Rule Adherence Uplift
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">
-                    <AnimatedCounter target={37} prefix="+" suffix="%" />
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  variants={staggerItem}
-                  className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55"
-                >
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Zap className="h-5 w-5 text-primary" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
-                    Impulse Trades Reduced
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">
-                    <AnimatedCounter target={42} prefix="-" suffix="%" />
-                  </p>
-                </motion.div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-5"
-        >
-          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'CSV Import'].map((platform) => (
-            <span 
-              key={platform}
-              className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 transition-colors duration-200 hover:text-foreground [font-family:var(--home-copy)]"
-            >
-              {platform}
-            </span>
-          ))}
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary/80 [font-family:var(--home-copy)]">
-            NINJA<span className="mx-0.5 align-baseline text-primary/60">|</span>TRADER
-          </span>
-        </motion.div>
-
-        <motion.p
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          className="mt-8 text-center text-sm tracking-[0.06em] text-muted-foreground/80 [font-family:var(--home-copy)]"
-        >
-          Join free. Import your first session. Get a ranked diagnostic before your next open.
-        </motion.p>
-      </div>
-      
-      <div 
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-        style={{
-          background: 'linear-gradient(to_bottom, transparent, hsl(var(--background)))'
-        }}
-      />
-    </section>
-  )
-}
-
-function HeroStatic({ locale }: { locale: string }) {
-  return (
-    <section className="relative min-h-[90vh] overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8">
-      {/* Minimal background - single subtle gradient */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
-          <div 
-            className="absolute inset-0 rounded-full opacity-20 blur-[100px]"
-            style={{
-              background: 'radial-gradient(circle, hsl(var(--primary) / 0.3) 0%, transparent 70%)'
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-5xl">
+        {/* Badge */}
         <div className="mb-10 flex justify-center">
           <div className="group relative">
             <div 
               className="absolute -inset-0.5 rounded-full opacity-20 blur-sm transition-all duration-300 group-hover:opacity-30"
-              style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent-luxury)))' }}
+              style={{ background: 'linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 50%))' }}
             />
-            <Badge 
-              variant="secondary" 
-              className="relative border border-primary/20 bg-card/80 px-5 py-2 backdrop-blur-md [font-family:var(--home-copy)]"
-            >
-              <Sparkles className="mr-2.5 h-4 w-4 text-primary" />
-              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-sm font-medium tracking-wide text-transparent">
-                Live decision telemetry for discretionary traders
+            <div className="relative rounded-full border border-v2-accent/20 bg-v2-bg-surface/80 px-5 py-2 backdrop-blur-md">
+              <span className="flex items-center gap-2.5 text-sm font-medium tracking-wide text-v2-text-secondary">
+                <ChartIcon size={16} className="text-v2-accent" />
+                <span className="bg-gradient-to-r from-v2-accent to-v2-accent/70 bg-clip-text text-transparent">
+                  Live decision telemetry for discretionary traders
+                </span>
               </span>
-            </Badge>
+            </div>
           </div>
         </div>
 
-        {/* Single-line headline with minimal gradient */}
-        <h1 className="mx-auto mb-8 text-center tracking-tight [font-family:var(--home-display)]">
-          <span className="block text-[clamp(2.75rem,8vw,5.5rem)] font-semibold leading-[0.95] text-foreground">
+        {/* Single-line headline with subtle accent gradient */}
+        <h1 className="mx-auto mb-8 text-center font-sans font-semibold tracking-tight">
+          <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
             Build repeatable edge.
           </span>
           <span 
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] font-semibold leading-[0.95] tracking-tight"
+            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight"
             style={{
-              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent-luxury-hover)) 50%, hsl(var(--foreground) / 0.8) 100%)',
+              background: 'linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 92% 65%) 50%, hsl(0 0% 97% / 0.8) 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
@@ -347,109 +89,109 @@ function HeroStatic({ locale }: { locale: string }) {
           </span>
         </h1>
 
-        <p className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-muted-foreground sm:text-[19px] [font-family:var(--home-copy)]">
+        <p className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-v2-text-secondary sm:text-[19px]">
           Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
           Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
         </p>
 
-        {/* Single CTA button */}
+        {/* Single CTA button with V2 Button */}
         <div className="mt-12 flex justify-center">
-          <Button 
-            asChild 
-            size="lg" 
-            className="h-13 w-full min-w-[240px] rounded-2xl bg-primary px-8 py-6 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-xl shadow-primary/25 transition-all duration-200 hover:bg-primary/95 hover:shadow-2xl hover:shadow-primary/30 sm:w-auto [font-family:var(--home-copy)]"
-          >
-            <Link href={`/${locale}/authentication?next=dashboard`}>
-              <Zap className="mr-2.5 h-5 w-5" />
+          <ButtonV2 variant="solid" size="lg" className="min-w-[240px]">
+            <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
               Start Free Audit
             </Link>
-          </Button>
+          </ButtonV2>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground [font-family:var(--home-copy)]">
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-v2-text-secondary">
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
             No credit card required
           </span>
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
             First audit in minutes
           </span>
-          <span className="flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
             Built for discretionary futures traders
           </span>
         </div>
 
+        {/* Stats cards */}
         <div className="mt-16">
-          <Card className="relative overflow-hidden border-primary/10 bg-card/60 shadow-2xl shadow-black/20 backdrop-blur-xl">
+          <div className={cn(
+            "relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface/60",
+            "shadow-v2-lg shadow-black/20 backdrop-blur-xl"
+          )}>
             <div 
               className="absolute inset-0 opacity-20"
               style={{
-                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(var(--primary) / 0.15), transparent)'
+                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(217 91% 60% / 0.15), transparent)'
               }}
             />
             
-            <CardContent className="relative p-5 sm:p-7">
+            <div className="relative p-5 sm:p-7">
               <div className="grid gap-4 sm:grid-cols-3">
-                <div className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Target className="h-5 w-5 text-primary" />
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ProfileIcon size={20} className="text-v2-accent" />
                   </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
                     Session Grade Confidence
                   </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
-                    94%
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-text-primary">
+                    <AnimatedCounter target={94} suffix="%" />
                   </p>
                 </div>
                 
-                <div className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <TrendingDown className="h-5 w-5 text-primary" />
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ChartIcon size={20} className="text-v2-accent" />
                   </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
                     Rule Adherence Uplift
                   </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">
-                    +37%
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
+                    <AnimatedCounter target={37} prefix="+" suffix="%" />
                   </p>
                 </div>
                 
-                <div className="group relative rounded-xl border border-border/60 bg-background/40 p-5 text-center transition-all duration-300 hover:border-primary/30 hover:bg-background/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Zap className="h-5 w-5 text-primary" />
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ChartIcon size={20} className="text-v2-accent" />
                   </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground [font-family:var(--home-copy)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
                     Impulse Trades Reduced
                   </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">
-                    -42%
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
+                    <AnimatedCounter target={42} prefix="-" suffix="%" />
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
+        {/* Platform logos */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
           {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'CSV Import'].map((platform) => (
             <span 
               key={platform}
-              className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/80 transition-colors duration-200 hover:text-foreground [font-family:var(--home-copy)]"
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary/80 transition-colors duration-200 hover:text-v2-text-primary"
             >
               {platform}
             </span>
           ))}
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary/80 [font-family:var(--home-copy)]">
-            NINJA<span className="mx-0.5 align-baseline text-primary/60">|</span>TRADER
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-v2-accent/80">
+            NINJA<span className="mx-0.5 align-baseline text-v2-accent/60">|</span>TRADER
           </span>
         </div>
 
-        <p className="mt-8 text-center text-sm tracking-[0.06em] text-muted-foreground/80 [font-family:var(--home-copy)]">
+        <p className="mt-8 text-center text-sm tracking-[0.06em] text-v2-text-secondary/80">
           Join free. Import your first session. Get a ranked diagnostic before your next open.
         </p>
       </div>
@@ -457,7 +199,176 @@ function HeroStatic({ locale }: { locale: string }) {
       <div 
         className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
         style={{
-          background: 'linear-gradient(to_bottom, transparent, hsl(var(--background)))'
+          background: 'linear-gradient(to_bottom, transparent, hsl(240 6% 3%))'
+        }}
+      />
+    </section>
+  )
+}
+
+function HeroStatic({ locale }: { locale: string }) {
+  return (
+    <section className="relative min-h-[90vh] overflow-hidden px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8">
+      {/* Clean V2 gradient background */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
+          <div 
+            className="absolute inset-0 rounded-full opacity-[0.08] blur-[100px]"
+            style={{
+              background: 'radial-gradient(circle, hsl(217 91% 60%) 0%, transparent 70%)'
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl">
+        {/* Badge */}
+        <div className="mb-10 flex justify-center">
+          <div className="group relative">
+            <div 
+              className="absolute -inset-0.5 rounded-full opacity-20 blur-sm transition-all duration-300 group-hover:opacity-30"
+              style={{ background: 'linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 50%))' }}
+            />
+            <div className="relative rounded-full border border-v2-accent/20 bg-v2-bg-surface/80 px-5 py-2 backdrop-blur-md">
+              <span className="flex items-center gap-2.5 text-sm font-medium tracking-wide text-v2-text-secondary">
+                <ChartIcon size={16} className="text-v2-accent" />
+                <span className="bg-gradient-to-r from-v2-accent to-v2-accent/70 bg-clip-text text-transparent">
+                  Live decision telemetry for discretionary traders
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Single-line headline with subtle accent gradient */}
+        <h1 className="mx-auto mb-8 text-center font-sans font-semibold tracking-tight">
+          <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
+            Build repeatable edge.
+          </span>
+          <span 
+            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight"
+            style={{
+              background: 'linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 92% 65%) 50%, hsl(0 0% 97% / 0.8) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            Eliminate emotional drift.
+          </span>
+        </h1>
+
+        <p className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-v2-text-secondary sm:text-[19px]">
+          Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
+          Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
+        </p>
+
+        {/* Single CTA button with V2 Button */}
+        <div className="mt-12 flex justify-center">
+          <ButtonV2 variant="solid" size="lg" className="min-w-[240px]">
+            <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
+              Start Free Audit
+            </Link>
+          </ButtonV2>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-v2-text-secondary">
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
+            No credit card required
+          </span>
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
+            First audit in minutes
+          </span>
+          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
+            Built for discretionary futures traders
+          </span>
+        </div>
+
+        {/* Stats cards */}
+        <div className="mt-16">
+          <div className={cn(
+            "relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface/60",
+            "shadow-v2-lg shadow-black/20 backdrop-blur-xl"
+          )}>
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(217 91% 60% / 0.15), transparent)'
+              }}
+            />
+            
+            <div className="relative p-5 sm:p-7">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ProfileIcon size={20} className="text-v2-accent" />
+                  </div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
+                    Session Grade Confidence
+                  </p>
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-text-primary">
+                    94%
+                  </p>
+                </div>
+                
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ChartIcon size={20} className="text-v2-accent" />
+                  </div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
+                    Rule Adherence Uplift
+                  </p>
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
+                    +37%
+                  </p>
+                </div>
+                
+                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
+                    <ChartIcon size={20} className="text-v2-accent" />
+                  </div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
+                    Impulse Trades Reduced
+                  </p>
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
+                    -42%
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Platform logos */}
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'CSV Import'].map((platform) => (
+            <span 
+              key={platform}
+              className="text-[11px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary/80 transition-colors duration-200 hover:text-v2-text-primary"
+            >
+              {platform}
+            </span>
+          ))}
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-v2-accent/80">
+            NINJA<span className="mx-0.5 align-baseline text-v2-accent/60">|</span>TRADER
+          </span>
+        </div>
+
+        <p className="mt-8 text-center text-sm tracking-[0.06em] text-v2-text-secondary/80">
+          Join free. Import your first session. Get a ranked diagnostic before your next open.
+        </p>
+      </div>
+      
+      <div 
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
+        style={{
+          background: 'linear-gradient(to_bottom, transparent, hsl(240 6% 3%))'
         }}
       />
     </section>

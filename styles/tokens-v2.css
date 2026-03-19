@@ -1,0 +1,228 @@
+/**
+ * V2 Design Token System - sedai.io-inspired Dark SaaS Aesthetic
+ * Clean, modern design with electric blue accent
+ * All colors use HSL format for consistency with existing token system
+ * 
+ * Usage: Import this file in globals.css alongside tokens.css
+ * V2 tokens are ADDITIVE - new pages use them, old pages stay unchanged
+ */
+
+@layer base {
+  :root {
+    /* ===== V2 SPACING GRID (8px Base) ===== */
+    --v2-space-1: 0.25rem;   /* 4px */
+    --v2-space-2: 0.5rem;    /* 8px */
+    --v2-space-3: 0.75rem;   /* 12px */
+    --v2-space-4: 1rem;      /* 16px */
+    --v2-space-5: 1.25rem;   /* 20px */
+    --v2-space-6: 1.5rem;    /* 24px */
+    --v2-space-8: 2rem;      /* 32px */
+    --v2-space-10: 2.5rem;   /* 40px */
+    --v2-space-12: 3rem;      /* 48px */
+    --v2-space-16: 4rem;      /* 64px */
+    --v2-space-20: 5rem;      /* 80px */
+    --v2-space-24: 6rem;      /* 96px */
+
+    /* ===== V2 BORDER RADII ===== */
+    --v2-radius-sm: 0.5rem;   /* 8px */
+    --v2-radius-md: 0.75rem;  /* 12px */
+    --v2-radius-lg: 1rem;     /* 16px */
+    --v2-radius-full: 9999px;
+
+    /* ===== V2 SEMANTIC TOKENS - Dark SaaS Backgrounds ===== */
+    --v2-bg-base: 240 6% 3%;       /* #08080b - Deepest background */
+    --v2-bg-surface: 240 5% 6%;     /* #0f0f12 - Card/surface background */
+    --v2-bg-elevated: 240 5% 9%;   /* #17171b - Elevated elements */
+    --v2-bg-hover: 240 5% 12%;     /* #1f1f24 - Hover states */
+    --v2-bg-active: 240 5% 15%;    /* #26262b - Active/pressed states */
+    --v2-bg-muted: 240 4% 8%;      /* #131316 - Muted/subtle backgrounds */
+
+    /* ===== V2 TEXT TOKENS ===== */
+    --v2-text-primary: 0 0% 97%;   /* 97% white - Primary text */
+    --v2-text-secondary: 0 0% 65%; /* 65% white - Secondary/muted text */
+    --v2-text-tertiary: 0 0% 45%;  /* 45% white - Tertiary/disabled text */
+    --v2-text-inverse: 240 6% 3%;  /* For text on accent backgrounds */
+
+    /* ===== V2 ACCENT - Electric Blue ===== */
+    --v2-accent: 217 91% 60%;      /* Electric blue - Primary accent */
+    --v2-accent-hover: 217 92% 65%;
+    --v2-accent-active: 217 93% 55%;
+    --v2-accent-subtle: 217 91% 60% / 0.12;  /* Subtle accent bg */
+    --v2-accent-muted: 217 91% 60% / 0.2;    /* Muted accent bg */
+    --v2-accent-foreground: 0 0% 100%;        /* White text on accent */
+    --v2-accent-border: 217 91% 60% / 0.4;    /* Accent border */
+
+    /* ===== V2 BORDER TOKENS ===== */
+    --v2-border: 0 0% 100% / 0.18;           /* 18% white - Default border */
+    --v2-border-subtle: 0 0% 100% / 0.12;    /* 12% white - Subtle border */
+    --v2-border-strong: 0 0% 100% / 0.28;    /* 28% white - Strong border */
+    --v2-border-accent: var(--v2-accent-border); /* Accent border */
+
+    /* ===== V2 STATUS TOKENS ===== */
+    /* Success - Green */
+    --v2-success: 142 71% 45%;              /* Vibrant green */
+    --v2-success-foreground: 0 0% 100%;     /* White text */
+    --v2-success-subtle: 142 71% 45% / 0.15;
+    --v2-success-border: 142 71% 45% / 0.3;
+
+    /* Warning - Amber */
+    --v2-warning: 38 92% 50%;               /* Amber/gold */
+    --v2-warning-foreground: 240 6% 3%;    /* Dark text */
+    --v2-warning-subtle: 38 92% 50% / 0.15;
+    --v2-warning-border: 38 92% 50% / 0.3;
+
+    /* Error - Red */
+    --v2-error: 0 84% 60%;                  /* Vibrant red */
+    --v2-error-foreground: 0 0% 100%;       /* White text */
+    --v2-error-subtle: 0 84% 60% / 0.15;
+    --v2-error-border: 0 84% 60% / 0.3;
+
+    /* Info - Electric Blue (same as accent) */
+    --v2-info: var(--v2-accent);
+    --v2-info-foreground: var(--v2-accent-foreground);
+    --v2-info-subtle: var(--v2-accent-subtle);
+    --v2-info-border: var(--v2-accent-border);
+
+    /* ===== V2 EASING & DURATION ===== */
+    --v2-ease: cubic-bezier(0.16, 1, 0.3, 1);       /* Smooth ease-out */
+    --v2-ease-in: cubic-bezier(0.4, 0, 1, 1);       /* Ease-in */
+    --v2-ease-out: cubic-bezier(0, 0, 0.2, 1);      /* Ease-out */
+    --v2-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy spring */
+    --v2-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring effect */
+
+    --v2-duration-instant: 50ms;
+    --v2-duration-fast: 150ms;
+    --v2-duration-base: 200ms;
+    --v2-duration-slow: 300ms;
+    --v2-duration-slower: 500ms;
+
+    /* ===== V2 SHADOWS ===== */
+    --v2-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --v2-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+    --v2-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --v2-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --v2-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+    --v2-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    --v2-shadow-glow: 0 0 20px -5px hsl(217 91% 60% / 0.4);
+    --v2-shadow-glow-strong: 0 0 30px -5px hsl(217 91% 60% / 0.6);
+
+    /* ===== V2 OVERLAY ===== */
+    --v2-overlay-light: 0 0% 100% / 0.05;
+    --v2-overlay: 0 0% 0% / 0.6;
+    --v2-overlay-heavy: 0 0% 0% / 0.8;
+
+    /* ===== V2 INPUT TOKENS ===== */
+    --v2-input-bg: var(--v2-bg-surface);
+    --v2-input-border: var(--v2-border);
+    --v2-input-placeholder: var(--v2-text-tertiary);
+    --v2-input-focus: var(--v2-accent);
+
+    /* ===== V2 RING TOKENS ===== */
+    --v2-ring: var(--v2-accent);
+    --v2-ring-offset: var(--v2-bg-base);
+  }
+}
+
+/* ===== V2 THEME INLINE - Tailwind CSS v4 Integration ===== */
+@theme inline {
+  /* V2 Background Colors */
+  --color-v2-bg-base: hsl(var(--v2-bg-base));
+  --color-v2-bg-surface: hsl(var(--v2-bg-surface));
+  --color-v2-bg-elevated: hsl(var(--v2-bg-elevated));
+  --color-v2-bg-hover: hsl(var(--v2-bg-hover));
+  --color-v2-bg-active: hsl(var(--v2-bg-active));
+  --color-v2-bg-muted: hsl(var(--v2-bg-muted));
+
+  /* V2 Text Colors */
+  --color-v2-text-primary: hsl(var(--v2-text-primary));
+  --color-v2-text-secondary: hsl(var(--v2-text-secondary));
+  --color-v2-text-tertiary: hsl(var(--v2-text-tertiary));
+  --color-v2-text-inverse: hsl(var(--v2-text-inverse));
+
+  /* V2 Accent Colors */
+  --color-v2-accent: hsl(var(--v2-accent));
+  --color-v2-accent-hover: hsl(var(--v2-accent-hover));
+  --color-v2-accent-active: hsl(var(--v2-accent-active));
+  --color-v2-accent-subtle: hsl(var(--v2-accent-subtle));
+  --color-v2-accent-muted: hsl(var(--v2-accent-muted));
+  --color-v2-accent-foreground: hsl(var(--v2-accent-foreground));
+
+  /* V2 Border Colors */
+  --color-v2-border: hsl(var(--v2-border));
+  --color-v2-border-subtle: hsl(var(--v2-border-subtle));
+  --color-v2-border-strong: hsl(var(--v2-border-strong));
+  --color-v2-border-accent: hsl(var(--v2-border-accent));
+
+  /* V2 Status Colors - Success */
+  --color-v2-success: hsl(var(--v2-success));
+  --color-v2-success-foreground: hsl(var(--v2-success-foreground));
+  --color-v2-success-subtle: hsl(var(--v2-success-subtle));
+  --color-v2-success-border: hsl(var(--v2-success-border));
+
+  /* V2 Status Colors - Warning */
+  --color-v2-warning: hsl(var(--v2-warning));
+  --color-v2-warning-foreground: hsl(var(--v2-warning-foreground));
+  --color-v2-warning-subtle: hsl(var(--v2-warning-subtle));
+  --color-v2-warning-border: hsl(var(--v2-warning-border));
+
+  /* V2 Status Colors - Error */
+  --color-v2-error: hsl(var(--v2-error));
+  --color-v2-error-foreground: hsl(var(--v2-error-foreground));
+  --color-v2-error-subtle: hsl(var(--v2-error-subtle));
+  --color-v2-error-border: hsl(var(--v2-error-border));
+
+  /* V2 Status Colors - Info */
+  --color-v2-info: hsl(var(--v2-info));
+  --color-v2-info-foreground: hsl(var(--v2-info-foreground));
+  --color-v2-info-subtle: hsl(var(--v2-info-subtle));
+  --color-v2-info-border: hsl(var(--v2-info-border));
+
+  /* V2 Spacing */
+  --spacing-v2-1: var(--v2-space-1);
+  --spacing-v2-2: var(--v2-space-2);
+  --spacing-v2-3: var(--v2-space-3);
+  --spacing-v2-4: var(--v2-space-4);
+  --spacing-v2-5: var(--v2-space-5);
+  --spacing-v2-6: var(--v2-space-6);
+  --spacing-v2-8: var(--v2-space-8);
+  --spacing-v2-10: var(--v2-space-10);
+  --spacing-v2-12: var(--v2-space-12);
+  --spacing-v2-16: var(--v2-space-16);
+  --spacing-v2-20: var(--v2-space-20);
+  --spacing-v2-24: var(--v2-space-24);
+
+  /* V2 Border Radius */
+  --radius-v2-sm: var(--v2-radius-sm);
+  --radius-v2-md: var(--v2-radius-md);
+  --radius-v2-lg: var(--v2-radius-lg);
+  --radius-v2-full: var(--v2-radius-full);
+
+  /* V2 Shadows */
+  --shadow-v2-sm: var(--v2-shadow-sm);
+  --shadow-v2: var(--v2-shadow);
+  --shadow-v2-md: var(--v2-shadow-md);
+  --shadow-v2-lg: var(--v2-shadow-lg);
+  --shadow-v2-xl: var(--v2-shadow-xl);
+  --shadow-v2-2xl: var(--v2-shadow-2xl);
+  --shadow-v2-glow: var(--v2-shadow-glow);
+  --shadow-v2-glow-strong: var(--v2-shadow-glow-strong);
+
+  /* V2 Easing */
+  --ease-v2: var(--v2-ease);
+  --ease-v2-in: var(--v2-ease-in);
+  --ease-v2-out: var(--v2-ease-out);
+  --ease-v2-bounce: var(--v2-ease-bounce);
+  --ease-v2-spring: var(--v2-ease-spring);
+
+  /* V2 Duration */
+  --duration-v2-instant: var(--v2-duration-instant);
+  --duration-v2-fast: var(--v2-duration-fast);
+  --duration-v2-base: var(--v2-duration-base);
+  --duration-v2-slow: var(--v2-duration-slow);
+  --duration-v2-slower: var(--v2-duration-slower);
+
+  /* V2 Input & Ring */
+  --color-v2-input: hsl(var(--v2-input-bg));
+  --color-v2-ring: hsl(var(--v2-ring));
+  --color-v2-ring-offset: hsl(var(--v2-ring-offset));
+}

@@ -17,6 +17,7 @@
   "/[locale]/dashboard/strategies",
   "/[locale]/dashboard/trader-profile",
   "/[locale]/deals",
+  "/[locale]/deals-v2",
   "/[locale]/deals/calculator",
   "/[locale]/deals/compare",
   "/[locale]/deals/faq",
@@ -25,6 +26,8 @@
   "/[locale]/docs",
   "/[locale]/embed",
   "/[locale]/faq",
+  "/[locale]/firm/[slug]",
+  "/[locale]/leaderboard",
   "/[locale]/maintenance",
   "/[locale]/newsletter",
   "/[locale]/pricing",
@@ -49,6 +52,7 @@
   "/[locale]/teams/join",
   "/[locale]/teams/manage",
   "/[locale]/terms",
+  "/[locale]/trader/[slug]",
   "/[locale]/updates",
   "/[locale]/updates/[slug]"
 ]

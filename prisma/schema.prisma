@@ -218,6 +218,70 @@ model LayoutVersion {
   @@schema("public")
 }
 
+// Prop firm catalogue for deal analytics
+model PropFirm {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  name          String
+  category      String       // "Futures" | "Forex" | "Crypto"
+  description   String?
+  shortDesc     String?
+  platform      String?
+  payoutModel   String?
+  drawdownType  String?
+  profitSplit   String?
+  maxAllocation String?
+  referralUrl   String?
+  logoUrl       String?
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  reviews  FirmReview[]  // relation to reviews
+  coupons  FirmCoupon[]  // relation to coupons
+
+  @@index([slug])
+  @@map("prop_firm")
+  @@schema("public")
+}
+
+model FirmReview {
+  id         String   @id @default(cuid())
+  propfirmId String
+  propFirm   PropFirm @relation(fields: [propfirmId], references: [id], onDelete: Cascade)
+  userId     String
+  username   String
+  rating     Int      // 1-5
+  title      String?
+  body       String?
+  avatarUrl  String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([propfirmId])
+  @@index([userId])
+  @@unique([propfirmId, userId])
+  @@map("firm_review")
+  @@schema("public")
+}
+
+model FirmCoupon {
+  id              String   @id @default(cuid())
+  propfirmId      String
+  propfirm        PropFirm @relation(fields: [propfirmId], references: [id], onDelete: Cascade)
+  code            String
+  discountPercent Int
+  challengeFee    Int?
+  expiresAt       DateTime?
+  claimUrl        String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  @@unique([propfirmId, code])
+  @@index([propfirmId])
+  @@map("firm_coupon")
+  @@schema("public")
+}
 // ============================================================================
 // TRADING CORE
 // ============================================================================
