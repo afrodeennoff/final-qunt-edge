@@ -1306,7 +1306,7 @@
 
   .marketing-panel {
     border: 1px solid hsl(var(--mk-border) / 0.24);
-    background: hsl(var(--mk-surface) / 0.92);
+    background: hsl(var(--mk-surface) / 1);
     box-shadow: 0 24px 50px -36px hsl(var(--brand-ink) / 0.65);
   }
 
@@ -1480,30 +1480,4 @@
 
 .animate-button-ripple {
   animation: button-ripple 0.6s ease-out forwards;
-}
-
-@keyframes icon-glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
-  }
-  50% {
-    box-shadow: 0 0 12px 2px hsl(var(--primary) / 0.15);
-  }
-}
-
-@keyframes icon-glow-pulse-strong {
-  0%, 100% {
-    box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
-  }
-  50% {
-    box-shadow: 0 0 20px 4px hsl(var(--primary) / 0.25), 0 0 8px 1px hsl(var(--primary) / 0.15);
-  }
-}
-
-.icon-glow {
-  animation: icon-glow-pulse 3s ease-in-out infinite;
-}
-
-.icon-glow-key {
-  animation: icon-glow-pulse-strong 2.5s ease-in-out infinite;
 }

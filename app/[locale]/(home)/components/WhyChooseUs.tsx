@@ -1,11 +1,9 @@
 'use client'
 
-import { useRef } from 'react'
-
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2 } from 'lucide-react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const proofStats = [
   { label: 'Time To First Diagnostic', value: '< 7 min', note: 'from first sync to actionable process signal' },
@@ -43,11 +41,10 @@ const socialProof = [
 ]
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0 },
   visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+    opacity: 1,
+    transition: { duration: 0.4, ease: 'easeOut' }
   }
 }
 
@@ -55,41 +52,28 @@ const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 }
+    transition: { staggerChildren: 0.05 }
   }
 }
 
 export default function WhyChooseUs() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start']
-  })
-  
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 0.5, 0.5, 0.3])
-
   return (
     <section 
       id="why-us" 
-      ref={sectionRef}
       className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-14 lg:px-8"
     >
-      <motion.div 
-        className="pointer-events-none absolute inset-0 -z-10 opacity-30"
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-20"
         style={{ 
-          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.15), transparent)',
-          y: backgroundY,
-          opacity: backgroundOpacity
+          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.15), transparent)'
         }}
       />
       
       <div className="mx-auto max-w-6xl space-y-10">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           className="text-center"
         >
           <Badge variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
@@ -141,7 +125,7 @@ export default function WhyChooseUs() {
               >
                 <Card variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)]">
                   <CardHeader>
-                    <div className={`mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground ${isKeyBenefit ? 'icon-glow-key' : 'icon-glow'}`}>
+                    <div className={`mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] ${isKeyBenefit ? 'border-[hsl(var(--border-focus)/0.4)]' : ''} bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground`}>
                       <Icon className="h-5 w-5" />
                     </div>
                     <CardTitle className="text-xl tracking-[-0.01em] [font-family:var(--home-display)]">{reason.title}</CardTitle>

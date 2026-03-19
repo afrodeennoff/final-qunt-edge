@@ -168,25 +168,10 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
   return (
     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-      <motion.div
-        animate={{
-          boxShadow: [
-            '0 4px 16px -4px hsl(var(--primary) / 0.3)',
-            '0 6px 30px -4px hsl(var(--primary) / 0.5)',
-            '0 4px 16px -4px hsl(var(--primary) / 0.3)',
-          ],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      >
-        <Badge className="bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-luxury-hover))] px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--primary-foreground))] shadow-[0_4px_16px_-4px_hsl(var(--primary)/0.5)]">
-          <Sparkles className="mr-1.5 h-3 w-3 animate-pulse" />
-          Most Popular
-        </Badge>
-      </motion.div>
+      <Badge className="bg-[hsl(var(--primary))] px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(var(--primary-foreground))]">
+        <Sparkles className="mr-1.5 h-3 w-3" />
+        Most Popular
+      </Badge>
     </div>
   )
 }
@@ -195,10 +180,7 @@ function PlanSavingsNote({ show, savings }: { show: boolean; savings: number }) 
   if (!show) return null
   return (
     <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-[hsl(var(--primary)/0.9)] [font-family:var(--home-copy)]">
-      <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[hsl(var(--primary)/0.6)] opacity-75"></span>
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-[hsl(var(--primary))]"></span>
-      </span>
+      <span className="flex h-2 w-2 rounded-full bg-[hsl(var(--primary))]" />
       Save ${savings}/month with annual billing
     </p>
   )

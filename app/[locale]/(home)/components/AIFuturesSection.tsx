@@ -1,17 +1,12 @@
 "use client"
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
-
-const springTransition = {
-  type: 'spring',
-  stiffness: 300,
-  damping: 30,
-}
+import { Brain, Bot, ChevronRight, Radar, ShieldAlert, Sparkles } from 'lucide-react'
 
 const intelligenceFeatures = [
   {
@@ -66,12 +61,9 @@ function FeatureGrid({ items, delay = 0 }: { items: typeof intelligenceFeatures;
               ease: [0.25, 0.1, 0.25, 1],
             }}
           >
-            <Card
-              variant="glass"
-              className="h-full rounded-[28px] border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)] transition-transform duration-300 hover:scale-[1.02]"
-            >
+            <Card className="h-full rounded-md border border-border/60 bg-card p-5 transition-all duration-200 hover:border-border/80 hover:bg-card/80">
               <CardHeader className="space-y-3 px-0 pb-0">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.14)] text-foreground">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border/60 bg-[hsl(var(--primary)/0.1)] text-foreground">
                   <Icon className="h-5 w-5" />
                 </div>
                 <CardTitle className="text-base font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
@@ -100,7 +92,7 @@ export default function AIFuturesSection() {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
+        <div className="mx-auto max-w-6xl space-y-8 rounded-md border border-border/60 bg-card/60 p-8 text-foreground sm:space-y-10 sm:p-10">
           <div className="space-y-3 text-center">
             <Badge
               variant="outline"
@@ -116,30 +108,30 @@ export default function AIFuturesSection() {
 
           <Tabs defaultValue="intelligence" className="w-full" onValueChange={setActiveTab}>
             <div className="relative">
-              <TabsList className="h-auto w-full justify-start rounded-[28px] border border-border/70 bg-card/70 p-1">
+              <TabsList className="h-auto w-full justify-start rounded-md border border-border/60 bg-transparent p-0">
                 <TabsTrigger
                   value="intelligence"
-                  className="relative rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+                  className="rounded-md px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-150 data-[state=active]:text-foreground [font-family:var(--home-copy)]"
                 >
                   Intelligence
                   {activeTab === 'intelligence' && (
                     <motion.div
                       layoutId="tab-indicator"
-                      className="absolute -bottom-px left-0 right-0 h-0.5 bg-foreground/80"
-                      transition={springTransition}
+                      className="absolute bottom-0 left-4 right-4 h-px bg-foreground/60"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="automation"
-                  className="relative rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+                  className="rounded-md px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors duration-150 data-[state=active]:text-foreground [font-family:var(--home-copy)]"
                 >
                   Automation
                   {activeTab === 'automation' && (
                     <motion.div
                       layoutId="tab-indicator"
-                      className="absolute -bottom-px left-0 right-0 h-0.5 bg-foreground/80"
-                      transition={springTransition}
+                      className="absolute bottom-0 left-4 right-4 h-px bg-foreground/60"
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
                 </TabsTrigger>
@@ -164,10 +156,7 @@ export default function AIFuturesSection() {
             </AnimatePresence>
           </Tabs>
 
-          <Card
-            variant="glass"
-            className="mt-6 rounded-[28px] border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
-          >
+          <Card className="mt-6 rounded-md border border-border/60 bg-[hsl(var(--primary)/0.06)]">
             <CardContent className="flex flex-col gap-3 p-6 text-sm text-muted-foreground [font-family:var(--home-copy)] sm:flex-row sm:items-center sm:justify-between">
               <p className="leading-relaxed">
                 AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
@@ -180,6 +169,16 @@ export default function AIFuturesSection() {
               </Badge>
             </CardContent>
           </Card>
+
+          <div className="flex items-center justify-center pt-2">
+            <Link
+              href="/dashboard"
+              className="group inline-flex items-center gap-2 rounded-md border border-border/60 bg-[hsl(var(--primary)/0.1)] px-5 py-2.5 text-sm font-medium text-foreground transition-all duration-200 hover:border-[hsl(var(--primary)/0.4)] hover:bg-[hsl(var(--primary)/0.18)]"
+            >
+              See AI Features in Action
+              <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
         </div>
       </motion.div>
     </section>

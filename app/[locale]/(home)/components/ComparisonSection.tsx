@@ -1,6 +1,3 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, X } from 'lucide-react'
@@ -33,41 +30,6 @@ const comparisonRows = [
   },
 ]
 
-// Animation variants
-const rowVariants = {
-  hidden: {
-    opacity: 0,
-    x: -20,
-  },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.4,
-      ease: 'easeOut',
-    },
-  }),
-}
-
-const checkmarkVariants = {
-  hidden: {
-    scale: 0,
-    opacity: 0,
-  },
-  visible: (i: number) => ({
-    scale: 1,
-    opacity: 1,
-    transition: {
-      delay: 0.3 + i * 0.08,
-      type: 'spring',
-      stiffness: 400,
-      damping: 25,
-      mass: 0.8,
-    },
-  }),
-}
-
 export default function ComparisonSection() {
   return (
     <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
@@ -97,38 +59,25 @@ export default function ComparisonSection() {
                   </tr>
                 </thead>
                 <tbody>
-                  {comparisonRows.map((row, rowIndex) => (
-                    <motion.tr
+                  {comparisonRows.map((row) => (
+                    <tr
                       key={row.item}
-                      custom={rowIndex}
-                      variants={rowVariants}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true, margin: '-50px' }}
                       className="border-b border-[hsl(var(--mk-border)/0.24)] transition-colors duration-200 hover:bg-[hsl(var(--mk-surface-muted)/0.3)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 text-sm text-foreground">
-                          <motion.div custom={rowIndex} variants={checkmarkVariants}>
-                            <Check className="h-4 w-4 text-foreground" />
-                          </motion.div>
+                          <Check className="h-4 w-4 text-foreground" />
                           <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 text-sm text-foreground/80">
-                          <motion.div
-                            custom={rowIndex}
-                            variants={checkmarkVariants}
-                            transition={{ delay: 0.4 + rowIndex * 0.08 }}
-                          >
-                            <X className="h-4 w-4" />
-                          </motion.div>
+                          <X className="h-4 w-4" />
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>
                       </td>
-                    </motion.tr>
+                    </tr>
                   ))}
                 </tbody>
               </table>

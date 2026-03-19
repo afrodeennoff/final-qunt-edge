@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { SpringButton } from '@/components/animation/spring-button'
-import { RippleButton } from '@/components/animation/spring-button'
 
 const sectionVariants = {
   hidden: { 
@@ -66,32 +65,6 @@ function CTAAnimated() {
 
   return (
     <section className="relative px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-14 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div 
-          className="absolute inset-0 animate-gradient-shift opacity-30"
-          style={{
-            background: 'linear-gradient(135deg, hsl(var(--primary) / 0.15) 0%, transparent 50%, hsl(var(--accent-luxury) / 0.1) 100%)',
-            backgroundSize: '200% 200%',
-          }}
-        />
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, hsl(var(--primary) / 0.12) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.6, 0.8, 0.6],
-          }}
-          transition={{
-            duration: 8,
-            ease: 'easeInOut',
-            repeat: Infinity,
-          }}
-        />
-      </div>
-
       <motion.div
         initial="hidden"
         animate="visible"
@@ -156,20 +129,6 @@ function CTAAnimated() {
             </motion.p>
           </motion.div>
         </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        className="mt-6 flex justify-center"
-      >
-        <RippleButton
-          className="text-xs uppercase tracking-widest text-foreground/60 transition-colors hover:text-foreground/80 [font-family:var(--home-copy)]"
-          onClick={() => {}}
-        >
-          Learn more about our methodology →
-        </RippleButton>
       </motion.div>
     </section>
   )
