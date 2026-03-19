@@ -1,6 +1,10 @@
 -- Migration: v2_data_integrity
--- 1) Create PayoutStatus enum (includes CANCELLED used by frontend)
-CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PAID', 'REFUSED', 'CANCELLED');
+-- 1) Create PayoutStatus enum (idempotent — handles partial previous attempts)
+DO $$ BEGIN
+  CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PAID', 'REFUSED', 'CANCELLED');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
 
 -- 2) Alter Payout.status to enum type — drop default first, then type, then re-set default
 ALTER TABLE "Payout" ALTER COLUMN "status" DROP DEFAULT;
