@@ -1,5 +1,5 @@
 -- Migration: v2_data_integrity
--- 1) Create PayoutStatus enum (idempotent — handles partial previous attempts)
+-- 1) Create PayoutStatus enum (idempotent)
 DO $$ BEGIN
   CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PAID', 'REFUSED', 'CANCELLED');
 EXCEPTION
@@ -14,14 +14,19 @@ ALTER TABLE "Payout" ALTER COLUMN "status" SET DEFAULT 'PENDING'::"PayoutStatus"
 -- 3) Add propFirmId column to Account (nullable)
 ALTER TABLE "Account" ADD COLUMN "propFirmId" VARCHAR(255);
 
--- 4) Add FK constraint for propFirmId (table is "prop_firm" per @@map in schema)
-ALTER TABLE "Account" ADD CONSTRAINT "Account_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "prop_firm"("id") ON DELETE SET NULL;
+-- 4) Add FK constraint for propFirmId only if prop_firm table exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'prop_firm') THEN
+    ALTER TABLE "Account" ADD CONSTRAINT "Account_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "prop_firm"("id") ON DELETE SET NULL;
+  END IF;
+END $$;
 
 -- 5) Add index on propFirmId
 CREATE INDEX "Account_propFirmId_idx" ON "Account" ("propFirmId");
 
--- 6) Create the Challenge table
-CREATE TABLE "challenge" (
+-- 6) Create the Challenge table (idempotent)
+CREATE TABLE IF NOT EXISTS "challenge" (
   "id" VARCHAR(255) PRIMARY KEY,
   "propFirmId" VARCHAR(255) NOT NULL,
   "name" VARCHAR(255) NOT NULL,
@@ -42,11 +47,19 @@ CREATE TABLE "challenge" (
 
   "isActive" BOOLEAN NOT NULL DEFAULT TRUE,
   "createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-  "updatedAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-
-  CONSTRAINT "Challenge_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "prop_firm"("id") ON DELETE CASCADE
+  "updatedAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
--- 7) Add indexes on Challenge
-CREATE INDEX "Challenge_propFirmId_idx" ON "challenge" ("propFirmId");
-CREATE INDEX "Challenge_propFirmId_accountSize_idx" ON "challenge" ("propFirmId", "accountSize");
+-- 7) Add Challenge FK constraint only if prop_firm table exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'prop_firm') THEN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'Challenge_propFirmId_fkey') THEN
+      ALTER TABLE "challenge" ADD CONSTRAINT "Challenge_propFirmId_fkey" FOREIGN KEY ("propFirmId") REFERENCES "prop_firm"("id") ON DELETE CASCADE;
+    END IF;
+  END IF;
+END $$;
+
+-- 8) Add indexes on Challenge (idempotent)
+CREATE INDEX IF NOT EXISTS "Challenge_propFirmId_idx" ON "challenge" ("propFirmId");
+CREATE INDEX IF NOT EXISTS "Challenge_propFirmId_accountSize_idx" ON "challenge" ("propFirmId", "accountSize");
