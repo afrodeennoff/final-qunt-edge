@@ -62,6 +62,11 @@ function parseFailedMigrationName(output) {
   return match?.[1] ?? null;
 }
 
+function parseMigrationName(output) {
+  const match = output.match(/Migration name: (\S+)/);
+  return match?.[1] ?? null;
+}
+
 run("npx", ["prisma", "generate"], "Prisma client generated");
 
 const rawUrl = process.env.DIRECT_URL || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL;
@@ -100,6 +105,20 @@ if (migrationUrl) {
         `[sync-stack] P3009 detected${
           failedMigration ? ` for ${failedMigration}` : ""
         }. Manual resolution required (use prisma migrate resolve --rolled-back/--applied).`,
+      );
+      process.exit(deploy.status);
+    }
+  } else if (deploy.output.includes("P3018")) {
+    const failedMigration = parseMigrationName(deploy.output) || parseFailedMigrationName(deploy.output);
+    if (failedMigration) {
+      console.log(
+        `[sync-stack] Detected P3018 for ${failedMigration}. Marking as rolled-back and retrying deploy...`,
+      );
+      run("npx", ["prisma", "migrate", "resolve", "--rolled-back", failedMigration]);
+      run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3018 repair");
+    } else {
+      console.error(
+        "[sync-stack] P3018 detected but could not parse migration name. Manual resolution required.",
       );
       process.exit(deploy.status);
     }
