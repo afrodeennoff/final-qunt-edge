@@ -94,7 +94,17 @@ if (migrationUrl) {
       "20260316000000_add_mt5_accounts",
     ]);
 
-    if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
+    const autoRollbackRepairMigrations = new Set([
+      "20260320000000_v2_data_integrity",
+    ]);
+
+    if (failedMigration && autoRollbackRepairMigrations.has(failedMigration)) {
+      console.log(
+        `[sync-stack] Detected P3009 for ${failedMigration}. Marking as rolled-back and retrying deploy...`,
+      );
+      run("npx", ["prisma", "migrate", "resolve", "--rolled-back", failedMigration]);
+      run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3009 rollback");
+    } else if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
       console.log(
         `[sync-stack] Detected P3009 for ${failedMigration}. Marking as applied and retrying deploy...`,
       );
