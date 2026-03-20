@@ -1,14 +1,12 @@
 ---
 active: true
 iteration: 1
-completion_promise: "VERIFIED"
+completion_promise: "DONE"
 initial_completion_promise: "DONE"
-verification_attempt_id: "d2b6bf7a-2279-45e6-8201-9aec8c677df1"
-started_at: "2026-03-20T17:41:20.346Z"
+started_at: "2026-03-20T18:13:10.836Z"
 session_id: "ses_2f89ad4e9ffe94DfPgjz5RaagA"
 ultrawork: true
-verification_pending: true
 strategy: "continue"
-message_count_at_start: 613
+message_count_at_start: 639
 ---
-i cant open the deals and deals v2 page fix that
+when i open this its show this fix that Something went wrong An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.
