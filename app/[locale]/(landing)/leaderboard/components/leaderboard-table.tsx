@@ -3,9 +3,134 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import { CardV2, SkeletonV2 } from '@/components/ui/v2'
 import { AvatarV2, AvatarV2Fallback } from '@/components/ui/v2'
+import { Trophy, Medal, Award } from 'lucide-react'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 type SortKey = 'monthly_pnl' | 'alltime_pnl' | 'winrate' | 'totalTrades'
+
+const podiumConfig = {
+  1: {
+    icon: Trophy,
+    label: 'Champion',
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/30',
+    text: 'text-yellow-500',
+    glow: 'shadow-yellow-500/10',
+  },
+  2: {
+    icon: Medal,
+    label: 'Runner-up',
+    bg: 'bg-gray-400/10',
+    border: 'border-gray-400/30',
+    text: 'text-gray-400',
+    glow: 'shadow-gray-400/10',
+  },
+  3: {
+    icon: Award,
+    label: 'Third Place',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/30',
+    text: 'text-orange-500',
+    glow: 'shadow-orange-500/10',
+  },
+} as const
+
+interface PodiumCardProps {
+  entry: LeaderboardEntry & { rank: number }
+  rank: 1 | 2 | 3
+}
+
+function PodiumCard({ entry, rank }: PodiumCardProps) {
+  const config = podiumConfig[rank]
+  const Icon = config.icon
+
+  return (
+    <CardV2
+      hover={false}
+      className={cn(
+        'flex flex-col items-center p-4 text-center transition-all duration-300',
+        config.bg,
+        config.border,
+        'border',
+        config.glow,
+        rank === 1 && 'shadow-lg ring-1 ring-yellow-500/20'
+      )}
+    >
+      <div className={cn('flex items-center gap-1.5 mb-3', config.text)}>
+        <Icon className="w-5 h-5" strokeWidth={2.5} />
+        <span className={cn('text-sm font-bold', config.text)}>{config.label}</span>
+      </div>
+
+      <AvatarV2 size="lg" className="mb-3 ring-2 ring-white/10">
+        <AvatarV2Fallback className={cn(
+          'text-lg font-semibold',
+          rank === 1 && 'bg-yellow-500/20 text-yellow-500',
+          rank === 2 && 'bg-gray-400/20 text-gray-400',
+          rank === 3 && 'bg-orange-500/20 text-orange-500'
+        )}>
+          {entry.username.charAt(0).toUpperCase()}
+        </AvatarV2Fallback>
+      </AvatarV2>
+
+      <div className="font-medium text-v2-text-primary text-sm truncate max-w-full mb-2">
+        {entry.username}
+      </div>
+
+      <div className="space-y-1 w-full">
+        <div className={cn(
+          'text-lg font-bold',
+          entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
+        )}>
+          {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
+        </div>
+
+        <div className="flex items-center justify-center gap-1">
+          <div className={cn(
+            'w-1.5 h-1.5 rounded-full',
+            entry.winRate >= 50 ? 'bg-v2-success' : 'bg-v2-text-tertiary'
+          )} />
+          <span className="text-xs text-v2-text-secondary">
+            {entry.winRate}% Win
+          </span>
+        </div>
+      </div>
+    </CardV2>
+  )
+}
+
+interface PodiumSectionProps {
+  top3: (LeaderboardEntry & { rank: number })[]
+}
+
+function PodiumSection({ top3 }: PodiumSectionProps) {
+  if (top3.length === 0) return null
+
+  const [first, second, third] = top3
+
+  return (
+    <div className="mb-8">
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <Trophy className="w-6 h-6 text-yellow-500" />
+        <h2 className="text-xl font-bold text-v2-text-primary">Top Traders</h2>
+        <Trophy className="w-6 h-6 text-yellow-500" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center sm:items-end">
+        <div className="sm:mt-8 order-2 sm:order-1">
+          {second && <PodiumCard entry={second} rank={2} />}
+        </div>
+
+        <div className="order-1 sm:order-2">
+          {first && <PodiumCard entry={first} rank={1} />}
+        </div>
+
+        <div className="sm:mt-8 order-3">
+          {third && <PodiumCard entry={third} rank={3} />}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } }) {
   return (
@@ -96,6 +221,9 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
     return result.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
   }, [entries, sortBy])
 
+  const top3 = sorted.slice(0, 3)
+  const rest = sorted.slice(3)
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-4">
@@ -120,8 +248,10 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
         ))}
       </div>
 
+      <PodiumSection top3={top3} />
+
       <div className="space-y-2">
-        {sorted.map((entry) => (
+        {rest.map((entry) => (
           <MemoizedLeaderboardRow key={entry.userId} entry={entry} />
         ))}
 

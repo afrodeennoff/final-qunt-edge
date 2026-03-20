@@ -26,8 +26,7 @@ import type {
   TradingPlatform,
   PayoutModel,
 } from '@/server/deals'
-import type { PropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/types'
-import { DealsSidebarV2 } from '@/app/[locale]/(landing)/deals-v2/components/deals-sidebar'
+
 
 type SortKey =
   | 'name'
@@ -44,7 +43,6 @@ interface Props {
   deals: DealItem[]
   firms: UnifiedFirm[]
   faqs: FaqItem[]
-  catalogueData: PropfirmCatalogueData
   lastUpdated: string
 }
 
@@ -143,14 +141,6 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
     if (sortKey !== key) return ''
     return sortDirection === 'asc' ? 'ascending' : 'descending'
   }
-
-  const sidebarFirms = firms.map(f => ({
-    id: f.id,
-    slug: f.slug,
-    name: f.name,
-    category: f.category,
-    _count: { reviews: f._count.reviews, coupons: f._count.coupons },
-  }))
 
   return (
     <div className="min-h-screen bg-background/50">
@@ -522,11 +512,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
             </div>
           </div>
 
-          <aside className="lg:col-span-1">
-            <div className="sticky top-24">
-              <DealsSidebarV2 firms={sidebarFirms} />
-            </div>
-          </aside>
+
         </div>
       </div>
     </div>
