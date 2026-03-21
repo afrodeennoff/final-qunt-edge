@@ -12,26 +12,26 @@ const podiumConfig = {
   1: {
     icon: Trophy,
     label: 'Champion',
-    bg: 'bg-yellow-500/10',
-    border: 'border-yellow-500/30',
-    text: 'text-yellow-500',
-    glow: 'shadow-yellow-500/10',
+    bg: 'bg-v2-accent-subtle',
+    border: 'border-v2-accent/40',
+    text: 'text-v2-accent',
+    glow: 'shadow-v2-glow',
   },
   2: {
     icon: Medal,
     label: 'Runner-up',
-    bg: 'bg-gray-400/10',
-    border: 'border-gray-400/30',
-    text: 'text-gray-400',
-    glow: 'shadow-gray-400/10',
+    bg: 'bg-v2-bg-elevated',
+    border: 'border-v2-border',
+    text: 'text-v2-text-secondary',
+    glow: 'shadow-v2-sm',
   },
   3: {
     icon: Award,
     label: 'Third Place',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/30',
-    text: 'text-orange-500',
-    glow: 'shadow-orange-500/10',
+    bg: 'bg-v2-warning-subtle',
+    border: 'border-v2-warning/30',
+    text: 'text-v2-warning',
+    glow: 'shadow-v2-sm',
   },
 } as const
 
@@ -63,7 +63,7 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
         config.border,
         'border',
         config.glow,
-        rank === 1 && 'shadow-lg ring-1 ring-yellow-500/20'
+        rank === 1 && 'shadow-v2-lg ring-1 ring-v2-accent/25'
       )}
     >
       <div className={cn('flex items-center gap-1.5 mb-3', config.text)}>
@@ -71,12 +71,12 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
         <span className={cn('text-sm font-bold', config.text)}>{config.label}</span>
       </div>
 
-      <AvatarV2 size="lg" className="mb-3 ring-2 ring-white/10">
+      <AvatarV2 size="lg" className="mb-3 ring-2 ring-v2-border-subtle">
         <AvatarV2Fallback className={cn(
           'text-lg font-semibold',
-          rank === 1 && 'bg-yellow-500/20 text-yellow-500',
-          rank === 2 && 'bg-gray-400/20 text-gray-400',
-          rank === 3 && 'bg-orange-500/20 text-orange-500'
+          rank === 1 && 'bg-v2-accent-subtle text-v2-accent',
+          rank === 2 && 'bg-v2-bg-muted text-v2-text-secondary',
+          rank === 3 && 'bg-v2-warning-subtle text-v2-warning'
         )}>
           {entry.username.charAt(0).toUpperCase()}
         </AvatarV2Fallback>
@@ -89,7 +89,11 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
       <div className="space-y-1 w-full">
         <div className={cn(
           'text-lg font-bold',
-          entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
+          entry.monthlyPnl === null
+            ? 'text-v2-text-secondary'
+            : entry.monthlyPnl >= 0
+              ? 'text-v2-success'
+              : 'text-v2-error'
         )}>
           {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
         </div>
@@ -120,9 +124,9 @@ function PodiumSection({ top3 }: PodiumSectionProps) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-center gap-2 mb-6">
-        <Trophy className="w-6 h-6 text-yellow-500" />
+        <Trophy className="w-6 h-6 text-v2-accent" />
         <h2 className="text-xl font-bold text-v2-text-primary">Top Traders</h2>
-        <Trophy className="w-6 h-6 text-yellow-500" />
+        <Trophy className="w-6 h-6 text-v2-accent" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center sm:items-end">
@@ -151,7 +155,7 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
       <div className="w-8 text-center">
         <span className={cn(
           "text-sm font-bold",
-          entry.rank === 1 ? "text-v2-accent" :
+         entry.rank === 1 ? "text-v2-accent" :
           entry.rank === 2 ? "text-v2-text-secondary" :
           entry.rank === 3 ? "text-v2-warning" :
           "text-v2-text-tertiary"
@@ -184,7 +188,11 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
           <div className="text-xs text-v2-text-tertiary">Monthly PnL</div>
          <div className={cn(
            'text-lg font-bold',
-           entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
+           entry.monthlyPnl === null
+             ? 'text-v2-text-secondary'
+             : entry.monthlyPnl >= 0
+               ? 'text-v2-success'
+               : 'text-v2-error'
          )}>
            {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
          </div>
@@ -245,7 +253,6 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
       <div className="flex flex-wrap gap-2 mb-4">
         {[
           { key: 'monthly_pnl' as SortKey, label: 'Monthly PnL' },
-          { key: 'alltime_pnl' as SortKey, label: 'All-Time PnL' },
           { key: 'winrate' as SortKey, label: 'Win Rate' },
           { key: 'totalTrades' as SortKey, label: 'Total Trades' },
         ].map(({ key, label }) => (
@@ -255,7 +262,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
             className={cn(
               "px-3 py-1.5 text-xs font-medium rounded-v2-md transition-colors",
               sortBy === key
-                ? "bg-v2-accent text-white"
+                ? "bg-v2-accent text-v2-accent-foreground"
                 : "bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover"
             )}
           >
@@ -268,7 +275,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
 
       <div className="space-y-2">
         {rest.map((entry) => (
-          <MemoizedLeaderboardRow key={entry.userId} entry={entry} />
+          <MemoizedLeaderboardRow key={entry.userId ?? `anon-${entry.rank}-${entry.username}`} entry={entry} />
         ))}
 
         {sorted.length === 0 && (

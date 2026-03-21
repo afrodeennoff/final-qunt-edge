@@ -146,7 +146,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background dark`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning

@@ -17,7 +17,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Search, Filter, Star, ChevronDown, ChevronUp, CheckCircle2, Clock, TrendingUp, Shield } from 'lucide-react'
-import { CardV2 } from '@/components/ui/v2'
 import type {
   DealItem,
   DrawdownType,
@@ -146,8 +145,8 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
   return (
     <div className="min-h-screen bg-v2-bg-base">
       <div className="max-w-5xl mx-auto px-v2-6 py-v2-16">
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-10">
+        <div className="space-y-10">
+          <div className="space-y-10">
             <div className="space-y-10">
               {/* Hero Section with V2 Glassmorphism */}
               <section className="relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface p-8 sm:p-12">
