@@ -1,15 +1,27 @@
 "use client"
+
 import React from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Copy, Check, ExternalLink, TrendingUp, Shield, DollarSign, BarChart3, Clock, Target, Layers } from 'lucide-react'
-import { CardV2, BadgeV2, SkeletonV2 } from '@/components/ui/v2'
-import { FirmIcon } from '@/components/icons/svg-icons'
+import { BadgeV2, CardV2, CardV2Content, CardV2Description, CardV2Title, SkeletonV2 } from '@/components/ui/v2'
+import {
+  Building2,
+  Check,
+  Clock,
+  Copy,
+  DollarSign,
+  ExternalLink,
+  Landmark,
+  Layers,
+  Shield,
+  Target,
+  Wallet,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const FirmReviewsSection = dynamic(
-  () => import('./components/firm-reviews-section').then(m => ({ default: m.FirmReviewsSection })),
+  () => import('./components/firm-reviews-section').then((m) => ({ default: m.FirmReviewsSection })),
   {
     loading: () => <CardV2 className="p-6"><SkeletonV2 className="h-48" /></CardV2>,
     ssr: false,
@@ -17,7 +29,7 @@ const FirmReviewsSection = dynamic(
 )
 
 const FirmCouponsSection = dynamic(
-  () => import('./components/firm-coupons-section').then(m => ({ default: m.FirmCouponsSection })),
+  () => import('./components/firm-coupons-section').then((m) => ({ default: m.FirmCouponsSection })),
   {
     loading: () => <CardV2 className="p-6"><SkeletonV2 className="h-32" /></CardV2>,
     ssr: false,
@@ -41,22 +53,54 @@ type FirmData = {
   _count?: { reviews?: number; coupons?: number }
 }
 
-interface RuleCardProps {
-  icon: React.ComponentType<{ size?: number; className?: string }>
-  label: string
-  value: string
+const trustChecklist = [
+  'Structured company facts and trading rule context.',
+  'Review and coupon tabs stay connected to the same profile.',
+  'Cleaner hierarchy for scanning payouts, split, and platform details.',
+]
+
+function firmInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0] ?? '')
+    .join('')
+    .toUpperCase()
 }
 
-function RuleCard({ icon: Icon, label, value }: RuleCardProps) {
+function formatCategoryTone(category: string): 'default' | 'accent' {
+  return category === 'Futures' ? 'default' : 'accent'
+}
+
+function FactTile({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+  value: string
+}) {
   return (
-    <div className="flex items-start gap-3 p-4 rounded-v2-md bg-v2-bg-elevated border border-v2-border">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-v2-lg bg-v2-accent-subtle">
-        <Icon size={18} className="text-v2-accent" />
+    <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
+          <Icon className="h-4 w-4 text-v2-accent" />
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
+          <p className="mt-2 text-sm font-semibold text-white">{value || 'N/A'}</p>
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs text-v2-text-tertiary mb-1">{label}</div>
-        <div className="text-sm font-semibold text-v2-text-primary truncate">{value || '—'}</div>
-      </div>
+    </div>
+  )
+}
+
+function MetricCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-white">{value}</p>
     </div>
   )
 }
@@ -70,7 +114,6 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Fallback for older browsers
       const textArea = document.createElement('textarea')
       textArea.value = referralUrl
       document.body.appendChild(textArea)
@@ -83,86 +126,60 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <CardV2 className="p-6 border-v2-accent/30 bg-v2-accent-subtle">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-v2-text-primary">Ready to start?</div>
-          <div className="text-xs text-v2-text-secondary mt-1 mb-3">Use our referral link for the best deal</div>
-          <div className="flex items-center gap-2 p-2 rounded-v2-md bg-v2-bg-surface border border-v2-border">
-            <code className="flex-1 text-xs text-v2-text-secondary truncate">{referralUrl}</code>
+    <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2Content className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs uppercase tracking-[0.16em] text-white/45">Referral link</p>
+          <CardV2Title className="mt-3 text-2xl text-white">Open the official company site.</CardV2Title>
+          <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
+            Use the firm link below if you want to continue from research into signup.
+          </CardV2Description>
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/25 px-3 py-3">
+            <code className="min-w-0 flex-1 truncate text-xs text-white/60">{referralUrl}</code>
             <button
               onClick={handleCopy}
-              className="shrink-0 p-1.5 rounded-v2-md hover:bg-v2-bg-elevated transition-colors"
+              className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] p-2 transition-colors hover:bg-white/[0.08]"
               title="Copy link"
+              type="button"
             >
-              {copied ? (
-                <Check size={14} className="text-v2-accent" />
-              ) : (
-                <Copy size={14} className="text-v2-text-tertiary" />
-              )}
+              {copied ? <Check className="h-4 w-4 text-v2-accent" /> : <Copy className="h-4 w-4 text-white/55" />}
             </button>
           </div>
         </div>
+
         <a
           href={referralUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 flex items-center gap-2 px-4 py-2.5 bg-v2-accent text-white text-sm font-semibold rounded-v2-md hover:bg-v2-accent/90 transition-colors"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
         >
-          Start Challenge
-          <ExternalLink size={14} />
+          Visit Firm
+          <ExternalLink className="h-4 w-4" />
         </a>
-      </div>
+      </CardV2Content>
     </CardV2>
   )
 }
 
 function ChallengesSection() {
   return (
-    <CardV2 className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Target size={18} className="text-v2-accent" />
-        <span className="text-lg font-semibold text-v2-text-primary">Challenges</span>
-      </div>
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-v2-bg-elevated mb-4">
-          <Clock size={24} className="text-v2-text-tertiary" />
+    <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2Content className="p-6">
+        <div className="flex items-center gap-2">
+          <Target className="h-5 w-5 text-v2-accent" />
+          <CardV2Title className="text-2xl text-white">Challenge dashboard</CardV2Title>
         </div>
-        <h3 className="text-sm font-medium text-v2-text-primary mb-2">Challenge details coming soon</h3>
-        <p className="text-xs text-v2-text-secondary max-w-xs">
-          We&apos;re working on adding detailed challenge information including phases, evaluation criteria, and pricing tiers.
-        </p>
-      </div>
-    </CardV2>
-  )
-}
-
-function RulesSection({ firm }: { firm: FirmData }) {
-  const rules = [
-    { icon: TrendingUp, label: 'Payout Model', value: firm.payoutModel },
-    { icon: Shield, label: 'Drawdown Type', value: firm.drawdownType },
-    { icon: DollarSign, label: 'Profit Split', value: firm.profitSplit },
-    { icon: BarChart3, label: 'Max Allocation', value: firm.maxAllocation },
-    { icon: Layers, label: 'Platform', value: firm.platform },
-    { icon: Target, label: 'Category', value: firm.category },
-  ]
-
-  return (
-    <CardV2 className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Shield size={18} className="text-v2-accent" />
-        <span className="text-lg font-semibold text-v2-text-primary">Trading Rules</span>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {rules.map((rule) => (
-          <RuleCard
-            key={rule.label}
-            icon={rule.icon}
-            label={rule.label}
-            value={rule.value || '—'}
-          />
-        ))}
-      </div>
+        <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
+          Challenge-level breakdowns are still being filled in. The page already exposes the firm summary, reviews, and live coupons in the same dashboard layout.
+        </CardV2Description>
+        <div className="mt-6 rounded-3xl border border-dashed border-white/15 bg-black/25 px-6 py-12 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+            <Clock className="h-5 w-5 text-white/45" />
+          </div>
+          <p className="mt-4 text-sm font-semibold text-white">Detailed challenge rows coming next.</p>
+          <p className="mt-2 text-sm text-white/55">This slot is reserved for phase pricing, targets, and rule-specific challenge data.</p>
+        </div>
+      </CardV2Content>
     </CardV2>
   )
 }
@@ -170,45 +187,95 @@ function RulesSection({ firm }: { firm: FirmData }) {
 function OverviewSection({ firm }: { firm: FirmData }) {
   return (
     <div className="space-y-6">
-      <RulesSection firm={firm} />
-      {firm.referralUrl && <ReferralCTA referralUrl={firm.referralUrl} />}
+      <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+          <CardV2Content className="p-6 sm:p-8">
+            <p className="text-xs uppercase tracking-[0.16em] text-white/45">Company dashboard</p>
+            <CardV2Title className="mt-4 text-3xl text-white">Prop firm profile overview</CardV2Title>
+            <CardV2Description className="mt-4 text-base leading-7 text-white/60">
+              {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
+            </CardV2Description>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <FactTile icon={Layers} label="Platform" value={firm.platform ?? 'N/A'} />
+              <FactTile icon={Wallet} label="Payout model" value={firm.payoutModel ?? 'N/A'} />
+              <FactTile icon={Shield} label="Drawdown type" value={firm.drawdownType ?? 'N/A'} />
+              <FactTile icon={DollarSign} label="Profit split" value={firm.profitSplit ?? 'N/A'} />
+              <FactTile icon={Landmark} label="Max allocation" value={firm.maxAllocation ?? 'N/A'} />
+              <FactTile icon={Building2} label="Category" value={firm.category ?? 'N/A'} />
+            </div>
+          </CardV2Content>
+        </CardV2>
+
+        <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+          <CardV2Content className="p-6 sm:p-8">
+            <p className="text-xs uppercase tracking-[0.16em] text-white/45">Trust view</p>
+            <CardV2Title className="mt-4 text-3xl text-white">What to check before you click out</CardV2Title>
+            <div className="mt-6 space-y-3">
+              {trustChecklist.map((item) => (
+                <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-v2-accent" />
+                  <p className="text-sm leading-7 text-white/58">{item}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <MetricCard label="Reviews" value={(firm._count?.reviews ?? 0).toLocaleString()} />
+              <MetricCard label="Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
+            </div>
+          </CardV2Content>
+        </CardV2>
+      </section>
+
+      {firm.referralUrl ? <ReferralCTA referralUrl={firm.referralUrl} /> : null}
     </div>
   )
 }
 
 function FirmHeader({ firm }: { firm: FirmData }) {
   return (
-    <div className="flex items-center gap-5 p-6 bg-v2-bg-surface rounded-v2-lg border border-v2-border">
-      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-v2-lg bg-v2-accent-subtle overflow-hidden">
-        {firm.logoUrl ? (
-          <Image
-            src={firm.logoUrl}
-            alt={`${firm.name} logo`}
-            width={48}
-            height={48}
-            className="object-contain"
-            onError={(e) => {
-              // Fallback to FirmIcon on error
-              const target = e.target as HTMLImageElement
-              target.style.display = 'none'
-            }}
-          />
-        ) : (
-          <FirmIcon size={32} className="text-v2-accent" />
-        )}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-v2-text-primary">{firm.name}</h1>
-          <BadgeV2 variant={firm.category === 'Futures' ? 'default' : 'accent'}>{firm.category}</BadgeV2>
+    <section className="relative overflow-hidden rounded-[34px] border border-white/10 bg-black/40 p-6 sm:p-8 lg:p-10">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.2),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_36%)]" />
+      <div className="relative grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+        <div className="min-w-0">
+          <div className="flex items-start gap-4">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] border border-white/10 bg-white/[0.04] overflow-hidden">
+              {firm.logoUrl ? (
+                <Image
+                  src={firm.logoUrl}
+                  alt={`${firm.name} logo`}
+                  width={58}
+                  height={58}
+                  className="object-contain"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-v2-accent">
+                  {firmInitials(firm.name)}
+                </div>
+              )}
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-3">
+                <BadgeV2 variant={formatCategoryTone(firm.category)}>{firm.category}</BadgeV2>
+                <BadgeV2 variant="default">{firm.platform ?? 'Platform pending'}</BadgeV2>
+              </div>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">{firm.name}</h1>
+              <p className="mt-4 max-w-2xl text-base leading-8 text-white/60">
+                {firm.shortDesc ?? firm.description ?? 'Structured prop firm profile with reviews, coupons, and rule context.'}
+              </p>
+            </div>
+          </div>
         </div>
-        <p className="text-sm text-v2-text-secondary mt-1">{firm.shortDesc ?? firm.description ?? 'Prop trading firm'}</p>
-        <div className="flex gap-4 mt-2 text-xs text-v2-text-tertiary">
-          <span>{firm._count?.reviews ?? 0} reviews</span>
-          <span>{firm._count?.coupons ?? 0} coupons</span>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <MetricCard label="Profit split" value={firm.profitSplit ?? 'N/A'} />
+          <MetricCard label="Max allocation" value={firm.maxAllocation ?? 'N/A'} />
+          <MetricCard label="Reviews" value={(firm._count?.reviews ?? 0).toLocaleString()} />
+          <MetricCard label="Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
@@ -217,47 +284,28 @@ export function FirmDetailClient({ firm }: { firm: FirmData }) {
 
   return (
     <div className="min-h-screen bg-v2-bg-base">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-[1240px] px-4 py-8 sm:px-6 lg:px-8">
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-          <TabsList className="bg-v2-bg-surface border border-v2-border">
-            <TabsTrigger
-              value="overview"
-              className={cn(
-                "data-[state=active]:bg-v2-accent data-[state=active]:text-white",
-                "text-v2-text-secondary hover:text-v2-text-primary"
-              )}
-            >
-              Overview
-            </TabsTrigger>
-            <TabsTrigger
-              value="challenges"
-              className={cn(
-                "data-[state=active]:bg-v2-accent data-[state=active]:text-white",
-                "text-v2-text-secondary hover:text-v2-text-primary"
-              )}
-            >
-              Challenges
-            </TabsTrigger>
-            <TabsTrigger
-              value="reviews"
-              className={cn(
-                "data-[state=active]:bg-v2-accent data-[state=active]:text-white",
-                "text-v2-text-secondary hover:text-v2-text-primary"
-              )}
-            >
-              Reviews ({firm._count?.reviews ?? 0})
-            </TabsTrigger>
-            <TabsTrigger
-              value="coupons"
-              className={cn(
-                "data-[state=active]:bg-v2-accent data-[state=active]:text-white",
-                "text-v2-text-secondary hover:text-v2-text-primary"
-              )}
-            >
-              Coupons ({firm._count?.coupons ?? 0})
-            </TabsTrigger>
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 rounded-[22px] border border-white/10 bg-white/[0.03] p-2">
+            {[
+              ['overview', 'Overview'],
+              ['challenges', 'Challenges'],
+              ['reviews', `Reviews (${firm._count?.reviews ?? 0})`],
+              ['coupons', `Coupons (${firm._count?.coupons ?? 0})`],
+            ].map(([value, label]) => (
+              <TabsTrigger
+                key={value}
+                value={value}
+                className={cn(
+                  'rounded-2xl px-4 py-2.5 text-sm text-white/60 transition-colors',
+                  'data-[state=active]:bg-v2-accent data-[state=active]:text-black'
+                )}
+              >
+                {label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="overview" className="mt-6">

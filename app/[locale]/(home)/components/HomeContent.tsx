@@ -11,6 +11,9 @@ import {
   Landmark,
   Shield,
   Sparkles,
+  Target,
+  Trophy,
+  Wallet,
 } from 'lucide-react'
 import { ButtonV2, CardV2, CardV2Content, CardV2Description, CardV2Title } from '@/components/ui/v2'
 import type { DealsOverview, DealsSpotlightCollection } from '@/server/deals'
@@ -23,34 +26,48 @@ type HomeContentProps = {
   spotlights: DealsSpotlightCollection
 }
 
-const corePillars = [
+const reveal = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
+
+const appFeatureRows = [
   {
-    title: 'Review what actually happened',
-    body: 'Track return, pair selection, durations, average win and loss, and streak behavior instead of hiding everything behind one performance number.',
+    title: 'Execution review',
+    body: 'Audit return, pair selection, average win/loss, duration, and streak behavior instead of relying on a single PnL headline.',
     icon: BarChart3,
   },
   {
-    title: 'Research firms with context',
-    body: 'Compare live deals, short company summaries, tracked account value, and paid payout totals in one public workflow.',
+    title: 'Firm research',
+    body: 'Screen prop firms by cost, payout model, drawdown type, tracked accounts, and paid-out volume on the same public surface.',
     icon: Building2,
   },
   {
-    title: 'Keep the interface disciplined',
-    body: 'One dark visual system across home, deals, leaderboard, and firm pages means less friction and less visual drift.',
+    title: 'Proof system',
+    body: 'Bring leaderboard visibility, payout evidence, and public deal context together so the site reads like a product, not a brochure.',
     icon: Shield,
   },
 ]
 
 const whyChooseUs = [
-  'Deals and leaderboard use real public data contracts instead of decorative placeholders.',
-  'Public pages now share the same dark design language as the rest of the product.',
-  'The landing page flows directly into firm research and proof, not disconnected marketing tabs.',
+  {
+    title: 'One interface',
+    body: 'Home, deals, prop firms, and leaderboard now share the same layout rhythm and dark design language.',
+  },
+  {
+    title: 'Research before hype',
+    body: 'The public story starts with market context, tracked data, and company facts instead of disconnected promo blocks.',
+  },
+  {
+    title: 'Built around trader decisions',
+    body: 'Each page is designed to help users decide what to review, which firm to explore, and where to go next.',
+  },
 ]
 
 const competitorRows = [
-  ['Research depth', 'Firm cards include payouts, account value, and challenge context.', 'Mostly promo-first pages with thin company detail.'],
-  ['Trader proof', 'Leaderboard shows richer public metrics like pair, duration, and streaks.', 'Usually limited to top-line results or ad-style ranking lists.'],
-  ['Design continuity', 'Home, deals, and leaderboard feel like one product.', 'Marketing and app surfaces often look like separate systems.'],
+  ['Homepage structure', 'Guided path into deals, firms, and leaderboard with live public stats.', 'Hero-only marketing pages with weak product entry points.'],
+  ['Firm discovery', 'Uses tracked payout and account data alongside deal coverage.', 'Mostly coupon feeds or directory listings without decision context.'],
+  ['Trader proof', 'Leaderboard and public proof blocks feed the landing page directly.', 'Usually separate, thin, or missing entirely.'],
 ]
 
 function formatCompactCurrency(value: number): string {
@@ -62,102 +79,100 @@ function formatCompactCurrency(value: number): string {
   }).format(value)
 }
 
-const reveal = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
-}
-
 export default function HomeContent({ locale, overview, leaders, spotlights }: HomeContentProps) {
   const reduceMotion = useReducedMotion()
-  const topLeaders = leaders.slice(0, 4)
+  const topLeaders = leaders.slice(0, 5)
+  const featuredSpotlights = [...spotlights.futures.slice(0, 2), ...spotlights.cfd.slice(0, 2)]
 
   return (
-    <main className="relative mx-auto w-full max-w-[1320px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[760px] overflow-hidden">
+    <main className="relative mx-auto w-full max-w-[1360px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[900px] overflow-hidden">
         <motion.div
-          initial={{ opacity: 0.25, scale: 0.92 }}
-          animate={reduceMotion ? { opacity: 0.45, scale: 1 } : { opacity: 0.72, scale: 1 }}
+          initial={{ opacity: 0.2, scale: 0.92 }}
+          animate={reduceMotion ? { opacity: 0.35, scale: 1 } : { opacity: 0.55, scale: 1 }}
           transition={{ duration: 1.8, ease: 'easeOut' }}
-          className="absolute left-[18%] top-0 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_rgba(88,129,255,0.22)_0%,_rgba(88,129,255,0)_72%)] blur-3xl"
+          className="absolute left-[10%] top-4 h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,_rgba(88,129,255,0.26)_0%,_rgba(88,129,255,0)_72%)] blur-3xl"
         />
         <motion.div
-          initial={{ opacity: 0.2, x: 32 }}
-          animate={reduceMotion ? { opacity: 0.28, x: 0 } : { opacity: 0.48, x: 0 }}
+          initial={{ opacity: 0.18, x: 28 }}
+          animate={reduceMotion ? { opacity: 0.24, x: 0 } : { opacity: 0.42, x: 0 }}
           transition={{ duration: 2.2, ease: 'easeOut' }}
-          className="absolute right-[10%] top-20 h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,_rgba(28,200,138,0.16)_0%,_rgba(28,200,138,0)_75%)] blur-3xl"
+          className="absolute right-[7%] top-16 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_rgba(28,200,138,0.18)_0%,_rgba(28,200,138,0)_75%)] blur-3xl"
         />
-        <div className="absolute inset-x-0 top-20 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute inset-x-0 top-24 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
-      <section className="grid gap-6 pb-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:pb-14">
+      <section className="grid gap-6 pb-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:pb-10">
         <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.7 }} className="space-y-7">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/72">
             <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
-            Minimal trader operating system
+            Public trader research layer
           </div>
 
           <div className="space-y-5">
-            <h1 className="max-w-5xl text-[clamp(3.2rem,7vw,7rem)] font-semibold leading-[0.88] tracking-[-0.055em] text-white">
-              Sharper review.
+            <h1 className="max-w-5xl text-[clamp(3.1rem,7vw,7rem)] font-semibold leading-[0.88] tracking-[-0.055em] text-white">
+              Research firms.
               <br />
-              Cleaner research.
+              Review trades.
               <br />
-              One public surface.
+              See public proof.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-white/64 sm:text-lg">
-              Qunt Edge connects execution review, firm discovery, payout proof, and public leaderboard signals in one dark interface built for traders who want less noise and better decisions.
+              Qunt Edge is a unified trader operating surface for performance review, prop firm discovery, payout context, and leaderboard visibility. The public pages now feel like one product end to end.
             </p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <ButtonV2 variant="solid" size="lg" className="rounded-full px-8" asChild>
-              <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center gap-2">
-                Open Dashboard
+              <Link href={`/${locale}/deals`} className="flex items-center gap-2">
+                Explore Deals
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </ButtonV2>
             <ButtonV2 variant="outline" size="lg" className="rounded-full border-white/12 bg-white/[0.03] px-8 text-white hover:bg-white/[0.06]" asChild>
-              <Link href={`/${locale}/deals`}>Explore Deals</Link>
+              <Link href={`/${locale}/authentication?next=dashboard`}>Open Dashboard</Link>
             </ButtonV2>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <StatChip label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
-            <StatChip label="Accounts tracked" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
-            <StatChip label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
+            <StatCard label="Live deals" value={overview.totalLiveDeals.toLocaleString()} icon={Wallet} />
+            <StatCard label="Accounts tracked" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
+            <StatCard label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
           </div>
         </motion.div>
 
         <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.8, delay: 0.12 }}>
           <CardV2 variant="glass" hover={false} className="overflow-hidden rounded-[34px] border-white/10 bg-black/35 p-0">
             <div className="grid gap-4 border-b border-white/10 bg-white/[0.025] px-6 py-5 sm:grid-cols-2">
-              <MiniFeature
+              <FeaturePulse
                 eyebrow="Top futures"
-                title={spotlights.futures[0]?.name ?? 'Tradeify'}
-                body={spotlights.futures[0]?.promoText ?? 'Live futures spotlight data.'}
+                title={spotlights.futures[0]?.name ?? 'Futures spotlight'}
+                body={spotlights.futures[0]?.promoText ?? 'Live futures coverage from the public market feed.'}
               />
-              <MiniFeature
+              <FeaturePulse
                 eyebrow="Top CFD"
-                title={spotlights.cfd[0]?.name ?? 'FTMO'}
-                body={spotlights.cfd[0]?.promoText ?? 'Live CFD spotlight data.'}
+                title={spotlights.cfd[0]?.name ?? 'CFD spotlight'}
+                body={spotlights.cfd[0]?.promoText ?? 'Live CFD coverage from the public market feed.'}
               />
             </div>
-            <CardV2Content className="p-6">
+            <CardV2Content className="space-y-5 p-6">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-white/45">Leaderboard pulse</p>
-                  <p className="mt-2 text-sm text-white/58">The top public traders this month, surfaced directly on the landing page.</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-white/45">Live public board</p>
+                  <p className="mt-2 text-sm text-white/58">A compact view of the strongest public leader and firm signals on the site.</p>
                 </div>
                 <ButtonV2 variant="ghost" size="sm" className="rounded-full text-v2-accent" asChild>
-                  <Link href={`/${locale}/leaderboard`}>View board</Link>
+                  <Link href={`/${locale}/leaderboard`}>View leaderboard</Link>
                 </ButtonV2>
               </div>
-              <div className="mt-5 space-y-3">
+
+              <div className="grid gap-3">
                 {topLeaders.map((leader) => (
                   <div key={leader.userId} className="flex items-center justify-between gap-4 rounded-2xl border border-white/8 bg-black/25 px-4 py-3">
                     <div className="flex items-center gap-3">
                       <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-xs font-semibold text-white/72">
-                        {leader.rank}
+                        #{leader.rank}
                       </span>
                       <div>
                         <p className="text-sm font-medium text-white">{leader.username}</p>
@@ -176,8 +191,61 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
         </motion.div>
       </section>
 
+      <section className="grid gap-4 py-8 lg:grid-cols-[1.05fr_0.95fr]">
+        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.72, delay: 0.14 }}>
+          <SurfacePanel
+            eyebrow="Platform story"
+            title="Why traders choose us"
+            description="The public site now mirrors the product itself: less clutter, stronger hierarchy, and a clear path from discovery to decision."
+          >
+            <div className="grid gap-3">
+              {whyChooseUs.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-v2-accent" />
+                    <div>
+                      <p className="text-sm font-semibold text-white">{item.title}</p>
+                      <p className="mt-2 text-sm leading-7 text-white/58">{item.body}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SurfacePanel>
+        </motion.div>
+
+        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.78, delay: 0.2 }}>
+          <SurfacePanel
+            eyebrow="Market snapshot"
+            title="Featured prop firm coverage"
+            description={`Spotlights refreshed from PropFirmMatch on ${spotlights.updatedAt}.`}
+          >
+            <div className="grid gap-3">
+              {featuredSpotlights.map((item) => (
+                <a
+                  key={`${item.slug}-${item.category}`}
+                  href={item.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4 transition-colors hover:bg-white/[0.04]"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-white">{item.name}</p>
+                      <p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-white/45">{item.category} spotlight</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-white/40" />
+                  </div>
+                  <p className="mt-3 text-sm leading-7 text-white/58">{item.promoText}</p>
+                </a>
+              ))}
+            </div>
+          </SurfacePanel>
+        </motion.div>
+      </section>
+
       <section className="grid gap-4 border-y border-white/8 py-8 sm:grid-cols-3">
-        {corePillars.map((item, index) => {
+        {appFeatureRows.map((item, index) => {
           const Icon = item.icon
           return (
             <motion.div
@@ -185,7 +253,7 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
               initial="hidden"
               animate="visible"
               variants={reveal}
-              transition={{ duration: 0.62, delay: 0.14 + index * 0.08 }}
+              transition={{ duration: 0.62, delay: 0.16 + index * 0.08 }}
             >
               <CardV2 variant="glass" hover={false} className="h-full rounded-[28px] border-white/8 bg-white/[0.02]">
                 <CardV2Content className="p-5">
@@ -201,63 +269,41 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
         })}
       </section>
 
-      <section className="grid gap-4 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:py-14">
-        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.72, delay: 0.18 }}>
-          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
-            <CardV2Content className="p-6 sm:p-8">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/45">Why Qunt Edge</p>
-              <CardV2Title className="mt-4 text-3xl text-white">Built for traders who want signal, not clutter.</CardV2Title>
-              <div className="mt-6 space-y-3">
-                {whyChooseUs.map((item) => (
-                  <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-v2-accent" />
-                    <p className="text-sm leading-7 text-white/60">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </CardV2Content>
-          </CardV2>
+      <section className="grid gap-4 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:py-14">
+        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.76, delay: 0.22 }}>
+          <SurfacePanel
+            eyebrow="What you can do"
+            title="Move from homepage to action in a few clicks"
+            description="The landing flow is intentionally simple now, with stronger continuity across discovery pages."
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              <JourneyCard icon={Target} title="Find a firm" body="Browse the deals board, filter by fit, then open a company profile." href={`/${locale}/deals`} />
+              <JourneyCard icon={Trophy} title="See public leaders" body="Use the leaderboard to inspect current top performers and trade behavior." href={`/${locale}/leaderboard`} />
+              <JourneyCard icon={Building2} title="Review firm stats" body="Scan tracked account value and payout traction on the prop firms page." href={`/${locale}/propfirms`} />
+              <JourneyCard icon={BarChart3} title="Open the product" body="Go straight into your dashboard and review your own execution workflow." href={`/${locale}/authentication?next=dashboard`} />
+            </div>
+          </SurfacePanel>
         </motion.div>
 
-        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.78, delay: 0.24 }}>
-          <CardV2 variant="elevated" hover={false} className="rounded-[30px] border-white/12 bg-white/[0.04]">
-            <CardV2Content className="p-6 sm:p-8">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/45">Public proof</p>
-              <CardV2Title className="mt-4 text-3xl text-white">The landing page now carries product truth, not only marketing copy.</CardV2Title>
-              <CardV2Description className="mt-4 text-base leading-7 text-white/60">
-                {overview.totalLiveDeals} live deals, {overview.totalTrackedFirms} tracked firms, and {leaders.length} leaderboard entries now drive the public story directly.
-              </CardV2Description>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <InlineLink href={`/${locale}/deals`} label="Open firm board" />
-                <InlineLink href={`/${locale}/leaderboard`} label="See leaderboard" />
-                <InlineLink href={`/${locale}/propfirms`} label="Browse prop firms" />
-                <InlineLink href={`/${locale}/support`} label="Talk to the team" />
-              </div>
-            </CardV2Content>
-          </CardV2>
-        </motion.div>
-      </section>
-
-      <section className="pb-6">
-        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.82, delay: 0.28 }}>
+        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.84, delay: 0.28 }}>
           <CardV2 variant="glass" hover={false} className="overflow-hidden rounded-[32px] border-white/10 bg-white/[0.03] p-0">
             <CardV2Content className="p-6 sm:p-8">
               <div className="max-w-2xl">
                 <p className="text-xs uppercase tracking-[0.18em] text-white/45">Comparison</p>
-                <CardV2Title className="mt-4 text-3xl text-white">A tighter product story than the usual trader landing page.</CardV2Title>
+                <CardV2Title className="mt-4 text-3xl text-white">A more coherent public product than the usual trader site.</CardV2Title>
                 <CardV2Description className="mt-4 text-base leading-7 text-white/60">
-                  The difference is not louder claims. It is that research, proof, and product entry points now live in one coherent public experience.
+                  The difference is not louder claims. It is that the landing page, firm research pages, and deal board now all tell the same product story.
                 </CardV2Description>
               </div>
             </CardV2Content>
             <div className="border-t border-white/10">
-              <div className="grid grid-cols-[0.9fr_1fr_1fr] border-b border-white/10 bg-white/[0.03] text-[11px] uppercase tracking-[0.16em] text-white/45">
+              <div className="grid grid-cols-[0.85fr_1fr_1fr] border-b border-white/10 bg-white/[0.03] text-[11px] uppercase tracking-[0.16em] text-white/45">
                 <div className="px-4 py-4">Category</div>
                 <div className="px-4 py-4">Qunt Edge</div>
                 <div className="px-4 py-4">Typical alternative</div>
               </div>
               {competitorRows.map(([label, ours, others]) => (
-                <div key={label} className="grid grid-cols-[0.9fr_1fr_1fr] border-b border-white/10 last:border-b-0">
+                <div key={label} className="grid grid-cols-[0.85fr_1fr_1fr] border-b border-white/10 last:border-b-0">
                   <div className="px-4 py-4 text-sm font-medium text-white">{label}</div>
                   <div className="px-4 py-4 text-sm leading-7 text-white/62">{ours}</div>
                   <div className="px-4 py-4 text-sm leading-7 text-white/48">{others}</div>
@@ -271,7 +317,30 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
   )
 }
 
-function StatChip({
+function SurfacePanel({
+  eyebrow,
+  title,
+  description,
+  children,
+}: {
+  eyebrow: string
+  title: string
+  description: string
+  children: React.ReactNode
+}) {
+  return (
+    <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2Content className="p-6 sm:p-8">
+        <p className="text-xs uppercase tracking-[0.18em] text-white/45">{eyebrow}</p>
+        <CardV2Title className="mt-4 text-3xl text-white">{title}</CardV2Title>
+        <CardV2Description className="mt-4 text-base leading-7 text-white/60">{description}</CardV2Description>
+        <div className="mt-6">{children}</div>
+      </CardV2Content>
+    </CardV2>
+  )
+}
+
+function StatCard({
   label,
   value,
   icon: Icon,
@@ -295,7 +364,7 @@ function StatChip({
   )
 }
 
-function MiniFeature({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
+function FeaturePulse({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
   return (
     <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
       <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{eyebrow}</p>
@@ -305,10 +374,24 @@ function MiniFeature({ eyebrow, title, body }: { eyebrow: string; title: string;
   )
 }
 
-function InlineLink({ href, label }: { href: string; label: string }) {
+function JourneyCard({
+  icon: Icon,
+  title,
+  body,
+  href,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  body: string
+  href: string
+}) {
   return (
-    <Link href={href} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm font-medium text-white/72 transition-colors hover:bg-white/[0.05] hover:text-white">
-      {label}
+    <Link href={href} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4 transition-colors hover:bg-white/[0.05]">
+      <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
+        <Icon className="h-4 w-4 text-v2-accent" />
+      </div>
+      <p className="mt-4 text-sm font-semibold text-white">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-white/58">{body}</p>
     </Link>
   )
 }

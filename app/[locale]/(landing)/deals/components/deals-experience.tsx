@@ -207,17 +207,17 @@ export function DealsExperience({
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
                   <BadgePercent className="h-3.5 w-3.5 text-v2-accent" />
-                  Modern prop firm market board
+                  Prop firm deals board
                 </span>
                 <h1 className="mt-6 max-w-4xl text-[clamp(2.9rem,6vw,5.8rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
-                  Better firm research.
+                  Compare deals faster.
                   <br />
-                  Cleaner deal discovery.
+                  Open firm profiles.
                   <br />
-                  Stronger public proof.
+                  Validate the details.
                 </h1>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-white/66 sm:text-lg">
-                  The deals page now feels like a market surface instead of a coupon feed, combining internal payout data, tracked accounts, and editorial spotlight coverage in one interface.
+                  This page is designed like a modern prop-firm marketplace: deal-first scanning up top, company cards with real context underneath, and a denser comparison table when you need to sort the whole market.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <a href="#firm-board" className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
@@ -241,7 +241,7 @@ export function DealsExperience({
 
           <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <BoardPanel
-              title="Spotlight feed"
+              title="Featured deals radar"
               subtitle={`Futures and CFD coverage refreshed from PropFirmMatch on ${spotlights.updatedAt}`}
             >
               <div className="space-y-3">
@@ -266,13 +266,13 @@ export function DealsExperience({
 
             <BoardPanel
               title="How to use this board"
-              subtitle="Scan the market quickly, then open firm pages for deeper company context."
+              subtitle="Scan discounts first, then open the company page for rule context and supporting details."
             >
               <div className="grid gap-3 sm:grid-cols-3">
                 {[
-                  ['1. Filter by fit', 'Narrow by market, platform, payout model, and drawdown first.'],
-                  ['2. Open companies', 'Use the firm board to read descriptions, account counts, and payout totals.'],
-                  ['3. Validate offers', 'Check the live deal cards and then confirm exact terms before purchase.'],
+                  ['1. Filter by fit', 'Narrow by market, platform, payout model, and drawdown before you compare prices.'],
+                  ['2. Open companies', 'Use the firm board to read descriptions, tracked accounts, and payout totals.'],
+                  ['3. Validate offers', 'Check the active deal card and then confirm the exact checkout terms on the firm site.'],
                 ].map(([title, body]) => (
                   <div key={title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
                     <p className="text-sm font-semibold text-white">{title}</p>
@@ -336,7 +336,7 @@ export function DealsExperience({
           <section id="firm-board" className="space-y-5">
             <SectionIntro
               title="Firm board"
-              body="A cleaner company-first layout with cards that surface descriptions, account footprint, and payout proof before you click through."
+              body="A company-first board inspired by the better prop-firm directory layouts: quick facts, short descriptions, and clear next actions."
               count={`${filteredFirms.length} firms`}
             />
             <div className="grid gap-4 lg:grid-cols-2">
@@ -349,7 +349,7 @@ export function DealsExperience({
           <section id="deal-board" className="space-y-5">
             <SectionIntro
               title="Live deals"
-              body="Deals are presented with company context, not as floating discount pills."
+              body="Deals stay front and center, but each card now carries enough company context to avoid blind clicking."
               count={`${filteredDeals.length} deals`}
             />
             {filteredDeals.length === 0 ? (
@@ -370,7 +370,7 @@ export function DealsExperience({
           <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="mb-6">
               <h2 className="text-2xl font-semibold text-white">Comparison table</h2>
-              <p className="mt-1 text-sm text-white/55">A denser market table for sorting by cost, account activity, or paid payout traction.</p>
+              <p className="mt-1 text-sm text-white/55">A dense market table for users who want the full directory view after scanning the cards.</p>
             </div>
 
             <div className="hidden overflow-hidden rounded-2xl border border-white/10 md:block">
@@ -427,7 +427,7 @@ export function DealsExperience({
           </section>
 
           <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <BoardPanel title="Trust and maintenance" subtitle="Why this board is more useful than a generic deals dump.">
+            <BoardPanel title="Why this board works" subtitle="The page is designed to behave like a real research layer, not a generic coupon dump.">
               <div className="space-y-3">
                 {[
                   ['Deal review', 'Active coupons and real claim destinations are filtered before they render.'],
