@@ -222,15 +222,15 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
   const sorted = React.useMemo(() => {
      const result = [...entries].sort((a, b) => {
        switch (sortBy) {
-         case 'winrate': return b.winRate - a.winRate
-          case 'totalTrades': 
-           const aTrades = a.totalTrades
-           const bTrades = b.totalTrades
-           return bTrades - aTrades
-         default: 
-           const aPnl = a.monthlyPnl
-           const bPnl = b.monthlyPnl
-           return bPnl - aPnl
+         case 'winrate':
+           if (b.winRate !== a.winRate) return b.winRate - a.winRate
+           return b.monthlyPnl - a.monthlyPnl
+         case 'totalTrades':
+           if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
+           return b.monthlyPnl - a.monthlyPnl
+         default:
+           if (b.monthlyPnl !== a.monthlyPnl) return b.monthlyPnl - a.monthlyPnl
+           return b.winRate - a.winRate
        }
      })
     return result.map((entry, idx) => ({ ...entry, rank: idx + 1 }))

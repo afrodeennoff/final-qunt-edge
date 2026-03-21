@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Logo } from '@/components/logo'
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Home, Search, Sun, Moon, Monitor } from "lucide-react"
+import { ArrowLeft, Home, Search, Moon } from "lucide-react"
 import { useDebounce } from '@/hooks/use-debounce'
 
 // Define translations locally to avoid I18nProvider dependency
@@ -43,33 +43,12 @@ function getLocaleFromGeolocation(): 'en' | 'fr' {
   return frenchCountries.includes(country || '') ? 'fr' : 'en'
 }
 
-function getThemeFromLocalStorage(): 'light' | 'dark' | 'system' {
-  if (typeof window === 'undefined') return 'system'
-
-  try {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null
-    return savedTheme || 'system'
-  } catch {
-    return 'system'
-  }
-}
-
-function getEffectiveTheme(theme: 'light' | 'dark' | 'system'): 'light' | 'dark' {
-  if (theme === 'system') {
-    if (typeof window !== 'undefined') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-    return 'light'
-  }
-  return theme
-}
-
-function applyThemeToDocument(effectiveTheme: 'light' | 'dark', intensity: number) {
+function applyThemeToDocument(intensity: number) {
   if (typeof window === 'undefined') return
 
   const root = document.documentElement
   root.classList.remove('light', 'dark')
-  root.classList.add(effectiveTheme)
+  root.classList.add('dark')
   root.style.setProperty('--theme-intensity', `${intensity}%`)
 }
 
@@ -95,8 +74,6 @@ function NotFoundContent() {
   const router = useRouter()
   const [locale, setLocale] = useState<'en' | 'fr'>('fr')
   const [isClient, setIsClient] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system')
-  const [effectiveTheme, setEffectiveTheme] = useState<'light' | 'dark'>('light')
   const [allRoutes, setAllRoutes] = useState<string[]>([])
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebounce(query, 150)
@@ -115,25 +92,8 @@ function NotFoundContent() {
     document.title = 'Qunt Edge | ' + translations[detectedLocale].title
 
     // Apply theme from localStorage
-    const savedTheme = getThemeFromLocalStorage()
     const savedIntensity = parseInt(localStorage.getItem('intensity') || '100')
-    const currentEffectiveTheme = getEffectiveTheme(savedTheme)
-    setTheme(savedTheme)
-    setEffectiveTheme(currentEffectiveTheme)
-    applyThemeToDocument(currentEffectiveTheme, savedIntensity)
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleThemeChange = () => {
-      if (savedTheme === 'system') {
-        const newEffectiveTheme = getEffectiveTheme('system')
-        setEffectiveTheme(newEffectiveTheme)
-        applyThemeToDocument(newEffectiveTheme, savedIntensity)
-      }
-    }
-
-    mediaQuery.addEventListener('change', handleThemeChange)
-    return () => mediaQuery.removeEventListener('change', handleThemeChange)
+    applyThemeToDocument(savedIntensity)
   }, [])
 
   // Fetch routes from public/routes.json (generated at build time)
@@ -228,26 +188,6 @@ function NotFoundContent() {
     }
   }
 
-  const handleThemeToggle = () => {
-    const themeOrder: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system']
-    const currentIndex = themeOrder.indexOf(theme)
-    const nextTheme = themeOrder[(currentIndex + 1) % themeOrder.length]
-
-    setTheme(nextTheme)
-    const newEffectiveTheme = getEffectiveTheme(nextTheme)
-    setEffectiveTheme(newEffectiveTheme)
-
-    const intensity = parseInt(localStorage.getItem('intensity') || '100')
-    applyThemeToDocument(newEffectiveTheme, intensity)
-    localStorage.setItem('theme', nextTheme)
-  }
-
-  const getThemeIcon = () => {
-    if (theme === 'system') return <Monitor className="w-4 h-4" />
-    if (effectiveTheme === 'dark') return <Moon className="w-4 h-4" />
-    return <Sun className="w-4 h-4" />
-  }
-
   const displayLabel = (route: string) => {
     const stripped = route.replace(new RegExp(`^/${locale}`), '') || '/'
     return stripped === '' ? '/' : stripped
@@ -282,7 +222,7 @@ function NotFoundContent() {
     blurTimeout.current = window.setTimeout(() => setShowResults(false), 100)
   }
 
-  // Show fallback during hydration with French as default (respects system theme)
+  // Show fallback during hydration with French as default.
   if (!isClient) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 relative">
@@ -311,16 +251,10 @@ function NotFoundContent() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 relative">
-      {/* Theme toggle button in top right */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleThemeToggle}
-        className="absolute top-4 right-4 flex items-center gap-2"
-        title={`Current theme: ${theme}`}
-      >
-        {getThemeIcon()}
-      </Button>
+      <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-3 py-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+        <Moon className="h-4 w-4 text-primary" />
+        Dark
+      </div>
 
       <Logo className="w-16 h-16 mb-8 fill-primary" />
 

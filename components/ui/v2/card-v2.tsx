@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
 
 export type CardVariant = "default" | "glass" | "elevated" | "outlined" | "flat" | "matte"
 export type CardSize = "sm" | "md" | "lg"
@@ -27,27 +28,6 @@ const CardV2 = React.forwardRef<HTMLDivElement, CardV2Props>(
     status,
     ...props
   }, ref) => {
-    const isInteractive = clickable || typeof props.onClick === "function"
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (isInteractive && (e.key === "Enter" || e.key === " ")) {
-        e.preventDefault()
-        props.onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>)
-      }
-    }
-
-    const variantClasses = cn(
-      {
-        default: "border-v2-border bg-v2-bg-surface",
-        glass: "border-v2-border-subtle bg-v2-bg-surface/10 backdrop-blur-md",
-        elevated: "border-v2-border bg-v2-bg-surface shadow-v2-md",
-        outlined: "border-2 border-v2-border bg-transparent shadow-none",
-        flat: "border-0 bg-transparent shadow-none",
-        matte: "border border-v2-border/60 bg-v2-bg-surface text-v2-text-primary shadow-none",
-      },
-      variant
-    )
-
     const sizeClasses = cn(
       {
         sm: "p-v2-2",
@@ -57,42 +37,28 @@ const CardV2 = React.forwardRef<HTMLDivElement, CardV2Props>(
       size
     )
 
-    const statusDot = status ? (
-      <div className="absolute right-[var(--v2-space-3)] top-[var(--v2-space-3)] z-20 flex items-center gap-[var(--v2-space-2)] rounded-full border border-v2-border-subtle bg-v2-bg-surface/80 px-[var(--v2-space-2)] py-[var(--v2-space-1)] backdrop-blur-sm">
-        <div className={cn(
-          "status-dot",
-          status === "live" && "status-dot-live",
-          status === "synced" && "status-dot-synced",
-          status === "idle" && "status-dot-idle",
-          status === "error" && "status-dot-error"
-        )} />
-        <span className="text-[var(--v2-type-xs)] font-semibold uppercase leading-none tracking-widest text-v2-text-secondary">
-          {status}
-        </span>
-      </div>
-    ) : null
-
     return (
-      <div
+      <Card
         ref={ref}
+        variant={variant}
+        hover={hover}
+        size={size}
+        clickable={clickable}
+        status={status}
         className={cn(
-          "relative rounded-v2-lg border bg-v2-bg-surface text-v2-text-primary shadow-sm",
-          variantClasses,
+          "rounded-v2-lg border-v2-border bg-v2-bg-surface text-v2-text-primary",
+          variant === "glass" && "border-v2-border-subtle bg-v2-bg-surface/10 backdrop-blur-md",
+          variant === "elevated" && "shadow-v2-md",
+          variant === "outlined" && "border-2 border-v2-border bg-transparent shadow-none",
+          variant === "flat" && "border-0 bg-transparent shadow-none",
+          variant === "matte" && "border-v2-border/60 bg-v2-bg-surface text-v2-text-primary shadow-none",
           sizeClasses,
-          {
-            "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-v2-md": hover,
-            "cursor-pointer": isInteractive,
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v2-ring focus-visible:ring-offset-v2-bg-base": isInteractive,
-          },
           className
         )}
-        onKeyDown={isInteractive ? handleKeyDown : undefined}
-        onClick={isInteractive ? props.onClick : undefined}
         {...props}
       >
-        {statusDot}
         {props.children}
-      </div>
+      </Card>
     )
   }
 )

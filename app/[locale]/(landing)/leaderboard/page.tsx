@@ -13,7 +13,7 @@ export default async function LeaderboardPage() {
           <LeaderboardIcon size={32} className="text-v2-accent" />
           <h1 className="text-2xl sm:text-3xl font-bold text-v2-text-primary">Leaderboard</h1>
         </div>
-        <p className="text-v2-text-secondary mb-v2-6">Top traders ranked by monthly PnL performance.</p>
+        <p className="text-v2-text-secondary mb-v2-6">Top opted-in traders, sortable by monthly PnL, win rate, and monthly trade count.</p>
         <LeaderboardTable entries={entries} />
       </div>
     </div>

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Logo } from "@/components/logo"
-import { Moon, Sun, Menu, Globe, Laptop } from "lucide-react"
+import { Moon, Menu } from "lucide-react"
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -15,13 +15,9 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-    navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { useTheme } from '@/context/theme-provider'
 import { cn } from '@/lib/utils'
-import { useChangeLocale, useI18n } from "@/locales/client"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { useI18n } from "@/locales/client"
 import { LanguageSelector } from "@/components/ui/language-selector"
 import { Badge } from "@/components/ui/badge"
 
@@ -62,8 +58,55 @@ const MobileNavItem = ({ href, children, onClick, className }: { href: string; c
     </li>
 )
 
+function MobileNavContent({
+    onLinkClick,
+    t,
+}: {
+    onLinkClick: () => void
+    t: ReturnType<typeof useI18n>
+}) {
+    return (
+        <nav className="flex flex-col space-y-4">
+            <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="features">
+                    <AccordionTrigger>{t('teams.navbar.features')}</AccordionTrigger>
+                    <AccordionContent>
+                        <ul className="space-y-2 list-none">
+                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.multiAccount')}</MobileNavItem>
+                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.teamAnalytics')}</MobileNavItem>
+                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.realTime')}</MobileNavItem>
+                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.riskManagement')}</MobileNavItem>
+                        </ul>
+                    </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="roadmap">
+                    <AccordionTrigger>{t('teams.navbar.roadmap')}</AccordionTrigger>
+                    <AccordionContent>
+                        <ul className="space-y-2 list-none">
+                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q1')}</MobileNavItem>
+                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q2')}</MobileNavItem>
+                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q3')}</MobileNavItem>
+                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q4')}</MobileNavItem>
+                        </ul>
+                    </AccordionContent>
+                </AccordionItem>
+
+            </Accordion>
+            <Button asChild variant="outline" className="w-full" onClick={onLinkClick}>
+                <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
+            </Button>
+            <div className="py-4 border-t space-y-4">
+                <div className="flex items-center gap-2 rounded-md border border-border/50 px-3 py-2 text-sm text-muted-foreground">
+                    <Moon className="h-4 w-4 text-primary" />
+                    <span>Unified dark theme</span>
+                </div>
+                <LanguageSelector showLabel align="start" />
+            </div>
+        </nav>
+    )
+}
+
 export default function TeamNavbar() {
-    const { theme, setTheme } = useTheme()
     const [isOpen, setIsOpen] = useState(false)
     const [hoveredItem, setHoveredItem] = useState<string | null>(null)
     const [isVisible, setIsVisible] = useState(true)
@@ -98,95 +141,6 @@ export default function TeamNavbar() {
             }
         }
     }, [lastScrollY])
-
-    const [themeOpen, setThemeOpen] = useState(false)
-    const [languageOpen, setLanguageOpen] = useState(false)
-    const changeLocale = useChangeLocale()
-    const handleThemeChange = (value: string) => {
-        setTheme(value as "light" | "dark" | "system")
-        setThemeOpen(false)
-    }
-
-    const handleLanguageChange = (value: string) => {
-        changeLocale(value as "en" | "fr")
-        setLanguageOpen(false)
-    }
-
-    const getThemeIcon = () => {
-        if (theme === 'light') return <Sun className="h-5 w-5" />;
-        if (theme === 'dark') return <Moon className="h-5 w-5" />;
-        // For 'system' theme, we need to check the actual applied theme
-        if (typeof window !== 'undefined') {
-            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            return isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />;
-        }
-        // Fallback to Laptop icon if we can't determine
-        return <Laptop className="h-5 w-5" />;
-    };
-
-    const MobileNavContent = ({ onLinkClick }: { onLinkClick: () => void }) => (
-        <nav className="flex flex-col space-y-4">
-            <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="features">
-                    <AccordionTrigger>{t('teams.navbar.features')}</AccordionTrigger>
-                    <AccordionContent>
-                        <ul className="space-y-2 list-none">
-                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.multiAccount')}</MobileNavItem>
-                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.teamAnalytics')}</MobileNavItem>
-                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.realTime')}</MobileNavItem>
-                            <MobileNavItem href="/teams#features" onClick={onLinkClick}>{t('teams.navbar.features.riskManagement')}</MobileNavItem>
-                        </ul>
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="roadmap">
-                    <AccordionTrigger>{t('teams.navbar.roadmap')}</AccordionTrigger>
-                    <AccordionContent>
-                        <ul className="space-y-2 list-none">
-                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q1')}</MobileNavItem>
-                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q2')}</MobileNavItem>
-                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q3')}</MobileNavItem>
-                            <MobileNavItem href="/teams#roadmap" onClick={onLinkClick}>{t('teams.navbar.roadmap.q4')}</MobileNavItem>
-                        </ul>
-                    </AccordionContent>
-                </AccordionItem>
-
-            </Accordion>
-            <Button asChild variant="outline" className="w-full" onClick={onLinkClick}>
-                <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
-            </Button>
-            <div className="py-4 border-t space-y-4">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" className="w-full justify-start">
-                            {getThemeIcon()}
-                            <span className="ml-2">{t('teams.navbar.theme.change')}</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0" align="start">
-                        <Command>
-                            <CommandList>
-                                <CommandGroup>
-                                    <CommandItem onSelect={() => handleThemeChange("light")}>
-                                        <Sun className="mr-2 h-4 w-4" />
-                                        <span>{t('teams.navbar.theme.light')}</span>
-                                    </CommandItem>
-                                    <CommandItem onSelect={() => handleThemeChange("dark")}>
-                                        <Moon className="mr-2 h-4 w-4" />
-                                        <span>{t('teams.navbar.theme.dark')}</span>
-                                    </CommandItem>
-                                    <CommandItem onSelect={() => handleThemeChange("system")}>
-                                        <Laptop className="mr-2 h-4 w-4" />
-                                        <span>{t('teams.navbar.theme.system')}</span>
-                                    </CommandItem>
-                                </CommandGroup>
-                            </CommandList>
-                        </Command>
-                    </PopoverContent>
-                </Popover>
-                <LanguageSelector showLabel align="start" />
-            </div>
-        </nav>
-    )
 
     return (
         <>
@@ -267,34 +221,10 @@ export default function TeamNavbar() {
 
                 <div className="flex items-center space-x-4">
                     <LanguageSelector />
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="ghost" className="hidden lg:inline-flex h-9 w-9 px-0">
-                                {getThemeIcon()}
-                                <span className="sr-only">Toggle theme</span>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0" align="end">
-                            <Command>
-                                <CommandList>
-                                    <CommandGroup>
-                                        <CommandItem onSelect={() => handleThemeChange("light")}>
-                                            <Sun className="mr-2 h-4 w-4" />
-                                            <span>{t('teams.navbar.theme.light')}</span>
-                                        </CommandItem>
-                                        <CommandItem onSelect={() => handleThemeChange("dark")}>
-                                            <Moon className="mr-2 h-4 w-4" />
-                                            <span>{t('teams.navbar.theme.dark')}</span>
-                                        </CommandItem>
-                                        <CommandItem onSelect={() => handleThemeChange("system")}>
-                                            <Laptop className="mr-2 h-4 w-4" />
-                                            <span>{t('teams.navbar.theme.system')}</span>
-                                        </CommandItem>
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
+                    <Button variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
+                        <Moon className="h-4 w-4 text-primary" />
+                        <span className="text-xs uppercase tracking-[0.14em]">Dark</span>
+                    </Button>
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon" className="flex lg:hidden" onClick={toggleMenu}>
@@ -305,7 +235,7 @@ export default function TeamNavbar() {
                         <SheetContent side="right" className="w-[300px] sm:w-[400px] lg:hidden">
                             <div className="flex flex-col h-full">
                                 <div className="grow overflow-y-auto py-6">
-                                    <MobileNavContent onLinkClick={closeMenu} />
+                                    <MobileNavContent onLinkClick={closeMenu} t={t} />
                                 </div>
                             </div>
                         </SheetContent>

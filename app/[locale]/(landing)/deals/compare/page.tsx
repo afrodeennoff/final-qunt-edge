@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
 import { getUnifiedFirms } from '@/server/deals'
-import type { UnifiedFirm } from '@/server/deals'
 import { FirmComparisonGrid } from './components/firm-comparison-grid'
 
 const SITE_ORIGIN = "https://qunt-edge.vercel.app";
@@ -55,7 +54,7 @@ export default async function PropfirmPerkComparePage() {
               Compare prop firm tradeoffs before you pay for an evaluation
             </h2>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground sm:text-base">
-              Filter by drawdown model, reset behavior, and payout rhythm. Pick structure-fit over headline hype.
+              Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -81,7 +80,7 @@ export default async function PropfirmPerkComparePage() {
         <article className="rounded-xl border border-border bg-card p-5">
           <h3 className="text-base font-semibold text-foreground">1. Set max month-one spend</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Include evaluation fee, expected reset count, and platform costs.
+            Include evaluation fee, any likely retry budget, and platform costs.
           </p>
         </article>
         <article className="rounded-xl border border-border bg-card p-5">
@@ -100,5 +99,3 @@ export default async function PropfirmPerkComparePage() {
     </PublicFlowShell>
   );
 }
-
-

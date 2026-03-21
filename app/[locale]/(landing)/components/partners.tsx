@@ -1,10 +1,8 @@
 'use client'
 import Image from 'next/image'
-import { useTheme } from '@/context/theme-provider'
 import { useI18n } from '@/locales/client'
 
 export default function Partners() {
-    const { effectiveTheme } = useTheme()
     const t = useI18n()
 
     return (
@@ -33,7 +31,7 @@ export default function Partners() {
                         </a>
                         <a className="relative w-full h-16 flex items-center justify-center touch-optimized">
                             <Image
-                                src={effectiveTheme === 'dark' ? '/logos/rithmic-logo-white.png' : '/logos/rithmic-logo-black.png'}
+                                src="/logos/rithmic-logo-white.png"
                                 alt="Rithmic"
                                 fill
                                 sizes="(max-width: 768px) 100vw, 50vw"

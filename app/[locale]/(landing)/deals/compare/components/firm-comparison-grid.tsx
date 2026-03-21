@@ -43,7 +43,6 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
             <tr className="border-b border-border text-xs uppercase tracking-[0.1em] text-muted-foreground">
               <th className="px-3 py-3 font-semibold">Firm</th>
               <th className="px-3 py-3 font-semibold">Typical Entry</th>
-              <th className="px-3 py-3 font-semibold">Reset Policy</th>
               <th className="px-3 py-3 font-semibold">Drawdown Model</th>
               <th className="px-3 py-3 font-semibold">Payout Tempo</th>
               <th className="px-3 py-3 font-semibold">Best For</th>
@@ -56,7 +55,6 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
                 <td className="px-3 py-4 text-muted-foreground">
                   {formatChallengeFee(getLowestChallengeFee(firm))}
                 </td>
-                <td className="px-3 py-4 text-muted-foreground">N/A</td>
                 <td className="px-3 py-4 text-muted-foreground">{firm.drawdownType}</td>
                 <td className="px-3 py-4 text-muted-foreground">{firm.payoutModel}</td>
                 <td className="px-3 py-4">
@@ -78,10 +76,6 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Typical Entry</dt>
                 <dd className="text-lg font-semibold text-foreground">{formatChallengeFee(getLowestChallengeFee(firm))}</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Reset Policy</dt>
-                <dd className="text-foreground">N/A</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Drawdown Model</dt>

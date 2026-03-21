@@ -6,6 +6,29 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ## 🚀 Recent Feature Updates
 
+### 2026-03-21: Home Redesign + Dark-Only Theme Unification
+- **What changed:** Rebuilt the public home page into a smaller minimal dark-only marketing surface, collapsed the active theme path to a unified dark presentation, and reduced card drift by aligning the V2 card wrapper with the base card primitive.
+- **What I want:** The landing experience should feel restrained, premium, and consistent across public/product surfaces, with one dark visual system and one shared card language instead of mixed light/system/theme variants.
+- **What I don't want:** A stitched-together homepage with too many sections, exposed light/system toggles that fight the intended design, duplicated card primitives drifting apart, or special-case pages reintroducing a separate theme engine.
+- **How we fixed that:**
+  - Replaced the old multi-section home composition in `app/[locale]/(home)/components/HomeContent.tsx` with a smaller minimal structure: hero, proof strip, capabilities, workflow, exploration links, and CTA.
+  - Updated `components/ui/v2/card-v2.tsx` to layer on top of the base `Card` primitive instead of maintaining a second independent interaction/surface implementation.
+  - Simplified `context/theme-provider.tsx` to a dark-only unified path with fixed dark theme behavior and non-mutable public-facing theme controls.
+  - Simplified the boot-time theme script in `app/layout.tsx` to force the dark presentation immediately and remove dashboard palette class application from the document bootstrap.
+  - Replaced active light/system theme switchers with dark-only affordances in:
+    - `components/theme-switcher.tsx`
+    - `app/[locale]/teams/components/theme-switcher.tsx`
+    - `app/[locale]/admin/components/theme-switcher.tsx`
+    - `app/[locale]/dashboard/components/user-menu.tsx`
+    - `app/[locale]/dashboard/settings/page.tsx`
+  - Hardened `app/not-found.tsx` so the 404 page no longer runs a separate light/dark/system theme toggle path and instead stays on the unified dark presentation.
+- **Key Files:** `app/[locale]/(home)/components/HomeContent.tsx`, `components/ui/v2/card-v2.tsx`, `context/theme-provider.tsx`, `app/layout.tsx`, `components/theme-switcher.tsx`, `app/[locale]/teams/components/theme-switcher.tsx`, `app/[locale]/admin/components/theme-switcher.tsx`, `app/[locale]/dashboard/components/user-menu.tsx`, `app/[locale]/dashboard/settings/page.tsx`, `app/not-found.tsx`
+- **Verification:**
+  - `npx eslint <touched files>` -> passes (`0` errors)
+  - `npm run -s typecheck` -> passes
+  - Open `/en` and confirm the homepage now renders as a smaller dark-only composition with unified card surfaces.
+  - Open dashboard/team/admin menus and confirm they no longer expose light/system theme switching paths.
+
 ### 2026-03-21: Public Deals + Leaderboard Audit Hardening
 - **What changed:** Fixed public-surface correctness issues across the deals and leaderboard pages, including leaderboard privacy/ranking bugs and misleading deal CTA/data fallbacks.
 - **What I want:** The public leaderboard should only include users who explicitly opted in, rank traders consistently, and never leak viewer-specific data through shared caching. The deals surface should keep locale-aware navigation, avoid fake “verified” CTAs, and only show current coupon pricing.

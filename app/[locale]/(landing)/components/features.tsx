@@ -17,19 +17,8 @@ type FeatureCard = {
   icon: ReactNode
   description: string
   stat: string
-  image: ReactNode | { light: string; dark: string }
+  image: ReactNode | string
   wrapperClass?: string
-}
-
-function isImagePair(
-  image: FeatureCard["image"]
-): image is { light: string; dark: string } {
-  return (
-    typeof image === "object" &&
-    image !== null &&
-    "light" in image &&
-    "dark" in image
-  )
 }
 
 export default function Features() {
@@ -112,23 +101,14 @@ export default function Features() {
                   feature.wrapperClass ?? "h-[250px] sm:h-[300px] md:h-[350px]"
                 )}
               >
-                  {isImagePair(feature.image) ? (
-                    <>
-                      <Image
-                        src={feature.image.light}
-                        alt={`${feature.title} visualization`}
-                        className="rounded-md dark:hidden h-full w-full object-contain"
-                        width={800}
-                        height={400}
-                      />
-                      <Image
-                        src={feature.image.dark}
-                        alt={`${feature.title} visualization`}
-                        className="rounded-md hidden dark:block h-full w-full object-contain"
-                        width={800}
-                        height={400}
-                      />
-                    </>
+                  {typeof feature.image === "string" ? (
+                    <Image
+                      src={feature.image}
+                      alt={`${feature.title} visualization`}
+                      className="h-full w-full rounded-md object-contain"
+                      width={800}
+                      height={400}
+                    />
                   ) : (
                     feature.image
                   )}
