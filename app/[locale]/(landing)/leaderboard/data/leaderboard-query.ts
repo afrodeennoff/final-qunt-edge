@@ -51,13 +51,33 @@ function computeLongestStreak(values: number[], mode: 'win' | 'loss'): number {
   return max
 }
 
+function isMissingColumnError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'P2022'
+  )
+}
+
 export async function getLeaderboardData(
   sort: LeaderboardSort = 'monthly_pnl'
 ): Promise<LeaderboardEntry[]> {
-  const eligibleUsers = await prisma.user.findMany({
-    where: { showOnLeaderboard: true },
-    select: { id: true, email: true },
-  })
+  let eligibleUsers: Array<{ id: string; email: string | null }> = []
+
+  try {
+    eligibleUsers = await prisma.user.findMany({
+      where: { showOnLeaderboard: true },
+      select: { id: true, email: true },
+    })
+  } catch (error) {
+    if (isMissingColumnError(error)) {
+      console.warn('[Leaderboard] Missing showOnLeaderboard column; returning empty public leaderboard until schema is updated.')
+      return []
+    }
+
+    throw error
+  }
 
   if (eligibleUsers.length === 0) {
     return []

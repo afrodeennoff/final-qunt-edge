@@ -100,4 +100,15 @@ describe('getLeaderboardData', () => {
     expect(entries.map((entry) => entry.userId)).toEqual(['user-2', 'user-1', 'user-3'])
     expect(entries.map((entry) => entry.rank)).toEqual([1, 2, 3])
   })
+
+  it('fails closed when the leaderboard opt-in column is missing in the database', async () => {
+    prismaMock.user.findMany.mockRejectedValue({ code: 'P2022' })
+
+    const entries = await getLeaderboardData()
+
+    expect(entries).toEqual([])
+    expect(prismaMock.trade.groupBy).not.toHaveBeenCalled()
+    expect(prismaMock.trade.findMany).not.toHaveBeenCalled()
+    expect(prismaMock.account.groupBy).not.toHaveBeenCalled()
+  })
 })
