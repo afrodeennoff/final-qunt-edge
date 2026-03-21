@@ -56,10 +56,21 @@ export default async function HomePage({
 }) {
     const { locale } = await params;
     setStaticParamsLocale(locale);
-    const [overview, leaders] = await Promise.all([
+    const defaultOverview = {
+      totalTrackedFirms: 0,
+      totalLiveDeals: 0,
+      totalAccounts: 0,
+      totalAccountValue: 0,
+      totalPaidPayoutAmount: 0,
+      totalPaidPayoutCount: 0,
+    }
+
+    const [overviewResult, leadersResult] = await Promise.allSettled([
       getDealsOverview(),
       getLeaderboardData(),
     ])
+    const overview = overviewResult.status === 'fulfilled' ? overviewResult.value : defaultOverview
+    const leaders = leadersResult.status === 'fulfilled' ? leadersResult.value : []
     const spotlights = getDealsSpotlights()
 
     const softwareSchema = {
