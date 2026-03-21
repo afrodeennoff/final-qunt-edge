@@ -40,10 +40,12 @@ type SortKey =
 type SortDirection = 'asc' | 'desc'
 
 interface Props {
+  locale: string
   deals: DealItem[]
   firms: UnifiedFirm[]
   faqs: FaqItem[]
-  lastUpdated: string
+  hadFetchError: boolean
+  lastUpdated: string | null
 }
 
 const marketOptions: Array<'All' | MarketType> = ['All', 'Futures', 'Forex', 'Crypto']
@@ -68,7 +70,26 @@ function allocationToNumber(maxAllocation: string): number {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
-export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
+function getLowestChallengeFee(firm: UnifiedFirm): number | null {
+  const fees = firm.coupons
+    .map((coupon) => coupon.challengeFee)
+    .filter((fee): fee is number => typeof fee === 'number' && Number.isFinite(fee))
+
+  if (fees.length === 0) {
+    return null
+  }
+
+  return Math.min(...fees)
+}
+
+function formatChallengeFee(fee: number | null): string {
+  if (fee === null) return 'N/A'
+  if (fee === 0) return 'Free'
+  return `$${fee}`
+}
+
+export function DealsExperience({ locale, deals, firms, faqs, hadFetchError, lastUpdated }: Props) {
+  const localePrefix = `/${locale}`
   const [search, setSearch] = useState('')
   const [market, setMarket] = useState<'All' | MarketType>('All')
   const [platform, setPlatform] = useState<'All' | TradingPlatform>('All')
@@ -98,7 +119,10 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
       const platformOk = platform === 'All' || firm.platform === platform
       const payoutOk = payout === 'All' || firm.payoutModel === payout
       const drawdownOk = drawdown === 'All' || firm.drawdownType === drawdown
-      const priceOk = priceMatch(firm.coupons[0]?.challengeFee ?? 0, priceRange)
+      const lowestFee = getLowestChallengeFee(firm)
+      const priceOk = priceRange === 'all'
+        ? true
+        : lowestFee !== null && priceMatch(lowestFee, priceRange)
       const searchOk = !normalizedSearch || firm.name.toLowerCase().includes(normalizedSearch)
       return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
     })
@@ -109,8 +133,8 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
         case 'name':
           return a.name.localeCompare(b.name) * dir
         case 'challengeFee': {
-          const feeA = a.coupons[0]?.challengeFee ?? 0
-          const feeB = b.coupons[0]?.challengeFee ?? 0
+          const feeA = getLowestChallengeFee(a) ?? Number.POSITIVE_INFINITY
+          const feeB = getLowestChallengeFee(b) ?? Number.POSITIVE_INFINITY
           return (feeA - feeB) * dir
         }
         case 'profitSplit':
@@ -214,7 +238,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                         </div>
                         <div>
                           <p className="text-xs uppercase tracking-[0.1em] text-v2-text-tertiary">Last Updated</p>
-                          <p className="text-lg font-semibold text-v2-text-primary">{lastUpdated}</p>
+                          <p className="text-lg font-semibold text-v2-text-primary">{lastUpdated ?? 'Unavailable'}</p>
                         </div>
                       </div>
                     </div>
@@ -266,6 +290,12 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                   </label>
                 </div>
               </section>
+
+              {hadFetchError && (
+                <section className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+                  Some deal data is temporarily unavailable, so a few sections may be incomplete while the catalogue refreshes.
+                </section>
+              )}
 
               {/* Featured Deals Section with Enhanced Cards */}
               <section id="deals-grid" className="space-y-6">
@@ -325,15 +355,25 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                           <span>Expires: {deal.expiryDate}</span>
                         </div>
                         
-                        <a
-                          href={deal.claimUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
-                        >
-                          Claim Deal
-                          <TrendingUp className="h-4 w-4" />
-                        </a>
+                        {deal.claimUrl ? (
+                          <a
+                            href={deal.claimUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
+                          >
+                            Claim Deal
+                            <TrendingUp className="h-4 w-4" />
+                          </a>
+                        ) : (
+                          <Link
+                            href={`${localePrefix}/firm/${deal.firmSlug}`}
+                            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/50 px-4 py-3 text-sm font-semibold uppercase tracking-[0.1em] text-foreground transition-all duration-200 hover:bg-card/80"
+                          >
+                            View Firm
+                            <TrendingUp className="h-4 w-4" />
+                          </Link>
+                        )}
                       </div>
                     </article>
                   ))}
@@ -365,12 +405,12 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                       {filteredFirms.map((firm) => (
                         <TableRow key={firm.id} className="border-primary/10 transition-colors hover:bg-primary/5">
                           <TableCell className="font-semibold text-foreground">
-                            <Link href={`/firm/${firm.slug}`} className="hover:text-primary hover:underline">
+                            <Link href={`${localePrefix}/firm/${firm.slug}`} className="hover:text-primary hover:underline">
                               {firm.name}
                             </Link>
                           </TableCell>
                           <TableCell className="text-foreground">
-                            ${firm.coupons[0]?.challengeFee ?? '-'}
+                            {formatChallengeFee(getLowestChallengeFee(firm))}
                           </TableCell>
                           <TableCell className="text-foreground">{firm.profitSplit}</TableCell>
                           <TableCell>
@@ -397,7 +437,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                     <article key={firm.id} className="rounded-xl border border-primary/20 bg-card/60 p-5 backdrop-blur-xl transition-all duration-200 hover:border-primary/40">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-foreground">
-                          <Link href={`/firm/${firm.slug}`} className="hover:text-primary hover:underline">
+                          <Link href={`${localePrefix}/firm/${firm.slug}`} className="hover:text-primary hover:underline">
                             {firm.name}
                           </Link>
                         </h3>
@@ -407,7 +447,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                         </div>
                       </div>
                       <dl className="mt-4 grid grid-cols-2 gap-4">
-                        <Term label="Challenge Fee" value={`$${firm.coupons[0]?.challengeFee ?? '-'}`} />
+                        <Term label="Challenge Fee" value={formatChallengeFee(getLowestChallengeFee(firm))} />
                         <Term label="Profit Split" value={firm.profitSplit} />
                         <Term label="Drawdown" value={firm.drawdownType} />
                         <Term label="Payout" value={firm.payoutModel} />
@@ -450,7 +490,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                 </div>
                 
                 <div className="mt-6 flex flex-col gap-2 text-sm text-muted-foreground">
-                  <p>Last updated: {lastUpdated}</p>
+                  <p>Last updated: {lastUpdated ?? 'Unavailable'}</p>
                   <p className="text-xs">
                     <span className="inline-flex items-center gap-1">
                       <span className="text-primary">●</span> Affiliate disclosure:
@@ -471,7 +511,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                     <h3 className="text-xl font-semibold text-foreground">Join the community</h3>
                     <p className="mt-2 text-sm text-muted-foreground">Discuss rule changes, strategy fit, and new offers with other traders.</p>
                     <Link 
-                      href="/community" 
+                      href={`${localePrefix}/community`} 
                       className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
                     >
                       Open Community
@@ -489,7 +529,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                     <h3 className="text-xl font-semibold text-foreground">Use trader tools</h3>
                     <p className="mt-2 text-sm text-muted-foreground">Launch your planner workflow with matchup and cost tools.</p>
                     <Link 
-                      href="/deals/calculator" 
+                      href={`${localePrefix}/deals/calculator`} 
                       className="mt-5 inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-card/50 px-5 py-2.5 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-card/80"
                     >
                       Open Tracker / Calculator

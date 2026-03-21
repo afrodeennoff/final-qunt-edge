@@ -20,7 +20,7 @@ export interface DealItem {
   couponCode: string
   challengeFee: number
   expiryDate: string
-  claimUrl: string
+  claimUrl: string | null
 }
 
 export interface UnifiedFirm {
@@ -97,7 +97,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     couponCode: coupon.code,
     challengeFee: coupon.challengeFee ?? 0,
     expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
-    claimUrl: coupon.claimUrl || `https://example.com/${coupon.propfirm.slug}`,
+    claimUrl: coupon.claimUrl ?? null,
   }))
 }
 
@@ -108,12 +108,23 @@ export const getActiveDeals = unstable_cache(
 )
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
+  const now = new Date()
+
   const firms = await prisma.propFirm.findMany({
     where: { isActive: true },
     include: {
       coupons: {
-        where: { isActive: true },
-        orderBy: { discountPercent: 'desc' },
+        where: {
+          isActive: true,
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gte: now } },
+          ],
+        },
+        orderBy: [
+          { challengeFee: 'asc' },
+          { discountPercent: 'desc' },
+        ],
       },
       _count: { select: { reviews: true, coupons: true } },
     },

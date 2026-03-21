@@ -6,6 +6,23 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ## 🚀 Recent Feature Updates
 
+### 2026-03-21: Public Deals + Leaderboard Audit Hardening
+- **What changed:** Fixed public-surface correctness issues across the deals and leaderboard pages, including leaderboard privacy/ranking bugs and misleading deal CTA/data fallbacks.
+- **What I want:** The public leaderboard should only include users who explicitly opted in, rank traders consistently, and never leak viewer-specific data through shared caching. The deals surface should keep locale-aware navigation, avoid fake “verified” CTAs, and only show current coupon pricing.
+- **What I don't want:** Opt-out users appearing anonymously on the leaderboard, cached private leaderboard rows leaking across sessions, dead localized links, expired coupon pricing being treated as live, or placeholder outbound URLs being rendered as legitimate claim actions.
+- **How we fixed that:**
+  - Reworked `app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts` to build a public leaderboard strictly from `showOnLeaderboard: true` users, remove viewer-specific personalization/caching, and sort ranks from real public metrics.
+  - Updated `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx` to align with the public data contract and keep ranking/sort behavior consistent.
+  - Hardened `server/deals.ts` so active deals no longer synthesize fake `example.com` claim URLs, and firm coupon data excludes expired offers while ordering by usable challenge fee.
+  - Updated `app/[locale]/(landing)/deals/page.tsx` and `app/[locale]/(landing)/deals/components/deals-experience.tsx` to pass locale-aware hrefs, degrade honestly when data fetches fail, and fall back to firm detail pages when no verified claim URL exists.
+  - Updated `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx` to stop inventing reset-policy values and to display `N/A` for unavailable coupon pricing instead of synthetic values.
+  - Added regression coverage in `tests/leaderboard-query.test.ts`.
+- **Key Files:** `app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts`, `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`, `server/deals.ts`, `app/[locale]/(landing)/deals/page.tsx`, `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx`, `tests/leaderboard-query.test.ts`
+- **Verification:**
+  - `npx vitest run tests/leaderboard-query.test.ts` -> passes
+  - `npm run -s typecheck` -> passes
+  - `npx eslint <touched files>` -> passes with warnings-only baseline or clean output
+
 ### 2026-03-15: Phase 7 - AI Endpoints Consolidation (Unified Analyze Route)
 - **What changed:** Consolidated three separate AI analysis endpoints (`accounts`, `instrument`, `time-of-day`) into a single unified endpoint with type-based dispatch.
 - **What I want:** A single unified `/api/ai/analyze` endpoint that dispatches based on `type` field, with the old routes maintained as thin backward-compatible wrappers.

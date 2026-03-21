@@ -3,10 +3,16 @@ import { DealsExperience } from './components/deals-experience'
 
 export const revalidate = 3600
 
-export default async function DealsPage() {
+export default async function DealsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   let deals: Awaited<ReturnType<typeof getActiveDeals>> = []
   let firms: Awaited<ReturnType<typeof getUnifiedFirms>> = []
   let faqs: Awaited<ReturnType<typeof getDefaultFaqs>> = []
+  let hadFetchError = false
 
   try {
     const results = await Promise.allSettled([
@@ -21,20 +27,24 @@ export default async function DealsPage() {
 
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
+        hadFetchError = true
         const sources = ['deals', 'firms', 'faqs']
         console.error(`DealsPage: Failed to fetch ${sources[index]}:`, result.reason)
       }
     })
   } catch (error) {
+    hadFetchError = true
     console.error('DealsPage: Unexpected error:', error)
   }
 
   return (
     <DealsExperience
+      locale={locale}
       deals={deals}
       firms={firms}
       faqs={faqs}
-      lastUpdated={new Date().toISOString().split('T')[0]}
+      hadFetchError={hadFetchError}
+      lastUpdated={hadFetchError ? null : new Date().toISOString().split('T')[0]}
     />
   )
 }

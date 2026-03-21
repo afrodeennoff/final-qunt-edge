@@ -1,150 +1,115 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { getDatabaseUserId } from '@/server/auth'
-import { unstable_cache } from 'next/cache'
 
 export type LeaderboardEntry = {
   rank: number
-  userId: string | null
+  userId: string
   username: string
-  monthlyPnl: number | null
-  totalTrades: number | null
+  monthlyPnl: number
+  totalTrades: number
   winRate: number
 }
 
-export type LeaderboardEntryPublic = Omit<LeaderboardEntry, 'userId'>
+export type LeaderboardSort = 'monthly_pnl' | 'winrate' | 'totalTrades'
 
-const _getLeaderboardData = async (
-  sort: 'monthly_pnl' | 'alltime_pnl' | 'winrate' = 'monthly_pnl'
-): Promise<LeaderboardEntry[]> => {
-  // Check if user is authenticated
-  let userId: string | null = null
-  try {
-    userId = await getDatabaseUserId()
-  } catch (error) {
-    // User is not authenticated, continue with anonymous view
-    userId = null
+function toUsername(email: string | null | undefined, fallbackId: string): string {
+  const base = email?.split('@')[0]?.trim()
+  if (base) return base
+  return `Trader ${fallbackId.slice(0, 8)}`
+}
+
+export async function getLeaderboardData(
+  sort: LeaderboardSort = 'monthly_pnl'
+): Promise<LeaderboardEntry[]> {
+  const eligibleUsers = await prisma.user.findMany({
+    where: { showOnLeaderboard: true },
+    select: { id: true, email: true },
+  })
+
+  if (eligibleUsers.length === 0) {
+    return []
   }
 
   const startOfMonth = new Date()
   startOfMonth.setDate(1)
   startOfMonth.setHours(0, 0, 0, 0)
 
-  const isMonthly = sort !== 'alltime_pnl'
-  const dateFilter = isMonthly ? { closeDate: { gte: startOfMonth } } : {}
+  const dateFilter = { closeDate: { gte: startOfMonth } }
+  const userIds = eligibleUsers.map((user) => user.id)
 
-  // Get aggregated trade data
-  const agg = await prisma.trade.groupBy({
-    by: ['userId'],
-    _sum: { pnl: true },
-    _count: { id: true },
-    where: dateFilter,
-    orderBy: sort === 'winrate'
-      ? undefined
-      : { _sum: { pnl: 'desc' } },
-    take: 100,
-  })
-
-  // Get user information for authenticated users
-  const userIds = agg.map((a) => a.userId)
-  const [users, winCounts, lossCounts] = await Promise.all([
-    prisma.user.findMany({
-      where: { 
-        id: { in: userIds },
-        showOnLeaderboard: true
-      },
-      select: { id: true, email: true },
-    }),
-    // Count winning trades (pnl > 0)
+  const [agg, winCounts, lossCounts] = await Promise.all([
     prisma.trade.groupBy({
       by: ['userId'],
-      where: { 
-        userId: { in: userIds }, 
-        pnl: { gt: 0 }, 
-        ...dateFilter 
+      _sum: { pnl: true },
+      _count: { id: true },
+      where: {
+        userId: { in: userIds },
+        ...dateFilter,
+      },
+    }),
+    prisma.trade.groupBy({
+      by: ['userId'],
+      where: {
+        userId: { in: userIds },
+        pnl: { gt: 0 },
+        ...dateFilter,
       },
       _count: { id: true },
     }),
-    // Count losing trades (pnl < 0) - for accurate win rate calculation
     prisma.trade.groupBy({
       by: ['userId'],
-      where: { 
-        userId: { in: userIds }, 
-        pnl: { lt: 0 }, 
-        ...dateFilter 
+      where: {
+        userId: { in: userIds },
+        pnl: { lt: 0 },
+        ...dateFilter,
       },
       _count: { id: true },
     }),
   ])
 
-  // Create maps for quick lookup
   const userMap = Object.fromEntries(
-    users.map((u) => [u.id, u.email?.split('@')[0] ?? 'Anonymous'])
+    eligibleUsers.map((user) => [user.id, toUsername(user.email, user.id)])
   )
 
   const winCountMap = Object.fromEntries(
-    winCounts.map((w) => [w.userId, w._count.id])
+    winCounts.map((entry) => [entry.userId, entry._count.id])
   )
 
   const lossCountMap = Object.fromEntries(
-    lossCounts.map((l) => [l.userId, l._count.id])
+    lossCounts.map((entry) => [entry.userId, entry._count.id])
   )
 
-  // Build leaderboard entries
   const entries: LeaderboardEntry[] = agg.map((entry) => {
-    const userIdStr = entry.userId
-    const winCount = winCountMap[userIdStr] ?? 0
-    const lossCount = lossCountMap[userIdStr] ?? 0
-    const totalDecisive = winCount + lossCount  // Exclude breakeven trades
+    const winCount = winCountMap[entry.userId] ?? 0
+    const lossCount = lossCountMap[entry.userId] ?? 0
+    const totalDecisive = winCount + lossCount
     const totalTrades = entry._count.id
-    
-    // Calculate win rate excluding breakeven trades
     const winRate = totalDecisive > 0 ? Math.round((winCount / totalDecisive) * 100) : 0
-    
-    // Determine what data to show based on authentication
-    const showFullDetails = userId !== null && userId === userIdStr && userMap[userIdStr] !== 'Anonymous'
-    
+
     return {
       rank: 0,
-      userId: showFullDetails ? userIdStr : null,
-      username: showFullDetails 
-        ? (userMap[userIdStr] || 'Anonymous') 
-        : `Trader #${Math.floor(Math.random() * 1000)}`, // Anonymized for privacy
-      monthlyPnl: showFullDetails 
-        ? Number(entry._sum.pnl ?? 0) 
-        : null, // Hide exact PnL for anonymous users
-      totalTrades: showFullDetails ? totalTrades : null, // Hide exact trade count
-      winRate: winRate // Win rate is safe to show (aggregated statistic)
+      userId: entry.userId,
+      username: userMap[entry.userId] ?? toUsername(null, entry.userId),
+      monthlyPnl: Number(entry._sum.pnl ?? 0),
+      totalTrades,
+      winRate,
     }
   })
-  
-  // Sort based on the selected criteria
+
   if (sort === 'winrate') {
     entries.sort((a, b) => {
-      // Primary sort by win rate, secondary by monthly PnL for tie-breaking
       if (b.winRate !== a.winRate) return b.winRate - a.winRate
-      
-      // For win rate sorting, use monthly PnL as tie-breaker
-      const aPnl = a.monthlyPnl ?? 0
-      const bPnl = b.monthlyPnl ?? 0
-      return bPnl - aPnl
+      return b.monthlyPnl - a.monthlyPnl
+    })
+  } else if (sort === 'totalTrades') {
+    entries.sort((a, b) => {
+      if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
+      return b.monthlyPnl - a.monthlyPnl
     })
   } else {
-    // For PnL sorting, handle null values (anonymous users show null)
-    entries.sort((a, b) => {
-      const aPnl = a.monthlyPnl ?? 0
-      const bPnl = b.monthlyPnl ?? 0
-      return bPnl - aPnl
-    })
+    entries.sort((a, b) => b.monthlyPnl - a.monthlyPnl)
   }
-  
-  // Add rank numbers
-  return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
-};
 
-export const getLeaderboardData = unstable_cache(
-  _getLeaderboardData,
-  ['leaderboard'],
-  { revalidate: 300, tags: ['leaderboard'] }
-)
+  return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
+}

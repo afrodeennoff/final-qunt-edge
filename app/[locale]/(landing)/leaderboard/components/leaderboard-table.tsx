@@ -6,7 +6,7 @@ import { AvatarV2, AvatarV2Fallback } from '@/components/ui/v2'
 import { Trophy, Medal, Award } from 'lucide-react'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
-type SortKey = 'monthly_pnl' | 'alltime_pnl' | 'winrate' | 'totalTrades'
+type SortKey = 'monthly_pnl' | 'winrate' | 'totalTrades'
 
 const podiumConfig = {
   1: {
@@ -48,9 +48,8 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
   const variant: CardVariant = rank === 1 ? 'outlined' : 'default'
   
   // Determine status based on monthly PnL
-  const status: CardStatusTone | undefined = 
-    entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'live' : 
-    entry.monthlyPnl !== null && entry.monthlyPnl < 0 ? 'error' : undefined
+  const status: CardStatusTone | undefined =
+    entry.monthlyPnl >= 0 ? 'live' : 'error'
 
   return (
     <CardV2 
@@ -89,13 +88,9 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
       <div className="space-y-1 w-full">
         <div className={cn(
           'text-lg font-bold',
-          entry.monthlyPnl === null
-            ? 'text-v2-text-secondary'
-            : entry.monthlyPnl >= 0
-              ? 'text-v2-success'
-              : 'text-v2-error'
+          entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
         )}>
-          {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
+          {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
         </div>
 
         <div className="flex items-center justify-center gap-1">
@@ -171,7 +166,7 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
       </AvatarV2>
        <div className="flex-1 min-w-0">
          <div className="font-medium text-v2-text-primary truncate">{entry.username}</div>
-         <div className="text-xs text-v2-text-secondary">{entry.totalTrades !== null ? entry.totalTrades.toLocaleString() : '--'} trades</div>
+         <div className="text-xs text-v2-text-secondary">{entry.totalTrades.toLocaleString()} trades</div>
        </div>
 
       <div className="flex gap-6 text-right shrink-0">
@@ -188,13 +183,9 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
           <div className="text-xs text-v2-text-tertiary">Monthly PnL</div>
          <div className={cn(
            'text-lg font-bold',
-           entry.monthlyPnl === null
-             ? 'text-v2-text-secondary'
-             : entry.monthlyPnl >= 0
-               ? 'text-v2-success'
-               : 'text-v2-error'
+           entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
          )}>
-           {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
+           {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
          </div>
         </div>
       </div>
@@ -232,13 +223,13 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
      const result = [...entries].sort((a, b) => {
        switch (sortBy) {
          case 'winrate': return b.winRate - a.winRate
-         case 'totalTrades': 
-           const aTrades = a.totalTrades ?? 0
-           const bTrades = b.totalTrades ?? 0
+          case 'totalTrades': 
+           const aTrades = a.totalTrades
+           const bTrades = b.totalTrades
            return bTrades - aTrades
          default: 
-           const aPnl = a.monthlyPnl ?? 0
-           const bPnl = b.monthlyPnl ?? 0
+           const aPnl = a.monthlyPnl
+           const bPnl = b.monthlyPnl
            return bPnl - aPnl
        }
      })
@@ -275,7 +266,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
 
       <div className="space-y-2">
         {rest.map((entry) => (
-          <MemoizedLeaderboardRow key={entry.userId ?? `anon-${entry.rank}-${entry.username}`} entry={entry} />
+          <MemoizedLeaderboardRow key={entry.userId} entry={entry} />
         ))}
 
         {sorted.length === 0 && (

@@ -4,6 +4,24 @@ interface FirmComparisonGridProps {
   firms: UnifiedFirm[]
 }
 
+function getLowestChallengeFee(firm: UnifiedFirm): number | null {
+  const fees = firm.coupons
+    .map((coupon) => coupon.challengeFee)
+    .filter((fee): fee is number => typeof fee === 'number' && Number.isFinite(fee))
+
+  if (fees.length === 0) {
+    return null
+  }
+
+  return Math.min(...fees)
+}
+
+function formatChallengeFee(fee: number | null): string {
+  if (fee === null) return 'N/A'
+  if (fee === 0) return 'Free'
+  return `$${fee}`
+}
+
 export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
   return (
     <section className="mt-6 rounded-3xl border border-border bg-card p-4 sm:p-6">
@@ -36,28 +54,13 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
               <tr key={firm.id} className="border-b border-border/70 transition-colors hover:bg-background/50 last:border-b-0">
                 <td className="sticky left-0 bg-card px-3 py-4 font-semibold text-foreground">{firm.name}</td>
                 <td className="px-3 py-4 text-muted-foreground">
-                  {/* Show the best (highest discount) coupon's challenge fee, or "Free" if 0 */}
-                  {firm.coupons.length > 0 ? (
-                    firm.coupons[0].challengeFee === 0 ? 'Free' : `$${firm.coupons[0].challengeFee}`
-                  ) : (
-                    'N/A'
-                  )}
+                  {formatChallengeFee(getLowestChallengeFee(firm))}
                 </td>
-                <td className="px-3 py-4 text-muted-foreground">
-                  {/* Reset policy - not directly in data, infer from drawdown type or show N/A */}
-                  {firm.drawdownType === 'Trailing' ? 'Daily' : firm.drawdownType === 'Static' ? 'Fixed' : 'End-of-day'}
-                </td>
-                <td className="px-3 py-4 text-muted-foreground">
-                  {/* Drawdown model maps directly */}
-                  {firm.drawdownType}
-                </td>
-                <td className="px-3 py-4 text-muted-foreground">
-                  {/* Payout tempo maps directly */}
-                  {firm.payoutModel}
-                </td>
+                <td className="px-3 py-4 text-muted-foreground">N/A</td>
+                <td className="px-3 py-4 text-muted-foreground">{firm.drawdownType}</td>
+                <td className="px-3 py-4 text-muted-foreground">{firm.payoutModel}</td>
                 <td className="px-3 py-4">
                   <span className="rounded-full border border-border bg-background px-2 py-1 text-xs text-foreground">
-                    {/* Best for - combine profit split and max allocation */}
                     {firm.profitSplit} split • {firm.maxAllocation}
                   </span>
                 </td>
@@ -74,19 +77,11 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
             <dl className="mt-3 grid gap-2 text-sm">
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Typical Entry</dt>
-                <dd className="text-lg font-semibold text-foreground">
-                  {firm.coupons.length > 0 ? (
-                    firm.coupons[0].challengeFee === 0 ? 'Free' : `$${firm.coupons[0].challengeFee}`
-                  ) : (
-                    'N/A'
-                  )}
-                </dd>
+                <dd className="text-lg font-semibold text-foreground">{formatChallengeFee(getLowestChallengeFee(firm))}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Reset Policy</dt>
-                <dd className="text-foreground">
-                  {firm.drawdownType === 'Trailing' ? 'Daily' : firm.drawdownType === 'Static' ? 'Fixed' : 'End-of-day'}
-                </dd>
+                <dd className="text-foreground">N/A</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Drawdown Model</dt>
