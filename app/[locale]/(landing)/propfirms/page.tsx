@@ -91,11 +91,11 @@ function renderPropfirmCard(
         </span>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricPill label="Accounts" value={stat.accountsCount.toLocaleString()} icon={Building2} />
-        <MetricPill label="Sized" value={stat.sizedAccountsCount.toLocaleString()} icon={Landmark} />
-        <MetricPill label="Account value" value={formatCompactCurrency(stat.totalAccountValue)} icon={Wallet} />
-        <MetricPill label="Paid out" value={formatCompactCurrency(paidAmount)} icon={Banknote} />
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <MetricPill compact label="Accounts" value={stat.accountsCount.toLocaleString()} icon={Building2} />
+        <MetricPill compact label="Sized" value={stat.sizedAccountsCount.toLocaleString()} icon={Landmark} />
+        <MetricPill compact label="Account value" value={formatCompactCurrency(stat.totalAccountValue)} icon={Wallet} />
+        <MetricPill compact label="Paid out" value={formatCompactCurrency(paidAmount)} icon={Banknote} />
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
@@ -185,7 +185,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
                 <ArrowRight className="h-3.5 w-3.5 text-v2-accent" />
                 Prop firm market index
               </span>
-              <h1 className="mt-6 text-[clamp(2.8rem,6vw,5.5rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
+              <h1 className="mt-6 max-w-4xl text-[clamp(2.8rem,5.2vw,4.9rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
                 Ranked firm traction.
                 <br />
                 Cleaner payout context.
@@ -295,20 +295,24 @@ function MetricPill({
   label,
   value,
   icon: Icon,
+  compact = false,
 }: {
   label: string
   value: string
   icon: React.ComponentType<{ className?: string }>
+  compact?: boolean
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-black/25">
-          <Icon className="h-5 w-5 text-v2-accent" />
+    <div className={`rounded-2xl border border-white/10 ${compact ? 'bg-black/20 px-4 py-4' : 'bg-white/[0.04] p-4 sm:p-5'} min-h-[104px]`}>
+      <div className="flex items-start gap-3">
+        <div className={`flex shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/25 ${compact ? 'h-10 w-10' : 'h-11 w-11'}`}>
+          <Icon className={`${compact ? 'h-4 w-4' : 'h-5 w-5'} text-v2-accent`} />
         </div>
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-          <p className="mt-1 text-xl font-semibold text-white">{value}</p>
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase leading-none tracking-[0.16em] text-white/45">{label}</p>
+          <p className={`mt-3 font-semibold leading-none text-white ${compact ? 'text-[clamp(1.5rem,2vw,1.9rem)]' : 'text-[clamp(1.7rem,2.4vw,2.25rem)] tracking-[-0.03em]'}`}>
+            {value}
+          </p>
         </div>
       </div>
     </div>
