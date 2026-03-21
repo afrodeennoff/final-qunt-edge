@@ -21,13 +21,11 @@ import {
   BadgePercent,
   Banknote,
   Building2,
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
   Filter,
   Landmark,
   Search,
-  Shield,
   Wallet,
 } from 'lucide-react'
 import type {
@@ -93,10 +91,7 @@ function getLowestChallengeFee(firm: UnifiedFirm): number | null {
     .map((coupon) => coupon.challengeFee)
     .filter((fee): fee is number => typeof fee === 'number' && Number.isFinite(fee))
 
-  if (fees.length === 0) {
-    return null
-  }
-
+  if (fees.length === 0) return null
   return Math.min(...fees)
 }
 
@@ -137,17 +132,15 @@ export function DealsExperience({
 
   const normalizedSearch = search.trim().toLowerCase()
 
-  const filteredDeals = useMemo(() => {
-    return deals.filter((deal) => {
-      const marketOk = market === 'All' || deal.category === market
-      const platformOk = platform === 'All' || deal.platform === platform
-      const payoutOk = payout === 'All' || deal.payoutModel === payout
-      const drawdownOk = drawdown === 'All' || deal.drawdownType === drawdown
-      const priceOk = priceMatch(deal.challengeFee, priceRange)
-      const searchOk = !normalizedSearch || deal.firmName.toLowerCase().includes(normalizedSearch)
-      return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
-    })
-  }, [deals, drawdown, market, normalizedSearch, payout, platform, priceRange])
+  const filteredDeals = useMemo(() => deals.filter((deal) => {
+    const marketOk = market === 'All' || deal.category === market
+    const platformOk = platform === 'All' || deal.platform === platform
+    const payoutOk = payout === 'All' || deal.payoutModel === payout
+    const drawdownOk = drawdown === 'All' || deal.drawdownType === drawdown
+    const priceOk = priceMatch(deal.challengeFee, priceRange)
+    const searchOk = !normalizedSearch || deal.firmName.toLowerCase().includes(normalizedSearch)
+    return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
+  }), [deals, drawdown, market, normalizedSearch, payout, platform, priceRange])
 
   const filteredFirms = useMemo(() => {
     const base = firms.filter((firm) => {
@@ -156,20 +149,13 @@ export function DealsExperience({
       const payoutOk = payout === 'All' || firm.payoutModel === payout
       const drawdownOk = drawdown === 'All' || firm.drawdownType === drawdown
       const lowestFee = getLowestChallengeFee(firm)
-      const priceOk = priceRange === 'all'
-        ? true
-        : lowestFee !== null && priceMatch(lowestFee, priceRange)
-      const searchOk =
-        !normalizedSearch ||
-        firm.name.toLowerCase().includes(normalizedSearch) ||
-        (firm.shortDesc ?? '').toLowerCase().includes(normalizedSearch)
-
+      const priceOk = priceRange === 'all' ? true : lowestFee !== null && priceMatch(lowestFee, priceRange)
+      const searchOk = !normalizedSearch || firm.name.toLowerCase().includes(normalizedSearch) || (firm.shortDesc ?? '').toLowerCase().includes(normalizedSearch)
       return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
     })
 
     return [...base].sort((a, b) => {
       const dir = sortDirection === 'asc' ? 1 : -1
-
       switch (sortKey) {
         case 'name':
           return a.name.localeCompare(b.name) * dir
@@ -207,33 +193,31 @@ export function DealsExperience({
       setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
       return
     }
-
     setSortKey(nextKey)
     setSortDirection('desc')
   }
 
   return (
     <div className="min-h-screen bg-v2-bg-base">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1320px] px-4 py-16 sm:px-6 lg:px-8">
         <div className="space-y-8">
-          <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/40 p-8 sm:p-10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.18),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(34,197,94,0.12),_transparent_35%)]" />
-            <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+          <section className="relative overflow-hidden rounded-[34px] border border-white/10 bg-black/40 p-8 sm:p-10 lg:p-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.18),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.14),_transparent_34%)]" />
+            <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
                   <BadgePercent className="h-3.5 w-3.5 text-v2-accent" />
-                  Production-ready prop firm board
+                  Modern prop firm market board
                 </span>
-                <h1 className="mt-6 max-w-4xl text-[clamp(2.75rem,6vw,5.5rem)] font-semibold leading-[0.94] tracking-[-0.04em] text-white">
-                  Compare firms,
+                <h1 className="mt-6 max-w-4xl text-[clamp(2.9rem,6vw,5.8rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
+                  Better firm research.
                   <br />
-                  check live deals,
+                  Cleaner deal discovery.
                   <br />
-                  trust the numbers.
+                  Stronger public proof.
                 </h1>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/68 sm:text-lg">
-                  Qunt Edge now blends our internal payout and account data with a PropFirmMatch-backed spotlight layer,
-                  so each firm card reads like a real company profile instead of a coupon stub.
+                <p className="mt-5 max-w-2xl text-base leading-8 text-white/66 sm:text-lg">
+                  The deals page now feels like a market surface instead of a coupon feed, combining internal payout data, tracked accounts, and editorial spotlight coverage in one interface.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <a href="#firm-board" className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
@@ -246,36 +230,67 @@ export function DealsExperience({
                 </div>
               </div>
 
-              <div className="grid gap-4">
-                <StatsTile icon={Building2} label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} />
-                <StatsTile icon={Wallet} label="Live deals" value={overview.totalLiveDeals.toLocaleString()} />
-                <StatsTile icon={Landmark} label="Accounts tracked" value={overview.totalAccounts.toLocaleString()} />
-                <StatsTile icon={Banknote} label="Paid payouts" value={`${formatCompactCurrency(overview.totalPaidPayoutAmount)} / ${overview.totalPaidPayoutCount}`} />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <MetricPanel label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
+                <MetricPanel label="Live deals" value={overview.totalLiveDeals.toLocaleString()} icon={Wallet} />
+                <MetricPanel label="Accounts tracked" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
+                <MetricPanel label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
               </div>
             </div>
           </section>
 
-          <section className="grid gap-4 lg:grid-cols-2">
-            <SpotlightSection
-              title="Top Futures Firms"
-              subtitle={`Editorial spotlight refreshed from PropFirmMatch on ${spotlights.updatedAt}`}
-              items={spotlights.futures}
-            />
-            <SpotlightSection
-              title="Top CFD Firms"
-              subtitle={`Forex and CFD coverage aligned to PropFirmMatch source pages as of ${spotlights.updatedAt}`}
-              items={spotlights.cfd}
-            />
+          <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+            <BoardPanel
+              title="Spotlight feed"
+              subtitle={`Futures and CFD coverage refreshed from PropFirmMatch on ${spotlights.updatedAt}`}
+            >
+              <div className="space-y-3">
+                {[...spotlights.futures.slice(0, 2), ...spotlights.cfd.slice(0, 2)].map((item, index) => (
+                  <a
+                    key={`${item.slug}-${index}`}
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition-colors hover:bg-white/[0.04]"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-white">{item.name}</p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/45">{item.category} spotlight</p>
+                      <p className="mt-2 text-sm text-white/60">{item.promoText}</p>
+                    </div>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-white/45" />
+                  </a>
+                ))}
+              </div>
+            </BoardPanel>
+
+            <BoardPanel
+              title="How to use this board"
+              subtitle="Scan the market quickly, then open firm pages for deeper company context."
+            >
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  ['1. Filter by fit', 'Narrow by market, platform, payout model, and drawdown first.'],
+                  ['2. Open companies', 'Use the firm board to read descriptions, account counts, and payout totals.'],
+                  ['3. Validate offers', 'Check the live deal cards and then confirm exact terms before purchase.'],
+                ].map(([title, body]) => (
+                  <div key={title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-sm font-semibold text-white">{title}</p>
+                    <p className="mt-2 text-sm leading-7 text-white/58">{body}</p>
+                  </div>
+                ))}
+              </div>
+            </BoardPanel>
           </section>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
                 <Filter className="h-5 w-5 text-v2-accent" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Filter the board</h2>
-                <p className="text-sm text-white/55">Search firms, narrow by rules, and sort by payout traction or price.</p>
+                <h2 className="text-xl font-semibold text-white">Filter the market</h2>
+                <p className="text-sm text-white/55">A cleaner control bar with less visual noise and stronger spacing.</p>
               </div>
             </div>
 
@@ -312,23 +327,18 @@ export function DealsExperience({
             </div>
           </section>
 
-          {hadFetchError && (
+          {hadFetchError ? (
             <section className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
-              Some deal data is temporarily unavailable, so parts of the board may be incomplete while the catalogue refreshes.
+              Some deal data is temporarily unavailable, so parts of the market board may be incomplete while the catalogue refreshes.
             </section>
-          )}
+          ) : null}
 
           <section id="firm-board" className="space-y-5">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h2 className="text-2xl font-semibold text-white">Firm board</h2>
-                <p className="mt-1 text-sm text-white/55">Open a firm profile, review the short description, and validate the payout/account data before you buy.</p>
-              </div>
-              <p className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-                {filteredFirms.length} firms
-              </p>
-            </div>
-
+            <SectionIntro
+              title="Firm board"
+              body="A cleaner company-first layout with cards that surface descriptions, account footprint, and payout proof before you click through."
+              count={`${filteredFirms.length} firms`}
+            />
             <div className="grid gap-4 lg:grid-cols-2">
               {filteredFirms.map((firm) => (
                 <FirmBoardCard key={firm.id} localePrefix={localePrefix} firm={firm} />
@@ -337,16 +347,11 @@ export function DealsExperience({
           </section>
 
           <section id="deal-board" className="space-y-5">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <h2 className="text-2xl font-semibold text-white">Live deals</h2>
-                <p className="mt-1 text-sm text-white/55">Deal cards now keep the company context visible instead of collapsing into a bare coupon button.</p>
-              </div>
-              <p className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-                {filteredDeals.length} deals
-              </p>
-            </div>
-
+            <SectionIntro
+              title="Live deals"
+              body="Deals are presented with company context, not as floating discount pills."
+              count={`${filteredDeals.length} deals`}
+            />
             {filteredDeals.length === 0 ? (
               <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-10 text-center">
                 <p className="text-lg font-medium text-white">No matching deals right now.</p>
@@ -356,23 +361,16 @@ export function DealsExperience({
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {filteredDeals.map((deal) => {
                   const firm = firms.find((candidate) => candidate.id === deal.firmId)
-                  return (
-                    <DealCard
-                      key={deal.id}
-                      deal={deal}
-                      firm={firm}
-                      localePrefix={localePrefix}
-                    />
-                  )
+                  return <DealCard key={deal.id} deal={deal} firm={firm} localePrefix={localePrefix} />
                 })}
               </div>
             )}
           </section>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="mb-6">
               <h2 className="text-2xl font-semibold text-white">Comparison table</h2>
-              <p className="mt-1 text-sm text-white/55">Sort by fees, live accounts, or paid payouts to see which firms are actually active inside Qunt Edge.</p>
+              <p className="mt-1 text-sm text-white/55">A denser market table for sorting by cost, account activity, or paid payout traction.</p>
             </div>
 
             <div className="hidden overflow-hidden rounded-2xl border border-white/10 md:block">
@@ -392,9 +390,7 @@ export function DealsExperience({
                   {filteredFirms.map((firm) => (
                     <TableRow key={firm.id} className="border-white/10 hover:bg-white/[0.03]">
                       <TableCell className="font-medium text-white">
-                        <Link href={`${localePrefix}/firm/${firm.slug}`} className="hover:text-v2-accent">
-                          {firm.name}
-                        </Link>
+                        <Link href={`${localePrefix}/firm/${firm.slug}`} className="hover:text-v2-accent">{firm.name}</Link>
                       </TableCell>
                       <TableCell className="text-white/72">{formatChallengeFee(getLowestChallengeFee(firm))}</TableCell>
                       <TableCell className="text-white/72">{firm.profitSplit}</TableCell>
@@ -412,9 +408,7 @@ export function DealsExperience({
               {filteredFirms.map((firm) => (
                 <article key={firm.id} className="rounded-2xl border border-white/10 bg-black/25 p-5">
                   <div className="flex items-center justify-between gap-3">
-                    <Link href={`${localePrefix}/firm/${firm.slug}`} className="text-lg font-semibold text-white hover:text-v2-accent">
-                      {firm.name}
-                    </Link>
+                    <Link href={`${localePrefix}/firm/${firm.slug}`} className="text-lg font-semibold text-white hover:text-v2-accent">{firm.name}</Link>
                     <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/60">
                       {firm.category}
                     </span>
@@ -432,50 +426,39 @@ export function DealsExperience({
             </div>
           </section>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold text-white">How trust is built</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <TrustCard
-                icon={Shield}
-                title="Deal review"
-                body="Every offer shown here is filtered for active coupons and real claim destinations before it is rendered."
-              />
-              <TrustCard
-                icon={CheckCircle2}
-                title="Company context"
-                body="Each firm now carries its own short description, account footprint, and payout totals so you can evaluate the company, not only the coupon."
-              />
-              <TrustCard
-                icon={Landmark}
-                title="Internal payout proof"
-                body="Account counts, funded value, and payout totals are pulled from our own payouts and account tables rather than hand-written placeholders."
-              />
-            </div>
-            <div className="mt-6 space-y-2 text-sm text-white/55">
-              <p>Deals board updated: {lastUpdated ?? 'Unavailable'}</p>
-              <p>PropFirmMatch spotlight source snapshot: {spotlights.updatedAt}</p>
-            </div>
-          </section>
+          <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+            <BoardPanel title="Trust and maintenance" subtitle="Why this board is more useful than a generic deals dump.">
+              <div className="space-y-3">
+                {[
+                  ['Deal review', 'Active coupons and real claim destinations are filtered before they render.'],
+                  ['Company context', 'Descriptions, account counts, and paid payout totals keep the cards grounded.'],
+                  ['Internal proof', 'Tracked account and payout data comes from our own product-side dataset.'],
+                ].map(([title, body]) => (
+                  <div key={title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-sm font-semibold text-white">{title}</p>
+                    <p className="mt-2 text-sm leading-7 text-white/58">{body}</p>
+                  </div>
+                ))}
+              </div>
+            </BoardPanel>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold text-white">FAQ</h2>
-            <p className="mt-1 text-sm text-white/55">The board is now structured to survive production data changes without inventing terms we do not have.</p>
-            <Accordion type="single" collapsible className="mt-6">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={faq.question}
-                  value={`faq-${index}`}
-                  className="rounded-2xl border border-white/10 bg-black/20 px-5 mb-3"
-                >
-                  <AccordionTrigger className="text-left text-white hover:no-underline">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-white/60">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+              <h2 className="text-2xl font-semibold text-white">FAQ</h2>
+              <p className="mt-1 text-sm text-white/55">Everything you need to know about this market board.</p>
+              <Accordion type="single" collapsible className="mt-6">
+                {faqs.map((faq, index) => (
+                  <AccordionItem key={faq.question} value={`faq-${index}`} className="mb-3 rounded-2xl border border-white/10 bg-black/20 px-5">
+                    <AccordionTrigger className="text-left text-white hover:no-underline">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/60">{faq.answer}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+              <div className="mt-4 text-xs text-white/45">
+                Updated: {lastUpdated ?? 'Unavailable'}
+              </div>
+            </section>
           </section>
         </div>
       </div>
@@ -483,14 +466,14 @@ export function DealsExperience({
   )
 }
 
-function StatsTile({
-  icon: Icon,
+function MetricPanel({
   label,
   value,
+  icon: Icon,
 }: {
-  icon: React.ComponentType<{ className?: string }>
   label: string
   value: string
+  icon: React.ComponentType<{ className?: string }>
 }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
@@ -500,59 +483,42 @@ function StatsTile({
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-          <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-white">{value}</p>
+          <p className="mt-1 text-xl font-semibold text-white">{value}</p>
         </div>
       </div>
     </div>
   )
 }
 
-function SpotlightSection({
+function BoardPanel({
   title,
   subtitle,
-  items,
+  children,
 }: {
   title: string
   subtitle: string
-  items: DealsSpotlightCollection['futures']
+  children: React.ReactNode
 }) {
   return (
-    <section className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-semibold text-white">{title}</h2>
-          <p className="mt-1 text-sm text-white/55">{subtitle}</p>
-        </div>
-        <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
-          Source layer
-        </span>
-      </div>
-      <div className="mt-5 space-y-3">
-        {items.map((item, index) => (
-          <a
-            key={item.slug}
-            href={item.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition-colors hover:bg-white/[0.04]"
-          >
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-v2-accent">#{index + 1}</span>
-                <p className="font-medium text-white">{item.name}</p>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2 text-xs text-white/55">
-                <span>{item.rating.toFixed(1)} rating</span>
-                <span>{item.reviewCount} reviews</span>
-                {item.maxAllocation ? <span>{item.maxAllocation} max allocation</span> : null}
-              </div>
-              <p className="mt-2 text-sm text-white/68">{item.promoText}</p>
-            </div>
-            <ArrowUpRight className="h-4 w-4 shrink-0 text-white/45" />
-          </a>
-        ))}
-      </div>
+    <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+      <h2 className="text-2xl font-semibold text-white">{title}</h2>
+      <p className="mt-1 text-sm text-white/55">{subtitle}</p>
+      <div className="mt-6">{children}</div>
     </section>
+  )
+}
+
+function SectionIntro({ title, body, count }: { title: string; body: string; count: string }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h2 className="text-2xl font-semibold text-white">{title}</h2>
+        <p className="mt-1 text-sm text-white/55">{body}</p>
+      </div>
+      <p className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+        {count}
+      </p>
+    </div>
   )
 }
 
@@ -564,7 +530,7 @@ function FirmBoardCard({
   localePrefix: string
 }) {
   return (
-    <article className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6">
+    <article className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
@@ -575,9 +541,7 @@ function FirmBoardCard({
               <Link href={`${localePrefix}/firm/${firm.slug}`} className="text-lg font-semibold text-white hover:text-v2-accent">
                 {firm.name}
               </Link>
-              <p className="text-xs uppercase tracking-[0.14em] text-white/45">
-                {firm.category} • {firm.platform}
-              </p>
+              <p className="text-xs uppercase tracking-[0.14em] text-white/45">{firm.category} • {firm.platform}</p>
             </div>
           </div>
           <p className="mt-4 text-sm leading-7 text-white/62">
@@ -585,7 +549,7 @@ function FirmBoardCard({
           </p>
         </div>
         <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
-          {firm.spotlight ? 'PropFirmMatch tracked' : 'Qunt Edge tracked'}
+          {firm.spotlight ? 'Tracked' : 'Internal'}
         </span>
       </div>
 
@@ -604,20 +568,12 @@ function FirmBoardCard({
       </div>
 
       <div className="mt-5 flex flex-wrap gap-3">
-        <Link
-          href={`${localePrefix}/firm/${firm.slug}`}
-          className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
-        >
+        <Link href={`${localePrefix}/firm/${firm.slug}`} className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
           Open Company
           <ArrowUpRight className="h-4 w-4" />
         </Link>
         {firm.referralUrl ? (
-          <a
-            href={firm.referralUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]"
-          >
+          <a href={firm.referralUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]">
             Visit Site
             <ArrowUpRight className="h-4 w-4" />
           </a>
@@ -637,7 +593,7 @@ function DealCard({
   localePrefix: string
 }) {
   return (
-    <article className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6">
+    <article className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-black/25 text-sm font-semibold text-v2-accent">
@@ -655,11 +611,16 @@ function DealCard({
         </span>
       </div>
 
-      <div className="mt-5">
-        <p className="text-4xl font-semibold tracking-[-0.04em] text-white">{deal.discountPercent}% OFF</p>
-        <p className="mt-2 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-sm font-medium text-white/72">
-          Code <span className="text-v2-accent">{deal.couponCode}</span>
-        </p>
+      <div className="mt-5 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-4xl font-semibold tracking-[-0.04em] text-white">{deal.discountPercent}% OFF</p>
+          <p className="mt-2 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-sm font-medium text-white/72">
+            Code <span className="text-v2-accent">{deal.couponCode}</span>
+          </p>
+        </div>
+        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-white/55">
+          {deal.expiryDate}
+        </span>
       </div>
 
       <p className="mt-4 text-sm leading-7 text-white/60">
@@ -668,26 +629,18 @@ function DealCard({
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <MiniMetric label="Challenge Fee" value={formatChallengeFee(deal.challengeFee)} />
-        <MiniMetric label="Expires" value={deal.expiryDate} />
+        <MiniMetric label="Payout model" value={deal.payoutModel} />
         <MiniMetric label="Accounts" value={firm ? firm.catalogueStats.accountsCount.toLocaleString() : '0'} />
         <MiniMetric label="Paid Out" value={firm ? formatCompactCurrency(firm.catalogueStats.paidPayoutAmount) : '$0'} />
       </div>
 
       <div className="mt-5 flex flex-wrap gap-3">
-        <Link
-          href={`${localePrefix}/firm/${deal.firmSlug}`}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]"
-        >
+        <Link href={`${localePrefix}/firm/${deal.firmSlug}`} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]">
           Open Company
           <ArrowUpRight className="h-4 w-4" />
         </Link>
         {deal.claimUrl ? (
-          <a
-            href={deal.claimUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
-          >
+          <a href={deal.claimUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
             Claim Deal
             <ArrowUpRight className="h-4 w-4" />
           </a>
@@ -703,26 +656,6 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
       <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
       <p className="mt-1 text-base font-semibold text-white">{value}</p>
     </div>
-  )
-}
-
-function TrustCard({
-  icon: Icon,
-  title,
-  body,
-}: {
-  icon: React.ComponentType<{ className?: string }>
-  title: string
-  body: string
-}) {
-  return (
-    <article className="rounded-2xl border border-white/10 bg-black/20 p-5">
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
-        <Icon className="h-5 w-5 text-v2-accent" />
-      </div>
-      <h3 className="mt-4 font-semibold text-white">{title}</h3>
-      <p className="mt-2 text-sm leading-7 text-white/60">{body}</p>
-    </article>
   )
 }
 
@@ -749,11 +682,7 @@ function SortableHead({
       >
         {label}
         {active ? (
-          indicator.includes('ascending') ? (
-            <ChevronUp className="h-3.5 w-3.5" />
-          ) : (
-            <ChevronDown className="h-3.5 w-3.5" />
-          )
+          indicator.includes('ascending') ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />
         ) : (
           <ChevronDown className="h-3.5 w-3.5 opacity-40" />
         )}
