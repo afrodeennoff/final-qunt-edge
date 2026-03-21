@@ -112,4 +112,25 @@ const CardV2 = React.forwardRef<HTMLDivElement, CardV2Props>(
 )
 CardV2.displayName = "CardV2"
 
-export { CardV2 }
+const CardV2Header = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 pb-v2-4", className)} {...props} />
+  )
+)
+CardV2Header.displayName = "CardV2Header"
+
+const CardV2Description = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p ref={ref} className={cn("text-sm text-v2-text-secondary", className)} {...props} />
+  )
+)
+CardV2Description.displayName = "CardV2Description"
+
+const CardV2Content = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("pt-0", className)} {...props} />
+  )
+)
+CardV2Content.displayName = "CardV2Content"
+
+export { CardV2, CardV2Header as CardV2Title, CardV2Description, CardV2Content }
