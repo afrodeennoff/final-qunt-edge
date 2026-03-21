@@ -8,5 +8,5 @@ export default async function FirmDetailPage({ params }: { params: Promise<{ slu
   const { slug } = await params
   const firm = await getPropFirmBySlug(slug)
   if (!firm) notFound()
-  return <FirmDetailClient firm={firm as any} />
+  return <FirmDetailClient firm={firm} />
 }

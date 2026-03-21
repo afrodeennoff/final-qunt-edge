@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowRight, Banknote, Building2, Landmark, Trophy } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ArrowRight, Banknote, Building2, CheckCircle2, Landmark, Trophy } from 'lucide-react'
 import { ButtonV2, CardV2, CardV2Content, CardV2Description, CardV2Title } from '@/components/ui/v2'
 import type { DealsOverview, DealsSpotlightCollection } from '@/server/deals'
 import type { LeaderboardEntry } from '@/app/[locale]/(landing)/leaderboard/data/leaderboard-query'
@@ -19,21 +19,55 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 }
 
+const appFeatures = [
+  {
+    title: 'Execution review that stays specific',
+    body: 'Track leaderboards, trading pairs, average wins and losses, duration, and streaks without flattening real trade behavior into one generic KPI.',
+  },
+  {
+    title: 'Firm intelligence with account proof',
+    body: 'Deals pages now combine company descriptions, live offers, tracked accounts, funded value, and paid payout totals from our own dataset.',
+  },
+  {
+    title: 'One surface across public and product',
+    body: 'Home, deals, leaderboard, and firm detail pages share one dark design system instead of drifting between disconnected marketing shells.',
+  },
+]
+
+const whyChooseUs = [
+  'Unified dark interface with fewer visual conflicts.',
+  'Real payout and account metrics instead of empty comparison copy.',
+  'Public proof layer from deals to leaderboard to firm details.',
+]
+
+const comparisonRows = [
+  ['Data honesty', 'Real account and payout aggregates on public firm cards.', 'Mostly promo-first landing pages with shallow or static stats.'],
+  ['Review depth', 'Leaderboard includes return %, top pair, durations, and streaks.', 'Often reduced to top-line PnL or affiliate ranking lists.'],
+  ['Product continuity', 'Home page flows directly into firm research and public proof.', 'Marketing and product surfaces usually feel separate.'],
+]
+
+const trustPoints = [
+  'Dark-only unified public theme instead of split light/system marketing paths.',
+  'Public leaderboard respects explicit opt-in users only.',
+  'Deals cards degrade honestly when direct claim URLs or catalogue data are unavailable.',
+]
+
 export default function HomeContent({ locale, overview, leaders, spotlights }: HomeContentProps) {
   const topLeaders = leaders.slice(0, 5)
+  const shouldReduceMotion = useReducedMotion()
 
   return (
     <main className="relative mx-auto w-full max-w-[1280px] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[680px] overflow-hidden">
         <motion.div
           initial={{ opacity: 0.45, scale: 0.94 }}
-          animate={{ opacity: 0.8, scale: 1 }}
+          animate={shouldReduceMotion ? { opacity: 0.65, scale: 1 } : { opacity: 0.8, scale: 1 }}
           transition={{ duration: 1.8, ease: 'easeOut' }}
           className="absolute left-1/2 top-0 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(88,129,255,0.22)_0%,_rgba(88,129,255,0)_72%)] blur-3xl"
         />
         <motion.div
           initial={{ opacity: 0.2, x: -40 }}
-          animate={{ opacity: 0.5, x: 0 }}
+          animate={shouldReduceMotion ? { opacity: 0.35, x: 0 } : { opacity: 0.5, x: 0 }}
           transition={{ duration: 2.2, ease: 'easeOut' }}
           className="absolute right-[10%] top-24 h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,_rgba(34,197,94,0.12)_0%,_rgba(34,197,94,0)_74%)] blur-3xl"
         />
@@ -137,6 +171,37 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
         </motion.div>
       </section>
 
+      <section className="grid gap-4 pb-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.74, delay: 0.22 }}>
+          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+            <CardV2Content className="p-6 sm:p-8">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/45">Proof and trust</p>
+              <CardV2Title className="mt-4 text-3xl text-white">What makes the product feel dependable.</CardV2Title>
+              <div className="mt-6 space-y-3">
+                {trustPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-v2-accent" />
+                    <p className="text-sm leading-7 text-white/60">{point}</p>
+                  </div>
+                ))}
+              </div>
+            </CardV2Content>
+          </CardV2>
+        </motion.div>
+
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.78, delay: 0.28 }}>
+          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+            <CardV2Content className="p-6 sm:p-8">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/45">Public proof</p>
+              <CardV2Title className="mt-4 text-3xl text-white">Live market context, not generic marketing promises.</CardV2Title>
+              <CardV2Description className="mt-4 text-base leading-7 text-white/60">
+                {overview.totalLiveDeals} active deals, {overview.totalTrackedFirms} tracked firms, and {leaders.length} public leaderboard entries are now woven directly into the landing story.
+              </CardV2Description>
+            </CardV2Content>
+          </CardV2>
+        </motion.div>
+      </section>
+
       <section className="grid gap-4 border-y border-white/8 py-8 sm:grid-cols-3">
         {[
           ['Unified public surface', 'Home, deals, and leaderboard now speak the same dark visual language and data model.'],
@@ -155,6 +220,45 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
             <p className="mt-2 text-sm leading-6 text-white/56">{body}</p>
           </motion.div>
         ))}
+      </section>
+
+      <section className="grid gap-4 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:py-14">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.72, delay: 0.18 }}>
+          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+            <CardV2Content className="p-6 sm:p-8">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/45">App features</p>
+              <CardV2Title className="mt-4 text-3xl text-white">What the app actually helps you do.</CardV2Title>
+              <CardV2Description className="mt-4 text-base leading-7 text-white/60">
+                The homepage now explains the product with the same clarity the app tries to bring to a trading review session.
+              </CardV2Description>
+              <div className="mt-6 space-y-3">
+                {appFeatures.map((feature) => (
+                  <div key={feature.title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-sm font-semibold text-white">{feature.title}</p>
+                    <p className="mt-2 text-sm leading-7 text-white/58">{feature.body}</p>
+                  </div>
+                ))}
+              </div>
+            </CardV2Content>
+          </CardV2>
+        </motion.div>
+
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.78, delay: 0.25 }}>
+          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+            <CardV2Content className="p-6 sm:p-8">
+              <p className="text-xs uppercase tracking-[0.18em] text-white/45">Why choose us</p>
+              <CardV2Title className="mt-4 text-3xl text-white">Built for traders who want signal, not chrome.</CardV2Title>
+              <div className="mt-6 space-y-3">
+                {whyChooseUs.map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-v2-accent" />
+                    <p className="text-sm leading-7 text-white/60">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </CardV2Content>
+          </CardV2>
+        </motion.div>
       </section>
 
       <section className="grid gap-4 py-10 lg:grid-cols-[1fr_0.95fr] lg:py-14">
@@ -199,6 +303,36 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </ButtonV2>
+            </CardV2Content>
+          </CardV2>
+        </motion.div>
+      </section>
+
+      <section className="pb-6">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ duration: 0.8, delay: 0.3 }}>
+          <CardV2 variant="glass" hover={false} className="rounded-[30px] border-white/10 bg-white/[0.03] p-0">
+            <CardV2Content className="p-6 sm:p-8">
+              <div className="max-w-2xl">
+                <p className="text-xs uppercase tracking-[0.18em] text-white/45">Comparison</p>
+                <CardV2Title className="mt-4 text-3xl text-white">Why Qunt Edge feels different from generic trader landing pages.</CardV2Title>
+                <CardV2Description className="mt-4 text-base leading-7 text-white/60">
+                  We kept the comparison honest and product-focused instead of claiming magic. The difference is mostly in how tightly the public experience and the actual app are connected.
+                </CardV2Description>
+              </div>
+              <div className="mt-6 overflow-hidden rounded-[24px] border border-white/10">
+                <div className="grid grid-cols-[0.9fr_1fr_1fr] border-b border-white/10 bg-white/[0.03] text-[11px] uppercase tracking-[0.16em] text-white/45">
+                  <div className="px-4 py-4">Category</div>
+                  <div className="px-4 py-4">Qunt Edge</div>
+                  <div className="px-4 py-4">Typical alternative</div>
+                </div>
+                {comparisonRows.map(([label, ours, others]) => (
+                  <div key={label} className="grid grid-cols-[0.9fr_1fr_1fr] border-b border-white/10 last:border-b-0">
+                    <div className="px-4 py-4 text-sm font-medium text-white">{label}</div>
+                    <div className="px-4 py-4 text-sm leading-7 text-white/62">{ours}</div>
+                    <div className="px-4 py-4 text-sm leading-7 text-white/48">{others}</div>
+                  </div>
+                ))}
+              </div>
             </CardV2Content>
           </CardV2>
         </motion.div>
