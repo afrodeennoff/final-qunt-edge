@@ -200,8 +200,8 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
             <div className="grid gap-3 sm:grid-cols-2">
               <MetricPill label="Tracked firms" value={stats.length.toLocaleString()} icon={Building2} />
               <MetricPill label="Accounts" value={totals.accounts.toLocaleString()} icon={Landmark} />
-              <MetricPill label="Account value" value={formatCompactCurrency(totals.accountValue)} icon={Wallet} />
-              <MetricPill label="Paid payouts" value={formatCompactCurrency(totals.paidAmount)} icon={Banknote} />
+              <MetricPill label="Paid payout count" value={totals.paidCount.toLocaleString()} icon={Banknote} />
+              <MetricPill label="Sized accounts" value={stats.reduce((sum, item) => sum + item.sizedAccountsCount, 0).toLocaleString()} icon={Wallet} />
             </div>
           </div>
         </section>
@@ -210,7 +210,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-white">{t('landing.propfirms.chart.title')}</h2>
             <p className="mt-1 text-sm text-white/55">
-              Compare registered accounts, sized accounts, account value, and payout behavior over the selected timeframe.
+              Compare firms by registered account count and payout count first, then add extra count layers only if you need them.
             </p>
           </div>
 
@@ -221,8 +221,11 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
               sizedAccountsCount: firmStats?.sizedAccountsCount ?? 0,
               totalAccountValue: firmStats?.totalAccountValue ?? 0,
               paidAmount: firmStats?.payouts.paidAmount ?? 0,
+              paidCount: firmStats?.payouts.paidCount ?? 0,
               pendingAmount: firmStats?.payouts.pendingAmount ?? 0,
+              pendingCount: firmStats?.payouts.pendingCount ?? 0,
               refusedAmount: firmStats?.payouts.refusedAmount ?? 0,
+              refusedCount: firmStats?.payouts.refusedCount ?? 0,
               sizeBreakdown: firmStats?.sizeBreakdown ?? 'No sized accounts',
             }))}
             chartTitle={t('landing.propfirms.chart.title')}

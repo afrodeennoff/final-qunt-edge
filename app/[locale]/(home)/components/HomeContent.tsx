@@ -64,12 +64,6 @@ const whyChooseUs = [
   },
 ]
 
-const competitorRows = [
-  ['Homepage structure', 'Guided path into deals, firms, and leaderboard with live public stats.', 'Hero-only marketing pages with weak product entry points.'],
-  ['Firm discovery', 'Uses tracked payout and account data alongside deal coverage.', 'Mostly coupon feeds or directory listings without decision context.'],
-  ['Trader proof', 'Leaderboard and public proof blocks feed the landing page directly.', 'Usually separate, thin, or missing entirely.'],
-]
-
 function formatCompactCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -81,8 +75,8 @@ function formatCompactCurrency(value: number): string {
 
 export default function HomeContent({ locale, overview, leaders, spotlights }: HomeContentProps) {
   const reduceMotion = useReducedMotion()
-  const topLeaders = leaders.slice(0, 5)
-  const featuredSpotlights = [...spotlights.futures.slice(0, 2), ...spotlights.cfd.slice(0, 2)]
+  const topLeaders = leaders.slice(0, 4)
+  const featuredSpotlights = [...spotlights.futures.slice(0, 1), ...spotlights.cfd.slice(0, 1)]
 
   return (
     <main className="relative mx-auto w-full max-w-[1360px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
@@ -269,12 +263,12 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
         })}
       </section>
 
-      <section className="grid gap-4 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:py-14">
+      <section className="grid gap-4 py-10 lg:grid-cols-[1fr] lg:py-14">
         <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.76, delay: 0.22 }}>
           <SurfacePanel
             eyebrow="What you can do"
             title="Move from homepage to action in a few clicks"
-            description="The landing flow is intentionally simple now, with stronger continuity across discovery pages."
+            description="The landing flow is intentionally short now, with only the key product paths."
           >
             <div className="grid gap-3 sm:grid-cols-2">
               <JourneyCard icon={Target} title="Find a firm" body="Browse the deals board, filter by fit, then open a company profile." href={`/${locale}/deals`} />
@@ -283,34 +277,6 @@ export default function HomeContent({ locale, overview, leaders, spotlights }: H
               <JourneyCard icon={BarChart3} title="Open the product" body="Go straight into your dashboard and review your own execution workflow." href={`/${locale}/authentication?next=dashboard`} />
             </div>
           </SurfacePanel>
-        </motion.div>
-
-        <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ duration: 0.84, delay: 0.28 }}>
-          <CardV2 variant="glass" hover={false} className="overflow-hidden rounded-[32px] border-white/10 bg-white/[0.03] p-0">
-            <CardV2Content className="p-6 sm:p-8">
-              <div className="max-w-2xl">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/45">Comparison</p>
-                <CardV2Title className="mt-4 text-3xl text-white">A more coherent public product than the usual trader site.</CardV2Title>
-                <CardV2Description className="mt-4 text-base leading-7 text-white/60">
-                  The difference is not louder claims. It is that the landing page, firm research pages, and deal board now all tell the same product story.
-                </CardV2Description>
-              </div>
-            </CardV2Content>
-            <div className="border-t border-white/10">
-              <div className="grid grid-cols-[0.85fr_1fr_1fr] border-b border-white/10 bg-white/[0.03] text-[11px] uppercase tracking-[0.16em] text-white/45">
-                <div className="px-4 py-4">Category</div>
-                <div className="px-4 py-4">Qunt Edge</div>
-                <div className="px-4 py-4">Typical alternative</div>
-              </div>
-              {competitorRows.map(([label, ours, others]) => (
-                <div key={label} className="grid grid-cols-[0.85fr_1fr_1fr] border-b border-white/10 last:border-b-0">
-                  <div className="px-4 py-4 text-sm font-medium text-white">{label}</div>
-                  <div className="px-4 py-4 text-sm leading-7 text-white/62">{ours}</div>
-                  <div className="px-4 py-4 text-sm leading-7 text-white/48">{others}</div>
-                </div>
-              ))}
-            </div>
-          </CardV2>
         </motion.div>
       </section>
     </main>

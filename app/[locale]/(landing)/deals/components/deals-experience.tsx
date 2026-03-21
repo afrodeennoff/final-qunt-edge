@@ -239,13 +239,13 @@ export function DealsExperience({
             </div>
           </section>
 
-          <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <section className="grid gap-4 lg:grid-cols-[1fr]">
             <BoardPanel
               title="Featured deals radar"
               subtitle={`Futures and CFD coverage refreshed from PropFirmMatch on ${spotlights.updatedAt}`}
             >
-              <div className="space-y-3">
-                {[...spotlights.futures.slice(0, 2), ...spotlights.cfd.slice(0, 2)].map((item, index) => (
+              <div className="grid gap-3 md:grid-cols-2">
+                {[...spotlights.futures.slice(0, 1), ...spotlights.cfd.slice(0, 1)].map((item, index) => (
                   <a
                     key={`${item.slug}-${index}`}
                     href={item.sourceUrl}
@@ -260,24 +260,6 @@ export function DealsExperience({
                     </div>
                     <ArrowUpRight className="h-4 w-4 shrink-0 text-white/45" />
                   </a>
-                ))}
-              </div>
-            </BoardPanel>
-
-            <BoardPanel
-              title="How to use this board"
-              subtitle="Scan discounts first, then open the company page for rule context and supporting details."
-            >
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[
-                  ['1. Filter by fit', 'Narrow by market, platform, payout model, and drawdown before you compare prices.'],
-                  ['2. Open companies', 'Use the firm board to read descriptions, tracked accounts, and payout totals.'],
-                  ['3. Validate offers', 'Check the active deal card and then confirm the exact checkout terms on the firm site.'],
-                ].map(([title, body]) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-sm font-semibold text-white">{title}</p>
-                    <p className="mt-2 text-sm leading-7 text-white/58">{body}</p>
-                  </div>
                 ))}
               </div>
             </BoardPanel>
@@ -426,22 +408,7 @@ export function DealsExperience({
             </div>
           </section>
 
-          <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-            <BoardPanel title="Why this board works" subtitle="The page is designed to behave like a real research layer, not a generic coupon dump.">
-              <div className="space-y-3">
-                {[
-                  ['Deal review', 'Active coupons and real claim destinations are filtered before they render.'],
-                  ['Company context', 'Descriptions, account counts, and paid payout totals keep the cards grounded.'],
-                  ['Internal proof', 'Tracked account and payout data comes from our own product-side dataset.'],
-                ].map(([title, body]) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-sm font-semibold text-white">{title}</p>
-                    <p className="mt-2 text-sm leading-7 text-white/58">{body}</p>
-                  </div>
-                ))}
-              </div>
-            </BoardPanel>
-
+          <section className="grid gap-4 lg:grid-cols-[1fr]">
             <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
               <h2 className="text-2xl font-semibold text-white">FAQ</h2>
               <p className="mt-1 text-sm text-white/55">Everything you need to know about this market board.</p>
