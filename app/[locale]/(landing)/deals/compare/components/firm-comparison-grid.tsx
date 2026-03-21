@@ -1,31 +1,10 @@
-const firms = [
-  {
-    name: 'Apex Trader Funding',
-    onboardingCost: '$167',
-    resetPolicy: 'Optional paid reset',
-    drawdownStyle: 'Trailing threshold',
-    payoutTempo: 'Bi-weekly eligible windows',
-    bestFor: 'High-frequency consistency plans',
-  },
-  {
-    name: 'Take Profit Trader',
-    onboardingCost: '$149',
-    resetPolicy: 'Discounted retry tiers',
-    drawdownStyle: 'Static intraday buffer',
-    payoutTempo: 'Weekly cadence after approval',
-    bestFor: 'Traders prioritizing predictable caps',
-  },
-  {
-    name: 'Lucid Trading',
-    onboardingCost: '$189',
-    resetPolicy: 'Bundle-friendly resets',
-    drawdownStyle: 'EOD drawdown lock',
-    payoutTempo: 'Structured monthly cycles',
-    bestFor: 'Multi-account rollout strategies',
-  },
-]
+import type { UnifiedFirm } from '@/server/deals'
 
-export function FirmComparisonGrid() {
+interface FirmComparisonGridProps {
+  firms: UnifiedFirm[]
+}
+
+export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
   return (
     <section className="mt-6 rounded-3xl border border-border bg-card p-4 sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -54,15 +33,32 @@ export function FirmComparisonGrid() {
           </thead>
           <tbody>
             {firms.map((firm) => (
-              <tr key={firm.name} className="border-b border-border/70 transition-colors hover:bg-background/50 last:border-b-0">
+              <tr key={firm.id} className="border-b border-border/70 transition-colors hover:bg-background/50 last:border-b-0">
                 <td className="sticky left-0 bg-card px-3 py-4 font-semibold text-foreground">{firm.name}</td>
-                <td className="px-3 py-4 text-muted-foreground">{firm.onboardingCost}</td>
-                <td className="px-3 py-4 text-muted-foreground">{firm.resetPolicy}</td>
-                <td className="px-3 py-4 text-muted-foreground">{firm.drawdownStyle}</td>
-                <td className="px-3 py-4 text-muted-foreground">{firm.payoutTempo}</td>
+                <td className="px-3 py-4 text-muted-foreground">
+                  {/* Show the best (highest discount) coupon's challenge fee, or "Free" if 0 */}
+                  {firm.coupons.length > 0 ? (
+                    firm.coupons[0].challengeFee === 0 ? 'Free' : `$${firm.coupons[0].challengeFee}`
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
+                <td className="px-3 py-4 text-muted-foreground">
+                  {/* Reset policy - not directly in data, infer from drawdown type or show N/A */}
+                  {firm.drawdownType === 'Trailing' ? 'Daily' : firm.drawdownType === 'Static' ? 'Fixed' : 'End-of-day'}
+                </td>
+                <td className="px-3 py-4 text-muted-foreground">
+                  {/* Drawdown model maps directly */}
+                  {firm.drawdownType}
+                </td>
+                <td className="px-3 py-4 text-muted-foreground">
+                  {/* Payout tempo maps directly */}
+                  {firm.payoutModel}
+                </td>
                 <td className="px-3 py-4">
                   <span className="rounded-full border border-border bg-background px-2 py-1 text-xs text-foreground">
-                    {firm.bestFor}
+                    {/* Best for - combine profit split and max allocation */}
+                    {firm.profitSplit} split • {firm.maxAllocation}
                   </span>
                 </td>
               </tr>
@@ -73,29 +69,39 @@ export function FirmComparisonGrid() {
 
       <div className="mt-5 grid gap-4 lg:hidden">
         {firms.map((firm) => (
-          <article key={firm.name} className="rounded-xl border border-border bg-background/50 p-4">
+          <article key={firm.id} className="rounded-xl border border-border bg-background/50 p-4">
             <h3 className="text-lg font-semibold text-foreground">{firm.name}</h3>
             <dl className="mt-3 grid gap-2 text-sm">
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Typical Entry</dt>
-                <dd className="text-lg font-semibold text-foreground">{firm.onboardingCost}</dd>
+                <dd className="text-lg font-semibold text-foreground">
+                  {firm.coupons.length > 0 ? (
+                    firm.coupons[0].challengeFee === 0 ? 'Free' : `$${firm.coupons[0].challengeFee}`
+                  ) : (
+                    'N/A'
+                  )}
+                </dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Reset Policy</dt>
-                <dd className="text-foreground">{firm.resetPolicy}</dd>
+                <dd className="text-foreground">
+                  {firm.drawdownType === 'Trailing' ? 'Daily' : firm.drawdownType === 'Static' ? 'Fixed' : 'End-of-day'}
+                </dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Drawdown Model</dt>
-                <dd className="text-foreground">{firm.drawdownStyle}</dd>
+                <dd className="text-foreground">{firm.drawdownType}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Payout Tempo</dt>
-                <dd className="text-foreground">{firm.payoutTempo}</dd>
+                <dd className="text-foreground">{firm.payoutModel}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Best For</dt>
                 <dd className="text-foreground">
-                  <span className="rounded-full border border-border bg-card px-2 py-1 text-xs">{firm.bestFor}</span>
+                  <span className="rounded-full border border-border bg-card px-2 py-1 text-xs">
+                    {firm.profitSplit} split • {firm.maxAllocation}
+                  </span>
                 </dd>
               </div>
             </dl>

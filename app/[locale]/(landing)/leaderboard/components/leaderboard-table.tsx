@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { cn } from '@/lib/utils'
-import { CardV2, SkeletonV2 } from '@/components/ui/v2'
+import { CardV2, SkeletonV2, type CardVariant, type CardStatusTone } from '@/components/ui/v2'
 import { AvatarV2, AvatarV2Fallback } from '@/components/ui/v2'
 import { Trophy, Medal, Award } from 'lucide-react'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
@@ -44,9 +44,19 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
   const config = podiumConfig[rank]
   const Icon = config.icon
 
+  // Determine variant based on rank
+  const variant: CardVariant = rank === 1 ? 'outlined' : 'default'
+  
+  // Determine status based on monthly PnL
+  const status: CardStatusTone | undefined = 
+    entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'live' : 
+    entry.monthlyPnl !== null && entry.monthlyPnl < 0 ? 'error' : undefined
+
   return (
-    <CardV2
+    <CardV2 
+      variant={variant}
       hover={false}
+      status={status}
       className={cn(
         'flex flex-col items-center p-4 text-center transition-all duration-300',
         config.bg,
@@ -79,9 +89,9 @@ function PodiumCard({ entry, rank }: PodiumCardProps) {
       <div className="space-y-1 w-full">
         <div className={cn(
           'text-lg font-bold',
-          entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
+          entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
         )}>
-          {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
+          {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
         </div>
 
         <div className="flex items-center justify-center gap-1">
@@ -155,10 +165,10 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
           {entry.username.charAt(0).toUpperCase()}
         </AvatarV2Fallback>
       </AvatarV2>
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-v2-text-primary truncate">{entry.username}</div>
-        <div className="text-xs text-v2-text-secondary">{entry.totalTrades} trades</div>
-      </div>
+       <div className="flex-1 min-w-0">
+         <div className="font-medium text-v2-text-primary truncate">{entry.username}</div>
+         <div className="text-xs text-v2-text-secondary">{entry.totalTrades !== null ? entry.totalTrades.toLocaleString() : '--'} trades</div>
+       </div>
 
       <div className="flex gap-6 text-right shrink-0">
         <div>
@@ -172,12 +182,12 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } 
         </div>
         <div>
           <div className="text-xs text-v2-text-tertiary">Monthly PnL</div>
-          <div className={cn(
-            "text-sm font-semibold",
-            entry.monthlyPnl >= 0 ? "text-v2-success" : "text-v2-error"
-          )}>
-            {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
-          </div>
+         <div className={cn(
+           'text-lg font-bold',
+           entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
+         )}>
+           {entry.monthlyPnl !== null && entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl !== null ? entry.monthlyPnl.toLocaleString() : '--'}
+         </div>
         </div>
       </div>
     </CardV2>
@@ -211,13 +221,19 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
   const [sortBy, setSortBy] = React.useState<SortKey>('monthly_pnl')
 
   const sorted = React.useMemo(() => {
-    const result = [...entries].sort((a, b) => {
-      switch (sortBy) {
-        case 'winrate': return b.winRate - a.winRate
-        case 'totalTrades': return b.totalTrades - a.totalTrades
-        default: return b.monthlyPnl - a.monthlyPnl
-      }
-    })
+     const result = [...entries].sort((a, b) => {
+       switch (sortBy) {
+         case 'winrate': return b.winRate - a.winRate
+         case 'totalTrades': 
+           const aTrades = a.totalTrades ?? 0
+           const bTrades = b.totalTrades ?? 0
+           return bTrades - aTrades
+         default: 
+           const aPnl = a.monthlyPnl ?? 0
+           const bPnl = b.monthlyPnl ?? 0
+           return bPnl - aPnl
+       }
+     })
     return result.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
   }, [entries, sortBy])
 

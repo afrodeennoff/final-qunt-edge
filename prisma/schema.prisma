@@ -52,6 +52,7 @@ model User {
   isBeta             Boolean             @default(false)
   language           String              @default("en")
   dashboardTheme     String              @default("blue") // dashboard theme preference: blue, violet, emerald, amber, rose
+  showOnLeaderboard  Boolean             @default(true)
   etpToken           String?
   etpTokenHash       String?             @unique
   etpTokenExpiresAt  DateTime?

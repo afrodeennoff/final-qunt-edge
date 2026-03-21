@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Search, Filter, Star, ChevronDown, ChevronUp, CheckCircle2, Clock, TrendingUp, Shield } from 'lucide-react'
+import { CardV2 } from '@/components/ui/v2'
 import type {
   DealItem,
   DrawdownType,
@@ -143,78 +144,78 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-background/50">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-v2-bg-base">
+      <div className="max-w-5xl mx-auto px-v2-6 py-v2-16">
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-10">
             <div className="space-y-10">
-              {/* Hero Section with Enhanced Glassmorphism */}
-              <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/60 p-8 sm:p-12">
-                <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/15 blur-[100px]" />
-                <div className="pointer-events-none absolute right-0 bottom-0 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-                <div className="pointer-events-none absolute top-1/2 left-1/3 h-32 w-32 rounded-full bg-primary/8 blur-[60px]" />
+              {/* Hero Section with V2 Glassmorphism */}
+              <section className="relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface p-8 sm:p-12">
+                <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-v2-accent/15 blur-[100px]" />
+                <div className="pointer-events-none absolute right-0 bottom-0 h-64 w-64 rounded-full bg-v2-accent/10 blur-[80px]" />
+                <div className="pointer-events-none absolute top-1/2 left-1/3 h-32 w-32 rounded-full bg-v2-accent/8 blur-[60px]" />
 
                 <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
                   <div>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-v2-border-accent bg-v2-accent-subtle px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-v2-accent">
                       <Star className="h-3.5 w-3.5" />
                       Prop Firm Deals & Comparison
                     </span>
-                    <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                    <h1 className="mt-6 text-4xl font-black tracking-tight text-v2-text-primary sm:text-5xl lg:text-6xl">
                       Find verified{' '}
-                      <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                      <span className="bg-gradient-to-r from-v2-accent via-v2-accent/80 to-v2-accent/60 bg-clip-text text-transparent">
                         discounts
                       </span>{' '}
                       and compare firms fast
                     </h1>
-                    <p className="mt-5 max-w-2xl text-lg text-muted-foreground leading-relaxed">
+                    <p className="mt-5 max-w-2xl text-lg text-v2-text-secondary leading-relaxed">
                       Explore fresh promo codes, filter by your preferred rule set, and evaluate firm structures before committing.
                     </p>
                     <div className="mt-8 flex flex-wrap gap-4">
                       <a 
                         href="#deals-grid" 
-                        className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-primary/25"
+                        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-all duration-200 hover:bg-v2-accent-hover hover:shadow-lg hover:shadow-v2-accent/25"
                       >
                         Browse Deals
                         <ChevronDown className="h-4 w-4" />
                       </a>
                       <a 
                         href="#comparison-table" 
-                        className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-card/50 px-6 py-3 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-card/80"
+                        className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-elevated px-6 py-3 text-sm font-semibold text-v2-text-primary transition-all duration-200 hover:bg-v2-bg-hover"
                       >
                         Compare Firms
                       </a>
                     </div>
                   </div>
                   
-                  {/* Stats Panel with Glass Effect */}
-                  <div className="rounded-2xl border border-primary/20 bg-card/40 p-6 backdrop-blur-xl">
+                  {/* Stats Panel with V2 Glass Effect */}
+                  <div className="rounded-v2-lg border border-v2-border bg-v2-bg-surface p-6">
                     <div className="grid grid-cols-1 gap-4">
-                      <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
-                          <Shield className="h-5 w-5 text-primary" />
+                      <div className="flex items-center gap-3 rounded-v2-md border border-v2-border-subtle bg-v2-bg-elevated p-4 transition-all duration-200 hover:border-v2-border">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-v2-sm bg-v2-accent-subtle">
+                          <Shield className="h-5 w-5 text-v2-accent" />
                         </div>
                         <div>
-                          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Tracked Firms</p>
-                          <p className="text-2xl font-bold text-foreground">{firms.length}</p>
+                          <p className="text-xs uppercase tracking-[0.1em] text-v2-text-tertiary">Tracked Firms</p>
+                          <p className="text-2xl font-bold text-v2-text-primary">{firms.length}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
-                          <TrendingUp className="h-5 w-5 text-primary" />
+                      <div className="flex items-center gap-3 rounded-v2-md border border-v2-border-subtle bg-v2-bg-elevated p-4 transition-all duration-200 hover:border-v2-border">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-v2-sm bg-v2-accent-subtle">
+                          <TrendingUp className="h-5 w-5 text-v2-accent" />
                         </div>
                         <div>
-                          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Live Deals</p>
-                          <p className="text-2xl font-bold text-foreground">{deals.length}</p>
+                          <p className="text-xs uppercase tracking-[0.1em] text-v2-text-tertiary">Live Deals</p>
+                          <p className="text-2xl font-bold text-v2-text-primary">{deals.length}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 rounded-xl border border-primary/15 bg-card/60 p-4 transition-all duration-200 hover:border-primary/30">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
-                          <Clock className="h-5 w-5 text-primary" />
+                      <div className="flex items-center gap-3 rounded-v2-md border border-v2-border-subtle bg-v2-bg-elevated p-4 transition-all duration-200 hover:border-v2-border">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-v2-sm bg-v2-accent-subtle">
+                          <Clock className="h-5 w-5 text-v2-accent" />
                         </div>
                         <div>
-                          <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Last Updated</p>
-                          <p className="text-lg font-semibold text-foreground">{lastUpdated}</p>
+                          <p className="text-xs uppercase tracking-[0.1em] text-v2-text-tertiary">Last Updated</p>
+                          <p className="text-lg font-semibold text-v2-text-primary">{lastUpdated}</p>
                         </div>
                       </div>
                     </div>
@@ -279,6 +280,17 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                   </p>
                 </div>
                 
+                {filteredDeals.length === 0 ? (
+                  <div className="rounded-2xl border border-primary/20 bg-card/60 p-12 text-center backdrop-blur-xl">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                      <Star className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground">No Deals Available</h3>
+                    <p className="mt-2 text-muted-foreground">
+                      Deals are currently being updated. Check back soon for exclusive prop firm discounts.
+                    </p>
+                  </div>
+                ) : (
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredDeals.map((deal, index) => (
                     <article 
@@ -327,6 +339,7 @@ export function DealsExperience({ deals, firms, faqs, lastUpdated }: Props) {
                     </article>
                   ))}
                 </div>
+                )}
               </section>
 
               {/* Enhanced Comparison Table */}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
-
+import { getUnifiedFirms } from '@/server/deals'
+import type { UnifiedFirm } from '@/server/deals'
 import { FirmComparisonGrid } from './components/firm-comparison-grid'
 
 const SITE_ORIGIN = "https://qunt-edge.vercel.app";
@@ -39,7 +40,9 @@ export async function generateMetadata({
   };
 }
 
-export default function PropfirmPerkComparePage() {
+export default async function PropfirmPerkComparePage() {
+  const firms = await getUnifiedFirms();
+
   return (
     <PublicFlowShell
       title="Matchup"
@@ -58,7 +61,7 @@ export default function PropfirmPerkComparePage() {
           <div className="grid grid-cols-3 gap-2">
             <article className="rounded-xl border border-border bg-background/60 p-3">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
-              <p className="mt-1 text-lg font-bold text-foreground">24+</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
             </article>
             <article className="rounded-xl border border-border bg-background/60 p-3">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Models</p>
@@ -72,7 +75,7 @@ export default function PropfirmPerkComparePage() {
         </div>
       </section>
 
-      <FirmComparisonGrid />
+      <FirmComparisonGrid firms={firms} />
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
         <article className="rounded-xl border border-border bg-card p-5">
@@ -95,5 +98,7 @@ export default function PropfirmPerkComparePage() {
         </article>
       </section>
     </PublicFlowShell>
-  )
+  );
 }
+
+
