@@ -4,8 +4,10 @@ import { listFirmCoupons } from '@/server/firm-coupons'
 import { CardV2, BadgeV2, SkeletonV2 } from '@/components/ui/v2'
 import { DealsIcon } from '@/components/icons/svg-icons'
 
+type FirmCouponItem = Awaited<ReturnType<typeof listFirmCoupons>>[number]
+
 export function FirmCouponsSection({ firmId }: { firmId: string }) {
-  const [coupons, setCoupons] = React.useState<any[]>([])
+  const [coupons, setCoupons] = React.useState<FirmCouponItem[]>([])
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {

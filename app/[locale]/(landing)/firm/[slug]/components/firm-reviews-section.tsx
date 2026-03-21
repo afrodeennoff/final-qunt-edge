@@ -5,26 +5,28 @@ import { CardV2, ButtonV2, InputV2, SkeletonV2 } from '@/components/ui/v2'
 import { ReviewsIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 
+type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>[number]
+
 export function FirmReviewsSection({ firmId }: { firmId: string }) {
   const [title, setTitle] = React.useState('')
   const [body, setBody] = React.useState('')
   const [rating, setRating] = React.useState(5)
-  const [reviews, setReviews] = React.useState<Array<any>>([])
+  const [reviews, setReviews] = React.useState<FirmReviewItem[]>([])
   const [loading, setLoading] = React.useState(true)
   const [submitting, setSubmitting] = React.useState(false)
 
-  async function fetchReviews() {
+  const fetchReviews = React.useCallback(async () => {
     try {
       const data = await listFirmReviews(firmId)
       setReviews(data ?? [])
     } finally {
       setLoading(false)
     }
-  }
+  }, [firmId])
 
   React.useEffect(() => {
-    fetchReviews()
-  }, [firmId])
+    void fetchReviews()
+  }, [fetchReviews])
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -35,7 +37,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       setTitle('')
       setBody('')
       setRating(5)
-      fetchReviews()
+      await fetchReviews()
     } finally {
       setSubmitting(false)
     }
