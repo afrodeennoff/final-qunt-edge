@@ -133,43 +133,39 @@ export function ConsentBanner() {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1">
-                <p className="text-sm text-muted-foreground">
-                  {/* @ts-ignore */}
-                  {t('landing.consent.banner.message')} {t('landing.consent.banner.updatePreferences')}{' '}
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto text-sm text-foreground underline underline-offset-2"
-                    onClick={() => setShowDetails(true)}
-                  >
-                    {/* @ts-ignore */}
-                    {t('landing.consent.banner.managePreferences')}
-                  </Button>.
-                </p>
+                 <p className="text-sm text-muted-foreground">
+                   {(t as any)('landing.consent.banner.message')} {(t as any)('landing.consent.banner.updatePreferences')}{' '}
+                   <Button
+                     variant="link"
+                     className="p-0 h-auto text-sm text-foreground underline underline-offset-2"
+                     onClick={() => setShowDetails(true)}
+                   >
+                     {(t as any)('landing.consent.banner.managePreferences')}
+                   </Button>.
+                 </p>
               </div>
               <div className="flex gap-3 shrink-0">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => saveConsent({
-                    ...settings,
-                    analytics_storage: false,
-                    ad_storage: false,
-                    ad_user_data: false,
-                    ad_personalization: false,
-                    personalization_storage: false,
-                  })}
-                >
-                  {/* @ts-ignore */}
-                  {t('landing.consent.banner.rejectNonEssential')}
-                </Button>
-                <Button
-                  size="sm"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                  onClick={handleAcceptAll}
-                >
-                  {/* @ts-ignore */}
-                  {t('landing.consent.banner.acceptAll')}
-                </Button>
+                 <Button
+                   variant="outline"
+                   size="sm"
+                   onClick={() => saveConsent({
+                     ...settings,
+                     analytics_storage: false,
+                     ad_storage: false,
+                     ad_user_data: false,
+                     ad_personalization: false,
+                     personalization_storage: false,
+                   })}
+                 >
+                   {(t as any)('landing.consent.banner.rejectNonEssential')}
+                 </Button>
+                 <Button
+                   size="sm"
+                   className="bg-primary text-primary-foreground hover:bg-primary/90"
+                   onClick={handleAcceptAll}
+                 >
+                   {(t as any)('landing.consent.banner.acceptAll')}
+                 </Button>
               </div>
             </div>
           </div>
@@ -181,15 +177,13 @@ export function ConsentBanner() {
             <Dialog open={showDetails} onOpenChange={setShowDetails}>
               <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-lg border border-border bg-card shadow-xl">
                 <DialogHeader className="p-6 pb-4">
-                  <DialogTitle className="text-lg font-medium text-foreground">
-                    {/* @ts-ignore */}
-                    {t('landing.consent.preferences.title')}
-                  </DialogTitle>
-                  <DialogDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {/* @ts-ignore */}
-                    {t('landing.consent.preferences.description')}{' '}
-                    <a href="#" className="text-semantic-info underline">{/* @ts-ignore */}{t('landing.consent.preferences.learnMore')}</a>.
-                  </DialogDescription>
+                   <DialogTitle className="text-lg font-medium text-foreground">
+                     {(t as any)('landing.consent.preferences.title')}
+                   </DialogTitle>
+                   <DialogDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                     {(t as any)('landing.consent.preferences.description')}{' '}
+                     <a href="#" className="text-semantic-info underline">{((t as any)('landing.consent.preferences.learnMore'))}</a>.
+                   </DialogDescription>
                 </DialogHeader>
 
                 <div className="px-6 pb-6">
@@ -202,16 +196,14 @@ export function ConsentBanner() {
                         disabled
                         className="mt-1 h-5 w-5 rounded border-border bg-muted"
                       />
-                      <div>
-                        <label htmlFor="consent-necessary-desktop" className="text-sm font-medium text-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.strictlyNecessary.title')}
-                        </label>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.strictlyNecessary.description')}
-                        </p>
-                      </div>
+                       <div>
+                         <label htmlFor="consent-necessary-desktop" className="text-sm font-medium text-foreground">
+                           {(t as any)('landing.consent.preferences.strictlyNecessary.title')}
+                         </label>
+                         <p className="mt-1 text-sm text-muted-foreground">
+                           {(t as any)('landing.consent.preferences.strictlyNecessary.description')}
+                         </p>
+                       </div>
                     </div>
 
                     <div className="flex items-start gap-3 min-h-[44px]">
@@ -222,16 +214,14 @@ export function ConsentBanner() {
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
                         className="mt-1 h-5 w-5 rounded border-border bg-background"
                       />
-                      <div>
-                        <label htmlFor="consent-analytics-desktop" className="text-sm font-medium text-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.analytics.title')}
-                        </label>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.analytics.description')}
-                        </p>
-                      </div>
+                       <div>
+                         <label htmlFor="consent-analytics-desktop" className="text-sm font-medium text-foreground">
+                           {(t as any)('landing.consent.preferences.analytics.title')}
+                         </label>
+                         <p className="mt-1 text-sm text-muted-foreground">
+                           {(t as any)('landing.consent.preferences.analytics.description')}
+                         </p>
+                       </div>
                     </div>
 
                     <div className="flex items-start gap-3 min-h-[44px]">
@@ -242,27 +232,24 @@ export function ConsentBanner() {
                         onChange={(e) => setSettings({ ...settings, ad_storage: e.target.checked })}
                         className="mt-1 h-5 w-5 rounded border-border bg-background"
                       />
-                      <div>
-                        <label htmlFor="consent-marketing-desktop" className="text-sm font-medium text-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.marketing.title')}
-                        </label>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {/* @ts-ignore */}
-                          {t('landing.consent.preferences.marketing.description')}
-                        </p>
-                      </div>
+                       <div>
+                         <label htmlFor="consent-marketing-desktop" className="text-sm font-medium text-foreground">
+                           {(t as any)('landing.consent.preferences.marketing.title')}
+                         </label>
+                         <p className="mt-1 text-sm text-muted-foreground">
+                           {(t as any)('landing.consent.preferences.marketing.description')}
+                         </p>
+                       </div>
                     </div>
                   </div>
 
                   <div className="mt-6">
-                    <Button
-                      onClick={handleSavePreferences}
-                      className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-                    >
-                      {/* @ts-ignore */}
-                      {t('landing.consent.preferences.done')}
-                    </Button>
+                     <Button
+                       onClick={handleSavePreferences}
+                       className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                     >
+                       {(t as any)('landing.consent.preferences.done')}
+                     </Button>
                   </div>
                 </div>
               </DialogContent>
@@ -276,11 +263,10 @@ export function ConsentBanner() {
                   <DrawerTitle className="text-lg font-medium text-foreground">
                     {t('landing.consent.preferences.title')}
                   </DrawerTitle>
-                  <DrawerDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {/* @ts-ignore */}
-                    {t('landing.consent.preferences.description')}{' '}
-                    <a href="#" className="text-semantic-info underline">{/* @ts-ignore */}{t('landing.consent.preferences.learnMore')}</a>.
-                  </DrawerDescription>
+                   <DrawerDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                     {(t as any)('landing.consent.preferences.description')}{' '}
+                     <a href="#" className="text-semantic-info underline">{((t as any)('landing.consent.preferences.learnMore'))}</a>.
+                   </DrawerDescription>
                 </DrawerHeader>
 
                 <div className="flex-1 overflow-y-auto px-6">
@@ -293,14 +279,14 @@ export function ConsentBanner() {
                         disabled
                         className="mt-1 h-4 w-4 rounded border-border bg-muted"
                       />
-                      <div>
-                        <label htmlFor="consent-necessary-mobile" className="text-sm font-medium text-foreground">
-                          {t('landing.consent.preferences.strictlyNecessary.title')}
-                        </label>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {t('landing.consent.preferences.strictlyNecessary.description')}
-                        </p>
-                      </div>
+                 <div>
+                   <label htmlFor="consent-necessary-mobile" className="text-sm font-medium text-foreground">
+                     {(t as any)('landing.consent.preferences.strictlyNecessary.title')}
+                   </label>
+                   <p className="mt-1 text-sm text-muted-foreground">
+                     {(t as any)('landing.consent.preferences.strictlyNecessary.description')}
+                   </p>
+                 </div>
                     </div>
 
                     <div className="flex items-start gap-3">
@@ -311,14 +297,14 @@ export function ConsentBanner() {
                         onChange={(e) => setSettings({ ...settings, analytics_storage: e.target.checked })}
                         className="mt-1 h-4 w-4 rounded border-border bg-background"
                       />
-                      <div>
-                        <label htmlFor="consent-analytics-mobile" className="text-sm font-medium text-foreground">
-                          {t('landing.consent.preferences.analytics.title')}
-                        </label>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {t('landing.consent.preferences.analytics.description')}
-                        </p>
-                      </div>
+                       <div>
+                         <label htmlFor="consent-analytics-mobile" className="text-sm font-medium text-foreground">
+                           {(t as any)('landing.consent.preferences.analytics.title')}
+                         </label>
+                         <p className="mt-1 text-sm text-muted-foreground">
+                           {(t as any)('landing.consent.preferences.analytics.description')}
+                         </p>
+                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">

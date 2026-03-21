@@ -9,14 +9,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
   ArrowUpRight,
   BadgePercent,
   Banknote,
@@ -26,7 +18,10 @@ import {
   Filter,
   Landmark,
   Search,
+  SlidersHorizontal,
+  Star,
   Wallet,
+  X,
 } from 'lucide-react'
 import type {
   DealItem,
@@ -110,6 +105,24 @@ function formatCompactCurrency(value: number): string {
   }).format(value)
 }
 
+function getActiveFilterCount(
+  market: string,
+  platform: string,
+  payout: string,
+  drawdown: string,
+  priceRange: string,
+  search: string,
+): number {
+  let count = 0
+  if (market !== 'All') count++
+  if (platform !== 'All') count++
+  if (payout !== 'All') count++
+  if (drawdown !== 'All') count++
+  if (priceRange !== 'all') count++
+  if (search.trim()) count++
+  return count
+}
+
 export function DealsExperience({
   locale,
   deals,
@@ -129,8 +142,11 @@ export function DealsExperience({
   const [priceRange, setPriceRange] = useState('all')
   const [sortKey, setSortKey] = useState<SortKey>('paidPayoutAmount')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [showFilters, setShowFilters] = useState(false)
 
   const normalizedSearch = search.trim().toLowerCase()
+
+  const activeFilterCount = getActiveFilterCount(market, platform, payout, drawdown, priceRange, search)
 
   const filteredDeals = useMemo(() => deals.filter((deal) => {
     const marketOk = market === 'All' || deal.category === market
@@ -183,11 +199,6 @@ export function DealsExperience({
     })
   }, [drawdown, firms, market, normalizedSearch, payout, platform, priceRange, sortDirection, sortKey])
 
-  const sortLabel = (key: SortKey) => {
-    if (sortKey !== key) return ''
-    return sortDirection === 'asc' ? 'ascending' : 'descending'
-  }
-
   const onSort = (nextKey: SortKey) => {
     if (nextKey === sortKey) {
       setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
@@ -197,235 +208,262 @@ export function DealsExperience({
     setSortDirection('desc')
   }
 
+  const clearFilters = () => {
+    setSearch('')
+    setMarket('All')
+    setPlatform('All')
+    setPayout('All')
+    setDrawdown('All')
+    setPriceRange('all')
+  }
+
   return (
     <div className="min-h-screen bg-v2-bg-base">
-      <div className="mx-auto max-w-[1320px] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <section className="relative overflow-hidden rounded-[34px] border border-white/10 bg-black/40 p-8 sm:p-10 lg:p-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.18),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.14),_transparent_34%)]" />
-            <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
-                  <BadgePercent className="h-3.5 w-3.5 text-v2-accent" />
-                  Prop firm deals board
-                </span>
-                <h1 className="mt-6 max-w-4xl text-[clamp(2.9rem,6vw,5.8rem)] font-semibold leading-[0.92] tracking-[-0.045em] text-white">
-                  Compare deals faster.
-                  <br />
-                  Open firm profiles.
-                  <br />
-                  Validate the details.
-                </h1>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/66 sm:text-lg">
-                  This page is designed like a modern prop-firm marketplace: deal-first scanning up top, company cards with real context underneath, and a denser comparison table when you need to sort the whole market.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <a href="#firm-board" className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
-                    Browse Firms
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <a href="#deal-board" className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]">
-                    View Deals
-                  </a>
-                </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <MetricPanel label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
-                <MetricPanel label="Live deals" value={overview.totalLiveDeals.toLocaleString()} icon={Wallet} />
-                <MetricPanel label="Accounts tracked" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
-                <MetricPanel label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+      <section className="relative overflow-hidden border-b border-v2-border-subtle">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_hsl(var(--v2-accent)/0.08),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_hsl(var(--v2-accent)/0.05),_transparent_50%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-v2-text-secondary">
+                <BadgePercent className="h-3.5 w-3.5 text-v2-accent" />
+                Prop firm deals
+              </span>
+              <h1 className="mt-6 text-4xl font-bold leading-[1.08] tracking-tight text-v2-text-primary sm:text-5xl lg:text-6xl">
+                Find the best
+                <br />
+                prop firm deals.
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-v2-text-secondary sm:text-lg">
+                Compare firms, track live discounts, and open company profiles with real account data and payout context.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="#firm-board"
+                  className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-glow"
+                >
+                  Browse Firms
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#deal-board"
+                  className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-6 py-3 text-sm font-semibold text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
+                >
+                  View Deals
+                </a>
               </div>
             </div>
-          </section>
 
-          <section className="grid gap-4 lg:grid-cols-[1fr]">
-            <BoardPanel
-              title="Featured deals radar"
-              subtitle={`Futures and CFD coverage refreshed from PropFirmMatch on ${spotlights.updatedAt}`}
-            >
-              <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
+              <StatCard label="Live deals" value={overview.totalLiveDeals.toLocaleString()} icon={Wallet} />
+              <StatCard label="Accounts" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
+              <StatCard label="Paid out" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+        <div className="space-y-12">
+          {spotlights.futures.length > 0 || spotlights.cfd.length > 0 ? (
+            <section className="space-y-4">
+              <SectionHeader title="Featured spotlights" subtitle={`Futures and CFD coverage from PropFirmMatch · ${spotlights.updatedAt}`} />
+              <div className="grid gap-3 sm:grid-cols-2">
                 {[...spotlights.futures.slice(0, 1), ...spotlights.cfd.slice(0, 1)].map((item, index) => (
                   <a
                     key={`${item.slug}-${index}`}
                     href={item.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition-colors hover:bg-white/[0.04]"
+                    className="group flex items-start justify-between gap-4 rounded-2xl border border-v2-border-subtle bg-v2-bg-surface p-5 transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border"
                   >
-                    <div>
-                      <p className="text-sm font-semibold text-white">{item.name}</p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.14em] text-white/45">{item.category} spotlight</p>
-                      <p className="mt-2 text-sm text-white/60">{item.promoText}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold text-v2-text-primary">{item.name}</p>
+                        <span className="rounded-full bg-v2-accent-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-accent">
+                          {item.category}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed text-v2-text-secondary">{item.promoText}</p>
                     </div>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-white/45" />
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-v2-text-tertiary transition-colors group-hover:text-v2-accent" />
                   </a>
                 ))}
               </div>
-            </BoardPanel>
-          </section>
-
-          <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
-                <Filter className="h-5 w-5 text-v2-accent" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-white">Filter the market</h2>
-                <p className="text-sm text-white/55">A cleaner control bar with less visual noise and stronger spacing.</p>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="relative sm:col-span-2 lg:col-span-3">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
-                <input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search firms, payout model, or description..."
-                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-11 py-3 text-white outline-none placeholder:text-white/35 focus:border-v2-accent/50"
-                />
-              </div>
-              <FilterSelect label="Market Type" value={market} onChange={setMarket} options={marketOptions} />
-              <FilterSelect label="Platform" value={platform} onChange={setPlatform} options={platformOptions} />
-              <FilterSelect label="Payout Model" value={payout} onChange={setPayout} options={payoutOptions} />
-              <FilterSelect label="Drawdown Type" value={drawdown} onChange={setDrawdown} options={drawdownOptions} />
-              <label className="space-y-2 text-sm">
-                <span className="text-white/55">Price Range</span>
-                <div className="relative">
-                  <select
-                    value={priceRange}
-                    onChange={(event) => setPriceRange(event.target.value)}
-                    className="w-full appearance-none rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none focus:border-v2-accent/50"
-                  >
-                    <option value="all">All prices</option>
-                    <option value="0-99">$0 - $99</option>
-                    <option value="100-199">$100 - $199</option>
-                    <option value="200+">$200+</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
-                </div>
-              </label>
-            </div>
-          </section>
-
-          {hadFetchError ? (
-            <section className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
-              Some deal data is temporarily unavailable, so parts of the market board may be incomplete while the catalogue refreshes.
             </section>
           ) : null}
 
-          <section id="firm-board" className="space-y-5">
-            <SectionIntro
-              title="Firm board"
-              body="A company-first board inspired by the better prop-firm directory layouts: quick facts, short descriptions, and clear next actions."
-              count={`${filteredFirms.length} firms`}
-            />
-            <div className="grid gap-4 lg:grid-cols-2">
-              {filteredFirms.map((firm) => (
-                <FirmBoardCard key={firm.id} localePrefix={localePrefix} firm={firm} />
+          <section className="space-y-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <SectionHeader title="Filter & sort" subtitle="Narrow the market to match your criteria" className="mb-0" />
+              <div className="flex items-center gap-3">
+                {activeFilterCount > 0 ? (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-v2-border bg-v2-bg-surface px-3 py-1.5 text-xs font-medium text-v2-text-secondary transition-colors hover:bg-v2-bg-hover hover:text-v2-text-primary"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear {activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setShowFilters((prev) => !prev)}
+                  className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-4 py-2 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  {showFilters ? 'Hide filters' : 'Show filters'}
+                  {activeFilterCount > 0 ? (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-v2-accent text-[10px] font-bold text-v2-accent-foreground">
+                      {activeFilterCount}
+                    </span>
+                  ) : null}
+                </button>
+              </div>
+            </div>
+
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-v2-text-tertiary" />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search firms, payout model, or description..."
+                className="w-full rounded-2xl border border-v2-border bg-v2-bg-surface px-11 py-3.5 text-sm text-v2-text-primary outline-none transition-colors placeholder:text-v2-text-tertiary focus:border-v2-accent focus:ring-1 focus:ring-v2-accent/30"
+              />
+              {search ? (
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 text-v2-text-tertiary transition-colors hover:text-v2-text-primary"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : null}
+            </div>
+
+            {showFilters ? (
+              <div className="grid gap-4 rounded-2xl border border-v2-border-subtle bg-v2-bg-surface p-5 sm:grid-cols-2 lg:grid-cols-3">
+                <FilterPillGroup label="Market" value={market} onChange={setMarket} options={marketOptions} />
+                <FilterPillGroup label="Platform" value={platform} onChange={setPlatform} options={platformOptions} />
+                <FilterPillGroup label="Payout" value={payout} onChange={setPayout} options={payoutOptions} />
+                <FilterPillGroup label="Drawdown" value={drawdown} onChange={setDrawdown} options={drawdownOptions} />
+                <div className="space-y-2">
+                  <span className="text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">Price Range</span>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { value: 'all', label: 'All' },
+                      { value: '0-99', label: '$0–$99' },
+                      { value: '100-199', label: '$100–$199' },
+                      { value: '200+', label: '$200+' },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setPriceRange(option.value)}
+                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
+                          priceRange === option.value
+                            ? 'bg-v2-accent text-v2-accent-foreground shadow-v2-sm'
+                            : 'border border-v2-border bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="mr-1 text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">Sort:</span>
+              {([
+                { key: 'paidPayoutAmount' as SortKey, label: 'Paid Out' },
+                { key: 'accountsCount' as SortKey, label: 'Accounts' },
+                { key: 'challengeFee' as SortKey, label: 'Entry Fee' },
+                { key: 'profitSplit' as SortKey, label: 'Split' },
+                { key: 'name' as SortKey, label: 'Name' },
+                { key: 'rating' as SortKey, label: 'Reviews' },
+              ]).map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => onSort(option.key)}
+                  className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
+                    sortKey === option.key
+                      ? 'bg-v2-accent/15 text-v2-accent border border-v2-accent/30'
+                      : 'border border-v2-border-subtle bg-v2-bg-surface text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
+                  }`}
+                >
+                  {option.label}
+                  {sortKey === option.key ? (
+                    sortDirection === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
+                  ) : null}
+                </button>
               ))}
             </div>
           </section>
 
-          <section id="deal-board" className="space-y-5">
-            <SectionIntro
-              title="Live deals"
-              body="Deals stay front and center, but each card now carries enough company context to avoid blind clicking."
-              count={`${filteredDeals.length} deals`}
+          {hadFetchError ? (
+            <div className="rounded-2xl border border-v2-warning/30 bg-v2-warning/10 px-5 py-4 text-sm text-v2-warning">
+              Some deal data is temporarily unavailable. The catalogue will refresh automatically.
+            </div>
+          ) : null}
+
+          <section id="firm-board" className="space-y-6">
+            <SectionHeader
+              title="Firm board"
+              subtitle="Company cards with real account data, payout context, and quick actions"
+              badge={`${filteredFirms.length} firms`}
             />
-            {filteredDeals.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-10 text-center">
-                <p className="text-lg font-medium text-white">No matching deals right now.</p>
-                <p className="mt-2 text-sm text-white/55">Adjust the filters or check again after the next catalogue refresh.</p>
-              </div>
+            {filteredFirms.length === 0 ? (
+              <EmptyState message="No firms match your filters." onClear={clearFilters} hasFilters={activeFilterCount > 0} />
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filteredDeals.map((deal) => {
+                {filteredFirms.map((firm, index) => (
+                  <FirmCard key={firm.id} firm={firm} localePrefix={localePrefix} index={index} />
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section id="deal-board" className="space-y-6">
+            <SectionHeader
+              title="Live deals"
+              subtitle="Active discounts and promotions from verified prop firms"
+              badge={`${filteredDeals.length} deals`}
+            />
+            {filteredDeals.length === 0 ? (
+              <EmptyState message="No matching deals right now." onClear={clearFilters} hasFilters={activeFilterCount > 0} />
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredDeals.map((deal, index) => {
                   const firm = firms.find((candidate) => candidate.id === deal.firmId)
-                  return <DealCard key={deal.id} deal={deal} firm={firm} localePrefix={localePrefix} />
+                  return <DealCard key={deal.id} deal={deal} firm={firm} localePrefix={localePrefix} index={index} />
                 })}
               </div>
             )}
           </section>
 
-          <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-white">Comparison table</h2>
-              <p className="mt-1 text-sm text-white/55">A dense market table for users who want the full directory view after scanning the cards.</p>
-            </div>
-
-            <div className="hidden overflow-hidden rounded-2xl border border-white/10 md:block">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/10 bg-white/[0.03] hover:bg-white/[0.03]">
-                    <SortableHead label="Firm" onClick={() => onSort('name')} active={sortKey === 'name'} indicator={sortLabel('name')} />
-                    <SortableHead label="Entry Fee" onClick={() => onSort('challengeFee')} active={sortKey === 'challengeFee'} indicator={sortLabel('challengeFee')} />
-                    <SortableHead label="Split" onClick={() => onSort('profitSplit')} active={sortKey === 'profitSplit'} indicator={sortLabel('profitSplit')} />
-                    <SortableHead label="Payout" onClick={() => onSort('payoutFrequency')} active={sortKey === 'payoutFrequency'} indicator={sortLabel('payoutFrequency')} />
-                    <SortableHead label="Accounts" onClick={() => onSort('accountsCount')} active={sortKey === 'accountsCount'} indicator={sortLabel('accountsCount')} />
-                    <SortableHead label="Paid Out" onClick={() => onSort('paidPayoutAmount')} active={sortKey === 'paidPayoutAmount'} indicator={sortLabel('paidPayoutAmount')} />
-                    <SortableHead label="Reviews" onClick={() => onSort('rating')} active={sortKey === 'rating'} indicator={sortLabel('rating')} />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredFirms.map((firm) => (
-                    <TableRow key={firm.id} className="border-white/10 hover:bg-white/[0.03]">
-                      <TableCell className="font-medium text-white">
-                        <Link href={`${localePrefix}/firm/${firm.slug}`} className="hover:text-v2-accent">{firm.name}</Link>
-                      </TableCell>
-                      <TableCell className="text-white/72">{formatChallengeFee(getLowestChallengeFee(firm))}</TableCell>
-                      <TableCell className="text-white/72">{firm.profitSplit}</TableCell>
-                      <TableCell className="text-white/72">{firm.payoutModel}</TableCell>
-                      <TableCell className="text-white/72">{firm.catalogueStats.accountsCount.toLocaleString()}</TableCell>
-                      <TableCell className="text-emerald-300">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</TableCell>
-                      <TableCell className="text-white/72">{firm._count.reviews.toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-
-            <div className="grid gap-4 md:hidden">
-              {filteredFirms.map((firm) => (
-                <article key={firm.id} className="rounded-2xl border border-white/10 bg-black/25 p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <Link href={`${localePrefix}/firm/${firm.slug}`} className="text-lg font-semibold text-white hover:text-v2-accent">{firm.name}</Link>
-                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/60">
-                      {firm.category}
-                    </span>
-                  </div>
-                  <dl className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                    <Term label="Entry Fee" value={formatChallengeFee(getLowestChallengeFee(firm))} />
-                    <Term label="Payout" value={firm.payoutModel} />
-                    <Term label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
-                    <Term label="Paid Out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} />
-                    <Term label="Allocation" value={firm.maxAllocation} />
-                    <Term label="Reviews" value={firm._count.reviews.toLocaleString()} />
-                  </dl>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="grid gap-4 lg:grid-cols-[1fr]">
-            <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-              <h2 className="text-2xl font-semibold text-white">FAQ</h2>
-              <p className="mt-1 text-sm text-white/55">Everything you need to know about this market board.</p>
-              <Accordion type="single" collapsible className="mt-6">
+          <section className="space-y-6">
+            <SectionHeader title="FAQ" subtitle="Everything you need to know about the deals board" />
+            <div className="rounded-2xl border border-v2-border-subtle bg-v2-bg-surface">
+              <Accordion type="single" collapsible className="divide-y divide-v2-border-subtle">
                 {faqs.map((faq, index) => (
-                  <AccordionItem key={faq.question} value={`faq-${index}`} className="mb-3 rounded-2xl border border-white/10 bg-black/20 px-5">
-                    <AccordionTrigger className="text-left text-white hover:no-underline">
+                  <AccordionItem key={faq.question} value={`faq-${index}`} className="border-0 px-6">
+                    <AccordionTrigger className="py-5 text-left text-sm font-medium text-v2-text-primary hover:no-underline">
                       {faq.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-white/60">{faq.answer}</AccordionContent>
+                    <AccordionContent className="pb-5 text-sm leading-relaxed text-v2-text-secondary">
+                      {faq.answer}
+                    </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
-              <div className="mt-4 text-xs text-white/45">
-                Updated: {lastUpdated ?? 'Unavailable'}
-              </div>
-            </section>
+            </div>
+            <p className="text-xs text-v2-text-tertiary">
+              Last updated: {lastUpdated ?? 'Unavailable'}
+            </p>
           </section>
         </div>
       </div>
@@ -433,7 +471,7 @@ export function DealsExperience({
   )
 }
 
-function MetricPanel({
+function StatCard({
   label,
   value,
   icon: Icon,
@@ -443,106 +481,162 @@ function MetricPanel({
   icon: React.ComponentType<{ className?: string }>
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+    <div className="rounded-2xl border border-v2-border-subtle bg-v2-bg-surface/80 p-4 backdrop-blur-sm">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-black/25">
-          <Icon className="h-5 w-5 text-v2-accent" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-v2-accent/10">
+          <Icon className="h-4 w-4 text-v2-accent" />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-          <p className="mt-1 text-xl font-semibold text-white">{value}</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</p>
+          <p className="mt-0.5 text-lg font-bold text-v2-text-primary">{value}</p>
         </div>
       </div>
     </div>
   )
 }
 
-function BoardPanel({
+function SectionHeader({
   title,
   subtitle,
-  children,
+  badge,
+  className = '',
 }: {
   title: string
-  subtitle: string
-  children: React.ReactNode
+  subtitle?: string
+  badge?: string
+  className?: string
 }) {
   return (
-    <section className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-      <h2 className="text-2xl font-semibold text-white">{title}</h2>
-      <p className="mt-1 text-sm text-white/55">{subtitle}</p>
-      <div className="mt-6">{children}</div>
-    </section>
-  )
-}
-
-function SectionIntro({ title, body, count }: { title: string; body: string; count: string }) {
-  return (
-    <div className="flex flex-wrap items-end justify-between gap-3">
+    <div className={`flex flex-wrap items-end justify-between gap-3 ${className}`}>
       <div>
-        <h2 className="text-2xl font-semibold text-white">{title}</h2>
-        <p className="mt-1 text-sm text-white/55">{body}</p>
+        <h2 className="text-xl font-bold text-v2-text-primary">{title}</h2>
+        {subtitle ? <p className="mt-1 text-sm text-v2-text-secondary">{subtitle}</p> : null}
       </div>
-      <p className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-        {count}
-      </p>
+      {badge ? (
+        <span className="rounded-full border border-v2-border bg-v2-bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wider text-v2-text-secondary">
+          {badge}
+        </span>
+      ) : null}
     </div>
   )
 }
 
-function FirmBoardCard({
+function EmptyState({
+  message,
+  onClear,
+  hasFilters,
+}: {
+  message: string
+  onClear: () => void
+  hasFilters: boolean
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-v2-border-subtle bg-v2-bg-surface px-6 py-16 text-center">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-v2-bg-elevated">
+        <Filter className="h-5 w-5 text-v2-text-tertiary" />
+      </div>
+      <p className="text-base font-medium text-v2-text-primary">{message}</p>
+      <p className="mt-1 text-sm text-v2-text-secondary">Adjust the filters or check again after the next catalogue refresh.</p>
+      {hasFilters ? (
+        <button
+          type="button"
+          onClick={onClear}
+          className="mt-4 rounded-full border border-v2-border bg-v2-bg-elevated px-4 py-2 text-sm font-medium text-v2-text-primary transition-colors hover:bg-v2-bg-hover"
+        >
+          Clear all filters
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+function FirmCard({
   firm,
   localePrefix,
+  index,
 }: {
   firm: UnifiedFirm
   localePrefix: string
+  index: number
 }) {
+  const lowestFee = getLowestChallengeFee(firm)
+  const hasActiveDeal = firm.coupons.length > 0
+
   return (
-    <article className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-black/25 text-sm font-semibold text-v2-accent">
-              {firm.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <Link href={`${localePrefix}/firm/${firm.slug}`} className="text-lg font-semibold text-white hover:text-v2-accent">
-                {firm.name}
-              </Link>
-              <p className="text-xs uppercase tracking-[0.14em] text-white/45">{firm.category} • {firm.platform}</p>
-            </div>
+    <article
+      className="group relative flex flex-col rounded-2xl border border-v2-border-subtle bg-v2-bg-surface transition-all duration-v2-base hover:border-v2-border hover:bg-v2-bg-hover hover:shadow-v2-lg"
+      style={{ animationDelay: `${index * 40}ms` }}
+    >
+      <div className="flex items-start gap-4 p-5 pb-0">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-v2-border bg-v2-bg-elevated text-sm font-bold text-v2-accent transition-colors group-hover:border-v2-accent/30">
+          {firm.logoUrl ? (
+            <img src={firm.logoUrl} alt={firm.name} className="h-8 w-8 rounded-lg object-contain" />
+          ) : (
+            firm.name.slice(0, 2).toUpperCase()
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <Link
+              href={`${localePrefix}/firm/${firm.slug}`}
+              className="truncate text-base font-bold text-v2-text-primary transition-colors hover:text-v2-accent"
+            >
+              {firm.name}
+            </Link>
+            {hasActiveDeal ? (
+              <span className="shrink-0 rounded-full bg-v2-success/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-success">
+                Deal
+              </span>
+            ) : null}
           </div>
-          <p className="mt-4 text-sm leading-7 text-white/62">
-            {firm.shortDesc ?? firm.description ?? 'No editorial summary available yet.'}
+          <p className="mt-0.5 text-xs uppercase tracking-wider text-v2-text-tertiary">
+            {firm.category} · {firm.platform}
           </p>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
-          {firm.spotlight ? 'Tracked' : 'Internal'}
-        </span>
+        {firm._count.reviews > 0 ? (
+          <div className="flex shrink-0 items-center gap-1 rounded-full bg-v2-bg-elevated px-2 py-1">
+            <Star className="h-3 w-3 text-v2-accent" />
+            <span className="text-xs font-semibold text-v2-text-primary">{firm._count.reviews}</span>
+          </div>
+        ) : null}
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <MiniMetric label="Lowest entry" value={formatChallengeFee(getLowestChallengeFee(firm))} />
-        <MiniMetric label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
-        <MiniMetric label="Value tracked" value={formatCompactCurrency(firm.catalogueStats.totalAccountValue)} />
-        <MiniMetric label="Paid payouts" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} />
+      <div className="px-5 pt-3">
+        <p className="line-clamp-2 text-sm leading-relaxed text-v2-text-secondary">
+          {firm.shortDesc ?? firm.description ?? 'No editorial summary available yet.'}
+        </p>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2 text-xs text-white/55">
-        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1">{firm.payoutModel} payouts</span>
-        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1">{firm.drawdownType} drawdown</span>
-        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1">{firm.profitSplit} split</span>
-        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1">{firm.maxAllocation} max allocation</span>
+      <div className="mt-4 grid grid-cols-2 gap-2 px-5">
+        <MetricPill label="Entry" value={formatChallengeFee(lowestFee)} />
+        <MetricPill label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
+        <MetricPill label="Paid out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} highlight />
+        <MetricPill label="Allocation" value={firm.maxAllocation} />
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        <Link href={`${localePrefix}/firm/${firm.slug}`} className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
-          Open Company
+      <div className="mt-4 flex flex-wrap gap-1.5 px-5">
+        <Tag>{firm.payoutModel}</Tag>
+        <Tag>{firm.drawdownType}</Tag>
+        <Tag>{firm.profitSplit} split</Tag>
+      </div>
+
+      <div className="mt-auto flex items-center gap-3 p-5 pt-4">
+        <Link
+          href={`${localePrefix}/firm/${firm.slug}`}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-v2-accent px-4 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-sm"
+        >
+          View Profile
           <ArrowUpRight className="h-4 w-4" />
         </Link>
         {firm.referralUrl ? (
-          <a href={firm.referralUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]">
-            Visit Site
-            <ArrowUpRight className="h-4 w-4" />
+          <a
+            href={firm.referralUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-v2-border bg-v2-bg-elevated px-4 py-2.5 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
+          >
+            Site
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         ) : null}
       </div>
@@ -554,60 +648,82 @@ function DealCard({
   deal,
   firm,
   localePrefix,
+  index,
 }: {
   deal: DealItem
   firm: UnifiedFirm | undefined
   localePrefix: string
+  index: number
 }) {
   return (
-    <article className="rounded-[30px] border border-white/10 bg-white/[0.03] p-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-black/25 text-sm font-semibold text-v2-accent">
-            {deal.firmName.slice(0, 2).toUpperCase()}
-          </div>
-          <div>
-            <Link href={`${localePrefix}/firm/${deal.firmSlug}`} className="font-semibold text-white hover:text-v2-accent">
-              {deal.firmName}
-            </Link>
-            <p className="text-xs uppercase tracking-[0.14em] text-white/45">{deal.category} • {deal.platform}</p>
-          </div>
+    <article
+      className="group relative flex flex-col rounded-2xl border border-v2-border-subtle bg-v2-bg-surface transition-all duration-v2-base hover:border-v2-border hover:bg-v2-bg-hover hover:shadow-v2-lg"
+      style={{ animationDelay: `${index * 40}ms` }}
+    >
+      <div className="flex items-start gap-4 p-5 pb-0">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-v2-border bg-v2-bg-elevated text-sm font-bold text-v2-accent">
+          {deal.firmName.slice(0, 2).toUpperCase()}
         </div>
-        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
+        <div className="min-w-0 flex-1">
+          <Link
+            href={`${localePrefix}/firm/${deal.firmSlug}`}
+            className="text-sm font-bold text-v2-text-primary transition-colors hover:text-v2-accent"
+          >
+            {deal.firmName}
+          </Link>
+          <p className="mt-0.5 text-xs uppercase tracking-wider text-v2-text-tertiary">
+            {deal.category} · {deal.platform}
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full bg-v2-success/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-v2-success">
           Verified
         </span>
       </div>
 
-      <div className="mt-5 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-4xl font-semibold tracking-[-0.04em] text-white">{deal.discountPercent}% OFF</p>
-          <p className="mt-2 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-sm font-medium text-white/72">
-            Code <span className="text-v2-accent">{deal.couponCode}</span>
-          </p>
+      <div className="px-5 pt-4">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <p className="text-3xl font-bold tracking-tight text-v2-text-primary">
+              {deal.discountPercent}%
+              <span className="ml-1 text-lg font-medium text-v2-text-secondary">OFF</span>
+            </p>
+            <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-v2-border bg-v2-bg-elevated px-3 py-1.5 text-sm">
+              <span className="text-v2-text-tertiary">Code</span>
+              <span className="font-mono text-sm font-semibold text-v2-accent">{deal.couponCode}</span>
+            </div>
+          </div>
+          <span className="rounded-full border border-v2-border-subtle bg-v2-bg-elevated px-2.5 py-1 text-[10px] uppercase tracking-wider text-v2-text-tertiary">
+            {deal.expiryDate}
+          </span>
         </div>
-        <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-white/55">
-          {deal.expiryDate}
-        </span>
       </div>
 
-      <p className="mt-4 text-sm leading-7 text-white/60">
-        {firm?.shortDesc ?? firm?.description ?? 'Open the company profile for rule details, payouts, and tracked account metrics.'}
-      </p>
-
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <MiniMetric label="Challenge Fee" value={formatChallengeFee(deal.challengeFee)} />
-        <MiniMetric label="Payout model" value={deal.payoutModel} />
-        <MiniMetric label="Accounts" value={firm ? firm.catalogueStats.accountsCount.toLocaleString() : '0'} />
-        <MiniMetric label="Paid Out" value={firm ? formatCompactCurrency(firm.catalogueStats.paidPayoutAmount) : '$0'} />
+      <div className="mt-4 grid grid-cols-2 gap-2 px-5">
+        <MetricPill label="Fee" value={formatChallengeFee(deal.challengeFee)} />
+        <MetricPill label="Payout" value={deal.payoutModel} />
+        {firm ? (
+          <>
+            <MetricPill label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
+            <MetricPill label="Paid out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} highlight />
+          </>
+        ) : null}
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        <Link href={`${localePrefix}/firm/${deal.firmSlug}`} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]">
-          Open Company
-          <ArrowUpRight className="h-4 w-4" />
+      <div className="mt-auto flex items-center gap-3 p-5 pt-4">
+        <Link
+          href={`${localePrefix}/firm/${deal.firmSlug}`}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-v2-border bg-v2-bg-elevated px-4 py-2.5 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
+        >
+          Profile
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
         {deal.claimUrl ? (
-          <a href={deal.claimUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover">
+          <a
+            href={deal.claimUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-v2-accent px-4 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-sm"
+          >
             Claim Deal
             <ArrowUpRight className="h-4 w-4" />
           </a>
@@ -617,57 +733,24 @@ function DealCard({
   )
 }
 
-function MiniMetric({ label, value }: { label: string; value: string }) {
+function MetricPill({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
-      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-      <p className="mt-1 text-base font-semibold text-white">{value}</p>
+    <div className="rounded-xl border border-v2-border-subtle bg-v2-bg-elevated px-3 py-2">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</p>
+      <p className={`mt-0.5 text-sm font-semibold ${highlight ? 'text-v2-success' : 'text-v2-text-primary'}`}>{value}</p>
     </div>
   )
 }
 
-function SortableHead({
-  label,
-  onClick,
-  active,
-  indicator,
-}: {
-  label: string
-  onClick: () => void
-  active: boolean
-  indicator: string
-}) {
+function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <TableHead>
-      <button
-        type="button"
-        onClick={onClick}
-        className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.14em] transition-colors ${
-          active ? 'text-v2-accent' : 'text-white/55 hover:text-white'
-        }`}
-        aria-label={`Sort by ${label}${indicator ? ` (${indicator})` : ''}`}
-      >
-        {label}
-        {active ? (
-          indicator.includes('ascending') ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />
-        ) : (
-          <ChevronDown className="h-3.5 w-3.5 opacity-40" />
-        )}
-      </button>
-    </TableHead>
+    <span className="rounded-full border border-v2-border-subtle bg-v2-bg-elevated px-2.5 py-1 text-[11px] font-medium text-v2-text-secondary">
+      {children}
+    </span>
   )
 }
 
-function Term({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">{label}</dt>
-      <dd className="mt-1 font-medium text-white">{value}</dd>
-    </div>
-  )
-}
-
-function FilterSelect<T extends string>({
+function FilterPillGroup<T extends string>({
   label,
   value,
   onChange,
@@ -679,22 +762,24 @@ function FilterSelect<T extends string>({
   options: readonly T[]
 }) {
   return (
-    <label className="space-y-2 text-sm">
-      <span className="text-white/55">{label}</span>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value as T)}
-          className="w-full appearance-none rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none focus:border-v2-accent/50"
-        >
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
+    <div className="space-y-2">
+      <span className="text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</span>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
+              value === option
+                ? 'bg-v2-accent text-v2-accent-foreground shadow-v2-sm'
+                : 'border border-v2-border bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
+            }`}
+          >
+            {option}
+          </button>
+        ))}
       </div>
-    </label>
+    </div>
   )
 }

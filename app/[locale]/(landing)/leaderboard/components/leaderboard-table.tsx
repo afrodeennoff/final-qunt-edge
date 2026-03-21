@@ -1,12 +1,18 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { CardV2, SkeletonV2 } from '@/components/ui/v2'
-import { Trophy, Medal, Award, Flame, Clock3, TrendingUp, TrendingDown } from 'lucide-react'
+import { Trophy, Medal, Award, Flame, Clock3, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 type SortKey = 'monthly_pnl' | 'winrate' | 'totalTrades'
+
+interface LeaderboardTableProps {
+  entries: LeaderboardEntry[]
+  locale: string
+}
 
 const podiumConfig = {
   1: { icon: Trophy, label: 'Champion', accent: 'text-amber-300', border: 'border-amber-300/20', bg: 'bg-amber-300/8' },
@@ -31,7 +37,29 @@ function formatMinutes(value: number): string {
   return `${hours}h ${minutes}m`
 }
 
-function PodiumCard({ entry, rank }: { entry: LeaderboardEntry; rank: 1 | 2 | 3 }) {
+function TraderLink({ userId, username, locale, children, className }: {
+  userId: string
+  username: string
+  locale: string
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <Link
+      href={`/${locale}/trader/${userId}`}
+      className={cn(
+        'group inline-flex items-center gap-1.5 transition-colors hover:text-v2-accent',
+        className
+      )}
+      title={`View ${username}'s profile`}
+    >
+      {children}
+      <ExternalLink className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+    </Link>
+  )
+}
+
+function PodiumCard({ entry, rank, locale }: { entry: LeaderboardEntry; rank: 1 | 2 | 3; locale: string }) {
   const config = podiumConfig[rank]
   const Icon = config.icon
 
@@ -42,7 +70,9 @@ function PodiumCard({ entry, rank }: { entry: LeaderboardEntry; rank: 1 | 2 | 3 
         {config.label}
       </div>
       <div className="mt-5">
-        <p className="text-lg font-semibold text-v2-text-primary">{entry.username}</p>
+        <TraderLink userId={entry.userId} username={entry.username} locale={locale}>
+          <p className="text-lg font-semibold text-v2-text-primary">{entry.username}</p>
+        </TraderLink>
         <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{formatCurrency(entry.monthlyPnl)}</p>
         <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
           <Metric label="Return" value={`${entry.returnPct >= 0 ? '+' : ''}${entry.returnPct}%`} tone="text-emerald-300" />
@@ -64,7 +94,7 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: s
   )
 }
 
-function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
+function LeaderboardRow({ entry, locale }: { entry: LeaderboardEntry; locale: string }) {
   return (
     <tr className="border-white/10 hover:bg-white/[0.03]">
       <td className="px-4 py-4">
@@ -79,7 +109,9 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
             {entry.rank}
           </span>
           <div>
-            <p className="font-medium text-white">{entry.username}</p>
+            <TraderLink userId={entry.userId} username={entry.username} locale={locale}>
+              <p className="font-medium text-white">{entry.username}</p>
+            </TraderLink>
             <p className="text-xs text-white/45">{entry.topInstrument ?? 'No pair data'}</p>
           </div>
         </div>
@@ -123,7 +155,7 @@ export function LeaderboardTableSkeleton() {
   )
 }
 
-export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
+export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, locale }: LeaderboardTableProps) {
   const [sortBy, setSortBy] = React.useState<SortKey>('monthly_pnl')
 
   const sorted = React.useMemo(() => {
@@ -173,7 +205,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
 
       <div className="grid gap-4 lg:grid-cols-3">
         {top3.map((entry, index) => (
-          <PodiumCard key={entry.userId} entry={entry} rank={(index + 1) as 1 | 2 | 3} />
+          <PodiumCard key={entry.userId} entry={entry} rank={(index + 1) as 1 | 2 | 3} locale={locale} />
         ))}
       </div>
 
@@ -197,7 +229,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
             </thead>
             <tbody>
               {rest.map((entry) => (
-                <LeaderboardRow key={entry.userId} entry={entry} />
+                <LeaderboardRow key={entry.userId} entry={entry} locale={locale} />
               ))}
             </tbody>
           </table>

@@ -1,11 +1,17 @@
 import { LeaderboardIcon } from '@/components/icons/svg-icons'
 import { getLeaderboardData } from './data/leaderboard-query'
-import { LeaderboardTable } from './components/leaderboard-table'
+import { LeaderboardContent } from './components/leaderboard-content'
 
 export const dynamic = 'force-dynamic'
 
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   const entries = await getLeaderboardData()
+
   return (
     <div className="min-h-screen bg-v2-bg-base">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -16,7 +22,7 @@ export default async function LeaderboardPage() {
         <p className="mb-6 max-w-3xl text-v2-text-secondary">
           Top opted-in traders ranked from real monthly trading data. The board now shows deeper production metrics including return percentage, top pair, average win/loss, duration, and streak behavior.
         </p>
-        <LeaderboardTable entries={entries} />
+        <LeaderboardContent initialEntries={entries} locale={locale} />
       </div>
     </div>
   )
