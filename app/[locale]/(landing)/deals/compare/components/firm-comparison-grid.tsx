@@ -45,7 +45,8 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
               <th className="px-3 py-3 font-semibold">Typical Entry</th>
               <th className="px-3 py-3 font-semibold">Drawdown Model</th>
               <th className="px-3 py-3 font-semibold">Payout Tempo</th>
-              <th className="px-3 py-3 font-semibold">Best For</th>
+              <th className="px-3 py-3 font-semibold">Tracked Accounts</th>
+              <th className="px-3 py-3 font-semibold">Paid Payouts</th>
             </tr>
           </thead>
           <tbody>
@@ -57,11 +58,8 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
                 </td>
                 <td className="px-3 py-4 text-muted-foreground">{firm.drawdownType}</td>
                 <td className="px-3 py-4 text-muted-foreground">{firm.payoutModel}</td>
-                <td className="px-3 py-4">
-                  <span className="rounded-full border border-border bg-background px-2 py-1 text-xs text-foreground">
-                    {firm.profitSplit} split • {firm.maxAllocation}
-                  </span>
-                </td>
+                <td className="px-3 py-4 text-muted-foreground">{firm.catalogueStats.accountsCount.toLocaleString()}</td>
+                <td className="px-3 py-4 text-foreground">${firm.catalogueStats.paidPayoutAmount.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
@@ -86,12 +84,12 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
                 <dd className="text-foreground">{firm.payoutModel}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Best For</dt>
-                <dd className="text-foreground">
-                  <span className="rounded-full border border-border bg-card px-2 py-1 text-xs">
-                    {firm.profitSplit} split • {firm.maxAllocation}
-                  </span>
-                </dd>
+                <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Tracked Accounts</dt>
+                <dd className="text-foreground">{firm.catalogueStats.accountsCount.toLocaleString()}</dd>
+              </div>
+              <div>
+                <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Paid Payouts</dt>
+                <dd className="text-foreground">${firm.catalogueStats.paidPayoutAmount.toLocaleString()}</dd>
               </div>
             </dl>
           </article>

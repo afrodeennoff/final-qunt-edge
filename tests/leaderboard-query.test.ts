@@ -5,8 +5,12 @@ const { prismaMock } = vi.hoisted(() => ({
     user: {
       findMany: vi.fn(),
     },
+    account: {
+      groupBy: vi.fn(),
+    },
     trade: {
       groupBy: vi.fn(),
+      findMany: vi.fn(),
     },
   },
 }))
@@ -28,25 +32,23 @@ describe('getLeaderboardData', () => {
     ])
 
     prismaMock.trade.groupBy
-      .mockResolvedValueOnce([
-        { userId: 'user-1', _sum: { pnl: 4200 }, _count: { id: 12 } },
-      ])
-      .mockResolvedValueOnce([
-        { userId: 'user-1', _count: { id: 9 } },
-      ])
-      .mockResolvedValueOnce([
-        { userId: 'user-1', _count: { id: 3 } },
-      ])
+      .mockResolvedValueOnce([{ userId: 'user-1', _sum: { pnl: 4200 }, _count: { id: 12 } }])
+    prismaMock.account.groupBy.mockResolvedValueOnce([
+      { userId: 'user-1', _sum: { startingBalance: 100000 } },
+    ])
+    prismaMock.trade.findMany.mockResolvedValueOnce([
+      { userId: 'user-1', pnl: 500, instrument: 'XAUUSD', timeInPosition: 30, closeDate: new Date('2026-03-01') },
+      { userId: 'user-1', pnl: 250, instrument: 'XAUUSD', timeInPosition: 45, closeDate: new Date('2026-03-02') },
+      { userId: 'user-1', pnl: -100, instrument: 'NAS100', timeInPosition: 60, closeDate: new Date('2026-03-03') },
+    ])
 
     const entries = await getLeaderboardData()
 
-    expect(prismaMock.trade.groupBy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({
-          userId: { in: ['user-1'] },
-        }),
+    expect(prismaMock.trade.groupBy).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({
+        userId: { in: ['user-1'] },
       }),
-    )
+    }))
     expect(entries).toEqual([
       {
         rank: 1,
@@ -54,7 +56,14 @@ describe('getLeaderboardData', () => {
         username: 'alpha',
         monthlyPnl: 4200,
         totalTrades: 12,
-        winRate: 75,
+        winRate: 66.67,
+        returnPct: 4.2,
+        topInstrument: 'XAUUSD',
+        avgWin: 375,
+        avgLoss: 100,
+        avgDurationMinutes: 45,
+        longestWinStreak: 2,
+        longestLossStreak: 1,
       },
     ])
   })
@@ -72,16 +81,19 @@ describe('getLeaderboardData', () => {
         { userId: 'user-2', _sum: { pnl: 900 }, _count: { id: 10 } },
         { userId: 'user-3', _sum: { pnl: 1200 }, _count: { id: 8 } },
       ])
-      .mockResolvedValueOnce([
-        { userId: 'user-1', _count: { id: 7 } },
-        { userId: 'user-2', _count: { id: 6 } },
-        { userId: 'user-3', _count: { id: 6 } },
-      ])
-      .mockResolvedValueOnce([
-        { userId: 'user-1', _count: { id: 3 } },
-        { userId: 'user-2', _count: { id: 4 } },
-        { userId: 'user-3', _count: { id: 2 } },
-      ])
+    prismaMock.account.groupBy.mockResolvedValueOnce([
+      { userId: 'user-1', _sum: { startingBalance: 100000 } },
+      { userId: 'user-2', _sum: { startingBalance: 100000 } },
+      { userId: 'user-3', _sum: { startingBalance: 100000 } },
+    ])
+    prismaMock.trade.findMany.mockResolvedValueOnce([
+      { userId: 'user-1', pnl: 100, instrument: 'XAUUSD', timeInPosition: 20, closeDate: new Date('2026-03-01') },
+      { userId: 'user-1', pnl: -10, instrument: 'XAUUSD', timeInPosition: 25, closeDate: new Date('2026-03-02') },
+      { userId: 'user-2', pnl: 200, instrument: 'USOIL', timeInPosition: 15, closeDate: new Date('2026-03-01') },
+      { userId: 'user-2', pnl: -10, instrument: 'USOIL', timeInPosition: 20, closeDate: new Date('2026-03-02') },
+      { userId: 'user-3', pnl: 300, instrument: 'GBPUSD', timeInPosition: 35, closeDate: new Date('2026-03-01') },
+      { userId: 'user-3', pnl: -10, instrument: 'GBPUSD', timeInPosition: 40, closeDate: new Date('2026-03-02') },
+    ])
 
     const entries = await getLeaderboardData('totalTrades')
 

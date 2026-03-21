@@ -1,214 +1,121 @@
 'use client'
+
 import React from 'react'
 import { cn } from '@/lib/utils'
-import { CardV2, SkeletonV2, type CardVariant, type CardStatusTone } from '@/components/ui/v2'
-import { AvatarV2, AvatarV2Fallback } from '@/components/ui/v2'
-import { Trophy, Medal, Award } from 'lucide-react'
+import { CardV2, SkeletonV2 } from '@/components/ui/v2'
+import { Trophy, Medal, Award, Flame, Clock3, TrendingUp, TrendingDown } from 'lucide-react'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 type SortKey = 'monthly_pnl' | 'winrate' | 'totalTrades'
 
 const podiumConfig = {
-  1: {
-    icon: Trophy,
-    label: 'Champion',
-    bg: 'bg-v2-accent-subtle',
-    border: 'border-v2-accent/40',
-    text: 'text-v2-accent',
-    glow: 'shadow-v2-glow',
-  },
-  2: {
-    icon: Medal,
-    label: 'Runner-up',
-    bg: 'bg-v2-bg-elevated',
-    border: 'border-v2-border',
-    text: 'text-v2-text-secondary',
-    glow: 'shadow-v2-sm',
-  },
-  3: {
-    icon: Award,
-    label: 'Third Place',
-    bg: 'bg-v2-warning-subtle',
-    border: 'border-v2-warning/30',
-    text: 'text-v2-warning',
-    glow: 'shadow-v2-sm',
-  },
+  1: { icon: Trophy, label: 'Champion', accent: 'text-amber-300', border: 'border-amber-300/20', bg: 'bg-amber-300/8' },
+  2: { icon: Medal, label: 'Runner-up', accent: 'text-slate-300', border: 'border-slate-300/20', bg: 'bg-slate-300/8' },
+  3: { icon: Award, label: 'Third', accent: 'text-orange-300', border: 'border-orange-300/20', bg: 'bg-orange-300/8' },
 } as const
 
-interface PodiumCardProps {
-  entry: LeaderboardEntry & { rank: number }
-  rank: 1 | 2 | 3
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(value)
 }
 
-function PodiumCard({ entry, rank }: PodiumCardProps) {
+function formatMinutes(value: number): string {
+  if (!Number.isFinite(value) || value <= 0) return '—'
+  const hours = Math.floor(value / 60)
+  const minutes = Math.round(value % 60)
+  if (hours <= 0) return `${minutes}m`
+  if (minutes === 0) return `${hours}h`
+  return `${hours}h ${minutes}m`
+}
+
+function PodiumCard({ entry, rank }: { entry: LeaderboardEntry; rank: 1 | 2 | 3 }) {
   const config = podiumConfig[rank]
   const Icon = config.icon
 
-  // Determine variant based on rank
-  const variant: CardVariant = rank === 1 ? 'outlined' : 'default'
-  
-  // Determine status based on monthly PnL
-  const status: CardStatusTone | undefined =
-    entry.monthlyPnl >= 0 ? 'live' : 'error'
-
   return (
-    <CardV2 
-      variant={variant}
-      hover={false}
-      status={status}
-      className={cn(
-        'flex flex-col items-center p-4 text-center transition-all duration-300',
-        config.bg,
-        config.border,
-        'border',
-        config.glow,
-        rank === 1 && 'shadow-v2-lg ring-1 ring-v2-accent/25'
-      )}
-    >
-      <div className={cn('flex items-center gap-1.5 mb-3', config.text)}>
-        <Icon className="w-5 h-5" strokeWidth={2.5} />
-        <span className={cn('text-sm font-bold', config.text)}>{config.label}</span>
+    <CardV2 className={cn('rounded-[28px] border p-5 text-left', config.border, config.bg)}>
+      <div className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]', config.border, config.accent)}>
+        <Icon className="h-3.5 w-3.5" />
+        {config.label}
       </div>
-
-      <AvatarV2 size="lg" className="mb-3 ring-2 ring-v2-border-subtle">
-        <AvatarV2Fallback className={cn(
-          'text-lg font-semibold',
-          rank === 1 && 'bg-v2-accent-subtle text-v2-accent',
-          rank === 2 && 'bg-v2-bg-muted text-v2-text-secondary',
-          rank === 3 && 'bg-v2-warning-subtle text-v2-warning'
-        )}>
-          {entry.username.charAt(0).toUpperCase()}
-        </AvatarV2Fallback>
-      </AvatarV2>
-
-      <div className="font-medium text-v2-text-primary text-sm truncate max-w-full mb-2">
-        {entry.username}
-      </div>
-
-      <div className="space-y-1 w-full">
-        <div className={cn(
-          'text-lg font-bold',
-          entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
-        )}>
-          {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
-        </div>
-
-        <div className="flex items-center justify-center gap-1">
-          <div className={cn(
-            'w-1.5 h-1.5 rounded-full',
-            entry.winRate >= 50 ? 'bg-v2-success' : 'bg-v2-text-tertiary'
-          )} />
-          <span className="text-xs text-v2-text-secondary">
-            {entry.winRate}% Win
-          </span>
+      <div className="mt-5">
+        <p className="text-lg font-semibold text-v2-text-primary">{entry.username}</p>
+        <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{formatCurrency(entry.monthlyPnl)}</p>
+        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <Metric label="Return" value={`${entry.returnPct >= 0 ? '+' : ''}${entry.returnPct}%`} tone="text-emerald-300" />
+          <Metric label="Win Rate" value={`${entry.winRate}%`} />
+          <Metric label="Top Pair" value={entry.topInstrument ?? '—'} />
+          <Metric label="Trades" value={entry.totalTrades.toLocaleString()} />
         </div>
       </div>
     </CardV2>
   )
 }
 
-interface PodiumSectionProps {
-  top3: (LeaderboardEntry & { rank: number })[]
-}
-
-function PodiumSection({ top3 }: PodiumSectionProps) {
-  if (top3.length === 0) return null
-
-  const [first, second, third] = top3
-
+function Metric({ label, value, tone }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-center gap-2 mb-6">
-        <Trophy className="w-6 h-6 text-v2-accent" />
-        <h2 className="text-xl font-bold text-v2-text-primary">Top Traders</h2>
-        <Trophy className="w-6 h-6 text-v2-accent" />
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center sm:items-end">
-        <div className="sm:mt-8 order-2 sm:order-1">
-          {second && <PodiumCard entry={second} rank={2} />}
-        </div>
-
-        <div className="order-1 sm:order-2">
-          {first && <PodiumCard entry={first} rank={1} />}
-        </div>
-
-        <div className="sm:mt-8 order-3">
-          {third && <PodiumCard entry={third} rank={3} />}
-        </div>
-      </div>
+    <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-white/40">{label}</p>
+      <p className={cn('mt-1 text-sm font-semibold text-white', tone)}>{value}</p>
     </div>
   )
 }
 
-function LeaderboardRow({ entry }: { entry: LeaderboardEntry & { rank: number } }) {
+function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   return (
-    <CardV2 className={cn(
-      "flex items-center gap-4 p-4",
-      entry.rank === 1 && "border-v2-accent/50 bg-v2-accent-subtle"
-    )}>
-      <div className="w-8 text-center">
-        <span className={cn(
-          "text-sm font-bold",
-         entry.rank === 1 ? "text-v2-accent" :
-          entry.rank === 2 ? "text-v2-text-secondary" :
-          entry.rank === 3 ? "text-v2-warning" :
-          "text-v2-text-tertiary"
-        )}>
-          #{entry.rank}
-        </span>
-      </div>
-
-      <AvatarV2 size="md" className="shrink-0">
-        <AvatarV2Fallback className="bg-v2-accent-subtle text-v2-accent">
-          {entry.username.charAt(0).toUpperCase()}
-        </AvatarV2Fallback>
-      </AvatarV2>
-       <div className="flex-1 min-w-0">
-         <div className="font-medium text-v2-text-primary truncate">{entry.username}</div>
-         <div className="text-xs text-v2-text-secondary">{entry.totalTrades.toLocaleString()} trades</div>
-       </div>
-
-      <div className="flex gap-6 text-right shrink-0">
-        <div>
-          <div className="text-xs text-v2-text-tertiary">Win Rate</div>
-          <div className={cn(
-            "text-sm font-semibold",
-            entry.winRate >= 50 ? "text-v2-success" : "text-v2-text-secondary"
+    <tr className="border-white/10 hover:bg-white/[0.03]">
+      <td className="px-4 py-4">
+        <div className="flex items-center gap-3">
+          <span className={cn(
+            'inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold',
+            entry.rank === 1 && 'border-amber-300/30 bg-amber-300/10 text-amber-300',
+            entry.rank === 2 && 'border-slate-300/30 bg-slate-300/10 text-slate-300',
+            entry.rank === 3 && 'border-orange-300/30 bg-orange-300/10 text-orange-300',
+            entry.rank > 3 && 'border-white/10 bg-white/[0.03] text-white/70',
           )}>
-            {entry.winRate}%
+            {entry.rank}
+          </span>
+          <div>
+            <p className="font-medium text-white">{entry.username}</p>
+            <p className="text-xs text-white/45">{entry.topInstrument ?? 'No pair data'}</p>
           </div>
         </div>
-        <div>
-          <div className="text-xs text-v2-text-tertiary">Monthly PnL</div>
-         <div className={cn(
-           'text-lg font-bold',
-           entry.monthlyPnl >= 0 ? 'text-v2-success' : 'text-v2-error'
-         )}>
-           {entry.monthlyPnl >= 0 ? '+' : ''}${entry.monthlyPnl.toLocaleString()}
-         </div>
-        </div>
-      </div>
-    </CardV2>
+      </td>
+      <td className="px-4 py-4 text-emerald-300">{formatCurrency(entry.monthlyPnl)}</td>
+      <td className="px-4 py-4 text-emerald-300">{`${entry.returnPct >= 0 ? '+' : ''}${entry.returnPct}%`}</td>
+      <td className="px-4 py-4 text-white/80">{entry.winRate}%</td>
+      <td className="px-4 py-4 text-white/80">{entry.topInstrument ?? '—'}</td>
+      <td className="px-4 py-4 text-emerald-300">{entry.avgWin > 0 ? formatCurrency(entry.avgWin) : '—'}</td>
+      <td className="px-4 py-4 text-rose-300">{entry.avgLoss > 0 ? `-${formatCurrency(entry.avgLoss)}` : '—'}</td>
+      <td className="px-4 py-4 text-white/80">
+        <span className="inline-flex items-center gap-2">
+          <Clock3 className="h-3.5 w-3.5 text-white/35" />
+          {formatMinutes(entry.avgDurationMinutes)}
+        </span>
+      </td>
+      <td className="px-4 py-4 text-white/80">{entry.totalTrades.toLocaleString()}</td>
+      <td className="px-4 py-4 text-rose-300">{entry.longestLossStreak}</td>
+      <td className="px-4 py-4 text-emerald-300">
+        <span className="inline-flex items-center gap-2">
+          <Flame className="h-3.5 w-3.5" />
+          {entry.longestWinStreak}
+        </span>
+      </td>
+    </tr>
   )
 }
 
-const MemoizedLeaderboardRow = React.memo(LeaderboardRow)
-
 export function LeaderboardTableSkeleton() {
   return (
-    <div className="space-y-2">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <CardV2 key={i} className="flex items-center gap-4 p-4">
-          <SkeletonV2 className="w-8 h-4" />
-          <SkeletonV2 className="w-8 h-8 rounded-full" />
-          <div className="flex-1 space-y-2">
-            <SkeletonV2 className="h-4 w-24" />
-            <SkeletonV2 className="h-3 w-16" />
-          </div>
-          <div className="flex gap-6">
-            <SkeletonV2 className="h-8 w-16" />
-            <SkeletonV2 className="h-8 w-20" />
+    <div className="space-y-3">
+      {[1, 2, 3, 4].map((i) => (
+        <CardV2 key={i} className="rounded-3xl p-5">
+          <SkeletonV2 className="h-6 w-40" />
+          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+            {[1, 2, 3, 4].map((j) => <SkeletonV2 key={j} className="h-16 w-full rounded-2xl" />)}
           </div>
         </CardV2>
       ))}
@@ -220,61 +127,86 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries }
   const [sortBy, setSortBy] = React.useState<SortKey>('monthly_pnl')
 
   const sorted = React.useMemo(() => {
-     const result = [...entries].sort((a, b) => {
-       switch (sortBy) {
-         case 'winrate':
-           if (b.winRate !== a.winRate) return b.winRate - a.winRate
-           return b.monthlyPnl - a.monthlyPnl
-         case 'totalTrades':
-           if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
-           return b.monthlyPnl - a.monthlyPnl
-         default:
-           if (b.monthlyPnl !== a.monthlyPnl) return b.monthlyPnl - a.monthlyPnl
-           return b.winRate - a.winRate
-       }
-     })
+    const result = [...entries].sort((a, b) => {
+      switch (sortBy) {
+        case 'winrate':
+          if (b.winRate !== a.winRate) return b.winRate - a.winRate
+          return b.monthlyPnl - a.monthlyPnl
+        case 'totalTrades':
+          if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
+          return b.monthlyPnl - a.monthlyPnl
+        default:
+          if (b.monthlyPnl !== a.monthlyPnl) return b.monthlyPnl - a.monthlyPnl
+          return b.winRate - a.winRate
+      }
+    })
+
     return result.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
   }, [entries, sortBy])
 
   const top3 = sorted.slice(0, 3)
-  const rest = sorted.slice(3)
+  const rest = sorted
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-2 mb-4">
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-2">
         {[
-          { key: 'monthly_pnl' as SortKey, label: 'Monthly PnL' },
-          { key: 'winrate' as SortKey, label: 'Win Rate' },
-          { key: 'totalTrades' as SortKey, label: 'Total Trades' },
-        ].map(({ key, label }) => (
+          { key: 'monthly_pnl' as SortKey, label: 'Monthly PnL', icon: TrendingUp },
+          { key: 'winrate' as SortKey, label: 'Win Rate', icon: Trophy },
+          { key: 'totalTrades' as SortKey, label: 'Trade Count', icon: TrendingDown },
+        ].map(({ key, label, icon: Icon }) => (
           <button
             key={key}
             onClick={() => setSortBy(key)}
             className={cn(
-              "px-3 py-1.5 text-xs font-medium rounded-v2-md transition-colors",
+              'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
               sortBy === key
-                ? "bg-v2-accent text-v2-accent-foreground"
-                : "bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover"
+                ? 'border-v2-accent/40 bg-v2-accent/10 text-v2-accent'
+                : 'border-white/10 bg-white/[0.03] text-white/60 hover:text-white'
             )}
           >
+            <Icon className="h-4 w-4" />
             {label}
           </button>
         ))}
       </div>
 
-      <PodiumSection top3={top3} />
-
-      <div className="space-y-2">
-        {rest.map((entry) => (
-          <MemoizedLeaderboardRow key={entry.userId} entry={entry} />
+      <div className="grid gap-4 lg:grid-cols-3">
+        {top3.map((entry, index) => (
+          <PodiumCard key={entry.userId} entry={entry} rank={(index + 1) as 1 | 2 | 3} />
         ))}
-
-        {sorted.length === 0 && (
-          <CardV2 className="p-8 text-center">
-            <p className="text-v2-text-secondary">No trading data found.</p>
-          </CardV2>
-        )}
       </div>
+
+      <CardV2 className="overflow-hidden rounded-[30px] border-white/10 bg-white/[0.03] p-0">
+        <div className="overflow-x-auto">
+          <table className="min-w-[1160px] w-full border-collapse text-left text-sm">
+            <thead className="border-b border-white/10 bg-white/[0.03]">
+              <tr className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+                <th className="px-4 py-4 font-semibold">Rank</th>
+                <th className="px-4 py-4 font-semibold">Profit</th>
+                <th className="px-4 py-4 font-semibold">Profit %</th>
+                <th className="px-4 py-4 font-semibold">Win Ratio</th>
+                <th className="px-4 py-4 font-semibold">Pair</th>
+                <th className="px-4 py-4 font-semibold">Avg. Win</th>
+                <th className="px-4 py-4 font-semibold">Avg. Loss</th>
+                <th className="px-4 py-4 font-semibold">Avg. Duration</th>
+                <th className="px-4 py-4 font-semibold">Trades</th>
+                <th className="px-4 py-4 font-semibold">Losing Streak</th>
+                <th className="px-4 py-4 font-semibold">Winning Streak</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rest.map((entry) => (
+                <LeaderboardRow key={entry.userId} entry={entry} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {rest.length === 0 ? (
+          <div className="p-10 text-center text-white/55">No public trading data found for this month.</div>
+        ) : null}
+      </CardV2>
     </div>
   )
 })

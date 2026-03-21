@@ -1,5 +1,11 @@
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
+import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
+import {
+  PROP_FIRM_MATCH_SOURCE_DATE,
+  PROP_FIRM_MATCH_SPOTLIGHTS,
+  type PropFirmMatchSpotlight,
+} from '@/lib/propfirmmatch/source'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
 export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
@@ -27,6 +33,9 @@ export interface UnifiedFirm {
   id: string
   slug: string
   name: string
+  description?: string
+  shortDesc?: string
+  referralUrl?: string
   logoUrl?: string
   category: MarketType
   platform: TradingPlatform
@@ -34,6 +43,16 @@ export interface UnifiedFirm {
   drawdownType: DrawdownType
   profitSplit: string
   maxAllocation: string
+  challengeCount: number
+  spotlight: PropFirmMatchSpotlight | null
+  catalogueStats: {
+    accountsCount: number
+    totalAccountValue: number
+    paidPayoutAmount: number
+    paidPayoutCount: number
+    pendingPayoutAmount: number
+    sizeBreakdown: string
+  }
   coupons: FirmCoupon[]
   _count: {
     reviews: number
@@ -48,6 +67,25 @@ interface FirmCoupon {
   challengeFee: number | null
   expiresAt: Date | null
   claimUrl: string | null
+}
+
+export interface DealsOverview {
+  totalTrackedFirms: number
+  totalLiveDeals: number
+  totalAccounts: number
+  totalAccountValue: number
+  totalPaidPayoutAmount: number
+  totalPaidPayoutCount: number
+}
+
+export interface DealsSpotlightCollection {
+  updatedAt: string
+  futures: PropFirmMatchSpotlight[]
+  cfd: PropFirmMatchSpotlight[]
+}
+
+function normalizeFirmName(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '')
 }
 
 export interface FaqItem {
@@ -109,10 +147,21 @@ export const getActiveDeals = unstable_cache(
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   const now = new Date()
+  const catalogue = await getPropfirmCatalogueData('allTime')
+  const catalogueMap = new Map(
+    catalogue.stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
+  )
+  const spotlightMap = new Map(
+    PROP_FIRM_MATCH_SPOTLIGHTS.map((entry) => [normalizeFirmName(entry.name), entry])
+  )
 
   const firms = await prisma.propFirm.findMany({
     where: { isActive: true },
     include: {
+      challenges: {
+        where: { isActive: true },
+        select: { id: true },
+      },
       coupons: {
         where: {
           isActive: true,
@@ -135,6 +184,9 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     id: firm.id,
     slug: firm.slug,
     name: firm.name,
+    description: firm.description ?? undefined,
+    shortDesc: firm.shortDesc ?? undefined,
+    referralUrl: firm.referralUrl ?? undefined,
     logoUrl: firm.logoUrl ?? undefined,
     category: (firm.category || 'Futures') as MarketType,
     platform: (firm.platform || 'Tradovate') as TradingPlatform,
@@ -142,6 +194,16 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
     profitSplit: firm.profitSplit || '80/20',
     maxAllocation: firm.maxAllocation || '$100K',
+    challengeCount: firm.challenges.length,
+    spotlight: spotlightMap.get(normalizeFirmName(firm.name)) ?? null,
+    catalogueStats: {
+      accountsCount: catalogueMap.get(normalizeFirmName(firm.name))?.accountsCount ?? 0,
+      totalAccountValue: catalogueMap.get(normalizeFirmName(firm.name))?.totalAccountValue ?? 0,
+      paidPayoutAmount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.paidAmount ?? 0,
+      paidPayoutCount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.paidCount ?? 0,
+      pendingPayoutAmount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.pendingAmount ?? 0,
+      sizeBreakdown: catalogueMap.get(normalizeFirmName(firm.name))?.sizeBreakdown ?? 'No live account data yet',
+    },
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
@@ -162,6 +224,36 @@ export const getUnifiedFirms = unstable_cache(
   ['deals-firms'],
   { revalidate: 3600, tags: ['deals', 'prop-firms'] }
 )
+
+export async function getDealsOverview(): Promise<DealsOverview> {
+  const [firms, deals, catalogue] = await Promise.all([
+    getUnifiedFirms(),
+    getActiveDeals(),
+    getPropfirmCatalogueData('allTime'),
+  ])
+
+  const totalAccounts = catalogue.stats.reduce((sum, item) => sum + item.accountsCount, 0)
+  const totalAccountValue = catalogue.stats.reduce((sum, item) => sum + item.totalAccountValue, 0)
+  const totalPaidPayoutAmount = catalogue.stats.reduce((sum, item) => sum + item.payouts.paidAmount, 0)
+  const totalPaidPayoutCount = catalogue.stats.reduce((sum, item) => sum + item.payouts.paidCount, 0)
+
+  return {
+    totalTrackedFirms: firms.length,
+    totalLiveDeals: deals.length,
+    totalAccounts,
+    totalAccountValue,
+    totalPaidPayoutAmount,
+    totalPaidPayoutCount,
+  }
+}
+
+export function getDealsSpotlights(): DealsSpotlightCollection {
+  return {
+    updatedAt: PROP_FIRM_MATCH_SOURCE_DATE,
+    futures: PROP_FIRM_MATCH_SPOTLIGHTS.filter((item) => item.category === 'Futures'),
+    cfd: PROP_FIRM_MATCH_SPOTLIGHTS.filter((item) => item.category === 'CFD'),
+  }
+}
 
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [
   { question: 'How are deals verified?', answer: 'Each deal is manually checked against public checkout pages and then stamped with a verification timestamp in our editorial queue.' },

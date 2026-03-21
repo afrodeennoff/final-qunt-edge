@@ -6,6 +6,26 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ## 🚀 Recent Feature Updates
 
+### 2026-03-21: Home/Data Unification + Public Deals/Leaderboard Production Pass
+- **What changed:** Pushed the public home, deals, and leaderboard surfaces into one tighter dark-only data-backed system, added a typed PropFirmMatch spotlight source for top futures/CFD firms, and expanded leaderboard/deals rows to carry richer production metrics.
+- **What I want:** The public experience should feel unified from the homepage down into firm discovery and leaderboard review, with real account/payout context on deals cards and richer trader metrics on the leaderboard instead of thin placeholder summaries.
+- **What I don't want:** A marketing page disconnected from product data, prop firm cards that only show coupon codes, missing company descriptions when a user opens a firm, or a leaderboard UI that lacks the row detail traders expect.
+- **How we fixed that:**
+  - Rebuilt `app/[locale]/(home)/components/HomeContent.tsx` into a minimal motion-led homepage that now surfaces live firm/deal/leaderboard context instead of a disconnected static marketing stack.
+  - Updated `app/[locale]/(home)/page.tsx` to fetch `getDealsOverview()`, `getDealsSpotlights()`, and `getLeaderboardData()` so the homepage is driven by the same public data model as the rest of the landing product.
+  - Added `lib/propfirmmatch/source.ts` as a typed editorial source layer for top futures and CFD/forex firms, including current source links and snapshot date.
+  - Extended `server/deals.ts` so unified firms now include descriptions, referral links, challenge counts, internal account/payout aggregates, and optional PropFirmMatch spotlight matches.
+  - Rebuilt `app/[locale]/(landing)/deals/components/deals-experience.tsx` around company-level cards, richer live-deal cards, spotlight sections, and comparison sorting by tracked accounts and paid payouts.
+  - Updated `app/[locale]/(landing)/deals/page.tsx` and `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx` so the deals surface can render total accounts, tracked value, and paid-payout metrics directly from our internal catalogue/payout data.
+  - Expanded `app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts` to compute return percentage, top instrument, average win/loss, average duration, and streaks from monthly trades.
+  - Rebuilt `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx` into a fuller board closer to the requested layout, with podium cards plus detailed row metrics.
+  - Updated `tests/leaderboard-query.test.ts` to cover the richer leaderboard output contract.
+- **Key Files:** `app/[locale]/(home)/components/HomeContent.tsx`, `app/[locale]/(home)/page.tsx`, `lib/propfirmmatch/source.ts`, `server/deals.ts`, `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `app/[locale]/(landing)/deals/page.tsx`, `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx`, `app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts`, `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`, `app/[locale]/(landing)/leaderboard/page.tsx`, `tests/leaderboard-query.test.ts`
+- **Verification:**
+  - `npx vitest run tests/leaderboard-query.test.ts tests/theme-provider.test.tsx` -> passes (`5/5`).
+  - `npx eslint <touched home/deals/leaderboard files>` -> warnings-only baseline (`0` errors).
+  - `npm run -s typecheck` -> passes.
+
 ### 2026-03-21: Home Redesign + Dark-Only Theme Unification
 - **What changed:** Rebuilt the public home page into a smaller minimal dark-only marketing surface, collapsed the active theme path to a unified dark presentation, and reduced card drift by aligning the V2 card wrapper with the base card primitive.
 - **What I want:** The landing experience should feel restrained, premium, and consistent across public/product surfaces, with one dark visual system and one shared card language instead of mixed light/system/theme variants.
