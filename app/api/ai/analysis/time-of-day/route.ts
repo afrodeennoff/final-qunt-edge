@@ -6,6 +6,7 @@ import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError } from "@/lib/ai/timeout";
 
 // Wrapper for time-of-day analysis - delegates to shared handler
 const timeOfDayAnalysisRateLimit = rateLimit({ 

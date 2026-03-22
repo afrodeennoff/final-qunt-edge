@@ -6,6 +6,7 @@ import { categorizeAiError, logAiRequest } from "@/lib/ai/telemetry";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError } from "@/lib/ai/timeout";
 
 // Wrapper for instrument analysis - delegates to shared handler
 const instrumentAnalysisRateLimit = rateLimit({ 
@@ -51,6 +52,29 @@ export async function POST(req: NextRequest) {
     // Delegate to shared handler
     return handleInstrumentAnalysis(unifiedData, policy, startedAt, userId, "/api/ai/analysis/instrument");
   } catch (error) {
+    if (isTimeoutError(error)) {
+      void logAiRequest({
+        userId,
+        route: "/api/ai/analysis/instrument",
+        feature: "analysis",
+        model: policy.model,
+        provider: policy.provider,
+        latencyMs: policy.timeoutMs,
+        success: false,
+        errorCategory: "model_timeout",
+        errorCode: "TIMEOUT",
+        sampleRate: 1,
+      });
+      logAiError("[Instrument Analysis] AI request timed out", error, { userId, timeoutMs: policy.timeoutMs });
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
+    }
+
     if (error instanceof SyntaxError) {
       return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
     }

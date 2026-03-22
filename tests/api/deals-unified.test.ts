@@ -69,11 +69,20 @@ describe("/api/deals/unified", () => {
     const response = await GET(request)
     const data = await response.json()
 
-    expect(response.status).toBe(200)
-    expect(data.firms).toHaveLength(1)
-    expect(data.firms[0]).toEqual(mockFirms[0])
-    expect(data.pagination.total).toBe(1)
-    expect(getUnifiedFirms).toHaveBeenCalled()
+     expect(response.status).toBe(200)
+     expect(data.firms).toHaveLength(1)
+     const expectedFirm = {
+       ...mockFirms[0],
+       coupons: [
+         {
+           ...mockFirms[0].coupons[0],
+           expiresAt: mockFirms[0].coupons[0].expiresAt.toISOString()
+         }
+       ]
+     }
+     expect(data.firms[0]).toEqual(expectedFirm)
+     expect(data.pagination.total).toBe(1)
+     expect(getUnifiedFirms).toHaveBeenCalled()
   })
 
   it("should filter firms by search term", async () => {

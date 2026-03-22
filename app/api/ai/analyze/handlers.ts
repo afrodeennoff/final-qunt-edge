@@ -135,6 +135,7 @@ export async function handleInstrumentAnalysis(
     ],
     temperature: policy.temperature,
     stopWhen: stepCountIs(policy.maxSteps),
+    abortSignal: createAiTimeoutSignal(policy.timeoutMs),
     onStepFinish: (step) => {
       toolCallsCount += step.toolCalls?.length ?? 0;
     },
@@ -202,6 +203,7 @@ export async function handleTimeOfDayAnalysis(
     ],
     temperature: policy.temperature,
     stopWhen: stepCountIs(policy.maxSteps),
+    abortSignal: createAiTimeoutSignal(policy.timeoutMs),
     onStepFinish: (step) => {
       toolCallsCount += step.toolCalls?.length ?? 0;
     },
@@ -266,6 +268,7 @@ export async function handleGlobalAnalysis(
     messages: modelMessages,
     temperature: policy.temperature,
     stopWhen: stepCountIs(policy.maxSteps),
+    abortSignal: createAiTimeoutSignal(policy.timeoutMs),
     onStepFinish: (step) => {
       toolCallsCount += step.toolCalls?.length ?? 0;
     },
