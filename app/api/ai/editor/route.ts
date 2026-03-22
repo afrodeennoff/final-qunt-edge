@@ -117,6 +117,7 @@ export async function POST(req: NextRequest) {
           : policy.temperature,
       tools,
       stopWhen: stepCountIs(policy.maxSteps),
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       onStepFinish: (step) => {
         toolCallsCount += step.toolCalls?.length ?? 0;
       },
@@ -154,6 +155,29 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
+    if (isTimeoutError(error)) {
+      void logAiRequest({
+        userId,
+        route: "/api/ai/editor",
+        feature: "editor",
+        model: policy.model,
+        provider: policy.provider,
+        latencyMs: policy.timeoutMs,
+        success: false,
+        errorCategory: "model_timeout",
+        errorCode: "TIMEOUT",
+        sampleRate: 1,
+      });
+      logAiError("[Editor Route] AI request timed out", error, { userId, timeoutMs: policy.timeoutMs });
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
+    }
+
     if (error instanceof SyntaxError) {
       return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
     }

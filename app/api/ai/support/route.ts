@@ -18,6 +18,7 @@ import {
   logAiError,
   sanitizeAiError,
 } from "@/lib/ai/error-utils";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 const supportRateLimit = rateLimit({ limit: 12, window: 60_000, identifier: "ai-support" });
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
     const modelMessages = await convertToModelMessages(messages);
     const result = streamText({
       model: webSearch && webSearchModel ? getAiLanguageModelById(webSearchModel) : getAiLanguageModelById(selectedModel),
+      abortSignal: createAiTimeoutSignal(policy.timeoutMs),
       system: `${webSearchFallback ? "[WEB_SEARCH_FALLBACK_ACTIVE] Web search is unavailable for this environment; answer without external browsing.\n\n" : ""}You are an AI chatbot support assistant for Qunt Edge, a trading journaling platform. Your role is to gather information and direct users to the appropriate support channels.
 
 ## CRITICAL LIMITATIONS
@@ -198,6 +200,29 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
       sendReasoning: false,
     });
   } catch (error: unknown) {
+    if (isTimeoutError(error)) {
+      void logAiRequest({
+        userId,
+        route: "/api/ai/support",
+        feature: "support",
+        model: selectedModel,
+        provider: policy.provider,
+        latencyMs: policy.timeoutMs,
+        success: false,
+        errorCategory: "model_timeout",
+        errorCode: "TIMEOUT",
+        sampleRate: 1,
+      });
+      logAiError("[Support Route] AI request timed out", error, { userId, timeoutMs: policy.timeoutMs });
+      return apiError(
+        "TIMEOUT",
+        `AI request timed out after ${Math.round(policy.timeoutMs / 1000)}s`,
+        504,
+        { timeoutMs: policy.timeoutMs },
+        { "Retry-After": String(Math.ceil(policy.timeoutMs / 1000)) },
+      );
+    }
+
     if (error instanceof SyntaxError) {
       return apiError("BAD_REQUEST", "Malformed JSON request body", 400);
     }
@@ -224,7 +249,6 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
     const err = sanitizeAiError(error);
     logAiError("Support API Error", error, { userId });
 
-    // Handle rate limit errors specifically
     if (err.statusCode === 429 || err.type === "rate_limit_exceeded") {
       return apiError(
         "RATE_LIMITED",
@@ -238,7 +262,6 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
       );
     }
 
-    // Handle other AI/API errors
     if (typeof err.statusCode === "number" && err.statusCode >= 400 && err.statusCode < 500) {
       return apiError(
         "SERVICE_UNAVAILABLE",
@@ -248,7 +271,6 @@ Remember: Always be transparent about being an AI chatbot and your role in gathe
       );
     }
 
-    // Handle server errors
     return apiError(
       "INTERNAL_ERROR",
       "An unexpected error occurred. Please try again later or contact support.",

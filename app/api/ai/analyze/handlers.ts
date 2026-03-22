@@ -5,6 +5,7 @@ import { getAiPolicy } from "@/lib/ai/policy";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import { apiError } from "@/lib/api-response";
 import { getAiErrorCode, logAiError } from "@/lib/ai/error-utils";
+import { isTimeoutError, createAiTimeoutSignal } from "@/lib/ai/timeout";
 
 // Analysis Tools - Accounts
 import { generateAnalysisComponent } from "../analysis/accounts/generate-analysis-component";
@@ -66,6 +67,7 @@ export async function handleAccountsAnalysis(
     messages: modelMessages,
     temperature: policy.temperature,
     stopWhen: stepCountIs(policy.maxSteps),
+    abortSignal: createAiTimeoutSignal(policy.timeoutMs),
     onStepFinish: (step) => {
       toolCallsCount += step.toolCalls?.length ?? 0;
     },
