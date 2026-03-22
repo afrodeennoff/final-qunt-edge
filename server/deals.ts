@@ -255,6 +255,140 @@ export function getDealsSpotlights(): DealsSpotlightCollection {
   }
 }
 
+export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> => {
+  const now = new Date()
+  
+  const firm = await prisma.propFirm.findUnique({
+    where: { id: firmId, isActive: true },
+    include: {
+      challenges: {
+        where: { isActive: true },
+        select: { id: true },
+      },
+      coupons: {
+        where: {
+          isActive: true,
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gte: now } },
+          ],
+        },
+        orderBy: [
+          { challengeFee: 'asc' },
+          { discountPercent: 'desc' },
+        ],
+      },
+      _count: { select: { reviews: true, coupons: true } },
+    },
+  })
+  
+  if (!firm) return null
+  
+  // Get catalogue data for this firm
+  const catalogue = await getPropfirmCatalogueData('allTime')
+  const catalogueEntry = catalogue.stats.find(entry => 
+    normalizeFirmName(entry.propfirmName) === normalizeFirmName(firm.name)
+  )
+  
+  // Get spotlight data
+  const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find(entry => 
+    normalizeFirmName(entry.name) === normalizeFirmName(firm.name)
+  ) ?? null
+  
+  return {
+    id: firm.id,
+    slug: firm.slug,
+    name: firm.name,
+    description: firm.description ?? undefined,
+    shortDesc: firm.shortDesc ?? undefined,
+    referralUrl: firm.referralUrl ?? undefined,
+    logoUrl: firm.logoUrl ?? undefined,
+    category: (firm.category || 'Futures') as MarketType,
+    platform: (firm.platform || 'Tradovate') as TradingPlatform,
+    payoutModel: (firm.payoutModel || 'Monthly') as PayoutModel,
+    drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
+    profitSplit: firm.profitSplit || '80/20',
+    maxAllocation: firm.maxAllocation || '$100K',
+    challengeCount: firm.challenges.length,
+    spotlight: spotlight,
+    catalogueStats: {
+      accountsCount: catalogueEntry?.accountsCount ?? 0,
+      totalAccountValue: catalogueEntry?.totalAccountValue ?? 0,
+      paidPayoutAmount: catalogueEntry?.payouts.paidAmount ?? 0,
+      paidPayoutCount: catalogueEntry?.payouts.paidCount ?? 0,
+      pendingPayoutAmount: catalogueEntry?.payouts.pendingAmount ?? 0,
+      sizeBreakdown: catalogueEntry?.sizeBreakdown ?? 'No live account data yet',
+    },
+    coupons: firm.coupons.map((c) => ({
+      id: c.id,
+      code: c.code,
+      discountPercent: c.discountPercent,
+      challengeFee: c.challengeFee,
+      expiresAt: c.expiresAt,
+      claimUrl: c.claimUrl,
+    })),
+    _count: {
+      reviews: firm._count.reviews,
+      coupons: firm._count.coupons,
+    },
+  }
+}
+
+export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
+  const now = new Date()
+  
+  // First verify the firm exists and is active
+  const firm = await prisma.propFirm.findUnique({
+    where: { id: firmId, isActive: true },
+  })
+  
+  if (!firm) return []
+  
+  // Get active coupons/deals for this firm
+  const coupons = await prisma.firmCoupon.findMany({
+    where: {
+      propfirmId: firmId,
+      isActive: true,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gte: now } },
+      ],
+    },
+    include: {
+      propfirm: {
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          logoUrl: true,
+          category: true,
+          platform: true,
+          payoutModel: true,
+          drawdownType: true,
+        },
+      },
+    },
+    orderBy: { discountPercent: 'desc' },
+  })
+  
+  return coupons.map((coupon) => ({
+    id: coupon.id,
+    firmId: coupon.propfirm.id,
+    firmSlug: coupon.propfirm.slug,
+    firmName: coupon.propfirm.name,
+    logoUrl: coupon.propfirm.logoUrl ?? undefined,
+    category: (coupon.propfirm.category || 'Futures') as MarketType,
+    platform: (coupon.propfirm.platform || 'Tradovate') as TradingPlatform,
+    payoutModel: (coupon.propfirm.payoutModel || 'Monthly') as PayoutModel,
+    drawdownType: (coupon.propfirm.drawdownType || 'Static') as DrawdownType,
+    discountPercent: coupon.discountPercent,
+    couponCode: coupon.code,
+    challengeFee: coupon.challengeFee ?? 0,
+    expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
+    claimUrl: coupon.claimUrl ?? null,
+  }))
+}
+
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [
   { question: 'How are deals verified?', answer: 'Each deal is manually checked against public checkout pages and then stamped with a verification timestamp in our editorial queue.' },
   { question: 'How often is this page updated?', answer: 'The deal board is reviewed daily and refreshed faster if firms publish urgent promo changes.' },

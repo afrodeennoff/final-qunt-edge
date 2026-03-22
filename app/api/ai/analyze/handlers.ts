@@ -19,8 +19,8 @@ import { getTradesSummary } from "../chat/tools/get-trades-summary";
 import { getMostTradedInstruments } from "../chat/tools/get-most-traded-instruments";
 
 // Analysis Tools - Global (moved from inline route)
-import { getOverallPerformanceMetrics } from "../../chat/tools/get-overall-performance-metrics";
-import { getPerformanceTrends } from "../../chat/tools/get-performance-trends";
+import { getOverallPerformanceMetrics } from "../chat/tools/get-overall-performance-metrics";
+import { getPerformanceTrends } from "../chat/tools/get-performance-trends";
 import { getGlobalAnalysisPrompt } from "@/lib/ai/prompts/analysis";
 import { getAccountAnalysisPrompt } from "@/lib/ai/prompts/analysis";
 import { getInstrumentAnalysisPrompt } from "@/lib/ai/prompts/analysis";

@@ -83,7 +83,6 @@ describe("AI route error contract consistency", () => {
   it("returns normalized validation error for analysis routes", async () => {
     const routes = [
       { modulePath: "@/app/api/ai/analysis/accounts/route", requestPath: "/api/ai/analysis/accounts" },
-      { modulePath: "@/app/api/ai/analysis/global/route", requestPath: "/api/ai/analysis/global" },
       { modulePath: "@/app/api/ai/analysis/instrument/route", requestPath: "/api/ai/analysis/instrument" },
       { modulePath: "@/app/api/ai/analysis/time-of-day/route", requestPath: "/api/ai/analysis/time-of-day" },
     ] as const

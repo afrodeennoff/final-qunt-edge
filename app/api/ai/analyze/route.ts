@@ -10,7 +10,8 @@ import {
   unifiedSchema, 
   handleAccountsAnalysis, 
   handleInstrumentAnalysis, 
-  handleTimeOfDayAnalysis 
+  handleTimeOfDayAnalysis,
+  handleGlobalAnalysis
 } from "./handlers";
 
 export const maxDuration = 300;
@@ -44,6 +45,8 @@ export async function POST(req: NextRequest) {
         return handleInstrumentAnalysis(validatedData, policy, startedAt, userId, "/api/ai/analyze");
       case "time-of-day":
         return handleTimeOfDayAnalysis(validatedData, policy, startedAt, userId, "/api/ai/analyze");
+      case "global":
+        return handleGlobalAnalysis(validatedData, policy, startedAt, userId, "/api/ai/analyze");
       default:
         return apiError("VALIDATION_FAILED", "Invalid analysis type", 400);
     }
