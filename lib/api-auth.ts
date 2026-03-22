@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { prisma } from './prisma'
-import { getRedisJson, invalidateCacheNamespace, setRedisJson } from './redis-cache'
+import { getRedisJson, invalidateCacheNamespace, setRedisJson } from './redis-client'
 
 const TOKEN_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000
 

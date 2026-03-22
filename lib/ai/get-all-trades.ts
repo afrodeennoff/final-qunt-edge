@@ -1,6 +1,6 @@
 import { getTradesAction, type SerializedTrade } from "@/server/database";
 import { getUserId } from "@/server/auth";
-import { getRedisJson, setRedisJson } from "@/lib/redis-cache";
+import { getRedisJson, setRedisJson } from "@/lib/redis-client";
 
 const DEFAULT_PAGE_SIZE = 500;
 const MAX_PAGES = 200;

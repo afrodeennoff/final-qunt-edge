@@ -2,12 +2,11 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { CardV2, SkeletonV2 } from '@/components/ui/v2'
 import { Trophy, Medal, Award, Flame, Clock3, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
-import type { LeaderboardEntry } from '../data/leaderboard-query'
-
-type SortKey = 'monthly_pnl' | 'winrate' | 'totalTrades'
+import type { LeaderboardEntry, LeaderboardSort } from '../data/leaderboard-query'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -156,50 +155,33 @@ export function LeaderboardTableSkeleton() {
 }
 
 export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, locale }: LeaderboardTableProps) {
-  const [sortBy, setSortBy] = React.useState<SortKey>('monthly_pnl')
+  const searchParams = useSearchParams()
+  const currentSort = (searchParams.get('sort') ?? 'monthly_pnl') as LeaderboardSort
 
-  const sorted = React.useMemo(() => {
-    const result = [...entries].sort((a, b) => {
-      switch (sortBy) {
-        case 'winrate':
-          if (b.winRate !== a.winRate) return b.winRate - a.winRate
-          return b.monthlyPnl - a.monthlyPnl
-        case 'totalTrades':
-          if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
-          return b.monthlyPnl - a.monthlyPnl
-        default:
-          if (b.monthlyPnl !== a.monthlyPnl) return b.monthlyPnl - a.monthlyPnl
-          return b.winRate - a.winRate
-      }
-    })
-
-    return result.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
-  }, [entries, sortBy])
-
-  const top3 = sorted.slice(0, 3)
-  const rest = sorted
+  const top3 = entries.slice(0, 3)
+  const rest = entries
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
-        {[
-          { key: 'monthly_pnl' as SortKey, label: 'Monthly PnL', icon: TrendingUp },
-          { key: 'winrate' as SortKey, label: 'Win Rate', icon: Trophy },
-          { key: 'totalTrades' as SortKey, label: 'Trade Count', icon: TrendingDown },
-        ].map(({ key, label, icon: Icon }) => (
-          <button
+        {([
+          { key: 'monthly_pnl', label: 'Monthly PnL', icon: TrendingUp },
+          { key: 'winrate', label: 'Win Rate', icon: Trophy },
+          { key: 'totalTrades', label: 'Trade Count', icon: TrendingDown },
+        ] as const).map(({ key, label, icon: Icon }) => (
+          <Link
             key={key}
-            onClick={() => setSortBy(key)}
+            href={`/${locale}/leaderboard?sort=${key}`}
             className={cn(
-              'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-              sortBy === key
+              'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors no-underline',
+              currentSort === key
                 ? 'border-v2-accent/40 bg-v2-accent/10 text-v2-accent'
                 : 'border-white/10 bg-white/[0.03] text-white/60 hover:text-white'
             )}
           >
             <Icon className="h-4 w-4" />
             {label}
-          </button>
+          </Link>
         ))}
       </div>
 

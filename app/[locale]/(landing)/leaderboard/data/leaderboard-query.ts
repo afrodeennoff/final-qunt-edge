@@ -192,6 +192,9 @@ export async function getLeaderboardData(
     }
   })
 
+  // Sort entries by the requested metric, using monthlyPnl as a stable tie-breaker.
+  // JavaScript's Array.sort is stable: equal elements retain their original relative order.
+  // This ensures deterministic, non-flashing ranks when two traders are tied on the primary sort field.
   if (sort === 'winrate') {
     entries.sort((a, b) => {
       if (b.winRate !== a.winRate) return b.winRate - a.winRate
@@ -209,5 +212,7 @@ export async function getLeaderboardData(
     })
   }
 
+  // Assign ranks after sorting so ranks reflect the server-computed sort order.
+  // Client components must NOT re-sort or reassign ranks — they must use server-assigned ranks.
   return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
 }

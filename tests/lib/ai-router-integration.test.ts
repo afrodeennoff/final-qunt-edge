@@ -1,11 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from "vitest"
 
 // Mock the router dependencies
-vi.mock('@/lib/redis-cache', () => ({
-  getRedisJson: vi.fn(async () => null),
-  setRedisJson: vi.fn(async () => undefined),
-  isRedisConfigured: vi.fn(() => false),
-  runRedisCommand: vi.fn(async () => null),
+vi.mock('@/lib/redis-client', () => ({
+   getRedisJson: vi.fn(async () => null),
+   setRedisJson: vi.fn(async () => undefined),
+   isRedisConfigured: vi.fn(() => false),
+   runRedisCommand: vi.fn(async () => null),
 }))
 
 vi.mock('@/lib/env', () => ({

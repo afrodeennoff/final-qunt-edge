@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { apiError } from "@/lib/api-response"
 import { getDatabaseUserId } from "@/server/auth"
 import { computeBehaviorInsights } from "@/lib/behavior-insights"
-import { getRedisJson, setRedisJson } from "@/lib/redis-cache"
+import { getRedisJson, setRedisJson } from "@/lib/redis-client"
 
 function sanitizePeriodDays(value: string | null): number {
   if (!value) return 30

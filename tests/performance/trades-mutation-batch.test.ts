@@ -21,8 +21,8 @@ vi.mock("@/server/auth", () => ({
   getDatabaseUserId: vi.fn(),
 }))
 
-vi.mock("@/lib/redis-cache", () => ({
-  invalidateCacheNamespace,
+vi.mock("@/lib/redis-client", () => ({
+   invalidateCacheNamespace,
 }))
 
 vi.mock("@/lib/date-utils", () => ({

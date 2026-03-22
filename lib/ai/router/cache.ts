@@ -1,4 +1,4 @@
-import { getRedisJson, setRedisJson } from '@/lib/redis-cache';
+import { getRedisJson, setRedisJson } from '@/lib/redis-client';
 import { getRouterConfig } from './config';
 import crypto from 'crypto';
 

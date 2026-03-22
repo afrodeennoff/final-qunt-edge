@@ -1,6 +1,7 @@
 'use client'
 
-import { LeaderboardTable } from './leaderboard-table'
+import { Suspense } from 'react'
+import { LeaderboardTable, LeaderboardTableSkeleton } from './leaderboard-table'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 interface LeaderboardContentProps {
@@ -9,5 +10,9 @@ interface LeaderboardContentProps {
 }
 
 export function LeaderboardContent({ initialEntries, locale }: LeaderboardContentProps) {
-  return <LeaderboardTable entries={initialEntries} locale={locale} />
+  return (
+    <Suspense fallback={<LeaderboardTableSkeleton />}>
+      <LeaderboardTable entries={initialEntries} locale={locale} />
+    </Suspense>
+  )
 }

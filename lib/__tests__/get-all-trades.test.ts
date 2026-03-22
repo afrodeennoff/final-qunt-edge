@@ -15,9 +15,9 @@ vi.mock("@/server/auth", () => ({
   getUserId: () => getUserIdMock(),
 }));
 
-vi.mock("@/lib/redis-cache", () => ({
-  getRedisJson: (...args: unknown[]) => getRedisJsonMock(...args),
-  setRedisJson: (...args: unknown[]) => setRedisJsonMock(...args),
+vi.mock("@/lib/redis-client", () => ({
+   getRedisJson: (...args: unknown[]) => getRedisJsonMock(...args),
+   setRedisJson: (...args: unknown[]) => setRedisJsonMock(...args),
 }));
 
 function buildPage(total: number, page: number, hasMore: boolean): PaginatedTrades {

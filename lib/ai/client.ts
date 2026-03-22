@@ -37,6 +37,10 @@ function normalizeModelForOpenRouter(model: string): string {
  * Returns a router-aware OpenAI-compatible language model via OpenRouter.
  * When AI router is enabled, model calls use the canonical fallback chain:
  * openrouter/free -> openrouter/auto -> liquid fallback.
+ * 
+ * This is the unified approach that replaces both getAiLanguageModel and 
+ * createCompletionWithRouter paths, using the AI SDK's built-in streaming
+ * capabilities consistently.
  */
 export function getAiLanguageModel(feature: AiFeature) {
   if (!aiApiKey && !hasWarnedMissingApiKey) {
@@ -61,7 +65,7 @@ export function getAiLanguageModelById(model: string) {
   }
 
   const chain = buildRouterModelChain(routerConfig);
-  return createFallbackModel(chain);
+  return createUnifiedFallbackModel(chain);
 }
 
 function buildRouterModelChain(routerConfig: ReturnType<typeof getRouterConfig>): string[] {
@@ -79,42 +83,63 @@ function buildRouterModelChain(routerConfig: ReturnType<typeof getRouterConfig>)
   });
 }
 
-function createFallbackModel(modelChain: string[]): RouterAwareModel {
-  const baseModel = aiClient(modelChain[0]) as unknown as Record<string, unknown>;
-  const fallbackModel = {
-    ...baseModel,
-    modelId: modelChain[0],
-    async doGenerate(options: unknown) {
-      let lastError: unknown;
-      for (const modelId of modelChain) {
-        try {
-          const candidate = aiClient(modelId) as unknown as { doGenerate: (o: unknown) => Promise<unknown> };
-          return await candidate.doGenerate(options);
-        } catch (error) {
-          lastError = error;
-        }
+/**
+ * Creates a unified fallback model that properly delegates to the AI SDK
+ * instead of manually cloning and overriding methods.
+ */
+function createUnifiedFallbackModel(modelChain: string[]): RouterAwareModel {
+  // Instead of manually cloning methods, we create a proxy that
+  // delegates to the first working model in the chain
+  const baseModel = aiClient(modelChain[0]);
+  
+  // Create a proxy that tries each model in sequence for generate/stream operations
+  return new Proxy(baseModel, {
+    get(target, prop) {
+      // For doGenerate and doStream, we need special fallback handling
+      if (prop === 'doGenerate') {
+        return async (options: unknown) => {
+          let lastError: unknown;
+          for (const modelId of modelChain) {
+            try {
+              const candidate = aiClient(modelId);
+              // @ts-ignore - we know the candidate has doGenerate
+              return await candidate.doGenerate(options);
+            } catch (error) {
+              lastError = error;
+            }
+          }
+          throw lastError ?? new Error("All fallback models failed");
+        };
       }
-      throw lastError ?? new Error("All fallback models failed");
-    },
-    async doStream(options: unknown) {
-      let lastError: unknown;
-      for (const modelId of modelChain) {
-        try {
-          const candidate = aiClient(modelId) as unknown as { doStream: (o: unknown) => Promise<unknown> };
-          return await candidate.doStream(options);
-        } catch (error) {
-          lastError = error;
-        }
+      
+      if (prop === 'doStream') {
+        return async (options: unknown) => {
+          let lastError: unknown;
+          for (const modelId of modelChain) {
+            try {
+              const candidate = aiClient(modelId);
+              // @ts-ignore - we know the candidate has doStream
+              return await candidate.doStream(options);
+            } catch (error) {
+              lastError = error;
+            }
+          }
+          throw lastError ?? new Error("All fallback models failed");
+        };
       }
-      throw lastError ?? new Error("All fallback models failed");
-    },
-  };
-  return fallbackModel as unknown as RouterAwareModel;
+      
+      // For all other properties, delegate to the base model
+      // @ts-ignore - we know target has the property
+      return target[prop];
+    }
+  }) as unknown as RouterAwareModel;
 }
 
 /**
  * Direct completion function that uses the router for free tier attempts.
  * This should be used when you want explicit control over the routing process.
+ * 
+ * Kept for backward compatibility but now internally uses the unified approach.
  */
 export async function createCompletionWithRouter(
   feature: AiFeature,
@@ -122,64 +147,22 @@ export async function createCompletionWithRouter(
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
   options: { temperature?: number; model?: string } = {}
 ): Promise<{ content: string; provider: string; model: string }> {
-  const routerConfig = getRouterConfig();
-  const { model } = getAiPolicy(feature);
-  const normalizedModel = normalizeModelForOpenRouter(options.model || model);
-  
-  // Router disabled: use direct OpenRouter completion.
-  if (!routerConfig.enabled) {
-    if (!aiApiKey) {
-      throw new Error("OPENROUTER_API_KEY is required for direct OpenRouter fallback");
-    }
+  // Delegate to the unified AI Router completion function
+  const model = options.model ?? getAiPolicy(feature).model;
+  const normalizedModel = normalizeModelForOpenRouter(model);
+  const result = await aiRouter.createCompletion({
+    userId,
+    feature,
+    messages,
+    temperature: options.temperature ?? 0.3,
+    requestedModel: normalizedModel,
+  });
 
-    const response = await fetch(`${baseURL}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${aiApiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://quntedge.com",
-        "X-Title": "Qunt Edge",
-      },
-      body: JSON.stringify({
-        model: normalizedModel,
-        messages,
-        temperature: options.temperature ?? 0.3,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`OpenRouter completion failed: ${response.status} ${response.statusText}`);
-    }
-
-    const data = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) {
-      throw new Error("OpenRouter completion returned empty content");
-    }
-
-    return { content, provider: "openrouter-direct", model: normalizedModel };
-  }
-
-  try {
-    const result = await aiRouter.createCompletion({
-      userId,
-      feature,
-      messages,
-      temperature: options.temperature ?? 0.3,
-      requestedModel: normalizedModel,
-    });
-
-    return {
-      content: result.content,
-      provider: result.provider,
-      model: result.model,
-    };
-  } catch (error) {
-    logAiError("[AI Router] Completion failed", error, { feature, userId });
-    throw error;
-  }
+  return {
+    content: result.content,
+    provider: result.provider,
+    model: result.model,
+  };
 }
 
 export function getAiBaseURL(): string {

@@ -10,7 +10,7 @@ import { formatTimestamp, isChronologicalRange, normalizeToUtcTimestamp } from '
 import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
-import { invalidateCacheNamespace } from '@/lib/redis-cache'
+import { invalidateCacheNamespace } from '@/lib/redis-client'
 
 const importTradeSchema = z.object({
   accountNumber: z.string().min(1, 'Account number is required'),
