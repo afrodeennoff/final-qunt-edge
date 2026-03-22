@@ -1,13 +1,8 @@
 'use server'
 
-import { createOpenAI } from "@ai-sdk/openai"
 import { streamObject } from "ai"
 import { z } from 'zod/v3';
-
-const customOpenai = createOpenAI({
-  baseURL: "https://api.z.ai/api/paas/v4",
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { getAiLanguageModel } from "@/lib/ai/client"
 
 const QUNT_EDGE_CONTEXT = {
   fr: `Qunt Edge est une plateforme web pour day traders de futures, avec une interface intuitive et personnalisable. Conçue à partir de mon expérience personnelle en tant que day trader de futures, utilisant des stratégies de scalping, elle propose des fonctionnalités comme la gestion de multiple compte, le suivi des challenges propfirms, et des tableaux de bord personnalisables. Notre but est de fournir aux traders des analyses approfondies sur leurs habitudes de trading pour optimiser leurs stratégies et améliorer leur prise de décision.`,
@@ -61,7 +56,7 @@ export async function generateTradingAnalysis(
     const lastTwoWeeks = weekNumbers.slice(0, 2).map(weekNum => tradesByWeek[weekNum])
 
     const { partialObjectStream } = streamObject({
-      model: customOpenai("gpt-4.1-nano-2025-04-14"),
+      model: getAiLanguageModel("analysis"),
       schema: analysisSchema,
       prompt: language === 'fr'
         ? `Tu es un coach en trading qui aide les traders à progresser. Tu es toujours positif et encourageant.

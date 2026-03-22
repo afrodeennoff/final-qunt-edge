@@ -42,16 +42,6 @@ vi.mock("@/lib/ai/telemetry", async () => {
   };
 });
 
-vi.mock("openai", () => ({
-  default: class MockOpenAI {
-    public audio = {
-      transcriptions: {
-        create: vi.fn(async () => "mock transcript"),
-      },
-    };
-  },
-}));
-
 describe("AI Router - Comprehensive Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -110,22 +100,6 @@ describe("AI Router - Comprehensive Integration Tests", () => {
     expect(response.status).toBe(200);
     expect(streamTextMock).toHaveBeenCalled();
     expect(createCompletionWithRouterMock).not.toHaveBeenCalled();
-  });
-
-  it("transcribe route records telemetry on success", async () => {
-    const { POST } = await import("@/app/api/ai/transcribe/route");
-    const formData = new FormData();
-    formData.append("audio", new File(["audio"], "test.mp3", { type: "audio/mp3" }));
-
-    const response = await POST(
-      new Request("http://localhost/api/ai/transcribe", {
-        method: "POST",
-        body: formData,
-      }) as never,
-    );
-
-    expect(response.status).toBe(200);
-    expect(logAiRequestMock).toHaveBeenCalled();
   });
 
 });

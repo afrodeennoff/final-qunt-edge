@@ -22,16 +22,6 @@ vi.mock("@ai-sdk/openai", () => ({
   createOpenAI: vi.fn(() => vi.fn()),
 }))
 
-vi.mock("openai", () => ({
-  default: class MockOpenAI {
-    public audio = {
-      transcriptions: {
-        create: vi.fn(async () => "mock transcript"),
-      },
-    }
-  },
-}))
-
 interface ErrorContractBody {
   error: {
     code: string
@@ -88,22 +78,6 @@ describe("AI route error contract consistency", () => {
     expect(body.error.code).toBe("VALIDATION_FAILED")
     expect(body.error.message).toBe("Invalid support request payload")
     expect(body.error.details).toBeDefined()
-  })
-
-  it("returns normalized validation error for transcribe route missing file", async () => {
-    const { POST } = await import("@/app/api/ai/transcribe/route")
-    const formData = new FormData()
-    const response = await POST(
-      new Request("http://localhost/api/ai/transcribe", {
-        method: "POST",
-        body: formData,
-      }) as never,
-    )
-
-    expect(response.status).toBe(400)
-    const body = await parseError(response)
-    expect(body.error.code).toBe("VALIDATION_FAILED")
-    expect(body.error.message).toBe("No audio file provided")
   })
 
   it("returns normalized validation error for analysis routes", async () => {

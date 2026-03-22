@@ -6,7 +6,6 @@ export type AiGuardFeature =
   | 'support'
   | 'editor'
   | 'analysis'
-  | 'transcribe'
   | 'mappings'
   | 'format-trades'
   | 'search'
