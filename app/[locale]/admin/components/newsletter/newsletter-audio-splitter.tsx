@@ -4,7 +4,6 @@
 import { useRef, useState } from 'react'
 import { Input, Output, Conversion, ALL_FORMATS, BlobSource, WavOutputFormat, BufferTarget } from 'mediabunny'
 import { Upload, Download, Play, Pause } from 'lucide-react'
-import { TranscriptionComponent } from './newsletter-transcription'
 
 interface AudioSegment {
   buffer: ArrayBuffer
@@ -275,17 +274,12 @@ export function AudioSplitter({ onSegmentsCreated, onTranscriptionComplete }: Au
         </div>
       )}
 
-      {/* Transcription Component */}
+      {/* Transcription Component - Removed */}
       {segments.length > 0 && (
-        <div className="mt-6">
-          <TranscriptionComponent 
-            segments={segments}
-            onTranscriptionComplete={(transcriptions) => {
-              if (onTranscriptionComplete) {
-                onTranscriptionComplete(transcriptions)
-              }
-            }}
-          />
+        <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
+          <p className="text-sm text-white/60">
+            Transcription feature has been removed. Segments are ready for manual processing.
+          </p>
         </div>
       )}
     </div>
