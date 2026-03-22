@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
+import { isTimeoutError } from "@/lib/ai/timeout";
 
 export type AiErrorCategory =
   | "validation"
@@ -68,6 +69,7 @@ export function extractUsage(usage: any): AiUsage {
 }
 
 export function categorizeAiError(error: unknown): AiErrorCategory {
+  if (isTimeoutError(error)) return "model_timeout";
   const maybeError = error as any;
   const code = String(maybeError?.code || maybeError?.type || "").toLowerCase();
   const message = String(maybeError?.message || "").toLowerCase();

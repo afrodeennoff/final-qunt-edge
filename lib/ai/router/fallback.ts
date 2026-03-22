@@ -11,6 +11,7 @@ export interface RouterCompletionOptions {
   messages: OpenRouterMessage[];
   temperature?: number;
   requestedModel?: string;
+  timeoutMs?: number;
 }
 
 export interface RouterCompletionResult {
@@ -64,7 +65,6 @@ export class FallbackRouter {
     // Try each provider in sequence
     for (const provider of providers) {
       try {
-        // Make API call through circuit breaker
         const result = await this.circuitBreaker.call(
           provider.name,
           provider.model,
@@ -80,6 +80,7 @@ export class FallbackRouter {
                 output: config.openrouter.provider.maxPrice.output,
               },
             },
+            timeoutMs: options.timeoutMs,
           })
         );
         
