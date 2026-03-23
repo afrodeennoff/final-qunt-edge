@@ -1,158 +1,70 @@
-"use client"
-
-import { motion, useReducedMotion } from 'framer-motion'
-import { CardV2, CardV2Title, CardV2Description } from '@/components/ui/v2'
-import { DashboardIcon, ChartIcon, LeaderboardIcon, ProfileIcon, SettingsIcon, DealsIcon } from '@/components/icons/svg-icons'
-
-const MOTION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
-const STAGGER_DELAY = 0.08
+import { BarChart3, Brain, CalendarCheck2, Database, LayoutDashboard, ShieldCheck } from 'lucide-react'
 
 const items = [
   {
     title: 'One Truth Timeline',
     desc: 'Unify fills, notes, and context into one performance record across brokers and imports.',
-    Icon: DashboardIcon,
+    icon: BarChart3,
   },
   {
     title: 'Execution Grade Engine',
     desc: 'Score every trade against your ruleset so discipline becomes measurable, not assumed.',
-    Icon: ChartIcon,
+    icon: Database,
   },
   {
     title: 'AI Session Debriefs',
     desc: 'Get blunt post-session diagnostics with root causes and the next priorities to fix.',
-    Icon: LeaderboardIcon,
+    icon: Brain,
   },
   {
     title: 'Drift Alerts',
     desc: 'Detect emotional, sizing, and frequency drift before it compounds into drawdown.',
-    Icon: ProfileIcon,
+    icon: LayoutDashboard,
   },
   {
     title: 'Correction Loop',
     desc: 'Convert weak patterns into concrete interventions and track adherence week over week.',
-    Icon: SettingsIcon,
+    icon: CalendarCheck2,
   },
   {
     title: 'Desk-Level Oversight',
     desc: 'Give managers and mentors a clean, auditable view of process quality by trader.',
-    Icon: DealsIcon,
+    icon: ShieldCheck,
   },
 ]
 
-function FeatureCard({ item, index }: { item: typeof items[0]; index: number }) {
-  const { Icon } = item
-
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-8% 0px" }}
-      transition={{
-        duration: 0.42,
-        ease: MOTION_EASE,
-        delay: index * STAGGER_DELAY,
-      }}
-    >
-      <CardV2 className="group relative flex h-full flex-col gap-4 bg-white/[0.03] border-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 hover:border-v2-accent/30">
-        <div className="inline-flex">
-          <div className="flex h-11 w-11 items-center justify-center rounded-v2-lg bg-v2-accent-subtle p-v2-3 text-v2-accent transition-colors duration-300 group-hover:bg-v2-accent/20">
-            <Icon size={20} strokeWidth={1.5} />
-          </div>
-        </div>
-
-        <div className="flex flex-1 flex-col gap-2.5">
-          <CardV2Title className="transition-colors duration-300 group-hover:text-v2-accent">
-            {item.title}
-          </CardV2Title>
-          <CardV2Description>
-            {item.desc}
-          </CardV2Description>
-        </div>
-
-        <div className="flex items-center gap-1.5 text-v2-text-secondary transition-colors duration-300 group-hover:text-v2-accent">
-          <span className="text-xs font-medium tracking-wide">Learn more</span>
-          <svg
-            className="h-3.5 w-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </div>
-      </CardV2>
-    </motion.article>
-  )
-}
-
-function FeaturesAnimated() {
-  return (
-    <section
-      id="features"
-      className="relative px-4 py-40 sm:px-6 lg:px-8"
-    >
-      <div className="relative mx-auto max-w-6xl">
-        <motion.div
-          className="space-y-4 text-center sm:space-y-5"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: MOTION_EASE }}
-        >
-          <p className="text-[11px] uppercase tracking-[0.25em] text-v2-accent">
-            Platform Weapons
-          </p>
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-light leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
-            Built for traders who{' '}
-            <span className="block text-v2-accent">want standards, not excuses</span>
-          </h2>
-        </motion.div>
-
-        <div className="mt-12 grid gap-5 sm:mt-14 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
-          {items.map((item, index) => (
-            <FeatureCard key={item.title} item={item} index={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function FeaturesStatic() {
-  return (
-    <section
-      id="features"
-      className="relative px-4 py-40 sm:px-6 lg:px-8"
-    >
-      <div className="relative mx-auto max-w-6xl">
-        <div className="space-y-4 text-center sm:space-y-5">
-          <p className="text-[11px] uppercase tracking-[0.25em] text-v2-accent">
-            Platform Weapons
-          </p>
-          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-light leading-[0.92] tracking-[-0.025em] text-v2-text-primary">
-            Built for traders who{' '}
-            <span className="block text-v2-accent">want standards, not excuses</span>
-          </h2>
-        </div>
-
-        <div className="mt-12 grid gap-5 sm:mt-14 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
-          {items.map((item, index) => (
-            <FeatureCard key={item.title} item={item} index={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 export default function Features() {
-  const prefersReducedMotion = useReducedMotion()
-  
-  if (prefersReducedMotion) {
-    return <FeaturesStatic />
-  }
-  
-  return <FeaturesAnimated />
+  return (
+    <section id="features" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] sm:space-y-10 sm:p-10">
+        <div className="space-y-3 text-center">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
+          <h2 className="text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+            Built for traders who
+            <span className="block text-foreground">want standards, not excuses</span>
+          </h2>
+        </div>
+        <div className="h-px bg-border/50" />
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => {
+            const Icon = item.icon
+
+            return (
+              <article
+                key={item.title}
+                className="flex h-full flex-col gap-4 rounded-[28px] border border-border/70 bg-card/80 p-6 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)] transition duration-200 hover:border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--primary)/0.04)]"
+              >
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.12)] text-foreground">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-lg font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">{item.desc}</p>
+              </article>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
 }

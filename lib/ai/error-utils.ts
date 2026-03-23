@@ -16,10 +16,14 @@ function toNumberOrNull(value: unknown): number | null {
   return value;
 }
 
+<<<<<<< HEAD
 import { isTimeoutError } from "@/lib/ai/timeout";
 
 export function getAiErrorCode(error: unknown): string | null {
   if (isTimeoutError(error)) return "TIMEOUT";
+=======
+export function getAiErrorCode(error: unknown): string | null {
+>>>>>>> main
   if (!error || typeof error !== "object") return null;
   const maybeCode = (error as { code?: unknown }).code;
   return toStringOrNull(maybeCode);

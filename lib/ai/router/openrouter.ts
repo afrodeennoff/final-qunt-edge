@@ -23,7 +23,10 @@ export interface OpenRouterCompletionOptions {
   messages: OpenRouterMessage[];
   temperature?: number;
   max_tokens?: number;
+<<<<<<< HEAD
   timeoutMs?: number;
+=======
+>>>>>>> main
   provider?: {
     order?: string[];
     sort?: 'price';
@@ -46,7 +49,11 @@ export class OpenRouterClient {
       throw new Error('OpenRouter API key not configured');
     }
 
+<<<<<<< HEAD
     const fetchOptions: RequestInit = {
+=======
+    const response = await fetch(`${config.openrouter.baseUrl}/chat/completions`, {
+>>>>>>> main
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${config.openrouter.apiKey}`,
@@ -61,6 +68,7 @@ export class OpenRouterClient {
         max_tokens: options.max_tokens,
         provider: options.provider,
       }),
+<<<<<<< HEAD
     };
 
     if (options.timeoutMs) {
@@ -68,6 +76,9 @@ export class OpenRouterClient {
     }
 
     const response = await fetch(`${config.openrouter.baseUrl}/chat/completions`, fetchOptions);
+=======
+    });
+>>>>>>> main
 
     if (!response.ok) {
       // Never include raw provider response bodies in thrown errors to avoid leaking prompt data.

@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
+<<<<<<< HEAD
 import { getUnifiedFirms } from '@/server/deals'
+=======
+
+>>>>>>> main
 import { FirmComparisonGrid } from './components/firm-comparison-grid'
 
 const SITE_ORIGIN = "https://qunt-edge.vercel.app";
@@ -39,9 +43,13 @@ export async function generateMetadata({
   };
 }
 
+<<<<<<< HEAD
 export default async function PropfirmPerkComparePage() {
   const firms = await getUnifiedFirms();
 
+=======
+export default function PropfirmPerkComparePage() {
+>>>>>>> main
   return (
     <PublicFlowShell
       title="Matchup"
@@ -54,13 +62,21 @@ export default async function PropfirmPerkComparePage() {
               Compare prop firm tradeoffs before you pay for an evaluation
             </h2>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground sm:text-base">
+<<<<<<< HEAD
               Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.
+=======
+              Filter by drawdown model, reset behavior, and payout rhythm. Pick structure-fit over headline hype.
+>>>>>>> main
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <article className="rounded-xl border border-border bg-background/60 p-3">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
+<<<<<<< HEAD
               <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
+=======
+              <p className="mt-1 text-lg font-bold text-foreground">24+</p>
+>>>>>>> main
             </article>
             <article className="rounded-xl border border-border bg-background/60 p-3">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Models</p>
@@ -74,13 +90,21 @@ export default async function PropfirmPerkComparePage() {
         </div>
       </section>
 
+<<<<<<< HEAD
       <FirmComparisonGrid firms={firms} />
+=======
+      <FirmComparisonGrid />
+>>>>>>> main
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
         <article className="rounded-xl border border-border bg-card p-5">
           <h3 className="text-base font-semibold text-foreground">1. Set max month-one spend</h3>
           <p className="mt-2 text-sm text-muted-foreground">
+<<<<<<< HEAD
             Include evaluation fee, any likely retry budget, and platform costs.
+=======
+            Include evaluation fee, expected reset count, and platform costs.
+>>>>>>> main
           </p>
         </article>
         <article className="rounded-xl border border-border bg-card p-5">
@@ -97,5 +121,9 @@ export default async function PropfirmPerkComparePage() {
         </article>
       </section>
     </PublicFlowShell>
+<<<<<<< HEAD
   );
+=======
+  )
+>>>>>>> main
 }

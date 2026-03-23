@@ -3,8 +3,6 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getStaticParams } from "@/locales/server";
 import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
-import { getDealsOverview, getDealsSpotlights } from '@/server/deals'
-import { getLeaderboardData } from '@/app/[locale]/(landing)/leaderboard/data/leaderboard-query'
 
 const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
 
@@ -56,22 +54,6 @@ export default async function HomePage({
 }) {
     const { locale } = await params;
     setStaticParamsLocale(locale);
-    const defaultOverview = {
-      totalTrackedFirms: 0,
-      totalLiveDeals: 0,
-      totalAccounts: 0,
-      totalAccountValue: 0,
-      totalPaidPayoutAmount: 0,
-      totalPaidPayoutCount: 0,
-    }
-
-    const [overviewResult, leadersResult] = await Promise.allSettled([
-      getDealsOverview(),
-      getLeaderboardData(),
-    ])
-    const overview = overviewResult.status === 'fulfilled' ? overviewResult.value : defaultOverview
-    const leaders = leadersResult.status === 'fulfilled' ? leadersResult.value : []
-    const spotlights = getDealsSpotlights()
 
     const softwareSchema = {
       '@context': 'https://schema.org',
@@ -96,7 +78,7 @@ export default async function HomePage({
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <HomeContent locale={locale} overview={overview} leaders={leaders} spotlights={spotlights} />
+        <HomeContent locale={locale} />
       </>
     );
 }

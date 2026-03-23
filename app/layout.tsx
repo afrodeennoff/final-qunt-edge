@@ -120,7 +120,10 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: "black",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -143,7 +146,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background dark`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -174,11 +177,61 @@ export default async function RootLayout({
             (function() {
               try {
                 var root = document.documentElement;
+                var pathname = window.location.pathname || '/';
+                var isDashboardRoute = /^\\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\\/dashboard(?:\\/|$)/i.test(pathname);
+                var dashboardThemeClasses = [
+                  'dashboard-theme-blue',
+                  'dashboard-theme-violet',
+                  'dashboard-theme-emerald',
+                  'dashboard-theme-amber',
+                  'dashboard-theme-rose'
+                ];
+
+                var removeDashboardThemes = function() {
+                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
+                  root.removeAttribute('data-dashboard-theme');
+                };
+
+                var clampIntensity = function(value) {
+                  var parsed = Number(value);
+                  return Number.isFinite(parsed)
+                    ? Math.min(100, Math.max(90, Math.round(parsed)))
+                    : 100;
+                };
+
+                var resolveTheme = function(savedTheme) {
+                  if (savedTheme === 'dark' || savedTheme === 'light') {
+                    return savedTheme;
+                  }
+                  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                };
+
+                var resolveDashboardTheme = function(value) {
+                  return value === 'violet' || value === 'emerald' || value === 'amber' || value === 'rose' ? value : 'blue';
+                };
+
+                if (!isDashboardRoute) {
+                  root.classList.remove('light', 'dark');
+                  root.classList.add('dark');
+                  root.style.setProperty('--theme-intensity', '100%');
+                  removeDashboardThemes();
+                  root.removeAttribute('data-theme');
+                  return;
+                }
+
+                var resolvedTheme = resolveTheme(localStorage.getItem('theme'));
                 root.classList.remove('light', 'dark');
-                root.classList.add('dark');
-                root.style.setProperty('--theme-intensity', '100%');
-                root.classList.remove('dashboard-theme-blue', 'dashboard-theme-violet', 'dashboard-theme-emerald', 'dashboard-theme-amber', 'dashboard-theme-rose');
-                root.removeAttribute('data-dashboard-theme');
+                root.classList.add(resolvedTheme);
+
+                var intensity = clampIntensity(localStorage.getItem('intensity'));
+                root.style.setProperty('--theme-intensity', intensity + '%');
+
+                removeDashboardThemes();
+                var savedDashboardTheme = resolveDashboardTheme(localStorage.getItem('dashboard-theme'));
+                if (savedDashboardTheme !== 'blue') {
+                  root.classList.add('dashboard-theme-' + savedDashboardTheme);
+                  root.setAttribute('data-dashboard-theme', savedDashboardTheme);
+                }
                 root.removeAttribute('data-theme');
               } catch (e) {
                 // Fail silently to avoid blocking render

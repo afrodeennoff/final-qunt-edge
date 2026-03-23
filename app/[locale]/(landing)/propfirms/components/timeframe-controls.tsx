@@ -35,7 +35,7 @@ export function TimeframeControls({ timeframeLabel, timeframeOptions }: Timefram
 
   return (
     <div className="flex items-center gap-2">
-      <Label htmlFor="timeframe-select" className="text-xs font-semibold tracking-wide text-foreground">
+      <Label htmlFor="timeframe-select" className="text-xs font-semibold tracking-wide text-[hsl(var(--mk-text))]">
         {timeframeLabel}
       </Label>
       <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>

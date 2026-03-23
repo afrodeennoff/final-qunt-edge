@@ -12,9 +12,15 @@ vi.mock("@/server/auth", () => ({
   getDatabaseUserId,
 }))
 
+<<<<<<< HEAD
 vi.mock("@/lib/redis-client", () => ({
    getRedisJson,
    setRedisJson: vi.fn(),
+=======
+vi.mock("@/lib/redis-cache", () => ({
+  getRedisJson,
+  setRedisJson: vi.fn(),
+>>>>>>> main
 }))
 
 vi.mock("@/lib/behavior-insights", () => ({

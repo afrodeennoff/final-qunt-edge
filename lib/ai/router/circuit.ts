@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { getRedisJson, setRedisJson } from "@/lib/redis-client";
+=======
+import { getRedisJson, setRedisJson } from "@/lib/redis-cache";
+>>>>>>> main
 import { getRouterConfig } from "./config";
 
 // Circuit breaker state

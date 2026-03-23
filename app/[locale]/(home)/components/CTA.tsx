@@ -1,111 +1,31 @@
-"use client"
+'use client'
 
 import Link from 'next/link'
 import { useCurrentLocale } from '@/locales/client'
-import { motion, useReducedMotion } from 'framer-motion'
-import { ButtonV2 } from '@/components/ui/v2'
-import { ChartIcon } from '@/components/icons/svg-icons'
 
-const staggerItem = {
-  hidden: { opacity: 0, y: 25 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      duration: 0.6, 
-      ease: [0.22, 1, 0.36, 1] 
-    }
-  }
-}
-
-function CTAAnimated() {
+export default function CTA() {
   const locale = useCurrentLocale()
-
   return (
-    <section className="relative px-4 py-40 sm:px-6 lg:px-8">
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={{ visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } } }}
-      >
-        <div className="mx-auto max-w-4xl rounded-v2-lg border border-v2-border bg-v2-bg-surface px-6 py-11 text-center shadow-v2-xl sm:px-10">
-          <motion.div variants={staggerItem} className="mb-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-v2-accent/20 bg-v2-bg-elevated px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-v2-text-secondary backdrop-blur-sm">
-              <ChartIcon size={14} className="text-v2-accent" />
-              Your Next Edge
-            </div>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="space-y-2">
-            <h2 className="text-[clamp(2rem,5vw,3.6rem)] font-light leading-[0.9] tracking-[-0.028em] text-v2-text-primary">
-              Keep your strategy.
-              <span className="block">Raise the standard of your <span className="text-v2-accent">decisions</span>.</span>
-            </h2>
-            
-            <p className="mx-auto max-w-[900px] text-[15px] leading-[1.78] text-v2-text-secondary sm:text-base">
-              Join in minutes and receive your first AI-backed performance audit before your next session opens.
-            </p>
-          </motion.div>
-
-          <motion.div variants={staggerItem} className="mt-8 flex flex-col items-center gap-3">
-            <ButtonV2 variant="solid" size="lg" className="min-w-[230px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
-              <Link 
-                href={`/${locale}/authentication?next=dashboard`}
-                className="flex h-full w-full items-center justify-center"
-              >
-                Start Free Audit
-              </Link>
-            </ButtonV2>
-
-            <p className="text-xs text-v2-text-secondary">
-              No credit card required. 7-day Pro trial unlocks advanced diagnostics.
-            </p>
-          </motion.div>
-        </div>
-      </motion.div>
-    </section>
-  )
-}
-
-function CTAStatic() {
-  const locale = useCurrentLocale()
-  
-  return (
-    <section className="relative px-4 py-40 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl rounded-v2-lg border border-v2-border bg-v2-bg-surface px-6 py-11 text-center shadow-v2-xl sm:px-10">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-v2-accent/20 bg-v2-bg-elevated px-4 py-1.5 text-[10px] uppercase tracking-[0.22em] text-v2-text-secondary backdrop-blur-sm">
-          <ChartIcon size={14} className="text-v2-accent" />
-          Your Next Edge
-        </div>
-        <h2 className="text-[clamp(2rem,5vw,3.6rem)] font-light leading-[0.9] tracking-[-0.028em] text-v2-text-primary">
+    <section className="relative px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-14 lg:px-8">
+      <div className="marketing-panel mx-auto max-w-4xl rounded-[30px] px-6 py-11 text-center sm:px-10">
+        <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/80 [font-family:var(--home-copy)]">Your Next Edge</p>
+        <h2 className="mt-2 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[0.9] tracking-[-0.028em] [font-family:var(--home-display)]">
           Keep your strategy.
-          <span className="block">Raise the standard of your <span className="text-v2-accent">decisions</span>.</span>
+          <span className="block text-foreground">Raise the standard of your decisions.</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-[900px] text-[15px] leading-[1.78] text-v2-text-secondary sm:text-base">
+        <p className="mx-auto mt-4 max-w-xl text-[15px] leading-[1.78] text-foreground/85 sm:text-base [font-family:var(--home-copy)]">
           Join in minutes and receive your first AI-backed performance audit before your next session opens.
         </p>
         <div className="mt-8 flex flex-col items-center gap-3">
-          <ButtonV2 variant="solid" size="lg" className="min-w-[230px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
-            <Link
-              href={`/${locale}/authentication?next=dashboard`}
-              className="flex h-full w-full items-center justify-center"
-            >
-              Start Free Audit
-            </Link>
-          </ButtonV2>
-          <p className="text-xs text-v2-text-secondary">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
+          <Link
+            href={`/${locale}/authentication?next=dashboard`}
+            className="inline-flex h-12 min-w-[230px] items-center justify-center rounded-2xl bg-primary px-9 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-all duration-300 hover:bg-primary/90 [font-family:var(--home-copy)]"
+          >
+            Start Free Audit
+          </Link>
+          <p className="text-xs text-foreground/80 [font-family:var(--home-copy)]">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
         </div>
       </div>
     </section>
   )
-}
-
-export default function CTA() {
-  const prefersReducedMotion = useReducedMotion()
-  
-  if (prefersReducedMotion) {
-    return <CTAStatic />
-  }
-  
-  return <CTAAnimated />
 }

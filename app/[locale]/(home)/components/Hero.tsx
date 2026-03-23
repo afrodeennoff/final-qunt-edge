@@ -1,364 +1,95 @@
-"use client"
-
 import Link from 'next/link'
-import { useReducedMotion, useInView } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
-import { ButtonV2 } from '@/components/ui/v2'
-import { cn } from '@/lib/utils'
-import { ChartIcon, ProfileIcon } from '@/components/icons/svg-icons'
-
-function AnimatedCounter({ target, suffix = "", prefix = "" }: { target: number; suffix?: string; prefix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-10%" })
-  const [count, setCount] = useState(0)
-  
-  useEffect(() => {
-    if (!isInView) return
-    const duration = 1500
-    const startTime = performance.now()
-    
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setCount(Math.floor(eased * target))
-      if (progress < 1) requestAnimationFrame(animate)
-    }
-    requestAnimationFrame(animate)
-  }, [isInView, target])
-  
-  return <span ref={ref}>{prefix}{isInView ? count : 0}{suffix}</span>
-}
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function Hero({ locale }: { locale: string }) {
-  const prefersReducedMotion = useReducedMotion()
-
-  // If user prefers reduced motion, render static version
-  if (prefersReducedMotion) {
-    return <HeroStatic locale={locale} />
-  }
-
   return (
-    <section className="relative min-h-[90vh] overflow-hidden px-4 py-40 sm:px-6 lg:px-8">
-      {/* Clean V2 gradient background */}
+    <section className="relative isolate overflow-hidden px-4 pb-16 pt-24 sm:px-6 sm:pb-24 sm:pt-32 lg:px-8 lg:pb-28 lg:pt-40">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
-          <div 
-            className="absolute inset-0 rounded-full opacity-[0.08] blur-[100px]"
-            style={{
-              background: 'radial-gradient(circle, hsl(217 91% 60%) 0%, transparent 70%)'
-            }}
-          />
-        </div>
+        <div className="absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_-8%,hsl(var(--foreground)/0.16)_0%,transparent_58%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.04)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.04)_1px,transparent_1px)] bg-[size:44px_44px] sm:bg-[size:52px_52px]" />
+        <div className="absolute inset-x-10 top-8 h-px bg-[linear-gradient(90deg,transparent,hsl(var(--foreground)/0.34),transparent)]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl">
-        {/* Badge */}
-        <div className="mb-10 flex justify-center">
-          <div className="group relative">
-            <div 
-              className="absolute -inset-0.5 rounded-full opacity-20 blur-sm transition-all duration-300 group-hover:opacity-30"
-              style={{ background: 'linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 50%))' }}
-            />
-            <div className="relative rounded-full border border-v2-accent/20 bg-v2-bg-surface/80 px-5 py-2 backdrop-blur-md">
-              <span className="flex items-center gap-2.5 text-sm font-medium tracking-wide text-v2-text-secondary">
-                <ChartIcon size={16} className="text-v2-accent" />
-                <span className="bg-gradient-to-r from-v2-accent to-v2-accent/70 bg-clip-text text-transparent">
-                  Live decision telemetry for discretionary traders
-                </span>
-              </span>
-            </div>
-          </div>
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <div className="mb-8 flex justify-center">
+          <Badge variant="secondary" className="border-border/70 bg-card/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.22em] backdrop-blur-sm [font-family:var(--home-copy)]">
+            <Sparkles className="mr-2 h-3.5 w-3.5 text-primary" />
+            Live decision telemetry for discretionary traders
+          </Badge>
         </div>
 
-        {/* Single-line headline with subtle accent gradient */}
-        <h1 className="mx-auto mb-8 text-center font-sans font-light tracking-tight">
-          <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
-            Build repeatable <span className="text-v2-accent">edge</span>.
-          </span>
-          <span 
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight text-v2-text-primary"
-          >
-            Eliminate emotional <span className="text-v2-accent">drift</span>.
+        <h1 className="mx-auto max-w-5xl text-center text-[clamp(3rem,10vw,7.1rem)] font-semibold leading-[0.88] tracking-[-0.04em] [font-family:var(--home-display)]">
+          Build repeatable edge.
+          <span className="mt-2 block bg-[linear-gradient(95deg,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.62)_100%)] bg-clip-text text-transparent">
+            Eliminate emotional drift.
           </span>
         </h1>
 
-        <p className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-v2-text-secondary sm:text-[19px]">
+        <p className="mx-auto mt-6 max-w-3xl text-center text-[14px] leading-[1.72] text-foreground/85 sm:text-[18px] sm:leading-[1.8] [font-family:var(--home-copy)]">
           Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
           Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
         </p>
 
-        {/* Single CTA button with V2 Button */}
-        <div className="mt-12 flex justify-center">
-          <ButtonV2 variant="solid" size="lg" className="min-w-[240px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
-            <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
+        <div className="mt-12 flex w-full flex-col items-center justify-center gap-3 sm:mt-14 sm:w-auto sm:flex-row sm:gap-5">
+          <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
+            <Link href={`/${locale}/authentication?next=dashboard`}>
               Start Free Audit
             </Link>
-          </ButtonV2>
+          </Button>
+          <Button asChild size="lg" className="h-12 w-full max-w-[320px] rounded-2xl bg-primary text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 sm:min-w-[220px] sm:w-auto [font-family:var(--home-copy)]">
+            <Link href={`/${locale}/#pricing`}>
+              See Pricing
+              <ArrowRight className="ml-2 h-3.5 w-3.5" />
+            </Link>
+          </Button>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-v2-text-secondary">
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            No credit card required
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            First audit in minutes
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            Built for discretionary futures traders
-          </span>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[10px] uppercase tracking-[0.16em] text-foreground/80 [font-family:var(--home-copy)]">
+          <span className="marketing-badge rounded-full px-3 py-1">No credit card required</span>
+          <span className="marketing-badge rounded-full px-3 py-1">First audit in minutes</span>
+          <span className="marketing-badge rounded-full px-3 py-1">Built for discretionary futures traders</span>
         </div>
 
-        {/* Stats cards */}
         <div className="mt-16">
-          <div className={cn(
-            "relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface/60",
-            "shadow-v2-lg shadow-black/20 backdrop-blur-xl"
-          )}>
-            <div 
-              className="absolute inset-0 opacity-20"
-              style={{
-                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(217 91% 60% / 0.15), transparent)'
-              }}
-            />
-            
-            <div className="relative p-5 sm:p-7">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ProfileIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Session Grade Confidence
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-text-primary">
-                    <AnimatedCounter target={94} suffix="%" />
-                  </p>
+          <Card className="overflow-hidden border-border/70 bg-card/75 shadow-xl backdrop-blur-md">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Session Grade Confidence</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">94%</p>
                 </div>
-                
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ChartIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Rule Adherence Uplift
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
-                    <AnimatedCounter target={37} prefix="+" suffix="%" />
-                  </p>
+                <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Rule Adherence Uplift</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-fg-primary [font-family:var(--home-display)]">+37%</p>
                 </div>
-                
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ChartIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Impulse Trades Reduced
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
-                    <AnimatedCounter target={42} prefix="-" suffix="%" />
-                  </p>
+                <div className="rounded-xl border border-border/70 bg-background/35 p-4 text-center transition-colors hover:bg-background/55">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85 [font-family:var(--home-copy)]">Impulse Trades Reduced</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-primary [font-family:var(--home-display)]">-42%</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Platform logos */}
-        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
-          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'CSV Import'].map((platform) => (
-            <span 
-              key={platform}
-              className="text-[11px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary/80 transition-colors duration-200 hover:text-v2-text-primary"
-            >
-              {platform}
-            </span>
-          ))}
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-v2-accent/80">
-            NINJA<span className="mx-0.5 align-baseline text-v2-accent/60">|</span>TRADER
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">
+          <span>Tradovate</span>
+          <span>Rithmic</span>
+          <span>IBKR</span>
+          <span>CQG</span>
+          <span className="font-medium tracking-[0.15em] text-primary/80" aria-label="NinjaTrader">
+            NINJA<span className="mx-1 align-baseline text-primary">|</span>TRADER
           </span>
+          <span>CSV Import</span>
         </div>
 
-        <p className="mt-8 text-center text-sm tracking-[0.06em] text-v2-text-secondary/80">
+        <p className="mt-6 text-center text-xs tracking-[0.08em] text-foreground/80 [font-family:var(--home-copy)]">
           Join free. Import your first session. Get a ranked diagnostic before your next open.
         </p>
       </div>
-      
-      <div 
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-        style={{
-          background: 'linear-gradient(to_bottom, transparent, hsl(240 6% 3%))'
-        }}
-      />
-    </section>
-  )
-}
-
-function HeroStatic({ locale }: { locale: string }) {
-  return (
-    <section className="relative min-h-[90vh] overflow-hidden px-4 py-40 sm:px-6 lg:px-8">
-      {/* Clean V2 gradient background */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2">
-          <div 
-            className="absolute inset-0 rounded-full opacity-[0.08] blur-[100px]"
-            style={{
-              background: 'radial-gradient(circle, hsl(217 91% 60%) 0%, transparent 70%)'
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-5xl">
-        {/* Badge */}
-        <div className="mb-10 flex justify-center">
-          <div className="group relative">
-            <div 
-              className="absolute -inset-0.5 rounded-full opacity-20 blur-sm transition-all duration-300 group-hover:opacity-30"
-              style={{ background: 'linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 50%))' }}
-            />
-            <div className="relative rounded-full border border-v2-accent/20 bg-v2-bg-surface/80 px-5 py-2 backdrop-blur-md">
-              <span className="flex items-center gap-2.5 text-sm font-medium tracking-wide text-v2-text-secondary">
-                <ChartIcon size={16} className="text-v2-accent" />
-                <span className="bg-gradient-to-r from-v2-accent to-v2-accent/70 bg-clip-text text-transparent">
-                  Live decision telemetry for discretionary traders
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Single-line headline with subtle accent gradient */}
-        <h1 className="mx-auto mb-8 text-center font-sans font-light tracking-tight">
-          <span className="block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] text-v2-text-primary">
-            Build repeatable <span className="text-v2-accent">edge</span>.
-          </span>
-          <span 
-            className="mt-4 block text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.95] tracking-tight text-v2-text-primary"
-          >
-            Eliminate emotional <span className="text-v2-accent">drift</span>.
-          </span>
-        </h1>
-
-        <p className="mx-auto mt-8 max-w-2xl text-center text-[17px] leading-[1.75] text-v2-text-secondary sm:text-[19px]">
-          Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface.
-          Every session gets a precise diagnosis, so your next session starts with intent, not guesswork.
-        </p>
-
-        {/* Single CTA button with V2 Button */}
-        <div className="mt-12 flex justify-center">
-          <ButtonV2 variant="solid" size="lg" className="min-w-[240px] rounded-full px-16 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-v2-accent/20">
-            <Link href={`/${locale}/authentication?next=dashboard`} className="flex items-center justify-center">
-              Start Free Audit
-            </Link>
-          </ButtonV2>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.14em] text-v2-text-secondary">
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            No credit card required
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            First audit in minutes
-          </span>
-          <span className="flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface/40 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-v2-accent" />
-            Built for discretionary futures traders
-          </span>
-        </div>
-
-        {/* Stats cards */}
-        <div className="mt-16">
-          <div className={cn(
-            "relative overflow-hidden rounded-v2-lg border border-v2-border bg-v2-bg-surface/60",
-            "shadow-v2-lg shadow-black/20 backdrop-blur-xl"
-          )}>
-            <div 
-              className="absolute inset-0 opacity-20"
-              style={{
-                background: 'radial-gradient(ellipse 80% 50% at 50% 0%, hsl(217 91% 60% / 0.15), transparent)'
-              }}
-            />
-            
-            <div className="relative p-5 sm:p-7">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ProfileIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Session Grade Confidence
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-text-primary">
-                    94%
-                  </p>
-                </div>
-                
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ChartIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Rule Adherence Uplift
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
-                    +37%
-                  </p>
-                </div>
-                
-                <div className="group relative rounded-v2-md border border-v2-border bg-v2-bg-elevated/40 p-5 text-center transition-all duration-300 hover:border-v2-accent/30 hover:bg-v2-bg-elevated/55">
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-v2-accent/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-v2-accent-subtle">
-                    <ChartIcon size={20} className="text-v2-accent" />
-                  </div>
-                  <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary">
-                    Impulse Trades Reduced
-                  </p>
-                  <p className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-v2-accent">
-                    -42%
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Platform logos */}
-        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
-          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'CSV Import'].map((platform) => (
-            <span 
-              key={platform}
-              className="text-[11px] font-medium uppercase tracking-[0.18em] text-v2-text-secondary/80 transition-colors duration-200 hover:text-v2-text-primary"
-            >
-              {platform}
-            </span>
-          ))}
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-v2-accent/80">
-            NINJA<span className="mx-0.5 align-baseline text-v2-accent/60">|</span>TRADER
-          </span>
-        </div>
-
-        <p className="mt-8 text-center text-sm tracking-[0.06em] text-v2-text-secondary/80">
-          Join free. Import your first session. Get a ranked diagnostic before your next open.
-        </p>
-      </div>
-      
-      <div 
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32"
-        style={{
-          background: 'linear-gradient(to_bottom, transparent, hsl(240 6% 3%))'
-        }}
-      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(to_bottom,transparent,hsl(var(--background)))]" />
     </section>
   )
 }

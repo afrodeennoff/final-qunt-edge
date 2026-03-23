@@ -51,6 +51,28 @@ type FirmData = {
   referralUrl?: string | null
   logoUrl?: string | null
   _count?: { reviews?: number; coupons?: number }
+  spotlight?: {
+    slug: string
+    name: string
+    category: 'Futures' | 'CFD'
+    rating: number
+    reviewCount: number
+    promoText: string
+    promoCode?: string
+    maxAllocation?: string
+    countryCode?: string
+    founded?: string
+    yearsInOperation?: number
+    sourceUrl: string
+  } | null
+  catalogueStats?: {
+    accountsCount: number
+    totalAccountValue: number
+    paidPayoutAmount: number
+    paidPayoutCount: number
+    pendingPayoutAmount: number
+    sizeBreakdown: string
+  }
 }
 
 const trustChecklist = [

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { isRedisConfigured, runRedisCommand } from '@/lib/redis-client';
+=======
+import { isRedisConfigured, runRedisCommand } from '@/lib/redis-cache';
+>>>>>>> main
 
 // Lua script for atomic budget reservation
 const RESERVE_BUDGET_SCRIPT = `

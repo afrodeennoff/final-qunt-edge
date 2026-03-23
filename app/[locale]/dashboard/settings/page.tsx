@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
+import { DASHBOARD_THEMES, type DashboardTheme, useTheme } from '@/context/theme-provider'
 import {
   User,
   Settings,
@@ -19,10 +20,13 @@ import {
   Shield,
   Globe,
   Moon,
+  Sun,
+  Laptop,
   Clock,
   CreditCard,
   Database,
   LifeBuoy,
+  Palette,
   LogOut,
   Building2,
   Eye,
@@ -35,10 +39,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Slider } from "@/components/ui/slider"
 import { leaveTeam, getUserTeams } from './actions'
 import { toast } from "sonner"
 import {
@@ -54,8 +62,16 @@ import {
 } from "@/components/ui/alert-dialog"
 import { LinkedAccounts } from "@/components/linked-accounts"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
+import { cn } from "@/lib/utils"
 
 type Locale = 'en' | 'fr'
+type ThemeMode = 'light' | 'dark' | 'system'
+type DashboardThemeOption = {
+  value: DashboardTheme
+  label: string
+  preview: string
+  swatchClass: string
+}
 type TranslateFn = ReturnType<typeof useI18n>
 type TeamSummary = {
   id: string
@@ -79,6 +95,30 @@ const timezones = [
   'Australia/Sydney',
   // Add more common timezones as needed
 ];
+
+const dashboardThemeOptions: DashboardThemeOption[] = [
+  { value: 'blue', label: 'VTRON Blue', preview: 'Balanced and crisp', swatchClass: 'bg-chart-1' },
+  { value: 'violet', label: 'CWH Violet', preview: 'High contrast focus', swatchClass: 'bg-chart-2' },
+  { value: 'emerald', label: 'Emerald Light', preview: 'Fresh and minimal', swatchClass: 'bg-chart-4' },
+  { value: 'amber', label: 'Lara Amber', preview: 'Warm and energetic', swatchClass: 'bg-chart-5' },
+  { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
+]
+
+const THEME_MODE_LABELS: Record<ThemeMode, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'System',
+}
+
+function getThemeIcon(theme: ThemeMode) {
+  if (theme === 'light') return <Sun className="h-4 w-4" />
+  if (theme === 'dark') return <Moon className="h-4 w-4" />
+  if (typeof window !== 'undefined') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
+  }
+  return <Laptop className="h-4 w-4" />
+}
 
 function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message) {
@@ -295,6 +335,7 @@ export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
+  const { theme, setTheme, dashboardTheme, setDashboardTheme, intensity, setIntensity } = useTheme()
   const user = useUserStore(state => state.supabaseUser)
   const timezone = useUserStore(state => state.timezone)
   const setTimezone = useUserStore(state => state.setTimezone)
@@ -316,6 +357,21 @@ export default function SettingsPage() {
     { value: 'en', label: 'English' },
     { value: 'fr', label: 'Français' },
   ]
+
+  const handleThemeChange = (value: string) => {
+    setTheme(value as ThemeMode)
+  }
+
+  const handleDashboardThemeChange = (value: string) => {
+    if (!DASHBOARD_THEMES.includes(value as DashboardTheme)) {
+      return
+    }
+
+    setDashboardTheme(value as DashboardTheme)
+  }
+
+  const activeDashboardTheme = dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0]
+  const currentThemeLabel = THEME_MODE_LABELS[theme]
 
   const refreshTeams = async () => {
     const result = await getUserTeams()
@@ -450,12 +506,92 @@ export default function SettingsPage() {
               <Label className="text-base font-medium">Theme</Label>
               <div className="mt-2 grid gap-3">
                 <div className="rounded-md border border-border/50 bg-background/30 p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <p className="text-sm font-medium">Dashboard palette</p>
+                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <span className={cn('h-2.5 w-2.5 rounded-full', activeDashboardTheme.swatchClass)} />
+                      {activeDashboardTheme.label}
+                    </span>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start">
+                        <Palette className="mr-2 h-4 w-4" />
+                        <span className="flex min-w-0 flex-col items-start text-left">
+                          <span className="truncate text-sm">{activeDashboardTheme.label}</span>
+                          <span className="truncate text-xs text-muted-foreground">{activeDashboardTheme.preview}</span>
+                        </span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[260px]">
+                      <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+                        Palette presets
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup
+                        value={dashboardTheme}
+                        onValueChange={handleDashboardThemeChange}
+                        aria-label="Dashboard theme"
+                      >
+                        {dashboardThemeOptions.map((option) => (
+                          <DropdownMenuRadioItem
+                            key={option.value}
+                            value={option.value}
+                            className="items-start py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                            aria-label={`${option.label} theme`}
+                          >
+                            <div className="flex min-w-0 items-start gap-2">
+                              <span className={cn('mt-0.5 h-3 w-3 shrink-0 rounded-full', option.swatchClass)} />
+                              <span className="min-w-0">
+                                <span className="block truncate text-sm">{option.label}</span>
+                                <span className="block truncate text-xs text-muted-foreground">{option.preview}</span>
+                              </span>
+                            </div>
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <div className="rounded-md border border-border/50 bg-background/30 p-3">
                   <p className="mb-2 text-sm font-medium">Interface mode</p>
-                  <div className="flex items-center gap-3 rounded-md border border-border/40 bg-background/20 px-3 py-3">
-                      <Moon className="h-4 w-4 text-primary" />
-                      <div>
-                      <p className="text-sm font-medium">Dark</p>
-                      <p className="text-xs text-muted-foreground">Qunt Edge now uses one unified dark interface across marketing and product surfaces.</p>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start sm:w-[200px]">
+                          {getThemeIcon(theme)}
+                          <span className="ml-2">{currentThemeLabel}</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
+                          <Sun className="mr-2 h-4 w-4" />
+                          <span>Light</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
+                          <Moon className="mr-2 h-4 w-4" />
+                          <span>Dark</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleThemeChange("system")}>
+                          <Laptop className="mr-2 h-4 w-4" />
+                          <span>System</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <div className="flex-1">
+                      <Label className="text-sm">Theme Intensity</Label>
+                      <div className="mt-2 flex items-center gap-4">
+                        <Slider
+                          value={[intensity]}
+                          onValueChange={([value]) => setIntensity(value)}
+                          min={90}
+                          max={100}
+                          step={1}
+                          className="flex-1"
+                          aria-label="Theme intensity"
+                        />
+                        <span className="w-12 text-sm text-muted-foreground">{intensity}%</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -31,7 +31,7 @@ export function SortControls({ sortLabel, sortOptions }: SortControlsProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <Label htmlFor="sort-select" className="text-xs font-semibold tracking-wide text-foreground">
+      <Label htmlFor="sort-select" className="text-xs font-semibold tracking-wide text-[hsl(var(--mk-text))]">
         {sortLabel}
       </Label>
       <Select value={currentSort} onValueChange={handleSortChange}>

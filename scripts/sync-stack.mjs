@@ -62,11 +62,14 @@ function parseFailedMigrationName(output) {
   return match?.[1] ?? null;
 }
 
+<<<<<<< HEAD
 function parseMigrationName(output) {
   const match = output.match(/Migration name: (\S+)/);
   return match?.[1] ?? null;
 }
 
+=======
+>>>>>>> main
 run("npx", ["prisma", "generate"], "Prisma client generated");
 
 const rawUrl = process.env.DIRECT_URL || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL;
@@ -94,6 +97,7 @@ if (migrationUrl) {
       "20260316000000_add_mt5_accounts",
     ]);
 
+<<<<<<< HEAD
     const autoRollbackRepairMigrations = new Set([
       "20260320000000_v2_data_integrity",
     ]);
@@ -105,6 +109,9 @@ if (migrationUrl) {
       run("npx", ["prisma", "migrate", "resolve", "--rolled-back", failedMigration]);
       run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3009 rollback");
     } else if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
+=======
+    if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
+>>>>>>> main
       console.log(
         `[sync-stack] Detected P3009 for ${failedMigration}. Marking as applied and retrying deploy...`,
       );
@@ -118,6 +125,7 @@ if (migrationUrl) {
       );
       process.exit(deploy.status);
     }
+<<<<<<< HEAD
   } else if (deploy.output.includes("P3018")) {
     const failedMigration = parseMigrationName(deploy.output) || parseFailedMigrationName(deploy.output);
     if (failedMigration) {
@@ -132,6 +140,8 @@ if (migrationUrl) {
       );
       process.exit(deploy.status);
     }
+=======
+>>>>>>> main
   } else {
     process.exit(deploy.status);
   }

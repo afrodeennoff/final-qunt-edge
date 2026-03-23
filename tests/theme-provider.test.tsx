@@ -35,6 +35,9 @@ function ThemeProbe() {
       <button data-testid="setDark" onClick={() => setTheme('dark')} type="button">
         dark
       </button>
+      <button data-testid="setSystem" onClick={() => setTheme('system')} type="button">
+        system
+      </button>
       <button data-testid="setColorTheme" onClick={() => setColorTheme('tiesen')} type="button">
         color
       </button>
@@ -64,10 +67,8 @@ describe('ThemeProvider', () => {
     localStorage.clear()
   })
 
-  it('keeps the provider in dark mode for dashboard scope', async () => {
-    localStorage.setItem('theme', 'light')
-    localStorage.setItem('dashboard-theme', 'violet')
-    localStorage.setItem('intensity', '91')
+  it('resolves system theme and toggles from effective system theme', async () => {
+    localStorage.setItem('theme', 'system')
 
     container = document.createElement('div')
     document.body.appendChild(container)
@@ -84,41 +85,17 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
     const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
-    const setDark = container.querySelector('[data-testid="setDark"]') as HTMLButtonElement
-    const setColorTheme = container.querySelector('[data-testid="setColorTheme"]') as HTMLButtonElement
-    const setDashboardTheme = container.querySelector('[data-testid="setDashboardTheme"]') as HTMLButtonElement
-    const setIntensity = container.querySelector('[data-testid="setIntensity"]') as HTMLButtonElement
-    const colorTheme = container.querySelector('[data-testid="colorTheme"]')
-    const dashboardTheme = container.querySelector('[data-testid="dashboardTheme"]')
-    const intensity = container.querySelector('[data-testid="intensity"]')
-    const isThemeMutable = container.querySelector('[data-testid="isThemeMutable"]')
 
-    expect(theme?.textContent).toBe('dark')
+    expect(theme?.textContent).toBe('system')
     expect(effectiveTheme?.textContent).toBe('dark')
-    expect(colorTheme?.textContent).toBe('default')
-    expect(dashboardTheme?.textContent).toBe('blue')
-    expect(intensity?.textContent).toBe('100')
-    expect(isThemeMutable?.textContent).toBe('false')
     expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(document.documentElement.className.includes('dashboard-theme-')).toBe(false)
-    expect(document.documentElement.hasAttribute('data-dashboard-theme')).toBe(false)
 
     await act(async () => {
       toggleTheme.click()
-      setDark.click()
-      setColorTheme.click()
-      void setDashboardTheme.click()
-      setIntensity.click()
     })
 
-    expect(theme?.textContent).toBe('dark')
-    expect(effectiveTheme?.textContent).toBe('dark')
-    expect(colorTheme?.textContent).toBe('default')
-    expect(dashboardTheme?.textContent).toBe('blue')
-    expect(intensity?.textContent).toBe('100')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(document.documentElement.className.includes('dashboard-theme-')).toBe(false)
-    expect(document.documentElement.hasAttribute('data-dashboard-theme')).toBe(false)
+    expect(theme?.textContent).toBe('light')
+    expect(document.documentElement.classList.contains('light')).toBe(true)
   })
 
   it('forces dark default theme when scope is non-dashboard', async () => {
@@ -146,6 +123,7 @@ describe('ThemeProvider', () => {
     const isThemeMutable = container.querySelector('[data-testid="isThemeMutable"]')
     const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
     const setDark = container.querySelector('[data-testid="setDark"]') as HTMLButtonElement
+    const setSystem = container.querySelector('[data-testid="setSystem"]') as HTMLButtonElement
     const setColorTheme = container.querySelector('[data-testid="setColorTheme"]') as HTMLButtonElement
     const setDashboardTheme = container.querySelector('[data-testid="setDashboardTheme"]') as HTMLButtonElement
     const setIntensity = container.querySelector('[data-testid="setIntensity"]') as HTMLButtonElement
@@ -163,8 +141,9 @@ describe('ThemeProvider', () => {
     await act(async () => {
       toggleTheme.click()
       setDark.click()
+      setSystem.click()
       setColorTheme.click()
-      void setDashboardTheme.click()
+      setDashboardTheme.click()
       setIntensity.click()
     })
 
@@ -177,6 +156,26 @@ describe('ThemeProvider', () => {
     expect(localStorage.getItem('theme')).toBe('dark')
     expect(localStorage.getItem('dashboard-theme')).toBe('rose')
     expect(localStorage.getItem('intensity')).toBe('92')
+  })
+
+  it('applies persisted dashboard palette class only in dashboard scope', async () => {
+    localStorage.setItem('theme', 'light')
+    localStorage.setItem('dashboard-theme', 'violet')
+
+    container = document.createElement('div')
+    document.body.appendChild(container)
+    root = createRoot(container)
+
+    await act(async () => {
+      root!.render(
+        <ThemeProvider scope="dashboard">
+          <ThemeProbe />
+        </ThemeProvider>,
+      )
+    })
+
+    expect(document.documentElement.getAttribute('data-dashboard-theme')).toBe('violet')
+    expect(document.documentElement.classList.contains('dashboard-theme-violet')).toBe(true)
   })
 
   it('exposes an accessible label for the theme switcher trigger', async () => {
@@ -196,6 +195,6 @@ describe('ThemeProvider', () => {
     const label = trigger?.getAttribute('aria-label') ?? trigger?.textContent ?? ''
 
     expect(trigger).not.toBeNull()
-    expect(label.toLowerCase()).toContain('dark theme enabled')
+    expect(label.toLowerCase()).toContain('toggle theme')
   })
 })

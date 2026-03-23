@@ -62,7 +62,7 @@ export default function ComparisonSection() {
                   {comparisonRows.map((row) => (
                     <tr
                       key={row.item}
-                      className="border-b border-[hsl(var(--mk-border)/0.24)] transition-colors duration-200 hover:bg-[hsl(var(--mk-surface-muted)/0.3)]"
+                      className="border-b border-[hsl(var(--mk-border)/0.24)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
                       <td className="px-4 py-4">

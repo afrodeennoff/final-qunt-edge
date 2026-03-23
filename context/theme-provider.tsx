@@ -2,9 +2,12 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
+  useState,
 } from 'react'
 
 type Theme = 'light' | 'dark' | 'system'
@@ -14,6 +17,9 @@ export const DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose'] a
 export type DashboardTheme = (typeof DASHBOARD_THEMES)[number]
 const DASHBOARD_THEME_CLASS_PREFIX = 'dashboard-theme-'
 
+const THEME_STORAGE_KEY = 'theme'
+const INTENSITY_STORAGE_KEY = 'intensity'
+const DASHBOARD_THEME_STORAGE_KEY = 'dashboard-theme'
 const DEFAULT_INTENSITY = 100
 const DEFAULT_NON_DASHBOARD_THEME: Theme = 'dark'
 const DEFAULT_DASHBOARD_THEME: DashboardTheme = 'blue'
@@ -48,6 +54,22 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useTheme = () => useContext(ThemeContext)
 
+function resolveEffectiveTheme(theme: Theme, prefersDark: boolean): 'light' | 'dark' {
+  if (theme === 'system') {
+    return prefersDark ? 'dark' : 'light'
+  }
+
+  return theme
+}
+
+function isValidTheme(value: string | null): value is Theme {
+  return value === 'light' || value === 'dark' || value === 'system'
+}
+
+function isValidDashboardTheme(value: string | null): value is DashboardTheme {
+  return typeof value === 'string' && DASHBOARD_THEMES.includes(value as DashboardTheme)
+}
+
 function clampIntensity(intensity: number): number {
   if (!Number.isFinite(intensity)) {
     return DEFAULT_INTENSITY
@@ -56,16 +78,88 @@ function clampIntensity(intensity: number): number {
   return Math.max(90, Math.min(100, Math.round(intensity)))
 }
 
+function mapLegacyColorThemeToDashboardTheme(colorTheme: ColorTheme): DashboardTheme {
+  return colorTheme === 'tiesen' ? 'violet' : 'blue'
+}
+
 function mapDashboardThemeToLegacyColorTheme(dashboardTheme: DashboardTheme): ColorTheme {
   return dashboardTheme === 'violet' ? 'tiesen' : 'default'
 }
-function applyThemeToDocument(): void {
-  const root = window.document.documentElement
-  root.classList.remove('light', 'dark')
-  root.classList.add('dark')
+
+function getInitialTheme(scope: ThemeScope): Theme {
+  if (scope !== 'dashboard' || typeof window === 'undefined') {
+    return DEFAULT_NON_DASHBOARD_THEME
+  }
+
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+  return isValidTheme(savedTheme) ? savedTheme : 'system'
 }
 
-function applyDashboardThemeToDocument(): void {
+function getInitialDashboardTheme(scope: ThemeScope): DashboardTheme {
+  if (scope !== 'dashboard' || typeof window === 'undefined') {
+    return DEFAULT_DASHBOARD_THEME
+  }
+
+  // First try localStorage for immediate theme (server-side DB fetch happens asynchronously)
+  const savedDashboardTheme = window.localStorage.getItem(DASHBOARD_THEME_STORAGE_KEY)
+  if (isValidDashboardTheme(savedDashboardTheme)) {
+    return savedDashboardTheme
+  }
+  
+  return DEFAULT_DASHBOARD_THEME
+}
+
+// Fetch theme from database API (called separately for async loading)
+async function fetchDashboardThemeFromDatabase(): Promise<DashboardTheme | null> {
+  if (typeof window === 'undefined' || process.env.NODE_ENV === 'test') return null
+  
+  try {
+    const origin = window.location.origin
+    if (!origin || origin === 'null') {
+      return null
+    }
+
+    const apiUrl = new URL('/api/user/theme', origin)
+    const response = await fetch(apiUrl.toString(), {
+      method: 'GET',
+      credentials: 'include',
+    })
+    if (response.ok) {
+      const data = await response.json()
+      if (data.theme && isValidDashboardTheme(data.theme)) {
+        return data.theme
+      }
+    }
+  } catch (error) {
+    console.warn('[ThemeProvider] Failed to fetch theme from database:', error)
+  }
+  return null
+}
+
+function getInitialIntensity(scope: ThemeScope): number {
+  if (scope !== 'dashboard' || typeof window === 'undefined') {
+    return DEFAULT_INTENSITY
+  }
+
+  const savedIntensity = Number(window.localStorage.getItem(INTENSITY_STORAGE_KEY))
+  return clampIntensity(savedIntensity)
+}
+
+function getInitialSystemPreference(): boolean {
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
+function applyThemeToDocument(theme: 'light' | 'dark'): void {
+  const root = window.document.documentElement
+  root.classList.remove('light', 'dark')
+  root.classList.add(theme)
+}
+
+function applyDashboardThemeToDocument(scope: ThemeScope, dashboardTheme: DashboardTheme): void {
   const root = window.document.documentElement
   root.removeAttribute('data-theme')
   root.classList.remove(
@@ -76,12 +170,19 @@ function applyDashboardThemeToDocument(): void {
     `${DASHBOARD_THEME_CLASS_PREFIX}rose`
   )
 
-  root.removeAttribute('data-dashboard-theme')
+  if (scope !== 'dashboard' || dashboardTheme === DEFAULT_DASHBOARD_THEME) {
+    root.removeAttribute('data-dashboard-theme')
+    return
+  }
+
+  root.classList.add(`${DASHBOARD_THEME_CLASS_PREFIX}${dashboardTheme}`)
+  root.setAttribute('data-dashboard-theme', dashboardTheme)
 }
 
-function applyIntensityToDocument(intensity: number): void {
+function applyIntensityToDocument(scope: ThemeScope, intensity: number): void {
   const root = window.document.documentElement
-  root.style.setProperty('--theme-intensity', `${clampIntensity(intensity)}%`)
+  const effectiveIntensity = scope === 'dashboard' ? clampIntensity(intensity) : DEFAULT_INTENSITY
+  root.style.setProperty('--theme-intensity', `${effectiveIntensity}%`)
 }
 
 export function ThemeProvider({
@@ -91,20 +192,136 @@ export function ThemeProvider({
   children: React.ReactNode
   scope?: ThemeScope
 }) {
-  void scope
-  const isThemeMutable = false
-  const appliedTheme: Theme = DEFAULT_NON_DASHBOARD_THEME
-  const appliedDashboardTheme: DashboardTheme = DEFAULT_DASHBOARD_THEME
-  const appliedIntensity = DEFAULT_INTENSITY
-  const effectiveTheme: 'light' | 'dark' = 'dark'
+  const isThemeMutable = scope === 'dashboard'
+  const [theme, setThemeState] = useState<Theme>(() => getInitialTheme(scope))
+  const [dashboardTheme, setDashboardThemeState] = useState<DashboardTheme>(() => getInitialDashboardTheme(scope))
+  const [intensity, setIntensityState] = useState<number>(() => getInitialIntensity(scope))
+  const [prefersDark, setPrefersDark] = useState<boolean>(getInitialSystemPreference)
+  const appliedTheme: Theme = isThemeMutable ? theme : DEFAULT_NON_DASHBOARD_THEME
+  const appliedDashboardTheme: DashboardTheme = isThemeMutable ? dashboardTheme : DEFAULT_DASHBOARD_THEME
+  const appliedIntensity = isThemeMutable ? intensity : DEFAULT_INTENSITY
+  const effectiveTheme = resolveEffectiveTheme(appliedTheme, prefersDark)
 
+  // Apply document-level theme styles before paint to avoid route flicker.
   useLayoutEffect(() => {
-    applyThemeToDocument()
-    applyDashboardThemeToDocument()
-    applyIntensityToDocument(appliedIntensity)
+    applyThemeToDocument(effectiveTheme)
+    applyDashboardThemeToDocument(scope, appliedDashboardTheme)
+    applyIntensityToDocument(scope, appliedIntensity)
   }, [
+    appliedDashboardTheme,
     appliedIntensity,
+    effectiveTheme,
+    scope,
   ])
+
+  useEffect(() => {
+    if (!isThemeMutable) {
+      return
+    }
+
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+    localStorage.setItem(INTENSITY_STORAGE_KEY, intensity.toString())
+    localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dashboardTheme)
+  }, [
+    dashboardTheme,
+    intensity,
+    isThemeMutable,
+    theme,
+  ])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersDark(event.matches)
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
+  useEffect(() => {
+    if (!isThemeMutable || typeof window === 'undefined') {
+      return
+    }
+
+    let mounted = true
+
+    const syncWithDatabase = async () => {
+      const dbTheme = await fetchDashboardThemeFromDatabase()
+      if (!mounted || !dbTheme) {
+        return
+      }
+
+      setDashboardThemeState((currentTheme) => {
+        if (currentTheme === dbTheme) {
+          return currentTheme
+        }
+
+        localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, dbTheme)
+        return dbTheme
+      })
+    }
+
+    syncWithDatabase()
+
+    return () => {
+      mounted = false
+    }
+  }, [isThemeMutable])
+
+  const setTheme = useCallback((newTheme: Theme) => {
+    if (!isThemeMutable) {
+      return
+    }
+    setThemeState(newTheme)
+  }, [isThemeMutable])
+
+  const setColorTheme = useCallback((newColorTheme: ColorTheme) => {
+    if (!isThemeMutable) {
+      return
+    }
+    setDashboardThemeState(mapLegacyColorThemeToDashboardTheme(newColorTheme))
+  }, [isThemeMutable])
+
+  const setDashboardTheme = useCallback(async (newDashboardTheme: DashboardTheme) => {
+    if (!isThemeMutable) {
+      return
+    }
+    
+    setDashboardThemeState(newDashboardTheme)
+    localStorage.setItem(DASHBOARD_THEME_STORAGE_KEY, newDashboardTheme)
+    
+    try {
+      await fetch('/api/user/theme', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: newDashboardTheme }),
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.warn('[ThemeProvider] Failed to save theme to database:', error)
+    }
+  }, [isThemeMutable])
+
+  const setIntensity = useCallback((newIntensity: number) => {
+    if (!isThemeMutable) {
+      return
+    }
+    setIntensityState(clampIntensity(newIntensity))
+  }, [isThemeMutable])
+
+  const toggleTheme = useCallback(() => {
+    if (!isThemeMutable) {
+      return
+    }
+
+    setThemeState(prevTheme => {
+      if (prevTheme === 'system') {
+        return effectiveTheme === 'light' ? 'dark' : 'light'
+      }
+      return prevTheme === 'light' ? 'dark' : 'light'
+    })
+  }, [effectiveTheme, isThemeMutable])
 
   const colorTheme = mapDashboardThemeToLegacyColorTheme(appliedDashboardTheme)
 
@@ -114,11 +331,11 @@ export function ThemeProvider({
     colorTheme,
     dashboardTheme: appliedDashboardTheme,
     intensity: appliedIntensity,
-    setTheme: () => undefined,
-    setColorTheme: () => undefined,
-    setDashboardTheme: async () => undefined,
-    setIntensity: () => undefined,
-    toggleTheme: () => undefined,
+    setTheme,
+    setColorTheme,
+    setDashboardTheme,
+    setIntensity,
+    toggleTheme,
     isThemeMutable,
   }), [
     appliedDashboardTheme,
@@ -127,6 +344,11 @@ export function ThemeProvider({
     colorTheme,
     effectiveTheme,
     isThemeMutable,
+    setColorTheme,
+    setDashboardTheme,
+    setIntensity,
+    setTheme,
+    toggleTheme,
   ])
 
   return (

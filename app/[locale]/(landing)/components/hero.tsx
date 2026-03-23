@@ -60,15 +60,15 @@ export default function Hero({  }: HeroProps) {
         <motion.div variants={item} className="mb-6 sm:mb-8">
            <div className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-[hsl(var(--mk-border)/0.55)] bg-[hsl(var(--mk-surface)/0.72)] px-3 py-1.5 backdrop-blur-md">
               <span className="w-1.5 h-1.5 rounded-full bg-foreground animate-pulse shadow-none"></span>
-              <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] sm:tracking-[0.3em] text-muted-foreground">Institutional Intelligence Layer</span>
+              <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] sm:tracking-[0.3em] text-[hsl(var(--mk-text-muted))]">Institutional Intelligence Layer</span>
            </div>
         </motion.div>
 
         <motion.h1
           variants={item}
-          className="mb-6 text-fluid-5xl sm:text-fluid-6xl md:text-fluid-7xl lg:text-fluid-8xl font-semibold leading-[0.86] tracking-[-0.038em] text-foreground [font-family:var(--home-display)]"
+          className="mb-6 text-fluid-5xl sm:text-fluid-6xl md:text-fluid-7xl lg:text-fluid-8xl font-semibold leading-[0.86] tracking-[-0.038em] text-[hsl(var(--mk-text))] [font-family:var(--home-display)]"
         >
-          Qunt <span className="bg-gradient-to-b from-foreground to-foreground/65 bg-clip-text text-transparent">Edge.</span>
+          Qunt <span className="bg-gradient-to-b from-[hsl(var(--mk-text))] to-[hsl(var(--mk-text)/0.55)] bg-clip-text text-transparent">Edge.</span>
         </motion.h1>
 
         <motion.p
@@ -76,7 +76,7 @@ export default function Hero({  }: HeroProps) {
           className="text-responsive sm:text-responsive-lg md:text-xl lg:text-2xl text-foreground/85 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed font-normal px-2"
         >
           Stop auditing the money. Audit the execution. <br className="hidden sm:block" />
-          <span className="text-muted-foreground">The clinical intelligence layer for professional discretionary traders.</span>
+          <span className="text-[hsl(var(--mk-text-muted))]">The clinical intelligence layer for professional discretionary traders.</span>
         </motion.p>
 
         <motion.div
