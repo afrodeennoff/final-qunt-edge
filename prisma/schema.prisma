@@ -67,6 +67,7 @@ model User {
   oauthStates           OAuthState[]           @relation("UserOAuthStates")
   recoveryCodes         RecoveryCode[]         @relation("UserRecoveryCodes")
   propFirmReviews      PropFirmReview[]       @relation("UserReviews")
+  reviewModerations    ReviewModeration[]     @relation("UserReviewModerations")
 
   @@index([email])
   @@schema("public")
@@ -1401,6 +1402,7 @@ model PropFirm {
 
   reviews  PropFirmReview[]
   coupons  PropFirmCoupon[]
+  rules    PropFirmRule[]
 
   @@index([slug])
   @@schema("public")
@@ -1414,14 +1416,41 @@ model PropFirmReview {
   title       String?
   content     String?  @db.Text
   isVerified  Boolean  @default(false)
+  helpfulVotes Int    @default(0)
+  status      String   @default("approved") // pending, approved, rejected, flagged
+  flaggedAt   DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  propFirm PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
-  user    User?    @relation("UserReviews", fields: [userId], references: [id], onDelete: SetNull)
+  propFirm         PropFirm           @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
+  user             User?              @relation("UserReviews", fields: [userId], references: [id], onDelete: SetNull)
+  moderationRecords ReviewModeration[]
 
   @@index([propFirmId])
   @@index([userId])
+  @@index([status])
+  @@schema("public")
+}
+
+model ReviewModeration {
+  id           String   @id @default(cuid())
+  reviewId     String
+  reporterId   String?
+  reason       String
+  description  String?  @db.Text
+  status       String   @default("pending") // pending, reviewed, resolved
+  reviewedAt   DateTime?
+  reviewerId   String?
+  resolution   String?  // upheld, dismissed, warning_issued
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  review  PropFirmReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reporter User?         @relation("UserReviewModerations", fields: [reporterId], references: [id], onDelete: SetNull)
+
+  @@index([reviewId])
+  @@index([reporterId])
+  @@index([status])
   @@schema("public")
 }
 
@@ -1445,6 +1474,23 @@ model PropFirmCoupon {
   propFirm PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
 
   @@unique([propFirmId, code])
+  @@index([propFirmId])
+  @@index([isActive])
+  @@schema("public")
+}
+
+model PropFirmRule {
+  id          String   @id @default(cuid())
+  propFirmId  String
+  ruleType    String
+  value       String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  propFirm PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
+
   @@index([propFirmId])
   @@index([isActive])
   @@schema("public")

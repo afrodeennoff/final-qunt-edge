@@ -40,3 +40,43 @@ export async function getUserProfileAction(): Promise<UserProfileData> {
     subscription
   }
 }
+
+/**
+ * Toggle the current user's leaderboard visibility.
+ * Returns the new value of showOnLeaderboard.
+ */
+export async function toggleLeaderboardVisibility(): Promise<{ success: boolean; showOnLeaderboard: boolean; error?: string }> {
+  const userId = await getDatabaseUserId()
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { showOnLeaderboard: true },
+  })
+
+  if (!currentUser) {
+    return { success: false, showOnLeaderboard: false, error: "User not found" }
+  }
+
+  const newValue = !currentUser.showOnLeaderboard
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { showOnLeaderboard: newValue },
+  })
+
+  return { success: true, showOnLeaderboard: newValue }
+}
+
+/**
+ * Get the current user's leaderboard visibility status.
+ */
+export async function getLeaderboardVisibility(): Promise<{ showOnLeaderboard: boolean }> {
+  const userId = await getDatabaseUserId()
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { showOnLeaderboard: true },
+  })
+
+  return { showOnLeaderboard: user?.showOnLeaderboard ?? false }
+}

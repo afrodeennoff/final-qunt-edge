@@ -27,7 +27,9 @@ import {
   useDashboardStats,
 } from "@/context/data-provider"
 import { useUserStore } from "@/store/user-store"
-import { CalendarIcon, ChevronDown, CircleDot, Zap } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { toggleLeaderboardVisibility, getLeaderboardVisibility } from "@/server/user-profile"
+import { CalendarIcon, ChevronDown, CircleDot, Zap, Globe, Lock } from "lucide-react"
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from "date-fns"
 import type { DateRange, DayButtonProps } from "react-day-picker"
 import {
@@ -150,6 +152,40 @@ export default function TraderProfilePage() {
   const [customDateRange, setCustomDateRange] = useState<DateRange | undefined>(undefined)
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<Date | undefined>(undefined)
   const [tradeFeedPage, setTradeFeedPage] = useState(1)
+  const [showOnLeaderboard, setShowOnLeaderboard] = useState(false)
+  const [isTogglingVisibility, setIsTogglingVisibility] = useState(false)
+
+  // Determine if viewing own profile (logged in user)
+  const isOwnProfile = Boolean(supabaseUser)
+
+  // Load current leaderboard visibility status
+  useEffect(() => {
+    if (!isOwnProfile) return
+    let alive = true
+
+    void getLeaderboardVisibility().then((result) => {
+      if (alive) setShowOnLeaderboard(result.showOnLeaderboard)
+    }).catch(() => {
+      // Silently fail - toggle will default to off
+    })
+
+    return () => { alive = false }
+  }, [isOwnProfile])
+
+  const handleToggleLeaderboard = async () => {
+    if (isTogglingVisibility) return
+    setIsTogglingVisibility(true)
+    try {
+      const result = await toggleLeaderboardVisibility()
+      if (result.success) {
+        setShowOnLeaderboard(result.showOnLeaderboard)
+      }
+    } catch {
+      // Silently fail - user can retry
+    } finally {
+      setIsTogglingVisibility(false)
+    }
+  }
 
   useEffect(() => {
     let alive = true
@@ -479,6 +515,26 @@ export default function TraderProfilePage() {
                     Withdraw {formatValue(totalWithdrawAllAccounts, 0)}
                   </span>
                 </div>
+                {isOwnProfile ? (
+                  <div className="mt-3 flex items-center gap-3 rounded-lg border border-border/10 bg-card/[0.03] px-3 py-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      {showOnLeaderboard ? (
+                        <Globe className="h-3.5 w-3.5 text-semantic-success shrink-0" />
+                      ) : (
+                        <Lock className="h-3.5 w-3.5 text-fg-muted shrink-0" />
+                      )}
+                      <p className="text-xs text-fg-muted truncate">
+                        {showOnLeaderboard ? "Your profile is public — visible on the leaderboard" : "Your profile is private — hidden from the leaderboard"}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={showOnLeaderboard}
+                      onCheckedChange={handleToggleLeaderboard}
+                      disabled={isTogglingVisibility}
+                      aria-label="Toggle leaderboard visibility"
+                    />
+                  </div>
+                ) : null}
               </div>
             </div>
             <div className="mt-3 grid gap-1.5 sm:grid-cols-3">

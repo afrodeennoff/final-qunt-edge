@@ -16,7 +16,10 @@ import {
   Layers,
   Shield,
   Target,
+  TrendingUp,
   Wallet,
+  FileText,
+  Award,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 

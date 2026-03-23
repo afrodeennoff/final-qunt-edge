@@ -175,6 +175,63 @@ export function DealsExperience({
     setTimeout(() => setCopiedCode(null), 2000)
   }
 
+  // Full-page empty state when there are no deals at all from DB
+  if (deals.length === 0 && !hadFetchError) {
+    return (
+      <div className="min-h-screen bg-background">
+        <section className="relative overflow-hidden border-b border-border">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_hsl(var(--primary)/0.06),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_hsl(var(--primary)/0.04),_transparent_50%)]" />
+          <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-18 lg:px-8 lg:py-22">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                <BadgePercent className="h-3.5 w-3.5 text-primary" />
+                Exclusive Deals
+              </span>
+              <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                Prop Firm Deals
+              </h1>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Save on funded account challenges with verified coupon codes and exclusive discounts.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-center text-center">
+            <div className="relative mb-8">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-border bg-card shadow-lg">
+                <Tag className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <div className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-muted">
+                <Clock className="h-3 w-3 text-muted-foreground" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">No active deals right now</h2>
+            <p className="mt-3 max-w-md text-base leading-relaxed text-muted-foreground">
+              We&apos;re working with prop firms to bring you exclusive discounts and coupon codes. Check back soon for new deals.
+            </p>
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+              <Link
+                href={`${localePrefix}/propfirms`}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-sm"
+              >
+                Browse Prop Firms
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href={`${localePrefix}`}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              >
+                Back to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <section className="relative overflow-hidden border-b border-border">

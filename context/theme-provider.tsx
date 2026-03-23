@@ -12,6 +12,12 @@ import React, {
 
 type Theme = 'light' | 'dark' | 'system'
 
+export const DASHBOARD_THEMES = [
+  { value: 'dark', label: 'Dark', primary: '#171717' },
+  { value: 'light', label: 'Light', primary: '#ffffff' },
+  { value: 'system', label: 'System', primary: 'auto' },
+] as const
+
 const THEME_STORAGE_KEY = 'theme'
 const DEFAULT_THEME: Theme = 'dark'
 
@@ -65,12 +71,17 @@ function applyThemeToDocument(theme: 'light' | 'dark'): void {
 
 export function ThemeProvider({
   children,
+  scope,
 }: {
   children: React.ReactNode
+  scope?: 'dashboard' | 'fixed-blue'
 }) {
   const [theme, setThemeState] = useState<Theme>(getInitialTheme)
   const [prefersDark, setPrefersDark] = useState<boolean>(getInitialSystemPreference)
   const effectiveTheme = resolveEffectiveTheme(theme, prefersDark)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const dashboardScope = scope // Reserved for future use
 
   useLayoutEffect(() => {
     applyThemeToDocument(effectiveTheme)

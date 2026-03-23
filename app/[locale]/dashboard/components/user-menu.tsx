@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { useI18n, useChangeLocale, useCurrentLocale } from '@/locales/client'
 import { useTheme } from '@/context/theme-provider'
 import { useDashboardActions } from '@/context/data-provider'

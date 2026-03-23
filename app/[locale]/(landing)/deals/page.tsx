@@ -7,7 +7,7 @@ import {
 } from '@/server/deals'
 import { DealsExperience } from './components/deals-experience'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function DealsPage({
   params,

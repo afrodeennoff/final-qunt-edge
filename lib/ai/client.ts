@@ -31,7 +31,7 @@ function normalizeModelForOpenRouter(model: string): string {
   return trimmed;
 }
 
-// Enhanced AI language model with caching
+// Enhanced AI language model with caching (only for non-streaming generations)
 export function getAiLanguageModel(feature: AiFeature) {
   if (!aiApiKey && !hasWarnedMissingApiKey) {
     console.warn("[AI] OPENROUTER_API_KEY is missing. AI routes will fail until it is configured.");
@@ -46,12 +46,12 @@ export function getAiLanguageModel(feature: AiFeature) {
   const { model } = getAiPolicy(feature);
   const rawModel = aiClient(normalizeModelForOpenRouter(model));
   
-  // Return a wrapped model that adds caching
+  // Return a wrapped model that adds caching for doGenerate only
   return new Proxy(rawModel, {
     get(target, p: string | symbol, receiver: any) {
       // If it's a method we want to wrap for caching, return our cached version
-      if (p === 'doGenerate' || p === 'doStream') {
-        return async function(options: unknown) {
+      if (p === 'doGenerate') {
+        return async function(options: Parameters<typeof target['doGenerate']>[0]) {
           // Generate cache key based on feature and options
           const featureStr = String(feature);
           
@@ -71,7 +71,7 @@ export function getAiLanguageModel(feature: AiFeature) {
         }.bind(this);
       }
       
-      // For all other properties/methods, delegate to the target
+      // For all other properties/methods (including doStream), delegate to the target
       return Reflect.get(target, p, receiver);
     }
   });

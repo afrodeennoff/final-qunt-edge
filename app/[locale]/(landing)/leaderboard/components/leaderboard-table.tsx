@@ -20,6 +20,7 @@ import type { LeaderboardEntry, LeaderboardSort } from '../data/leaderboard-quer
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
   locale: string
+  isLoading?: boolean
 }
 
 const trophyConfig = {
@@ -201,7 +202,7 @@ export function LeaderboardTableSkeleton() {
   )
 }
 
-export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, locale }: LeaderboardTableProps) {
+export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, locale, isLoading = false }: LeaderboardTableProps) {
   const searchParams = useSearchParams()
   const currentSort = (searchParams.get('sort') ?? 'monthly_pnl') as LeaderboardSort
 

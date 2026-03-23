@@ -80,7 +80,7 @@ export async function getLeaderboardData(
     throw error
   }
 
-  if (eligibleUsers.length === 0) {
+  if (!eligibleUsers || eligibleUsers.length === 0) {
     return []
   }
 
@@ -218,14 +218,22 @@ export async function getLeaderboardData(
       if (b.totalTrades !== a.totalTrades) return b.totalTrades - a.totalTrades
       return b.monthlyPnl - a.monthlyPnl
     })
-  } else {
+    } else {
     entries.sort((a, b) => {
       if (b.monthlyPnl !== a.monthlyPnl) return b.monthlyPnl - a.monthlyPnl
       return b.winRate - a.winRate
     })
   }
 
-  // Assign ranks after sorting so ranks reflect the server-computed sort order.
-  // Client components must NOT re-sort or reassign ranks — they must use server-assigned ranks.
-  return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }))
+  return entries
+}
+
+// Server Action for client-side polling - fetches fresh leaderboard data
+export async function refreshLeaderboardData(
+  sort: LeaderboardSort = 'monthly_pnl'
+): Promise<{ entries: LeaderboardEntry[]; lastUpdated: string }> {
+  const entries = await getLeaderboardData(sort)
+  const lastUpdated = new Date().toISOString()
+  
+  return { entries, lastUpdated }
 }

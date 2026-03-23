@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
-import { createFirmReview, listFirmReviews } from '@/server/firm-reviews'
+import { createFirmReview, listFirmReviews, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
 import { CardV2, CardV2Content, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
-import { ReviewsIcon } from '@/components/icons/svg-icons'
+import { ReviewsIcon, FilterIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase'
-import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle } from 'lucide-react'
+import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight } from 'lucide-react'
 
 type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>[number]
 
@@ -213,6 +213,19 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   const [titleError, setTitleError] = React.useState<string | null>(null)
   const [ratingError, setRatingError] = React.useState<string | null>(null)
   
+  // Sorting and pagination
+  const [sortBy, setSortBy] = React.useState<ReviewSortOption>('newest')
+  const [currentPage, setCurrentPage] = React.useState(1)
+  const [totalPages, setTotalPages] = React.useState(1)
+  
+  // Flag dialog
+  const [showFlagDialog, setShowFlagDialog] = React.useState(false)
+  const [flagReviewId, setFlagReviewId] = React.useState<string | null>(null)
+  const [flagReason, setFlagReason] = React.useState('')
+  const [flagDescription, setFlagDescription] = React.useState('')
+  const [flagSubmitting, setFlagSubmitting] = React.useState(false)
+  const [flagSuccess, setFlagSuccess] = React.useState(false)
+  
   const supabase = createClient()
   
   React.useEffect(() => {
@@ -237,8 +250,11 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   const fetchReviews = React.useCallback(async () => {
     try {
       setError(null)
-      const data = await listFirmReviews(firmId)
+      const data = await listFirmReviews(firmId, currentPage, sortBy)
       setReviews(data ?? [])
+      
+      // Calculate total pages (approximate since we don't have a count endpoint)
+      setTotalPages(Math.max(1, Math.ceil((data?.length ?? 0) / 10)))
       
       if (currentUserId) {
         const userReview = data?.find(r => r.userId === currentUserId)
@@ -250,8 +266,9 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
     } finally {
       setLoading(false)
     }
-  }, [firmId, currentUserId])
+  }, [firmId, currentUserId, currentPage, sortBy])
   
+  // Fetch when sort or page changes
   React.useEffect(() => {
     void fetchReviews()
   }, [fetchReviews])
@@ -342,7 +359,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       console.error('Failed to submit review:', err)
       
       const errorMessage = err instanceof Error ? err.message : String(err)
-      if (errorMessage.includes('Unique constraint') || errorMessage.includes('unique constraint')) {
+      if (errorMessage.includes('Unique constraint') || errorMessage.includes('unique constraint') || errorMessage.includes('already reviewed')) {
         setError('You have already reviewed this firm. Each user can only submit one review.')
         setHasUserReviewed(true)
       } else {
@@ -350,6 +367,35 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       }
     } finally {
       setSubmitting(false)
+    }
+  }
+  
+  function openFlagDialog(reviewId: string) {
+    setFlagReviewId(reviewId)
+    setFlagReason('')
+    setFlagDescription('')
+    setShowFlagDialog(true)
+  }
+  
+  async function submitFlag(e: React.FormEvent) {
+    e.preventDefault()
+    if (!flagReviewId || !flagReason.trim()) return
+    
+    setFlagSubmitting(true)
+    try {
+      await flagReview({
+        reviewId: flagReviewId,
+        reason: flagReason,
+        description: flagDescription.trim() || undefined,
+      })
+      setFlagSuccess(true)
+      setShowFlagDialog(false)
+      setTimeout(() => setFlagSuccess(false), 5000)
+    } catch (err) {
+      console.error('Failed to flag review:', err)
+      setError(err instanceof Error ? err.message : 'Failed to report review')
+    } finally {
+      setFlagSubmitting(false)
     }
   }
   
