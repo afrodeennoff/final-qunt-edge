@@ -1,4 +1,4 @@
-import { isRedisConfigured, getRedisJson, setRedisJson } from "@/lib/redis-client";
+import { isRedisConfigured, getRedisJson, setRedisJson } from "../lib/redis-client";
 
 // Simple hash function for caching keys
 function hashString(str: string): string {
