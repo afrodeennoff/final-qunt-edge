@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
-import { DASHBOARD_THEMES, type DashboardTheme, useTheme } from '@/context/theme-provider'
+import { useTheme } from '@/context/theme-provider'
 import {
   User,
   Settings,
@@ -66,12 +66,6 @@ import { cn } from "@/lib/utils"
 
 type Locale = 'en' | 'fr'
 type ThemeMode = 'light' | 'dark' | 'system'
-type DashboardThemeOption = {
-  value: DashboardTheme
-  label: string
-  preview: string
-  swatchClass: string
-}
 type TranslateFn = ReturnType<typeof useI18n>
 type TeamSummary = {
   id: string
@@ -95,14 +89,6 @@ const timezones = [
   'Australia/Sydney',
   // Add more common timezones as needed
 ];
-
-const dashboardThemeOptions: DashboardThemeOption[] = [
-  { value: 'blue', label: 'VTRON Blue', preview: 'Balanced and crisp', swatchClass: 'bg-chart-1' },
-  { value: 'violet', label: 'CWH Violet', preview: 'High contrast focus', swatchClass: 'bg-chart-2' },
-  { value: 'emerald', label: 'Emerald Light', preview: 'Fresh and minimal', swatchClass: 'bg-chart-4' },
-  { value: 'amber', label: 'Lara Amber', preview: 'Warm and energetic', swatchClass: 'bg-chart-5' },
-  { value: 'rose', label: 'Efferd Rose', preview: 'Neutral editorial', swatchClass: 'bg-chart-3' },
-]
 
 const THEME_MODE_LABELS: Record<ThemeMode, string> = {
   light: 'Light',
@@ -335,7 +321,7 @@ export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
-  const { theme, setTheme, dashboardTheme, setDashboardTheme, intensity, setIntensity } = useTheme()
+  const { theme, setTheme } = useTheme()
   const user = useUserStore(state => state.supabaseUser)
   const timezone = useUserStore(state => state.timezone)
   const setTimezone = useUserStore(state => state.setTimezone)
@@ -362,15 +348,6 @@ export default function SettingsPage() {
     setTheme(value as ThemeMode)
   }
 
-  const handleDashboardThemeChange = (value: string) => {
-    if (!DASHBOARD_THEMES.includes(value as DashboardTheme)) {
-      return
-    }
-
-    setDashboardTheme(value as DashboardTheme)
-  }
-
-  const activeDashboardTheme = dashboardThemeOptions.find((option) => option.value === dashboardTheme) ?? dashboardThemeOptions[0]
   const currentThemeLabel = THEME_MODE_LABELS[theme]
 
   const refreshTeams = async () => {
