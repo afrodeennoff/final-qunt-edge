@@ -16,6 +16,7 @@ export type LeaderboardEntry = {
   avgDurationMinutes: number
   longestWinStreak: number
   longestLossStreak: number
+  accountCount: number
 }
 
 export type LeaderboardSort = 'monthly_pnl' | 'winrate' | 'totalTrades'
@@ -90,7 +91,7 @@ export async function getLeaderboardData(
   const userIds = eligibleUsers.map((user) => user.id)
   const dateFilter = { closeDate: { gte: startOfMonth } }
 
-  const [agg, accounts, monthlyTrades] = await Promise.all([
+  const [agg, accounts, monthlyTrades, accountCounts] = await Promise.all([
     prisma.trade.groupBy({
       by: ['userId'],
       _sum: { pnl: true },
@@ -124,6 +125,13 @@ export async function getLeaderboardData(
         { closeDate: 'asc' },
       ],
     }),
+    prisma.account.groupBy({
+      by: ['userId'],
+      _count: { id: true },
+      where: {
+        userId: { in: userIds },
+      },
+    }),
   ])
 
   const userMap = Object.fromEntries(
@@ -132,6 +140,10 @@ export async function getLeaderboardData(
 
   const accountBalanceMap = new Map(
     accounts.map((entry) => [entry.userId, Number(entry._sum.startingBalance ?? 0)])
+  )
+
+  const accountCountMap = new Map(
+    accountCounts.map((entry) => [entry.userId, entry._count.id])
   )
 
   const tradesByUser = new Map<string, Array<{
@@ -189,6 +201,7 @@ export async function getLeaderboardData(
       avgDurationMinutes,
       longestWinStreak: computeLongestStreak(pnlValues, 'win'),
       longestLossStreak: computeLongestStreak(pnlValues, 'loss'),
+      accountCount: accountCountMap.get(entry.userId) ?? 0,
     }
   })
 

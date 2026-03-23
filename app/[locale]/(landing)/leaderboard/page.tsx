@@ -19,14 +19,14 @@ export default async function LeaderboardPage({
   const entries = await getLeaderboardData(sortKey)
 
   return (
-    <div className="min-h-screen bg-v2-bg-base">
+    <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-v2-3 mb-v2-8">
-          <LeaderboardIcon size={32} className="text-v2-accent" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-v2-text-primary">Leaderboard</h1>
+        <div className="flex items-center gap-3 mb-8">
+          <LeaderboardIcon size={32} className="text-foreground" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Leaderboard</h1>
         </div>
-        <p className="mb-6 max-w-3xl text-v2-text-secondary">
-          Top opted-in traders ranked from real monthly trading data. The board now shows deeper production metrics including return percentage, top pair, average win/loss, duration, and streak behavior.
+        <p className="mb-8 max-w-3xl text-muted-foreground">
+          Top opted-in traders ranked from real monthly trading data. The board shows deeper production metrics including return percentage, top pair, average win/loss, duration, and streak behavior.
         </p>
         <LeaderboardContent initialEntries={entries} locale={locale} />
       </div>

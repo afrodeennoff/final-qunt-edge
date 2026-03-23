@@ -3,23 +3,19 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
-import {
   ArrowUpRight,
   BadgePercent,
   Banknote,
   Building2,
   ChevronDown,
-  ChevronUp,
+  Clock,
+  Copy,
+  ExternalLink,
   Filter,
-  Landmark,
+  Flame,
   Search,
-  SlidersHorizontal,
-  Star,
+  Sparkles,
+  Tag,
   Wallet,
   X,
 } from 'lucide-react'
@@ -27,26 +23,12 @@ import type {
   DealItem,
   DealsOverview,
   DealsSpotlightCollection,
-  DrawdownType,
   FaqItem,
   MarketType,
-  PayoutModel,
-  TradingPlatform,
   UnifiedFirm,
 } from '@/server/deals'
 
-type SortKey =
-  | 'name'
-  | 'challengeFee'
-  | 'profitSplit'
-  | 'drawdownType'
-  | 'payoutFrequency'
-  | 'maxAllocation'
-  | 'rating'
-  | 'paidPayoutAmount'
-  | 'accountsCount'
-
-type SortDirection = 'asc' | 'desc'
+type SortKey = 'discount' | 'price-low' | 'price-high' | 'newest'
 
 interface Props {
   locale: string
@@ -60,40 +42,33 @@ interface Props {
 }
 
 const marketOptions: Array<'All' | MarketType> = ['All', 'Futures', 'Forex', 'Crypto']
-const platformOptions: Array<'All' | TradingPlatform> = ['All', 'Tradovate', 'Rithmic', 'MetaTrader 5', 'cTrader', 'DXtrade']
-const payoutOptions: Array<'All' | PayoutModel> = ['All', 'Bi-weekly', 'Weekly', 'On-demand', 'Monthly']
-const drawdownOptions: Array<'All' | DrawdownType> = ['All', 'Trailing', 'Static', 'End-of-day']
+const discountOptions = [
+  { value: 'all', label: 'All Discounts' },
+  { value: '10', label: '10%+' },
+  { value: '20', label: '20%+' },
+  { value: '30', label: '30%+' },
+  { value: '50', label: '50%+' },
+]
 
-function priceMatch(value: number, range: string): boolean {
-  if (range === 'all') return true
-  if (range === '0-99') return value <= 99
-  if (range === '100-199') return value >= 100 && value <= 199
-  return value >= 200
+function getOriginalPrice(deal: DealItem, firm: UnifiedFirm | undefined): number {
+  if (firm && firm.accountSizes) {
+    const sizes = Object.values(firm.accountSizes)
+    if (sizes.length > 0) {
+      const matchingSize = sizes.find(s => s.priceWithPromo === deal.challengeFee)
+      if (matchingSize) return matchingSize.price
+      const minPrice = Math.min(...sizes.map(s => s.price))
+      if (minPrice > 0) return minPrice
+    }
+  }
+  if (deal.challengeFee > 0 && deal.discountPercent > 0) {
+    return Math.round(deal.challengeFee / (1 - deal.discountPercent / 100))
+  }
+  return deal.challengeFee
 }
 
-function splitToNumber(split: string): number {
-  const parsed = Number(split.split('/')[0])
-  return Number.isFinite(parsed) ? parsed : 0
-}
-
-function allocationToNumber(maxAllocation: string): number {
-  const parsed = Number(maxAllocation.replace(/\$/g, '').replace(/K/gi, '000').replace(/M/gi, '000000').replace(/,/g, ''))
-  return Number.isFinite(parsed) ? parsed : 0
-}
-
-function getLowestChallengeFee(firm: UnifiedFirm): number | null {
-  const fees = firm.coupons
-    .map((coupon) => coupon.challengeFee)
-    .filter((fee): fee is number => typeof fee === 'number' && Number.isFinite(fee))
-
-  if (fees.length === 0) return null
-  return Math.min(...fees)
-}
-
-function formatChallengeFee(fee: number | null): string {
-  if (fee === null) return 'N/A'
-  if (fee === 0) return 'Free'
-  return `$${fee.toLocaleString()}`
+function formatPrice(price: number): string {
+  if (price === 0) return 'Free'
+  return `$${price.toLocaleString()}`
 }
 
 function formatCompactCurrency(value: number): string {
@@ -105,369 +80,482 @@ function formatCompactCurrency(value: number): string {
   }).format(value)
 }
 
-function getActiveFilterCount(
-  market: string,
-  platform: string,
-  payout: string,
-  drawdown: string,
-  priceRange: string,
-  search: string,
-): number {
-  let count = 0
-  if (market !== 'All') count++
-  if (platform !== 'All') count++
-  if (payout !== 'All') count++
-  if (drawdown !== 'All') count++
-  if (priceRange !== 'all') count++
-  if (search.trim()) count++
-  return count
+function isHotDeal(deal: DealItem): boolean {
+  if (deal.expiryDate === 'No expiry') return false
+  const expiry = new Date(deal.expiryDate)
+  const now = new Date()
+  const daysLeft = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  return daysLeft > 0 && daysLeft <= 14
+}
+
+function isFeaturedDeal(deal: DealItem): boolean {
+  return deal.discountPercent >= 25
+}
+
+function getDaysLeft(expiryDate: string): number | null {
+  if (expiryDate === 'No expiry') return null
+  const expiry = new Date(expiryDate)
+  const now = new Date()
+  const days = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  return days > 0 ? days : 0
 }
 
 export function DealsExperience({
   locale,
   deals,
   firms,
-  faqs,
   overview,
-  spotlights,
   hadFetchError,
   lastUpdated,
 }: Props) {
   const localePrefix = `/${locale}`
   const [search, setSearch] = useState('')
-  const [market, setMarket] = useState<'All' | MarketType>('All')
-  const [platform, setPlatform] = useState<'All' | TradingPlatform>('All')
-  const [payout, setPayout] = useState<'All' | PayoutModel>('All')
-  const [drawdown, setDrawdown] = useState<'All' | DrawdownType>('All')
-  const [priceRange, setPriceRange] = useState('all')
-  const [sortKey, setSortKey] = useState<SortKey>('paidPayoutAmount')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
-  const [showFilters, setShowFilters] = useState(false)
+  const [selectedFirm, setSelectedFirm] = useState<string>('All')
+  const [selectedMarket, setSelectedMarket] = useState<'All' | MarketType>('All')
+  const [selectedDiscount, setSelectedDiscount] = useState('all')
+  const [sortKey, setSortKey] = useState<SortKey>('discount')
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
   const normalizedSearch = search.trim().toLowerCase()
 
-  const activeFilterCount = getActiveFilterCount(market, platform, payout, drawdown, priceRange, search)
+  const firmNames = useMemo(() => {
+    const names = new Set(deals.map(d => d.firmName))
+    return ['All', ...Array.from(names).sort()]
+  }, [deals])
 
-  const filteredDeals = useMemo(() => deals.filter((deal) => {
-    const marketOk = market === 'All' || deal.category === market
-    const platformOk = platform === 'All' || deal.platform === platform
-    const payoutOk = payout === 'All' || deal.payoutModel === payout
-    const drawdownOk = drawdown === 'All' || deal.drawdownType === drawdown
-    const priceOk = priceMatch(deal.challengeFee, priceRange)
-    const searchOk = !normalizedSearch || deal.firmName.toLowerCase().includes(normalizedSearch)
-    return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
-  }), [deals, drawdown, market, normalizedSearch, payout, platform, priceRange])
-
-  const filteredFirms = useMemo(() => {
-    const base = firms.filter((firm) => {
-      const marketOk = market === 'All' || firm.category === market
-      const platformOk = platform === 'All' || firm.platform === platform
-      const payoutOk = payout === 'All' || firm.payoutModel === payout
-      const drawdownOk = drawdown === 'All' || firm.drawdownType === drawdown
-      const lowestFee = getLowestChallengeFee(firm)
-      const priceOk = priceRange === 'all' ? true : lowestFee !== null && priceMatch(lowestFee, priceRange)
-      const searchOk = !normalizedSearch || firm.name.toLowerCase().includes(normalizedSearch) || (firm.shortDesc ?? '').toLowerCase().includes(normalizedSearch)
-      return marketOk && platformOk && payoutOk && drawdownOk && priceOk && searchOk
+  const filteredDeals = useMemo(() => {
+    const filtered = deals.filter((deal) => {
+      const firmOk = selectedFirm === 'All' || deal.firmName === selectedFirm
+      const marketOk = selectedMarket === 'All' || deal.category === selectedMarket
+      const discountOk = selectedDiscount === 'all' || deal.discountPercent >= Number(selectedDiscount)
+      const searchOk = !normalizedSearch ||
+        deal.firmName.toLowerCase().includes(normalizedSearch) ||
+        deal.couponCode.toLowerCase().includes(normalizedSearch) ||
+        deal.category.toLowerCase().includes(normalizedSearch)
+      return firmOk && marketOk && discountOk && searchOk
     })
 
-    return [...base].sort((a, b) => {
-      const dir = sortDirection === 'asc' ? 1 : -1
+    return [...filtered].sort((a, b) => {
       switch (sortKey) {
-        case 'name':
-          return a.name.localeCompare(b.name) * dir
-        case 'challengeFee': {
-          const feeA = getLowestChallengeFee(a) ?? Number.POSITIVE_INFINITY
-          const feeB = getLowestChallengeFee(b) ?? Number.POSITIVE_INFINITY
-          return (feeA - feeB) * dir
-        }
-        case 'profitSplit':
-          return (splitToNumber(a.profitSplit) - splitToNumber(b.profitSplit)) * dir
-        case 'drawdownType':
-          return a.drawdownType.localeCompare(b.drawdownType) * dir
-        case 'payoutFrequency':
-          return a.payoutModel.localeCompare(b.payoutModel) * dir
-        case 'maxAllocation':
-          return (allocationToNumber(a.maxAllocation) - allocationToNumber(b.maxAllocation)) * dir
-        case 'accountsCount':
-          return (a.catalogueStats.accountsCount - b.catalogueStats.accountsCount) * dir
-        case 'paidPayoutAmount':
-          return (a.catalogueStats.paidPayoutAmount - b.catalogueStats.paidPayoutAmount) * dir
-        case 'rating':
+        case 'discount':
+          return b.discountPercent - a.discountPercent
+        case 'price-low':
+          return a.challengeFee - b.challengeFee
+        case 'price-high':
+          return b.challengeFee - a.challengeFee
+        case 'newest':
+          return a.expiryDate === 'No expiry' ? 1 : b.expiryDate === 'No expiry' ? -1 :
+            new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
         default:
-          return (a._count.reviews - b._count.reviews) * dir
+          return 0
       }
     })
-  }, [drawdown, firms, market, normalizedSearch, payout, platform, priceRange, sortDirection, sortKey])
+  }, [deals, selectedFirm, selectedMarket, selectedDiscount, normalizedSearch, sortKey])
 
-  const onSort = (nextKey: SortKey) => {
-    if (nextKey === sortKey) {
-      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
-      return
-    }
-    setSortKey(nextKey)
-    setSortDirection('desc')
-  }
+  const featuredDeals = useMemo(() => filteredDeals.filter(isFeaturedDeal), [filteredDeals])
+  const hotDeals = useMemo(() => filteredDeals.filter(isHotDeal), [filteredDeals])
+
+  const activeFilterCount = [
+    selectedFirm !== 'All',
+    selectedMarket !== 'All',
+    selectedDiscount !== 'all',
+    normalizedSearch.length > 0,
+  ].filter(Boolean).length
 
   const clearFilters = () => {
     setSearch('')
-    setMarket('All')
-    setPlatform('All')
-    setPayout('All')
-    setDrawdown('All')
-    setPriceRange('all')
+    setSelectedFirm('All')
+    setSelectedMarket('All')
+    setSelectedDiscount('all')
+  }
+
+  const copyCode = (code: string) => {
+    navigator.clipboard.writeText(code)
+    setCopiedCode(code)
+    setTimeout(() => setCopiedCode(null), 2000)
   }
 
   return (
-    <div className="min-h-screen bg-v2-bg-base">
-      <section className="relative overflow-hidden border-b border-v2-border-subtle">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_hsl(var(--v2-accent)/0.08),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_hsl(var(--v2-accent)/0.05),_transparent_50%)]" />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+    <div className="min-h-screen bg-background">
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_hsl(var(--primary)/0.06),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_hsl(var(--primary)/0.04),_transparent_50%)]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-18 lg:px-8 lg:py-22">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-v2-text-secondary">
-                <BadgePercent className="h-3.5 w-3.5 text-v2-accent" />
-                Prop firm deals
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                <BadgePercent className="h-3.5 w-3.5 text-primary" />
+                Exclusive Deals
               </span>
-              <h1 className="mt-6 text-4xl font-bold leading-[1.08] tracking-tight text-v2-text-primary sm:text-5xl lg:text-6xl">
-                Find the best
-                <br />
-                prop firm deals.
+              <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                Prop Firm Deals
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-v2-text-secondary sm:text-lg">
-                Compare firms, track live discounts, and open company profiles with real account data and payout context.
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Save on funded account challenges with verified coupon codes and exclusive discounts.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="#firm-board"
-                  className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-glow"
-                >
-                  Browse Firms
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <a
-                  href="#deal-board"
-                  className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-6 py-3 text-sm font-semibold text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
-                >
-                  View Deals
-                </a>
-              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toLocaleString()} icon={Building2} />
-              <StatCard label="Live deals" value={overview.totalLiveDeals.toLocaleString()} icon={Wallet} />
-              <StatCard label="Accounts" value={overview.totalAccounts.toLocaleString()} icon={Landmark} />
-              <StatCard label="Paid out" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+              <StatCard label="Active Deals" value={overview.totalLiveDeals.toString()} icon={Tag} />
+              <StatCard label="Firms" value={overview.totalTrackedFirms.toString()} icon={Building2} />
+              <StatCard label="Accounts" value={overview.totalAccounts.toLocaleString()} icon={Wallet} />
+              <StatCard label="Paid Out" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
             </div>
+          </div>
+
+
+          <div className="mt-8 relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search deals by firm name, coupon code, or category..."
+              className="w-full rounded-xl border border-border bg-card px-11 py-3.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary/30"
+            />
+            {search ? (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            ) : null}
+          </div>
+
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+
+            <div className="relative">
+              <select
+                value={selectedFirm}
+                onChange={(e) => setSelectedFirm(e.target.value)}
+                className="appearance-none rounded-full border border-border bg-card px-4 py-2 pr-8 text-xs font-medium text-foreground outline-none transition-colors hover:bg-muted focus:border-primary"
+              >
+                {firmNames.map(name => (
+                  <option key={name} value={name}>{name === 'All' ? 'All Firms' : name}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
+            </div>
+
+
+            {marketOptions.map(market => (
+              <button
+                key={market}
+                type="button"
+                onClick={() => setSelectedMarket(market)}
+                className={`rounded-full px-3.5 py-2 text-xs font-medium transition-all ${
+                  selectedMarket === market
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`}
+              >
+                {market === 'All' ? 'All Markets' : market}
+              </button>
+            ))}
+
+
+            <div className="relative">
+              <select
+                value={selectedDiscount}
+                onChange={(e) => setSelectedDiscount(e.target.value)}
+                className="appearance-none rounded-full border border-border bg-card px-4 py-2 pr-8 text-xs font-medium text-foreground outline-none transition-colors hover:bg-muted focus:border-primary"
+              >
+                {discountOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
+            </div>
+
+
+            <div className="relative ml-auto">
+              <select
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value as SortKey)}
+                className="appearance-none rounded-full border border-border bg-card px-4 py-2 pr-8 text-xs font-medium text-foreground outline-none transition-colors hover:bg-muted focus:border-primary"
+              >
+                <option value="discount">Highest Discount</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Expiring Soon</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
+            </div>
+
+            {activeFilterCount > 0 ? (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+                Clear ({activeFilterCount})
+              </button>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-        <div className="space-y-12">
-          {spotlights.futures.length > 0 || spotlights.cfd.length > 0 ? (
-            <section className="space-y-4">
-              <SectionHeader title="Featured spotlights" subtitle={`Futures and CFD coverage from PropFirmMatch · ${spotlights.updatedAt}`} />
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[...spotlights.futures.slice(0, 1), ...spotlights.cfd.slice(0, 1)].map((item, index) => (
-                  <a
-                    key={`${item.slug}-${index}`}
-                    href={item.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex items-start justify-between gap-4 rounded-2xl border border-v2-border-subtle bg-v2-bg-surface p-5 transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-v2-text-primary">{item.name}</p>
-                        <span className="rounded-full bg-v2-accent-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-accent">
-                          {item.category}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm leading-relaxed text-v2-text-secondary">{item.promoText}</p>
-                    </div>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 text-v2-text-tertiary transition-colors group-hover:text-v2-accent" />
-                  </a>
-                ))}
-              </div>
-            </section>
-          ) : null}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        {hadFetchError ? (
+          <div className="mb-8 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-5 py-4 text-sm text-yellow-600">
+            Some deal data is temporarily unavailable. The page will refresh automatically.
+          </div>
+        ) : null}
 
-          <section className="space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <SectionHeader title="Filter & sort" subtitle="Narrow the market to match your criteria" className="mb-0" />
-              <div className="flex items-center gap-3">
-                {activeFilterCount > 0 ? (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-v2-border bg-v2-bg-surface px-3 py-1.5 text-xs font-medium text-v2-text-secondary transition-colors hover:bg-v2-bg-hover hover:text-v2-text-primary"
-                  >
-                    <X className="h-3 w-3" />
-                    Clear {activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''}
-                  </button>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={() => setShowFilters((prev) => !prev)}
-                  className="inline-flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-surface px-4 py-2 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover"
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  {showFilters ? 'Hide filters' : 'Show filters'}
-                  {activeFilterCount > 0 ? (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-v2-accent text-[10px] font-bold text-v2-accent-foreground">
-                      {activeFilterCount}
-                    </span>
-                  ) : null}
-                </button>
-              </div>
-            </div>
 
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-v2-text-tertiary" />
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search firms, payout model, or description..."
-                className="w-full rounded-2xl border border-v2-border bg-v2-bg-surface px-11 py-3.5 text-sm text-v2-text-primary outline-none transition-colors placeholder:text-v2-text-tertiary focus:border-v2-accent focus:ring-1 focus:ring-v2-accent/30"
-              />
-              {search ? (
-                <button
-                  type="button"
-                  onClick={() => setSearch('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 text-v2-text-tertiary transition-colors hover:text-v2-text-primary"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              ) : null}
-            </div>
-
-            {showFilters ? (
-              <div className="grid gap-4 rounded-2xl border border-v2-border-subtle bg-v2-bg-surface p-5 sm:grid-cols-2 lg:grid-cols-3">
-                <FilterPillGroup label="Market" value={market} onChange={setMarket} options={marketOptions} />
-                <FilterPillGroup label="Platform" value={platform} onChange={setPlatform} options={platformOptions} />
-                <FilterPillGroup label="Payout" value={payout} onChange={setPayout} options={payoutOptions} />
-                <FilterPillGroup label="Drawdown" value={drawdown} onChange={setDrawdown} options={drawdownOptions} />
-                <div className="space-y-2">
-                  <span className="text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">Price Range</span>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { value: 'all', label: 'All' },
-                      { value: '0-99', label: '$0–$99' },
-                      { value: '100-199', label: '$100–$199' },
-                      { value: '200+', label: '$200+' },
-                    ].map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => setPriceRange(option.value)}
-                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
-                          priceRange === option.value
-                            ? 'bg-v2-accent text-v2-accent-foreground shadow-v2-sm'
-                            : 'border border-v2-border bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">Sort:</span>
-              {([
-                { key: 'paidPayoutAmount' as SortKey, label: 'Paid Out' },
-                { key: 'accountsCount' as SortKey, label: 'Accounts' },
-                { key: 'challengeFee' as SortKey, label: 'Entry Fee' },
-                { key: 'profitSplit' as SortKey, label: 'Split' },
-                { key: 'name' as SortKey, label: 'Name' },
-                { key: 'rating' as SortKey, label: 'Reviews' },
-              ]).map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => onSort(option.key)}
-                  className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
-                    sortKey === option.key
-                      ? 'bg-v2-accent/15 text-v2-accent border border-v2-accent/30'
-                      : 'border border-v2-border-subtle bg-v2-bg-surface text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
-                  }`}
-                >
-                  {option.label}
-                  {sortKey === option.key ? (
-                    sortDirection === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {hadFetchError ? (
-            <div className="rounded-2xl border border-v2-warning/30 bg-v2-warning/10 px-5 py-4 text-sm text-v2-warning">
-              Some deal data is temporarily unavailable. The catalogue will refresh automatically.
-            </div>
-          ) : null}
-
-          <section id="firm-board" className="space-y-6">
+        {featuredDeals.length > 0 && (
+          <section className="mb-12">
             <SectionHeader
-              title="Firm board"
-              subtitle="Company cards with real account data, payout context, and quick actions"
-              badge={`${filteredFirms.length} firms`}
+              title="Featured Deals"
+              subtitle="Highest discounts available right now"
+              icon={Sparkles}
+              badge={`${featuredDeals.length} deals`}
             />
-            {filteredFirms.length === 0 ? (
-              <EmptyState message="No firms match your filters." onClear={clearFilters} hasFilters={activeFilterCount > 0} />
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filteredFirms.map((firm, index) => (
-                  <FirmCard key={firm.id} firm={firm} localePrefix={localePrefix} index={index} />
-                ))}
-              </div>
-            )}
-          </section>
-
-          <section id="deal-board" className="space-y-6">
-            <SectionHeader
-              title="Live deals"
-              subtitle="Active discounts and promotions from verified prop firms"
-              badge={`${filteredDeals.length} deals`}
-            />
-            {filteredDeals.length === 0 ? (
-              <EmptyState message="No matching deals right now." onClear={clearFilters} hasFilters={activeFilterCount > 0} />
-            ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredDeals.map((deal, index) => {
-                  const firm = firms.find((candidate) => candidate.id === deal.firmId)
-                  return <DealCard key={deal.id} deal={deal} firm={firm} localePrefix={localePrefix} index={index} />
-                })}
-              </div>
-            )}
-          </section>
-
-          <section className="space-y-6">
-            <SectionHeader title="FAQ" subtitle="Everything you need to know about the deals board" />
-            <div className="rounded-2xl border border-v2-border-subtle bg-v2-bg-surface">
-              <Accordion type="single" collapsible className="divide-y divide-v2-border-subtle">
-                {faqs.map((faq, index) => (
-                  <AccordionItem key={faq.question} value={`faq-${index}`} className="border-0 px-6">
-                    <AccordionTrigger className="py-5 text-left text-sm font-medium text-v2-text-primary hover:no-underline">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-5 text-sm leading-relaxed text-v2-text-secondary">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredDeals.map((deal) => {
+                const firm = firms.find(f => f.id === deal.firmId)
+                return (
+                  <MarketplaceDealCard
+                    key={deal.id}
+                    deal={deal}
+                    firm={firm}
+                    localePrefix={localePrefix}
+                    onCopyCode={copyCode}
+                    copiedCode={copiedCode}
+                    featured
+                  />
+                )
+              })}
             </div>
-            <p className="text-xs text-v2-text-tertiary">
-              Last updated: {lastUpdated ?? 'Unavailable'}
-            </p>
           </section>
-        </div>
+        )}
+
+
+        {hotDeals.length > 0 && (
+          <section className="mb-12">
+            <SectionHeader
+              title="Hot Deals"
+              subtitle="Limited time offers expiring soon"
+              icon={Flame}
+              badge={`${hotDeals.length} expiring`}
+            />
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {hotDeals.map((deal) => {
+                const firm = firms.find(f => f.id === deal.firmId)
+                return (
+                  <MarketplaceDealCard
+                    key={deal.id}
+                    deal={deal}
+                    firm={firm}
+                    localePrefix={localePrefix}
+                    onCopyCode={copyCode}
+                    copiedCode={copiedCode}
+                    hot
+                  />
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+
+        <section>
+          <SectionHeader
+            title="All Deals"
+            subtitle="Browse every active discount and promotion"
+            icon={Tag}
+            badge={`${filteredDeals.length} deals`}
+          />
+          {filteredDeals.length === 0 ? (
+            <EmptyState
+              message="No deals match your filters."
+              onClear={clearFilters}
+              hasFilters={activeFilterCount > 0}
+            />
+          ) : (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredDeals.map((deal) => {
+                const firm = firms.find(f => f.id === deal.firmId)
+                return (
+                  <MarketplaceDealCard
+                    key={deal.id}
+                    deal={deal}
+                    firm={firm}
+                    localePrefix={localePrefix}
+                    onCopyCode={copyCode}
+                    copiedCode={copiedCode}
+                  />
+                )
+              })}
+            </div>
+          )}
+        </section>
+
+
+        <p className="mt-12 text-center text-xs text-muted-foreground">
+          Last updated: {lastUpdated ?? 'Unavailable'}
+        </p>
       </div>
     </div>
+  )
+}
+
+function MarketplaceDealCard({
+  deal,
+  firm,
+  localePrefix,
+  onCopyCode,
+  copiedCode,
+  featured = false,
+  hot = false,
+}: {
+  deal: DealItem
+  firm: UnifiedFirm | undefined
+  localePrefix: string
+  onCopyCode: (code: string) => void
+  copiedCode: string | null
+  featured?: boolean
+  hot?: boolean
+}) {
+  const originalPrice = getOriginalPrice(deal, firm)
+  const discountedPrice = deal.challengeFee
+  const daysLeft = getDaysLeft(deal.expiryDate)
+  const isCopied = copiedCode === deal.couponCode
+
+  return (
+    <article className={`group relative flex flex-col overflow-hidden rounded-xl border bg-card transition-all duration-200 hover:shadow-lg ${
+      featured ? 'border-primary/30 hover:border-primary/50' : 'border-border hover:border-border'
+    }`}>
+
+      <div className="flex items-center justify-between gap-2 px-4 pt-4">
+        <div className="flex items-center gap-2">
+          {featured && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+              <Sparkles className="h-2.5 w-2.5" />
+              Featured
+            </span>
+          )}
+          {hot && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-orange-400">
+              <Flame className="h-2.5 w-2.5" />
+              Hot
+            </span>
+          )}
+        </div>
+        {deal.discountPercent > 0 && (
+          <span className="rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-bold text-emerald-400">
+            -{deal.discountPercent}%
+          </span>
+        )}
+      </div>
+
+
+      <div className="flex items-center gap-3 px-4 pt-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-xs font-bold text-foreground">
+          {deal.logoUrl ? (
+            <img src={deal.logoUrl} alt={deal.firmName} className="h-6 w-6 rounded object-contain" />
+          ) : (
+            deal.firmName.slice(0, 2).toUpperCase()
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <Link
+            href={`${localePrefix}/firm/${deal.firmSlug}`}
+            className="block truncate text-sm font-bold text-foreground transition-colors hover:text-primary"
+          >
+            {deal.firmName}
+          </Link>
+          <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+            {deal.category} · {deal.platform}
+          </p>
+        </div>
+      </div>
+
+
+      <div className="px-4 pt-4">
+        <div className="flex items-baseline gap-2">
+          {originalPrice > discountedPrice && (
+            <span className="text-sm text-muted-foreground line-through">
+              {formatPrice(originalPrice)}
+            </span>
+          )}
+          <span className="text-2xl font-bold tracking-tight text-foreground">
+            {formatPrice(discountedPrice)}
+          </span>
+        </div>
+        {originalPrice > discountedPrice && (
+          <p className="mt-0.5 text-xs text-emerald-400">
+            You save {formatPrice(originalPrice - discountedPrice)}
+          </p>
+        )}
+      </div>
+
+
+      <div className="px-4 pt-3">
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2">
+          <div className="flex-1">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Coupon Code</p>
+            <p className="font-mono text-sm font-semibold text-foreground">{deal.couponCode}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onCopyCode(deal.couponCode)}
+            className="rounded-md border border-border bg-card p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            title="Copy code"
+          >
+            {isCopied ? (
+              <span className="text-[10px] font-semibold text-emerald-400">Copied!</span>
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+          </button>
+        </div>
+      </div>
+
+
+      <div className="flex flex-wrap gap-1.5 px-4 pt-3">
+        <MetaTag>{deal.payoutModel}</MetaTag>
+        <MetaTag>{deal.drawdownType}</MetaTag>
+        {daysLeft !== null && daysLeft <= 14 && (
+          <MetaTag highlight>
+            <Clock className="h-2.5 w-2.5" />
+            {daysLeft === 0 ? 'Expires today' : `${daysLeft}d left`}
+          </MetaTag>
+        )}
+      </div>
+
+
+      <div className="mt-auto flex items-center gap-2 p-4 pt-4">
+        <Link
+          href={`${localePrefix}/firm/${deal.firmSlug}`}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-xs font-medium text-foreground transition-all hover:bg-muted"
+        >
+          View Firm
+          <ArrowUpRight className="h-3 w-3" />
+        </Link>
+        {deal.claimUrl ? (
+          <a
+            href={deal.claimUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-sm"
+          >
+            Claim Deal
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        ) : (
+          <Link
+            href={`${localePrefix}/firm/${deal.firmSlug}`}
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2.5 text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-sm"
+          >
+            Get Deal
+            <ArrowUpRight className="h-3 w-3" />
+          </Link>
+        )}
+      </div>
+    </article>
   )
 }
 
@@ -481,14 +569,14 @@ function StatCard({
   icon: React.ComponentType<{ className?: string }>
 }) {
   return (
-    <div className="rounded-2xl border border-v2-border-subtle bg-v2-bg-surface/80 p-4 backdrop-blur-sm">
+    <div className="rounded-xl border border-border bg-card/80 p-3.5 backdrop-blur-sm sm:p-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-v2-accent/10">
-          <Icon className="h-4 w-4 text-v2-accent" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+          <Icon className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</p>
-          <p className="mt-0.5 text-lg font-bold text-v2-text-primary">{value}</p>
+          <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+          <p className="mt-0.5 text-lg font-bold text-foreground">{value}</p>
         </div>
       </div>
     </div>
@@ -498,26 +586,45 @@ function StatCard({
 function SectionHeader({
   title,
   subtitle,
+  icon: Icon,
   badge,
-  className = '',
 }: {
   title: string
   subtitle?: string
+  icon?: React.ComponentType<{ className?: string }>
   badge?: string
-  className?: string
 }) {
   return (
-    <div className={`flex flex-wrap items-end justify-between gap-3 ${className}`}>
-      <div>
-        <h2 className="text-xl font-bold text-v2-text-primary">{title}</h2>
-        {subtitle ? <p className="mt-1 text-sm text-v2-text-secondary">{subtitle}</p> : null}
+    <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex items-center gap-3">
+        {Icon && (
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+            <Icon className="h-4 w-4 text-primary" />
+          </div>
+        )}
+        <div>
+          <h2 className="text-xl font-bold text-foreground">{title}</h2>
+          {subtitle ? <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p> : null}
+        </div>
       </div>
       {badge ? (
-        <span className="rounded-full border border-v2-border bg-v2-bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wider text-v2-text-secondary">
+        <span className="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {badge}
         </span>
       ) : null}
     </div>
+  )
+}
+
+function MetaTag({ children, highlight = false }: { children: React.ReactNode; highlight?: boolean }) {
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${
+      highlight
+        ? 'border-orange-500/30 bg-orange-500/10 text-orange-400'
+        : 'border-border bg-muted/50 text-muted-foreground'
+    }`}>
+      {children}
+    </span>
   )
 }
 
@@ -531,255 +638,21 @@ function EmptyState({
   hasFilters: boolean
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-v2-border-subtle bg-v2-bg-surface px-6 py-16 text-center">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-v2-bg-elevated">
-        <Filter className="h-5 w-5 text-v2-text-tertiary" />
+    <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card px-6 py-16 text-center">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-muted">
+        <Filter className="h-5 w-5 text-muted-foreground" />
       </div>
-      <p className="text-base font-medium text-v2-text-primary">{message}</p>
-      <p className="mt-1 text-sm text-v2-text-secondary">Adjust the filters or check again after the next catalogue refresh.</p>
+      <p className="text-base font-medium text-foreground">{message}</p>
+      <p className="mt-1 text-sm text-muted-foreground">Adjust the filters or check back later for new deals.</p>
       {hasFilters ? (
         <button
           type="button"
           onClick={onClear}
-          className="mt-4 rounded-full border border-v2-border bg-v2-bg-elevated px-4 py-2 text-sm font-medium text-v2-text-primary transition-colors hover:bg-v2-bg-hover"
+          className="mt-4 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
         >
           Clear all filters
         </button>
       ) : null}
-    </div>
-  )
-}
-
-function FirmCard({
-  firm,
-  localePrefix,
-  index,
-}: {
-  firm: UnifiedFirm
-  localePrefix: string
-  index: number
-}) {
-  const lowestFee = getLowestChallengeFee(firm)
-  const hasActiveDeal = firm.coupons.length > 0
-
-  return (
-    <article
-      className="group relative flex flex-col rounded-2xl border border-v2-border-subtle bg-v2-bg-surface transition-all duration-v2-base hover:border-v2-border hover:bg-v2-bg-hover hover:shadow-v2-lg"
-      style={{ animationDelay: `${index * 40}ms` }}
-    >
-      <div className="flex items-start gap-4 p-5 pb-0">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-v2-border bg-v2-bg-elevated text-sm font-bold text-v2-accent transition-colors group-hover:border-v2-accent/30">
-          {firm.logoUrl ? (
-            <img src={firm.logoUrl} alt={firm.name} className="h-8 w-8 rounded-lg object-contain" />
-          ) : (
-            firm.name.slice(0, 2).toUpperCase()
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <Link
-              href={`${localePrefix}/firm/${firm.slug}`}
-              className="truncate text-base font-bold text-v2-text-primary transition-colors hover:text-v2-accent"
-            >
-              {firm.name}
-            </Link>
-            {hasActiveDeal ? (
-              <span className="shrink-0 rounded-full bg-v2-success/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-success">
-                Deal
-              </span>
-            ) : null}
-          </div>
-          <p className="mt-0.5 text-xs uppercase tracking-wider text-v2-text-tertiary">
-            {firm.category} · {firm.platform}
-          </p>
-        </div>
-        {firm._count.reviews > 0 ? (
-          <div className="flex shrink-0 items-center gap-1 rounded-full bg-v2-bg-elevated px-2 py-1">
-            <Star className="h-3 w-3 text-v2-accent" />
-            <span className="text-xs font-semibold text-v2-text-primary">{firm._count.reviews}</span>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="px-5 pt-3">
-        <p className="line-clamp-2 text-sm leading-relaxed text-v2-text-secondary">
-          {firm.shortDesc ?? firm.description ?? 'No editorial summary available yet.'}
-        </p>
-      </div>
-
-      <div className="mt-4 grid grid-cols-2 gap-2 px-5">
-        <MetricPill label="Entry" value={formatChallengeFee(lowestFee)} />
-        <MetricPill label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
-        <MetricPill label="Paid out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} highlight />
-        <MetricPill label="Allocation" value={firm.maxAllocation} />
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-1.5 px-5">
-        <Tag>{firm.payoutModel}</Tag>
-        <Tag>{firm.drawdownType}</Tag>
-        <Tag>{firm.profitSplit} split</Tag>
-      </div>
-
-      <div className="mt-auto flex items-center gap-3 p-5 pt-4">
-        <Link
-          href={`${localePrefix}/firm/${firm.slug}`}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-v2-accent px-4 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-sm"
-        >
-          View Profile
-          <ArrowUpRight className="h-4 w-4" />
-        </Link>
-        {firm.referralUrl ? (
-          <a
-            href={firm.referralUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-v2-border bg-v2-bg-elevated px-4 py-2.5 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
-          >
-            Site
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </a>
-        ) : null}
-      </div>
-    </article>
-  )
-}
-
-function DealCard({
-  deal,
-  firm,
-  localePrefix,
-  index,
-}: {
-  deal: DealItem
-  firm: UnifiedFirm | undefined
-  localePrefix: string
-  index: number
-}) {
-  return (
-    <article
-      className="group relative flex flex-col rounded-2xl border border-v2-border-subtle bg-v2-bg-surface transition-all duration-v2-base hover:border-v2-border hover:bg-v2-bg-hover hover:shadow-v2-lg"
-      style={{ animationDelay: `${index * 40}ms` }}
-    >
-      <div className="flex items-start gap-4 p-5 pb-0">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-v2-border bg-v2-bg-elevated text-sm font-bold text-v2-accent">
-          {deal.firmName.slice(0, 2).toUpperCase()}
-        </div>
-        <div className="min-w-0 flex-1">
-          <Link
-            href={`${localePrefix}/firm/${deal.firmSlug}`}
-            className="text-sm font-bold text-v2-text-primary transition-colors hover:text-v2-accent"
-          >
-            {deal.firmName}
-          </Link>
-          <p className="mt-0.5 text-xs uppercase tracking-wider text-v2-text-tertiary">
-            {deal.category} · {deal.platform}
-          </p>
-        </div>
-        <span className="shrink-0 rounded-full bg-v2-success/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-v2-success">
-          Verified
-        </span>
-      </div>
-
-      <div className="px-5 pt-4">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="text-3xl font-bold tracking-tight text-v2-text-primary">
-              {deal.discountPercent}%
-              <span className="ml-1 text-lg font-medium text-v2-text-secondary">OFF</span>
-            </p>
-            <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-v2-border bg-v2-bg-elevated px-3 py-1.5 text-sm">
-              <span className="text-v2-text-tertiary">Code</span>
-              <span className="font-mono text-sm font-semibold text-v2-accent">{deal.couponCode}</span>
-            </div>
-          </div>
-          <span className="rounded-full border border-v2-border-subtle bg-v2-bg-elevated px-2.5 py-1 text-[10px] uppercase tracking-wider text-v2-text-tertiary">
-            {deal.expiryDate}
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-4 grid grid-cols-2 gap-2 px-5">
-        <MetricPill label="Fee" value={formatChallengeFee(deal.challengeFee)} />
-        <MetricPill label="Payout" value={deal.payoutModel} />
-        {firm ? (
-          <>
-            <MetricPill label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
-            <MetricPill label="Paid out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} highlight />
-          </>
-        ) : null}
-      </div>
-
-      <div className="mt-auto flex items-center gap-3 p-5 pt-4">
-        <Link
-          href={`${localePrefix}/firm/${deal.firmSlug}`}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-v2-border bg-v2-bg-elevated px-4 py-2.5 text-sm font-medium text-v2-text-primary transition-all duration-v2-base hover:bg-v2-bg-hover hover:border-v2-border-strong"
-        >
-          Profile
-          <ArrowUpRight className="h-3.5 w-3.5" />
-        </Link>
-        {deal.claimUrl ? (
-          <a
-            href={deal.claimUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-v2-accent px-4 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-all duration-v2-base hover:bg-v2-accent-hover hover:shadow-v2-sm"
-          >
-            Claim Deal
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-        ) : null}
-      </div>
-    </article>
-  )
-}
-
-function MetricPill({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className="rounded-xl border border-v2-border-subtle bg-v2-bg-elevated px-3 py-2">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</p>
-      <p className={`mt-0.5 text-sm font-semibold ${highlight ? 'text-v2-success' : 'text-v2-text-primary'}`}>{value}</p>
-    </div>
-  )
-}
-
-function Tag({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded-full border border-v2-border-subtle bg-v2-bg-elevated px-2.5 py-1 text-[11px] font-medium text-v2-text-secondary">
-      {children}
-    </span>
-  )
-}
-
-function FilterPillGroup<T extends string>({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string
-  value: T
-  onChange: (value: T) => void
-  options: readonly T[]
-}) {
-  return (
-    <div className="space-y-2">
-      <span className="text-xs font-medium uppercase tracking-wider text-v2-text-tertiary">{label}</span>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => onChange(option)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-v2-fast ${
-              value === option
-                ? 'bg-v2-accent text-v2-accent-foreground shadow-v2-sm'
-                : 'border border-v2-border bg-v2-bg-elevated text-v2-text-secondary hover:bg-v2-bg-hover hover:text-v2-text-primary'
-            }`}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
     </div>
   )
 }

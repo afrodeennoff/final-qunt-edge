@@ -5,7 +5,16 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { CardV2, SkeletonV2 } from '@/components/ui/v2'
-import { Trophy, Medal, Award, Flame, Clock3, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { 
+  Trophy, 
+  Flame, 
+  TrendingUp, 
+  TrendingDown, 
+  ExternalLink,
+  Users,
+  ChevronRight
+} from 'lucide-react'
 import type { LeaderboardEntry, LeaderboardSort } from '../data/leaderboard-query'
 
 interface LeaderboardTableProps {
@@ -13,10 +22,10 @@ interface LeaderboardTableProps {
   locale: string
 }
 
-const podiumConfig = {
-  1: { icon: Trophy, label: 'Champion', accent: 'text-amber-300', border: 'border-amber-300/20', bg: 'bg-amber-300/8' },
-  2: { icon: Medal, label: 'Runner-up', accent: 'text-slate-300', border: 'border-slate-300/20', bg: 'bg-slate-300/8' },
-  3: { icon: Award, label: 'Third', accent: 'text-orange-300', border: 'border-orange-300/20', bg: 'bg-orange-300/8' },
+const trophyConfig = {
+  1: { icon: '🥇', label: 'Champion', accent: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/30' },
+  2: { icon: '🥈', label: 'Runner-up', accent: 'text-slate-300', bg: 'bg-slate-300/10', border: 'border-slate-300/30' },
+  3: { icon: '🥉', label: 'Third Place', accent: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/30' },
 } as const
 
 function formatCurrency(value: number): string {
@@ -27,113 +36,147 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
-function formatMinutes(value: number): string {
-  if (!Number.isFinite(value) || value <= 0) return '—'
-  const hours = Math.floor(value / 60)
-  const minutes = Math.round(value % 60)
-  if (hours <= 0) return `${minutes}m`
-  if (minutes === 0) return `${hours}h`
-  return `${hours}h ${minutes}m`
+function getInitials(username: string): string {
+  return username
+    .split(/[\s_-]+/)
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 }
 
-function TraderLink({ userId, username, locale, children, className }: {
-  userId: string
-  username: string
-  locale: string
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <Link
-      href={`/${locale}/trader/${userId}`}
-      className={cn(
-        'group inline-flex items-center gap-1.5 transition-colors hover:text-v2-accent',
-        className
-      )}
-      title={`View ${username}'s profile`}
-    >
-      {children}
-      <ExternalLink className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-    </Link>
-  )
+function getAvatarColor(userId: string): string {
+  const colors = [
+    'bg-blue-500/20 text-blue-400',
+    'bg-emerald-500/20 text-emerald-400',
+    'bg-violet-500/20 text-violet-400',
+    'bg-rose-500/20 text-rose-400',
+    'bg-amber-500/20 text-amber-400',
+    'bg-cyan-500/20 text-cyan-400',
+    'bg-pink-500/20 text-pink-400',
+    'bg-indigo-500/20 text-indigo-400',
+  ]
+  const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  return colors[hash % colors.length]
 }
 
-function PodiumCard({ entry, rank, locale }: { entry: LeaderboardEntry; rank: 1 | 2 | 3; locale: string }) {
-  const config = podiumConfig[rank]
-  const Icon = config.icon
-
+function WinRateBar({ winRate }: { winRate: number }) {
   return (
-    <CardV2 className={cn('rounded-[28px] border p-5 text-left', config.border, config.bg)}>
-      <div className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]', config.border, config.accent)}>
-        <Icon className="h-3.5 w-3.5" />
-        {config.label}
+    <div className="flex items-center gap-2">
+      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden max-w-[60px]">
+        <div 
+          className={cn(
+            "h-full rounded-full transition-all",
+            winRate >= 60 ? "bg-emerald-400" : 
+            winRate >= 40 ? "bg-amber-400" : 
+            "bg-rose-400"
+          )}
+          style={{ width: `${Math.min(winRate, 100)}%` }}
+        />
       </div>
-      <div className="mt-5">
-        <TraderLink userId={entry.userId} username={entry.username} locale={locale}>
-          <p className="text-lg font-semibold text-v2-text-primary">{entry.username}</p>
-        </TraderLink>
-        <p className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-white">{formatCurrency(entry.monthlyPnl)}</p>
-        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-          <Metric label="Return" value={`${entry.returnPct >= 0 ? '+' : ''}${entry.returnPct}%`} tone="text-emerald-300" />
-          <Metric label="Win Rate" value={`${entry.winRate}%`} />
-          <Metric label="Top Pair" value={entry.topInstrument ?? '—'} />
-          <Metric label="Trades" value={entry.totalTrades.toLocaleString()} />
-        </div>
-      </div>
-    </CardV2>
-  )
-}
-
-function Metric({ label, value, tone }: { label: string; value: string; tone?: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
-      <p className="text-[10px] uppercase tracking-[0.14em] text-white/40">{label}</p>
-      <p className={cn('mt-1 text-sm font-semibold text-white', tone)}>{value}</p>
+      <span className="text-sm font-medium text-foreground min-w-[40px]">{winRate}%</span>
     </div>
   )
 }
 
-function LeaderboardRow({ entry, locale }: { entry: LeaderboardEntry; locale: string }) {
+function RankBadge({ rank }: { rank: number }) {
+  if (rank <= 3) {
+    const config = trophyConfig[rank as 1 | 2 | 3]
+    return (
+      <div className={cn(
+        "flex items-center justify-center w-10 h-10 rounded-full border",
+        config.bg,
+        config.border
+      )}>
+        <span className="text-lg">{config.icon}</span>
+      </div>
+    )
+  }
+  
   return (
-    <tr className="border-white/10 hover:bg-white/[0.03]">
+    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted border border-border">
+      <span className="text-sm font-semibold text-muted-foreground">#{rank}</span>
+    </div>
+  )
+}
+
+function TraderRow({ entry, locale, isTop3 }: { entry: LeaderboardEntry; locale: string; isTop3: boolean }) {
+  const isPositivePnl = entry.monthlyPnl >= 0
+  
+  return (
+    <tr className={cn(
+      "border-b border-border transition-colors hover:bg-muted/50",
+      isTop3 && "bg-muted/30"
+    )}>
+      <td className="px-4 py-4 whitespace-nowrap">
+        <RankBadge rank={entry.rank} />
+      </td>
+      
       <td className="px-4 py-4">
         <div className="flex items-center gap-3">
-          <span className={cn(
-            'inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold',
-            entry.rank === 1 && 'border-amber-300/30 bg-amber-300/10 text-amber-300',
-            entry.rank === 2 && 'border-slate-300/30 bg-slate-300/10 text-slate-300',
-            entry.rank === 3 && 'border-orange-300/30 bg-orange-300/10 text-orange-300',
-            entry.rank > 3 && 'border-white/10 bg-white/[0.03] text-white/70',
-          )}>
-            {entry.rank}
-          </span>
+          <Avatar className={cn("h-10 w-10 border border-border", getAvatarColor(entry.userId))}>
+            <AvatarFallback className="text-xs font-semibold bg-transparent">
+              {getInitials(entry.username)}
+            </AvatarFallback>
+          </Avatar>
           <div>
-            <TraderLink userId={entry.userId} username={entry.username} locale={locale}>
-              <p className="font-medium text-white">{entry.username}</p>
-            </TraderLink>
-            <p className="text-xs text-white/45">{entry.topInstrument ?? 'No pair data'}</p>
+            <Link
+              href={`/${locale}/trader/${entry.userId}`}
+              className="font-medium text-foreground hover:text-foreground/80 transition-colors flex items-center gap-1 group"
+            >
+              {entry.username}
+              <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Link>
+            {isTop3 && (
+              <span className={cn(
+                "text-[10px] font-semibold uppercase tracking-wider",
+                trophyConfig[entry.rank as 1 | 2 | 3].accent
+              )}>
+                {trophyConfig[entry.rank as 1 | 2 | 3].label}
+              </span>
+            )}
           </div>
         </div>
       </td>
-      <td className="px-4 py-4 text-emerald-300">{formatCurrency(entry.monthlyPnl)}</td>
-      <td className="px-4 py-4 text-emerald-300">{`${entry.returnPct >= 0 ? '+' : ''}${entry.returnPct}%`}</td>
-      <td className="px-4 py-4 text-white/80">{entry.winRate}%</td>
-      <td className="px-4 py-4 text-white/80">{entry.topInstrument ?? '—'}</td>
-      <td className="px-4 py-4 text-emerald-300">{entry.avgWin > 0 ? formatCurrency(entry.avgWin) : '—'}</td>
-      <td className="px-4 py-4 text-rose-300">{entry.avgLoss > 0 ? `-${formatCurrency(entry.avgLoss)}` : '—'}</td>
-      <td className="px-4 py-4 text-white/80">
-        <span className="inline-flex items-center gap-2">
-          <Clock3 className="h-3.5 w-3.5 text-white/35" />
-          {formatMinutes(entry.avgDurationMinutes)}
-        </span>
+      
+      <td className="px-4 py-4 whitespace-nowrap">
+        <div className={cn(
+          "font-semibold",
+          isPositivePnl ? "text-emerald-400" : "text-rose-400"
+        )}>
+          {isPositivePnl ? '+' : ''}{formatCurrency(entry.monthlyPnl)}
+        </div>
       </td>
-      <td className="px-4 py-4 text-white/80">{entry.totalTrades.toLocaleString()}</td>
-      <td className="px-4 py-4 text-rose-300">{entry.longestLossStreak}</td>
-      <td className="px-4 py-4 text-emerald-300">
-        <span className="inline-flex items-center gap-2">
-          <Flame className="h-3.5 w-3.5" />
-          {entry.longestWinStreak}
-        </span>
+      
+      <td className="px-4 py-4 whitespace-nowrap">
+        <WinRateBar winRate={entry.winRate} />
+      </td>
+      
+      <td className="px-4 py-4 whitespace-nowrap">
+        <div className="flex items-center gap-1.5">
+          <Flame className={cn(
+            "h-4 w-4",
+            entry.longestWinStreak >= 5 ? "text-orange-400" : "text-muted-foreground"
+          )} />
+          <span className="font-medium text-foreground">{entry.longestWinStreak}</span>
+        </div>
+      </td>
+      
+      <td className="px-4 py-4 whitespace-nowrap">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Users className="h-4 w-4" />
+          <span>{entry.accountCount}</span>
+        </div>
+      </td>
+      
+      <td className="px-4 py-4 whitespace-nowrap">
+        <Link
+          href={`/${locale}/trader/${entry.userId}`}
+          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-full bg-muted border border-border text-muted-foreground hover:bg-muted/80 hover:text-foreground transition-colors"
+        >
+          View Profile
+          <ChevronRight className="h-3 w-3" />
+        </Link>
       </td>
     </tr>
   )
@@ -142,11 +185,15 @@ function LeaderboardRow({ entry, locale }: { entry: LeaderboardEntry; locale: st
 export function LeaderboardTableSkeleton() {
   return (
     <div className="space-y-3">
-      {[1, 2, 3, 4].map((i) => (
-        <CardV2 key={i} className="rounded-3xl p-5">
-          <SkeletonV2 className="h-6 w-40" />
-          <div className="mt-4 grid gap-3 sm:grid-cols-4">
-            {[1, 2, 3, 4].map((j) => <SkeletonV2 key={j} className="h-16 w-full rounded-2xl" />)}
+      {[1, 2, 3, 4, 5].map((i) => (
+        <CardV2 key={i} className="rounded-xl p-4">
+          <div className="flex items-center gap-4">
+            <SkeletonV2 className="h-10 w-10 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <SkeletonV2 className="h-4 w-32" />
+              <SkeletonV2 className="h-3 w-20" />
+            </div>
+            <SkeletonV2 className="h-6 w-20" />
           </div>
         </CardV2>
       ))}
@@ -157,9 +204,6 @@ export function LeaderboardTableSkeleton() {
 export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, locale }: LeaderboardTableProps) {
   const searchParams = useSearchParams()
   const currentSort = (searchParams.get('sort') ?? 'monthly_pnl') as LeaderboardSort
-
-  const top3 = entries.slice(0, 3)
-  const rest = entries
 
   return (
     <div className="space-y-6">
@@ -175,8 +219,8 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, 
             className={cn(
               'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors no-underline',
               currentSort === key
-                ? 'border-v2-accent/40 bg-v2-accent/10 text-v2-accent'
-                : 'border-white/10 bg-white/[0.03] text-white/60 hover:text-white'
+                ? 'border-foreground/20 bg-foreground/10 text-foreground'
+                : 'border-border bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
             )}
           >
             <Icon className="h-4 w-4" />
@@ -185,42 +229,49 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({ entries, 
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {top3.map((entry, index) => (
-          <PodiumCard key={entry.userId} entry={entry} rank={(index + 1) as 1 | 2 | 3} locale={locale} />
-        ))}
-      </div>
-
-      <CardV2 className="overflow-hidden rounded-[30px] border-white/10 bg-white/[0.03] p-0">
+      <CardV2 className="overflow-hidden rounded-2xl border-border bg-card p-0">
         <div className="overflow-x-auto">
-          <table className="min-w-[1160px] w-full border-collapse text-left text-sm">
-            <thead className="border-b border-white/10 bg-white/[0.03]">
-              <tr className="text-[11px] uppercase tracking-[0.14em] text-white/45">
-                <th className="px-4 py-4 font-semibold">Rank</th>
-                <th className="px-4 py-4 font-semibold">Profit</th>
-                <th className="px-4 py-4 font-semibold">Profit %</th>
-                <th className="px-4 py-4 font-semibold">Win Ratio</th>
-                <th className="px-4 py-4 font-semibold">Pair</th>
-                <th className="px-4 py-4 font-semibold">Avg. Win</th>
-                <th className="px-4 py-4 font-semibold">Avg. Loss</th>
-                <th className="px-4 py-4 font-semibold">Avg. Duration</th>
-                <th className="px-4 py-4 font-semibold">Trades</th>
-                <th className="px-4 py-4 font-semibold">Losing Streak</th>
-                <th className="px-4 py-4 font-semibold">Winning Streak</th>
+          <table className="w-full border-collapse text-left">
+            <thead className="bg-muted/50 border-b border-border">
+              <tr className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                <th className="px-4 py-4 font-semibold w-[80px]">Rank</th>
+                <th className="px-4 py-4 font-semibold">Trader</th>
+                <th className="px-4 py-4 font-semibold">PnL</th>
+                <th className="px-4 py-4 font-semibold">Win Rate</th>
+                <th className="px-4 py-4 font-semibold">Best Streak</th>
+                <th className="px-4 py-4 font-semibold">Accounts</th>
+                <th className="px-4 py-4 font-semibold w-[140px]">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {rest.map((entry) => (
-                <LeaderboardRow key={entry.userId} entry={entry} locale={locale} />
+              {entries.map((entry) => (
+                <TraderRow 
+                  key={entry.userId} 
+                  entry={entry} 
+                  locale={locale}
+                  isTop3={entry.rank <= 3}
+                />
               ))}
             </tbody>
           </table>
         </div>
 
-        {rest.length === 0 ? (
-          <div className="p-10 text-center text-white/55">No public trading data found for this month.</div>
+        {entries.length === 0 ? (
+          <div className="p-12 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+              <Trophy className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <p className="text-foreground font-medium">No traders found</p>
+            <p className="text-muted-foreground text-sm mt-1">Be the first to appear on the leaderboard!</p>
+          </div>
         ) : null}
       </CardV2>
+
+      {entries.length > 0 && (
+        <p className="text-center text-xs text-muted-foreground">
+          Showing top {entries.length} traders • Updated monthly
+        </p>
+      )}
     </div>
   )
 })

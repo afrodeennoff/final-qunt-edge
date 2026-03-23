@@ -495,7 +495,7 @@ export default async function middleware(req: NextRequest) {
         response.cookies.set("user-country", geo.country, {
           path: "/",
           maxAge: 60 * 60 * 24 * 30, // 30 days to minimize repeated edge geo work
-          sameSite: "lax",
+          sameSite: "strict",
           secure: process.env.NODE_ENV === "production",
         })
       }
@@ -518,7 +518,7 @@ export default async function middleware(req: NextRequest) {
         response.cookies.set("user-country", country, {
           path: "/",
           maxAge: 60 * 60 * 24 * 30,
-          sameSite: "lax",
+          sameSite: "strict",
           secure: process.env.NODE_ENV === "production",
         })
       }
