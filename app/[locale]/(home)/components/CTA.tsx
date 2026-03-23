@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useCurrentLocale } from '@/locales/client'
+import { ArrowRight } from 'lucide-react'
 
 export default function CTA() {
   const locale = useCurrentLocale()
@@ -16,15 +17,22 @@ export default function CTA() {
         <p className="mx-auto mt-4 max-w-xl text-[15px] leading-[1.78] text-foreground/85 sm:text-base [font-family:var(--home-copy)]">
           Join in minutes and receive your first AI-backed performance audit before your next session opens.
         </p>
-        <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href={`/${locale}/authentication?next=dashboard`}
             className="inline-flex h-12 min-w-[230px] items-center justify-center rounded-2xl bg-primary px-9 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-all duration-300 hover:bg-primary/90 [font-family:var(--home-copy)]"
           >
             Start Free Audit
           </Link>
-          <p className="text-xs text-foreground/80 [font-family:var(--home-copy)]">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
+          <Link
+            href={`/${locale}/pricing`}
+            className="inline-flex h-12 min-w-[230px] items-center justify-center gap-2 rounded-2xl border border-border/60 px-9 text-[10px] font-medium uppercase tracking-[0.18em] text-foreground transition-colors hover:bg-card/50 [font-family:var(--home-copy)]"
+          >
+            View Pricing
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
+        <p className="mt-4 text-xs text-foreground/80 [font-family:var(--home-copy)]">No credit card required. 7-day Pro trial unlocks advanced diagnostics.</p>
       </div>
     </section>
   )

@@ -1,18 +1,13 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
 import { getI18n } from '@/locales/server'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getPropfirmCatalogueData } from './actions/get-propfirm-catalogue'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { AccountsBarChart } from './components/accounts-bar-chart'
-import { SortControls } from './components/sort-controls'
 import { TimeframeControls } from './components/timeframe-controls'
+import { FirmFilters } from './components/firm-filters'
+import { FirmGrid } from './components/firm-grid'
 import type { Timeframe } from './actions/timeframe-utils'
 import type { PropfirmCatalogueStats } from './actions/types'
-
-// Keep the translator type intentionally light to avoid "union too complex" TS errors.
-type Translator = (key: string, params?: Record<string, unknown>) => string
 
 export async function generateMetadata({
   params,
@@ -48,140 +43,14 @@ export async function generateMetadata({
   };
 }
 
-// Format currency with $ symbol (always USD)
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value)
-}
-
-function formatCompactCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-    notation: 'compact',
-  }).format(value)
-}
-
-function renderPropfirmCard(
-  propfirmName: string,
-  slug: string,
-  stat: PropfirmCatalogueStats,
-  t: Translator
-) {
-  const paidAmount = stat.payouts.paidAmount
-  const paidCount = stat.payouts.paidCount
-  const pendingAmount = stat.payouts.pendingAmount
-  const pendingCount = stat.payouts.pendingCount
-  const refusedAmount = stat.payouts.refusedAmount
-  const refusedCount = stat.payouts.refusedCount
-
-  return (
-    <Link key={propfirmName} href={`/firm/${slug}`} className="block group">
-    <Card className="h-full border-border/70 bg-card/90 transition-all duration-200 group-hover:border-border group-hover:shadow-lg group-hover:shadow-black/5">
-      <CardHeader className="space-y-3 border-b border-border/70 pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
-          <div className="text-right">
-          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            Registered
-          </div>
-            <p className="text-3xl font-black text-foreground leading-none tabular-nums">
-              {stat.accountsCount.toLocaleString()}
-            </p>
-          </div>
-        </div>
-        {/* Unified (non-rainbow) KPI strip + remove duplicate "registered" blocks */}
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
-            Paid:{' '}
-            <span className="ml-1 font-semibold text-foreground tabular-nums">
-              {formatCompactCurrency(paidAmount)}
-            </span>
-          </Badge>
-          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
-            Account Value:{' '}
-            <span className="ml-1 font-semibold text-foreground tabular-nums">
-              {formatCompactCurrency(stat.totalAccountValue)}
-            </span>
-          </Badge>
-          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
-            Size Mix:{' '}
-            <span className="ml-1 font-semibold text-foreground">
-              {stat.sizeBreakdown}
-            </span>
-          </Badge>
-          <Badge variant="outline" className="border-border/70 bg-card/40 text-foreground/95">
-            Sized:{' '}
-            <span className="ml-1 font-semibold text-foreground tabular-nums">
-              {stat.sizedAccountsCount.toLocaleString()}
-            </span>
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <h3 className="mb-3 border-b border-border/70 pb-2 text-sm font-semibold text-foreground">{t('landing.propfirms.payouts.title')}</h3>
-          <div className="space-y-3">
-            {/* Paid */}
-            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  {t('landing.propfirms.payouts.paid.label')}
-                </span>
-                <span className="text-sm font-bold text-foreground">
-                  {formatCurrency(paidAmount)}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('landing.propfirms.payouts.count', { count: paidCount })}
-              </p>
-            </div>
-
-            {/* Pending */}
-            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  {t('landing.propfirms.payouts.pending.label')}
-                </span>
-                <span className="text-sm font-bold text-foreground">
-                  {formatCurrency(pendingAmount)}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('landing.propfirms.payouts.count', { count: pendingCount })}
-              </p>
-            </div>
-
-            {/* Refused */}
-            <div className="rounded-lg border border-border/70 bg-card/30 p-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-muted-foreground">
-                  {t('landing.propfirms.payouts.refused.label')}
-                </span>
-                <span className="text-sm font-bold text-foreground">
-                  {formatCurrency(refusedAmount)}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('landing.propfirms.payouts.count', { count: refusedCount })}
-              </p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-    </Link>
-  )
-}
-
 interface PropFirmsPageProps {
-  searchParams: Promise<{ sort?: string; timeframe?: string }>
+  searchParams: Promise<{
+    sort?: string
+    timeframe?: string
+    q?: string
+    payout?: string
+    page?: string
+  }>
 }
 
 export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps) {
@@ -189,6 +58,9 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
   const resolvedSearchParams = await searchParams
   const timeframe = (resolvedSearchParams.timeframe || '2026') as Timeframe
   const sortBy = resolvedSearchParams.sort || 'accounts'
+  const searchQuery = (resolvedSearchParams.q || '').toLowerCase().trim()
+  const payoutFilter = resolvedSearchParams.payout || ''
+
   const { stats } = await getPropfirmCatalogueData(timeframe)
 
   // Create a map of propfirm name -> stats for quick lookup
@@ -201,23 +73,60 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
     key: string
     name: string
     accountTemplatesCount: number
-    stats: typeof stats[0] | undefined
+    stats: PropfirmCatalogueStats
   }> = []
 
   Object.entries(propFirms).forEach(([key, firm]) => {
     const dbStats = statsMap.get(firm.name)
     const accountTemplatesCount = Object.keys(firm.accountSizes).length
 
+    const fallback: PropfirmCatalogueStats = {
+      propfirmName: firm.name,
+      accountsCount: 0,
+      sizedAccountsCount: 0,
+      totalAccountValue: 0,
+      sizeBreakdown: 'No sized accounts',
+      sizeDistribution: [],
+      payouts: {
+        propfirmName: firm.name,
+        pendingAmount: 0,
+        pendingCount: 0,
+        refusedAmount: 0,
+        refusedCount: 0,
+        paidAmount: 0,
+        paidCount: 0,
+      },
+    }
+
     configPropfirms.push({
       key,
       name: firm.name,
       accountTemplatesCount,
-      stats: dbStats,
+      stats: dbStats ?? fallback,
     })
   })
 
+  // Apply search filter
+  let filteredFirms = configPropfirms
+  if (searchQuery) {
+    filteredFirms = filteredFirms.filter(firm =>
+      firm.name.toLowerCase().includes(searchQuery)
+    )
+  }
+
+  // Apply payout filter
+  if (payoutFilter === 'high-paid') {
+    filteredFirms = filteredFirms.filter(firm =>
+      firm.stats.payouts.paidAmount > 0
+    )
+  } else if (payoutFilter === 'low-refused') {
+    filteredFirms = filteredFirms.filter(firm =>
+      firm.stats.payouts.refusedAmount === 0
+    )
+  }
+
   // Sort propfirms based on selected sort option
-  const sortedPropfirms = [...configPropfirms].sort((a, b) => {
+  const sortedFirms = [...filteredFirms].sort((a, b) => {
     const aStats = a.stats
     const bStats = b.stats
 
@@ -248,18 +157,19 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto w-full max-w-[1280px] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">{t('landing.propfirms.title')}</h1>
-          <p className="max-w-3xl text-lg text-muted-foreground">
+      <div className="mx-auto w-full max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">{t('landing.propfirms.title')}</h1>
+          <p className="max-w-2xl text-sm text-muted-foreground/80">
             {t('landing.propfirms.description')}
           </p>
         </div>
 
         {/* Accounts bar chart */}
-        <div className="mb-12">
+        <div className="mb-8">
           <AccountsBarChart
-            data={sortedPropfirms.map(({ name, stats }) => ({
+            data={sortedFirms.map(({ name, stats }) => ({
               propfirmName: name,
               accountsCount: stats?.accountsCount ?? 0,
               sizedAccountsCount: stats?.sizedAccountsCount ?? 0,
@@ -281,8 +191,8 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
           />
         </div>
 
-        {/* Controls */}
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border/70 bg-card/30 px-3 py-2">
+        {/* Timeframe Controls */}
+        <div className="mb-6 flex flex-wrap items-center gap-4 rounded-lg border border-border/50 bg-card/30 px-4 py-3">
           <TimeframeControls
             timeframeLabel={t('landing.propfirms.timeframe.label')}
             timeframeOptions={{
@@ -295,60 +205,18 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
               allTime: t('landing.propfirms.timeframe.allTime'),
             }}
           />
-          <SortControls
-            sortLabel={t('landing.propfirms.sort.label')}
-            sortOptions={{
-              accounts: t('landing.propfirms.sort.accounts'),
-              paidPayout: t('landing.propfirms.sort.paidPayout'),
-              refusedPayout: t('landing.propfirms.sort.refusedPayout'),
-              accountValue: 'Account Value',
-            }}
+        </div>
+
+        {/* Filters */}
+        <div className="mb-6">
+          <FirmFilters
+            totalCount={configPropfirms.length}
+            filteredCount={sortedFirms.length}
           />
         </div>
 
-        {/* Main propfirms grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedPropfirms.map(({ key, name, stats: dbStats }) => {
-            const fallback: PropfirmCatalogueStats = {
-              propfirmName: name,
-              accountsCount: 0,
-              sizedAccountsCount: 0,
-              totalAccountValue: 0,
-              sizeBreakdown: 'No sized accounts',
-              sizeDistribution: [],
-              payouts: {
-                propfirmName: name,
-                pendingAmount: 0,
-                pendingCount: 0,
-                refusedAmount: 0,
-                refusedCount: 0,
-                paidAmount: 0,
-                paidCount: 0,
-              },
-            }
-            const resolvedStats = dbStats ?? fallback
-            const payouts = resolvedStats.payouts
-
-            const enrichedStats: PropfirmCatalogueStats = {
-              propfirmName: name,
-              accountsCount: resolvedStats.accountsCount,
-              sizedAccountsCount: resolvedStats.sizedAccountsCount,
-              totalAccountValue: resolvedStats.totalAccountValue,
-              sizeBreakdown: resolvedStats.sizeBreakdown,
-              sizeDistribution: resolvedStats.sizeDistribution,
-              payouts: {
-                ...payouts,
-              },
-            }
-
-            return renderPropfirmCard(
-              name,
-              key,
-              enrichedStats,
-              t as unknown as Translator
-            )
-          })}
-        </div>
+        {/* Firm Grid with Pagination */}
+        <FirmGrid firms={sortedFirms} pageSize={9} />
       </div>
     </div>
   )

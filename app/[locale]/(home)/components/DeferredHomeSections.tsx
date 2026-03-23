@@ -10,11 +10,16 @@ const HowItWorks = dynamic(() => import('./HowItWorks'), { loading: SectionSkele
 const AnalysisDemo = dynamic(() => import('./AnalysisDemo'), { loading: SectionSkeleton })
 const WhyChooseUs = dynamic(() => import('./WhyChooseUs'), { loading: SectionSkeleton })
 const ComparisonSection = dynamic(() => import('./ComparisonSection'), { loading: SectionSkeleton })
-const AIFuturesSection = dynamic(() => import('./AIFuturesSection'), { loading: SectionSkeleton })
+const DealsPreview = dynamic(() => import('./DealsPreview'), { loading: SectionSkeleton })
+const LeaderboardPreview = dynamic(() => import('./LeaderboardPreview'), { loading: SectionSkeleton })
+const UserReviews = dynamic(() => import('./UserReviews'), { loading: SectionSkeleton })
+const FeaturedFirms = dynamic(() => import('./FeaturedFirms'), { loading: SectionSkeleton })
+const FAQSection = dynamic(() => import('./FAQSection'), { loading: SectionSkeleton })
 const PricingSection = dynamic(() => import('./PricingSection'), { loading: SectionSkeleton })
 const CTA = dynamic(() => import('./CTA'), { loading: SectionSkeleton })
+const Footer = dynamic(() => import('./Footer'), { loading: SectionSkeleton })
 
-export default function DeferredHomeSections() {
+export default function DeferredHomeSections({ locale }: { locale: string }) {
   return (
     <>
       <ProblemStatement />
@@ -25,9 +30,14 @@ export default function DeferredHomeSections() {
       <WhyChooseUs />
       <TrustAndProof />
       <ComparisonSection />
-      <AIFuturesSection />
+      <DealsPreview locale={locale} />
+      <LeaderboardPreview locale={locale} />
+      <UserReviews locale={locale} />
+      <FeaturedFirms locale={locale} />
       <PricingSection />
+      <FAQSection locale={locale} />
       <CTA />
+      <Footer />
     </>
   )
 }

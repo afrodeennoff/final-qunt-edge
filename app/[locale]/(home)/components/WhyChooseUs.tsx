@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2 } from 'lucide-react'
+import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2, Zap } from 'lucide-react'
 
 const proofStats = [
   { label: 'Time To First Diagnostic', value: '< 7 min', note: 'from first sync to actionable process signal' },
@@ -28,6 +28,11 @@ const reasons = [
     title: 'Journal Intelligence',
     description: 'Structured notes and context become concrete intervention plans, not vague reminders.',
     icon: LineChart,
+  },
+  {
+    title: 'Instant Drift Alerts',
+    description: 'Real-time detection of emotional, sizing, and frequency drift before it compounds.',
+    icon: Zap,
   },
 ]
 
@@ -67,14 +72,14 @@ export default function WhyChooseUs() {
           ))}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {reasons.map((reason) => {
             const Icon = reason.icon
             return (
               <div
                 key={reason.title}
               >
-                <Card variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)]">
+                <Card className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.4)]">
                   <CardHeader>
                     <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
                       <Icon className="h-5 w-5" />

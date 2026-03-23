@@ -2,10 +2,10 @@
 import React from 'react'
 import { createFirmReview, listFirmReviews, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
 import { CardV2, CardV2Content, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
-import { ReviewsIcon, FilterIcon } from '@/components/icons/svg-icons'
+import { ReviewsIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase'
-import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight, Filter, Search } from 'lucide-react'
 
 type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>[number]
 
@@ -124,7 +124,7 @@ function formatRelativeTime(date: Date): string {
   })
 }
 
-function ReviewCard({ review }: { review: FirmReviewItem }) {
+function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
     <div className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all duration-200 hover:bg-white/[0.04] hover:border-white/[0.1]">
       <div className="flex items-start gap-4">
@@ -147,9 +147,20 @@ function ReviewCard({ review }: { review: FirmReviewItem }) {
                 </BadgeV2>
               )}
             </div>
-            <span className="text-xs text-white/40 shrink-0">
-              {formatRelativeTime(new Date(review.createdAt))}
-            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              {canFlag && (
+                <button
+                  onClick={() => onFlag(review.id)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/5 rounded"
+                  title="Report this review"
+                >
+                  <Flag className="h-3.5 w-3.5 text-white/40 hover:text-v2-error" />
+                </button>
+              )}
+              <span className="text-xs text-white/40">
+                {formatRelativeTime(new Date(review.createdAt))}
+              </span>
+            </div>
           </div>
           
           <div className="mt-1.5">
@@ -606,16 +617,91 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
         </CardV2Content>
       </CardV2>
       
+      {/* Success Message for flag */}
+      {flagSuccess && (
+        <div className="flex items-center gap-3 rounded-2xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
+          <CheckCircle2 className="h-5 w-5 text-v2-success shrink-0" />
+          <p className="text-sm text-v2-success">Thank you for reporting this review. Our team will review it shortly.</p>
+        </div>
+      )}
+      
+      {/* Flag Report Dialog */}
+      {showFlagDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0A0A0A] p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Report Review</h3>
+              <button onClick={() => setShowFlagDialog(false)} className="p-1 hover:bg-white/5 rounded">
+                <XCircle className="h-5 w-5 text-white/40" />
+              </button>
+            </div>
+            <form onSubmit={submitFlag} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Reason</label>
+                <select
+                  value={flagReason}
+                  onChange={(e) => setFlagReason(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-v2-accent focus:outline-none"
+                  required
+                >
+                  <option value="">Select a reason</option>
+                  <option value="spam">Spam or misleading</option>
+                  <option value="inappropriate">Inappropriate content</option>
+                  <option value="fake">Fake or fabricated review</option>
+                  <option value="harassment">Harassment or abuse</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Additional Details (optional)</label>
+                <TextareaV2
+                  placeholder="Provide more context about your report..."
+                  value={flagDescription}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFlagDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <ButtonV2 type="submit" disabled={flagSubmitting || !flagReason.trim()}>
+                  {flagSubmitting ? 'Submitting...' : 'Submit Report'}
+                </ButtonV2>
+                <ButtonV2 type="button" variant="ghost" onClick={() => setShowFlagDialog(false)}>
+                  Cancel
+                </ButtonV2>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      
       {/* Reviews List */}
       <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
         <CardV2Content className="p-6">
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-white">
               All Reviews
               {stats.total > 0 && (
                 <span className="ml-2 text-sm font-normal text-white/40">({stats.total})</span>
               )}
             </h3>
+            
+            {/* Sort Controls */}
+            <div className="flex items-center gap-2">
+              <Filter size={16} className="text-white/40" />
+              <select
+                value={sortBy}
+                onChange={(e) => {
+                  setSortBy(e.target.value as ReviewSortOption)
+                  setCurrentPage(1)
+                }}
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white focus:border-v2-accent focus:outline-none"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="highest">Highest Rated</option>
+                <option value="lowest">Lowest Rated</option>
+              </select>
+            </div>
           </div>
           
           <div className="space-y-4">
@@ -650,10 +736,40 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : (
               // Reviews list
               reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
+                <ReviewCard 
+                  key={review.id} 
+                  review={review} 
+                  onFlag={openFlagDialog}
+                  canFlag={isAuthenticated === true && !!currentUserId && review.userId !== currentUserId}
+                />
               ))
             )}
           </div>
+          
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6 pt-4 border-t border-white/5">
+              <ButtonV2
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </ButtonV2>
+              <span className="text-sm text-white/50">
+                Page {currentPage} of {totalPages}
+              </span>
+              <ButtonV2
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </ButtonV2>
+            </div>
+          )}
         </CardV2Content>
       </CardV2>
     </div>

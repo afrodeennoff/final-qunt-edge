@@ -24,7 +24,8 @@ import {
     CreditCard,
     Shield,
     Mail,
-    Users
+    Users,
+    Flag
 } from "lucide-react";
 import TradeExportDialog from '@/components/export-button';
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
@@ -33,8 +34,9 @@ type LocalePathBuilder = (path: string) => string
 
 function buildAdminPanelItems(withLocale: LocalePathBuilder): UnifiedSidebarItem[] {
     return [
-        { label: 'Mail', href: withLocale('/admin/newsletter-builder'), icon: <Mail className="size-4" />, group: 'Admin Panel' },
-        { label: 'ID', href: withLocale('/admin'), icon: <Shield className="size-4" />, group: 'Admin Panel' },
+        { label: 'Overview', href: withLocale('/admin'), icon: <Shield className="size-4" />, group: 'Admin Panel' },
+        { label: 'Reviews', href: withLocale('/admin/reviews'), icon: <Flag className="size-4" />, group: 'Admin Panel' },
+        { label: 'Newsletter', href: withLocale('/admin/newsletter-builder'), icon: <Mail className="size-4" />, group: 'Admin Panel' },
     ]
 }
 

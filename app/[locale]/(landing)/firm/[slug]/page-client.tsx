@@ -677,6 +677,304 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
   )
 }
 
+function PayoutHistorySection({ firm }: { firm: FirmData }) {
+  const stats = firm.catalogueStats
+  if (!stats) {
+    return (
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2Content className="p-6">
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-v2-accent" />
+            <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
+          </div>
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            No payout data available for this firm yet.
+          </CardV2Description>
+        </CardV2Content>
+      </CardV2>
+    )
+  }
+
+  const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
+
+  return (
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2Content className="p-6">
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-v2-accent" />
+          <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
+        </div>
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          Aggregated payout statistics from verified trader accounts on this platform.
+        </CardV2Description>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid Out</p>
+            <p className="mt-2 text-2xl font-semibold text-v2-success">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
+          </div>
+          <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payouts Made</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{stats.paidPayoutCount.toLocaleString()}</p>
+          </div>
+          <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Avg Payout</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(avgPayout)}</p>
+          </div>
+          <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Pending</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.pendingPayoutAmount)}</p>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <div className="flex items-center justify-between rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Payout Success Rate</p>
+              <p className="mt-1 text-sm text-muted-foreground">Based on {stats.accountsCount.toLocaleString()} tracked accounts</p>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-semibold text-v2-success">
+                {stats.accountsCount > 0 ? Math.round((stats.paidPayoutCount / stats.accountsCount) * 100) : 0}%
+              </p>
+            </div>
+          </div>
+        </div>
+      </CardV2Content>
+    </CardV2>
+  )
+}
+
+function ROISection({ firm }: { firm: FirmData }) {
+  const accountSizes = firm.accountSizes ? Object.entries(firm.accountSizes) : []
+
+  if (accountSizes.length === 0) {
+    return (
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2Content className="p-6">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-v2-accent" />
+            <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
+          </div>
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            No account size data available for ROI calculation.
+          </CardV2Description>
+        </CardV2Content>
+      </CardV2>
+    )
+  }
+
+  return (
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2Content className="p-6">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-v2-accent" />
+          <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
+        </div>
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          Potential return on investment based on account sizes and profit targets.
+        </CardV2Description>
+
+        <div className="mt-6 grid gap-4">
+          {accountSizes.map(([key, size]) => {
+            const roiPotential = size.target > 0 && size.price > 0
+              ? Math.round((size.target / size.price) * 100)
+              : 0
+            const profitTargetPct = size.balance > 0
+              ? ((size.target / size.balance) * 100).toFixed(1)
+              : '0'
+
+            return (
+              <div key={key} className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{size.name}</p>
+                    <p className="text-xs text-muted-foreground">{formatCompactCurrency(size.balance)} account</p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Challenge Fee</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">
+                        {size.price > 0 ? formatCompactCurrency(size.price) : 'Free'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{profitTargetPct}%</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">ROI Potential</p>
+                      <p className={`mt-1 text-lg font-semibold ${roiPotential > 200 ? 'text-v2-success' : 'text-foreground'}`}>
+                        {roiPotential > 0 ? `${roiPotential}%` : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </CardV2Content>
+    </CardV2>
+  )
+}
+
+function RulesSection({ firm }: { firm: FirmData }) {
+  const accountSizes = firm.accountSizes ? Object.entries(firm.accountSizes) : []
+
+  const rules = [
+    {
+      title: 'Drawdown Type',
+      value: firm.drawdownType ?? 'N/A',
+      description: firm.drawdownType === 'Trailing'
+        ? 'Drawdown trails your highest profit point. More restrictive but allows for higher allocations.'
+        : firm.drawdownType === 'Static'
+        ? 'Fixed drawdown limit from starting balance. More forgiving for swing traders.'
+        : 'Calculated at end of trading day. Allows intraday flexibility.',
+    },
+    {
+      title: 'Payout Model',
+      value: firm.payoutModel ?? 'N/A',
+      description: `Payouts are processed on a ${firm.payoutModel?.toLowerCase() ?? 'monthly'} basis.`,
+    },
+    {
+      title: 'Profit Split',
+      value: firm.profitSplit ?? 'N/A',
+      description: 'You keep this percentage of profits generated on funded accounts.',
+    },
+    {
+      title: 'Max Allocation',
+      value: firm.maxAllocation ?? 'N/A',
+      description: 'Maximum total capital you can manage across all funded accounts.',
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2Content className="p-6">
+          <div className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-v2-accent" />
+            <CardV2Title className="text-2xl text-foreground">Trading Rules</CardV2Title>
+          </div>
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            Key trading rules and restrictions you need to follow to maintain your funded account.
+          </CardV2Description>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {rules.map((rule) => (
+              <div key={rule.title} className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{rule.title}</p>
+                <p className="mt-2 text-xl font-semibold text-foreground">{rule.value}</p>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
+              </div>
+            ))}
+          </div>
+        </CardV2Content>
+      </CardV2>
+
+      {accountSizes.length > 0 && (
+        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+          <CardV2Content className="p-6">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-v2-accent" />
+              <CardV2Title className="text-2xl text-foreground">Risk Parameters</CardV2Title>
+            </div>
+            <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+              Loss limits and drawdown rules for each account size.
+            </CardV2Description>
+
+            <div className="mt-6 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border/40">
+                    <th className="px-4 py-3 text-left text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account</th>
+                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Daily Loss</th>
+                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</th>
+                    <th className="px-4 py-3 text-right text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {accountSizes.map(([key, size]) => (
+                    <tr key={key} className="border-b border-border/20">
+                      <td className="px-4 py-3 font-medium text-foreground">{size.name}</td>
+                      <td className="px-4 py-3 text-right text-muted-foreground">
+                        {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
+                      </td>
+                      <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.drawdown)}</td>
+                      <td className="px-4 py-3 text-right text-muted-foreground">{formatCompactCurrency(size.target)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardV2Content>
+        </CardV2>
+      )}
+    </div>
+  )
+}
+
+function PayoutProofSection({ firm }: { firm: FirmData }) {
+  const stats = firm.catalogueStats
+
+  return (
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2Content className="p-6">
+        <div className="flex items-center gap-2">
+          <Award className="h-5 w-5 text-v2-accent" />
+          <CardV2Title className="text-2xl text-foreground">Payout Proof</CardV2Title>
+        </div>
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          Verified payout data from traders using this prop firm on our platform.
+        </CardV2Description>
+
+        {stats && stats.paidPayoutCount > 0 ? (
+          <div className="mt-6 space-y-4">
+            <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Verified Payouts</p>
+                  <p className="mt-2 text-3xl font-semibold text-v2-success">{stats.paidPayoutCount.toLocaleString()}</p>
+                </div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-v2-success/10">
+                  <Check className="h-6 w-6 text-v2-success" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Total Paid</p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">{formatCompactCurrency(stats.paidPayoutAmount)}</p>
+              </div>
+              <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Active Accounts</p>
+                <p className="mt-2 text-2xl font-semibold text-foreground">{stats.accountsCount.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account Size Distribution</p>
+              <p className="mt-2 text-sm text-foreground">{stats.sizeBreakdown}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 flex flex-col items-center justify-center py-8 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <Award className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <p className="mt-4 text-base font-medium text-foreground">No payout proof yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Payout data will appear here as traders on our platform receive payouts from this firm.
+            </p>
+          </div>
+        )}
+      </CardV2Content>
+    </CardV2>
+  )
+}
+
 function FirmHeader({ firm }: { firm: FirmData }) {
   // Use spotlight data if available, otherwise fall back to defaults
   const spotlightRating = firm.spotlight?.rating ?? 4.2
@@ -821,6 +1119,10 @@ function FirmHeader({ firm }: { firm: FirmData }) {
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
+              ['rules', 'Rules'],
+              ['roi', 'ROI'],
+              ['payouts', 'Payouts'],
+              ['proof', 'Payout Proof'],
               ['reviews', `Reviews (${firm._count?.reviews ?? 0})`],
               ['coupons', `Coupons (${firm._count?.coupons ?? 0})`],
             ].map(([value, label]) => (
@@ -843,6 +1145,22 @@ function FirmHeader({ firm }: { firm: FirmData }) {
 
           <TabsContent value="challenges" className="mt-6">
             <ChallengesSection accountSizes={firm.accountSizes} profitSplit={firm.profitSplit ?? 'N/A'} />
+          </TabsContent>
+
+          <TabsContent value="rules" className="mt-6">
+            <RulesSection firm={firm} />
+          </TabsContent>
+
+          <TabsContent value="roi" className="mt-6">
+            <ROISection firm={firm} />
+          </TabsContent>
+
+          <TabsContent value="payouts" className="mt-6">
+            <PayoutHistorySection firm={firm} />
+          </TabsContent>
+
+          <TabsContent value="proof" className="mt-6">
+            <PayoutProofSection firm={firm} />
           </TabsContent>
 
           <TabsContent value="reviews" className="mt-6">

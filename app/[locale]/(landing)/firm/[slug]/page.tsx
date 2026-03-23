@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getUnifiedFirmBySlug } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

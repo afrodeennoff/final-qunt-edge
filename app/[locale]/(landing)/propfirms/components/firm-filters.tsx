@@ -1,0 +1,161 @@
+"use client"
+
+import { useRouter, useSearchParams } from "next/navigation"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { useCallback, useTransition } from "react"
+
+interface FirmFiltersProps {
+  totalCount: number
+  filteredCount: number
+}
+
+export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
+
+  const search = searchParams.get("q") || ""
+  const payoutFilter = searchParams.get("payout") || ""
+  const sort = searchParams.get("sort") || "accounts"
+
+  const updateParams = useCallback(
+    (key: string, value: string) => {
+      startTransition(() => {
+        const params = new URLSearchParams(searchParams.toString())
+        if (value) {
+          params.set(key, value)
+        } else {
+          params.delete(key)
+        }
+        // Reset to page 1 when filters change
+        params.delete("page")
+        router.push(`?${params.toString()}`, { scroll: false })
+      })
+    },
+    [router, searchParams]
+  )
+
+  const clearAllFilters = useCallback(() => {
+    startTransition(() => {
+      router.push("?", { scroll: false })
+    })
+  }, [router])
+
+  const hasActiveFilters = search || payoutFilter || sort !== "accounts"
+
+  return (
+    <div className="space-y-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <svg
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <Input
+          type="search"
+          placeholder="Search prop firms..."
+          defaultValue={search}
+          onChange={(e) => updateParams("q", e.target.value)}
+          className="pl-10 h-10 bg-card/50 border-border/50 focus:border-primary/40 focus:ring-primary/20 placeholder:text-muted-foreground/40"
+        />
+      </div>
+
+      {/* Filter Row */}
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Payout Type Filter */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/60 font-medium mr-1">
+            Payouts
+          </span>
+          {["", "high-paid", "low-refused"].map((value) => (
+            <Button
+              key={value || "all"}
+              variant="ghost"
+              size="sm"
+              onClick={() => updateParams("payout", value)}
+              className={cn(
+                "h-7 px-2.5 text-[11px] font-medium rounded-md border transition-all duration-200",
+                payoutFilter === value
+                  ? "border-primary/40 bg-primary/10 text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              {value === "" ? "All" : value === "high-paid" ? "High Paid" : "Low Refused"}
+            </Button>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="w-px h-4 bg-border/40" />
+
+        {/* Sort Controls */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/60 font-medium mr-1">
+            Sort
+          </span>
+          {[
+            { value: "accounts", label: "Accounts" },
+            { value: "paidPayout", label: "Paid" },
+            { value: "refusedPayout", label: "Refused" },
+            { value: "accountValue", label: "Value" },
+          ].map(({ value, label }) => (
+            <Button
+              key={value}
+              variant="ghost"
+              size="sm"
+              onClick={() => updateParams("sort", value)}
+              className={cn(
+                "h-7 px-2.5 text-[11px] font-medium rounded-md border transition-all duration-200",
+                sort === value
+                  ? "border-primary/40 bg-primary/10 text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+
+        {/* Clear Filters */}
+        {hasActiveFilters && (
+          <>
+            <div className="w-px h-4 bg-border/40" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearAllFilters}
+              className="h-7 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
+            >
+              Clear All
+            </Button>
+          </>
+        )}
+      </div>
+
+      {/* Results Count */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground/70">
+            {filteredCount === totalCount
+              ? `${totalCount} firms`
+              : `${filteredCount} of ${totalCount} firms`}
+          </span>
+          {isPending && (
+            <div className="w-3 h-3 border-2 border-primary/30 border-t-primary/80 rounded-full animate-spin" />
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

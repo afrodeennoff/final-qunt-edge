@@ -28,23 +28,33 @@ const comparisonRows = [
     qunt: 'Desk-level process consistency analytics',
     others: 'Mostly account-level performance totals',
   },
+  {
+    item: 'Prop firm integration',
+    qunt: 'Built-in catalogue with real statistics and coupon codes',
+    others: 'Manual tracking across spreadsheets',
+  },
+  {
+    item: 'Multi-broker support',
+    qunt: 'Tradovate, Rithmic, MT5, IBKR, CSV import',
+    others: 'Limited broker integrations',
+  },
 ]
 
 export default function ComparisonSection() {
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section id="comparison" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center sm:mb-12">
           <Badge variant="outline" className="border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
           </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.7vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
-            Why we’re different
+            Why we are different
             <span className="block text-foreground">from standard trading analytics tools</span>
           </h2>
         </div>
 
-        <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
+        <Card className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
           <CardHeader className="border-b border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
             <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
           </CardHeader>
@@ -62,18 +72,18 @@ export default function ComparisonSection() {
                   {comparisonRows.map((row) => (
                     <tr
                       key={row.item}
-                      className="border-b border-[hsl(var(--mk-border)/0.24)]"
+                      className="border-b border-[hsl(var(--mk-border)/0.24)] transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.3)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 text-sm text-foreground">
-                          <Check className="h-4 w-4 text-foreground" />
+                          <Check className="h-4 w-4 text-emerald-400" />
                           <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 text-sm text-foreground/80">
-                          <X className="h-4 w-4" />
+                          <X className="h-4 w-4 text-foreground/80" />
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>
                       </td>

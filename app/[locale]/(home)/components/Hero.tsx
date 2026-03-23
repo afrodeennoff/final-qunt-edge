@@ -238,7 +238,8 @@ function AnimatedTradingSVG() {
 
       {/* Volume bars at bottom */}
       {[80, 130, 180, 230, 280, 330, 380, 430, 480, 530, 580, 630, 680, 730].map((x, i) => {
-        const height = 15 + Math.random() * 25
+        const heights = [22, 35, 18, 28, 40, 25, 32, 20, 38, 30, 24, 36, 28, 22]
+        const height = heights[i]
         const isUp = i % 3 !== 0
         return (
           <rect

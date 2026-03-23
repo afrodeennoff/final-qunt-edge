@@ -11,9 +11,6 @@
 
 @source "../node_modules/streamdown/dist/index.js";
 
-@import "../styles/tokens.css";
-
-
 
 /*
   ---break---
@@ -114,6 +111,26 @@
   --legacy-950: 240 20% 8%;
   --legacy-white: 0 0% 100%;
   --legacy-black: 240 20% 8%;
+
+  /* ===== V1 LEGACY TOKEN ALIASES → V2 TOKENS (V2 IS SINGLE SOURCE OF TRUTH) ===== */
+  /* These aliases ensure existing components using V1 tokens get V2 values */
+  --brand-primary: var(--primary);
+  --brand-primary-strong: var(--primary);
+  --brand-secondary: var(--secondary);
+  --brand-warm: var(--accent);
+  --brand-ink: var(--foreground);
+  --brand-soft-ink: var(--foreground);
+  --mk-bg-0: var(--background);
+  --mk-bg-1: var(--background);
+  --mk-bg-2: var(--card);
+  --mk-surface: var(--card);
+  --mk-surface-muted: var(--muted);
+  --mk-border: var(--border);
+  --mk-text: var(--foreground);
+  --mk-text-muted: var(--muted-foreground);
+  --accent-luxury: var(--primary);
+  --accent-rose: var(--accent);
+  --accent-bronze: var(--accent);
 }
 
 .dark {
@@ -178,6 +195,25 @@
   --legacy-950: 240 4% 97%;
   --legacy-white: 240 4% 98%;
   --legacy-black: 0 0% 0%;
+
+  /* ===== V1 LEGACY TOKEN ALIASES → V2 TOKENS (V2 IS SINGLE SOURCE OF TRUTH) ===== */
+  --brand-primary: var(--primary);
+  --brand-primary-strong: var(--primary);
+  --brand-secondary: var(--secondary);
+  --brand-warm: var(--accent);
+  --brand-ink: var(--foreground);
+  --brand-soft-ink: var(--foreground);
+  --mk-bg-0: var(--background);
+  --mk-bg-1: var(--background);
+  --mk-bg-2: var(--card);
+  --mk-surface: var(--card);
+  --mk-surface-muted: var(--muted);
+  --mk-border: var(--border);
+  --mk-text: var(--foreground);
+  --mk-text-muted: var(--muted-foreground);
+  --accent-luxury: var(--primary);
+  --accent-rose: var(--accent);
+  --accent-bronze: var(--accent);
 }
 
 @theme inline {
@@ -1378,5 +1414,129 @@
   [data-chart-surface="modern"] {
     background-clip: padding-box;
     -webkit-mask-image: none;
+  }
+}
+
+/* ===== HOME PAGE ANIMATIONS ===== */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px hsl(var(--primary) / 0.15);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-fade-in-delayed {
+  animation: fade-in 0.6s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delayed-2 {
+  animation: fade-in 0.6s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delayed-3 {
+  animation: fade-in 0.6s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground) / 0.05) 0%,
+    hsl(var(--foreground) / 0.1) 50%,
+    hsl(var(--foreground) / 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-delayed,
+  .animate-fade-in-delayed-2,
+  .animate-fade-in-delayed-3,
+  .animate-slide-up,
+  .animate-scale-in,
+  .animate-pulse-glow,
+  .animate-float,
+  .animate-shimmer {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
