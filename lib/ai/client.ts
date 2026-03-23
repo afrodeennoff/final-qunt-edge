@@ -47,10 +47,10 @@ export function getAiLanguageModel(feature: AiFeature) {
   
   // Return a wrapped model that adds caching for doGenerate only
   return new Proxy(rawModel, {
-    get(target, p: string | symbol, receiver: any) {
+    get(target, p: PropertyKey, receiver: any) {
       // If it's a method we want to wrap for caching, return our cached version
       if (p === 'doGenerate') {
-        return async function(options: Parameters<typeof target['doGenerate']>[0]) {
+        return async function(options: LanguageModelV3CallOptions) {
           // Generate cache key based on feature and options
           const featureStr = String(feature);
           
@@ -67,13 +67,13 @@ export function getAiLanguageModel(feature: AiFeature) {
           await setAiResponseCache(featureStr, options, result);
           
           return result;
-        }.bind(this);
+        };
       }
       
       // For all other properties/methods (including doStream), delegate to the target
       return Reflect.get(target, p, receiver);
     }
-  });
+  }) as LanguageModelV3;
 }
 
 // Cache statistics export

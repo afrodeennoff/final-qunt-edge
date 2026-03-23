@@ -80,13 +80,11 @@ export function resetAiCacheStats() {
  * Cache AI responses to reduce API calls and improve performance
  * @param feature The AI feature (chat, editor, etc.)
  * @param options The options passed to the AI model (messages, parameters, etc.)
- * @param ttlSeconds Time to live in seconds (default: 300 = 5 minutes)
  * @returns Cached result if available, null otherwise
  */
 export async function cacheAiResponse<T>(
   feature: string,
-  options: unknown,
-  ttlSeconds: number = 300
+  options: unknown
 ): Promise<T | null> {
   // Generate cache key
   const optionsStr = stableStringify(options);
@@ -124,14 +122,14 @@ export async function cacheAiResponse<T>(
  * @param feature The AI feature (chat, editor, etc.)
  * @param options The options passed to the AI model (messages, parameters, etc.)
  * @param result The result to cache
- * @param ttlSeconds Time to live in seconds (default: 300 = 5 minutes)
  */
 export async function setAiResponseCache<T>(
   feature: string,
   options: unknown,
-  result: T,
-  ttlSeconds: number = 300
+  result: T
 ): Promise<void> {
+  const ttlSeconds = 300; // Default 5 minutes TTL
+  
   // Generate cache key
   const optionsStr = stableStringify(options);
   const cacheKey = `ai:${feature}:${hashString(optionsStr)}`;
