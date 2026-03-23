@@ -55,23 +55,6 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_URL: optionalUrl(),
   UPSTASH_REDIS_REST_TOKEN: optionalMinString(1),
   OPENROUTER_API_KEY: optionalMinString(1),
-  AI_ROUTER_ENABLED: optionalString(),
-  AI_ROUTER_MODEL_FREE: optionalModelId(),
-  AI_ROUTER_MODEL_AUTO: optionalModelId(),
-  AI_ROUTER_MODEL_LIQUID: optionalModelId(),
-  AI_ROUTER_LIQUID_MODEL: optionalString(),
-  AI_ROUTER_PROVIDER_ORDER: optionalString(),
-  AI_ROUTER_MAX_PRICE_INPUT: optionalString(),
-  AI_ROUTER_MAX_PRICE_OUTPUT: optionalString(),
-}).superRefine((env, ctx) => {
-  const routerEnabled = env.AI_ROUTER_ENABLED === "true";
-  if (env.NODE_ENV === "production" && routerEnabled && !env.OPENROUTER_API_KEY) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["OPENROUTER_API_KEY"],
-      message: "OPENROUTER_API_KEY is required in production when AI_ROUTER_ENABLED=true",
-    });
-  }
 });
 
 type AppEnv = z.infer<typeof envSchema>;

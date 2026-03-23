@@ -4,7 +4,89 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
-## 🚀 Recent Feature Updates
+### 2026-03-23: PropFirm Pages + Home/Leaderboard/Deals Redesign + AI Cleanup
+
+- **What changed:** Completed a multi-part cleanup and feature project including AI codebase audit, propfirm page fixes, admin CRUD, and three new page designs (home/leaderboard/deals).
+
+- **What I want:** Clean up AI codebase conflicts/exports, fix admin propfirm bugs, redesign propfirm landing/firm detail pages, and create new home/leaderboard/deals pages matching propfirmmatch.com style.
+
+- **What I don't want:** Unresolved merge conflicts, hardcoded mock data, inconsistent styling, broken exports, or incomplete features.
+
+- **How we fixed that:**
+
+  #### AI Codebase Audit & Cleanup
+  - Audited 72 AI-related files across `lib/ai/` and `app/api/ai/`
+  - Resolved merge conflicts in 6 router files (redis-client vs redis-cache branches)
+  - Fixed missing exports in `lib/ai/error-utils.ts` (logAiError, logAiWarn, token estimation)
+  - Added 'transcribe' to AiGuardFeature type in `lib/ai/entitlements.ts`
+  - Added PropFirm/PropFirmReview/PropFirmCoupon models to Prisma schema
+
+  #### Admin PropFirm Bug Fix
+  - Fixed extra `</span>` JSX error in admin propfirms page
+  - Changed hard delete → soft delete via `softDeletePropFirm`
+  - Added reviews section with inline create/edit/delete
+  - Added coupons section with inline create/edit/delete
+  - Added admin access guards (`assertAdminAccess()`) to all actions
+
+  #### Firm Detail Page Fixes
+  - Rewrote ChallengesSection to use real config data instead of hardcoded mock cards
+  - Rewrote RADARAnalysisWidget to derive real metrics from config
+  - Added accountSizes to UnifiedFirm type and getAccountSizesFromConfig helper
+  - Unified all styling to v2 semantic tokens
+
+  #### Propfirm Landing Page Redesign
+  - Added platform/payout filter chips (All/Tradovate/Rithmic/MT5/cTrader/DXtrade)
+  - Added payout model filter
+  - Added comparison feature with firm selection modal
+  - Client-side filtering + sorting with side-by-side comparison view
+
+  #### Home Page Redesign (propfirmmatch.com style)
+  - New SearchHero component with search bar
+  - New FilterChips component (platform, challenge type, drawdown)
+  - New FirmCard component with metrics grid
+  - New FirmCardsGrid for responsive layout
+  - New PropFirmsExplorer client component for state management
+  - All using monochrome semantic tokens
+
+  #### Leaderboard Redesign
+  - Added accountCount field to LeaderboardEntry type
+  - New leaderboard-table component with:
+    - Rank column with trophy emojis 🥇🥈🥉 for top 3
+    - Avatar with initials + username + profile link
+    - PnL column with green/red coloring
+    - Win rate column with progress bar
+    - Best streak column with 🔥
+    - Accounts column
+  - Top 3 rows with highlight background, alternating row hover
+
+  #### Deals Page Redesign
+  - New deals-experience component with:
+    - Hero with search bar + stats row
+    - Filter chips (firm, market type, discount %, sort)
+    - Featured Deals section (25%+ discount, highlighted)
+    - Hot Deals section (expiring within 14 days, flame badge)
+    - All Deals full grid
+    - Deal cards with logo, original/discounted price, coupon code copy
+    - View Firm + Claim Deal buttons
+    - Responsive 1→2→3 column grid
+
+- **Key Files:**
+  - AI: `lib/ai/router/*.ts`, `lib/ai/error-utils.ts`, `lib/ai/entitlements.ts`, `prisma/schema.prisma`
+  - Admin: `app/[locale]/admin/propfirms/page.tsx`, `app/[locale]/admin/propfirms/[id]/page.tsx`, `server/prop-firms.ts`
+  - Firm Detail: `app/[locale]/(landing)/firm/[slug]/page-client.tsx`, `server/deals.ts`
+  - Propfirm Landing: `app/[locale]/(landing)/propfirms/page.tsx`
+  - Home: `app/[locale]/(home)/components/SearchHero.tsx`, `FilterChips.tsx`, `FirmCard.tsx`, `FirmCardsGrid.tsx`, `PropFirmsExplorer.tsx`
+  - Leaderboard: `app/[locale]/(landing)/leaderboard/page.tsx`, `components/leaderboard-table.tsx`
+  - Deals: `app/[locale]/(landing)/deals/page.tsx`, `components/deals-experience.tsx`
+
+- **Verification:**
+  - `npm run typecheck` → passed (after agent work)
+  - `npm run lint` → passed (0 errors)
+  - All features committed to `new-update` branch
+
+- **Note:** Widget Audit + Performance Audit tasks were delegated to subagents but sessions expired before completion. These remain pending verification.
+
+---
 
 ### 2026-03-15: Phase 7 - AI Endpoints Consolidation (Unified Analyze Route)
 - **What changed:** Consolidated three separate AI analysis endpoints (`accounts`, `instrument`, `time-of-day`) into a single unified endpoint with type-based dispatch.
