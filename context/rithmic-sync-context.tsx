@@ -88,6 +88,17 @@ export function RithmicSyncContextProvider({
   const [syncCheckInterval, setSyncCheckInterval] =
     useState<NodeJS.Timeout | null>(null);
 
+  const wsRef = useRef<WebSocket | null>(null);
+  const syncCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    wsRef.current = ws;
+  }, [ws]);
+
+  useEffect(() => {
+    syncCheckIntervalRef.current = syncCheckInterval;
+  }, [syncCheckInterval]);
+
   const t = useI18n();
   const { refreshTradesOnly } = useDashboardActions();
 
@@ -118,19 +129,26 @@ export function RithmicSyncContextProvider({
   } = useRithmicSyncStore();
 
   const disconnect = useCallback(() => {
-    if (ws) {
-      ws.close();
+    if (wsRef.current) {
+      wsRef.current.close();
       setWs(null);
       setIsConnected(false);
       setConnectionStatus("Disconnected");
       resetProcessingState();
+      wsRef.current = null;
     }
-    // Clear sync check interval when disconnecting
-    if (syncCheckInterval) {
-      clearInterval(syncCheckInterval);
+    if (syncCheckIntervalRef.current) {
+      clearInterval(syncCheckIntervalRef.current);
+      syncCheckIntervalRef.current = null;
       setSyncCheckInterval(null);
     }
-  }, [ws, resetProcessingState, syncCheckInterval]);
+  }, [resetProcessingState]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, []);
 
   const handleMessage = useCallback(
     (message: RithmicMessage) => {

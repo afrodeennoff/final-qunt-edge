@@ -571,13 +571,6 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
     }
   }
 
-  const pathData = metrics
-    .map((metric, index) => {
-      const point = getPoint(index, metric.value)
-      return `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
-    })
-    .join(' ') + ' Z'
-
   return (
     <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
       <CardV2Content className="p-6">

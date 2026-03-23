@@ -27,7 +27,8 @@ interface SaveLayoutResult {
   error?: string
 }
 
-const saveLocks = new Map<string, Promise<SaveLayoutResult>>()
+const saveLocks = new Map<string, { promise: Promise<SaveLayoutResult>; timestamp: number }>()
+const LOCK_TIMEOUT_MS = 30000 // 30 second max lock lifetime
 
 function validateLayouts(layouts: DashboardLayout): boolean {
   if (!layouts || typeof layouts !== 'object') return false
@@ -126,6 +127,14 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
   }
 
   const lockKey = `layout:${userId}`
+  const now = Date.now()
+
+  // Check and clean expired locks first
+  for (const [key, value] of saveLocks.entries()) {
+    if (now - value.timestamp > LOCK_TIMEOUT_MS) {
+      saveLocks.delete(key)
+    }
+  }
 
   if (saveLocks.has(lockKey)) {
     logger.info('[saveDashboardLayout] Debouncing concurrent save', { userId })
@@ -163,7 +172,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     }
   })()
 
-  saveLocks.set(lockKey, savePromise)
+  saveLocks.set(lockKey, { promise: savePromise, timestamp: Date.now() })
 
   try {
     const result = await savePromise

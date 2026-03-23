@@ -116,13 +116,15 @@ function serializeTrade(trade: SerializableTrade): SerializedTrade {
 
 export async function revalidateCache(tags: string[]) {
   logger.info(`[revalidateCache] Starting cache invalidation`, { tags })
-  tags.forEach(tag => {
-    try {
-      updateTag(tag)
-    } catch (error) {
-      logger.error(`[revalidateCache] Error revalidating tag ${tag}`, { error })
-    }
-  })
+  await Promise.all(
+    tags.map(async (tag) => {
+      try {
+        await updateTag(tag)
+      } catch (error) {
+        logger.error(`[revalidateCache] Error revalidating tag ${tag}`, { error })
+      }
+    })
+  )
 }
 
 async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
@@ -152,6 +154,8 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
 }
 
 function generateTradeUUID(trade: Partial<PrismaTrade> | any): string {
+  // Use multiple unique identifiers plus data fingerprint to minimize collision risk
+  // entryId + closeId from broker should be globally unique per account
   const tradeSignature = [
     trade.userId || '',
     trade.accountNumber || '',
@@ -167,6 +171,9 @@ function generateTradeUUID(trade: Partial<PrismaTrade> | any): string {
     trade.side || '',
     trade.pnl?.toString() || '',
     trade.commission?.toString() || '',
+    // Add microsecond timestamp component to further reduce collision probability
+    // for trades with identical data submitted at different moments
+    Date.now().toString(36),
   ].join('|')
 
   return uuidv5(tradeSignature, TRADE_NAMESPACE)

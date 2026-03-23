@@ -11,18 +11,28 @@ function isNextRedirectError(error: unknown): boolean {
   )
 }
 
+function parseStateCookie(cookieHeader: string): string | undefined {
+  const match = cookieHeader.match(/(?:^|;\s*)oauth_state=([^;]*)/)
+  return match ? decodeURIComponent(match[1]) : undefined
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  let result = 0
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  }
+  return result === 0
+}
+
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
-  const type = searchParams.get('type') // 'recovery' for password reset
-  // if "next" is in param, use it as the redirect URL
+  const type = searchParams.get('type')
   const next = searchParams.get('next')
   const action = searchParams.get('action')
   const locale = searchParams.get('locale') || undefined
 
-
-  // Normalize next path so values like "dashboard" become "/dashboard".
-  // Keep redirects internal by rejecting protocol-relative and absolute URLs.
   let normalizedNext: string | null = null
   if (next) {
     const decodedNext = decodeURIComponent(next).trim()
@@ -40,7 +50,6 @@ export async function GET(request: Request) {
   const safeLocale = (() => {
     const raw = (locale || '').trim().toLowerCase()
     if (!raw) return 'en'
-    // Keep permissive: app supports multiple locales.
     if (!/^[a-z]{2}(-[a-z]{2})?$/.test(raw)) return 'en'
     return raw
   })()
@@ -54,27 +63,39 @@ export async function GET(request: Request) {
 
   const websiteURL = await getWebsiteURL()
 
+  // --- OAuth CSRF Protection ---
+  // Validate state parameter to prevent CSRF attacks on OAuth flows
+  const stateParam = searchParams.get('state')
+  const cookieHeader = request.headers.get('cookie') || ''
+  const stateCookie = parseStateCookie(cookieHeader)
+
+  if (stateParam || stateCookie) {
+    if (!stateParam || !stateCookie || !timingSafeEqual(stateParam, stateCookie)) {
+      console.error('[Auth Callback] OAuth CSRF validation failed — state mismatch or missing')
+      return NextResponse.redirect(
+        new URL(withLocalePrefix('/authentication?error=csrf'), websiteURL)
+      )
+    }
+  }
+  // --- End OAuth CSRF Protection ---
+
   if (code) {
     try {
       const supabase = await createClient()
       const { error } = await supabase.auth.exchangeCodeForSession(code)
 
       if (!error) {
-        // Handle password recovery redirect
         if (type === 'recovery') {
           return NextResponse.redirect(new URL(withLocalePrefix('/dashboard/settings?passwordReset=true'), websiteURL))
         }
 
-        // Handle identity linking redirect
         if (action === 'link') {
           return NextResponse.redirect(new URL(withLocalePrefix('/dashboard/settings?linked=true'), websiteURL))
         }
 
-        // Ensure DB user exists and persist locale before redirecting
         try {
           const { data: { user } } = await supabase.auth.getUser()
           if (user) {
-            // Skip timeout - user creation is critical for auth to work
             await ensureUserInDatabase(user, locale, { skipDefaultLayout: true })
           }
         } catch (e) {
@@ -82,7 +103,6 @@ export async function GET(request: Request) {
             throw e
           }
           console.error('Auth callback ensureUserInDatabase error:', e)
-          // Non-fatal: continue redirect
         }
 
         if (normalizedNext) {
@@ -104,7 +124,6 @@ export async function GET(request: Request) {
           ? (error as { originalError?: { message?: string } }).originalError?.message ?? ''
           : ''
 
-      // Handle JSON parsing errors from Supabase API
       if (
         errorMessage.includes('Unexpected token') ||
         errorMessage.includes('is not valid JSON') ||
@@ -112,13 +131,11 @@ export async function GET(request: Request) {
         originalErrorMessage.includes('is not valid JSON')
       ) {
         console.error('[Auth Callback] Supabase API returned non-JSON response:', error)
-        // Redirect to auth page with error message
         return NextResponse.redirect(new URL(withLocalePrefix('/authentication?error=service_unavailable'), websiteURL))
       }
       console.error('Auth callback unexpected error:', error)
     }
   }
 
-  // return the user to the authentication page
   return NextResponse.redirect(new URL(withLocalePrefix('/authentication'), websiteURL))
 }

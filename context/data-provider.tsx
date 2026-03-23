@@ -1019,42 +1019,37 @@ export const DataProvider: React.FC<{
       );
   }, [trades]);
 
-  const formattedTrades = useMemo(() => {
-    if (!Array.isArray(sortedTrades) || sortedTrades.length === 0) {
-      return [];
-    }
-
+  // Stable filter Sets - only recreate when filter inputs change (not on every trade change)
+  const filterSets = useMemo(() => {
     const hiddenGroupId = groups.find((group) => group.name === "Hidden Accounts")?.id;
     const hiddenAccountNumbers = hiddenGroupId
       ? new Set(
-        accounts
-          .filter((account) => account.groupId === hiddenGroupId)
-          .map((account) => account.number)
-      )
+          accounts
+            .filter((account) => account.groupId === hiddenGroupId)
+            .map((account) => account.number)
+        )
       : null;
 
-    const accountByNumber = new Map(accounts.map((account) => [account.number, account]));
     const instrumentFilterSet = instruments.length > 0 ? new Set(instruments) : null;
     const accountFilterSet = accountNumbers.length > 0 ? new Set(accountNumbers) : null;
     const tagFilterSet = tagFilter.tags.length > 0 ? new Set(tagFilter.tags) : null;
 
+    // Pre-calculate date filter values
     const fromDate = dateRange?.from ? startOfDay(dateRange.from) : null;
     const toDate = dateRange?.to ? endOfDay(dateRange.to) : null;
     const singleDayTimestamp =
       fromDate && toDate && fromDate.getTime() === startOfDay(toDate).getTime()
         ? fromDate.getTime()
         : null;
-
-    // Extract times to avoid redundant object parsing inside the filter loop
     const fromTime = fromDate?.getTime() ?? null;
     const toTime = toDate?.getTime() ?? null;
 
     // Pre-calculate account reset times
     const accountResetTimes = new Map<string, number>();
     for (const account of accounts) {
-        if (account.resetDate && account.shouldConsiderTradesBeforeReset === false) {
-            accountResetTimes.set(account.number, startOfDay(new Date(account.resetDate)).getTime());
-        }
+      if (account.resetDate && account.shouldConsiderTradesBeforeReset === false) {
+        accountResetTimes.set(account.number, startOfDay(new Date(account.resetDate)).getTime());
+      }
     }
 
     const tickFilterValue = tickFilter?.value
@@ -1064,8 +1059,6 @@ export const DataProvider: React.FC<{
       tickFilterValue !== null
         ? Object.keys(tickDetails).sort((first, second) => second.length - first.length)
         : [];
-
-    const timezoneName = timezone || "UTC";
 
     const hasFilters =
       Boolean(hiddenAccountNumbers) ||
@@ -1083,10 +1076,6 @@ export const DataProvider: React.FC<{
       tagFilterSet !== null ||
       accountResetTimes.size > 0;
 
-    if (!hasFilters) {
-      return sortedTrades;
-    }
-
     const requiresDate =
       fromTime !== null ||
       toTime !== null ||
@@ -1095,11 +1084,68 @@ export const DataProvider: React.FC<{
       hourFilter.hour !== null ||
       accountResetTimes.size > 0;
 
+    return {
+      hiddenAccountNumbers,
+      instrumentFilterSet,
+      accountFilterSet,
+      tagFilterSet,
+      fromTime,
+      toTime,
+      singleDayTimestamp,
+      accountResetTimes,
+      tickFilterValue,
+      sortedTickers,
+      hasFilters,
+      requiresDate,
+    };
+  }, [
+    groups,
+    accounts,
+    instruments,
+    accountNumbers,
+    dateRange?.from,
+    dateRange?.to,
+    pnlRange.min,
+    pnlRange.max,
+    tickFilter?.value,
+    tickDetails,
+    timeRange.range,
+    weekdayFilter.days,
+    hourFilter.hour,
+    tagFilter.tags,
+  ]);
+
+  // Formatted trades - uses pre-computed filter Sets, only recalculates when trades or filterSets change
+  const formattedTrades = useMemo(() => {
+    if (!Array.isArray(sortedTrades) || sortedTrades.length === 0) {
+      return [];
+    }
+
+    const {
+      hiddenAccountNumbers,
+      instrumentFilterSet,
+      accountFilterSet,
+      tagFilterSet,
+      fromTime,
+      toTime,
+      singleDayTimestamp,
+      accountResetTimes,
+      tickFilterValue,
+      sortedTickers,
+      hasFilters,
+      requiresDate,
+    } = filterSets;
+
+    if (!hasFilters) {
+      return sortedTrades;
+    }
+
+    const timezoneName = timezone || "UTC";
+
     return sortedTrades
       .filter((trade) => {
         if (hiddenAccountNumbers?.has(trade.accountNumber)) return false;
 
-        const tradeAccount = accountByNumber.get(trade.accountNumber);
         const rawDate = new Date(trade.entryDate);
         if (!isValid(rawDate)) return false;
 
@@ -1173,24 +1219,7 @@ export const DataProvider: React.FC<{
 
         return true;
       });
-  }, [
-    sortedTrades,
-    groups,
-    accounts,
-    instruments,
-    accountNumbers,
-    dateRange?.from,
-    dateRange?.to,
-    pnlRange.min,
-    pnlRange.max,
-    tickFilter?.value,
-    tickDetails,
-    timeRange.range,
-    weekdayFilter.days,
-    hourFilter.hour,
-    tagFilter.tags,
-    timezone,
-  ]);
+  }, [sortedTrades, filterSets, accounts, pnlRange.min, pnlRange.max, timezone]);
 
   const statistics = useMemo(() => {
     const stats = calculateStatistics(formattedTrades, accounts);

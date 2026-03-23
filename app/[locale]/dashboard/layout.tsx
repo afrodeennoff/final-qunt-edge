@@ -6,6 +6,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { DashboardProviders } from "@/components/providers/dashboard-providers";
 import { SidebarRootProviders } from "@/components/providers/root-providers";
 import { DashboardScrollReset } from "./components/dashboard-scroll-reset";
+import { ErrorBoundary } from "@/components/error-boundary";
 import dynamic from "next/dynamic";
 
 const DashboardSidebar = dynamic(
@@ -71,7 +72,9 @@ export default async function DashboardLayout({
               <div className="relative z-0 flex h-svh min-h-0 flex-col">
                 <DashboardHeader />
                 <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain pb-safe">
-                  <div className="min-h-full">{children}</div>
+                  <ErrorBoundary>
+                    <div className="min-h-full">{children}</div>
+                  </ErrorBoundary>
                 </main>
               </div>
             </SidebarInset>
