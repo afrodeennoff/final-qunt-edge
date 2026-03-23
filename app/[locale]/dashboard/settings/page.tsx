@@ -26,7 +26,6 @@ import {
   CreditCard,
   Database,
   LifeBuoy,
-  Palette,
   LogOut,
   Building2,
   Eye,
@@ -46,7 +45,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Slider } from "@/components/ui/slider"
 import { leaveTeam, getUserTeams } from './actions'
 import { toast } from "sonner"
 import {
@@ -62,7 +60,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { LinkedAccounts } from "@/components/linked-accounts"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
-import { cn } from "@/lib/utils"
 
 type Locale = 'en' | 'fr'
 type ThemeMode = 'light' | 'dark' | 'system'

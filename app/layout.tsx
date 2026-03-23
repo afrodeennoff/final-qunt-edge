@@ -150,7 +150,6 @@ export default async function RootLayout({
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
-      style={{ "--theme-intensity": "100%" } as React.CSSProperties}
     >
       <head>
         {/* Resource Hinting for Performance */}
@@ -177,62 +176,10 @@ export default async function RootLayout({
             (function() {
               try {
                 var root = document.documentElement;
-                var pathname = window.location.pathname || '/';
-                var isDashboardRoute = /^\\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\\/dashboard(?:\\/|$)/i.test(pathname);
-                var dashboardThemeClasses = [
-                  'dashboard-theme-blue',
-                  'dashboard-theme-violet',
-                  'dashboard-theme-emerald',
-                  'dashboard-theme-amber',
-                  'dashboard-theme-rose'
-                ];
-
-                var removeDashboardThemes = function() {
-                  root.classList.remove.apply(root.classList, dashboardThemeClasses);
-                  root.removeAttribute('data-dashboard-theme');
-                };
-
-                var clampIntensity = function(value) {
-                  var parsed = Number(value);
-                  return Number.isFinite(parsed)
-                    ? Math.min(100, Math.max(90, Math.round(parsed)))
-                    : 100;
-                };
-
-                var resolveTheme = function(savedTheme) {
-                  if (savedTheme === 'dark' || savedTheme === 'light') {
-                    return savedTheme;
-                  }
-                  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                };
-
-                var resolveDashboardTheme = function(value) {
-                  return value === 'violet' || value === 'emerald' || value === 'amber' || value === 'rose' ? value : 'blue';
-                };
-
-                if (!isDashboardRoute) {
-                  root.classList.remove('light', 'dark');
-                  root.classList.add('dark');
-                  root.style.setProperty('--theme-intensity', '100%');
-                  removeDashboardThemes();
-                  root.removeAttribute('data-theme');
-                  return;
-                }
-
-                var resolvedTheme = resolveTheme(localStorage.getItem('theme'));
+                var savedTheme = localStorage.getItem('theme');
+                var isDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 root.classList.remove('light', 'dark');
-                root.classList.add(resolvedTheme);
-
-                var intensity = clampIntensity(localStorage.getItem('intensity'));
-                root.style.setProperty('--theme-intensity', intensity + '%');
-
-                removeDashboardThemes();
-                var savedDashboardTheme = resolveDashboardTheme(localStorage.getItem('dashboard-theme'));
-                if (savedDashboardTheme !== 'blue') {
-                  root.classList.add('dashboard-theme-' + savedDashboardTheme);
-                  root.setAttribute('data-dashboard-theme', savedDashboardTheme);
-                }
-                root.removeAttribute('data-theme');
+                root.classList.add(isDark ? 'dark' : 'light');
               } catch (e) {
                 // Fail silently to avoid blocking render
               }

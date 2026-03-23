@@ -1,6 +1,6 @@
 'use client'
 
-import { Moon, Sun, Palette } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/context/theme-provider'
 import { Button } from './ui/button'
 import {
@@ -8,23 +8,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuSeparator,
 } from './ui/dropdown-menu'
-import { Slider } from './ui/slider'
 
 export function ThemeSwitcher() {
-  const { setTheme, setColorTheme, colorTheme, intensity, setIntensity } = useTheme()
-
-  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
-    setTheme(newTheme)
-  }
-
-  const handleColorThemeChange = (newColorTheme: 'default' | 'tiesen') => {
-    setColorTheme(newColorTheme)
-  }
+  const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
@@ -36,52 +23,16 @@ export function ThemeSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleThemeChange('light')}>
+        <DropdownMenuItem onClick={() => setTheme('light')}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleThemeChange('dark')}>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleThemeChange('system')}>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
           System
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <Palette className="mr-2 h-4 w-4" />
-            Color Theme
-          </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-            <DropdownMenuItem onClick={() => handleColorThemeChange('default')}>
-              <span className="mr-2 h-3 w-3 rounded-full bg-primary" />
-              Default (Gold)
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleColorThemeChange('tiesen')}>
-              <span className="mr-2 h-3 w-3 rounded-full bg-secondary" />
-              Tiesen (Purple)
-            </DropdownMenuItem>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Intensity</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <div className="p-4">
-              <Slider
-                value={[intensity]}
-                onValueChange={([value]) => setIntensity(value)}
-                min={90}
-                max={100}
-                step={1}
-                className="w-[200px]"
-              />
-              <div className="mt-2 text-sm text-muted-foreground">
-                {intensity}%
-              </div>
-            </div>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
       </DropdownMenuContent>
     </DropdownMenu>
   )
-} 
+}
