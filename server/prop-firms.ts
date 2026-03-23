@@ -70,3 +70,10 @@ export async function updatePropFirm(id: string, data: PropFirmUpdateInput) {
   updateTag('prop-firms')
   return result
 }
+
+export async function deletePropFirm(id: string) {
+  await assertAdminAccess()
+  const result = await prisma.propFirm.delete({ where: { id } })
+  updateTag('prop-firms')
+  return result
+}

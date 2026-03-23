@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { getI18n } from '@/locales/server'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getPropfirmCatalogueData } from './actions/get-propfirm-catalogue'
@@ -69,6 +70,7 @@ function formatCompactCurrency(value: number): string {
 
 function renderPropfirmCard(
   propfirmName: string,
+  slug: string,
   stat: PropfirmCatalogueStats,
   t: Translator
 ) {
@@ -80,7 +82,8 @@ function renderPropfirmCard(
   const refusedCount = stat.payouts.refusedCount
 
   return (
-    <Card key={propfirmName} className="h-full border-border/70 bg-card/90">
+    <Link key={propfirmName} href={`/firm/${slug}`} className="block group">
+    <Card className="h-full border-border/70 bg-card/90 transition-all duration-200 group-hover:border-border group-hover:shadow-lg group-hover:shadow-black/5">
       <CardHeader className="space-y-3 border-b border-border/70 pb-4">
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-2xl tracking-tight">{propfirmName}</CardTitle>
@@ -173,6 +176,7 @@ function renderPropfirmCard(
         </div>
       </CardContent>
     </Card>
+    </Link>
   )
 }
 
@@ -304,7 +308,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
 
         {/* Main propfirms grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedPropfirms.map(({ name, stats: dbStats }) => {
+          {sortedPropfirms.map(({ key, name, stats: dbStats }) => {
             const fallback: PropfirmCatalogueStats = {
               propfirmName: name,
               accountsCount: 0,
@@ -339,6 +343,7 @@ export default async function PropFirmsPage({ searchParams }: PropFirmsPageProps
 
             return renderPropfirmCard(
               name,
+              key,
               enrichedStats,
               t as unknown as Translator
             )

@@ -793,103 +793,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col items-start gap-4 lg:items-end">
-          <div className="flex items-center gap-3">
-            {socialLinks.website && (
-              <SocialIcon type="website" url={socialLinks.website} />
-            )}
-            {socialLinks.twitter && (
-              <SocialIcon type="twitter" url={socialLinks.twitter} />
-            )}
-            {socialLinks.discord && (
-              <SocialIcon type="discord" url={socialLinks.discord} />
-            )}
-            {socialLinks.telegram && (
-              <SocialIcon type="telegram" url={socialLinks.telegram} />
-            )}
-            {socialLinks.youtube && (
-              <SocialIcon type="youtube" url={socialLinks.youtube} />
-            )}
-          </div>
-          
-          {firm.referralUrl && (
-            <a
-              href={firm.referralUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
-            >
-              Visit Official Website
-              <ExternalLink className="h-4 w-4" />
-            </a>
-          )}
-        </div>
         
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Profit Split" value={firm.profitSplit ?? 'N/A'} />
-          <MetricCard label="Max Allocation" value={spotlightMaxAllocation} />
-          <MetricCard label="Drawdown Type" value={firm.drawdownType ?? 'N/A'} />
-          <MetricCard label="Active Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-  return (
-    <section className="relative overflow-hidden rounded-[34px] border border-white/10 bg-black/40 p-6 sm:p-8 lg:p-10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.2),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_36%)]" />
-      <div className="relative">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] border border-white/10 bg-white/[0.04] overflow-hidden shadow-lg shadow-black/20">
-              {firm.logoUrl ? (
-                <Image
-                  src={firm.logoUrl}
-                  alt={`${firm.name} logo`}
-                  width={72}
-                  height={72}
-                  className="object-contain p-2"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-v2-accent">
-                  {firmInitials(firm.name)}
-                </div>
-              )}
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <BadgeV2 variant={formatCategoryTone(firm.category)}>{firm.category}</BadgeV2>
-                <BadgeV2 variant="default">{firm.platform ?? 'Platform pending'}</BadgeV2>
-                {firm.payoutModel && (
-                  <BadgeV2 variant="default">{firm.payoutModel}</BadgeV2>
-                )}
-              </div>
-              
-              <h1 className="mt-3 text-4xl font-bold tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
-                {firm.name}
-              </h1>
-              
-              <p className="mt-3 max-w-2xl text-lg leading-8 text-white/70">
-                {firm.shortDesc ?? firm.description ?? 'Structured prop firm profile with reviews, coupons, and rule context.'}
-              </p>
-              
-              <div className="mt-4 flex items-center gap-4">
-                <StarRating rating={Math.round(averageRating)} size="lg" />
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-white">{averageRating.toFixed(1)}</span>
-                  <span className="text-sm text-white/50">/ 5.0</span>
-                </div>
-                <span className="text-sm text-white/50">
-                  ({totalReviews.toLocaleString()} {totalReviews === 1 ? 'review' : 'reviews'})
-                </span>
-              </div>
-            </div>
-          </div>
-
           <div className="flex flex-col items-start gap-4 lg:items-end">
             <div className="flex items-center gap-3">
               {socialLinks.website && (
@@ -921,20 +825,20 @@ function FirmHeader({ firm }: { firm: FirmData }) {
               </a>
             )}
           </div>
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Profit Split" value={firm.profitSplit ?? 'N/A'} />
-          <MetricCard label="Max Allocation" value={firm.maxAllocation ?? 'N/A'} />
-          <MetricCard label="Drawdown Type" value={firm.drawdownType ?? 'N/A'} />
-          <MetricCard label="Active Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
+          
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <MetricCard label="Profit Split" value={firm.profitSplit ?? 'N/A'} />
+            <MetricCard label="Max Allocation" value={spotlightMaxAllocation} />
+            <MetricCard label="Drawdown Type" value={firm.drawdownType ?? 'N/A'} />
+            <MetricCard label="Active Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
+          </div>
         </div>
       </div>
     </section>
   )
 }
 
-export function FirmDetailClient({ firm }: { firm: FirmData }) {
+ export function FirmDetailClient({ firm }: { firm: FirmData }) {
   const [activeTab, setActiveTab] = React.useState('overview')
 
   return (
