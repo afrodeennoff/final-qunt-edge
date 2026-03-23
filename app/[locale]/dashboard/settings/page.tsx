@@ -483,94 +483,29 @@ export default function SettingsPage() {
               <Label className="text-base font-medium">Theme</Label>
               <div className="mt-2 grid gap-3">
                 <div className="rounded-md border border-border/50 bg-background/30 p-3">
-                  <div className="mb-2 flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium">Dashboard palette</p>
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span className={cn('h-2.5 w-2.5 rounded-full', activeDashboardTheme.swatchClass)} />
-                      {activeDashboardTheme.label}
-                    </span>
-                  </div>
+                  <p className="mb-2 text-sm font-medium">Interface mode</p>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start">
-                        <Palette className="mr-2 h-4 w-4" />
-                        <span className="flex min-w-0 flex-col items-start text-left">
-                          <span className="truncate text-sm">{activeDashboardTheme.label}</span>
-                          <span className="truncate text-xs text-muted-foreground">{activeDashboardTheme.preview}</span>
-                        </span>
+                      <Button variant="outline" className="w-full justify-start sm:w-[200px]">
+                        {getThemeIcon(theme)}
+                        <span className="ml-2">{currentThemeLabel}</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[260px]">
-                      <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
-                        Palette presets
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup
-                        value={dashboardTheme}
-                        onValueChange={handleDashboardThemeChange}
-                        aria-label="Dashboard theme"
-                      >
-                        {dashboardThemeOptions.map((option) => (
-                          <DropdownMenuRadioItem
-                            key={option.value}
-                            value={option.value}
-                            className="items-start py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                            aria-label={`${option.label} theme`}
-                          >
-                            <div className="flex min-w-0 items-start gap-2">
-                              <span className={cn('mt-0.5 h-3 w-3 shrink-0 rounded-full', option.swatchClass)} />
-                              <span className="min-w-0">
-                                <span className="block truncate text-sm">{option.label}</span>
-                                <span className="block truncate text-xs text-muted-foreground">{option.preview}</span>
-                              </span>
-                            </div>
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => handleThemeChange("light")}>
+                        <Sun className="mr-2 h-4 w-4" />
+                        <span>Light</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
+                        <Moon className="mr-2 h-4 w-4" />
+                        <span>Dark</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleThemeChange("system")}>
+                        <Laptop className="mr-2 h-4 w-4" />
+                        <span>System</span>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </div>
-                <div className="rounded-md border border-border/50 bg-background/30 p-3">
-                  <p className="mb-2 text-sm font-medium">Interface mode</p>
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start sm:w-[200px]">
-                          {getThemeIcon(theme)}
-                          <span className="ml-2">{currentThemeLabel}</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
-                          <Sun className="mr-2 h-4 w-4" />
-                          <span>Light</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
-                          <Moon className="mr-2 h-4 w-4" />
-                          <span>Dark</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleThemeChange("system")}>
-                          <Laptop className="mr-2 h-4 w-4" />
-                          <span>System</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <div className="flex-1">
-                      <Label className="text-sm">Theme Intensity</Label>
-                      <div className="mt-2 flex items-center gap-4">
-                        <Slider
-                          value={[intensity]}
-                          onValueChange={([value]) => setIntensity(value)}
-                          min={90}
-                          max={100}
-                          step={1}
-                          className="flex-1"
-                          aria-label="Theme intensity"
-                        />
-                        <span className="w-12 text-sm text-muted-foreground">{intensity}%</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
