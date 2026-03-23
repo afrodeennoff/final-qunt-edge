@@ -56,6 +56,10 @@ const PnLPerContractDailyChart = dynamic(
   () => import('../components/charts/pnl-per-contract-daily'),
   { ssr: false, loading: () => widgetFallback }
 )
+const ContractQuantityChart = dynamic(
+  () => import('../components/charts/contract-quantity'),
+  { ssr: false, loading: () => widgetFallback }
+)
 const AveragePositionTimeCard = dynamic(
   () => import('../components/statistics/average-position-time-card'),
   { ssr: false, loading: () => widgetFallback }
@@ -781,6 +785,15 @@ export const WIDGET_REGISTRY: Record<WidgetType, WidgetConfig> = {
     previewHeight: 300,
     getComponent: ({ size }) => <RiskMetricsWidget size={size} />,
     getPreview: () => <RiskMetricsWidget size="small" />
+  },
+  contractQuantity: {
+    type: 'contractQuantity',
+    defaultSize: 'medium',
+    allowedSizes: ['small', 'small-long', 'medium', 'large'],
+    category: 'charts',
+    previewHeight: 300,
+    getComponent: ({ size }) => <ContractQuantityChart size={size} />,
+    getPreview: () => <ContractQuantityChart size="small" />
   },
   // marketChart: {
   //   type: 'marketChart',

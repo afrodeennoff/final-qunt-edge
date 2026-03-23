@@ -1,8 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import type { AiFeature } from "@/lib/ai/policy";
 import { getAiPolicy } from "@/lib/ai/policy";
-import { getEnv } from "@/lib/env";
-import { cacheAiResponse, setAiResponseCache } from "@/lib/ai/cache";
+import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "@/lib/ai/cache";
 
 const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
 const aiApiKey = process.env.OPENROUTER_API_KEY;
@@ -76,6 +75,9 @@ export function getAiLanguageModel(feature: AiFeature) {
     }
   });
 }
+
+// Cache statistics export
+export { getAiCacheStats, resetAiCacheStats };
 
 export function getAiLanguageModelById(modelId: string) {
   return aiClient(normalizeModelForOpenRouter(modelId));

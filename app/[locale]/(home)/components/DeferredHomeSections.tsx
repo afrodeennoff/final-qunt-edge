@@ -32,10 +32,10 @@ export default function DeferredHomeSections({ locale }: { locale: string }) {
       <ComparisonSection />
       <DealsPreview locale={locale} />
       <LeaderboardPreview locale={locale} />
-      <UserReviews locale={locale} />
+      <UserReviews />
       <FeaturedFirms locale={locale} />
       <PricingSection />
-      <FAQSection locale={locale} />
+      <FAQSection />
       <CTA />
       <Footer />
     </>

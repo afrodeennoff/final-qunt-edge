@@ -43,7 +43,7 @@ export default function HowItWorks() {
                whileInView={{ width: '100%' }}
                viewport={{ once: true }}
                transition={{ duration: 1.5, ease: "easeInOut" }}
-               className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-[hsl(var(--brand-primary)/0.35)] to-[hsl(var(--mk-border)/0.34)]"
+               className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-[hsl(var(--primary)/0.35)] to-[hsl(var(--mk-border)/0.34)]"
              />
           </div>
 

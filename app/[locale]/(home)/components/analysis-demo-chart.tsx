@@ -110,7 +110,7 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
           cursor={{ stroke: 'hsl(var(--mk-border)/0.78)' }}
           content={<AnalysisChartTooltip />}
         />
-        <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.34} barSize={8} />
+        <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--chart-1))" opacity={0.34} barSize={8} />
         <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#chartArea)" tooltipType="none" />
         <Line yAxisId="price" dataKey="price" dot={false} stroke="hsl(var(--foreground))" strokeWidth={2} />
         <Line yAxisId="price" dataKey="ema" dot={false} stroke="hsl(var(--foreground)/0.62)" strokeDasharray="6 4" strokeWidth={1.5} />

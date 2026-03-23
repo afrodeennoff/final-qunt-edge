@@ -122,7 +122,7 @@ function TopBanner({ t }: { t: I18nFn }) {
           <div className="ml-auto flex items-center gap-2">
             <LanguageSelector languages={languages} />
             <Link href={`/${locale}/authentication`}>
-              <Button size="sm" className="h-10 rounded-full bg-[hsl(var(--brand-primary))] px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--brand-ink))] hover:bg-[hsl(var(--brand-primary)/0.9)]">
+              <Button size="sm" className="h-10 rounded-full bg-[hsl(var(--primary))] px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary)/0.9)]">
                 {t('shared.createAccount')}
               </Button>
             </Link>

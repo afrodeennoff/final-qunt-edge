@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { ArrowRight, Trophy, Flame, TrendingUp, Users } from 'lucide-react'
+import { ArrowRight, Trophy, Flame, Users } from 'lucide-react'
 
 interface LeaderboardEntry {
   rank: number

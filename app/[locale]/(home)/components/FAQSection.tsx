@@ -12,7 +12,7 @@ interface FAQItem {
 }
 
 interface FAQSectionProps {
-  locale: string
+  // Reserved for future i18n support
 }
 
 const faqs: FAQItem[] = [

@@ -120,17 +120,10 @@
   --brand-warm: var(--accent);
   --brand-ink: var(--foreground);
   --brand-soft-ink: var(--foreground);
-  --mk-bg-0: var(--background);
-  --mk-bg-1: var(--background);
-  --mk-bg-2: var(--card);
-  --mk-surface: var(--card);
-  --mk-surface-muted: var(--muted);
-  --mk-border: var(--border);
-  --mk-text: var(--foreground);
-  --mk-text-muted: var(--muted-foreground);
   --accent-luxury: var(--primary);
   --accent-rose: var(--accent);
   --accent-bronze: var(--accent);
+  /* mk-* tokens are defined in styles/tokens.css (extended token file) */
 }
 
 .dark {
@@ -203,17 +196,10 @@
   --brand-warm: var(--accent);
   --brand-ink: var(--foreground);
   --brand-soft-ink: var(--foreground);
-  --mk-bg-0: var(--background);
-  --mk-bg-1: var(--background);
-  --mk-bg-2: var(--card);
-  --mk-surface: var(--card);
-  --mk-surface-muted: var(--muted);
-  --mk-border: var(--border);
-  --mk-text: var(--foreground);
-  --mk-text-muted: var(--muted-foreground);
   --accent-luxury: var(--primary);
   --accent-rose: var(--accent);
   --accent-bronze: var(--accent);
+  /* mk-* tokens are defined in styles/tokens.css (extended token file) */
 }
 
 @theme inline {

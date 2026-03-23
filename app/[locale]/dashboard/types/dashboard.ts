@@ -31,6 +31,7 @@ export type WidgetType =
   | 'riskMetrics'
   | 'propFirmCatalogue'
   | 'smartInsights'
+  | 'contractQuantity'
 export type WidgetSize = 'tiny' | 'small' | 'small-long' | 'medium' | 'large' | 'extra-large'
 
 export interface LayoutItem {

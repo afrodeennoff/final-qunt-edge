@@ -82,4 +82,8 @@ export const WIDGET_METADATA: Record<WidgetType, WidgetMetadata> = {
     defaultSize: "medium",
     allowedSizes: ["small", "small-long", "medium", "large"],
   },
+  contractQuantity: {
+    defaultSize: "medium",
+    allowedSizes: ["small", "small-long", "medium", "large"],
+  },
 };

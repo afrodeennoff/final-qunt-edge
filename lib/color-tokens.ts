@@ -1,7 +1,7 @@
 /**
- * Centralized Color Token System - LUXURY EDITION
+ * Centralized Color Token System - UNIFIED (V2)
  * Provides semantic color utilities and type-safe token access
- * Premium palette: Champagne Gold, Rose Gold, Deep Obsidian
+ * Values aligned with globals.css :root/.dark theme
  */
 
 export type ColorToken = keyof typeof colorTokens;
@@ -17,14 +17,19 @@ export const colorTokens = {
     highlight: '240 4% 12%',
   },
   accent: {
-    luxury: '35 40% 85%',
-    luxuryHover: '35 38% 78%',
-    luxuryActive: '35 36% 72%',
-    luxurySubtle: '35 40% 85% / 0.1',
-    luxuryGlow: '35 40% 85% / 0.2',
-    rose: '350 30% 75%',
-    roseHover: '350 28% 70%',
-    bronze: '30 45% 55%',
+    primary: '222 84% 58%',
+    primaryHover: '222 84% 52%',
+    primaryActive: '222 84% 46%',
+    primarySubtle: '222 84% 58% / 0.1',
+    primaryGlow: '222 84% 58% / 0.2',
+    // Legacy aliases
+    luxury: '222 84% 58%',
+    luxuryHover: '222 84% 52%',
+    luxuryActive: '222 84% 46%',
+    luxurySubtle: '222 84% 58% / 0.1',
+    luxuryGlow: '222 84% 58% / 0.2',
+    rose: '222 68% 66%',
+    bronze: '222 60% 56%',
   },
   neutral: {
     50: '240 5% 96%',
@@ -40,44 +45,44 @@ export const colorTokens = {
     950: '240 8% 1.5%',
   },
   foreground: {
-    primary: '35 15% 92%',
-    secondary: '35 10% 65%',
-    tertiary: '35 10% 50%',
-    muted: '35 10% 40%',
-    disabled: '35 8% 28%',
+    primary: '220 15% 92%',
+    secondary: '220 10% 65%',
+    tertiary: '220 10% 50%',
+    muted: '220 10% 40%',
+    disabled: '220 8% 28%',
   },
   border: {
-    default: '35 18% 18%',
-    subtle: '35 15% 14%',
-    strong: '35 20% 22%',
-    focus: '35 40% 85%',
-    error: '0 40% 35%',
+    default: '220 18% 18%',
+    subtle: '220 15% 14%',
+    strong: '220 20% 22%',
+    focus: '222 84% 58%',
+    error: '0 84% 60%',
     warning: '35 60% 50%',
-    success: '35 40% 85%',
+    success: '222 84% 58%',
   },
   semantic: {
-    success: { fg: '35 15% 92%', bg: '35 40% 85% / 0.1', border: '35 40% 85% / 0.2' },
+    success: { fg: '220 15% 92%', bg: '222 84% 58% / 0.1', border: '222 84% 58% / 0.2' },
     warning: { fg: '35 15% 8%', bg: '35 60% 50% / 0.1', border: '35 60% 50% / 0.16' },
-    error: { fg: '35 15% 92%', bg: '0 40% 35% / 0.1', border: '0 40% 35% / 0.16' },
-    info: { fg: '35 15% 8%', bg: '35 25% 70% / 0.1', border: '35 25% 70% / 0.18' },
+    error: { fg: '0 15% 92%', bg: '0 84% 60% / 0.1', border: '0 84% 60% / 0.16' },
+    info: { fg: '220 15% 8%', bg: '220 68% 66% / 0.1', border: '220 68% 66% / 0.18' },
     // Back-compat aliases
-    errorBg: '0 40% 35% / 0.12',
+    errorBg: '0 84% 60% / 0.12',
     warningBg: '35 60% 50% / 0.1',
-    successBg: '35 40% 85% / 0.1',
-    infoBg: '35 25% 70% / 0.1',
+    successBg: '222 84% 58% / 0.1',
+    infoBg: '220 68% 66% / 0.1',
   },
   chart: {
-    positive: '35 40% 85%',
-    negative: '0 40% 35%',
-    neutral: '35 10% 50%',
-    c1: '35 40% 85%',
-    c2: '35 30% 72%',
-    c3: '35 25% 58%',
-    c4: '350 30% 75%',
-    c5: '30 45% 55%',
-    c6: '35 15% 35%',
-    c7: '35 12% 25%',
-    c8: '35 10% 15%',
+    positive: '222 84% 58%',
+    negative: '0 84% 60%',
+    neutral: '220 10% 50%',
+    c1: '221 84% 58%',
+    c2: '194 64% 63%',
+    c3: '111 72% 78%',
+    c4: '170 60% 56%',
+    c5: '29 80% 56%',
+    c6: '220 24% 70%',
+    c7: '220 18% 58%',
+    c8: '220 14% 46%',
   },
 } as const;
 
@@ -120,10 +125,10 @@ export function getChartColor(isPositive: boolean | null): string {
 
 export function getAccentColor(variant: 'primary' | 'hover' | 'active' | 'subtle' = 'primary'): string {
   const colors = {
-    primary: colorTokens.accent.luxury,
-    hover: colorTokens.accent.luxuryHover,
-    active: colorTokens.accent.luxuryActive,
-    subtle: colorTokens.accent.luxurySubtle,
+    primary: colorTokens.accent.primary,
+    hover: colorTokens.accent.primaryHover,
+    active: colorTokens.accent.primaryActive,
+    subtle: colorTokens.accent.primarySubtle,
   };
   return `hsl(${colors[variant]})`;
 }
@@ -159,7 +164,7 @@ export function calculateContrastRatio(foreground: string, background: string): 
 
     const [r, g, b] = rgb.map(Number).map((v) => {
       const sRGB = v / 255;
-      return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+      return sRGB <= 0.03928 ? sRGB / 1.992 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
     });
 
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;

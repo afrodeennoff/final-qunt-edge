@@ -13,7 +13,6 @@ interface Review {
 }
 
 interface UserReviewsProps {
-  locale: string
   reviews?: Review[]
 }
 
@@ -94,7 +93,7 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-export default function UserReviews(_props: UserReviewsProps) {
+export default function UserReviews({ reviews }: UserReviewsProps) {
   const displayReviews = reviews && reviews.length > 0 ? reviews : fallbackReviews
 
   return (

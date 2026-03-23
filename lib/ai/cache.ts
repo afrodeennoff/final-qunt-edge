@@ -1,5 +1,4 @@
 import { isRedisConfigured, getRedisJson, setRedisJson } from "@/lib/redis-client";
-import { getEnv } from "@/lib/env";
 
 // Simple hash function for caching keys
 function hashString(str: string): string {
@@ -23,6 +22,16 @@ function stableStringify(obj: unknown): string {
 // In-memory cache fallback
 const inMemoryCache = new Map<string, { value: unknown; expiresAt: number }>();
 const CACHE_SWEEP_INTERVAL_MS = 60_000; // 1 minute
+
+// Cache statistics
+const cacheStats = {
+  hits: 0,
+  misses: 0,
+  redisHits: 0,
+  memoryHits: 0,
+  sets: 0,
+  errors: 0
+};
 
 // Clean up expired entries periodically
 setInterval(() => {
@@ -52,6 +61,22 @@ function setInMemoryCache<T>(key: string, value: T, ttlSeconds: number): void {
 }
 
 /**
+ * Get cache statistics
+ */
+export function getAiCacheStats() {
+  return { ...cacheStats };
+}
+
+/**
+ * Reset cache statistics
+ */
+export function resetAiCacheStats() {
+  Object.keys(cacheStats).forEach(key => {
+    cacheStats[key as keyof typeof cacheStats] = 0;
+  });
+}
+
+/**
  * Cache AI responses to reduce API calls and improve performance
  * @param feature The AI feature (chat, editor, etc.)
  * @param options The options passed to the AI model (messages, parameters, etc.)
@@ -63,8 +88,6 @@ export async function cacheAiResponse<T>(
   options: unknown,
   ttlSeconds: number = 300
 ): Promise<T | null> {
-  const env = getEnv();
-  
   // Generate cache key
   const optionsStr = stableStringify(options);
   const cacheKey = `ai:${feature}:${hashString(optionsStr)}`;
@@ -74,19 +97,25 @@ export async function cacheAiResponse<T>(
     try {
       const cached = await getRedisJson<T>(cacheKey, cacheKey);
       if (cached !== null) {
+        cacheStats.hits++;
+        cacheStats.redisHits++;
         return cached;
       }
     } catch (error) {
       console.warn('[AI Cache] Redis GET failed, falling back to in-memory cache', { error });
+      cacheStats.errors++;
     }
   }
   
   // Fallback to in-memory cache
   const cached = getFromInMemoryCache<T>(cacheKey);
   if (cached !== null) {
+    cacheStats.hits++;
+    cacheStats.memoryHits++;
     return cached;
   }
   
+  cacheStats.misses++;
   return null;
 }
 
@@ -103,8 +132,6 @@ export async function setAiResponseCache<T>(
   result: T,
   ttlSeconds: number = 300
 ): Promise<void> {
-  const env = getEnv();
-  
   // Generate cache key
   const optionsStr = stableStringify(options);
   const cacheKey = `ai:${feature}:${hashString(optionsStr)}`;
@@ -113,8 +140,10 @@ export async function setAiResponseCache<T>(
   if (isRedisConfigured()) {
     try {
       await setRedisJson(cacheKey, cacheKey, result, ttlSeconds);
+      cacheStats.sets++;
     } catch (error) {
       console.warn('[AI Cache] Redis SET failed, falling back to in-memory cache', { error });
+      cacheStats.errors++;
     }
   }
   

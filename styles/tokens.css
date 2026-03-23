@@ -1,55 +1,14 @@
 /**
- * Centralized Design Token System - LUXURY EDITION
- * Replaces CDN-based Tailwind approach with token-based architecture
- * Premium color palette: Champagne Gold, Rose Gold, Deep Obsidian
- * All colors use HSL format for consistency and theme support
+ * Extended Design Token System - UNIFIED
+ * Canonical tokens live in app/globals.css (:root/.dark).
+ * This file provides extended tokens (marketing, glass, spacing, etc.)
+ * that globals.css does not define.
+ *
+ * DO NOT redefine --background, --foreground, --primary, etc. here.
  */
 
 @layer base {
   :root {
-    /* ===== LUXURY PRIMARY ACCENT - CHAMPAGNE GOLD ===== */
-    /* Primary accent - elegant champagne gold (#F5E6D3 / #E8D4B8) */
-    --accent-luxury: 35 40% 85%;
-    --accent-luxury-hover: 35 38% 78%;
-    --accent-luxury-active: 35 36% 72%;
-    --accent-luxury-subtle: 35 40% 85% / 0.12;
-    --accent-luxury-glow: 35 40% 85% / 0.25;
-    
-    /* Secondary accent - Rose Gold (#B76E79 / #E8C4C4) */
-    --accent-rose: 350 30% 75%;
-    --accent-rose-hover: 350 28% 70%;
-    --accent-rose-active: 350 25% 65%;
-    --accent-rose-subtle: 350 30% 75% / 0.1;
-    
-    /* Tertiary - Bronze (#CD7F32 variant) */
-    --accent-bronze: 30 45% 55%;
-    --accent-bronze-hover: 30 42% 50%;
-    
-    /* ===== CANONICAL APP SEMANTIC TOKENS ===== */
-    /* Rich obsidian backgrounds with warm undertones */
-    --background: 240 8% 2%;
-    --foreground: 35 15% 92%;
-    --card: 240 6% 4%;
-    --card-foreground: 35 15% 92%;
-    --popover: 240 5% 3%;
-    --popover-foreground: 35 15% 92%;
-    --primary: 35 40% 85%;
-    --primary-foreground: 240 8% 8%;
-    --secondary: 240 4% 12%;
-    --secondary-foreground: 35 15% 88%;
-    --muted: 240 4% 10%;
-    --muted-foreground: 35 10% 60%;
-    --accent: 35 35% 15%;
-    --accent-foreground: 35 40% 85%;
-    --destructive: 0 40% 25%;
-    --destructive-foreground: 35 40% 85%;
-    --success: 150 30% 40%;
-    --success-foreground: 35 15% 92%;
-    --input: 240 4% 16%;
-    --border: 35 20% 20%;
-    --ring: 35 40% 85%;
-    --radius: 0.5rem;
-
     /* ===== UI ALLOCATION TOKENS (60/30/10) ===== */
     --ui-60-bg: var(--background);
     --ui-60-surface: var(--card);
@@ -60,66 +19,148 @@
     --ui-10-accent: var(--primary);
     --ui-10-accent-fg: var(--primary-foreground);
 
-    /* ===== LUXURY SIDEBAR - Deep obsidian with gold accents ===== */
-    --sidebar-background: 240 6% 2%;
-    --sidebar-foreground: 35 15% 88%;
-    --sidebar-primary: 35 40% 85%;
-    --sidebar-primary-foreground: 240 8% 8%;
-    --sidebar-accent: 35 25% 12%;
-    --sidebar-accent-foreground: 35 40% 85%;
-    --sidebar-border: 35 20% 15%;
-    --sidebar-ring: 35 40% 85%;
+    /* ===== MARKETING SURFACE TOKENS ===== */
+    --mk-bg-0: 240 6% 1%;
+    --mk-bg-1: 240 6% 2%;
+    --mk-bg-2: 240 5% 3%;
+    --mk-surface: 240 5% 4%;
+    --mk-surface-muted: 240 4% 6%;
+    --mk-border: 220 20% 30%;
+    --mk-text: 220 15% 92%;
+    --mk-text-muted: 220 12% 72%;
 
-    /* ===== CHART COLORS - Luxury monotone with gold/rose accents ===== */
-    --chart-1: 35 40% 85%;
-    --chart-2: 35 30% 70%;
-    --chart-3: 35 25% 55%;
-    --chart-4: 350 30% 75%;
-    --chart-5: 30 45% 55%;
-    --chart-6: 220 12% 66%;
-    --chart-7: 220 11% 56%;
-    --chart-8: 220 10% 46%;
-    --chart-loss: 0 40% 25%;
-    --chart-win: 35 40% 85%;
-    --chart-grid: 35 15% 18%;
-    --chart-axis: 35 10% 55%;
-    --chart-tooltip: 240 6% 4%;
-    --chart-tooltip-border: 35 20% 20%;
+    /* ===== BACKGROUND HIERARCHY (7 levels) ===== */
+    --bg-base: 240 8% 1.5%;
+    --bg-elevated: 240 6% 3%;
+    --bg-card: 240 6% 4.5%;
+    --bg-card-hover: 240 5% 6%;
+    --bg-overlay: 240 5% 8%;
+    --bg-modal: 240 4% 10%;
+    --bg-highlight: 240 4% 12%;
 
-    /* ===== LUXURY PRECISION PANEL ===== */
-    --precision-cobalt: 35 40% 85%;
-    --precision-cobalt-rgb: 245 230 211;
-    --accent-neutral-rgb: 245 230 211;
-    --rose-500-rgb: 183 110 121;
+    /* ===== PRIMARY ACCENT (maps to --primary) ===== */
+    --accent-neutral: var(--primary);
+    --accent-neutral-hover: var(--primary);
+    --accent-neutral-active: var(--primary);
+    --accent-neutral-subtle: var(--primary) / 0.1;
+    --accent-neutral-glow: var(--primary) / 0.2;
+    --accent-neutral-rgb: 130 160 255;
+
+    /* ===== PRECISION PANEL (maps to --primary) ===== */
+    --precision-cobalt: var(--primary);
+    --precision-cobalt-rgb: 130 160 255;
     --precision-panel: 240 6% 2%;
     --precision-panel-elevated: 240 6% 4%;
-    --precision-panel-line: 35 20% 18%;
-    --precision-panel-inner: 35 40% 85%;
+    --precision-panel-line: 220 20% 18%;
+    --precision-panel-inner: var(--primary);
 
-    /* ===== OPTIMIZATION PASS: SEMANTIC CORE TOKENS ===== */
-    --bg: var(--background);
-    --surface-1: var(--card);
-    --surface-2: var(--popover);
+    /* ===== BRAND TOKENS (maps to semantic) ===== */
+    --brand-primary: var(--primary);
+    --brand-primary-strong: var(--primary);
+    --brand-secondary: var(--chart-1);
+    --brand-warm: var(--chart-5);
+    --brand-ink: var(--foreground);
+    --brand-soft-ink: var(--muted-foreground);
+
+    /* ===== FOREGROUND EXTENSIONS ===== */
+    --fg-primary: var(--foreground);
+    --fg-secondary: var(--muted-foreground);
+    --fg-tertiary: var(--muted-foreground);
+    --fg-muted: var(--muted-foreground);
+    --fg-disabled: var(--muted-foreground);
+
+    /* ===== BORDER EXTENSIONS ===== */
+    --border-default: var(--border);
+    --border-subtle: var(--border);
+    --border-strong: var(--border);
+    --border-focus: var(--ring);
+    --border-error: var(--destructive);
+    --border-warning: 35 60% 50%;
+    --border-success: var(--primary);
+    --border-muted: var(--border);
+
+    /* ===== GLASSMORPHISM TOKENS ===== */
+    --glass-bg: var(--bg-elevated) / 0.65;
+    --glass-bg-strong: var(--bg-card) / 0.85;
+    --glass-bg-subtle: var(--bg-base) / 0.45;
+    --glass-blur: blur(20px);
+    --glass-blur-strong: blur(40px);
+    --glass-border: 255 255 255 / 0.08;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+    /* ===== INTERACTIVE STATES ===== */
+    --hover-overlay: 255 255 255 / 0.06;
+    --hover-accent: var(--primary) / 0.12;
+    --active-overlay: 255 255 255 / 0.1;
+    --focus-ring: var(--ring) / 0.6;
+    --focus-ring-offset: 0 0 0 2px var(--bg-base);
+
+    /* ===== SEMANTIC COLORS ===== */
+    --color-error: var(--destructive);
+    --color-error-bg: var(--destructive) / 0.12;
+    --color-warning: 35 60% 50%;
+    --color-warning-bg: 35 60% 50% / 0.1;
+    --color-success: var(--primary);
+    --color-success-bg: var(--primary) / 0.1;
+    --color-info: 220 25% 70%;
+    --color-info-bg: 220 25% 70% / 0.1;
+
+    /* ===== SEMANTIC TOKENS (for tailwind.config) ===== */
+    --semantic-success: var(--primary);
+    --semantic-success-fg: var(--primary-foreground);
+    --semantic-success-bg: var(--primary) / 0.08;
+    --semantic-success-border: var(--primary) / 0.2;
+    --semantic-warning: 35 60% 55%;
+    --semantic-warning-fg: 35 15% 8%;
+    --semantic-warning-bg: 35 60% 55% / 0.06;
+    --semantic-warning-border: 35 60% 55% / 0.16;
+    --semantic-error: var(--destructive);
+    --semantic-error-fg: var(--destructive-foreground);
+    --semantic-error-bg: var(--destructive) / 0.08;
+    --semantic-error-border: var(--destructive) / 0.16;
+    --semantic-info: 220 25% 70%;
+    --semantic-info-fg: 220 15% 8%;
+    --semantic-info-bg: 220 25% 70% / 0.07;
+    --semantic-info-border: 220 25% 70% / 0.18;
+
+    /* ===== CONTRAST-COMPLIANT TEXT TOKENS ===== */
     --text-primary: var(--foreground);
     --text-secondary: var(--muted-foreground);
-    --accent-1: var(--primary);
-    --accent-2: var(--secondary);
-    --success: var(--primary);
-    --warning: var(--accent-bronze);
-    --danger: var(--destructive);
+    --text-tertiary: var(--muted-foreground);
+    --text-disabled: var(--muted-foreground);
+
+    /* ===== SURFACE TOKENS ===== */
+    --surface-subtle: 0 0% 100% / 0.05;
+    --surface-subtle-hover: 255 255 255 / 0.08;
+    --surface-subtle-active: 255 255 255 / 0.12;
+    --surface-muted: 255 255 255 / 0.08;
+    --surface-muted-hover: 255 255 255 / 0.12;
+    --surface-elevated: 255 255 255 / 0.02;
+    --surface-elevated-hover: 255 255 255 / 0.05;
+
+    /* ===== CHART EXTENSIONS ===== */
+    --chart-positive: var(--primary);
+    --chart-negative: var(--destructive);
+    --chart-neutral: var(--muted-foreground);
+    --chart-grid: 220 15% 18%;
+    --chart-axis: 220 10% 55%;
+    --chart-tooltip: 240 6% 4%;
+    --chart-tooltip-border: 220 20% 20%;
+    --chart-loss: var(--destructive);
+    --chart-win: var(--primary);
 
     /* ===== 4PX RHYTHM SPACING SCALE ===== */
-    --space-1: 0.25rem;  /* 4px */
-    --space-2: 0.5rem;   /* 8px */
-    --space-3: 0.75rem;  /* 12px */
-    --space-4: 1rem;     /* 16px */
-    --space-5: 1.25rem;  /* 20px */
-    --space-6: 1.5rem;   /* 24px */
-    --space-8: 2rem;     /* 32px */
-    --space-10: 2.5rem;  /* 40px */
-    --space-12: 3rem;    /* 48px */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
 
-    /* ===== PRODUCT TYPO SCALE (5 LEVELS) ===== */
+    /* ===== PRODUCT TYPO SCALE ===== */
     --type-xs: 0.75rem;
     --type-sm: 0.875rem;
     --type-md: 1rem;
@@ -134,152 +175,6 @@
     --shadow-md: 0 8px 18px -12px rgb(0 0 0 / 0.55);
     --shadow-lg: 0 18px 28px -16px rgb(0 0 0 / 0.7);
 
-    /* ===== GLOBAL BRAND COLORS - Luxury Champagne Gold & Rose Gold ===== */
-    --brand-primary: 35 40% 85%;
-    --brand-primary-strong: 35 38% 78%;
-    --brand-secondary: 350 30% 75%;
-    --brand-warm: 30 45% 55%;
-    --brand-ink: 35 15% 8%;
-    --brand-soft-ink: 35 12% 15%;
-
-    /* ===== MARKETING SURFACE TOKENS - Rich luxury surfaces ===== */
-    --mk-bg-0: 240 6% 1%;
-    --mk-bg-1: 240 6% 2%;
-    --mk-bg-2: 240 5% 3%;
-    --mk-surface: 240 5% 4%;
-    --mk-surface-muted: 240 4% 6%;
-    --mk-border: 35 20% 30%;
-    --mk-text: 35 15% 92%;
-    --mk-text-muted: 35 12% 72%;
-
-    /* ===== BACKGROUND HIERARCHY (7 levels) - Luxury obsidian depths ===== */
-    /* Semantic background tokens from darkest to lightest */
-    --bg-base: 240 8% 1.5%;
-    --bg-elevated: 240 6% 3%;
-    --bg-card: 240 6% 4.5%;
-    --bg-card-hover: 240 5% 6%;
-    --bg-overlay: 240 5% 8%;
-    --bg-modal: 240 4% 10%;
-    --bg-highlight: 240 4% 12%;
-
-    /* ===== PRIMARY ACCENT (Luxury Champagne Gold: #F5E6D3) ===== */
-    --accent-neutral: 35 40% 85%;
-    --accent-neutral-hover: 35 38% 78%;
-    --accent-neutral-active: 35 36% 72%;
-    --accent-neutral-subtle: 35 40% 85% / 0.1;
-    --accent-neutral-glow: 35 40% 85% / 0.2;
-
-    /* ===== NEUTRAL PALETTE (Zinc scale) ===== */
-    --neutral-50: 240 5% 96%;
-    --neutral-100: 240 5% 90%;
-    --neutral-200: 240 4% 80%;
-    --neutral-300: 240 4% 70%;
-    --neutral-400: 240 4% 60%;
-    --neutral-500: 240 5% 50%;
-    --neutral-600: 240 5% 40%;
-    --neutral-700: 240 5% 30%;
-    --neutral-800: 240 4% 20%;
-    --neutral-900: 240 6% 10%;
-    --neutral-950: 240 10% 3.9%;
-
-    /* ===== FOREGROUND COLORS - Warm luxury tones ===== */
-    --fg-primary: 35 15% 92%;
-    --fg-secondary: 35 10% 65%;
-    --fg-tertiary: 35 10% 50%;
-    --fg-muted: 35 10% 40%;
-    --fg-disabled: 35 8% 28%;
-
-    /* ===== BORDER COLORS - Subtle gold/bronze hints ===== */
-    --border-default: 35 18% 18%;
-    --border-subtle: 35 15% 14%;
-    --border-strong: 35 20% 22%;
-    --border-focus: var(--accent-neutral);
-    --border-error: 0 40% 35%;
-    --border-warning: 35 60% 50%;
-    --border-success: var(--accent-neutral);
-
-    /* ===== GLASSMORPHISM TOKENS - Luxury gold-tinted glass ===== */
-    --glass-bg: var(--bg-elevated) / 0.65;
-    --glass-bg-strong: var(--bg-card) / 0.85;
-    --glass-bg-subtle: var(--bg-base) / 0.45;
-    --glass-blur: blur(20px);
-    --glass-blur-strong: blur(40px);
-    --glass-border: 245 230 211 / 0.08;
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-
-    /* ===== INTERACTIVE STATES - Gold accent hover/active ===== */
-    --hover-overlay: 245 230 211 / 0.06;
-    --hover-accent: var(--accent-neutral) / 0.12;
-    --active-overlay: 245 230 211 / 0.1;
-    --focus-ring: var(--accent-neutral) / 0.6;
-    --focus-ring-offset: 0 0 0 2px var(--bg-base);
-
-    /* ===== SEMANTIC COLORS - Luxury refined tones ===== */
-    --color-error: 0 40% 35%;
-    --color-error-bg: 0 40% 35% / 0.12;
-    --color-warning: 35 60% 50%;
-    --color-warning-bg: 35 60% 50% / 0.1;
-    --color-success: var(--accent-neutral);
-    --color-success-bg: var(--accent-neutral) / 0.1;
-    --color-info: 35 25% 70%;
-    --color-info-bg: 35 25% 70% / 0.1;
-
-    /* ===== CONTRAST-COMPLIANT TEXT TOKENS (replaces raw text-white/xx) ===== */
-    /* Primary text on dark backgrounds - warm white */
-    --text-primary: 35 15% 92%;
-    /* Secondary text - warm gray, WCAG AA compliant (>4.5:1) */
-    --text-secondary: 35 10% 65%;
-    /* Tertiary/muted text - WCAG AA compliant for large text (>3:1) */
-    --text-tertiary: 35 10% 55%;
-    /* Disabled/placeholder */
-    --text-disabled: 35 8% 38%;
-
-    /* ===== SURFACE TOKENS (replaces raw bg-white/xx and bg-black/xx) ===== */
-    /* Subtle surfaces - replaces bg-white/5 */
-    --surface-subtle: 0 0% 100% / 0.05;
-    --surface-subtle-hover: 245 230 211 / 0.08;
-    --surface-subtle-active: 245 230 211 / 0.12;
-    /* Muted surfaces - replaces bg-white/10 */
-    --surface-muted: 245 230 211 / 0.08;
-    --surface-muted-hover: 245 230 211 / 0.12;
-    /* Elevated/dark surfaces - replaces bg-black/95 */
-    --surface-elevated: 245 230 211 / 0.02;
-    --surface-elevated-hover: 245 230 211 / 0.05;
-
-    /* ===== BORDER TOKENS (replaces raw border-white/xx) ===== */
-    --border-subtle: 245 230 211 / 0.06;
-    --border-muted: 245 230 211 / 0.1;
-    --border-default: 245 230 211 / 0.15;
-    --semantic-success: 35 40% 85%;
-    --semantic-success-fg: 35 15% 8%;
-    --semantic-success-bg: 35 40% 85% / 0.08;
-    --semantic-success-border: 35 40% 85% / 0.2;
-    --semantic-warning: 35 60% 55%;
-    --semantic-warning-fg: 35 15% 8%;
-    --semantic-warning-bg: 35 60% 55% / 0.06;
-    --semantic-warning-border: 35 60% 55% / 0.16;
-    --semantic-error: 0 40% 45%;
-    --semantic-error-fg: 35 15% 92%;
-    --semantic-error-bg: 0 40% 45% / 0.08;
-    --semantic-error-border: 0 40% 45% / 0.16;
-    --semantic-info: 35 25% 70%;
-    --semantic-info-fg: 35 15% 8%;
-    --semantic-info-bg: 35 25% 70% / 0.07;
-    --semantic-info-border: 35 25% 70% / 0.18;
-
-    /* ===== CHART COLORS - Luxury palette with gold accents ===== */
-    --chart-positive: 35 40% 85%;
-    --chart-negative: 0 40% 35%;
-    --chart-neutral: 35 10% 50%;
-    --chart-1: 35 40% 85%;
-    --chart-2: 35 30% 72%;
-    --chart-3: 35 25% 58%;
-    --chart-4: 350 30% 75%;
-    --chart-5: 30 45% 55%;
-    --chart-6: 220 12% 66%;
-    --chart-7: 220 11% 56%;
-    --chart-8: 220 10% 46%;
-
     /* ===== ANIMATION TIMING ===== */
     --transition-fast: 150ms;
     --transition-base: 200ms;
@@ -289,7 +184,7 @@
     --easing-out: cubic-bezier(0, 0, 0.2, 1);
     --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    /* ===== SPACING ARCHITECTURE (Fluid & Logical) ===== */
+    /* ===== SPACING ARCHITECTURE (Fluid) ===== */
     --space-3xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
     --space-2xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
     --space-xs: clamp(0.75rem, 0.6rem + 0.75vw, 1rem);
@@ -313,273 +208,104 @@
     --card-padding-lg: var(--space-md);
     --card-padding-xl: var(--space-lg);
   }
-
-  /* .dark class inherits luxury theme from :root */
-  .dark {
-    /* Inherits all luxury tokens from :root for consistency */
-    /* Dark mode uses the same warm obsidian palette with gold accents */
-  }
-}
-
-@theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
 }
 
 /* ===== TOKEN UTILITY CLASSES ===== */
 @layer utilities {
 
-  /* Background hierarchy tokens */
-  .bg-base {
-    background-color: hsl(var(--bg-base));
-  }
+  .bg-base { background-color: hsl(var(--bg-base)); }
+  .bg-elevated { background-color: hsl(var(--bg-elevated)); }
+  .bg-token-card { background-color: hsl(var(--bg-card)); }
+  .bg-card-hover { background-color: hsl(var(--bg-card-hover)); }
+  .bg-overlay { background-color: hsl(var(--bg-overlay)); }
+  .bg-modal { background-color: hsl(var(--bg-modal)); }
+  .bg-highlight { background-color: hsl(var(--bg-highlight)); }
 
-  .bg-elevated {
-    background-color: hsl(var(--bg-elevated));
-  }
+  .bg-accent-neutral { background-color: hsl(var(--accent-neutral)); }
+  .bg-accent-neutral-hover { background-color: hsl(var(--accent-neutral-hover)); }
+  .bg-accent-neutral-subtle { background-color: hsl(var(--accent-neutral) / 0.1); }
+  .text-accent-neutral { color: hsl(var(--accent-neutral)); }
+  .border-accent-neutral { border-color: hsl(var(--accent-neutral)); }
 
-  .bg-token-card {
-    background-color: hsl(var(--bg-card));
-  }
+  .text-fg-primary { color: hsl(var(--fg-primary)); }
+  .text-fg-secondary { color: hsl(var(--fg-secondary)); }
+  .text-fg-tertiary { color: hsl(var(--fg-tertiary)); }
+  .text-fg-muted { color: hsl(var(--fg-muted)); }
 
-  .bg-card-hover {
-    background-color: hsl(var(--bg-card-hover));
-  }
+  .text-token-primary { color: hsl(var(--text-primary)); }
+  .text-token-secondary { color: hsl(var(--text-secondary)); }
+  .text-tertiary { color: hsl(var(--text-tertiary)); }
+  .text-disabled { color: hsl(var(--text-disabled)); }
 
-  .bg-overlay {
-    background-color: hsl(var(--bg-overlay));
-  }
+  .bg-surface-subtle { background-color: var(--surface-subtle); }
+  .bg-surface-subtle-hover:hover { background-color: var(--surface-subtle-hover); }
+  .bg-surface-muted { background-color: var(--surface-muted); }
+  .bg-surface-muted-hover:hover { background-color: var(--surface-muted-hover); }
+  .bg-surface-elevated { background-color: var(--surface-elevated); }
+  .bg-surface-elevated-hover:hover { background-color: var(--surface-elevated-hover); }
 
-  .bg-modal {
-    background-color: hsl(var(--bg-modal));
-  }
+  .border-subtle { border-color: var(--border-subtle); }
+  .border-muted { border-color: var(--border-muted); }
 
-  .bg-highlight {
-    background-color: hsl(var(--bg-highlight));
-  }
-
-  /* Primary accent tokens */
-  .bg-accent-neutral {
-    background-color: hsl(var(--accent-neutral));
-  }
-
-  .bg-accent-neutral-hover {
-    background-color: hsl(var(--accent-neutral-hover));
-  }
-
-  .bg-accent-neutral-subtle {
-    background-color: hsl(var(--accent-neutral) / 0.1);
-  }
-
-  .text-accent-neutral {
-    color: hsl(var(--accent-neutral));
-  }
-
-  .border-accent-neutral {
-    border-color: hsl(var(--accent-neutral));
-  }
-
-  /* Foreground tokens */
-  .text-fg-primary {
-    color: hsl(var(--fg-primary));
-  }
-
-  .text-fg-secondary {
-    color: hsl(var(--fg-secondary));
-  }
-
-  .text-fg-tertiary {
-    color: hsl(var(--fg-tertiary));
-  }
-
-  .text-fg-muted {
-    color: hsl(var(--fg-muted));
-  }
-
-  /* Contrast-compliant text tokens (replaces text-white/50, text-white/60, text-white/70) */
-  .text-token-primary {
-    color: hsl(var(--text-primary));
-  }
-
-  .text-token-secondary {
-    color: hsl(var(--text-secondary));
-  }
-
-  .text-tertiary {
-    color: hsl(var(--text-tertiary));
-  }
-
-  .text-disabled {
-    color: hsl(var(--text-disabled));
-  }
-
-  /* Surface tokens (replaces bg-white/5, bg-white/10, bg-black/95) */
-  .bg-surface-subtle {
-    background-color: var(--surface-subtle);
-  }
-
-  .bg-surface-subtle-hover:hover {
-    background-color: var(--surface-subtle-hover);
-  }
-
-  .bg-surface-muted {
-    background-color: var(--surface-muted);
-  }
-
-  .bg-surface-muted-hover:hover {
-    background-color: var(--surface-muted-hover);
-  }
-
-  .bg-surface-elevated {
-    background-color: var(--surface-elevated);
-  }
-
-  .bg-surface-elevated-hover:hover {
-    background-color: var(--surface-elevated-hover);
-  }
-
-  /* Border tokens (replaces border-white/10, border-white/20) */
-  .border-subtle {
-    border-color: var(--border-subtle);
-  }
-
-  .border-muted {
-    border-color: var(--border-muted);
-  }
-
-  /* Glassmorphism tokens */
   .glass {
     background: hsl(var(--glass-bg));
     backdrop-filter: var(--glass-blur);
     border: 1px solid hsl(var(--glass-border));
     box-shadow: var(--glass-shadow);
   }
-
   .glass-strong {
     background: hsl(var(--glass-bg-strong));
     backdrop-filter: var(--glass-blur-strong);
     border: 1px solid hsl(var(--glass-border));
     box-shadow: var(--glass-shadow);
   }
-
   .glass-subtle {
     background: hsl(var(--glass-bg-subtle));
     backdrop-filter: var(--glass-blur);
     border: 1px solid hsl(var(--glass-border));
   }
 
-  /* Interactive state tokens */
   .hover-lift {
     transition: transform var(--transition-base) var(--easing-out),
       box-shadow var(--transition-base) var(--easing-out);
   }
-
   .hover-lift:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
-  /* Focus state tokens */
   .focus-ring-neutral:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--focus-ring-offset),
       0 0 0 4px hsl(var(--focus-ring));
   }
 
-  /* Chart color tokens */
-  .chart-positive {
-    color: hsl(var(--chart-positive));
-  }
+  .chart-positive { color: hsl(var(--chart-positive)); }
+  .chart-negative { color: hsl(var(--chart-negative)); }
+  .chart-neutral { color: hsl(var(--chart-neutral)); }
 
-  .chart-negative {
-    color: hsl(var(--chart-negative));
-  }
+  .card-shadow-sm { box-shadow: var(--card-shadow-sm); }
+  .card-shadow-md { box-shadow: var(--card-shadow-md); }
+  .card-shadow-lg { box-shadow: var(--card-shadow-lg); }
+  .card-shadow-xl { box-shadow: var(--card-shadow-xl); }
+  .card-radius-sm { border-radius: var(--card-radius-sm); }
+  .card-radius-md { border-radius: var(--card-radius-md); }
+  .card-radius-lg { border-radius: var(--card-radius-lg); }
 
-  .chart-neutral {
-    color: hsl(var(--chart-neutral));
-  }
-
-  /* Card utility classes */
-  .card-shadow-sm {
-    box-shadow: var(--card-shadow-sm);
-  }
-
-  .card-shadow-md {
-    box-shadow: var(--card-shadow-md);
-  }
-
-  .card-shadow-lg {
-    box-shadow: var(--card-shadow-lg);
-  }
-
-  .card-shadow-xl {
-    box-shadow: var(--card-shadow-xl);
-  }
-
-  .card-radius-sm {
-    border-radius: var(--card-radius-sm);
-  }
-
-  .card-radius-md {
-    border-radius: var(--card-radius-md);
-  }
-
-  .card-radius-lg {
-    border-radius: var(--card-radius-lg);
-  }
-
-  /* Card hover effects */
   .card-hover {
     transition: transform var(--transition-base) var(--easing-out),
       box-shadow var(--transition-base) var(--easing-out),
       border-color var(--transition-base) var(--easing-out);
   }
-
   .card-hover:hover {
     transform: translateY(-2px);
     box-shadow: var(--card-shadow-lg);
     border-color: hsl(var(--border-focus));
   }
-
   .card-clickable {
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
-
-  .card-clickable:active {
-    transform: scale(0.98);
-  }
+  .card-clickable:active { transform: scale(0.98); }
 }
-
-/* Route-scoped themes removed - using unified dark/light mode system */

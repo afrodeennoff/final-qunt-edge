@@ -72,6 +72,7 @@ const widgetLoaders: Record<WidgetType, () => Promise<{ default: React.Component
   smartInsights: () => import("../components/widgets/smart-insights-widget").then((module) => ({
     default: module.SmartInsightsWidget as React.ComponentType<WidgetComponentProps>,
   })),
+  contractQuantity: () => import("../components/charts/contract-quantity"),
 }
 
 const dynamicWidgets = Object.entries(widgetLoaders).reduce((acc, [type, loader]) => {
