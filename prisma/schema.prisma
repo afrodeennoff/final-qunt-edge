@@ -21,6 +21,7 @@ model User {
   isBeta             Boolean             @default(false)
   language           String              @default("en")
   dashboardTheme     String              @default("blue") // dashboard theme preference: blue, violet, emerald, amber, rose
+  showOnLeaderboard  Boolean             @default(false)
   etpToken           String?
   etpTokenHash       String?             @unique
   etpTokenExpiresAt  DateTime?
@@ -65,6 +66,7 @@ model User {
   authAttempts          AuthAttempt[]          @relation("UserAuthAttempts")
   oauthStates           OAuthState[]           @relation("UserOAuthStates")
   recoveryCodes         RecoveryCode[]         @relation("UserRecoveryCodes")
+  propFirmReviews      PropFirmReview[]       @relation("UserReviews")
 
   @@index([email])
   @@schema("public")
@@ -1372,5 +1374,78 @@ enum DurationType {
   FOREVER
   REPEATING
 
+  @@schema("public")
+}
+
+// ============================================================================
+// PROP FIRMS
+// ============================================================================
+
+model PropFirm {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  name          String
+  category      String?
+  description   String?   @db.Text
+  shortDesc     String?   @db.VarChar(255)
+  platform      String?
+  payoutModel   String?
+  drawdownType  String?
+  profitSplit   String?
+  maxAllocation String?
+  referralUrl   String?
+  logoUrl       String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  reviews  PropFirmReview[]
+  coupons  PropFirmCoupon[]
+
+  @@index([slug])
+  @@schema("public")
+}
+
+model PropFirmReview {
+  id          String   @id @default(cuid())
+  propFirmId  String
+  userId      String?
+  rating      Int      @default(0)
+  title       String?
+  content     String?  @db.Text
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  propFirm PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
+  user    User?    @relation("UserReviews", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([propFirmId])
+  @@index([userId])
+  @@schema("public")
+}
+
+model PropFirmCoupon {
+  id            String   @id @default(cuid())
+  propFirmId    String
+  code          String
+  description   String?
+  discountPercent Float?
+  challengeFee    Float?
+  drawdownType    String?
+  payoutModel     String?
+  platform        String?
+  claimUrl        String?
+  isActive      Boolean  @default(true)
+  startsAt      DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  propFirm PropFirm @relation(fields: [propFirmId], references: [id], onDelete: Cascade)
+
+  @@unique([propFirmId, code])
+  @@index([propFirmId])
+  @@index([isActive])
   @@schema("public")
 }

@@ -12,7 +12,7 @@ type PropFirmData = {
   id: string
   slug: string
   name: string
-  category: string
+  category: string | null
   description: string | null
   shortDesc: string | null
   platform: string | null

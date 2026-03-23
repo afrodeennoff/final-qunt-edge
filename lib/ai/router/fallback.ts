@@ -11,10 +11,6 @@ export interface RouterCompletionOptions {
   messages: OpenRouterMessage[];
   temperature?: number;
   requestedModel?: string;
-<<<<<<< HEAD
-  timeoutMs?: number;
-=======
->>>>>>> main
 }
 
 export interface RouterCompletionResult {
@@ -30,7 +26,6 @@ export class FallbackRouter {
   
   async createCompletion(options: RouterCompletionOptions): Promise<RouterCompletionResult> {
     const config = getRouterConfig();
-    // Include role/model/temperature to avoid cross-request collisions.
     const cacheKeyPayload = JSON.stringify({
       requestedModel: options.requestedModel ?? null,
       temperature: options.temperature ?? null,
@@ -51,7 +46,6 @@ export class FallbackRouter {
     }
     
     const requestedModel = options.requestedModel?.trim();
-    // Deduplicate complete chain while preserving stable order.
     const providerCandidates: Array<{ name: string; model: string }> = [
       { name: "openrouter-free", model: config.openrouter.models.free },
       { name: "openrouter-auto", model: config.openrouter.models.auto },
@@ -65,13 +59,8 @@ export class FallbackRouter {
       return true;
     });
     
-    // Try each provider in sequence
     for (const provider of providers) {
       try {
-<<<<<<< HEAD
-=======
-        // Make API call through circuit breaker
->>>>>>> main
         const result = await this.circuitBreaker.call(
           provider.name,
           provider.model,
@@ -87,14 +76,9 @@ export class FallbackRouter {
                 output: config.openrouter.provider.maxPrice.output,
               },
             },
-<<<<<<< HEAD
-            timeoutMs: options.timeoutMs,
-=======
->>>>>>> main
           })
         );
         
-        // Cache the result
         await this.cache.set(
           options.userId,
           options.feature,
@@ -112,7 +96,6 @@ export class FallbackRouter {
           provider: provider.name,
           model: provider.model,
         });
-        // Continue to next provider
       }
     }
     

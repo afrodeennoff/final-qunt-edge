@@ -96,7 +96,7 @@ export interface FaqItem {
 const _getActiveDeals = async (): Promise<DealItem[]> => {
   const now = new Date()
   
-  const coupons = await prisma.firmCoupon.findMany({
+  const coupons = await prisma.propFirmCoupon.findMany({
     where: {
       isActive: true,
       OR: [
@@ -105,7 +105,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       ],
     },
     include: {
-      propfirm: {
+      propFirm: {
         select: {
           id: true,
           slug: true,
@@ -123,15 +123,15 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
 
   return coupons.map((coupon) => ({
     id: coupon.id,
-    firmId: coupon.propfirm.id,
-    firmSlug: coupon.propfirm.slug,
-    firmName: coupon.propfirm.name,
-    logoUrl: coupon.propfirm.logoUrl ?? undefined,
-    category: (coupon.propfirm.category || 'Futures') as MarketType,
-    platform: (coupon.propfirm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (coupon.propfirm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (coupon.propfirm.drawdownType || 'Static') as DrawdownType,
-    discountPercent: coupon.discountPercent,
+    firmId: coupon.propFirm.id,
+    firmSlug: coupon.propFirm.slug,
+    firmName: coupon.propFirm.name,
+    logoUrl: coupon.propFirm.logoUrl ?? undefined,
+    category: (coupon.propFirm.category || 'Futures') as MarketType,
+    platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
+    payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
+    drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
+    discountPercent: coupon.discountPercent ?? 0,
     couponCode: coupon.code,
     challengeFee: coupon.challengeFee ?? 0,
     expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
@@ -158,10 +158,6 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   const firms = await prisma.propFirm.findMany({
     where: { isActive: true },
     include: {
-      challenges: {
-        where: { isActive: true },
-        select: { id: true },
-      },
       coupons: {
         where: {
           isActive: true,
@@ -175,6 +171,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
           { discountPercent: 'desc' },
         ],
       },
+      reviews: { select: { id: true } },
       _count: { select: { reviews: true, coupons: true } },
     },
     orderBy: { name: 'asc' },
@@ -194,7 +191,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
     profitSplit: firm.profitSplit || '80/20',
     maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.challenges.length,
+    challengeCount: firm.reviews.length,
     spotlight: spotlightMap.get(normalizeFirmName(firm.name)) ?? null,
     catalogueStats: {
       accountsCount: catalogueMap.get(normalizeFirmName(firm.name))?.accountsCount ?? 0,
@@ -207,8 +204,8 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
-      discountPercent: c.discountPercent,
-      challengeFee: c.challengeFee,
+      discountPercent: c.discountPercent ?? 0,
+      challengeFee: c.challengeFee ?? 0,
       expiresAt: c.expiresAt,
       claimUrl: c.claimUrl,
     })),
@@ -261,10 +258,6 @@ export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> =
   const firm = await prisma.propFirm.findUnique({
     where: { id: firmId, isActive: true },
     include: {
-      challenges: {
-        where: { isActive: true },
-        select: { id: true },
-      },
       coupons: {
         where: {
           isActive: true,
@@ -278,6 +271,7 @@ export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> =
           { discountPercent: 'desc' },
         ],
       },
+      reviews: { select: { id: true } },
       _count: { select: { reviews: true, coupons: true } },
     },
   })
@@ -309,7 +303,7 @@ export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> =
     drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
     profitSplit: firm.profitSplit || '80/20',
     maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.challenges.length,
+    challengeCount: firm.reviews.length,
     spotlight: spotlight,
     catalogueStats: {
       accountsCount: catalogueEntry?.accountsCount ?? 0,
@@ -322,8 +316,8 @@ export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> =
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
-      discountPercent: c.discountPercent,
-      challengeFee: c.challengeFee,
+      discountPercent: c.discountPercent ?? 0,
+      challengeFee: c.challengeFee ?? 0,
       expiresAt: c.expiresAt,
       claimUrl: c.claimUrl,
     })),
@@ -340,10 +334,6 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
   const firm = await prisma.propFirm.findUnique({
     where: { slug, isActive: true },
     include: {
-      challenges: {
-        where: { isActive: true },
-        select: { id: true },
-      },
       coupons: {
         where: {
           isActive: true,
@@ -357,6 +347,7 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
           { discountPercent: 'desc' },
         ],
       },
+      reviews: { select: { id: true } },
       _count: { select: { reviews: true, coupons: true } },
     },
   })
@@ -388,7 +379,7 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
     drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
     profitSplit: firm.profitSplit || '80/20',
     maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.challenges.length,
+    challengeCount: firm.reviews.length,
     spotlight: spotlight,
     catalogueStats: {
       accountsCount: catalogueEntry?.accountsCount ?? 0,
@@ -401,8 +392,8 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
-      discountPercent: c.discountPercent,
-      challengeFee: c.challengeFee,
+      discountPercent: c.discountPercent ?? 0,
+      challengeFee: c.challengeFee ?? 0,
       expiresAt: c.expiresAt,
       claimUrl: c.claimUrl,
     })),
@@ -424,9 +415,9 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
   if (!firm) return []
   
   // Get active coupons/deals for this firm
-  const coupons = await prisma.firmCoupon.findMany({
+  const coupons = await prisma.propFirmCoupon.findMany({
     where: {
-      propfirmId: firmId,
+      propFirmId: firmId,
       isActive: true,
       OR: [
         { expiresAt: null },
@@ -434,7 +425,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       ],
     },
     include: {
-      propfirm: {
+      propFirm: {
         select: {
           id: true,
           slug: true,
@@ -452,15 +443,15 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
   
   return coupons.map((coupon) => ({
     id: coupon.id,
-    firmId: coupon.propfirm.id,
-    firmSlug: coupon.propfirm.slug,
-    firmName: coupon.propfirm.name,
-    logoUrl: coupon.propfirm.logoUrl ?? undefined,
-    category: (coupon.propfirm.category || 'Futures') as MarketType,
-    platform: (coupon.propfirm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (coupon.propfirm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (coupon.propfirm.drawdownType || 'Static') as DrawdownType,
-    discountPercent: coupon.discountPercent,
+    firmId: coupon.propFirm.id,
+    firmSlug: coupon.propFirm.slug,
+    firmName: coupon.propFirm.name,
+    logoUrl: coupon.propFirm.logoUrl ?? undefined,
+    category: (coupon.propFirm.category || 'Futures') as MarketType,
+    platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
+    payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
+    drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
+    discountPercent: coupon.discountPercent ?? 0,
     couponCode: coupon.code,
     challengeFee: coupon.challengeFee ?? 0,
     expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',

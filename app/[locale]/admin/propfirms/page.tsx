@@ -1,8 +1,16 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
+import { deletePropFirm } from '@/server/prop-firms'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Trash2 } from 'lucide-react'
+
+async function handleDelete(formData: FormData) {
+  'use server'
+  const id = formData.get('id') as string
+  await deletePropFirm(id)
+}
 
 export default async function PropFirmsListPage({ params }: { params: Promise<{ locale: string }> }) {
   await assertAdminAccess()
@@ -66,9 +74,17 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                         </span>
                       </td>
                       <td className="py-3">
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/${locale}/admin/propfirms/${f.id}`}>Edit</Link>
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link href={`/${locale}/admin/propfirms/${f.id}`}>Edit</Link>
+                          </Button>
+                          <form action={handleDelete}>
+                            <input type="hidden" name="id" value={f.id} />
+                            <Button variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </form>
+                        </div>
                       </td>
                     </tr>
                   ))

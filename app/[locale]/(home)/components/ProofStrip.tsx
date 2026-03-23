@@ -1,10 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Lock, ShieldCheck, FileDown, Workflow } from 'lucide-react'
-<<<<<<< HEAD
 import { motion } from 'framer-motion'
-=======
->>>>>>> main
 
 const proofItems = [
   {
@@ -29,7 +26,6 @@ const proofItems = [
   },
 ]
 
-<<<<<<< HEAD
 const logos = [
   { name: 'Tradovate', abbr: 'TV' },
   { name: 'Rithmic', abbr: 'RI' },
@@ -43,8 +39,6 @@ const logos = [
   { name: 'MyFundedFX', abbr: 'MF' },
 ]
 
-=======
->>>>>>> main
 export default function ProofStrip() {
   return (
     <section className="relative px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
@@ -90,7 +84,6 @@ export default function ProofStrip() {
             </div>
           </CardContent>
         </Card>
-<<<<<<< HEAD
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,8 +115,6 @@ export default function ProofStrip() {
             </div>
           </div>
         </motion.div>
-=======
->>>>>>> main
       </div>
     </section>
   )

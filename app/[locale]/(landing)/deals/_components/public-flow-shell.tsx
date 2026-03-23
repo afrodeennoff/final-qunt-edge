@@ -4,9 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-<<<<<<< HEAD
-import { FLOW_LINKS, isFlowLinkActive } from './flow-links'
-=======
 
 const FLOW_LINKS = [
   { path: '/deals', label: 'Deals' },
@@ -22,7 +19,6 @@ function isActive(pathname: string, href: string): boolean {
   }
   return pathname.endsWith(href)
 }
->>>>>>> main
 
 export function PublicFlowShell({
   title,
@@ -67,11 +63,7 @@ export function PublicFlowShell({
 
                 <nav className="mt-6 flex flex-wrap gap-2" aria-label="Deals flow">
                   {FLOW_LINKS.map((link) => {
-<<<<<<< HEAD
-                    const active = isFlowLinkActive(pathname, link.path)
-=======
                     const active = isActive(pathname, link.path)
->>>>>>> main
                     return (
                       <Link
                         key={link.path}

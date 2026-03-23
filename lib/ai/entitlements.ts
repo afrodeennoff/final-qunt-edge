@@ -9,6 +9,7 @@ export type AiGuardFeature =
   | 'mappings'
   | 'format-trades'
   | 'search'
+  | 'transcribe'
 
 type EntitlementResult = {
   allowed: boolean

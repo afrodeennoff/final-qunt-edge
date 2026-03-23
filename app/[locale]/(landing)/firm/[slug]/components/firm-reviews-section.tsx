@@ -130,7 +130,7 @@ function ReviewCard({ review }: { review: FirmReviewItem }) {
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
-            {(review.username ?? 'U').charAt(0).toUpperCase()}
+            {review.userId ? review.userId.charAt(0).toUpperCase() : 'U'}
           </span>
         </div>
         
@@ -138,7 +138,7 @@ function ReviewCard({ review }: { review: FirmReviewItem }) {
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-sm font-medium text-white truncate">
-                {review.username ?? 'Anonymous Trader'}
+                {review.userId ? 'Verified Trader' : 'Anonymous Trader'}
               </span>
               {review.isVerified && (
                 <BadgeV2 variant="success" size="sm" className="shrink-0 gap-1">
@@ -162,9 +162,9 @@ function ReviewCard({ review }: { review: FirmReviewItem }) {
             </h4>
           )}
           
-          {review.body && (
+          {review.content && (
             <p className="mt-1.5 text-sm leading-relaxed text-white/60">
-              {review.body}
+              {review.content}
             </p>
           )}
         </div>

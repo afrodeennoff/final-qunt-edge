@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { isRedisConfigured, runRedisCommand } from '@/lib/redis-client';
-=======
-import { isRedisConfigured, runRedisCommand } from '@/lib/redis-cache';
->>>>>>> main
 
 // Lua script for atomic budget reservation
 const RESERVE_BUDGET_SCRIPT = `
@@ -33,7 +29,6 @@ export class BudgetReservation {
     const isProduction = process.env.NODE_ENV === 'production';
 
     if (isRedisConfigured()) {
-      // Use Lua script for atomic check + reserve.
       const result = await runRedisCommand([
         'EVAL',
         RESERVE_BUDGET_SCRIPT,
@@ -54,7 +49,6 @@ export class BudgetReservation {
       throw new Error('Redis is required for budget reservations in production')
     }
 
-    // Deterministic in-memory fallback for test/local environments.
     const currentBalance = this.memoryStore.get(budgetKey) || 0;
     if (currentBalance + amount <= limit) {
       this.memoryStore.set(budgetKey, currentBalance + amount);

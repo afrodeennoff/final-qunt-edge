@@ -62,14 +62,11 @@ function parseFailedMigrationName(output) {
   return match?.[1] ?? null;
 }
 
-<<<<<<< HEAD
 function parseMigrationName(output) {
   const match = output.match(/Migration name: (\S+)/);
   return match?.[1] ?? null;
 }
 
-=======
->>>>>>> main
 run("npx", ["prisma", "generate"], "Prisma client generated");
 
 const rawUrl = process.env.DIRECT_URL || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL;
@@ -78,73 +75,30 @@ const migrationUrl = rawUrl ? rawUrl.replace(/^"(.*)"$/, '$1') : null;
 if (migrationUrl) {
   // Inject the direct connection URL into process.env so Prisma uses it for deployments (bypassing PgBouncer)
   process.env.DATABASE_URL = migrationUrl;
+  console.log(`[sync-stack] Using direct DB URL for migrations`);
+}
 
-  const deploy = runCapture("npx", ["prisma", "migrate", "deploy"]);
+const isCI = process.env.CI === "true" || process.env.CI === "1";
 
-  if (deploy.status === 0) {
-    console.log("[sync-stack] Prisma migrations deployed");
-  } else if (deploy.output.includes("P3005")) {
-    console.log(
-      "[sync-stack] Detected Prisma P3005 (existing non-empty database). Running baseline once.",
-    );
-    baselineAllMigrations();
-    run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after baseline");
-  } else if (deploy.output.includes("P3009")) {
-    const failedMigration = parseFailedMigrationName(deploy.output);
-    const autoApplyRepairMigrations = new Set([
-      "20260213091500_supabase_storage_scaling",
-      "20260226120000_restrict_storage_list_objects_rpc",
-      "20260316000000_add_mt5_accounts",
-    ]);
+const applyMigrations = process.env.SYNC_STACK_APPLY_MIGRATIONS === "true";
+const baselineMode = process.env.SYNC_STACK_BASELINE === "true";
 
-<<<<<<< HEAD
-    const autoRollbackRepairMigrations = new Set([
-      "20260320000000_v2_data_integrity",
-    ]);
+if (baselineMode) {
+  baselineAllMigrations();
+} else if (applyMigrations) {
+  const result = runCapture("npx", ["prisma", "migrate", "deploy"]);
 
-    if (failedMigration && autoRollbackRepairMigrations.has(failedMigration)) {
-      console.log(
-        `[sync-stack] Detected P3009 for ${failedMigration}. Marking as rolled-back and retrying deploy...`,
-      );
-      run("npx", ["prisma", "migrate", "resolve", "--rolled-back", failedMigration]);
-      run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3009 rollback");
-    } else if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
-=======
-    if (failedMigration && autoApplyRepairMigrations.has(failedMigration)) {
->>>>>>> main
-      console.log(
-        `[sync-stack] Detected P3009 for ${failedMigration}. Marking as applied and retrying deploy...`,
-      );
-      run("npx", ["prisma", "migrate", "resolve", "--applied", failedMigration]);
-      run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3009 repair");
-    } else {
-      console.error(
-        `[sync-stack] P3009 detected${
-          failedMigration ? ` for ${failedMigration}` : ""
-        }. Manual resolution required (use prisma migrate resolve --rolled-back/--applied).`,
-      );
-      process.exit(deploy.status);
+  if (result.status !== 0) {
+    const failedMigration = parseFailedMigrationName(result.output);
+    if (failedMigration && !isCI) {
+      console.log(`[sync-stack] Migration ${failedMigration} failed`);
+      console.log(`[sync-stack] In CI, failing migrations stop the build. Locally, you can:`);
+      console.log(`[sync-stack]   - Run \`npx prisma migrate resolve --rolled-back ${failedMigration}\` to mark as rolled back`);
+      console.log(`[sync-stack]   - Run \`npx prisma migrate resolve --applied ${failedMigration}\` to mark as applied`);
+      console.log(`[sync-stack]   - Run \`SYNC_STACK_APPLY_MIGRATIONS=true npm run build\` to attempt again`);
     }
-<<<<<<< HEAD
-  } else if (deploy.output.includes("P3018")) {
-    const failedMigration = parseMigrationName(deploy.output) || parseFailedMigrationName(deploy.output);
-    if (failedMigration) {
-      console.log(
-        `[sync-stack] Detected P3018 for ${failedMigration}. Marking as rolled-back and retrying deploy...`,
-      );
-      run("npx", ["prisma", "migrate", "resolve", "--rolled-back", failedMigration]);
-      run("npx", ["prisma", "migrate", "deploy"], "Prisma migrations deployed after P3018 repair");
-    } else {
-      console.error(
-        "[sync-stack] P3018 detected but could not parse migration name. Manual resolution required.",
-      );
-      process.exit(deploy.status);
-    }
-=======
->>>>>>> main
-  } else {
-    process.exit(deploy.status);
+    process.exit(result.status);
   }
 } else {
-  console.log("[sync-stack] No DATABASE_URL found (checked DATABASE_URL, POSTGRES_PRISMA_URL, POSTGRES_URL); skipped prisma migrate deploy");
+  run("npx", ["prisma", "migrate", "status"], "Prisma migrations up to date");
 }

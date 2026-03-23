@@ -2,30 +2,23 @@
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 
-export async function createFirmReview(data: { propfirmId: string; rating: number; title?: string; body?: string; avatarUrl?: string }) {
+export async function createFirmReview(data: { propfirmId: string; rating: number; title?: string; body?: string }) {
   const userId = await getDatabaseUserId()
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { email: true },
-  })
-  const username = user?.email?.split('@')[0] ?? 'Trader'
-  return prisma.firmReview.create({
+  return prisma.propFirmReview.create({
     data: {
-      propfirmId: data.propfirmId,
+      propFirmId: data.propfirmId,
       rating: data.rating,
       title: data.title,
-      body: data.body,
-      avatarUrl: data.avatarUrl,
+      content: data.body,
       userId,
-      username,
     },
   })
 }
 
 export async function listFirmReviews(propfirmId: string, page = 1) {
   const take = 10
-  return prisma.firmReview.findMany({
-    where: { propfirmId },
+  return prisma.propFirmReview.findMany({
+    where: { propFirmId: propfirmId },
     orderBy: { createdAt: 'desc' },
     skip: (page - 1) * take,
     take,

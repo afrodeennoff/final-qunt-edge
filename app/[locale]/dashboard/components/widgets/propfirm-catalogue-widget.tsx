@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { useI18n } from "@/locales/client"
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { Building2, Users, DollarSign } from "lucide-react"
@@ -41,34 +42,37 @@ export default function PropfirmCatalogueWidget() {
             <ScrollArea className="h-full">
                 <div className="flex flex-col gap-1 p-3">
                     {sortedStats.map((stat) => (
-                        <div
+                        <Link
                             key={stat.propfirmName}
-                            className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors"
+                            href={`/firm/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
+                            className="block"
                         >
-                            <div className="flex flex-col gap-1 min-w-0">
-                                <span className="font-bold text-sm truncate tracking-tight">{stat.propfirmName}</span>
-                                <div className="flex items-center gap-3">
-                                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                                        <Users className="w-3 h-3 text-muted-foreground" />
-                                        <span>{stat.accountsCount}</span>
+                            <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors cursor-pointer">
+                                <div className="flex flex-col gap-1 min-w-0">
+                                    <span className="font-bold text-sm truncate tracking-tight">{stat.propfirmName}</span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                            <Users className="w-3 h-3 text-muted-foreground" />
+                                            <span>{stat.accountsCount}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                                            <DollarSign className="w-3 h-3 text-muted-foreground" />
+                                            <span className="font-medium text-foreground">{stat.payouts.paidCount} Payouts</span>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                                        <DollarSign className="w-3 h-3 text-muted-foreground" />
-                                        <span className="font-medium text-foreground">{stat.payouts.paidCount} Payouts</span>
+                                </div>
+                                <div className="text-right shrink-0">
+                                    <div className="text-[13px] font-bold text-foreground tracking-tight tabular-nums">
+                                        ${stat.payouts.paidAmount > 1000
+                                            ? `${(stat.payouts.paidAmount / 1000).toFixed(1)}k`
+                                            : stat.payouts.paidAmount.toLocaleString()}
+                                    </div>
+                                    <div className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">
+                                        Paid
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-right shrink-0">
-                                <div className="text-[13px] font-bold text-foreground tracking-tight tabular-nums">
-                                    ${stat.payouts.paidAmount > 1000
-                                        ? `${(stat.payouts.paidAmount / 1000).toFixed(1)}k`
-                                        : stat.payouts.paidAmount.toLocaleString()}
-                                </div>
-                                <div className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">
-                                    Paid
-                                </div>
-                            </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </ScrollArea>
