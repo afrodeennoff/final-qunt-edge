@@ -35,14 +35,9 @@ async function run(cmd, args) {
 function isTransientNextBuildFsRace(output) {
   if (!output) return false;
   const hasEnoent = output.includes("ENOENT: no such file or directory");
-<<<<<<< HEAD
   const hasUnexpectedJson = output.includes("SyntaxError: Unexpected end of JSON input");
   const hasNextTypesMissing = /Type error:\s*File '.*\/\.next\/types\/.*' not found\./.test(output);
   if (!hasEnoent && !hasNextTypesMissing && !hasUnexpectedJson) return false;
-=======
-  const hasNextTypesMissing = /Type error:\s*File '.*\/\.next\/types\/.*' not found\./.test(output);
-  if (!hasEnoent && !hasNextTypesMissing) return false;
->>>>>>> main
 
   // Observed intermittent races in this workspace:
   // - .next/build-manifest.json
@@ -53,12 +48,8 @@ function isTransientNextBuildFsRace(output) {
     output,
   ) || /\/\.next\/static\/.*_buildManifest\.js(\.tmp\.[^'"\s]+)?/.test(output)
     || /\/\.next\/server\/[^'"\s]+\.nft\.json/.test(output)
-<<<<<<< HEAD
     || /\/\.next\/types\//.test(output)
     || hasUnexpectedJson;
-=======
-    || /\/\.next\/types\//.test(output);
->>>>>>> main
 }
 
 const MAX_ATTEMPTS = Number(process.env.NEXT_BUILD_MAX_ATTEMPTS ?? "4");

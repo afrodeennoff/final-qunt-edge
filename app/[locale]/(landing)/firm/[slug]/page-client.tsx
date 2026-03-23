@@ -73,6 +73,18 @@ type FirmData = {
     pendingPayoutAmount: number
     sizeBreakdown: string
   }
+  accountSizes?: Record<string, {
+    name: string
+    balance: number
+    price: number
+    priceWithPromo: number
+    target: number
+    dailyLoss: number | null
+    drawdown: number
+    trailing?: string
+    profitSharing: number
+    evaluation: boolean
+  }>
 }
 
 const trustChecklist = [
@@ -113,14 +125,14 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+    <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-card/5">
           <Icon className="h-4 w-4 text-v2-accent" />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-          <p className="mt-2 text-sm font-semibold text-white">{value || 'N/A'}</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+          <p className="mt-2 text-sm font-semibold text-foreground">{value || 'N/A'}</p>
         </div>
       </div>
     </div>
@@ -129,9 +141,9 @@ function FactTile({
 
 function MetricCard({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
-      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</p>
-      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-v2-success' : 'text-white'}`}>{value}</p>
+    <div className="rounded-2xl border border-border/40 bg-card/5 px-4 py-4">
+      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+      <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-v2-success' : 'text-foreground'}`}>{value}</p>
     </div>
   )
 }
@@ -157,23 +169,23 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
       <CardV2Content className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-[0.16em] text-white/45">Referral link</p>
-          <CardV2Title className="mt-3 text-2xl text-white">Open the official company site.</CardV2Title>
-          <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
+          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
+          <CardV2Title className="mt-3 text-2xl text-foreground">Open the official company site.</CardV2Title>
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
             Use the firm link below if you want to continue from research into signup.
           </CardV2Description>
-          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/25 px-3 py-3">
-            <code className="min-w-0 flex-1 truncate text-xs text-white/60">{referralUrl}</code>
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-border/40 bg-background/50 px-3 py-3">
+            <code className="min-w-0 flex-1 truncate text-xs text-foreground/80">{referralUrl}</code>
             <button
               onClick={handleCopy}
-              className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] p-2 transition-colors hover:bg-white/[0.08]"
+              className="shrink-0 rounded-xl border border-border/40 bg-card/5 p-2 transition-colors hover:bg-card/10"
               title="Copy link"
               type="button"
             >
-              {copied ? <Check className="h-4 w-4 text-v2-accent" /> : <Copy className="h-4 w-4 text-white/55" />}
+              {copied ? <Check className="h-4 w-4 text-v2-accent" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
             </button>
           </div>
         </div>
@@ -192,80 +204,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   )
 }
 
-function ChallengesSection({ firmId }: { firmId: string }) {
-  const challenges = [
-    {
-      id: '1',
-      name: '1-Step Challenge',
-      phase: 1,
-      accountSize: 25000,
-      targetProfit: 2500,
-      maxDailyLoss: 1250,
-      maxTotalLoss: 2500,
-      minTradingDays: 4,
-      maxTradingDays: 30,
-      profitSplit: 80,
-      price: 155,
-      priceWithPromo: 124,
-    },
-    {
-      id: '2',
-      name: '1-Step Challenge',
-      phase: 1,
-      accountSize: 50000,
-      targetProfit: 5000,
-      maxDailyLoss: 2500,
-      maxTotalLoss: 5000,
-      minTradingDays: 4,
-      maxTradingDays: 60,
-      profitSplit: 80,
-      price: 280,
-      priceWithPromo: 224,
-    },
-    {
-      id: '3',
-      name: '2-Step Evaluation',
-      phase: 1,
-      accountSize: 100000,
-      targetProfit: 10000,
-      maxDailyLoss: 5000,
-      maxTotalLoss: 10000,
-      minTradingDays: 4,
-      maxTradingDays: 60,
-      profitSplit: 80,
-      price: 520,
-      priceWithPromo: 416,
-    },
-    {
-      id: '4',
-      name: '2-Step Evaluation',
-      phase: 2,
-      accountSize: 100000,
-      targetProfit: 5000,
-      maxDailyLoss: 5000,
-      maxTotalLoss: 10000,
-      minTradingDays: 4,
-      maxTradingDays: 60,
-      profitSplit: 80,
-      price: 0,
-      priceWithPromo: 0,
-    },
-    {
-      id: '5',
-      name: 'Instant Funding',
-      phase: 1,
-      accountSize: 10000,
-      targetProfit: 1000,
-      maxDailyLoss: 500,
-      maxTotalLoss: 1000,
-      minTradingDays: 0,
-      maxTradingDays: 0,
-      profitSplit: 90,
-      price: 99,
-      priceWithPromo: 79,
-    },
-  ]
-
+function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmData['accountSizes']; profitSplit: string }) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -275,89 +214,114 @@ function ChallengesSection({ firmId }: { firmId: string }) {
     }).format(value)
   }
 
-  return (
-    <div className="space-y-6">
-      <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+  const entries = accountSizes ? Object.entries(accountSizes) : []
+
+  if (entries.length === 0) {
+    return (
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-white">Challenge Types</CardV2Title>
+            <CardV2Title className="text-2xl text-foreground">Challenge Types</CardV2Title>
           </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
-            Detailed breakdown of available challenge types, pricing, and trading rules.
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            No challenge data available for this firm yet.
+          </CardV2Description>
+        </CardV2Content>
+      </CardV2>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2Content className="p-6">
+          <div className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-v2-accent" />
+            <CardV2Title className="text-2xl text-foreground">Challenge Types</CardV2Title>
+          </div>
+          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            Detailed breakdown of available account sizes, pricing, and trading rules.
           </CardV2Description>
         </CardV2Content>
       </CardV2>
 
       <div className="grid gap-4">
-        {challenges.map((challenge) => (
-          <CardV2 key={challenge.id} className="rounded-[30px] border-white/10 bg-white/[0.03]">
+        {entries.map(([key, size]) => (
+          <CardV2 key={key} className="rounded-[30px] border-border/40 bg-card/5">
             <CardV2Content className="p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <BadgeV2 variant="accent">{challenge.name}</BadgeV2>
-                    {challenge.phase > 1 && (
-                      <BadgeV2 variant="default">Phase {challenge.phase}</BadgeV2>
+                    <BadgeV2 variant={size.evaluation ? 'accent' : 'default'}>
+                      {size.name}
+                    </BadgeV2>
+                    {!size.evaluation && (
+                      <BadgeV2 variant="default">Direct Funded</BadgeV2>
+                    )}
+                    {size.trailing && (
+                      <BadgeV2 variant="default">{size.trailing}</BadgeV2>
                     )}
                   </div>
                   
                   <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Account Size</p>
-                      <p className="mt-1 text-xl font-semibold text-white">{formatCurrency(challenge.accountSize)}</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account Size</p>
+                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.balance)}</p>
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Profit Target</p>
-                      <p className="mt-1 text-xl font-semibold text-white">{formatCurrency(challenge.targetProfit)}</p>
-                      <p className="text-xs text-white/45">{((challenge.targetProfit / challenge.accountSize) * 100).toFixed(1)}%</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</p>
+                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.target)}</p>
+                      {size.target > 0 && (
+                        <p className="text-xs text-muted-foreground">{((size.target / size.balance) * 100).toFixed(1)}%</p>
+                      )}
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Max Daily Loss</p>
-                      <p className="mt-1 text-xl font-semibold text-white">{formatCurrency(challenge.maxDailyLoss)}</p>
-                      <p className="text-xs text-white/45">{((challenge.maxDailyLoss / challenge.accountSize) * 100).toFixed(1)}%</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Daily Loss</p>
+                      <p className="mt-1 text-xl font-semibold text-foreground">
+                        {size.dailyLoss !== null ? formatCurrency(size.dailyLoss) : 'No limit'}
+                      </p>
+                      {size.dailyLoss !== null && size.dailyLoss > 0 && (
+                        <p className="text-xs text-muted-foreground">{((size.dailyLoss / size.balance) * 100).toFixed(1)}%</p>
+                      )}
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Max Total Loss</p>
-                      <p className="mt-1 text-xl font-semibold text-white">{formatCurrency(challenge.maxTotalLoss)}</p>
-                      <p className="text-xs text-white/45">{((challenge.maxTotalLoss / challenge.accountSize) * 100).toFixed(1)}%</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</p>
+                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.drawdown)}</p>
+                      <p className="text-xs text-muted-foreground">{((size.drawdown / size.balance) * 100).toFixed(1)}%</p>
                     </div>
                   </div>
 
                   <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Min Trading Days</p>
-                      <p className="mt-1 text-lg font-semibold text-white">
-                        {challenge.minTradingDays === 0 ? 'None' : challenge.minTradingDays}
-                      </p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Split</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{size.profitSharing}%</p>
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Max Trading Days</p>
-                      <p className="mt-1 text-lg font-semibold text-white">
-                        {challenge.maxTradingDays === 0 ? 'Unlimited' : challenge.maxTradingDays}
-                      </p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Evaluation</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{size.evaluation ? 'Required' : 'None'}</p>
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Profit Split</p>
-                      <p className="mt-1 text-lg font-semibold text-white">{challenge.profitSplit}%</p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">Price</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Price</p>
                       <div className="mt-1 flex items-baseline gap-2">
-                        {challenge.priceWithPromo > 0 && challenge.priceWithPromo < challenge.price ? (
+                        {size.priceWithPromo > 0 && size.priceWithPromo < size.price ? (
                           <>
-                            <span className="text-lg font-semibold text-white">{formatCurrency(challenge.priceWithPromo)}</span>
-                            <span className="text-sm text-white/40 line-through">{formatCurrency(challenge.price)}</span>
+                            <span className="text-lg font-semibold text-foreground">{formatCurrency(size.priceWithPromo)}</span>
+                            <span className="text-sm text-muted-foreground line-through">{formatCurrency(size.price)}</span>
                             <BadgeV2 variant="accent" className="text-[10px]">
-                              {Math.round((1 - challenge.priceWithPromo / challenge.price) * 100)}% OFF
+                              {Math.round((1 - size.priceWithPromo / size.price) * 100)}% OFF
                             </BadgeV2>
                           </>
                         ) : (
-                          <span className="text-lg font-semibold text-white">
-                            {challenge.price === 0 ? 'Included' : formatCurrency(challenge.price)}
+                          <span className="text-lg font-semibold text-foreground">
+                            {size.price === 0 ? 'Included' : formatCurrency(size.price)}
                           </span>
                         )}
                       </div>
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Split (Firm)</p>
+                      <p className="mt-1 text-lg font-semibold text-foreground">{profitSplit ?? 'N/A'}</p>
                     </div>
                   </div>
                 </div>
@@ -410,28 +374,28 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   ]
 
   return (
-    <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <CardV2Title className="text-2xl text-white">Additional Details</CardV2Title>
+          <CardV2Title className="text-2xl text-foreground">Additional Details</CardV2Title>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
           Key information about the firm including founding details, regulatory status, and supported platforms.
         </CardV2Description>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {details.map((detail) => (
-            <div key={detail.label} className="rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+            <div key={detail.label} className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-card/5">
                   <detail.icon className="h-4 w-4 text-v2-accent" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-white/45">{detail.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{detail.value}</p>
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{detail.label}</p>
+                  <p className="mt-2 text-sm font-semibold text-foreground">{detail.value}</p>
                 </div>
               </div>
             </div>
@@ -446,11 +410,11 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   return (
     <div className="space-y-6">
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-white/45">Company dashboard</p>
-            <CardV2Title className="mt-4 text-3xl text-white">Prop firm profile overview</CardV2Title>
-            <CardV2Description className="mt-4 text-base leading-7 text-white/60">
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Company dashboard</p>
+            <CardV2Title className="mt-4 text-3xl text-foreground">Prop firm profile overview</CardV2Title>
+            <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
               {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
             </CardV2Description>
 
@@ -465,20 +429,19 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </CardV2Content>
         </CardV2>
 
-        <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-white/45">Trust view</p>
-            <CardV2Title className="mt-4 text-3xl text-white">What to check before you click out</CardV2Title>
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust view</p>
+            <CardV2Title className="mt-4 text-3xl text-foreground">What to check before you click out</CardV2Title>
             <div className="mt-6 space-y-3">
               {trustChecklist.map((item) => (
-                <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-4">
+                <div key={item} className="flex items-start gap-3 rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-v2-accent" />
-                  <p className="text-sm leading-7 text-white/58">{item}</p>
+                  <p className="text-sm leading-7 text-muted-foreground">{item}</p>
                 </div>
               ))}
             </div>
             
-            {/* Catalogue statistics if available */}
             {firm.catalogueStats && (
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <MetricCard label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
@@ -496,7 +459,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
         </CardV2>
       </section>
 
-      <RADARAnalysisWidget firmId={firm.id} />
+      <RADARAnalysisWidget firm={firm} />
       
       <AdditionalDetailsSection firm={firm} />
 
@@ -519,7 +482,7 @@ function StarRating({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'md
           key={star}
           className={cn(
             sizeClasses[size],
-            star <= rating ? 'text-yellow-400' : 'text-white/20'
+            star <= rating ? 'text-yellow-400' : 'text-muted-foreground/40'
           )}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -565,21 +528,33 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/60 transition-colors hover:bg-white/[0.08] hover:text-white"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-card/10 text-foreground/80 transition-colors hover:bg-card/10 hover:text-foreground"
     >
       {icons[type]}
     </a>
   )
 }
 
-function RADARAnalysisWidget({ firmId }: { firmId: string }) {
+function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
+  const accountsFunded = Math.min(100, Math.round(((firm.catalogueStats?.accountsCount ?? 0) / 100) * 100))
+  const payoutsMade = Math.min(100, Math.round(((firm.catalogueStats?.paidPayoutCount ?? 0) / 50) * 100))
+  const consistencyScore = Math.round(((firm.spotlight?.rating ?? 4.0) / 5) * 100)
+  const reviewCount = firm._count?.reviews ?? 0
+  const supportQuality = Math.min(100, Math.round((reviewCount / 20) * 100))
+  const drawdownType = firm.drawdownType ?? 'Static'
+  const ruleFlexibility = drawdownType === 'Static' ? 80 : drawdownType === 'Trailing' ? 70 : 75
+  const avgPayout = firm.catalogueStats?.paidPayoutAmount ?? 0
+  const payoutCount = firm.catalogueStats?.paidPayoutCount ?? 1
+  const avgPayoutPerAccount = payoutCount > 0 ? avgPayout / payoutCount : 0
+  const valueForMoney = Math.min(100, Math.round((avgPayoutPerAccount / 10000) * 100))
+
   const metrics = [
-    { label: 'Total Accounts Funded', value: 85, max: 100 },
-    { label: 'Total Payouts Made', value: 78, max: 100 },
-    { label: 'Consistency Score', value: 92, max: 100 },
-    { label: 'Support Quality', value: 88, max: 100 },
-    { label: 'Rule Flexibility', value: 75, max: 100 },
-    { label: 'Value for Money', value: 82, max: 100 },
+    { label: 'Total Accounts Funded', value: accountsFunded, max: 100 },
+    { label: 'Total Payouts Made', value: payoutsMade, max: 100 },
+    { label: 'Consistency Score', value: consistencyScore, max: 100 },
+    { label: 'Support Quality', value: supportQuality, max: 100 },
+    { label: 'Rule Flexibility', value: ruleFlexibility, max: 100 },
+    { label: 'Value for Money', value: valueForMoney, max: 100 },
   ]
 
   const centerX = 150
@@ -604,16 +579,16 @@ function RADARAnalysisWidget({ firmId }: { firmId: string }) {
     .join(' ') + ' Z'
 
   return (
-    <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
-          <CardV2Title className="text-2xl text-white">RADAR Analysis</CardV2Title>
+          <CardV2Title className="text-2xl text-foreground">RADAR Analysis</CardV2Title>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-white/58">
-          Comprehensive performance metrics based on user reviews and platform data.
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          Performance metrics derived from platform data and user reviews.
         </CardV2Description>
 
         <div className="mt-6 flex flex-col items-center">
@@ -669,7 +644,7 @@ function RADARAnalysisWidget({ firmId }: { firmId: string }) {
                   y={point.y}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  className="fill-white/70 text-[10px]"
+                  className="fill-foreground/70 text-[10px]"
                 >
                   {metric.label}
                 </text>
@@ -694,9 +669,9 @@ function RADARAnalysisWidget({ firmId }: { firmId: string }) {
 
           <div className="mt-6 grid w-full grid-cols-2 gap-3 sm:grid-cols-3">
             {metrics.map((metric) => (
-              <div key={metric.label} className="rounded-2xl border border-white/10 bg-black/20 px-3 py-3">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-white/45">{metric.label}</p>
-                <p className="mt-1 text-lg font-semibold text-white">{metric.value}/100</p>
+              <div key={metric.label} className="rounded-2xl border border-border/40 bg-background/40 px-3 py-3">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{metric.label}</p>
+                <p className="mt-1 text-lg font-semibold text-foreground">{metric.value}/100</p>
               </div>
             ))}
           </div>
@@ -725,12 +700,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-[34px] border border-white/10 bg-black/40 p-6 sm:p-8 lg:p-10">
+    <section className="relative overflow-hidden rounded-[34px] border border-border/40 bg-background/80 p-6 sm:p-8 lg:p-10">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.2),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_36%)]" />
       <div className="relative">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] border border-white/10 bg-white/[0.04] overflow-hidden shadow-lg shadow-black/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] border border-border/40 bg-card/10 overflow-hidden shadow-lg shadow-black/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -755,7 +730,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                 )}
               </div>
               
-              <h1 className="mt-3 text-4xl font-bold tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mt-3 text-4xl font-bold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
                 {firm.name}
                 {spotlightPromoText && (
                   <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-v2-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-accent-foreground">
@@ -767,26 +742,25 @@ function FirmHeader({ firm }: { firm: FirmData }) {
               <div className="mt-3 flex items-center gap-4">
                 <StarRating rating={Math.round(spotlightRating)} size="lg" />
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-white">{spotlightRating.toFixed(1)}</span>
-                  <span className="text-sm text-white/50">/ 5.0</span>
+                  <span className="text-2xl font-bold text-foreground">{spotlightRating.toFixed(1)}</span>
+                  <span className="text-sm text-muted-foreground">/ 5.0</span>
                 </div>
-                <span className="text-sm text-white/50">
+                <span className="text-sm text-muted-foreground">
                   ({spotlightReviewCount.toLocaleString()} {spotlightReviewCount === 1 ? 'review' : 'reviews'})
                 </span>
                 
-                {/* Additional spotlight info */}
                 {spotlightYearsInOperation && (
-                  <span className="ml-3 text-sm text-white/50">
+                  <span className="ml-3 text-sm text-muted-foreground">
                     • {spotlightYearsInOperation} years in operation
                   </span>
                 )}
                 {spotlightCountryCode && (
-                  <span className="ml-3 text-sm text-white/50">
+                  <span className="ml-3 text-sm text-muted-foreground">
                     • {spotlightCountryCode}
                   </span>
                 )}
                 {spotlightFounded && (
-                  <span className="ml-3 text-sm text-white/50">
+                  <span className="ml-3 text-sm text-muted-foreground">
                     • Founded {spotlightFounded}
                   </span>
                 )}
@@ -847,7 +821,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 rounded-[22px] border border-white/10 bg-white/[0.03] p-2">
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 rounded-[22px] border border-border/40 bg-card/5 p-2">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -858,7 +832,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                 key={value}
                 value={value}
                 className={cn(
-                  'rounded-2xl px-4 py-2.5 text-sm text-white/60 transition-colors',
+                  'rounded-2xl px-4 py-2.5 text-sm text-foreground/80 transition-colors',
                   'data-[state=active]:bg-v2-accent data-[state=active]:text-black'
                 )}
               >
@@ -872,7 +846,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
           </TabsContent>
 
           <TabsContent value="challenges" className="mt-6">
-            <ChallengesSection firmId={firm.id} />
+            <ChallengesSection accountSizes={firm.accountSizes} profitSplit={firm.profitSplit ?? 'N/A'} />
           </TabsContent>
 
           <TabsContent value="reviews" className="mt-6">

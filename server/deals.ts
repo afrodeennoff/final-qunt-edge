@@ -6,6 +6,7 @@ import {
   PROP_FIRM_MATCH_SPOTLIGHTS,
   type PropFirmMatchSpotlight,
 } from '@/lib/propfirmmatch/source'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
 export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
@@ -27,6 +28,19 @@ export interface DealItem {
   challengeFee: number
   expiryDate: string
   claimUrl: string | null
+}
+
+export interface AccountSizeData {
+  name: string
+  balance: number
+  price: number
+  priceWithPromo: number
+  target: number
+  dailyLoss: number | null
+  drawdown: number
+  trailing?: string
+  profitSharing: number
+  evaluation: boolean
 }
 
 export interface UnifiedFirm {
@@ -53,6 +67,7 @@ export interface UnifiedFirm {
     pendingPayoutAmount: number
     sizeBreakdown: string
   }
+  accountSizes: Record<string, AccountSizeData>
   coupons: FirmCoupon[]
   _count: {
     reviews: number
@@ -86,6 +101,31 @@ export interface DealsSpotlightCollection {
 
 function normalizeFirmName(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '')
+}
+
+function getAccountSizesFromConfig(firmName: string): Record<string, AccountSizeData> {
+  const normalized = normalizeFirmName(firmName)
+  for (const [, firm] of Object.entries(propFirms)) {
+    if (normalizeFirmName(firm.name) === normalized) {
+      const result: Record<string, AccountSizeData> = {}
+      for (const [key, size] of Object.entries(firm.accountSizes)) {
+        result[key] = {
+          name: size.name,
+          balance: size.balance,
+          price: size.price,
+          priceWithPromo: size.priceWithPromo,
+          target: size.target,
+          dailyLoss: size.dailyLoss ?? null,
+          drawdown: size.drawdown,
+          trailing: size.trailing,
+          profitSharing: size.profitSharing,
+          evaluation: size.evaluation,
+        }
+      }
+      return result
+    }
+  }
+  return {}
 }
 
 export interface FaqItem {
@@ -201,6 +241,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       pendingPayoutAmount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.pendingAmount ?? 0,
       sizeBreakdown: catalogueMap.get(normalizeFirmName(firm.name))?.sizeBreakdown ?? 'No live account data yet',
     },
+    accountSizes: getAccountSizesFromConfig(firm.name),
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
@@ -313,6 +354,7 @@ export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> =
       pendingPayoutAmount: catalogueEntry?.payouts.pendingAmount ?? 0,
       sizeBreakdown: catalogueEntry?.sizeBreakdown ?? 'No live account data yet',
     },
+    accountSizes: getAccountSizesFromConfig(firm.name),
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,
@@ -389,6 +431,7 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
       pendingPayoutAmount: catalogueEntry?.payouts.pendingAmount ?? 0,
       sizeBreakdown: catalogueEntry?.sizeBreakdown ?? 'No live account data yet',
     },
+    accountSizes: getAccountSizesFromConfig(firm.name),
     coupons: firm.coupons.map((c) => ({
       id: c.id,
       code: c.code,

@@ -1,12 +1,22 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { createPropFirm, updatePropFirm } from '@/server/prop-firms'
+import {
+  createPropFirm,
+  updatePropFirm,
+  createPropFirmReview,
+  updatePropFirmReview,
+  deletePropFirmReview,
+  createPropFirmCoupon,
+  updatePropFirmCoupon,
+  deletePropFirmCoupon,
+} from '@/server/prop-firms'
 import { assertAdminAccess } from '@/server/authz'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Trash2, Plus } from 'lucide-react'
 
 type PropFirmData = {
   id: string
@@ -23,6 +33,29 @@ type PropFirmData = {
   referralUrl: string | null
   logoUrl: string | null
   isActive: boolean
+  reviews: {
+    id: string
+    rating: number
+    title: string | null
+    content: string | null
+    isVerified: boolean
+    createdAt: Date
+  }[]
+  coupons: {
+    id: string
+    code: string
+    description: string | null
+    discountPercent: number | null
+    challengeFee: number | null
+    drawdownType: string | null
+    payoutModel: string | null
+    platform: string | null
+    claimUrl: string | null
+    isActive: boolean
+    startsAt: Date | null
+    expiresAt: Date | null
+    createdAt: Date
+  }[]
 }
 
 export default async function PropFirmEditPage({
@@ -36,7 +69,13 @@ export default async function PropFirmEditPage({
 
   let firm: PropFirmData | null = null
   if (!isNew) {
-    firm = await prisma.propFirm.findUnique({ where: { id } })
+    firm = await prisma.propFirm.findUnique({
+      where: { id },
+      include: {
+        reviews: { orderBy: { createdAt: 'desc' } },
+        coupons: { orderBy: { createdAt: 'desc' } },
+      },
+    })
   }
 
   async function handleAction(formData: FormData) {
@@ -69,10 +108,102 @@ export default async function PropFirmEditPage({
     redirect(`/${locale}/admin/propfirms`)
   }
 
+  async function handleCreateReview(formData: FormData) {
+    'use server'
+    const propFirmId = formData.get('propFirmId') as string
+    await createPropFirmReview(propFirmId, {
+      rating: parseInt(formData.get('rating')?.toString() ?? '0', 10),
+      title: formData.get('title')?.toString() || undefined,
+      content: formData.get('content')?.toString() || undefined,
+      isVerified: formData.has('isVerified'),
+    })
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
+  async function handleUpdateReview(formData: FormData) {
+    'use server'
+    const reviewId = formData.get('reviewId') as string
+    const propFirmId = formData.get('propFirmId') as string
+    await updatePropFirmReview(reviewId, {
+      rating: parseInt(formData.get('rating')?.toString() ?? '0', 10),
+      title: formData.get('title')?.toString() || undefined,
+      content: formData.get('content')?.toString() || undefined,
+      isVerified: formData.has('isVerified'),
+    })
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
+  async function handleDeleteReview(formData: FormData) {
+    'use server'
+    const reviewId = formData.get('reviewId') as string
+    const propFirmId = formData.get('propFirmId') as string
+    await deletePropFirmReview(reviewId)
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
+  async function handleCreateCoupon(formData: FormData) {
+    'use server'
+    const propFirmId = formData.get('propFirmId') as string
+    const startsAt = formData.get('startsAt')?.toString()
+    const expiresAt = formData.get('expiresAt')?.toString()
+    await createPropFirmCoupon(propFirmId, {
+      code: formData.get('code')?.toString() ?? '',
+      description: formData.get('description')?.toString() || undefined,
+      discountPercent: formData.get('discountPercent')?.toString()
+        ? parseFloat(formData.get('discountPercent')!.toString())
+        : undefined,
+      challengeFee: formData.get('challengeFee')?.toString()
+        ? parseFloat(formData.get('challengeFee')!.toString())
+        : undefined,
+      drawdownType: formData.get('drawdownType')?.toString() || undefined,
+      payoutModel: formData.get('payoutModel')?.toString() || undefined,
+      platform: formData.get('platform')?.toString() || undefined,
+      claimUrl: formData.get('claimUrl')?.toString() || undefined,
+      isActive: formData.has('isActive'),
+      startsAt: startsAt ? new Date(startsAt) : undefined,
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    })
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
+  async function handleUpdateCoupon(formData: FormData) {
+    'use server'
+    const couponId = formData.get('couponId') as string
+    const propFirmId = formData.get('propFirmId') as string
+    const startsAt = formData.get('startsAt')?.toString()
+    const expiresAt = formData.get('expiresAt')?.toString()
+    await updatePropFirmCoupon(couponId, {
+      code: formData.get('code')?.toString() ?? '',
+      description: formData.get('description')?.toString() || undefined,
+      discountPercent: formData.get('discountPercent')?.toString()
+        ? parseFloat(formData.get('discountPercent')!.toString())
+        : undefined,
+      challengeFee: formData.get('challengeFee')?.toString()
+        ? parseFloat(formData.get('challengeFee')!.toString())
+        : undefined,
+      drawdownType: formData.get('drawdownType')?.toString() || undefined,
+      payoutModel: formData.get('payoutModel')?.toString() || undefined,
+      platform: formData.get('platform')?.toString() || undefined,
+      claimUrl: formData.get('claimUrl')?.toString() || undefined,
+      isActive: formData.has('isActive'),
+      startsAt: startsAt ? new Date(startsAt) : undefined,
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    })
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
+  async function handleDeleteCoupon(formData: FormData) {
+    'use server'
+    const couponId = formData.get('couponId') as string
+    const propFirmId = formData.get('propFirmId') as string
+    await deletePropFirmCoupon(couponId)
+    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  }
+
   const fieldClass = 'grid gap-2'
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
           <Link href={`/${locale}/admin/propfirms`}>← Back</Link>
@@ -181,6 +312,163 @@ export default async function PropFirmEditPage({
           </CardContent>
         </Card>
       </form>
+
+      {!isNew && firm && (
+        <>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
+              <form action={handleCreateReview}>
+                <input type="hidden" name="propFirmId" value={firm.id} />
+                <div className="flex items-center gap-2">
+                  <Input name="title" placeholder="Review title" className="w-40" />
+                  <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
+                  <Input name="content" placeholder="Content" className="w-60" />
+                  <label className="flex items-center gap-1 text-sm">
+                    <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
+                    Verified
+                  </label>
+                  <Button type="submit" size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-1" /> Add
+                  </Button>
+                </div>
+              </form>
+            </CardHeader>
+            <CardContent>
+              {firm.reviews.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No reviews yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {firm.reviews.map((review) => (
+                    <div key={review.id} className="flex items-start gap-3 p-3 rounded-lg border border-border">
+                      <div className="flex-1 space-y-2">
+                        <form action={handleUpdateReview} className="space-y-2">
+                          <input type="hidden" name="reviewId" value={review.id} />
+                          <input type="hidden" name="propFirmId" value={firm.id} />
+                          <div className="flex items-center gap-2">
+                            <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
+                            <Input name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
+                            <label className="flex items-center gap-1 text-sm">
+                              <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
+                              Verified
+                            </label>
+                            <Button type="submit" size="sm" variant="outline">Save</Button>
+                          </div>
+                          <textarea
+                            name="content"
+                            defaultValue={review.content ?? ''}
+                            placeholder="Review content"
+                            rows={2}
+                            className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                          />
+                        </form>
+                        <p className="text-xs text-muted-foreground">
+                          Created: {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <form action={handleDeleteReview}>
+                        <input type="hidden" name="reviewId" value={review.id} />
+                        <input type="hidden" name="propFirmId" value={firm.id} />
+                        <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </form>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
+              <form action={handleCreateCoupon}>
+                <input type="hidden" name="propFirmId" value={firm.id} />
+                <div className="flex items-center gap-2">
+                  <Input name="code" placeholder="Code" className="w-28" required />
+                  <Input name="description" placeholder="Description" className="w-40" />
+                  <Input name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-24" />
+                  <label className="flex items-center gap-1 text-sm">
+                    <input type="checkbox" name="isActive" defaultChecked className="h-4 w-4 rounded border-input accent-primary" />
+                    Active
+                  </label>
+                  <Button type="submit" size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-1" /> Add
+                  </Button>
+                </div>
+              </form>
+            </CardHeader>
+            <CardContent>
+              {firm.coupons.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No coupons yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {firm.coupons.map((coupon) => (
+                    <div key={coupon.id} className="flex items-start gap-3 p-3 rounded-lg border border-border">
+                      <div className="flex-1 space-y-2">
+                        <form action={handleUpdateCoupon} className="space-y-2">
+                          <input type="hidden" name="couponId" value={coupon.id} />
+                          <input type="hidden" name="propFirmId" value={firm.id} />
+                          <div className="grid grid-cols-4 gap-2">
+                            <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
+                            <Input name="description" defaultValue={coupon.description ?? ''} placeholder="Description" />
+                            <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
+                            <Input name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="Challenge Fee" />
+                          </div>
+                          <div className="grid grid-cols-4 gap-2">
+                            <Input name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Drawdown Type" />
+                            <Input name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Payout Model" />
+                            <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Platform" />
+                            <Input name="claimUrl" defaultValue={coupon.claimUrl ?? ''} placeholder="Claim URL" />
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={`startsAt-${coupon.id}`} className="text-sm">Starts:</Label>
+                              <Input
+                                id={`startsAt-${coupon.id}`}
+                                name="startsAt"
+                                type="datetime-local"
+                                defaultValue={coupon.startsAt ? new Date(coupon.startsAt).toISOString().slice(0, 16) : ''}
+                                className="w-44"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Label htmlFor={`expiresAt-${coupon.id}`} className="text-sm">Expires:</Label>
+                              <Input
+                                id={`expiresAt-${coupon.id}`}
+                                name="expiresAt"
+                                type="datetime-local"
+                                defaultValue={coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().slice(0, 16) : ''}
+                                className="w-44"
+                              />
+                            </div>
+                            <label className="flex items-center gap-1 text-sm">
+                              <input type="checkbox" name="isActive" defaultChecked={coupon.isActive} className="h-4 w-4 rounded border-input accent-primary" />
+                              Active
+                            </label>
+                            <Button type="submit" size="sm" variant="outline">Save</Button>
+                          </div>
+                        </form>
+                        <p className="text-xs text-muted-foreground">
+                          Created: {new Date(coupon.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <form action={handleDeleteCoupon}>
+                        <input type="hidden" name="couponId" value={coupon.id} />
+                        <input type="hidden" name="propFirmId" value={firm.id} />
+                        <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </form>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   )
 }

@@ -41,12 +41,12 @@ export default function PropfirmCatalogueWidget() {
         >
             <ScrollArea className="h-full">
                 <div className="flex flex-col gap-1 p-3">
-                    {sortedStats.map((stat) => (
-                        <Link
-                            key={stat.propfirmName}
-                            href={`/firm/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
-                            className="block"
-                        >
+{sortedStats.map((stat) => (
+                         <Link
+                             key={stat.propfirmName}
+                             href={`/propfirms/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
+                             className="block"
+                         >
                             <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors cursor-pointer">
                                 <div className="flex flex-col gap-1 min-w-0">
                                     <span className="font-bold text-sm truncate tracking-tight">{stat.propfirmName}</span>

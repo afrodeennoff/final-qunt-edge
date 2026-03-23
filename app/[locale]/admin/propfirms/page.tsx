@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
-import { deletePropFirm } from '@/server/prop-firms'
+import { softDeletePropFirm } from '@/server/prop-firms'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Trash2 } from 'lucide-react'
@@ -9,7 +9,7 @@ import { Trash2 } from 'lucide-react'
 async function handleDelete(formData: FormData) {
   'use server'
   const id = formData.get('id') as string
-  await deletePropFirm(id)
+  await softDeletePropFirm(id)
 }
 
 export default async function PropFirmsListPage({ params }: { params: Promise<{ locale: string }> }) {

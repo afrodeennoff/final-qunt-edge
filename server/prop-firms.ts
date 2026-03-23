@@ -77,3 +77,86 @@ export async function deletePropFirm(id: string) {
   updateTag('prop-firms')
   return result
 }
+
+export async function softDeletePropFirm(id: string) {
+  await assertAdminAccess()
+  const result = await prisma.propFirm.update({
+    where: { id },
+    data: { isActive: false },
+  })
+  updateTag('prop-firms')
+  return result
+}
+
+export type PropFirmReviewInput = {
+  rating: number
+  title?: string
+  content?: string
+  isVerified?: boolean
+}
+
+export async function createPropFirmReview(propFirmId: string, data: PropFirmReviewInput) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmReview.create({
+    data: { propFirmId, ...data },
+  })
+  updateTag('prop-firms')
+  return result
+}
+
+export async function updatePropFirmReview(id: string, data: PropFirmReviewInput) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmReview.update({
+    where: { id },
+    data,
+  })
+  updateTag('prop-firms')
+  return result
+}
+
+export async function deletePropFirmReview(id: string) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmReview.delete({ where: { id } })
+  updateTag('prop-firms')
+  return result
+}
+
+export type PropFirmCouponInput = {
+  code: string
+  description?: string
+  discountPercent?: number
+  challengeFee?: number
+  drawdownType?: string
+  payoutModel?: string
+  platform?: string
+  claimUrl?: string
+  isActive?: boolean
+  startsAt?: Date
+  expiresAt?: Date
+}
+
+export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCouponInput) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmCoupon.create({
+    data: { propFirmId, ...data },
+  })
+  updateTag('prop-firms')
+  return result
+}
+
+export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmCoupon.update({
+    where: { id },
+    data,
+  })
+  updateTag('prop-firms')
+  return result
+}
+
+export async function deletePropFirmCoupon(id: string) {
+  await assertAdminAccess()
+  const result = await prisma.propFirmCoupon.delete({ where: { id } })
+  updateTag('prop-firms')
+  return result
+}
