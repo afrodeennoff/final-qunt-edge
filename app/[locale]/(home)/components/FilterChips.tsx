@@ -1,6 +1,6 @@
 'use client'
 
-import { X } from 'lucide-react'
+import { SlidersHorizontal, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -13,13 +13,70 @@ export interface FilterState {
 interface FilterChipsProps {
   filters: FilterState
   onFilterChange: (filters: FilterState) => void
+  totalCount: number
+  filteredCount: number
 }
 
 const platformOptions = ['All', 'Tradovate', 'Rithmic', 'MetaTrader 5', 'cTrader', 'DXtrade']
 const challengeTypeOptions = ['All', 'One-phase', 'Two-phase', 'Instant']
 const drawdownOptions = ['All', 'Static', 'Trailing', 'EOD']
 
-function ChipGroup({
+export default function FilterChips({ filters, onFilterChange, totalCount, filteredCount }: FilterChipsProps) {
+  const hasActiveFilters =
+    filters.platform !== 'All' || filters.challengeType !== 'All' || filters.drawdown !== 'All'
+
+  return (
+    <section className="py-5">
+      <div className="rounded-[1.9rem] border border-border/60 bg-background/70 p-4 sm:p-5">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Refine the board
+              </div>
+              <p className="mt-2 text-sm text-foreground/80">
+                {filteredCount === totalCount ? `${totalCount} firms in view` : `${filteredCount} of ${totalCount} firms match`}
+              </p>
+            </div>
+            {hasActiveFilters ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onFilterChange({ platform: 'All', challengeType: 'All', drawdown: 'All' })}
+                className="gap-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-3 w-3" />
+                Reset
+              </Button>
+            ) : null}
+          </div>
+
+          <ChipRow
+            label="Platform"
+            options={platformOptions}
+            selected={filters.platform}
+            onSelect={(value) => onFilterChange({ ...filters, platform: value })}
+          />
+          <ChipRow
+            label="Challenge"
+            options={challengeTypeOptions}
+            selected={filters.challengeType}
+            onSelect={(value) => onFilterChange({ ...filters, challengeType: value })}
+          />
+          <ChipRow
+            label="Drawdown"
+            options={drawdownOptions}
+            selected={filters.drawdown}
+            onSelect={(value) => onFilterChange({ ...filters, drawdown: value })}
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ChipRow({
   label,
   options,
   selected,
@@ -31,20 +88,21 @@ function ChipGroup({
   onSelect: (value: string) => void
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground [font-family:var(--home-copy)]">
+    <div className="grid gap-2 lg:grid-cols-[120px_minmax(0,1fr)] lg:items-center">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </span>
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {options.map((option) => (
           <button
             key={option}
+            type="button"
             onClick={() => onSelect(option)}
             className={cn(
-              'shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors [font-family:var(--home-copy)]',
+              'shrink-0 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors',
               selected === option
-                ? 'border-foreground/20 bg-foreground/10 text-foreground'
-                : 'border-border/60 bg-transparent text-muted-foreground hover:border-border hover:bg-foreground/5 hover:text-foreground'
+                ? 'border-foreground/15 bg-foreground text-background'
+                : 'border-border/70 bg-card/80 text-muted-foreground hover:border-border hover:text-foreground'
             )}
           >
             {option}
@@ -52,58 +110,5 @@ function ChipGroup({
         ))}
       </div>
     </div>
-  )
-}
-
-export default function FilterChips({ filters, onFilterChange }: FilterChipsProps) {
-  const hasActiveFilters =
-    filters.platform !== 'All' || filters.challengeType !== 'All' || filters.drawdown !== 'All'
-
-  const clearAll = () => {
-    onFilterChange({ platform: 'All', challengeType: 'All', drawdown: 'All' })
-  }
-
-  return (
-    <section className="px-4 pb-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="rounded-xl border border-border/60 bg-card/50 p-4 backdrop-blur-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-              <ChipGroup
-                label="Platform"
-                options={platformOptions}
-                selected={filters.platform}
-                onSelect={(v) => onFilterChange({ ...filters, platform: v })}
-              />
-              <div className="hidden h-5 w-px bg-border/60 sm:block" />
-              <ChipGroup
-                label="Challenge"
-                options={challengeTypeOptions}
-                selected={filters.challengeType}
-                onSelect={(v) => onFilterChange({ ...filters, challengeType: v })}
-              />
-              <div className="hidden h-5 w-px bg-border/60 sm:block" />
-              <ChipGroup
-                label="Drawdown"
-                options={drawdownOptions}
-                selected={filters.drawdown}
-                onSelect={(v) => onFilterChange({ ...filters, drawdown: v })}
-              />
-            </div>
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearAll}
-                className="shrink-0 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-3 w-3" />
-                Clear all
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
   )
 }

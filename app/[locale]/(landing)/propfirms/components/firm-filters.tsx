@@ -46,7 +46,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 rounded-[28px] border border-border/70 bg-card/60 p-4 sm:p-5">
       {/* Search Bar */}
       <div className="relative">
         <svg
@@ -67,7 +67,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
-          className="pl-10 h-10 bg-card/50 border-border/50 focus:border-primary/40 focus:ring-primary/20 placeholder:text-muted-foreground/40"
+          className="h-12 rounded-2xl border-border/60 bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/20"
         />
       </div>
 
@@ -85,7 +85,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               size="sm"
               onClick={() => updateParams("payout", value)}
               className={cn(
-                "h-7 px-2.5 text-[11px] font-medium rounded-md border transition-all duration-200",
+                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200",
                 payoutFilter === value
                   ? "border-primary/40 bg-primary/10 text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -116,7 +116,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               size="sm"
               onClick={() => updateParams("sort", value)}
               className={cn(
-                "h-7 px-2.5 text-[11px] font-medium rounded-md border transition-all duration-200",
+                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200",
                 sort === value
                   ? "border-primary/40 bg-primary/10 text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -135,7 +135,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               variant="ghost"
               size="sm"
               onClick={clearAllFilters}
-              className="h-7 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
+              className="h-8 rounded-full px-3 text-[11px] font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
             >
               Clear All
             </Button>

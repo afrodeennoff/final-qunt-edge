@@ -3,6 +3,7 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getStaticParams } from "@/locales/server";
 import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
+import { getActiveDeals, getDealsOverview, getUnifiedFirms } from '@/server/deals'
 
 const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
 
@@ -55,6 +56,27 @@ export default async function HomePage({
     const { locale } = await params;
     setStaticParamsLocale(locale);
 
+    let firms: Awaited<ReturnType<typeof getUnifiedFirms>> = []
+    let deals: Awaited<ReturnType<typeof getActiveDeals>> = []
+    let overview: Awaited<ReturnType<typeof getDealsOverview>> = {
+      totalTrackedFirms: 0,
+      totalLiveDeals: 0,
+      totalAccounts: 0,
+      totalAccountValue: 0,
+      totalPaidPayoutAmount: 0,
+      totalPaidPayoutCount: 0,
+    }
+
+    const results = await Promise.allSettled([
+      getUnifiedFirms(),
+      getActiveDeals(),
+      getDealsOverview(),
+    ])
+
+    firms = results[0].status === 'fulfilled' ? results[0].value : []
+    deals = results[1].status === 'fulfilled' ? results[1].value : []
+    overview = results[2].status === 'fulfilled' ? results[2].value : overview
+
     const softwareSchema = {
       '@context': 'https://schema.org',
       '@type': 'SoftwareApplication',
@@ -78,7 +100,7 @@ export default async function HomePage({
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
-        <HomeContent locale={locale} />
+        <HomeContent locale={locale} firms={firms} deals={deals} overview={overview} />
       </>
     );
 }

@@ -10,44 +10,53 @@ interface SearchHeroProps {
   filteredCount: number
 }
 
-export default function SearchHero({ searchQuery, onSearchChange, totalCount, filteredCount }: SearchHeroProps) {
+export default function SearchHero({
+  searchQuery,
+  onSearchChange,
+  totalCount,
+  filteredCount,
+}: SearchHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden px-4 pb-8 pt-20 sm:px-6 sm:pb-10 sm:pt-28 lg:px-8 lg:pt-32">
+    <section className="relative isolate overflow-hidden rounded-[1.8rem] border border-border/60 bg-background/75 px-4 py-6 sm:px-6 sm:py-8">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(75%_60%_at_50%_0%,hsl(var(--foreground)/0.06),transparent_70%)]" />
 
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_-8%,hsl(var(--foreground)/0.08)_0%,transparent_58%)]" />
+      <div className="max-w-3xl">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Explorer
+        </div>
+        <h2 className="mt-4 text-[clamp(1.8rem,4vw,3.4rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground [font-family:var(--home-display)]">
+          Compare firms with a cleaner first pass.
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          Filter by platform, challenge shape, and drawdown model to narrow the field before you commit more research time.
+        </p>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-4xl">
-
-        <h1 className="text-center text-[clamp(2rem,6vw,3.5rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-foreground [font-family:var(--home-display)]">
-          Find Your Perfect
-          <span className="block text-foreground">Prop Trading Firm</span>
-        </h1>
-
-        <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground sm:text-base [font-family:var(--home-copy)]">
-          Compare profit splits, drawdown rules, and payout policies across {totalCount} prop firms.
-          {filteredCount < totalCount && (
-            <span className="ml-1 text-foreground/80">
-              Showing {filteredCount} matching firms.
-            </span>
-          )}
-        </p>
-
-
-        <div className="mx-auto mt-8 max-w-xl">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search firms by name..."
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="h-12 rounded-xl border-border/70 bg-card/80 pl-11 pr-4 text-sm backdrop-blur-sm placeholder:text-muted-foreground/60 focus-visible:border-ring focus-visible:ring-ring/30 [font-family:var(--home-copy)]"
-            />
-          </div>
+      <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search by firm, platform, or payout model..."
+            value={searchQuery}
+            onChange={(event) => onSearchChange(event.target.value)}
+            className="h-13 rounded-2xl border-border/70 bg-card/90 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">
+          <MetaCard label="Tracked" value={totalCount.toString()} />
+          <MetaCard label="Matching" value={filteredCount.toString()} />
         </div>
       </div>
     </section>
+  )
+}
+
+function MetaCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-card/80 px-4 py-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-lg font-semibold text-foreground">{value}</p>
+    </div>
   )
 }

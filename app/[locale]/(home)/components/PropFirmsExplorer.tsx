@@ -1,96 +1,114 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { propFirms, type PropFirm } from '@/app/[locale]/dashboard/components/accounts/config'
+import Link from 'next/link'
+import { useDeferredValue, useMemo, useState } from 'react'
+import { ArrowRight } from 'lucide-react'
+import type { UnifiedFirm } from '@/server/deals'
 import SearchHero from './SearchHero'
-import FilterChips, { type FilterState } from './FilterChips'
+import FilterChips from './FilterChips'
 import FirmCardsGrid from './FirmCardsGrid'
+import type { FilterState } from './prop-firm-utils'
 
 interface PropFirmsExplorerProps {
   locale: string
+  firms: UnifiedFirm[]
 }
 
-const platformMap: Record<string, string[]> = {
-  Tradovate: ['earn2trade', 'apex', 'topstep', 'myFundedFutures'],
-  Rithmic: ['bulenox', 'phidias', 'takeProfitTrader', 'tradeify', 'lucidTrading'],
-  'MetaTrader 5': ['bulenox', 'phidias'],
-  cTrader: ['bulenox'],
-  DXtrade: ['topstep', 'myFundedFutures'],
-}
-
-function matchesPlatform(key: string, platform: string): boolean {
-  if (platform === 'All') return true
-  return platformMap[platform]?.includes(key) ?? false
-}
-
-function matchesChallengeType(firm: PropFirm, challengeType: string): boolean {
+function matchesChallengeType(firm: UnifiedFirm, challengeType: string): boolean {
   if (challengeType === 'All') return true
   const sizes = Object.values(firm.accountSizes)
-  const hasInstant = sizes.some((s) => !s.evaluation)
+  const hasInstant = sizes.some((size) => !size.evaluation)
   const hasSinglePhase = sizes.some(
-    (s) => s.evaluation && typeof s.minDays === 'number' && s.minDays <= 10
-  )
+    (size) => size.evaluation && typeof size.name === 'string' && size.name.toLowerCase().includes('1-step')
+  ) || sizes.some((size) => size.evaluation && size.profitSharing >= 90)
+
   if (challengeType === 'Instant') return hasInstant
   if (challengeType === 'One-phase') return hasSinglePhase && !hasInstant
   if (challengeType === 'Two-phase') return !hasSinglePhase && !hasInstant
   return true
 }
 
-function matchesDrawdown(firm: PropFirm, drawdown: string): boolean {
+function matchesSearch(firm: UnifiedFirm, query: string): boolean {
+  if (!query) return true
+  const normalized = query.toLowerCase()
+  return (
+    firm.name.toLowerCase().includes(normalized) ||
+    firm.platform.toLowerCase().includes(normalized) ||
+    firm.payoutModel.toLowerCase().includes(normalized) ||
+    firm.drawdownType.toLowerCase().includes(normalized)
+  )
+}
+
+function matchesDrawdown(firm: UnifiedFirm, drawdown: string): boolean {
   if (drawdown === 'All') return true
-  const sizes = Object.values(firm.accountSizes)
-  const trailingTypes = sizes.map((s) => s.trailing).filter(Boolean)
-  if (drawdown === 'Static') return trailingTypes.some((t) => t === 'Static')
-  if (drawdown === 'Trailing') return trailingTypes.some((t) => t === 'Intraday' || t === 'EOD')
-  if (drawdown === 'EOD') return trailingTypes.some((t) => t === 'EOD')
+  if (drawdown === 'Static') return firm.drawdownType === 'Static'
+  if (drawdown === 'Trailing') return firm.drawdownType === 'Trailing'
+  if (drawdown === 'EOD') return firm.drawdownType === 'End-of-day'
   return true
 }
 
-function matchesSearch(name: string, query: string): boolean {
-  if (!query) return true
-  return name.toLowerCase().includes(query.toLowerCase())
-}
-
-function filterFirms(
-  entries: Array<[string, PropFirm]>,
-  searchQuery: string,
-  filters: FilterState
-): Array<[string, PropFirm]> {
-  return entries.filter(([key, firm]) => {
-    if (!matchesSearch(firm.name, searchQuery)) return false
-    if (!matchesPlatform(key, filters.platform)) return false
-    if (!matchesChallengeType(firm, filters.challengeType)) return false
-    if (!matchesDrawdown(firm, filters.drawdown)) return false
-    return true
-  })
-}
-
-export default function PropFirmsExplorer({ locale }: PropFirmsExplorerProps) {
+export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const deferredQuery = useDeferredValue(searchQuery)
   const [filters, setFilters] = useState<FilterState>({
     platform: 'All',
     challengeType: 'All',
     drawdown: 'All',
   })
 
-  const totalCount = useMemo(() => Object.keys(propFirms).length, [])
-  const firmEntries = useMemo(() => Object.entries(propFirms), [])
+  const filteredFirms = useMemo(() => {
+    const next = firms.filter((firm) => {
+      if (!matchesSearch(firm, deferredQuery)) return false
+      if (filters.platform !== 'All' && firm.platform !== filters.platform) return false
+      if (!matchesChallengeType(firm, filters.challengeType)) return false
+      if (!matchesDrawdown(firm, filters.drawdown)) return false
+      return true
+    })
 
-  const filteredCount = useMemo(
-    () => filterFirms(firmEntries, searchQuery, filters).length,
-    [firmEntries, searchQuery, filters]
-  )
+    return next.sort((a, b) => {
+      if (b.catalogueStats.accountsCount !== a.catalogueStats.accountsCount) {
+        return b.catalogueStats.accountsCount - a.catalogueStats.accountsCount
+      }
+      return b.catalogueStats.paidPayoutAmount - a.catalogueStats.paidPayoutAmount
+    })
+  }, [deferredQuery, filters, firms])
 
   return (
-    <>
+    <section className="rounded-[2rem] border border-border/60 bg-card/45 p-4 sm:p-6 lg:p-8">
       <SearchHero
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        totalCount={totalCount}
-        filteredCount={filteredCount}
+        totalCount={firms.length}
+        filteredCount={filteredFirms.length}
       />
-      <FilterChips filters={filters} onFilterChange={setFilters} />
-      <FirmCardsGrid searchQuery={searchQuery} filters={filters} locale={locale} />
-    </>
+
+      <FilterChips
+        filters={filters}
+        onFilterChange={setFilters}
+        totalCount={firms.length}
+        filteredCount={filteredFirms.length}
+      />
+
+      <FirmCardsGrid firms={filteredFirms} locale={locale} />
+
+      <div className="px-4 pt-8 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-3 rounded-[28px] border border-border/70 bg-background/55 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Need the full board?</p>
+            <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">Open the complete firm catalogue.</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Switch to the dedicated catalogue view for payout analytics, timeframe breakdowns, and the full prop-firm board.
+            </p>
+          </div>
+          <Link
+            href={`/${locale}/propfirms`}
+            className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-background"
+          >
+            Open catalogue
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
   )
 }

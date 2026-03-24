@@ -15,9 +15,10 @@ interface FirmGridProps {
     stats: PropfirmCatalogueStats
   }>
   pageSize?: number
+  locale: string
 }
 
-export function FirmGrid({ firms, pageSize = 9 }: FirmGridProps) {
+export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
@@ -76,6 +77,7 @@ export function FirmGrid({ firms, pageSize = 9 }: FirmGridProps) {
         {paginatedFirms.map(({ key, name, accountTemplatesCount, stats }) => (
           <FirmCard
             key={key}
+            locale={locale}
             name={name}
             slug={key}
             stats={stats}
