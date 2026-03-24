@@ -78,7 +78,9 @@ function transformRowData(rows: string[][], headers: string[], mappings: { [key:
   });
 }
 
-
+// AI batch streaming: two parallel useObject hooks with error/retry logic make this
+// structural complexity unavoidable. Extracted where possible; inline where necessary.
+/* eslint-disable complexity */
 export function FormatPreview({
   trades: initialTrades,
   processedTrades,
