@@ -21,6 +21,7 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
     const { locale } = await params;
+    setStaticParamsLocale(locale);
     const canonical = `${SITE_ORIGIN}/${locale}`;
 
     return {

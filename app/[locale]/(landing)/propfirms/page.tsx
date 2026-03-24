@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { setStaticParamsLocale } from 'next-international/server'
 import { getI18n } from '@/locales/server'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getPropfirmCatalogueData } from './actions/get-propfirm-catalogue'
@@ -68,6 +69,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getI18n()
 
   return {
@@ -98,6 +100,7 @@ export default async function PropFirmsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getI18n()
   const [catalogue, unifiedFirms] = await Promise.all([
     getPropfirmCatalogueData('allTime'),
