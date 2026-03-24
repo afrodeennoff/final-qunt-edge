@@ -11,6 +11,11 @@ interface HomeContentProps {
   overview: DealsOverview
 }
 
+function formatPrice(value: number): string {
+  if (value <= 0) return 'Free'
+  return `$${value.toLocaleString()}`
+}
+
 export default function HomeContent({ locale, firms, deals, overview }: HomeContentProps) {
   const localePrefix = `/${locale}`
   const featuredFirms = [...firms]
@@ -174,7 +179,7 @@ export default function HomeContent({ locale, firms, deals, overview }: HomeCont
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-semibold text-foreground">{deal.discountPercent}% off</p>
-                      <p className="text-xs text-muted-foreground">from ${deal.challengeFee}</p>
+                      <p className="text-xs text-muted-foreground">from {formatPrice(deal.challengeFee)}</p>
                     </div>
                   </Link>
                 ))

@@ -40,7 +40,7 @@ export default function SearchHero({
             placeholder="Search by firm, platform, or payout model..."
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
-            className="h-13 rounded-2xl border-border/70 bg-card/90 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
+            className="h-[52px] rounded-2xl border-border/70 bg-card/90 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
           />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">

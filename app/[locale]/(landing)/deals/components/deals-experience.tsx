@@ -294,7 +294,7 @@ export function DealsExperience({
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">The active board</h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              {browseDeals.length} result{browseDeals.length === 1 ? '' : 's'}
+              {browseDeals.length} remaining result{browseDeals.length === 1 ? '' : 's'}
             </p>
           </div>
 
