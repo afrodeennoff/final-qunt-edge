@@ -43,6 +43,13 @@ const discountOptions = [
   { value: '30', label: '30%+' },
 ]
 
+const sortOptions: ReadonlyArray<{ key: SortKey; label: string }> = [
+  { key: 'discount', label: 'Best discount' },
+  { key: 'expiring', label: 'Expiring soon' },
+  { key: 'price-low', label: 'Lowest price' },
+  { key: 'price-high', label: 'Highest price' },
+]
+
 function formatPrice(value: number): string {
   if (value <= 0) return 'Free'
   return `$${value.toLocaleString()}`
@@ -64,6 +71,88 @@ function isExpiringDeal(deal: DealItem): boolean {
   return daysLeft !== null && daysLeft <= 14
 }
 
+function buildFirmOptions(deals: DealItem[]): string[] {
+  return ['All', ...Array.from(new Set(deals.map((deal) => deal.firmName))).sort((a, b) => a.localeCompare(b))]
+}
+
+function matchesDealFilters(
+  deal: DealItem,
+  filters: {
+    selectedFirm: string
+    selectedMarket: 'All' | MarketType
+    selectedDiscount: string
+    normalizedSearch: string
+  }
+): boolean {
+  if (filters.selectedFirm !== 'All' && deal.firmName !== filters.selectedFirm) return false
+  if (filters.selectedMarket !== 'All' && deal.category !== filters.selectedMarket) return false
+  if (filters.selectedDiscount !== 'all' && deal.discountPercent < Number(filters.selectedDiscount)) return false
+  if (!filters.normalizedSearch) return true
+
+  const haystack = `${deal.firmName} ${deal.couponCode} ${deal.platform} ${deal.category}`.toLowerCase()
+  return haystack.includes(filters.normalizedSearch)
+}
+
+function sortDeals(deals: DealItem[], sortKey: SortKey): DealItem[] {
+  return [...deals].sort((a, b) => {
+    if (sortKey === 'price-low') return a.challengeFee - b.challengeFee
+    if (sortKey === 'price-high') return b.challengeFee - a.challengeFee
+    if (sortKey === 'expiring') {
+      const aDays = getDaysLeft(a.expiryDate)
+      const bDays = getDaysLeft(b.expiryDate)
+      if (aDays === null) return 1
+      if (bDays === null) return -1
+      return aDays - bDays
+    }
+    return b.discountPercent - a.discountPercent
+  })
+}
+
+function partitionDeals(filteredDeals: DealItem[]) {
+  const featuredDeals = filteredDeals.filter(isFeaturedDeal).slice(0, 4)
+  const featuredDealIds = new Set(featuredDeals.map((deal) => deal.id))
+  const expiringDeals = filteredDeals
+    .filter((deal) => !featuredDealIds.has(deal.id) && isExpiringDeal(deal))
+    .slice(0, 4)
+  const highlightedDealIds = new Set([...featuredDeals, ...expiringDeals].map((deal) => deal.id))
+
+  return {
+    featuredDeals,
+    expiringDeals,
+    browseDeals: filteredDeals.filter((deal) => !highlightedDealIds.has(deal.id)),
+  }
+}
+
+function getTopPayoutFirms(firms: UnifiedFirm[]): UnifiedFirm[] {
+  return [...firms]
+    .sort((a, b) => b.catalogueStats.paidPayoutAmount - a.catalogueStats.paidPayoutAmount)
+    .slice(0, 3)
+}
+
+function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-border/60 bg-card/55 p-8 text-center">
+          <BadgePercent className="mx-auto h-10 w-10 text-muted-foreground" />
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-foreground">No live deals right now</h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+            We are still tracking firms and pricing, but there are no active coupons in the dataset at the moment.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
+              Explore firms
+            </Link>
+            <Link href={localePrefix} className="rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground">
+              Back home
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function DealsExperience({
   locale,
   deals,
@@ -83,44 +172,26 @@ export function DealsExperience({
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
 
   const normalizedSearch = search.trim().toLowerCase()
-  const firmOptions = useMemo(() => ['All', ...new Set(deals.map((deal) => deal.firmName))], [deals])
+  const firmOptions = useMemo(() => buildFirmOptions(deals), [deals])
 
   const filteredDeals = useMemo(() => {
-    const next = deals.filter((deal) => {
-      if (selectedFirm !== 'All' && deal.firmName !== selectedFirm) return false
-      if (selectedMarket !== 'All' && deal.category !== selectedMarket) return false
-      if (selectedDiscount !== 'all' && deal.discountPercent < Number(selectedDiscount)) return false
-      if (normalizedSearch) {
-        const haystack = `${deal.firmName} ${deal.couponCode} ${deal.platform} ${deal.category}`.toLowerCase()
-        if (!haystack.includes(normalizedSearch)) return false
-      }
-      return true
-    })
+    const next = deals.filter((deal) =>
+      matchesDealFilters(deal, {
+        selectedFirm,
+        selectedMarket,
+        selectedDiscount,
+        normalizedSearch,
+      })
+    )
 
-    return next.sort((a, b) => {
-      if (sortKey === 'price-low') return a.challengeFee - b.challengeFee
-      if (sortKey === 'price-high') return b.challengeFee - a.challengeFee
-      if (sortKey === 'expiring') {
-        const aDays = getDaysLeft(a.expiryDate)
-        const bDays = getDaysLeft(b.expiryDate)
-        if (aDays === null) return 1
-        if (bDays === null) return -1
-        return aDays - bDays
-      }
-      return b.discountPercent - a.discountPercent
-    })
+    return sortDeals(next, sortKey)
   }, [deals, normalizedSearch, selectedDiscount, selectedFirm, selectedMarket, sortKey])
 
-  const featuredDeals = filteredDeals.filter(isFeaturedDeal).slice(0, 4)
-  const featuredDealIds = new Set(featuredDeals.map((deal) => deal.id))
-  const expiringDeals = filteredDeals
-    .filter((deal) => !featuredDealIds.has(deal.id) && isExpiringDeal(deal))
-    .slice(0, 4)
-  const highlightedDealIds = new Set([...featuredDeals, ...expiringDeals].map((deal) => deal.id))
-  const browseDeals = filteredDeals.filter((deal) => !highlightedDealIds.has(deal.id))
-  const topFirms = [...firms]
-    .sort((a, b) => b.catalogueStats.paidPayoutAmount - a.catalogueStats.paidPayoutAmount)
-    .slice(0, 3)
+  const { featuredDeals, expiringDeals, browseDeals } = useMemo(
+    () => partitionDeals(filteredDeals),
+    [filteredDeals]
+  )
+  const topFirms = useMemo(() => getTopPayoutFirms(firms), [firms])
 
   const copyCode = async (code: string) => {
     await navigator.clipboard.writeText(code)
@@ -129,29 +200,93 @@ export function DealsExperience({
   }
 
   if (deals.length === 0 && !hadFetchError) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] border border-border/60 bg-card/55 p-8 text-center">
-            <BadgePercent className="mx-auto h-10 w-10 text-muted-foreground" />
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-foreground">No live deals right now</h1>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-              We are still tracking firms and pricing, but there are no active coupons in the dataset at the moment.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
-                Explore firms
-              </Link>
-              <Link href={localePrefix} className="rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground">
-                Back home
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <EmptyDealsState localePrefix={localePrefix} />
   }
 
+  return (
+    <DealsBoard
+      locale={locale}
+      localePrefix={localePrefix}
+      search={search}
+      selectedFirm={selectedFirm}
+      selectedMarket={selectedMarket}
+      selectedDiscount={selectedDiscount}
+      sortKey={sortKey}
+      copiedCode={copiedCode}
+      onSearchChange={setSearch}
+      onFirmChange={setSelectedFirm}
+      onMarketChange={setSelectedMarket}
+      onDiscountChange={setSelectedDiscount}
+      onSortChange={setSortKey}
+      onCopyCode={copyCode}
+      firmOptions={firmOptions}
+      topFirms={topFirms}
+      featuredDeals={featuredDeals}
+      expiringDeals={expiringDeals}
+      browseDeals={browseDeals}
+      filteredDeals={filteredDeals}
+      faqs={faqs}
+      overview={overview}
+      spotlights={spotlights}
+      hadFetchError={hadFetchError}
+      lastUpdated={lastUpdated}
+    />
+  )
+}
+
+function DealsBoard({
+  locale,
+  localePrefix,
+  search,
+  selectedFirm,
+  selectedMarket,
+  selectedDiscount,
+  sortKey,
+  copiedCode,
+  onSearchChange,
+  onFirmChange,
+  onMarketChange,
+  onDiscountChange,
+  onSortChange,
+  onCopyCode,
+  firmOptions,
+  topFirms,
+  featuredDeals,
+  expiringDeals,
+  browseDeals,
+  filteredDeals,
+  faqs,
+  overview,
+  spotlights,
+  hadFetchError,
+  lastUpdated,
+}: {
+  locale: string
+  localePrefix: string
+  search: string
+  selectedFirm: string
+  selectedMarket: 'All' | MarketType
+  selectedDiscount: string
+  sortKey: SortKey
+  copiedCode: string | null
+  onSearchChange: (value: string) => void
+  onFirmChange: (value: string) => void
+  onMarketChange: (value: 'All' | MarketType) => void
+  onDiscountChange: (value: string) => void
+  onSortChange: (value: SortKey) => void
+  onCopyCode: (code: string) => void
+  firmOptions: string[]
+  topFirms: UnifiedFirm[]
+  featuredDeals: DealItem[]
+  expiringDeals: DealItem[]
+  browseDeals: DealItem[]
+  filteredDeals: DealItem[]
+  faqs: FaqItem[]
+  overview: DealsOverview
+  spotlights: DealsSpotlightCollection
+  hadFetchError: boolean
+  lastUpdated: string | null
+}) {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -192,14 +327,14 @@ export function DealsExperience({
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   value={search}
-                  onChange={(event) => setSearch(event.target.value)}
+                  onChange={(event) => onSearchChange(event.target.value)}
                   placeholder="Search by firm, coupon, or platform..."
                   className="h-12 w-full rounded-2xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-foreground/20"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2 sm:flex">
-                <SelectLike value={selectedFirm} onChange={setSelectedFirm} options={firmOptions} />
-                <SelectLike value={selectedMarket} onChange={(value) => setSelectedMarket(value as 'All' | MarketType)} options={marketOptions} />
+                <SelectLike value={selectedFirm} onChange={onFirmChange} options={firmOptions} />
+                <SelectLike value={selectedMarket} onChange={(value) => onMarketChange(value as 'All' | MarketType)} options={marketOptions} />
               </div>
             </div>
 
@@ -209,7 +344,7 @@ export function DealsExperience({
                   <button
                     key={option.value}
                     type="button"
-                    onClick={() => setSelectedDiscount(option.value)}
+                    onClick={() => onDiscountChange(option.value)}
                     className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
                       selectedDiscount === option.value
                         ? 'border-foreground/15 bg-foreground text-background'
@@ -221,16 +356,11 @@ export function DealsExperience({
                 ))}
               </div>
               <div className="flex flex-wrap gap-2">
-                {([
-                  { key: 'discount', label: 'Best discount' },
-                  { key: 'expiring', label: 'Expiring soon' },
-                  { key: 'price-low', label: 'Lowest price' },
-                  { key: 'price-high', label: 'Highest price' },
-                ] as const).map((item) => (
+                {sortOptions.map((item) => (
                   <button
                     key={item.key}
                     type="button"
-                    onClick={() => setSortKey(item.key)}
+                    onClick={() => onSortChange(item.key)}
                     className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
                       sortKey === item.key
                         ? 'border-foreground/15 bg-foreground text-background'
@@ -272,7 +402,7 @@ export function DealsExperience({
             deals={featuredDeals}
             locale={locale}
             copiedCode={copiedCode}
-            onCopyCode={copyCode}
+            onCopyCode={onCopyCode}
           />
         ) : null}
 
@@ -283,7 +413,7 @@ export function DealsExperience({
             deals={expiringDeals}
             locale={locale}
             copiedCode={copiedCode}
-            onCopyCode={copyCode}
+            onCopyCode={onCopyCode}
           />
         ) : null}
 
@@ -306,7 +436,7 @@ export function DealsExperience({
                   deal={deal}
                   locale={locale}
                   copiedCode={copiedCode}
-                  onCopyCode={copyCode}
+                  onCopyCode={onCopyCode}
                 />
               ))}
             </div>
@@ -384,6 +514,8 @@ function DealCard({
   onCopyCode: (code: string) => void
 }) {
   const daysLeft = getDaysLeft(deal.expiryDate)
+  const claimHref = deal.claimUrl || `/${locale}/firm/${deal.firmSlug}`
+  const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
     <div className="rounded-[1.4rem] border border-border/60 bg-background/75 p-4">
@@ -407,7 +539,7 @@ function DealCard({
         <StatPill label="Challenge fee" value={formatPrice(deal.challengeFee)} />
         <StatPill label="Drawdown" value={deal.drawdownType} />
         <StatPill label="Coupon" value={deal.couponCode} />
-        <StatPill label="Expiry" value={daysLeft === null ? 'No expiry' : `${daysLeft}d left`} />
+        <StatPill label="Expiry" value={daysLeft === null ? 'No expiry' : daysLeft === 0 ? 'Ends today' : `${daysLeft}d left`} />
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -425,13 +557,25 @@ function DealCard({
         >
           View firm
         </Link>
-        <Link
-          href={deal.claimUrl || `/${locale}/firm/${deal.firmSlug}`}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-        >
-          Claim deal
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        {isExternalClaim ? (
+          <a
+            href={claimHref}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            Claim deal
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        ) : (
+          <Link
+            href={claimHref}
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            Claim deal
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        )}
       </div>
     </div>
   )

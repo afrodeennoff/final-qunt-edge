@@ -5,7 +5,7 @@ import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
 import { getActiveDeals, getDealsOverview, getUnifiedFirms } from '@/server/deals'
 
-const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
+const SITE_ORIGIN = 'https://quntedge.com'
 
 export function generateStaticParams() {
     return getStaticParams();
@@ -77,29 +77,17 @@ export default async function HomePage({
     deals = results[1].status === 'fulfilled' ? results[1].value : []
     overview = results[2].status === 'fulfilled' ? results[2].value : overview
 
-    const softwareSchema = {
+    const websiteSchema = {
       '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
+      '@type': 'WebSite',
       name: 'Qunt Edge',
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.8',
-        ratingCount: '200',
-      },
       description: 'AI-backed trading journal and execution review platform for discretionary traders and teams.',
       url: `${SITE_ORIGIN}/${locale}`,
     };
 
     return (
       <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <HomeContent locale={locale} firms={firms} deals={deals} overview={overview} />
       </>
     );

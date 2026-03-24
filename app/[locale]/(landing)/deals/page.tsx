@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import {
   getActiveDeals,
   getDealsOverview,
@@ -8,6 +9,29 @@ import {
 import { DealsExperience } from './components/deals-experience'
 
 export const dynamic = 'force-dynamic'
+
+const SITE_ORIGIN = 'https://quntedge.com'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const canonical = `${SITE_ORIGIN}/${locale}/deals`
+
+  return {
+    title: 'Prop Firm Deals | Qunt Edge',
+    description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research.',
+    alternates: { canonical },
+    openGraph: {
+      title: 'Prop Firm Deals | Qunt Edge',
+      description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research.',
+      url: canonical,
+      type: 'website',
+    },
+  }
+}
 
 export default async function DealsPage({
   params,

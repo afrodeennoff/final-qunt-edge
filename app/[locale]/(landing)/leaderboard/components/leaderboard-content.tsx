@@ -43,6 +43,23 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
     })
   }
 
+  if (initialEntries.length === 0) {
+    return (
+      <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-8 text-center">
+        <div className="mx-auto max-w-2xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <Trophy className="h-3.5 w-3.5 text-primary" />
+            Public rankings
+          </div>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight text-foreground">No public traders are ranked yet.</h2>
+          <p className="mt-4 text-sm leading-7 text-muted-foreground">
+            The leaderboard only shows traders who opted into public visibility. Check back after more traders publish live performance.
+          </p>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-card/50 p-6 lg:grid-cols-[1.05fr_0.95fr] lg:p-8">
@@ -107,14 +124,19 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               <PodiumCard key={entry.userId} entry={entry} locale={locale} />
             ))}
           </div>
+          {remainingEntries.length === 0 ? (
+            <div className="mt-5 rounded-[1.3rem] border border-border/60 bg-background/70 p-4 text-sm text-muted-foreground">
+              All currently ranked traders are already shown in the podium above.
+            </div>
+          ) : null}
         </section>
       ) : null}
 
-      {isPending && remainingEntries.length === 0 ? (
+      {isPending && remainingEntries.length > 0 ? (
         <LeaderboardTableSkeleton />
-      ) : (
+      ) : remainingEntries.length > 0 ? (
         <LeaderboardTable entries={remainingEntries} locale={locale} isLoading={isPending} />
-      )}
+      ) : null}
     </div>
   )
 }

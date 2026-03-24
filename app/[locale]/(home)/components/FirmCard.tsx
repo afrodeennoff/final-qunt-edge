@@ -3,20 +3,11 @@
 import Link from 'next/link'
 import { ArrowRight, Banknote, BriefcaseBusiness, Shield, Wallet } from 'lucide-react'
 import type { UnifiedFirm } from '@/server/deals'
+import { formatCompactCurrency } from '@/lib/formatting/currency'
 
 interface FirmCardProps {
   firm: UnifiedFirm
   locale: string
-}
-
-function formatCompactCurrency(value: number): string {
-  if (value <= 0) return '$0'
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: value >= 1000 ? 'compact' : 'standard',
-    maximumFractionDigits: value >= 1000 ? 1 : 0,
-  }).format(value)
 }
 
 function getLowestPriceLabel(firm: UnifiedFirm): string {

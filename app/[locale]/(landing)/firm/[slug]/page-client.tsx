@@ -22,6 +22,7 @@ import {
   Award,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatCompactCurrency } from '@/lib/formatting/currency'
 
 const FirmReviewsSection = dynamic(
   () => import('./components/firm-reviews-section').then((m) => ({ default: m.FirmReviewsSection })),
@@ -96,6 +97,245 @@ const trustChecklist = [
   'Cleaner hierarchy for scanning payouts, split, and platform details.',
 ]
 
+type AccountSizeEntry = [string, NonNullable<FirmData['accountSizes']>[string]]
+type FactIcon = React.ComponentType<{ className?: string }>
+
+function formatFirmCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)
+}
+
+function getAccountSizeEntries(accountSizes?: FirmData['accountSizes']): AccountSizeEntry[] {
+  return accountSizes ? Object.entries(accountSizes) : []
+}
+
+function withDetailFallback(value?: string | null): string {
+  return value ?? 'Unavailable'
+}
+
+function buildAdditionalDetails(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
+  return [
+    { icon: Building2, label: 'Category', value: withDetailFallback(firm.category) },
+    { icon: Landmark, label: 'Founded', value: withDetailFallback(firm.spotlight?.founded) },
+    { icon: Shield, label: 'Drawdown Type', value: withDetailFallback(firm.drawdownType) },
+    { icon: Wallet, label: 'Max Allocation', value: withDetailFallback(firm.maxAllocation) },
+    { icon: DollarSign, label: 'Profit Split', value: withDetailFallback(firm.profitSplit) },
+    { icon: Clock, label: 'Payout Frequency', value: withDetailFallback(firm.payoutModel) },
+    { icon: Layers, label: 'Platform', value: withDetailFallback(firm.platform) },
+    { icon: Award, label: 'Country', value: withDetailFallback(firm.spotlight?.countryCode) },
+  ]
+}
+
+function buildOverviewFacts(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
+  return [
+    { icon: Layers, label: 'Platform', value: firm.platform ?? 'N/A' },
+    { icon: Wallet, label: 'Payout model', value: firm.payoutModel ?? 'N/A' },
+    { icon: Shield, label: 'Drawdown type', value: firm.drawdownType ?? 'N/A' },
+    { icon: DollarSign, label: 'Profit split', value: firm.profitSplit ?? 'N/A' },
+    { icon: Landmark, label: 'Max allocation', value: firm.maxAllocation ?? 'N/A' },
+    { icon: Building2, label: 'Category', value: firm.category ?? 'N/A' },
+  ]
+}
+
+function buildTrustMetrics(firm: FirmData): Array<{ label: string; value: string; highlight?: boolean }> {
+  const metrics: Array<{ label: string; value: string; highlight?: boolean }> = []
+
+  if (firm.catalogueStats) {
+    metrics.push(
+      { label: 'Accounts', value: firm.catalogueStats.accountsCount.toLocaleString() },
+      { label: 'Total Value', value: formatCompactCurrency(firm.catalogueStats.totalAccountValue), highlight: true },
+      { label: 'Paid Out', value: formatCompactCurrency(firm.catalogueStats.paidPayoutAmount), highlight: true },
+      { label: 'Payout Count', value: firm.catalogueStats.paidPayoutCount.toLocaleString() },
+    )
+  }
+
+  metrics.push(
+    { label: 'Reviews', value: (firm._count?.reviews ?? 0).toLocaleString() },
+    { label: 'Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
+  )
+
+  return metrics
+}
+
+function getResearchRatingValue(firm: FirmData): string {
+  return firm.spotlight?.rating ? `${firm.spotlight.rating.toFixed(1)}/5` : 'Not rated'
+}
+
+function getResearchRatingHelper(firm: FirmData): string {
+  return `${firm.spotlight?.reviewCount ?? firm._count?.reviews ?? 0} visible reviews`
+}
+
+function getResearchPayoutValue(firm: FirmData): string {
+  return (firm.catalogueStats?.paidPayoutCount ?? 0).toLocaleString()
+}
+
+function getResearchPayoutHelper(firm: FirmData): string {
+  return formatCompactCurrency(firm.catalogueStats?.paidPayoutAmount ?? 0)
+}
+
+function getResearchAccountValue(firm: FirmData): string {
+  return (firm.catalogueStats?.accountsCount ?? 0).toLocaleString()
+}
+
+function getResearchAccountHelper(firm: FirmData): string {
+  return firm.catalogueStats?.sizeBreakdown ?? 'No live account mix yet'
+}
+
+function getResearchFitValue(firm: FirmData): string {
+  return firm.platform ?? 'Platform pending'
+}
+
+function getResearchFitHelper(firm: FirmData): string {
+  return `${firm.drawdownType ?? 'Drawdown pending'} • ${firm.payoutModel ?? 'Payout pending'}`
+}
+
+function buildResearchSnapshot(firm: FirmData): Array<{ label: string; value: string; helper: string }> {
+  return [
+    {
+      label: 'Public rating',
+      value: getResearchRatingValue(firm),
+      helper: getResearchRatingHelper(firm),
+    },
+    {
+      label: 'Tracked payouts',
+      value: getResearchPayoutValue(firm),
+      helper: getResearchPayoutHelper(firm),
+    },
+    {
+      label: 'Tracked accounts',
+      value: getResearchAccountValue(firm),
+      helper: getResearchAccountHelper(firm),
+    },
+    {
+      label: 'Best fit',
+      value: getResearchFitValue(firm),
+      helper: getResearchFitHelper(firm),
+    },
+  ]
+}
+
+function getRuleFlexibility(drawdownType: string): number {
+  if (drawdownType === 'Static') return 80
+  if (drawdownType === 'Trailing') return 70
+  return 75
+}
+
+function getRadarAccountsFunded(firm: FirmData): number {
+  return Math.min(100, Math.round(firm.catalogueStats?.accountsCount ?? 0))
+}
+
+function getRadarPayoutsMade(firm: FirmData): number {
+  const paidPayoutCount = firm.catalogueStats?.paidPayoutCount ?? 0
+  return Math.min(100, Math.round((paidPayoutCount / 50) * 100))
+}
+
+function getRadarConsistencyScore(firm: FirmData): number {
+  const rating = firm.spotlight?.rating ?? 4.0
+  return Math.round((rating / 5) * 100)
+}
+
+function getRadarSupportQuality(firm: FirmData): number {
+  const reviewCount = firm._count?.reviews ?? 0
+  return Math.min(100, Math.round((reviewCount / 20) * 100))
+}
+
+function getRadarValueForMoney(firm: FirmData): number {
+  const paidPayoutAmount = firm.catalogueStats?.paidPayoutAmount ?? 0
+  const paidPayoutCount = firm.catalogueStats?.paidPayoutCount || 1
+  const avgPayoutPerAccount = paidPayoutAmount / paidPayoutCount
+  return Math.min(100, Math.round((avgPayoutPerAccount / 10000) * 100))
+}
+
+function buildRadarMetrics(firm: FirmData): Array<{ label: string; value: number; max: number }> {
+  return [
+    { label: 'Total Accounts Funded', value: getRadarAccountsFunded(firm), max: 100 },
+    { label: 'Total Payouts Made', value: getRadarPayoutsMade(firm), max: 100 },
+    { label: 'Consistency Score', value: getRadarConsistencyScore(firm), max: 100 },
+    { label: 'Support Quality', value: getRadarSupportQuality(firm), max: 100 },
+    { label: 'Rule Flexibility', value: getRuleFlexibility(firm.drawdownType ?? 'Static'), max: 100 },
+    { label: 'Value for Money', value: getRadarValueForMoney(firm), max: 100 },
+  ]
+}
+
+function getRadarPoint(index: number, value: number, totalMetrics: number) {
+  const centerX = 150
+  const centerY = 150
+  const radius = 120
+  const angleStep = (2 * Math.PI) / totalMetrics
+  const angle = index * angleStep - Math.PI / 2
+  const scaledRadius = (value / 100) * radius
+
+  return {
+    x: centerX + scaledRadius * Math.cos(angle),
+    y: centerY + scaledRadius * Math.sin(angle),
+  }
+}
+
+function getDrawdownDescription(drawdownType?: string | null): string {
+  if (drawdownType === 'Trailing') {
+    return 'Drawdown trails your highest profit point. More restrictive but allows for higher allocations.'
+  }
+  if (drawdownType === 'Static') {
+    return 'Fixed drawdown limit from starting balance. More forgiving for swing traders.'
+  }
+  return 'Calculated at end of trading day. Allows intraday flexibility.'
+}
+
+function buildRules(firm: FirmData): Array<{ title: string; value: string; description: string }> {
+  return [
+    {
+      title: 'Drawdown Type',
+      value: firm.drawdownType ?? 'N/A',
+      description: getDrawdownDescription(firm.drawdownType),
+    },
+    {
+      title: 'Payout Model',
+      value: firm.payoutModel ?? 'N/A',
+      description: `Payouts are processed on a ${firm.payoutModel?.toLowerCase() ?? 'monthly'} basis.`,
+    },
+    {
+      title: 'Profit Split',
+      value: firm.profitSplit ?? 'N/A',
+      description: 'You keep this percentage of profits generated on funded accounts.',
+    },
+    {
+      title: 'Max Allocation',
+      value: firm.maxAllocation ?? 'N/A',
+      description: 'Maximum total capital you can manage across all funded accounts.',
+    },
+  ]
+}
+
+function getHeaderReviewLabel(firm: FirmData): string {
+  const spotlightReviewCount = firm.spotlight?.reviewCount ?? firm._count?.reviews ?? 0
+  return `(${spotlightReviewCount.toLocaleString()} ${spotlightReviewCount === 1 ? 'review' : 'reviews'})`
+}
+
+function getHeaderOptionalItems(firm: FirmData): string[] {
+  return [
+    firm.spotlight?.yearsInOperation ? `${firm.spotlight.yearsInOperation} years in operation` : null,
+    firm.spotlight?.countryCode ?? null,
+    firm.spotlight?.founded ? `Founded ${firm.spotlight.founded}` : null,
+  ].filter((item): item is string => Boolean(item))
+}
+
+function buildHeaderMetaItems(firm: FirmData): string[] {
+  return [getHeaderReviewLabel(firm), ...getHeaderOptionalItems(firm)]
+}
+
+function buildHeaderMetrics(firm: FirmData): Array<{ label: string; value: string }> {
+  return [
+    { label: 'Profit Split', value: firm.profitSplit ?? 'N/A' },
+    { label: 'Max Allocation', value: firm.spotlight?.maxAllocation ?? firm.maxAllocation ?? '$100K' },
+    { label: 'Drawdown Type', value: firm.drawdownType ?? 'N/A' },
+    { label: 'Active Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
+  ]
+}
+
 function firmInitials(name: string): string {
   return name
     .split(/\s+/)
@@ -107,15 +347,6 @@ function firmInitials(name: string): string {
 
 function formatCategoryTone(category: string): 'default' | 'accent' {
   return category === 'Futures' ? 'default' : 'accent'
-}
-
-function formatCompactCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: value >= 1000 ? 'compact' : 'standard',
-    maximumFractionDigits: value >= 1000 ? 1 : 0,
-  }).format(value)
 }
 
 function FactTile({
@@ -207,17 +438,112 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   )
 }
 
-function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmData['accountSizes']; profitSplit: string }) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value)
-  }
+function ChallengeCard({
+  size,
+  profitSplit,
+}: {
+  size: AccountSizeEntry[1]
+  profitSplit: string
+}) {
+  const targetPercent = getTargetPercent(size)
+  const dailyLossPercent = getDailyLossPercent(size)
+  const drawdownPercent = getDrawdownPercent(size)
+  const dailyLossValue = getDailyLossValue(size)
 
-  const entries = accountSizes ? Object.entries(accountSizes) : []
+  return (
+    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2Content className="p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <BadgeV2 variant={size.evaluation ? 'accent' : 'default'}>{size.name}</BadgeV2>
+              {!size.evaluation ? <BadgeV2 variant="default">Direct Funded</BadgeV2> : null}
+              {size.trailing ? <BadgeV2 variant="default">{size.trailing}</BadgeV2> : null}
+            </div>
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <ChallengeStat label="Account Size" value={formatFirmCurrency(size.balance)} />
+              <ChallengeStat label="Profit Target" value={formatFirmCurrency(size.target)} note={targetPercent} />
+              <ChallengeStat label="Max Daily Loss" value={dailyLossValue} note={dailyLossPercent} />
+              <ChallengeStat label="Max Drawdown" value={formatFirmCurrency(size.drawdown)} note={drawdownPercent} />
+            </div>
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <ChallengeStat label="Profit Split" value={`${size.profitSharing}%`} />
+              <ChallengeStat label="Evaluation" value={size.evaluation ? 'Required' : 'None'} />
+              <ChallengePrice size={size} />
+              <ChallengeStat label="Profit Split (Firm)" value={profitSplit ?? 'N/A'} />
+            </div>
+          </div>
+        </div>
+      </CardV2Content>
+    </CardV2>
+  )
+}
+
+function getTargetPercent(size: AccountSizeEntry[1]): string | null {
+  return size.target > 0 ? `${((size.target / size.balance) * 100).toFixed(1)}%` : null
+}
+
+function getDailyLossPercent(size: AccountSizeEntry[1]): string | null {
+  if (size.dailyLoss === null || size.dailyLoss <= 0) return null
+  return `${((size.dailyLoss / size.balance) * 100).toFixed(1)}%`
+}
+
+function getDrawdownPercent(size: AccountSizeEntry[1]): string {
+  return `${((size.drawdown / size.balance) * 100).toFixed(1)}%`
+}
+
+function getDailyLossValue(size: AccountSizeEntry[1]): string {
+  return size.dailyLoss !== null ? formatFirmCurrency(size.dailyLoss) : 'No limit'
+}
+
+function ChallengeStat({ label, value, note }: { label: string; value: string; note?: string | null }) {
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
+      {note ? <p className="text-xs text-muted-foreground">{note}</p> : null}
+    </div>
+  )
+}
+
+function ChallengePrice({
+  size,
+}: {
+  size: AccountSizeEntry[1]
+}) {
+  const hasPromoPrice = size.priceWithPromo > 0 && size.priceWithPromo < size.price
+  const promoDiscount = hasPromoPrice && size.price > 0
+    ? `${Math.round((1 - size.priceWithPromo / size.price) * 100)}% OFF`
+    : null
+
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Price</p>
+      <div className="mt-1 flex items-baseline gap-2">
+        {hasPromoPrice ? (
+          <>
+            <span className="text-lg font-semibold text-foreground">{formatFirmCurrency(size.priceWithPromo)}</span>
+            <span className="text-sm text-muted-foreground line-through">{formatFirmCurrency(size.price)}</span>
+            {promoDiscount ? (
+              <BadgeV2 variant="accent" className="text-[10px]">
+                {promoDiscount}
+              </BadgeV2>
+            ) : null}
+          </>
+        ) : (
+          <span className="text-lg font-semibold text-foreground">
+            {size.price === 0 ? 'Included' : formatFirmCurrency(size.price)}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmData['accountSizes']; profitSplit: string }) {
+  const entries = getAccountSizeEntries(accountSizes)
 
   if (entries.length === 0) {
     return (
@@ -251,86 +577,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
       <div className="grid gap-4">
         {entries.map(([key, size]) => (
-          <CardV2 key={key} className="rounded-[30px] border-border/40 bg-card/5">
-            <CardV2Content className="p-6">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <BadgeV2 variant={size.evaluation ? 'accent' : 'default'}>
-                      {size.name}
-                    </BadgeV2>
-                    {!size.evaluation && (
-                      <BadgeV2 variant="default">Direct Funded</BadgeV2>
-                    )}
-                    {size.trailing && (
-                      <BadgeV2 variant="default">{size.trailing}</BadgeV2>
-                    )}
-                  </div>
-                  
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Account Size</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.balance)}</p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Target</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.target)}</p>
-                      {size.target > 0 && (
-                        <p className="text-xs text-muted-foreground">{((size.target / size.balance) * 100).toFixed(1)}%</p>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Daily Loss</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">
-                        {size.dailyLoss !== null ? formatCurrency(size.dailyLoss) : 'No limit'}
-                      </p>
-                      {size.dailyLoss !== null && size.dailyLoss > 0 && (
-                        <p className="text-xs text-muted-foreground">{((size.dailyLoss / size.balance) * 100).toFixed(1)}%</p>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Max Drawdown</p>
-                      <p className="mt-1 text-xl font-semibold text-foreground">{formatCurrency(size.drawdown)}</p>
-                      <p className="text-xs text-muted-foreground">{((size.drawdown / size.balance) * 100).toFixed(1)}%</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Split</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{size.profitSharing}%</p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Evaluation</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{size.evaluation ? 'Required' : 'None'}</p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Price</p>
-                      <div className="mt-1 flex items-baseline gap-2">
-                        {size.priceWithPromo > 0 && size.priceWithPromo < size.price ? (
-                          <>
-                            <span className="text-lg font-semibold text-foreground">{formatCurrency(size.priceWithPromo)}</span>
-                            <span className="text-sm text-muted-foreground line-through">{formatCurrency(size.price)}</span>
-                            <BadgeV2 variant="accent" className="text-[10px]">
-                              {Math.round((1 - size.priceWithPromo / size.price) * 100)}% OFF
-                            </BadgeV2>
-                          </>
-                        ) : (
-                          <span className="text-lg font-semibold text-foreground">
-                            {size.price === 0 ? 'Included' : formatCurrency(size.price)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Profit Split (Firm)</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{profitSplit ?? 'N/A'}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardV2Content>
-          </CardV2>
+          <ChallengeCard key={key} size={size} profitSplit={profitSplit} />
         ))}
       </div>
     </div>
@@ -338,43 +585,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 }
 
 function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
-  const details = [
-    {
-      icon: Building2,
-      label: 'Founded',
-      value: '2020',
-    },
-    {
-      icon: Landmark,
-      label: 'Headquarters',
-      value: 'United States',
-    },
-    {
-      icon: Shield,
-      label: 'Regulated',
-      value: 'Yes',
-    },
-    {
-      icon: Wallet,
-      label: 'Accepted Countries',
-      value: 'Worldwide',
-    },
-    {
-      icon: DollarSign,
-      label: 'Payment Methods',
-      value: 'Credit Card, Crypto, Bank Transfer',
-    },
-    {
-      icon: Clock,
-      label: 'Payout Frequency',
-      value: firm.payoutModel ?? 'Monthly',
-    },
-    {
-      icon: Layers,
-      label: 'Platforms',
-      value: firm.platform ?? 'MetaTrader 4/5, cTrader',
-    },
-  ]
+  const details = buildAdditionalDetails(firm)
 
   return (
     <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
@@ -410,8 +621,32 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
 }
 
 function OverviewSection({ firm }: { firm: FirmData }) {
+  const overviewFacts = buildOverviewFacts(firm)
+  const trustMetrics = buildTrustMetrics(firm)
+  const researchSnapshot = buildResearchSnapshot(firm)
+
   return (
     <div className="space-y-6">
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2Content className="p-6 sm:p-8">
+          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
+          <CardV2Title className="mt-4 text-3xl text-foreground">The fast dossier before you dig deeper.</CardV2Title>
+          <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
+            A compact read on trust, payout activity, and setup fit so you can decide whether this firm deserves a closer review.
+          </CardV2Description>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {researchSnapshot.map((item) => (
+              <div key={item.label} className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{item.label}</p>
+                <p className="mt-2 text-xl font-semibold text-foreground">{item.value}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.helper}</p>
+              </div>
+            ))}
+          </div>
+        </CardV2Content>
+      </CardV2>
+
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
         <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
@@ -422,12 +657,9 @@ function OverviewSection({ firm }: { firm: FirmData }) {
             </CardV2Description>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              <FactTile icon={Layers} label="Platform" value={firm.platform ?? 'N/A'} />
-              <FactTile icon={Wallet} label="Payout model" value={firm.payoutModel ?? 'N/A'} />
-              <FactTile icon={Shield} label="Drawdown type" value={firm.drawdownType ?? 'N/A'} />
-              <FactTile icon={DollarSign} label="Profit split" value={firm.profitSplit ?? 'N/A'} />
-              <FactTile icon={Landmark} label="Max allocation" value={firm.maxAllocation ?? 'N/A'} />
-              <FactTile icon={Building2} label="Category" value={firm.category ?? 'N/A'} />
+              {overviewFacts.map((fact) => (
+                <FactTile key={fact.label} icon={fact.icon} label={fact.label} value={fact.value} />
+              ))}
             </div>
           </CardV2Content>
         </CardV2>
@@ -445,18 +677,10 @@ function OverviewSection({ firm }: { firm: FirmData }) {
               ))}
             </div>
             
-            {firm.catalogueStats && (
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <MetricCard label="Accounts" value={firm.catalogueStats.accountsCount.toLocaleString()} />
-                <MetricCard label="Total Value" value={formatCompactCurrency(firm.catalogueStats.totalAccountValue)} highlight />
-                <MetricCard label="Paid Out" value={formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} highlight />
-                <MetricCard label="Payout Count" value={firm.catalogueStats.paidPayoutCount.toLocaleString()} />
-              </div>
-            )}
-            
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <MetricCard label="Reviews" value={(firm._count?.reviews ?? 0).toLocaleString()} />
-              <MetricCard label="Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {trustMetrics.map((metric) => (
+                <MetricCard key={metric.label} label={metric.label} value={metric.value} highlight={metric.highlight} />
+              ))}
             </div>
           </CardV2Content>
         </CardV2>
@@ -539,40 +763,8 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
 }
 
 function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
-  const accountsFunded = Math.min(100, Math.round(((firm.catalogueStats?.accountsCount ?? 0) / 100) * 100))
-  const payoutsMade = Math.min(100, Math.round(((firm.catalogueStats?.paidPayoutCount ?? 0) / 50) * 100))
-  const consistencyScore = Math.round(((firm.spotlight?.rating ?? 4.0) / 5) * 100)
-  const reviewCount = firm._count?.reviews ?? 0
-  const supportQuality = Math.min(100, Math.round((reviewCount / 20) * 100))
-  const drawdownType = firm.drawdownType ?? 'Static'
-  const ruleFlexibility = drawdownType === 'Static' ? 80 : drawdownType === 'Trailing' ? 70 : 75
-  const avgPayout = firm.catalogueStats?.paidPayoutAmount ?? 0
-  const payoutCount = firm.catalogueStats?.paidPayoutCount ?? 1
-  const avgPayoutPerAccount = payoutCount > 0 ? avgPayout / payoutCount : 0
-  const valueForMoney = Math.min(100, Math.round((avgPayoutPerAccount / 10000) * 100))
-
-  const metrics = [
-    { label: 'Total Accounts Funded', value: accountsFunded, max: 100 },
-    { label: 'Total Payouts Made', value: payoutsMade, max: 100 },
-    { label: 'Consistency Score', value: consistencyScore, max: 100 },
-    { label: 'Support Quality', value: supportQuality, max: 100 },
-    { label: 'Rule Flexibility', value: ruleFlexibility, max: 100 },
-    { label: 'Value for Money', value: valueForMoney, max: 100 },
-  ]
-
-  const centerX = 150
-  const centerY = 150
-  const radius = 120
-  const angleStep = (2 * Math.PI) / metrics.length
-
-  const getPoint = (index: number, value: number) => {
-    const angle = index * angleStep - Math.PI / 2
-    const r = (value / 100) * radius
-    return {
-      x: centerX + r * Math.cos(angle),
-      y: centerY + r * Math.sin(angle),
-    }
-  }
+  const metrics = buildRadarMetrics(firm)
+  const totalMetrics = metrics.length
 
   return (
     <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
@@ -594,7 +786,7 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
                 key={scale}
                 points={metrics
                   .map((_, index) => {
-                    const point = getPoint(index, scale * 100)
+                    const point = getRadarPoint(index, scale * 100, totalMetrics)
                     return `${point.x},${point.y}`
                   })
                   .join(' ')}
@@ -605,12 +797,12 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
             ))}
 
             {metrics.map((_, index) => {
-              const point = getPoint(index, 100)
+              const point = getRadarPoint(index, 100, totalMetrics)
               return (
                 <line
                   key={index}
-                  x1={centerX}
-                  y1={centerY}
+                  x1={150}
+                  y1={150}
                   x2={point.x}
                   y2={point.y}
                   stroke="rgba(255,255,255,0.1)"
@@ -622,7 +814,7 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
             <polygon
               points={metrics
                 .map((_, index) => {
-                  const point = getPoint(index, metrics[index].value)
+                  const point = getRadarPoint(index, metrics[index].value, totalMetrics)
                   return `${point.x},${point.y}`
                 })
                 .join(' ')}
@@ -632,7 +824,7 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
             />
 
             {metrics.map((metric, index) => {
-              const point = getPoint(index, 110)
+              const point = getRadarPoint(index, 110, totalMetrics)
               return (
                 <text
                   key={index}
@@ -648,7 +840,7 @@ function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
             })}
 
             {metrics.map((metric, index) => {
-              const point = getPoint(index, metric.value)
+              const point = getRadarPoint(index, metric.value, totalMetrics)
               return (
                 <circle
                   key={index}
@@ -735,7 +927,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
             </div>
             <div className="text-right">
               <p className="text-2xl font-semibold text-v2-success">
-                {stats.accountsCount > 0 ? Math.round((stats.paidPayoutCount / stats.accountsCount) * 100) : 0}%
+                {stats.accountsCount > 0 ? Math.min(100, Math.round((stats.paidPayoutCount / stats.accountsCount) * 100)) : 0}%
               </p>
             </div>
           </div>
@@ -820,34 +1012,8 @@ function ROISection({ firm }: { firm: FirmData }) {
 }
 
 function RulesSection({ firm }: { firm: FirmData }) {
-  const accountSizes = firm.accountSizes ? Object.entries(firm.accountSizes) : []
-
-  const rules = [
-    {
-      title: 'Drawdown Type',
-      value: firm.drawdownType ?? 'N/A',
-      description: firm.drawdownType === 'Trailing'
-        ? 'Drawdown trails your highest profit point. More restrictive but allows for higher allocations.'
-        : firm.drawdownType === 'Static'
-        ? 'Fixed drawdown limit from starting balance. More forgiving for swing traders.'
-        : 'Calculated at end of trading day. Allows intraday flexibility.',
-    },
-    {
-      title: 'Payout Model',
-      value: firm.payoutModel ?? 'N/A',
-      description: `Payouts are processed on a ${firm.payoutModel?.toLowerCase() ?? 'monthly'} basis.`,
-    },
-    {
-      title: 'Profit Split',
-      value: firm.profitSplit ?? 'N/A',
-      description: 'You keep this percentage of profits generated on funded accounts.',
-    },
-    {
-      title: 'Max Allocation',
-      value: firm.maxAllocation ?? 'N/A',
-      description: 'Maximum total capital you can manage across all funded accounts.',
-    },
-  ]
+  const accountSizes = getAccountSizeEntries(firm.accountSizes)
+  const rules = buildRules(firm)
 
   return (
     <div className="space-y-6">
@@ -975,23 +1141,62 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   )
 }
 
+function HeaderRatingSummary({
+  spotlightRating,
+  headerMetaItems,
+}: {
+  spotlightRating: number | null
+  headerMetaItems: string[]
+}) {
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-4">
+      {spotlightRating !== null ? (
+        <>
+          <StarRating rating={Math.round(spotlightRating)} size="lg" />
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-foreground">{spotlightRating.toFixed(1)}</span>
+            <span className="text-sm text-muted-foreground">/ 5.0</span>
+          </div>
+        </>
+      ) : (
+        <span className="text-sm text-muted-foreground">No verified rating yet</span>
+      )}
+      {headerMetaItems.map((item) => (
+        <span key={item} className="text-sm text-muted-foreground">
+          {item}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function HeaderActions({ referralUrl }: { referralUrl?: string | null }) {
+  if (!referralUrl) return null
+
+  return (
+    <div className="flex flex-col items-start gap-4 lg:items-end">
+      <div className="flex items-center gap-3">
+        <SocialIcon type="website" url={referralUrl} />
+      </div>
+
+      <a
+        href={referralUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
+      >
+        Visit Official Website
+        <ExternalLink className="h-4 w-4" />
+      </a>
+    </div>
+  )
+}
+
 function FirmHeader({ firm }: { firm: FirmData }) {
-  // Use spotlight data if available, otherwise fall back to defaults
-  const spotlightRating = firm.spotlight?.rating ?? 4.2
-  const spotlightReviewCount = firm.spotlight?.reviewCount ?? firm._count?.reviews ?? 0
+  const spotlightRating = firm.spotlight?.rating ?? null
   const spotlightPromoText = firm.spotlight?.promoText
-  const spotlightMaxAllocation = firm.spotlight?.maxAllocation ?? firm.maxAllocation ?? '$100K'
-  const spotlightCountryCode = firm.spotlight?.countryCode
-  const spotlightFounded = firm.spotlight?.founded
-  const spotlightYearsInOperation = firm.spotlight?.yearsInOperation
-  
-  const socialLinks = {
-    website: firm.referralUrl,
-    twitter: undefined,
-    discord: undefined,
-    telegram: undefined,
-    youtube: undefined,
-  }
+  const headerMetaItems = buildHeaderMetaItems(firm)
+  const headerMetrics = buildHeaderMetrics(firm)
 
   return (
     <section className="relative overflow-hidden rounded-[34px] border border-border/40 bg-background/80 p-6 sm:p-8 lg:p-10">
@@ -1032,73 +1237,17 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                   </span>
                 )}
               </h1>
-              
-              <div className="mt-3 flex items-center gap-4">
-                <StarRating rating={Math.round(spotlightRating)} size="lg" />
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-foreground">{spotlightRating.toFixed(1)}</span>
-                  <span className="text-sm text-muted-foreground">/ 5.0</span>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  ({spotlightReviewCount.toLocaleString()} {spotlightReviewCount === 1 ? 'review' : 'reviews'})
-                </span>
-                
-                {spotlightYearsInOperation && (
-                  <span className="ml-3 text-sm text-muted-foreground">
-                    • {spotlightYearsInOperation} years in operation
-                  </span>
-                )}
-                {spotlightCountryCode && (
-                  <span className="ml-3 text-sm text-muted-foreground">
-                    • {spotlightCountryCode}
-                  </span>
-                )}
-                {spotlightFounded && (
-                  <span className="ml-3 text-sm text-muted-foreground">
-                    • Founded {spotlightFounded}
-                  </span>
-                )}
-              </div>
+
+              <HeaderRatingSummary spotlightRating={spotlightRating} headerMetaItems={headerMetaItems} />
             </div>
           </div>
-        
-          <div className="flex flex-col items-start gap-4 lg:items-end">
-            <div className="flex items-center gap-3">
-              {socialLinks.website && (
-                <SocialIcon type="website" url={socialLinks.website} />
-              )}
-              {socialLinks.twitter && (
-                <SocialIcon type="twitter" url={socialLinks.twitter} />
-              )}
-              {socialLinks.discord && (
-                <SocialIcon type="discord" url={socialLinks.discord} />
-              )}
-              {socialLinks.telegram && (
-                <SocialIcon type="telegram" url={socialLinks.telegram} />
-              )}
-              {socialLinks.youtube && (
-                <SocialIcon type="youtube" url={socialLinks.youtube} />
-              )}
-            </div>
-            
-            {firm.referralUrl && (
-              <a
-                href={firm.referralUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
-              >
-                Visit Official Website
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            )}
-          </div>
+
+          <HeaderActions referralUrl={firm.referralUrl} />
           
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard label="Profit Split" value={firm.profitSplit ?? 'N/A'} />
-            <MetricCard label="Max Allocation" value={spotlightMaxAllocation} />
-            <MetricCard label="Drawdown Type" value={firm.drawdownType ?? 'N/A'} />
-            <MetricCard label="Active Coupons" value={(firm._count?.coupons ?? 0).toLocaleString()} />
+            {headerMetrics.map((metric) => (
+              <MetricCard key={metric.label} label={metric.label} value={metric.value} />
+            ))}
           </div>
         </div>
       </div>

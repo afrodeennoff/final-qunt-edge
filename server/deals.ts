@@ -7,6 +7,7 @@ import {
   type PropFirmMatchSpotlight,
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
 export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
@@ -84,6 +85,46 @@ interface FirmCoupon {
   claimUrl: string | null
 }
 
+interface CatalogueStatsSnapshot {
+  accountsCount: number
+  totalAccountValue: number
+  paidPayoutAmount: number
+  paidPayoutCount: number
+  pendingPayoutAmount: number
+  sizeBreakdown: string
+}
+
+interface CouponRecord {
+  id: string
+  code: string
+  discountPercent: number | null
+  challengeFee: number | null
+  expiresAt: Date | null
+  claimUrl: string | null
+}
+
+interface FirmRecord {
+  id: string
+  slug: string
+  name: string
+  description: string | null
+  shortDesc: string | null
+  referralUrl: string | null
+  logoUrl: string | null
+  category: string | null
+  platform: string | null
+  payoutModel: string | null
+  drawdownType: string | null
+  profitSplit: string | null
+  maxAllocation: string | null
+  coupons: CouponRecord[]
+  reviews: Array<{ id: string }>
+  _count: {
+    reviews: number
+    coupons: number
+  }
+}
+
 export interface DealsOverview {
   totalTrackedFirms: number
   totalLiveDeals: number
@@ -99,8 +140,172 @@ export interface DealsSpotlightCollection {
   cfd: PropFirmMatchSpotlight[]
 }
 
-function normalizeFirmName(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, '')
+function withTextFallback(value: string | null | undefined, fallback: string): string {
+  return value ?? fallback
+}
+
+function withNumberFallback(value: number | null | undefined, fallback = 0): number {
+  return value ?? fallback
+}
+
+function mapFirmCategory(value: string | null | undefined): MarketType {
+  return (value || 'Futures') as MarketType
+}
+
+function mapFirmPlatform(value: string | null | undefined): TradingPlatform {
+  return (value || 'Tradovate') as TradingPlatform
+}
+
+function mapFirmPayoutModel(value: string | null | undefined): PayoutModel {
+  return (value || 'Monthly') as PayoutModel
+}
+
+function mapFirmDrawdownType(value: string | null | undefined): DrawdownType {
+  return (value || 'Static') as DrawdownType
+}
+
+function getCataloguePayoutStats(catalogueEntry?: {
+  payouts: {
+    paidAmount: number
+    paidCount: number
+    pendingAmount: number
+  }
+}) {
+  return {
+    paidPayoutAmount: withNumberFallback(catalogueEntry?.payouts.paidAmount),
+    paidPayoutCount: withNumberFallback(catalogueEntry?.payouts.paidCount),
+    pendingPayoutAmount: withNumberFallback(catalogueEntry?.payouts.pendingAmount),
+  }
+}
+
+function buildCatalogueStats(catalogueEntry?: {
+  accountsCount: number
+  totalAccountValue: number
+  payouts: {
+    paidAmount: number
+    paidCount: number
+    pendingAmount: number
+  }
+  sizeBreakdown: string
+}): CatalogueStatsSnapshot {
+  const payoutStats = getCataloguePayoutStats(catalogueEntry)
+
+  return {
+    accountsCount: withNumberFallback(catalogueEntry?.accountsCount),
+    totalAccountValue: withNumberFallback(catalogueEntry?.totalAccountValue),
+    sizeBreakdown: withTextFallback(catalogueEntry?.sizeBreakdown, 'No live account data yet'),
+    ...payoutStats,
+  }
+}
+
+function mapFirmCoupon(coupon: CouponRecord): FirmCoupon {
+  return {
+    id: coupon.id,
+    code: coupon.code,
+    discountPercent: coupon.discountPercent ?? 0,
+    challengeFee: coupon.challengeFee ?? 0,
+    expiresAt: coupon.expiresAt,
+    claimUrl: coupon.claimUrl,
+  }
+}
+
+function buildUnifiedFirm(
+  firm: FirmRecord,
+  catalogueEntry?: Parameters<typeof buildCatalogueStats>[0],
+  spotlight: PropFirmMatchSpotlight | null = null
+): UnifiedFirm {
+  const description = firm.description ?? undefined
+  const shortDesc = firm.shortDesc ?? undefined
+  const referralUrl = firm.referralUrl ?? undefined
+  const logoUrl = firm.logoUrl ?? undefined
+
+  return {
+    id: firm.id,
+    slug: firm.slug,
+    name: firm.name,
+    description,
+    shortDesc,
+    referralUrl,
+    logoUrl,
+    category: mapFirmCategory(firm.category),
+    platform: mapFirmPlatform(firm.platform),
+    payoutModel: mapFirmPayoutModel(firm.payoutModel),
+    drawdownType: mapFirmDrawdownType(firm.drawdownType),
+    profitSplit: withTextFallback(firm.profitSplit, '80/20'),
+    maxAllocation: withTextFallback(firm.maxAllocation, '$100K'),
+    challengeCount: firm.reviews.length,
+    spotlight,
+    catalogueStats: buildCatalogueStats(catalogueEntry),
+    accountSizes: getAccountSizesFromConfig(firm.name),
+    coupons: firm.coupons.map(mapFirmCoupon),
+    _count: {
+      reviews: firm._count.reviews,
+      coupons: firm._count.coupons,
+    },
+  }
+}
+
+function findCatalogueEntry(
+  firmName: string,
+  catalogueEntries: Array<{
+    propfirmName: string
+    accountsCount: number
+    totalAccountValue: number
+    payouts: {
+      paidAmount: number
+      paidCount: number
+      pendingAmount: number
+    }
+    sizeBreakdown: string
+  }>
+) {
+  const normalizedFirmName = normalizeFirmName(firmName)
+  return catalogueEntries.find((entry) => normalizeFirmName(entry.propfirmName) === normalizedFirmName)
+}
+
+function findSpotlight(firmName: string): PropFirmMatchSpotlight | null {
+  const normalizedFirmName = normalizeFirmName(firmName)
+  return PROP_FIRM_MATCH_SPOTLIGHTS.find((entry) => normalizeFirmName(entry.name) === normalizedFirmName) ?? null
+}
+
+async function loadFirmWithRelations(where: { id?: string; slug?: string }): Promise<FirmRecord | null> {
+  const now = new Date()
+
+  return prisma.propFirm.findFirst({
+    where: {
+      ...where,
+      isActive: true,
+    },
+    include: {
+      coupons: {
+        where: {
+          isActive: true,
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gte: now } },
+          ],
+        },
+        orderBy: [
+          { challengeFee: 'asc' },
+          { discountPercent: 'desc' },
+        ],
+      },
+      reviews: { select: { id: true } },
+      _count: { select: { reviews: true, coupons: true } },
+    },
+  })
+}
+
+async function getUnifiedFirm(where: { id?: string; slug?: string }): Promise<UnifiedFirm | null> {
+  const firm = await loadFirmWithRelations(where)
+  if (!firm) return null
+
+  const catalogue = await getPropfirmCatalogueData('allTime')
+  return buildUnifiedFirm(
+    firm,
+    findCatalogueEntry(firm.name, catalogue.stats),
+    findSpotlight(firm.name)
+  )
 }
 
 function getAccountSizesFromConfig(firmName: string): Record<string, AccountSizeData> {
@@ -217,44 +422,14 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     orderBy: { name: 'asc' },
   })
 
-  return firms.map((firm) => ({
-    id: firm.id,
-    slug: firm.slug,
-    name: firm.name,
-    description: firm.description ?? undefined,
-    shortDesc: firm.shortDesc ?? undefined,
-    referralUrl: firm.referralUrl ?? undefined,
-    logoUrl: firm.logoUrl ?? undefined,
-    category: (firm.category || 'Futures') as MarketType,
-    platform: (firm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (firm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
-    profitSplit: firm.profitSplit || '80/20',
-    maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.reviews.length,
-    spotlight: spotlightMap.get(normalizeFirmName(firm.name)) ?? null,
-    catalogueStats: {
-      accountsCount: catalogueMap.get(normalizeFirmName(firm.name))?.accountsCount ?? 0,
-      totalAccountValue: catalogueMap.get(normalizeFirmName(firm.name))?.totalAccountValue ?? 0,
-      paidPayoutAmount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.paidAmount ?? 0,
-      paidPayoutCount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.paidCount ?? 0,
-      pendingPayoutAmount: catalogueMap.get(normalizeFirmName(firm.name))?.payouts.pendingAmount ?? 0,
-      sizeBreakdown: catalogueMap.get(normalizeFirmName(firm.name))?.sizeBreakdown ?? 'No live account data yet',
-    },
-    accountSizes: getAccountSizesFromConfig(firm.name),
-    coupons: firm.coupons.map((c) => ({
-      id: c.id,
-      code: c.code,
-      discountPercent: c.discountPercent ?? 0,
-      challengeFee: c.challengeFee ?? 0,
-      expiresAt: c.expiresAt,
-      claimUrl: c.claimUrl,
-    })),
-    _count: {
-      reviews: firm._count.reviews,
-      coupons: firm._count.coupons,
-    },
-  }))
+  return firms.map((firm) => {
+    const normalizedName = normalizeFirmName(firm.name)
+    return buildUnifiedFirm(
+      firm,
+      catalogueMap.get(normalizedName),
+      spotlightMap.get(normalizedName) ?? null
+    )
+  })
 }
 
 export const getUnifiedFirms = unstable_cache(
@@ -294,157 +469,11 @@ export function getDealsSpotlights(): DealsSpotlightCollection {
 }
 
 export const getFirmById = async (firmId: string): Promise<UnifiedFirm | null> => {
-  const now = new Date()
-   
-  const firm = await prisma.propFirm.findUnique({
-    where: { id: firmId, isActive: true },
-    include: {
-      coupons: {
-        where: {
-          isActive: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gte: now } },
-          ],
-        },
-        orderBy: [
-          { challengeFee: 'asc' },
-          { discountPercent: 'desc' },
-        ],
-      },
-      reviews: { select: { id: true } },
-      _count: { select: { reviews: true, coupons: true } },
-    },
-  })
-   
-  if (!firm) return null
-   
-  // Get catalogue data for this firm
-  const catalogue = await getPropfirmCatalogueData('allTime')
-  const catalogueEntry = catalogue.stats.find(entry => 
-    normalizeFirmName(entry.propfirmName) === normalizeFirmName(firm.name)
-  )
-   
-  // Get spotlight data
-  const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find(entry => 
-    normalizeFirmName(entry.name) === normalizeFirmName(firm.name)
-  ) ?? null
-   
-  return {
-    id: firm.id,
-    slug: firm.slug,
-    name: firm.name,
-    description: firm.description ?? undefined,
-    shortDesc: firm.shortDesc ?? undefined,
-    referralUrl: firm.referralUrl ?? undefined,
-    logoUrl: firm.logoUrl ?? undefined,
-    category: (firm.category || 'Futures') as MarketType,
-    platform: (firm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (firm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
-    profitSplit: firm.profitSplit || '80/20',
-    maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.reviews.length,
-    spotlight: spotlight,
-    catalogueStats: {
-      accountsCount: catalogueEntry?.accountsCount ?? 0,
-      totalAccountValue: catalogueEntry?.totalAccountValue ?? 0,
-      paidPayoutAmount: catalogueEntry?.payouts.paidAmount ?? 0,
-      paidPayoutCount: catalogueEntry?.payouts.paidCount ?? 0,
-      pendingPayoutAmount: catalogueEntry?.payouts.pendingAmount ?? 0,
-      sizeBreakdown: catalogueEntry?.sizeBreakdown ?? 'No live account data yet',
-    },
-    accountSizes: getAccountSizesFromConfig(firm.name),
-    coupons: firm.coupons.map((c) => ({
-      id: c.id,
-      code: c.code,
-      discountPercent: c.discountPercent ?? 0,
-      challengeFee: c.challengeFee ?? 0,
-      expiresAt: c.expiresAt,
-      claimUrl: c.claimUrl,
-    })),
-    _count: {
-      reviews: firm._count.reviews,
-      coupons: firm._count.coupons,
-    },
-  }
+  return getUnifiedFirm({ id: firmId })
 }
 
 export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | null> => {
-  const now = new Date()
-   
-  const firm = await prisma.propFirm.findUnique({
-    where: { slug, isActive: true },
-    include: {
-      coupons: {
-        where: {
-          isActive: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gte: now } },
-          ],
-        },
-        orderBy: [
-          { challengeFee: 'asc' },
-          { discountPercent: 'desc' },
-        ],
-      },
-      reviews: { select: { id: true } },
-      _count: { select: { reviews: true, coupons: true } },
-    },
-  })
-   
-  if (!firm) return null
-   
-  // Get catalogue data for this firm
-  const catalogue = await getPropfirmCatalogueData('allTime')
-  const catalogueEntry = catalogue.stats.find(entry => 
-    normalizeFirmName(entry.propfirmName) === normalizeFirmName(firm.name)
-  )
-   
-  // Get spotlight data
-  const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find(entry => 
-    normalizeFirmName(entry.name) === normalizeFirmName(firm.name)
-  ) ?? null
-   
-  return {
-    id: firm.id,
-    slug: firm.slug,
-    name: firm.name,
-    description: firm.description ?? undefined,
-    shortDesc: firm.shortDesc ?? undefined,
-    referralUrl: firm.referralUrl ?? undefined,
-    logoUrl: firm.logoUrl ?? undefined,
-    category: (firm.category || 'Futures') as MarketType,
-    platform: (firm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (firm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (firm.drawdownType || 'Static') as DrawdownType,
-    profitSplit: firm.profitSplit || '80/20',
-    maxAllocation: firm.maxAllocation || '$100K',
-    challengeCount: firm.reviews.length,
-    spotlight: spotlight,
-    catalogueStats: {
-      accountsCount: catalogueEntry?.accountsCount ?? 0,
-      totalAccountValue: catalogueEntry?.totalAccountValue ?? 0,
-      paidPayoutAmount: catalogueEntry?.payouts.paidAmount ?? 0,
-      paidPayoutCount: catalogueEntry?.payouts.paidCount ?? 0,
-      pendingPayoutAmount: catalogueEntry?.payouts.pendingAmount ?? 0,
-      sizeBreakdown: catalogueEntry?.sizeBreakdown ?? 'No live account data yet',
-    },
-    accountSizes: getAccountSizesFromConfig(firm.name),
-    coupons: firm.coupons.map((c) => ({
-      id: c.id,
-      code: c.code,
-      discountPercent: c.discountPercent ?? 0,
-      challengeFee: c.challengeFee ?? 0,
-      expiresAt: c.expiresAt,
-      claimUrl: c.claimUrl,
-    })),
-    _count: {
-      reviews: firm._count.reviews,
-      coupons: firm._count.coupons,
-    },
-  }
+  return getUnifiedFirm({ slug })
 }
 
 export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
