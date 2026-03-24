@@ -1,4 +1,4 @@
-import { isRedisConfigured, getRedisJson, setRedisJson } from "../lib/redis-client";
+import { isRedisConfigured, getRedisJson, setRedisJson } from "../redis-client";
 
 // Simple hash function for caching keys
 function hashString(str: string): string {
@@ -36,11 +36,11 @@ const cacheStats = {
 // Clean up expired entries periodically
 setInterval(() => {
   const now = Date.now();
-  for (const [key, entry] of inMemoryCache.entries()) {
-    if (entry.expiresAt <= now) {
+  inMemoryCache.forEach((value, key) => {
+    if (value.expiresAt <= now) {
       inMemoryCache.delete(key);
     }
-  }
+  });
 }, CACHE_SWEEP_INTERVAL_MS).unref?.();
 
 function getFromInMemoryCache<T>(key: string): T | null {

@@ -263,12 +263,12 @@ export async function setCachedResult<T>(key: string, data: T, ttlSeconds: numbe
 function enforceLocalCacheBounds(): void {
   const now = getNow()
 
-  // Remove expired entries
-  for (const [key, value] of queryCache.entries()) {
-    if (value.expiresAt <= now) {
-      queryCache.delete(key)
-    }
-  }
+// Remove expired entries
+   queryCache.forEach((value, key) => {
+     if (value.expiresAt <= now) {
+       queryCache.delete(key);
+     }
+   });
 
   // Evict oldest entries if over limit
   while (queryCache.size > MAX_IN_MEMORY_CACHE_ENTRIES) {
@@ -518,11 +518,11 @@ function parseRedisResponse(
 // Cache cleanup sweeps
 const inMemorySweep = setInterval(() => {
   const now = getNow()
-  for (const [key, entry] of inMemoryCache.entries()) {
+  inMemoryCache.forEach((entry, key) => {
     if (entry.expiresAt <= now) {
       inMemoryCache.delete(key)
     }
-  }
+  });
 }, 60_000)
 
 inMemorySweep.unref?.()

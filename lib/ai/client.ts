@@ -1,7 +1,8 @@
-import { createOpenAI, type LanguageModelV3, type LanguageModelV3CallOptions } from "@ai-sdk/openai";
-import type { AiFeature } from "../lib/ai/policy";
-import { getAiPolicy } from "../lib/ai/policy";
-import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "../lib/ai/cache";
+import { createOpenAI } from "@ai-sdk/openai";
+import type { AiFeature } from "./policy";
+import { getAiPolicy } from "./policy";
+import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats } from "./cache";
+import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 
 const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
 const aiApiKey = process.env.OPENROUTER_API_KEY;
