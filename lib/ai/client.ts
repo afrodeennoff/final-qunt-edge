@@ -46,35 +46,35 @@ export function getAiLanguageModel(feature: AiFeature) {
   const { model } = getAiPolicy(feature);
   const rawModel = aiClient(normalizeModelForOpenRouter(model));
   
-  // Return a wrapped model that adds caching for doGenerate only
-  return new Proxy(rawModel, {
-    get(target, p: PropertyKey, receiver: any) {
-      // If it's a method we want to wrap for caching, return our cached version
-      if (p === 'doGenerate') {
-        return async function(options: LanguageModelV3CallOptions) {
-          // Generate cache key based on feature and options
-          const featureStr = String(feature);
-          
-          // Try to get from cache first
-          const cached = await cacheAiResponse(featureStr, options);
-          if (cached !== null) {
-            return cached;
-          }
-          
-          // Not in cache, call the original method
-          const result = await Reflect.get(target, p, receiver)(options);
-          
-          // Cache the result (with a default TTL of 5 minutes)
-          await setAiResponseCache(featureStr, options, result);
-          
-          return result;
-        };
-      }
-      
-      // For all other properties/methods (including doStream), delegate to the target
-      return Reflect.get(target, p, receiver);
-    }
-  }) as LanguageModelV3;
+   // Return a wrapped model that adds caching for doGenerate only
+   return new Proxy(rawModel, {
+     get(target, p: PropertyKey, receiver: object) {
+       // If it's a method we want to wrap for caching, return our cached version
+       if (p === 'doGenerate') {
+         return async function(options: LanguageModelV3CallOptions) {
+           // Generate cache key based on feature and options
+           const featureStr = String(feature);
+           
+           // Try to get from cache first
+           const cached = await cacheAiResponse(featureStr, options);
+           if (cached !== null) {
+             return cached;
+           }
+           
+           // Not in cache, call the original method
+           const result = await Reflect.get(target, p, receiver)(options);
+           
+           // Cache the result (with a default TTL of 5 minutes)
+           await setAiResponseCache(featureStr, options, result);
+           
+           return result;
+         };
+       }
+       
+       // For all other properties/methods (including doStream), delegate to the target
+       return Reflect.get(target, p, receiver);
+     }
+   }) as LanguageModelV3;
 }
 
 // Cache statistics export

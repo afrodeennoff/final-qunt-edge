@@ -284,3 +284,4 @@ const useHashUpload = (options: UseHashUploadOptions) => {
 }
 
 export { useHashUpload, type UseHashUploadOptions, type UseHashUploadReturn }
+export type UseSupabaseUploadReturn = UseHashUploadReturn

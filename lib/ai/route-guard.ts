@@ -1,7 +1,7 @@
-import { canAccessAiFeature, type AiGuardFeature } from '@/lib/ai/entitlements'
-import { assertWithinAiBudget } from '@/lib/ai/usage-budget'
-import { apiError } from '@/lib/api-response'
-import { createRouteClient } from '@/lib/supabase/route-client'
+import { canAccessAiFeature, type AiGuardFeature } from './entitlements'
+import { assertWithinAiBudget } from './usage-budget'
+import { apiError } from '../api-response'
+import { createRouteClient } from '../supabase/route-client'
 
 type LimiterResult = {
   success: boolean
