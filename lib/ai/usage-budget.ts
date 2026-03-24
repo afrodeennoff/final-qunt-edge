@@ -1,4 +1,4 @@
-import { prisma } from '../../../lib/prisma'
+import { prisma } from '../prisma'
 
 const ACTIVE_MONTHLY_AI_TOKEN_LIMIT = 2_000_000
 const INACTIVE_MONTHLY_AI_TOKEN_LIMIT = 150_000

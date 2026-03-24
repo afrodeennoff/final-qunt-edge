@@ -1,5 +1,5 @@
-import { getSubscriptionDetails } from '../../../server/subscription'
-import { prisma } from '../../../lib/prisma'
+import { getSubscriptionDetails } from '../../server/subscription'
+import { prisma } from '../prisma'
 
 export type AiGuardFeature =
   | 'chat'
