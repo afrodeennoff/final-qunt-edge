@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BadgePercent,
   BookOpenText,
+  CheckCircle2,
   Radar,
   ShieldCheck,
   Sparkles,
@@ -25,258 +26,268 @@ function formatPrice(value: number): string {
   return `$${value.toLocaleString()}`
 }
 
-export default function HomeContent({ locale, firms, deals, overview }: HomeContentProps) {
-  const localePrefix = `/${locale}`
-
-  const leadingFirms = [...firms]
+function getLeadingFirms(firms: UnifiedFirm[]): UnifiedFirm[] {
+  return [...firms]
     .sort((a, b) => {
       if (b.catalogueStats.paidPayoutAmount !== a.catalogueStats.paidPayoutAmount) {
         return b.catalogueStats.paidPayoutAmount - a.catalogueStats.paidPayoutAmount
       }
       return b.catalogueStats.accountsCount - a.catalogueStats.accountsCount
     })
-    .slice(0, 3)
+    .slice(0, 6)
+}
 
-  const leadingDeals = [...deals]
-    .sort((a, b) => b.discountPercent - a.discountPercent)
-    .slice(0, 4)
+function getLeadingDeals(deals: DealItem[]): DealItem[] {
+  return [...deals].sort((a, b) => b.discountPercent - a.discountPercent).slice(0, 4)
+}
+
+export default function HomeContent({ locale, firms, deals, overview }: HomeContentProps) {
+  const localePrefix = `/${locale}`
+  const leadingFirms = getLeadingFirms(firms)
+  const featuredFirms = leadingFirms.slice(0, 3)
+  const trustFirms = leadingFirms.slice(0, 6)
+  const leadingDeals = getLeadingDeals(deals)
+  const topDeal = leadingDeals[0]
 
   return (
-    <div className="relative overflow-x-hidden bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_18%,hsl(var(--background))_100%)] selection:bg-[hsl(var(--primary)/0.3)] selection:text-primary-foreground [--home-display:var(--font-geist)] [--home-copy:var(--font-manrope)]">
+    <div className="relative overflow-x-hidden bg-[#f3f0e7] text-[#1d1b16] selection:bg-[#1d1b16] selection:text-[#f3f0e7]">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(65%_55%_at_50%_0%,hsl(var(--foreground)/0.10),transparent_72%)]" />
-        <div className="absolute left-[-10%] top-[18rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,hsl(var(--primary)/0.10),transparent_68%)] blur-3xl" />
-        <div className="absolute right-[-8%] top-[8rem] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,hsl(var(--foreground)/0.06),transparent_70%)] blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_top,_rgba(132,103,79,0.18),transparent_58%)]" />
+        <div className="absolute left-0 top-40 h-72 w-72 rounded-full bg-[#d9c7b0]/25 blur-3xl" />
+        <div className="absolute right-0 top-24 h-80 w-80 rounded-full bg-[#b9d0be]/25 blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(29,27,22,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(29,27,22,0.04)_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-[1420px] flex-col gap-12 px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:gap-14 lg:pb-24 lg:pt-12">
-        <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-[2.25rem] border border-border/60 bg-card/50 p-6 shadow-[0_20px_90px_rgba(0,0,0,0.12)] backdrop-blur-sm sm:p-8 lg:p-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/75 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              Qunt Edge for prop traders
-            </div>
+      <main className="relative z-10 mx-auto flex w-full max-w-[1380px] flex-col gap-10 px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:gap-16 lg:pt-12">
+        <section className="border-b border-[#1d1b16]/12 pb-10 lg:pb-14">
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6a6258]">
+                <Sparkles className="h-3.5 w-3.5 text-[#8b5e3c]" />
+                Qunt Edge for prop traders
+              </div>
 
-            <div className="mt-6 max-w-4xl">
-              <h1 className="text-[clamp(2.9rem,8vw,6.6rem)] font-semibold leading-[0.9] tracking-[-0.06em] text-foreground [font-family:var(--home-display)]">
-                A sharper home base
-                <span className="block text-muted-foreground">for picking firms and reviewing performance.</span>
+              <h1 className="mt-6 max-w-4xl text-[clamp(3.3rem,8vw,7.2rem)] font-semibold leading-[0.88] tracking-[-0.065em] text-[#1d1b16]">
+                Find the right
+                <span className="block text-[#8b5e3c]">prop firm faster.</span>
               </h1>
-              <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-                Compare prop firms, spot live discounts, and move into trader-grade review with a homepage built more like a control room than a generic landing page.
+
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[#5d564d]">
+                A redesigned command center for comparing firms, spotting live challenge discounts, and carrying that context into deeper review without bouncing between generic pages.
               </p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href={`${localePrefix}/propfirms`}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#1d1b16] px-5 py-3 text-sm font-semibold text-[#f3f0e7] transition-colors hover:bg-[#322f29]"
+                >
+                  Explore firms
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={`${localePrefix}/deals`}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#1d1b16]/10 bg-white/70 px-5 py-3 text-sm font-medium text-[#1d1b16] transition-colors hover:bg-white"
+                >
+                  Open deals board
+                  <BadgePercent className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={`${localePrefix}/leaderboard`}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#1d1b16]/10 bg-white/70 px-5 py-3 text-sm font-medium text-[#1d1b16] transition-colors hover:bg-white"
+                >
+                  View leaderboard
+                  <Trophy className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-10 grid gap-6 border-t border-[#1d1b16]/10 pt-6 sm:grid-cols-3">
+                <HeroMetric label="Tracked firms" value={overview.totalTrackedFirms.toString()} helper="Comparison-ready catalogue" />
+                <HeroMetric label="Live deals" value={overview.totalLiveDeals.toString()} helper="Verified offers on the board" />
+                <HeroMetric label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} helper={`${overview.totalPaidPayoutCount.toLocaleString()} payout events`} />
+              </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href={`${localePrefix}/propfirms`}
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                Explore firms
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href={`${localePrefix}/deals`}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-              >
-                See live deals
-                <BadgePercent className="h-4 w-4" />
-              </Link>
-              <Link
-                href={`${localePrefix}/leaderboard`}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-              >
-                Open leaderboard
-                <Trophy className="h-4 w-4" />
-              </Link>
-            </div>
+            <div className="grid gap-6 border-t border-[#1d1b16]/10 pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+              <div className="grid gap-3 sm:grid-cols-3">
+                {['2025 editorial pick', '2024 trader approved', '2023 comparison refined'].map((award) => (
+                  <div key={award} className="border-b border-[#1d1b16]/10 pb-3 text-sm font-medium text-[#4e473f]">
+                    {award}
+                  </div>
+                ))}
+              </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <PulseTile label="Tracked Firms" value={overview.totalTrackedFirms.toString()} helper="Comparison-ready catalogue" />
-              <PulseTile label="Active Deals" value={overview.totalLiveDeals.toString()} helper="Verified promos in the board" />
-              <PulseTile label="Paid Payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} helper={`${overview.totalPaidPayoutCount.toLocaleString()} payout events tracked`} />
-            </div>
-          </div>
+              <div className="grid gap-6 sm:grid-cols-[1.05fr_0.95fr]">
+                <div className="border-b border-[#1d1b16]/10 pb-6 text-[#1d1b16] sm:border-b-0 sm:border-r sm:pr-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7a7065]">Live signal</p>
+                  <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
+                    {topDeal ? `${topDeal.discountPercent}% off ${topDeal.firmName}` : 'Deals update throughout the day'}
+                  </h2>
+                  <p className="mt-4 text-sm leading-7 text-[#5d564d]">
+                    {topDeal
+                      ? `${topDeal.platform} • ${topDeal.category} • coupon ${topDeal.couponCode}`
+                      : 'When verified offers are live, the strongest discount appears here first.'}
+                  </p>
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                    <SoftStat label="Challenge fee" value={topDeal ? formatPrice(topDeal.challengeFee) : 'Pending'} />
+                    <SoftStat label="Tracked accounts" value={overview.totalAccounts.toLocaleString()} />
+                  </div>
+                </div>
 
-          <div className="grid gap-4">
-            <Panel
-              eyebrow="Workflow"
-              title="One homepage, three jobs"
-              copy="Research the firm, validate the deal, and keep the review mindset attached from the first click."
-              icon={Radar}
-            />
-            <Panel
-              eyebrow="Filtering"
-              title="Built for decision speed"
-              copy="Use the explorer below to narrow by platform, challenge structure, and drawdown logic before you go deeper."
-              icon={ShieldCheck}
-            />
-            <Panel
-              eyebrow="Review mode"
-              title="Not just a comparison site"
-              copy="The page speaks the same language as the performance tools, so discovery and execution review feel connected."
-              icon={BookOpenText}
-            />
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7a7065]">Why this page exists</p>
+                  <div className="mt-4 space-y-3">
+                    <StoryLine
+                      icon={Radar}
+                      title="Scan the field"
+                      copy="See the strongest firms, payouts, and deals before opening a single detail page."
+                    />
+                    <StoryLine
+                      icon={ShieldCheck}
+                      title="Stress-test the setup"
+                      copy="Use the explorer to narrow by platform, challenge structure, and drawdown type."
+                    />
+                    <StoryLine
+                      icon={BookOpenText}
+                      title="Carry context forward"
+                      copy="Move into deals, firm detail, and trader ranking without losing the reason behind your shortlist."
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="Signals" />
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">Where traders are leaning right now.</h2>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-              A quick read on the firms showing the strongest payout traction and live-account activity across the current dataset.
-            </p>
-
-            <div className="mt-6 space-y-3">
-              {leadingFirms.map((firm, index) => (
+        <section className="border-b border-[#1d1b16]/10 pb-10">
+          <SectionTag label="Trusted by active researchers" />
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3">
+            {trustFirms.length > 0 ? (
+              trustFirms.map((firm) => (
                 <Link
                   key={firm.id}
                   href={`${localePrefix}/firm/${firm.slug}`}
-                  className="group flex items-center justify-between rounded-[1.3rem] border border-border/60 bg-background/75 px-4 py-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+                  className="inline-flex items-center gap-3 text-sm font-semibold text-[#1d1b16] transition-colors hover:text-[#8b5e3c]"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/60 bg-card text-sm font-semibold text-foreground">
-                      #{index + 1}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">{firm.name}</p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                        {firm.platform} • {firm.payoutModel}
-                      </p>
-                    </div>
+                  <span>{firm.name}</span>
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#7a7065]">{firm.platform}</span>
+                </Link>
+              ))
+            ) : (
+              <div className="text-sm text-[#6a6258]">
+                Firm highlights appear here when the current dataset is available.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <FeaturePanel
+            label="Featured firms"
+            title="The names showing the strongest payout traction right now."
+            copy="A cleaner editorial list keeps the strongest firms visible without turning the page into a wall of boxes."
+          >
+            <div className="mt-6 divide-y divide-[#1d1b16]/10 border-y border-[#1d1b16]/10">
+              {featuredFirms.map((firm, index) => (
+                <Link
+                  key={firm.id}
+                  href={`${localePrefix}/firm/${firm.slug}`}
+                  className="grid gap-3 py-4 transition-colors hover:text-[#8b5e3c] sm:grid-cols-[auto_1fr_auto]"
+                >
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8b5e3c]">Rank #{index + 1}</p>
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#1d1b16]">{firm.name}</h3>
+                    <p className="mt-2 text-sm text-[#5d564d]">{firm.platform} • {firm.payoutModel}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-foreground">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</p>
-                    <p className="text-xs text-muted-foreground">{firm.catalogueStats.accountsCount.toLocaleString()} tracked accounts</p>
+                  <div className="grid gap-2 text-sm text-[#4e473f] sm:text-right">
+                    <span>{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} paid out</span>
+                    <span>{firm.catalogueStats.accountsCount.toLocaleString()} accounts</span>
                   </div>
                 </Link>
               ))}
             </div>
-          </div>
+          </FeaturePanel>
 
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="Live Deal Tape" />
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-3xl font-semibold tracking-tight text-foreground">Strong discounts worth checking.</h2>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-                  A fresh tape of the best live promos so pricing context is visible before you dive into firm detail.
-                </p>
-              </div>
-              <Link href={`${localePrefix}/deals`} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Open deals board
-              </Link>
-            </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <FeaturePanel
+            label="Live deal tape"
+            title="Pricing cards that feel like product tiles, not coupon clutter."
+            copy="This stays closer to a market tape than a coupon grid, so the pricing signal is easier to scan."
+          >
+            <div className="mt-6 divide-y divide-[#1d1b16]/10 border-y border-[#1d1b16]/10">
               {leadingDeals.length > 0 ? (
                 leadingDeals.map((deal) => (
                   <Link
                     key={deal.id}
                     href={`${localePrefix}/deals`}
-                    className="group rounded-[1.35rem] border border-border/60 bg-background/75 p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+                    className="grid gap-3 py-4 transition-colors hover:text-[#8b5e3c] sm:grid-cols-[1fr_auto]"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{deal.firmName}</p>
-                        <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                          {deal.category} • {deal.platform}
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-border/60 bg-card px-3 py-2 text-right">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Off</p>
-                        <p className="mt-1 text-lg font-semibold text-foreground">{deal.discountPercent}%</p>
-                      </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#1d1b16]">{deal.firmName}</p>
+                      <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[#7a7065]">{deal.category} • {deal.platform}</p>
                     </div>
-
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <MiniMetric label="Coupon" value={deal.couponCode} />
-                      <MiniMetric label="Challenge fee" value={formatPrice(deal.challengeFee)} />
+                    <div className="grid gap-2 text-sm text-[#4e473f] sm:text-right">
+                      <span>{deal.discountPercent}% off</span>
+                      <span>{deal.couponCode} • {formatPrice(deal.challengeFee)}</span>
                     </div>
                   </Link>
                 ))
               ) : (
-                <div className="rounded-[1.35rem] border border-dashed border-border bg-background/60 p-6 text-sm text-muted-foreground md:col-span-2">
-                  Live deal highlights will appear here when active offers are available.
+                <div className="py-6 text-sm text-[#6a6258]">
+                  Live deal highlights appear here when active offers are available.
                 </div>
               )}
             </div>
-          </div>
+          </FeaturePanel>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="How It Works" />
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">A cleaner path from first scan to deeper conviction.</h2>
-            <div className="mt-6 space-y-4">
-              <JourneyStep
-                index="01"
-                title="Scan the board"
-                copy="Start with the home signals, shortlist firms, and let the market pulse guide where you spend more attention."
-              />
-              <JourneyStep
-                index="02"
-                title="Stress-test the setup"
-                copy="Use the explorer to narrow by platform, challenge structure, and drawdown model instead of reading generic summaries."
-              />
-              <JourneyStep
-                index="03"
-                title="Carry that context forward"
-                copy="Move into deals, firm detail, and review workflows without losing the logic behind why you chose a firm."
-              />
-            </div>
-          </div>
+        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <StoryPanel
+            label="Why traders choose Qunt Edge"
+            eyebrow="Research without the mess"
+            title="A homepage built like a clean product story."
+            copy="The Najaf reference leans on spacious sections, strong cards, and simple story rhythm. Here that same feeling is translated into a trading-research surface with real metrics instead of placeholder product copy."
+            points={[
+              'One place to compare firms, see live deals, and jump to trader performance.',
+              'A calmer hierarchy that makes scanning easier on desktop and mobile.',
+              'Each block pushes toward a useful next step rather than stacking generic claims.',
+            ]}
+          />
 
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="Explorer" />
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">Search the firm field with a fresh board layout.</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
-              This is the hands-on section of the homepage: less brochure, more decision surface.
-            </p>
-            <div className="mt-6">
-              <PropFirmsExplorer locale={locale} firms={firms} />
-            </div>
-          </div>
+          <StoryPanel
+            label="Decision benefits"
+            eyebrow="Built for real comparison"
+            title="Move from shortlist to conviction faster."
+            copy="Instead of hiding the useful signals below a generic hero, the strongest firms, deal context, and interactive explorer show up immediately."
+            points={[
+              `${overview.totalAccounts.toLocaleString()} tracked accounts represented in the current view.`,
+              `${formatCompactCurrency(overview.totalAccountValue)} in account value across the dataset.`,
+              `${overview.totalLiveDeals.toString()} verified discounts available to review right now.`,
+            ]}
+            accent="sage"
+          />
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="Confidence Layer" />
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">Keep the same logic from discovery to due diligence.</h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <PulseTile label="Live accounts" value={overview.totalAccounts.toLocaleString()} helper="Real tracked trader accounts" />
-              <PulseTile label="Account value" value={formatCompactCurrency(overview.totalAccountValue)} helper="Capital represented in the dataset" />
-              <PulseTile label="Firm detail" value={firms.length > 0 ? 'Ready' : 'Pending'} helper="Research pages connect to the same data surface" />
+        <section className="border-t border-[#1d1b16]/10 pt-8">
+          <SectionTag label="Interactive explorer" />
+          <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="text-[clamp(2rem,4vw,3.4rem)] font-semibold tracking-[-0.05em] text-[#1d1b16]">
+                The hands-on section of the new home page.
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#5d564d]">
+                This is where the page stops talking and starts helping. Search the firm field, narrow by structure, and keep the same visual language all the way into the catalogue.
+              </p>
             </div>
-            <div className="mt-6 rounded-[1.3rem] border border-border/60 bg-background/70 p-5 text-sm leading-7 text-muted-foreground">
-              The point of the homepage is not to win a design contest. It should help you narrow the field fast, preserve context, and send you into deals and firm pages without repeating the same discovery work twice.
-            </div>
+            <Link
+              href={`${localePrefix}/propfirms`}
+              className="inline-flex items-center gap-2 rounded-full border border-[#1d1b16]/10 bg-white/80 px-5 py-3 text-sm font-medium text-[#1d1b16] transition-colors hover:bg-white"
+            >
+              Open full catalogue
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="rounded-[2rem] border border-border/60 bg-card/45 p-6">
-            <SectionLabel label="Next Move" />
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">Pick the surface that matches what you need right now.</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <CrossLinkCard
-                href={`${localePrefix}/propfirms`}
-                title="Compare firms"
-                copy="Open the full catalogue for broader payout, value, and account-board comparison."
-                icon={ShieldCheck}
-              />
-              <CrossLinkCard
-                href={`${localePrefix}/deals`}
-                title="Check active deals"
-                copy="Move straight into current offers when pricing is the deciding factor."
-                icon={BadgePercent}
-              />
-              <CrossLinkCard
-                href={`${localePrefix}/leaderboard`}
-                title="Review trader results"
-                copy="See how public traders are actually performing before you trust the marketing."
-                icon={TrendingUp}
-              />
-            </div>
+          <div className="mt-6">
+            <PropFirmsExplorer locale={locale} firms={firms} />
           </div>
         </section>
       </main>
@@ -284,15 +295,15 @@ export default function HomeContent({ locale, firms, deals, overview }: HomeCont
   )
 }
 
-function SectionLabel({ label }: { label: string }) {
+function SectionTag({ label }: { label: string }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <div className="inline-flex items-center gap-2 rounded-full border border-[#1d1b16]/10 bg-white/70 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7a7065]">
       {label}
     </div>
   )
 }
 
-function PulseTile({
+function HeroMetric({
   label,
   value,
   helper,
@@ -302,97 +313,104 @@ function PulseTile({
   helper: string
 }) {
   return (
-    <div className="rounded-[1.35rem] border border-border/60 bg-background/70 p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7a7065]">{label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-tight text-[#1d1b16]">{value}</p>
+      <p className="mt-2 text-xs text-[#6a6258]">{helper}</p>
     </div>
   )
 }
 
-function Panel({
+function SoftStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t border-[#1d1b16]/10 pt-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[#7a7065]">{label}</p>
+      <p className="mt-2 text-lg font-semibold text-[#1d1b16]">{value}</p>
+    </div>
+  )
+}
+
+function StoryLine({
+  icon: Icon,
+  title,
+  copy,
+}: {
+  icon: typeof TrendingUp
+  title: string
+  copy: string
+}) {
+  return (
+    <div className="border-b border-[#1d1b16]/10 pb-4 last:border-b-0">
+      <div className="flex items-start gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#1d1b16]/10 bg-white/80">
+          <Icon className="h-4 w-4 text-[#1d1b16]" />
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold text-[#1d1b16]">{title}</h3>
+          <p className="mt-2 text-sm leading-6 text-[#5d564d]">{copy}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function FeaturePanel({
+  label,
+  title,
+  copy,
+  children,
+}: {
+  label: string
+  title: string
+  copy: string
+  children: React.ReactNode
+}) {
+  return (
+    <section className="border-t border-[#1d1b16]/10 pt-6">
+      <SectionTag label={label} />
+      <h2 className="mt-4 text-[clamp(2rem,4vw,3.1rem)] font-semibold tracking-[-0.05em] text-[#1d1b16]">
+        {title}
+      </h2>
+      <p className="mt-3 max-w-2xl text-sm leading-7 text-[#5d564d]">{copy}</p>
+      {children}
+    </section>
+  )
+}
+
+function StoryPanel({
+  label,
   eyebrow,
   title,
   copy,
-  icon: Icon,
+  points,
+  accent = 'sand',
 }: {
+  label: string
   eyebrow: string
   title: string
   copy: string
-  icon: typeof TrendingUp
+  points: string[]
+  accent?: 'sand' | 'sage'
 }) {
-  return (
-    <div className="rounded-[1.75rem] border border-border/60 bg-card/55 p-5">
-      <div className="flex items-start gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/60 bg-background/75">
-          <Icon className="h-4 w-4 text-foreground" />
-        </div>
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>
-          <h3 className="mt-2 text-xl font-semibold tracking-tight text-foreground">{title}</h3>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
+  const panelClass =
+    accent === 'sage'
+      ? 'bg-[#dfe8df]/75 border-[#1d1b16]/10'
+      : 'bg-[#eadfce]/75 border-[#1d1b16]/10'
 
-function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/60 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
-    </div>
-  )
-}
-
-function JourneyStep({
-  index,
-  title,
-  copy,
-}: {
-  index: string
-  title: string
-  copy: string
-}) {
-  return (
-    <div className="rounded-[1.35rem] border border-border/60 bg-background/70 p-4">
-      <div className="flex items-start gap-4">
-        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{index}</div>
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p>
-        </div>
+    <section className={`border-t pt-6 ${panelClass}`}>
+      <SectionTag label={label} />
+      <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7a7065]">{eyebrow}</p>
+      <h2 className="mt-3 text-[clamp(2rem,4vw,3.2rem)] font-semibold tracking-[-0.05em] text-[#1d1b16]">{title}</h2>
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5d564d]">{copy}</p>
+      <div className="mt-6 space-y-3">
+        {points.map((point) => (
+          <div key={point} className="flex items-start gap-3 border-b border-[#1d1b16]/10 pb-4">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#8b5e3c]" />
+            <p className="text-sm leading-6 text-[#4e473f]">{point}</p>
+          </div>
+        ))}
       </div>
-    </div>
-  )
-}
-
-function CrossLinkCard({
-  href,
-  title,
-  copy,
-  icon: Icon,
-}: {
-  href: string
-  title: string
-  copy: string
-  icon: typeof ShieldCheck
-}) {
-  return (
-    <Link
-      href={href}
-      className="group rounded-[1.35rem] border border-border/60 bg-background/75 p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
-    >
-      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/60 bg-card">
-        <Icon className="h-4 w-4 text-foreground" />
-      </div>
-      <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p>
-      <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-foreground">
-        Open
-        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-      </div>
-    </Link>
+    </section>
   )
 }

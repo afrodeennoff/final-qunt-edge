@@ -72,17 +72,26 @@ const parseBooleanEnv = (value: string | undefined): boolean | undefined => {
   return undefined
 }
 
+const parseConnectionUrl = (connectionString: string): URL | null => {
+  if (!connectionString) return null
+  try {
+    return new URL(connectionString)
+  } catch {
+    return null
+  }
+}
+
 const shouldEnableSsl = (connectionString: string): boolean => {
   const override = parseBooleanEnv(process.env.PGSSL_ENABLE)
   if (override !== undefined) return override
   if (!connectionString) return false
 
-  try {
-    const url = new URL(connectionString)
-    const sslMode = url.searchParams.get('sslmode')?.toLowerCase()
-    if (sslMode === 'disable') return false
-    if (sslMode) return true
-  } catch {
+  const url = parseConnectionUrl(connectionString)
+  const sslMode = url?.searchParams.get('sslmode')?.toLowerCase()
+  if (sslMode === 'disable') return false
+  if (sslMode) return true
+
+  if (!url) {
     // Fall back to production default.
   }
 
@@ -93,21 +102,17 @@ const shouldRejectUnauthorized = (connectionString: string): boolean => {
   const override = parseBooleanEnv(process.env.PGSSL_REJECT_UNAUTHORIZED)
   if (override !== undefined) return override
 
-  if (connectionString) {
-    try {
-      const url = new URL(connectionString)
-      const sslMode = url.searchParams.get('sslmode')?.toLowerCase()
-      const isSupabasePooler = url.hostname.endsWith('.pooler.supabase.com')
+  const url = parseConnectionUrl(connectionString)
+  if (url) {
+    const sslMode = url.searchParams.get('sslmode')?.toLowerCase()
+    const isSupabasePooler = url.hostname.endsWith('.pooler.supabase.com')
 
-      // Align TLS verification behavior with libpq sslmode semantics.
-      // - verify-full / verify-ca: verify certificate chain.
-      // - require / prefer / allow: encrypt transport without strict verification.
-      if (sslMode === 'verify-full' || sslMode === 'verify-ca') return true
-      if (sslMode === 'require' || sslMode === 'prefer' || sslMode === 'allow') return false
-      if (isSupabasePooler) return false
-    } catch {
-      // Fall through to production default.
-    }
+    // Align TLS verification behavior with libpq sslmode semantics.
+    // - verify-full / verify-ca: verify certificate chain.
+    // - require / prefer / allow: encrypt transport without strict verification.
+    if (sslMode === 'verify-full' || sslMode === 'verify-ca') return true
+    if (sslMode === 'require' || sslMode === 'prefer' || sslMode === 'allow') return false
+    if (isSupabasePooler) return false
   }
 
   // Secure-by-default fallback in production. Opt out explicitly with PGSSL_REJECT_UNAUTHORIZED=false.
@@ -117,6 +122,11 @@ const shouldRejectUnauthorized = (connectionString: string): boolean => {
 // Runtime should prefer pooled DATABASE_URL (Supabase pooler).
 // DIRECT_URL is intended for migrations/admin operations.
 const connectionString = normalizeSupabasePoolerMode(selectRuntimeConnectionString())
+if (!connectionString && !isNextBuildPhase) {
+  throw new Error(
+    '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
+  )
+}
 const parsedPoolMax = Number.parseInt(process.env.PG_POOL_MAX ?? '', 10)
 const parsedPoolMin = Number.parseInt(process.env.PG_POOL_MIN ?? '', 10)
 

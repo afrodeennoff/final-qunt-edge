@@ -36,7 +36,19 @@ const sortOptions: Array<{ key: SortKey; label: string; summaryLabel: string }> 
   { key: 'refusedPayout', label: 'Lowest refused', summaryLabel: 'lowest refused' },
 ]
 
-function matchesCatalogueSearch(
+const payoutOptions: ReadonlyArray<{ key: PayoutFilter; label: string }> = [
+  { key: 'all', label: 'All firms' },
+  { key: 'high-paid', label: 'High paid' },
+  { key: 'low-refused', label: 'Low refused' },
+]
+
+const challengeOptions: ReadonlyArray<{ key: ChallengeFilter; label: string }> = [
+  { key: 'all', label: 'All challenges' },
+  { key: 'instant', label: 'Instant funded' },
+  { key: 'evaluation', label: 'Evaluation' },
+]
+
+function matchesSearch(
   firm: PropFirmCatalogueExperienceProps['firms'][number],
   normalizedSearch: string
 ): boolean {
@@ -46,7 +58,7 @@ function matchesCatalogueSearch(
     .includes(normalizedSearch)
 }
 
-function matchesCataloguePayoutFilter(
+function matchesPayoutFilter(
   firm: PropFirmCatalogueExperienceProps['firms'][number],
   payoutFilter: PayoutFilter
 ): boolean {
@@ -55,14 +67,14 @@ function matchesCataloguePayoutFilter(
   return true
 }
 
-function matchesCataloguePlatformFilter(
+function matchesPlatformFilter(
   firm: PropFirmCatalogueExperienceProps['firms'][number],
   platformFilter: PlatformFilter
 ): boolean {
   return platformFilter === 'all' || firm.platform === platformFilter
 }
 
-function matchesCatalogueChallengeFilter(
+function matchesChallengeFilter(
   firm: PropFirmCatalogueExperienceProps['firms'][number],
   challengeFilter: ChallengeFilter
 ): boolean {
@@ -71,22 +83,7 @@ function matchesCatalogueChallengeFilter(
   return true
 }
 
-function matchesCatalogueFilters(
-  firm: PropFirmCatalogueExperienceProps['firms'][number],
-  normalizedSearch: string,
-  payoutFilter: PayoutFilter,
-  platformFilter: PlatformFilter,
-  challengeFilter: ChallengeFilter
-): boolean {
-  return (
-    matchesCatalogueSearch(firm, normalizedSearch) &&
-    matchesCataloguePayoutFilter(firm, payoutFilter) &&
-    matchesCataloguePlatformFilter(firm, platformFilter) &&
-    matchesCatalogueChallengeFilter(firm, challengeFilter)
-  )
-}
-
-function sortCatalogueFirms(
+function sortFirms(
   firms: PropFirmCatalogueExperienceProps['firms'],
   sortKey: SortKey
 ) {
@@ -112,13 +109,18 @@ export function PropFirmCatalogueExperience({
   const [challengeFilter, setChallengeFilter] = useState<ChallengeFilter>('all')
 
   const filteredFirms = useMemo(() => {
-    const normalized = deferredSearch.trim().toLowerCase()
+    const normalizedSearch = deferredSearch.trim().toLowerCase()
 
-    const next = firms.filter((firm) =>
-      matchesCatalogueFilters(firm, normalized, payoutFilter, platformFilter, challengeFilter)
-    )
+    const next = firms.filter((firm) => {
+      return (
+        matchesSearch(firm, normalizedSearch) &&
+        matchesPayoutFilter(firm, payoutFilter) &&
+        matchesPlatformFilter(firm, platformFilter) &&
+        matchesChallengeFilter(firm, challengeFilter)
+      )
+    })
 
-    return sortCatalogueFirms(next, sortKey)
+    return sortFirms(next, sortKey)
   }, [challengeFilter, deferredSearch, firms, payoutFilter, platformFilter, sortKey])
 
   const overview = useMemo(() => {
@@ -129,16 +131,28 @@ export function PropFirmCatalogueExperience({
     }
   }, [firms])
 
-  const showLeaders = filteredFirms.length > 3
-  const topFirms = showLeaders ? filteredFirms.slice(0, 3) : []
-  const boardFirms = showLeaders ? filteredFirms.slice(3) : filteredFirms
+  const topFirms = filteredFirms.slice(0, 3)
   const activeSort = sortOptions.find((option) => option.key === sortKey) ?? sortOptions[0]
   const leadingPlatforms = useMemo(() => {
     return Array.from(new Set(firms.map((firm) => firm.platform).filter((platform) => platform !== 'Unknown'))).sort()
   }, [firms])
+  const hasActiveFilters =
+    search.trim().length > 0 ||
+    payoutFilter !== 'all' ||
+    platformFilter !== 'all' ||
+    challengeFilter !== 'all' ||
+    sortKey !== 'accounts'
+
+  const resetFilters = () => {
+    setSearch('')
+    setSortKey('accounts')
+    setPayoutFilter('all')
+    setPlatformFilter('all')
+    setChallengeFilter('all')
+  }
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_20%,hsl(var(--background))_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-card/50 p-6 shadow-[0_24px_120px_-60px_rgba(0,0,0,0.85)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
           <div>
@@ -170,146 +184,85 @@ export function PropFirmCatalogueExperience({
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
+        <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
             <div className="relative">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search prop firms..."
+                placeholder="Search prop firm"
                 className="h-12 w-full rounded-2xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground/60"
               />
             </div>
-
-            <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-wrap gap-2">
-                {([
-                  { key: 'all', label: 'All firms' },
-                  { key: 'high-paid', label: 'High paid' },
-                  { key: 'low-refused', label: 'Low refused' },
-                ] as const).map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setPayoutFilter(item.key)}
-                    className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-                      payoutFilter === item.key
-                        ? 'border-foreground/15 bg-foreground text-background'
-                        : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {([
-                  { key: 'all', label: 'All challenges' },
-                  { key: 'instant', label: 'Instant funded' },
-                  { key: 'evaluation', label: 'Evaluation' },
-                ] as const).map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setChallengeFilter(item.key)}
-                    className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-                      challengeFilter === item.key
-                        ? 'border-foreground/15 bg-foreground text-background'
-                        : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPlatformFilter('all')}
-                  className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-                    platformFilter === 'all'
-                      ? 'border-foreground/15 bg-foreground text-background'
-                      : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  All platforms
-                </button>
-                {leadingPlatforms.map((platform) => (
-                  <button
-                    key={platform}
-                    type="button"
-                    onClick={() => setPlatformFilter(platform as PlatformFilter)}
-                    className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-                      platformFilter === platform
-                        ? 'border-foreground/15 bg-foreground text-background'
-                        : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {platform}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {sortOptions.map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setSortKey(item.key)}
-                    className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-                      sortKey === item.key
-                        ? 'border-foreground/15 bg-foreground text-background'
-                        : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-border/60 bg-background/60 px-4 py-3 text-sm text-muted-foreground">
-              <span>
-                {filteredFirms.length} result{filteredFirms.length === 1 ? '' : 's'} after filters
-              </span>
-              <span>
-                Sorted by {activeSort.summaryLabel}
-              </span>
+            <div className="flex flex-wrap gap-2">
+              <SortPillGroup<SortKey>
+                options={sortOptions}
+                selected={sortKey}
+                onChange={setSortKey}
+              />
             </div>
           </div>
 
-          {showLeaders ? (
-            <div className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
-              <div className="mt-4 space-y-3">
-                {topFirms.map((firm, index) => (
-                  <Link
-                    key={firm.key}
-                    href={`/${locale}/firm/${firm.slug}`}
-                    className="flex items-center justify-between rounded-[1rem] border border-border/60 bg-background/70 px-4 py-3 transition-colors hover:bg-background"
-                  >
+          <div className="mt-4 flex flex-col gap-4">
+            <FilterRow<PayoutFilter> options={payoutOptions} selected={payoutFilter} onChange={setPayoutFilter} />
+            <FilterRow<ChallengeFilter> options={challengeOptions} selected={challengeFilter} onChange={setChallengeFilter} />
+            <FilterRow<PlatformFilter>
+              options={[{ key: 'all', label: 'All platforms' }, ...leadingPlatforms.map((platform) => ({ key: platform as PlatformFilter, label: platform }))]}
+              selected={platformFilter}
+              onChange={setPlatformFilter}
+            />
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-border/60 bg-background/60 px-4 py-3 text-sm text-muted-foreground">
+            <span>{filteredFirms.length} result{filteredFirms.length === 1 ? '' : 's'}</span>
+            <span>Sorted by {activeSort.summaryLabel}</span>
+          </div>
+
+          {hasActiveFilters ? (
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-dashed border-border/60 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
+              <span>Minimal board mode is active. Reset to return to the full catalogue.</span>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card"
+              >
+                Reset
+              </button>
+            </div>
+          ) : null}
+        </section>
+
+        {topFirms.length > 0 ? (
+          <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Top firms in the current shortlist</h2>
+              </div>
+              <p className="text-sm text-muted-foreground">Compact ranking before the full board.</p>
+            </div>
+
+            <div className="mt-6 grid gap-3 lg:grid-cols-3">
+              {topFirms.map((firm, index) => (
+                <Link
+                  key={firm.key}
+                  href={`/${locale}/firm/${firm.slug}`}
+                  className="rounded-[1.2rem] border border-border/60 bg-background/70 px-4 py-4 transition-colors hover:bg-background"
+                >
+                  <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Rank #{index + 1}</p>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{firm.name}</p>
+                      <p className="mt-2 text-base font-semibold text-foreground">{firm.name}</p>
                       <p className="mt-1 text-xs text-muted-foreground">{firm.platform} • {firm.drawdownType}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{firm.stats.accountsCount.toLocaleString()} accounts</p>
-                  </Link>
-                ))}
-              </div>
+                    <p className="text-sm font-semibold text-foreground">{formatCompactCurrency(firm.stats.payouts.paidAmount)}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
-          ) : (
-            <div className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Selection status</p>
-              <div className="mt-4 rounded-[1rem] border border-border/60 bg-background/70 p-4 text-sm text-muted-foreground">
-                Showing the full matching catalogue directly because the current filter set only returns a small result group.
-              </div>
-            </div>
-          )}
-        </section>
+          </section>
+        ) : null}
 
         <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -317,11 +270,12 @@ export function PropFirmCatalogueExperience({
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Catalogue board</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">All tracked firms</h2>
             </div>
+            <p className="text-sm text-muted-foreground">The board is the main comparison surface.</p>
           </div>
 
-          {boardFirms.length > 0 ? (
+          {filteredFirms.length > 0 ? (
             <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {boardFirms.map((firm) => (
+              {filteredFirms.map((firm) => (
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
@@ -344,13 +298,13 @@ export function PropFirmCatalogueExperience({
                     <BoardMetric label="Accounts" value={firm.stats.accountsCount.toLocaleString()} />
                     <BoardMetric label="Account value" value={formatCompactCurrency(firm.stats.totalAccountValue)} />
                     <BoardMetric label="Paid out" value={formatCompactCurrency(firm.stats.payouts.paidAmount)} />
-                    <BoardMetric label="Refused" value={formatCompactCurrency(firm.stats.payouts.refusedAmount)} />
                     <BoardMetric label="Drawdown" value={firm.drawdownType} />
                     <BoardMetric label="Access" value={firm.hasInstantFunding ? 'Instant + eval' : 'Evaluation'} />
+                    <BoardMetric label="Category" value={firm.category} />
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-border/60 pt-4">
-                    <p className="text-sm text-muted-foreground">{firm.stats.sizeBreakdown}</p>
+                    <p className="max-w-[75%] text-sm text-muted-foreground">{firm.stats.sizeBreakdown}</p>
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
                       View firm
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -361,11 +315,69 @@ export function PropFirmCatalogueExperience({
             </div>
           ) : (
             <div className="mt-6 rounded-[1.4rem] border border-dashed border-border bg-background/70 p-8 text-center text-sm text-muted-foreground">
-              No firms match the current search and payout filters.
+              No firms match the current search and filter stack.
             </div>
           )}
         </section>
       </div>
+    </div>
+  )
+}
+
+function SortPillGroup<T extends string>({
+  options,
+  selected,
+  onChange,
+}: {
+  options: ReadonlyArray<{ key: T; label: string }>
+  selected: T
+  onChange: (value: T) => void
+}) {
+  return (
+    <>
+      {options.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          onClick={() => onChange(item.key)}
+          className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+            selected === item.key
+              ? 'border-foreground/15 bg-foreground text-background'
+              : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
+    </>
+  )
+}
+
+function FilterRow<T extends string>({
+  options,
+  selected,
+  onChange,
+}: {
+  options: ReadonlyArray<{ key: T; label: string }>
+  selected: T
+  onChange: (value: T) => void
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((item) => (
+        <button
+          key={item.key}
+          type="button"
+          onClick={() => onChange(item.key)}
+          className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+            selected === item.key
+              ? 'border-foreground/15 bg-foreground text-background'
+              : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
     </div>
   )
 }

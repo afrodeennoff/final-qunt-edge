@@ -29,6 +29,11 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
     orderBy: { name: 'asc' },
   })
 
+  const activeCount = firms.filter((firm) => firm.isActive).length
+  const inactiveCount = firms.length - activeCount
+  const totalReviews = firms.reduce((sum, firm) => sum + firm._count.reviews, 0)
+  const totalCoupons = firms.reduce((sum, firm) => sum + firm._count.coupons, 0)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -36,6 +41,13 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
         <Button asChild>
           <Link href={`/${locale}/admin/propfirms/new`}>Add Firm</Link>
         </Button>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <AdminStat label="Total firms" value={firms.length.toString()} />
+        <AdminStat label="Active" value={activeCount.toString()} />
+        <AdminStat label="Inactive" value={inactiveCount.toString()} />
+        <AdminStat label="Reviews / Coupons" value={`${totalReviews} / ${totalCoupons}`} />
       </div>
 
       <Card>
@@ -69,7 +81,7 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                       <td className="py-3 pr-4 text-center">{f._count.reviews}</td>
                       <td className="py-3 pr-4 text-center">{f._count.coupons}</td>
                       <td className="py-3 pr-4 text-center">
-                        <span className={f.isActive ? 'text-emerald-500' : 'text-muted-foreground'}>
+                        <span className={f.isActive ? 'text-emerald-500' : 'text-amber-500'}>
                           {f.isActive ? 'Yes' : 'No'}
                         </span>
                       </td>
@@ -95,5 +107,16 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function AdminStat({ label, value }: { label: string; value: string }) {
+  return (
+    <Card>
+      <CardContent size="sm">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+        <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
+      </CardContent>
+    </Card>
   )
 }
