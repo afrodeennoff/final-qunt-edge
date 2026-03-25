@@ -8,6 +8,7 @@ import { AIModelSidebar } from "@/components/sidebar/aimodel-sidebar";
 import { useCurrentLocale } from "@/locales/client";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { RootProviders } from "@/components/providers/root-providers";
+import { DashboardProviders } from "@/components/providers/dashboard-providers";
 import { AuthTimeout } from "@/components/auth/auth-timeout";
 
 export default function RootLayout(
@@ -43,6 +44,7 @@ export default function RootLayout(
         <meta name="robots" content="noindex,nofollow" />
       </Head>
       <RootProviders>
+      <DashboardProviders>
       <SidebarProvider defaultOpen={true}>
         <AuthTimeout />
         <div className="flex min-h-screen w-full bg-background text-foreground">
@@ -60,6 +62,7 @@ export default function RootLayout(
           </SidebarInset>
         </div>
       </SidebarProvider>
+      </DashboardProviders>
       </RootProviders>
     </>
   );
