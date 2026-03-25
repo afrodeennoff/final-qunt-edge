@@ -5,6 +5,8 @@ import { geolocation } from "@vercel/functions"
 import { User } from "@supabase/supabase-js"
 import { buildAppCsp, buildEmbedCsp, createNonce } from "@/lib/security/csp"
 import { assertSecurityEnvConsistency } from "@/lib/env"
+import { isAdmin } from "@/server/authz"
+import { timingSafeEqual } from "node:crypto"
 
 try {
   assertSecurityEnvConsistency()
@@ -27,8 +29,79 @@ if (process.env.NODE_ENV !== 'production') {
   ALLOWED_ORIGINS.add('http://127.0.0.1:3000')
 }
 function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return true // same-origin requests have no Origin header
+  if (!origin) return true
   return ALLOWED_ORIGINS.has(origin)
+}
+
+function handleCronAuth(request: NextRequest): NextResponse | null {
+  const cronSecret = process.env.CRON_SECRET
+  const vercelCronSecret = process.env.VERCEL_CRON_SECRET
+
+  if (!cronSecret && !vercelCronSecret) {
+    return NextResponse.json({ error: "Cron not configured" }, { status: 500 })
+  }
+
+  const vercelCronHeader = request.headers.get("x-vercel-cron")
+  if (vercelCronHeader && vercelCronSecret && vercelCronHeader === vercelCronSecret) {
+    return null
+  }
+
+  const authHeader = request.headers.get("authorization")
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null
+
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized: Missing cron token" }, { status: 401 })
+  }
+
+  if (cronSecret) {
+    try {
+      if (timingSafeEqual(Buffer.from(token), Buffer.from(cronSecret))) {
+        return null
+      }
+    } catch {
+      return NextResponse.json({ error: "Unauthorized: Invalid cron token" }, { status: 401 })
+    }
+  }
+
+  return NextResponse.json({ error: "Unauthorized: Invalid cron token" }, { status: 401 })
+}
+
+async function handleAdminAuth(request: NextRequest): Promise<{ error: NextResponse } | { user: User }> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return { error: NextResponse.json({ error: "Internal server error" }, { status: 500 }) }
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll: () => request.cookies.getAll().map((c) => ({ name: c.name, value: c.value })),
+      setAll: () => {},
+    },
+  })
+
+  let user: User | null = null
+  try {
+    const authPromise = supabase.auth.getUser()
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Auth timeout")), 5000)
+    )
+    const result = (await Promise.race([authPromise, timeoutPromise])) as any
+    user = result.data?.user ?? null
+  } catch {
+    return { error: NextResponse.json({ error: "Unauthorized: No valid session" }, { status: 401 }) }
+  }
+
+  if (!user) {
+    return { error: NextResponse.json({ error: "Unauthorized: No valid session" }, { status: 401 }) }
+  }
+
+  if (!isAdmin(user.id)) {
+    return { error: NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 }) }
+  }
+
+  return { user }
 }
 
 // Use redirect strategy to ensure users are always on valid localized paths
@@ -283,6 +356,8 @@ export default async function middleware(req: NextRequest) {
     : process.env.NODE_ENV !== "production"
   const cspStrictMode = process.env.CSP_STRICT_MODE === "true"
 
+  let adminRouteUser: User | null = null
+
   // More specific static asset exclusions - must be first!
   if (routeClass === "static-asset") {
     return NextResponse.next()
@@ -312,18 +387,30 @@ export default async function middleware(req: NextRequest) {
     }
 
     if (!isPublicApiRoute(pathname)) {
-      const authHeader = req.headers.get('authorization')
-
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return NextResponse.json(
-          { error: 'Unauthorized', code: 'AUTH_REQUIRED' },
-          { status: 401 }
-        )
+      if (pathname.startsWith("/api/cron/")) {
+        const cronError = handleCronAuth(req)
+        if (cronError) return cronError
+      } else if (pathname.startsWith("/api/admin/")) {
+        const adminResult = await handleAdminAuth(req)
+        if ("error" in adminResult) return adminResult.error
+        adminRouteUser = adminResult.user
+      } else {
+        const authHeader = req.headers.get("authorization")
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+          return NextResponse.json(
+            { error: "Unauthorized", code: "AUTH_REQUIRED" },
+            { status: 401 }
+          )
+        }
       }
     }
 
     // Let API routes pass through with security headers + optional CORS
     const apiResponse = NextResponse.next()
+    if (adminRouteUser) {
+      apiResponse.headers.set("x-user-id", adminRouteUser.id)
+      apiResponse.headers.set("x-user-email", adminRouteUser.email || "")
+    }
     applySecurityHeaders(apiResponse)
     if (req.method === "GET" && routeClass === "public-api") {
       apiResponse.headers.set(
