@@ -32,6 +32,8 @@ async function run(cmd, args) {
   });
 }
 
+const nodeBin = process.execPath;
+
 function isTransientNextBuildFsRace(output) {
   if (!output) return false;
   const hasEnoent = output.includes("ENOENT: no such file or directory");
@@ -59,6 +61,9 @@ const nextBin = getBin("next");
 const args = ["build", "--webpack"];
 
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+  let result = await run(nodeBin, ["scripts/ensure-next-type-stubs.mjs"]);
+  if (result.code !== 0) process.exit(result.code);
+
   const { code, output } = await run(nextBin, args);
   if (code === 0) process.exit(0);
 
