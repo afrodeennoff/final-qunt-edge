@@ -38,6 +38,7 @@
   "/[locale]/propfirmperk/faq",
   "/[locale]/propfirmperk/guides",
   "/[locale]/propfirms",
+  "/[locale]/propfirms/[slug]",
   "/[locale]/referral",
   "/[locale]/shared/[slug]",
   "/[locale]/support",

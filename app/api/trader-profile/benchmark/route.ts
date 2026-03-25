@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { Prisma } from "@/prisma/generated/prisma"
 import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
+import { isPrismaSchemaMismatchError } from "@/lib/prisma-guard"
 
 const sanitizeErrorMessage = (error: unknown): string => {
   if (error instanceof Error && error.message) {
@@ -40,6 +41,26 @@ function isMissingTraderBenchmarkSnapshotTable(error: unknown): boolean {
   return (
     tableFromMeta.includes("TraderBenchmarkSnapshot") ||
     error.message.includes("TraderBenchmarkSnapshot")
+  )
+}
+
+function isRecoverableBenchmarkError(error: unknown): boolean {
+  if (isMissingTraderBenchmarkSnapshotTable(error) || isPrismaSchemaMismatchError(error)) {
+    return true
+  }
+
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  const maybeError = error as Error & { code?: string }
+  const message = error.message.toLowerCase()
+
+  return (
+    maybeError.code === "ECONNREFUSED" ||
+    maybeError.code === "P1001" ||
+    message.includes("econnrefused") ||
+    message.includes("can't reach database server")
   )
 }
 
@@ -251,6 +272,17 @@ export async function GET() {
 
     return responseFromSnapshot(computed)
   } catch (error) {
+    if (isRecoverableBenchmarkError(error)) {
+      return responseFromSnapshot({
+        riskReward: 0,
+        drawdown: 0,
+        winRate: 0,
+        avgReturn: 0,
+        sampleSize: 0,
+        computedAt: new Date(),
+      })
+    }
+
     console.error({
       event: "[TraderBenchmarkAPI] failed",
       phase: "benchmark",

@@ -106,6 +106,21 @@ describe('Query Cache', () => {
         { revalidate: 300, tags: undefined }
       )
     })
+
+    it('should disable Next cache cleanly when revalidation is 0', async () => {
+      const mockQueryFn = vi.fn().mockResolvedValue({ data: 'test' })
+      const mockCachedFn = vi.fn().mockResolvedValue({ data: 'cached' })
+
+      vi.mocked(unstable_cache).mockReturnValue(mockCachedFn as any)
+
+      cacheQuery(mockQueryFn, ['test'], { revalidateIn: 0 })
+
+      expect(unstable_cache).toHaveBeenCalledWith(
+        mockQueryFn,
+        ['query', 'test'],
+        { revalidate: false, tags: undefined }
+      )
+    })
   })
 
   describe('invalidateCache', () => {
@@ -149,7 +164,7 @@ describe('Query Cache', () => {
     it('should respect ENABLE_QUERY_CACHING feature flag', async () => {
       const { FEATURE_FLAGS } = await import('@/lib/feature-flags')
 
-      // When flag is disabled, revalidate should be 0 (bypass cache)
+      // When flag is disabled, revalidate should be false (bypass cache)
       if (!FEATURE_FLAGS.ENABLE_QUERY_CACHING) {
         const mockQueryFn = vi.fn().mockResolvedValue({ data: 'test' })
         const mockCachedFn = vi.fn().mockResolvedValue({ data: 'cached' })
@@ -165,7 +180,7 @@ describe('Query Cache', () => {
         expect(unstable_cache).toHaveBeenCalledWith(
           mockQueryFn,
           ['query', 'test'],
-          { revalidate: 0, tags: undefined }
+          { revalidate: false, tags: undefined }
         )
       }
     })

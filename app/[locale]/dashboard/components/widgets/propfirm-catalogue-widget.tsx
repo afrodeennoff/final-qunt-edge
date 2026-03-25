@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useI18n } from "@/locales/client"
+import { useCurrentLocale } from "@/locales/client"
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { Building2, Users, DollarSign } from "lucide-react"
 import { getPropfirmCatalogueData } from "@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue"
@@ -11,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function PropfirmCatalogueWidget() {
     const t = useI18n()
+    const locale = useCurrentLocale()
     const [stats, setStats] = useState<PropfirmCatalogueStats[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const sortedStats = useMemo(
@@ -44,7 +46,7 @@ export default function PropfirmCatalogueWidget() {
 {sortedStats.map((stat) => (
                          <Link
                              key={stat.propfirmName}
-                             href={`/propfirms/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
+                             href={`/${locale}/firm/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
                              className="block"
                          >
                             <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors cursor-pointer">

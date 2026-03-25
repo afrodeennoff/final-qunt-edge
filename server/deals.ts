@@ -8,6 +8,7 @@ import {
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
+import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
 export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
@@ -268,37 +269,125 @@ function findSpotlight(firmName: string): PropFirmMatchSpotlight | null {
   return PROP_FIRM_MATCH_SPOTLIGHTS.find((entry) => normalizeFirmName(entry.name) === normalizedFirmName) ?? null
 }
 
+function slugifyFirmName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function isPrismaUnavailableError(error: unknown): boolean {
+  if (isPrismaSchemaMismatchError(error)) return true
+
+  if (!error || typeof error !== 'object') return false
+
+  const maybeError = error as { code?: string; message?: string }
+  const message = (maybeError.message ?? '').toLowerCase()
+
+  return (
+    maybeError.code === 'ECONNREFUSED' ||
+    maybeError.code === 'P1001' ||
+    message.includes('econnrefused') ||
+    message.includes('can\'t reach database server')
+  )
+}
+
+function logDealsFallback(source: string, error: unknown) {
+  console.warn(`[Deals] Falling back in ${source}`, error)
+}
+
+function buildFallbackUnifiedFirmFromConfig(key: string, firm: (typeof propFirms)[keyof typeof propFirms]): UnifiedFirm {
+  return {
+    id: `fallback-${key}`,
+    slug: slugifyFirmName(firm.name),
+    name: firm.name,
+    description: undefined,
+    shortDesc: undefined,
+    referralUrl: undefined,
+    logoUrl: undefined,
+    category: 'Futures',
+    platform: 'Tradovate',
+    payoutModel: 'Monthly',
+    drawdownType: 'Static',
+    profitSplit: '80/20',
+    maxAllocation: '$100K',
+    challengeCount: 0,
+    spotlight: findSpotlight(firm.name),
+    catalogueStats: buildCatalogueStats(),
+    accountSizes: getAccountSizesFromConfig(firm.name),
+    coupons: [],
+    _count: {
+      reviews: 0,
+      coupons: 0,
+    },
+  }
+}
+
+function getFallbackUnifiedFirms(): UnifiedFirm[] {
+  return Object.entries(propFirms)
+    .map(([key, firm]) => buildFallbackUnifiedFirmFromConfig(key, firm))
+    .sort((a, b) => a.name.localeCompare(b.name))
+}
+
+function getFallbackUnifiedFirmBySlug(slug: string): UnifiedFirm | null {
+  const normalizedSlug = normalizeFirmName(slug)
+
+  for (const [key, firm] of Object.entries(propFirms)) {
+    const fallbackFirm = buildFallbackUnifiedFirmFromConfig(key, firm)
+    if (
+      normalizeFirmName(fallbackFirm.slug) === normalizedSlug ||
+      normalizeFirmName(firm.name) === normalizedSlug ||
+      normalizeFirmName(key) === normalizedSlug
+    ) {
+      return fallbackFirm
+    }
+  }
+
+  return null
+}
+
 async function loadFirmWithRelations(where: { id?: string; slug?: string }): Promise<FirmRecord | null> {
   const now = new Date()
 
-  return prisma.propFirm.findFirst({
-    where: {
-      ...where,
-      isActive: true,
-    },
-    include: {
-      coupons: {
-        where: {
-          isActive: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gte: now } },
+  try {
+    return await prisma.propFirm.findFirst({
+      where: {
+        ...where,
+        isActive: true,
+      },
+      include: {
+        coupons: {
+          where: {
+            isActive: true,
+            OR: [
+              { expiresAt: null },
+              { expiresAt: { gte: now } },
+            ],
+          },
+          orderBy: [
+            { challengeFee: 'asc' },
+            { discountPercent: 'desc' },
           ],
         },
-        orderBy: [
-          { challengeFee: 'asc' },
-          { discountPercent: 'desc' },
-        ],
+        reviews: { select: { id: true } },
+        _count: { select: { reviews: true, coupons: true } },
       },
-      reviews: { select: { id: true } },
-      _count: { select: { reviews: true, coupons: true } },
-    },
-  })
+    })
+  } catch (error) {
+    if (!isPrismaUnavailableError(error)) {
+      throw error
+    }
+
+    logDealsFallback('loadFirmWithRelations', error)
+    return null
+  }
 }
 
 async function getUnifiedFirm(where: { id?: string; slug?: string }): Promise<UnifiedFirm | null> {
   const firm = await loadFirmWithRelations(where)
-  if (!firm) return null
+  if (!firm) {
+    return where.slug ? getFallbackUnifiedFirmBySlug(where.slug) : null
+  }
 
   const catalogue = await getPropfirmCatalogueData('allTime')
   return buildUnifiedFirm(
@@ -340,48 +429,56 @@ export interface FaqItem {
 
 const _getActiveDeals = async (): Promise<DealItem[]> => {
   const now = new Date()
-  
-  const coupons = await prisma.propFirmCoupon.findMany({
-    where: {
-      isActive: true,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gte: now } },
-      ],
-    },
-    include: {
-      propFirm: {
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          logoUrl: true,
-          category: true,
-          platform: true,
-          payoutModel: true,
-          drawdownType: true,
+  try {
+    const coupons = await prisma.propFirmCoupon.findMany({
+      where: {
+        isActive: true,
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gte: now } },
+        ],
+      },
+      include: {
+        propFirm: {
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            logoUrl: true,
+            category: true,
+            platform: true,
+            payoutModel: true,
+            drawdownType: true,
+          },
         },
       },
-    },
-    orderBy: { discountPercent: 'desc' },
-  })
+      orderBy: { discountPercent: 'desc' },
+    })
 
-  return coupons.map((coupon) => ({
-    id: coupon.id,
-    firmId: coupon.propFirm.id,
-    firmSlug: coupon.propFirm.slug,
-    firmName: coupon.propFirm.name,
-    logoUrl: coupon.propFirm.logoUrl ?? undefined,
-    category: (coupon.propFirm.category || 'Futures') as MarketType,
-    platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
-    discountPercent: coupon.discountPercent ?? 0,
-    couponCode: coupon.code,
-    challengeFee: coupon.challengeFee ?? 0,
-    expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
-    claimUrl: coupon.claimUrl ?? null,
-  }))
+    return coupons.map((coupon) => ({
+      id: coupon.id,
+      firmId: coupon.propFirm.id,
+      firmSlug: coupon.propFirm.slug,
+      firmName: coupon.propFirm.name,
+      logoUrl: coupon.propFirm.logoUrl ?? undefined,
+      category: (coupon.propFirm.category || 'Futures') as MarketType,
+      platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
+      payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
+      drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
+      discountPercent: coupon.discountPercent ?? 0,
+      couponCode: coupon.code,
+      challengeFee: coupon.challengeFee ?? 0,
+      expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
+      claimUrl: coupon.claimUrl ?? null,
+    }))
+  } catch (error) {
+    if (!isPrismaUnavailableError(error)) {
+      throw error
+    }
+
+    logDealsFallback('getActiveDeals', error)
+    return []
+  }
 }
 
 export const getActiveDeals = unstable_cache(
@@ -400,36 +497,45 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     PROP_FIRM_MATCH_SPOTLIGHTS.map((entry) => [normalizeFirmName(entry.name), entry])
   )
 
-  const firms = await prisma.propFirm.findMany({
-    where: { isActive: true },
-    include: {
-      coupons: {
-        where: {
-          isActive: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gte: now } },
+  try {
+    const firms = await prisma.propFirm.findMany({
+      where: { isActive: true },
+      include: {
+        coupons: {
+          where: {
+            isActive: true,
+            OR: [
+              { expiresAt: null },
+              { expiresAt: { gte: now } },
+            ],
+          },
+          orderBy: [
+            { challengeFee: 'asc' },
+            { discountPercent: 'desc' },
           ],
         },
-        orderBy: [
-          { challengeFee: 'asc' },
-          { discountPercent: 'desc' },
-        ],
+        reviews: { select: { id: true } },
+        _count: { select: { reviews: true, coupons: true } },
       },
-      reviews: { select: { id: true } },
-      _count: { select: { reviews: true, coupons: true } },
-    },
-    orderBy: { name: 'asc' },
-  })
+      orderBy: { name: 'asc' },
+    })
 
-  return firms.map((firm) => {
-    const normalizedName = normalizeFirmName(firm.name)
-    return buildUnifiedFirm(
-      firm,
-      catalogueMap.get(normalizedName),
-      spotlightMap.get(normalizedName) ?? null
-    )
-  })
+    return firms.map((firm) => {
+      const normalizedName = normalizeFirmName(firm.name)
+      return buildUnifiedFirm(
+        firm,
+        catalogueMap.get(normalizedName),
+        spotlightMap.get(normalizedName) ?? null
+      )
+    })
+  } catch (error) {
+    if (!isPrismaUnavailableError(error)) {
+      throw error
+    }
+
+    logDealsFallback('getUnifiedFirms', error)
+    return getFallbackUnifiedFirms()
+  }
 }
 
 export const getUnifiedFirms = unstable_cache(
@@ -478,57 +584,62 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
 
 export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
   const now = new Date()
-  
-  // First verify the firm exists and is active
-  const firm = await prisma.propFirm.findUnique({
-    where: { id: firmId, isActive: true },
-  })
-  
-  if (!firm) return []
-  
-  // Get active coupons/deals for this firm
-  const coupons = await prisma.propFirmCoupon.findMany({
-    where: {
-      propFirmId: firmId,
-      isActive: true,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gte: now } },
-      ],
-    },
-    include: {
-      propFirm: {
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          logoUrl: true,
-          category: true,
-          platform: true,
-          payoutModel: true,
-          drawdownType: true,
+  try {
+    const firm = await prisma.propFirm.findUnique({
+      where: { id: firmId, isActive: true },
+    })
+    if (!firm) return []
+
+    const coupons = await prisma.propFirmCoupon.findMany({
+      where: {
+        propFirmId: firmId,
+        isActive: true,
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gte: now } },
+        ],
+      },
+      include: {
+        propFirm: {
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            logoUrl: true,
+            category: true,
+            platform: true,
+            payoutModel: true,
+            drawdownType: true,
+          },
         },
       },
-    },
-    orderBy: { discountPercent: 'desc' },
-  })
-  
-  return coupons.map((coupon) => ({
-    id: coupon.id,
-    firmId: coupon.propFirm.id,
-    firmSlug: coupon.propFirm.slug,
-    firmName: coupon.propFirm.name,
-    logoUrl: coupon.propFirm.logoUrl ?? undefined,
-    category: (coupon.propFirm.category || 'Futures') as MarketType,
-    platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
-    payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
-    drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
-    discountPercent: coupon.discountPercent ?? 0,
-    couponCode: coupon.code,
-    challengeFee: coupon.challengeFee ?? 0,
-    expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
-    claimUrl: coupon.claimUrl ?? null,
-  }))
+      orderBy: { discountPercent: 'desc' },
+    })
+
+    return coupons.map((coupon) => ({
+      id: coupon.id,
+      firmId: coupon.propFirm.id,
+      firmSlug: coupon.propFirm.slug,
+      firmName: coupon.propFirm.name,
+      logoUrl: coupon.propFirm.logoUrl ?? undefined,
+      category: (coupon.propFirm.category || 'Futures') as MarketType,
+      platform: (coupon.propFirm.platform || 'Tradovate') as TradingPlatform,
+      payoutModel: (coupon.propFirm.payoutModel || 'Monthly') as PayoutModel,
+      drawdownType: (coupon.propFirm.drawdownType || 'Static') as DrawdownType,
+      discountPercent: coupon.discountPercent ?? 0,
+      couponCode: coupon.code,
+      challengeFee: coupon.challengeFee ?? 0,
+      expiryDate: coupon.expiresAt ? coupon.expiresAt.toISOString().split('T')[0] : 'No expiry',
+      claimUrl: coupon.claimUrl ?? null,
+    }))
+  } catch (error) {
+    if (!isPrismaUnavailableError(error)) {
+      throw error
+    }
+
+    logDealsFallback('getFirmDeals', error)
+    return []
+  }
 }
 
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [

@@ -64,6 +64,7 @@ describe('getLeaderboardData', () => {
         avgDurationMinutes: 45,
         longestWinStreak: 2,
         longestLossStreak: 1,
+        accountCount: 0,
       },
     ])
   })

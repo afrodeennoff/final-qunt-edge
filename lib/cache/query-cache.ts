@@ -14,7 +14,7 @@ import { unstable_cache } from 'next/cache'
 import { logger } from '@/lib/logger'
 
 export interface CacheOptions {
-  /** Revalidation time in seconds (0 = no cache) */
+  /** Revalidation time in seconds (0 or less disables cache) */
   revalidateIn?: number
   /** Cache tags for selective invalidation */
   tags?: string[]
@@ -43,18 +43,19 @@ export function cacheQuery<T>(
   options: CacheOptions = {}
 ): () => Promise<T> {
   const { revalidateIn = 300, tags = [] } = options
+  const revalidate = revalidateIn > 0 ? revalidateIn : false
 
   // Prefix all keys with 'query' namespace to avoid collisions
   const cacheKey = ['query', ...keyParts]
 
   logger.debug('[Cache] Creating cached query', {
     key: cacheKey.join('/'),
-    revalidateIn,
+    revalidate,
     tags: tags.length > 0 ? tags : undefined,
   })
 
   return unstable_cache(queryFn, cacheKey, {
-    revalidate: revalidateIn,
+    revalidate,
     tags: tags.length > 0 ? tags : undefined,
   })
 }

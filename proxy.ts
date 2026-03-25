@@ -65,6 +65,14 @@ const PRIVATE_DOCUMENT_PATH_PREFIXES = [
 const PUBLIC_READ_API_PATHS = new Set<string>([
   "/api/health",
 ])
+const PUBLIC_API_PATH_PREFIXES = [
+  "/api/health",
+  "/api/og/",
+  "/api/auth/callback",
+  "/api/whop/webhook",
+  "/api/tradovate/auth",
+  "/api/rithmic/callback",
+]
 const PRIVATE_API_PATH_PREFIXES = [
   "/api/",
 ]
@@ -121,6 +129,16 @@ function isPublicDocumentRoute(pathname: string): boolean {
 
 function isPublicReadApiRoute(pathname: string): boolean {
   return PUBLIC_READ_API_PATHS.has(pathname)
+}
+
+function isPublicApiRoute(pathname: string): boolean {
+  return PUBLIC_API_PATH_PREFIXES.some((route) => {
+    if (route.endsWith('/')) {
+      return pathname.startsWith(route)
+    }
+
+    return pathname === route
+  })
 }
 
 function isPrivateApiRoute(pathname: string): boolean {
@@ -291,6 +309,17 @@ export default async function middleware(req: NextRequest) {
         { error: 'Origin not allowed', code: 'CORS_REJECTED' },
         { status: 403 }
       )
+    }
+
+    if (!isPublicApiRoute(pathname)) {
+      const authHeader = req.headers.get('authorization')
+
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return NextResponse.json(
+          { error: 'Unauthorized', code: 'AUTH_REQUIRED' },
+          { status: 401 }
+        )
+      }
     }
 
     // Let API routes pass through with security headers + optional CORS

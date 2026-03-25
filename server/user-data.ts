@@ -11,6 +11,7 @@ import { revalidateTag, unstable_cache } from 'next/cache'
 import { logger } from '@/lib/logger'
 import { cacheQuery } from '@/lib/cache/query-cache'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
+import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 
 export type SharedDataResponse = {
   trades: Trade[]
@@ -70,6 +71,54 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
   const userId = await getDatabaseUserId()
   const locale = await getCurrentLocale()
 
+  const loadUserData = async (): Promise<User | null> => {
+    try {
+      return await prisma.user.findUnique({
+        where: { auth_user_id: authUserId }
+      })
+    } catch (error) {
+      if (!isPrismaSchemaMismatchError(error)) {
+        throw error
+      }
+
+      logger.warn('[getUserData] Schema mismatch while loading user profile; using compatibility select', {
+        userId,
+      })
+
+      const legacyUser = await prisma.user.findUnique({
+        where: { auth_user_id: authUserId },
+        select: {
+          id: true,
+          email: true,
+          auth_user_id: true,
+          isFirstConnection: true,
+          isBeta: true,
+          language: true,
+          etpToken: true,
+          etpTokenHash: true,
+          etpTokenExpiresAt: true,
+          thorToken: true,
+          thorTokenHash: true,
+          thorTokenExpiresAt: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      })
+
+      if (!legacyUser) {
+        return null
+      }
+
+      return {
+        ...legacyUser,
+        dashboardTheme: 'blue',
+        showOnLeaderboard: false,
+        mt5TokenHash: null,
+        mt5TokenExpiresAt: null,
+      } satisfies User
+    }
+  }
+
   // If forceRefresh is true, bypass cache and fetch directly
   if (forceRefresh) {
     const start = performance.now();
@@ -78,33 +127,59 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
 
     // Fetch data in parallel without transaction to avoid timeouts
     const [userData, subscription, tickDetails, accounts, groups, tags, financialEvents, moodHistory] = await Promise.all([
-      prisma.user.findUnique({
-        where: { auth_user_id: authUserId }
-      }),
-      prisma.subscription.findUnique({
-        where: { userId: userId }
-      }),
-      prisma.tickDetails.findMany(),
-      prisma.account.findMany({
-        where: { userId: userId },
-        include: {
-          payouts: true,
-          group: true
-        }
-      }),
-      prisma.group.findMany({
-        where: { userId: userId },
-        include: { accounts: true }
-      }),
-      prisma.tag.findMany({
-        where: { userId: userId }
-      }),
-      prisma.financialEvent.findMany({
-        where: { lang: locale }
-      }),
-      prisma.mood.findMany({
-        where: { userId: userId }
-      })
+      withPrismaSchemaMismatchFallback(`user-data-force-user-${userId}`, loadUserData, null),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-subscription-${userId}`,
+        () => prisma.subscription.findUnique({
+          where: { userId: userId }
+        }),
+        null
+      ),
+      withPrismaSchemaMismatchFallback(
+        'user-data-force-tick-details',
+        () => prisma.tickDetails.findMany(),
+        []
+      ),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-accounts-${userId}`,
+        () => prisma.account.findMany({
+          where: { userId: userId },
+          include: {
+            payouts: true,
+            group: true
+          }
+        }),
+        []
+      ),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-groups-${userId}`,
+        () => prisma.group.findMany({
+          where: { userId: userId },
+          include: { accounts: true }
+        }),
+        []
+      ),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-tags-${userId}`,
+        () => prisma.tag.findMany({
+          where: { userId: userId }
+        }),
+        []
+      ),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-financial-events-${locale}`,
+        () => prisma.financialEvent.findMany({
+          where: { lang: locale }
+        }),
+        []
+      ),
+      withPrismaSchemaMismatchFallback(
+        `user-data-force-moods-${userId}`,
+        () => prisma.mood.findMany({
+          where: { userId: userId }
+        }),
+        []
+      )
     ])
 
     logger.info('[getUserData] Force refresh completed', {
@@ -145,12 +220,14 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
   const getCachedCoreUserData = cacheQuery(
     async () => {
       const [userData, subscription] = await Promise.all([
-        prisma.user.findUnique({
-          where: { auth_user_id: authUserId }
-        }),
-        prisma.subscription.findUnique({
-          where: { userId: userId }
-        })
+        withPrismaSchemaMismatchFallback(`user-data-core-user-${userId}`, loadUserData, null),
+        withPrismaSchemaMismatchFallback(
+          `user-data-core-subscription-${userId}`,
+          () => prisma.subscription.findUnique({
+            where: { userId: userId }
+          }),
+          null
+        )
       ])
 
       return { userData, subscription }
@@ -166,23 +243,39 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
   const getCachedSupplementalData = cacheQuery(
     async () => {
       const [accounts, groups, tags, moodHistory] = await Promise.all([
-        prisma.account.findMany({
-          where: { userId: userId },
-          include: {
-            payouts: true,
-            group: true
-          }
-        }),
-        prisma.group.findMany({
-          where: { userId: userId },
-          include: { accounts: true }
-        }),
-        prisma.tag.findMany({
-          where: { userId: userId }
-        }),
-        prisma.mood.findMany({
-          where: { userId: userId }
-        })
+        withPrismaSchemaMismatchFallback(
+          `user-data-supplemental-accounts-${userId}`,
+          () => prisma.account.findMany({
+            where: { userId: userId },
+            include: {
+              payouts: true,
+              group: true
+            }
+          }),
+          []
+        ),
+        withPrismaSchemaMismatchFallback(
+          `user-data-supplemental-groups-${userId}`,
+          () => prisma.group.findMany({
+            where: { userId: userId },
+            include: { accounts: true }
+          }),
+          []
+        ),
+        withPrismaSchemaMismatchFallback(
+          `user-data-supplemental-tags-${userId}`,
+          () => prisma.tag.findMany({
+            where: { userId: userId }
+          }),
+          []
+        ),
+        withPrismaSchemaMismatchFallback(
+          `user-data-supplemental-moods-${userId}`,
+          () => prisma.mood.findMany({
+            where: { userId: userId }
+          }),
+          []
+        )
       ])
 
       return { accounts, groups, tags, moodHistory }
@@ -197,8 +290,8 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
   // Fetch all in parallel
   const [core, tickDetails, financialEvents, supplemental] = await Promise.all([
     getCachedCoreUserData(),
-    getGlobalTickDetails(),
-    getGlobalFinancialEvents(),
+    withPrismaSchemaMismatchFallback('user-data-global-tick-details', getGlobalTickDetails, []),
+    withPrismaSchemaMismatchFallback(`user-data-global-financial-events-${locale}`, getGlobalFinancialEvents, []),
     getCachedSupplementalData()
   ])
 

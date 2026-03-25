@@ -32,7 +32,8 @@ export function useKeyboardShortcuts() {
     // Keyboard shortcuts dialog
     hotkeys('⌘+k, ctrl+k', (event) => {
       event.preventDefault();
-      // TODO: Implement keyboard shortcuts dialog
+      // Keyboard shortcuts dialog - to be implemented
+      console.info('Keyboard shortcuts: Press Cmd/Ctrl + D for dashboard, B for billing, S for data, H for help, Shift+Cmd+Q to logout');
     });
 
     // Logout shortcut

@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type LeaderboardEntry = {
   rank: number
@@ -61,6 +62,24 @@ function isMissingColumnError(error: unknown): boolean {
   )
 }
 
+function isLeaderboardUnavailableError(error: unknown): boolean {
+  if (isMissingColumnError(error) || isPrismaSchemaMismatchError(error)) {
+    return true
+  }
+
+  if (!error || typeof error !== 'object') return false
+
+  const maybeError = error as { code?: string; message?: string }
+  const message = (maybeError.message ?? '').toLowerCase()
+
+  return (
+    maybeError.code === 'ECONNREFUSED' ||
+    maybeError.code === 'P1001' ||
+    message.includes('econnrefused') ||
+    message.includes('can\'t reach database server')
+  )
+}
+
 export async function getLeaderboardData(
   sort: LeaderboardSort = 'monthly_pnl'
 ): Promise<LeaderboardEntry[]> {
@@ -91,59 +110,109 @@ export async function getLeaderboardData(
   const userIds = eligibleUsers.map((user) => user.id)
   const dateFilter = { closeDate: { gte: startOfMonth } }
 
-  const [agg, accounts, monthlyTrades, accountCounts] = await Promise.all([
-    prisma.trade.groupBy({
-      by: ['userId'],
-      _sum: { pnl: true },
-      _count: { id: true },
-      where: {
-        userId: { in: userIds },
-        ...dateFilter,
-      },
-    }),
-    prisma.account.groupBy({
-      by: ['userId'],
-      _sum: { startingBalance: true },
-      where: {
-        userId: { in: userIds },
-      },
-    }),
-    prisma.trade.findMany({
-      where: {
-        userId: { in: userIds },
-        ...dateFilter,
-      },
-      select: {
-        userId: true,
-        pnl: true,
-        instrument: true,
-        timeInPosition: true,
-        closeDate: true,
-      },
-      orderBy: [
-        { userId: 'asc' },
-        { closeDate: 'asc' },
-      ],
-    }),
-    prisma.account.groupBy({
-      by: ['userId'],
-      _count: { id: true },
-      where: {
-        userId: { in: userIds },
-      },
-    }),
-  ])
+  let aggregateRows: Array<{
+    userId: string
+    _sum: { pnl: unknown }
+    _count: { id: number }
+  }> = []
+  let accountRows: Array<{
+    userId: string
+    _sum: { startingBalance: unknown }
+  }> = []
+  let monthlyTradeRows: Array<{
+    userId: string
+    pnl: unknown
+    instrument: string
+    timeInPosition: unknown
+    closeDate: Date
+  }> = []
+  let accountCountRows: Array<{
+    userId: string
+    _count: { id: number }
+  }> = []
 
+  try {
+    const [agg, accounts, monthlyTrades, accountCounts] = await Promise.all([
+      prisma.trade.groupBy({
+        by: ['userId'],
+        _sum: { pnl: true },
+        _count: { id: true },
+        where: {
+          userId: { in: userIds },
+          ...dateFilter,
+        },
+      }),
+      prisma.account.groupBy({
+        by: ['userId'],
+        _sum: { startingBalance: true },
+        where: {
+          userId: { in: userIds },
+        },
+      }),
+      prisma.trade.findMany({
+        where: {
+          userId: { in: userIds },
+          ...dateFilter,
+        },
+        select: {
+          userId: true,
+          pnl: true,
+          instrument: true,
+          timeInPosition: true,
+          closeDate: true,
+        },
+        orderBy: [
+          { userId: 'asc' },
+          { closeDate: 'asc' },
+        ],
+      }),
+      prisma.account.groupBy({
+        by: ['userId'],
+        _count: { id: true },
+        where: {
+          userId: { in: userIds },
+        },
+      }),
+    ])
+
+    aggregateRows = (Array.isArray(agg) ? agg : []).map((entry) => ({
+      userId: entry.userId,
+      _sum: { pnl: entry._sum.pnl },
+      _count: { id: entry._count.id },
+    }))
+    accountRows = (Array.isArray(accounts) ? accounts : []).map((entry) => ({
+      userId: entry.userId,
+      _sum: { startingBalance: entry._sum.startingBalance },
+    }))
+    monthlyTradeRows = (Array.isArray(monthlyTrades) ? monthlyTrades : []).map((trade) => ({
+      userId: trade.userId,
+      pnl: trade.pnl,
+      instrument: trade.instrument,
+      timeInPosition: trade.timeInPosition,
+      closeDate: trade.closeDate,
+    }))
+    accountCountRows = (Array.isArray(accountCounts) ? accountCounts : []).map((entry) => ({
+      userId: entry.userId,
+      _count: { id: entry._count?.id ?? 0 },
+    }))
+  } catch (error) {
+    if (!isLeaderboardUnavailableError(error)) {
+      throw error
+    }
+
+    console.warn('[Leaderboard] Query unavailable; returning empty leaderboard.')
+    return []
+  }
   const userMap = Object.fromEntries(
     eligibleUsers.map((user) => [user.id, toUsername(user.email, user.id)])
   )
 
   const accountBalanceMap = new Map(
-    accounts.map((entry) => [entry.userId, Number(entry._sum.startingBalance ?? 0)])
+    accountRows.map((entry) => [entry.userId, Number(entry._sum.startingBalance ?? 0)])
   )
 
   const accountCountMap = new Map(
-    accountCounts.map((entry) => [entry.userId, entry._count.id])
+    accountCountRows.map((entry) => [entry.userId, entry._count?.id ?? 0])
   )
 
   const tradesByUser = new Map<string, Array<{
@@ -152,7 +221,7 @@ export async function getLeaderboardData(
     timeInPosition: number
   }>>()
 
-  monthlyTrades.forEach((trade) => {
+  monthlyTradeRows.forEach((trade) => {
     const existing = tradesByUser.get(trade.userId) ?? []
     existing.push({
       pnl: Number(trade.pnl),
@@ -162,7 +231,7 @@ export async function getLeaderboardData(
     tradesByUser.set(trade.userId, existing)
   })
 
-  const entries: LeaderboardEntry[] = agg.map((entry) => {
+  const entries: LeaderboardEntry[] = aggregateRows.map((entry) => {
     const trades = tradesByUser.get(entry.userId) ?? []
     const pnlValues = trades.map((trade) => trade.pnl)
     const winTrades = pnlValues.filter((value) => value > 0)
@@ -225,7 +294,10 @@ export async function getLeaderboardData(
     })
   }
 
-  return entries
+  return entries.map((entry, index) => ({
+    ...entry,
+    rank: index + 1,
+  }))
 }
 
 // Server Action for client-side polling - fetches fresh leaderboard data
