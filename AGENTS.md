@@ -6,6 +6,19 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ## 🚀 Recent Feature Updates
 
+### 2026-03-26: Admin Login Error Fix (DataProvider Context)
+- **What changed:** Fixed React Context error on `/admin` page where `useDashboardActions` was called outside DataProvider scope.
+- **What I want:** Admin pages should load without React Context errors, allowing users to navigate to admin section after authentication.
+- **What I don't want:** "useDashboardActions must be used within a DataProvider" error breaking admin page render.
+- **How we fixed that:**
+  - Added `DashboardProviders` wrapper to `app/[locale]/admin/layout.tsx`
+  - AIModelSidebar (used in admin layout) now has access to DataProvider context
+  - TypeScript typecheck passes with no errors
+- **Key Files:** `app/[locale]/admin/layout.tsx`
+- **Verification:**
+  - `npm run typecheck` -> passes
+  - Admin layout now properly wraps sidebar with DashboardProviders
+
 ### 2026-03-15: Phase 7 - AI Endpoints Consolidation (Unified Analyze Route)
 - **What changed:** Consolidated three separate AI analysis endpoints (`accounts`, `instrument`, `time-of-day`) into a single unified endpoint with type-based dispatch.
 - **What I want:** A single unified `/api/ai/analyze` endpoint that dispatches based on `type` field, with the old routes maintained as thin backward-compatible wrappers.
