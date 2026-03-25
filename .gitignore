@@ -63,14 +63,25 @@ datafeeds/
 
 **/market/**
 
-# Lock files
+# Lock files (except package-lock.json which IS committed)
+!package-lock.json
 *.lock
+
+# Local development binaries
+.local/
 
 # Additional ignore rules for clean push
 .turbo/
 .cache/
 Qunt-Edge-test/
 temp_d2_repo/
+
+# Log exports
+*-log-export-*.json
+
+# Dashboard verification screenshots
+dashboard_verification.png
+deals-page-*.png
 
 # prisma
 /prisma/generated/

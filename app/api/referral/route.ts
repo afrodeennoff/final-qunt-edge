@@ -9,6 +9,12 @@ import {
   ReferralAlreadyAppliedError,
 } from '@/server/referral'
 import { logger } from '@/lib/logger'
+import { parseJson } from '../_utils/validate'
+import { z } from 'zod'
+
+const ApplyReferralSchema = z.object({
+  slug: z.string().min(1, 'Referral slug is required'),
+})
 
 function isUnauthenticatedError(error: unknown): boolean {
   return (
@@ -76,15 +82,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { slug } = body
-
-    if (!slug || typeof slug !== 'string') {
-      return NextResponse.json(
-        { error: 'Referral slug is required' },
-        { status: 400 }
-      )
-    }
+    const { slug } = await parseJson(req, ApplyReferralSchema)
 
     const userId = await getDatabaseUserId()
 

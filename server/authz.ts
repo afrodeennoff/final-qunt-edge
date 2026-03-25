@@ -48,6 +48,21 @@ function parseCsvEnv(value?: string): string[] {
     .filter(Boolean)
 }
 
+export function isAdmin(userId: string): boolean {
+  const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
+
+  if (userId && allowedUserIds.includes(userId.toLowerCase())) {
+    return true
+  }
+
+  const deprecatedAdminId = process.env.ADMIN_USER_ID
+  if (deprecatedAdminId && userId.toLowerCase() === deprecatedAdminId.toLowerCase()) {
+    return true
+  }
+
+  return false
+}
+
 function isAdminUser(user: User): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
   const adminDomains = parseCsvEnv(process.env.ADMIN_EMAIL_DOMAINS)
@@ -138,6 +153,56 @@ export function requireServiceAuth(
     requestId?: string
     serviceName?: string
     secretEnvKey?: string
+    allowVercelCron?: boolean
+  }
+): ServiceAccessContext {
+  const requestId = options?.requestId ?? crypto.randomUUID()
+  const serviceName = options?.serviceName ?? 'cron'
+  const secretEnvKey = options?.secretEnvKey ?? 'CRON_SECRET'
+  const allowVercelCron = options?.allowVercelCron ?? true
+  const secret = process.env[secretEnvKey]
+
+  if (!secret) {
+    throw new AuthzError(
+      `${serviceName} secret not configured`,
+      500,
+      'AUTH_SERVICE_MISCONFIGURED',
+      requestId
+    )
+  }
+
+  const candidate = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+
+  if (candidate) {
+    try {
+      const isValid = timingSafeEqual(Buffer.from(candidate), Buffer.from(secret))
+      if (!isValid) {
+        throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+      }
+      return { service: serviceName, requestId }
+    } catch {
+      throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+    }
+  }
+
+  if (allowVercelCron) {
+    throw new AuthzError(
+      'Use x-vercel-cron header for Vercel cron jobs or Bearer token for direct calls',
+      401,
+      'AUTH_UNAUTHORIZED',
+      requestId
+    )
+  }
+
+  throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+}
+
+export function requireCronAuth(
+  request: Request,
+  options?: {
+    requestId?: string
+    serviceName?: string
+    secretEnvKey?: string
   }
 ): ServiceAccessContext {
   const requestId = options?.requestId ?? crypto.randomUUID()
@@ -152,6 +217,16 @@ export function requireServiceAuth(
       'AUTH_SERVICE_MISCONFIGURED',
       requestId
     )
+  }
+
+  const vercelCronHeader = request.headers.get('x-vercel-cron')
+  const authHeader = request.headers.get('authorization')
+
+  if (vercelCronHeader) {
+    const vercelCronSecret = process.env.VERCEL_CRON_SECRET
+    if (vercelCronSecret && vercelCronHeader === vercelCronSecret) {
+      return { service: serviceName, requestId }
+    }
   }
 
   const candidate = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null

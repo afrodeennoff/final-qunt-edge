@@ -1492,7 +1492,25 @@
   animation: shimmer 2s ease-in-out infinite;
 }
 
-/* Respect prefers-reduced-motion */
+/* Rolling ad banner animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll {
+    animation: none !important;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-fade-in-delayed,

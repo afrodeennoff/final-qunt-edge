@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { isValid } from 'date-fns'
 import { scrapeWithSandbox } from '@/lib/browser-sandbox'
-import { requireServiceAuth, toErrorResponse } from '@/server/authz'
+import { requireCronAuth, toErrorResponse } from '@/server/authz'
 import { logger, withLogContext } from '@/lib/logger'
 
 interface InvestingEvent {
@@ -291,7 +291,7 @@ export async function GET(request: Request) {
     },
     async () => {
       try {
-        requireServiceAuth(request.headers.get('authorization'), {
+        requireCronAuth(request, {
           serviceName: 'cron-investing',
           requestId,
         })

@@ -5,7 +5,7 @@ import { headers } from 'next/headers'
 import { format, subDays, isEqual, startOfDay } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
 import RenewalNoticeEmail from '@/components/emails/renewal-notice'
-import { requireServiceAuth, toErrorResponse } from '@/server/authz'
+import { requireCronAuth, toErrorResponse } from '@/server/authz'
 import { buildUnsubscribeUrl } from '@/lib/unsubscribe-url'
 
 const maskId = (value?: string) => value ? `${value.slice(0, 6)}…` : 'unknown'
@@ -36,10 +36,7 @@ export async function GET(req: Request) {
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   try {
-    // Verify that this is a legitimate Vercel cron job request
-    const headersList = await headers()
-    const authHeader = headersList.get('authorization')
-    requireServiceAuth(authHeader, { serviceName: 'cron-renewal-notice' })
+    requireCronAuth(req, { serviceName: 'cron-renewal-notice' })
 
     const today = startOfDay(new Date())
 

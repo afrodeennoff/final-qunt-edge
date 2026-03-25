@@ -10,6 +10,7 @@ import { Resend } from 'resend'
 import { formatDistanceToNow } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import CommentNotificationEmail from '@/components/emails/blog/comment-notification'
+import { isAdmin } from '@/server/authz'
 
 // resend will be initialized inside functions that need it
 const POST_NOT_FOUND_SENTINEL = "__POST_NOT_FOUND__"
@@ -71,11 +72,6 @@ function sanitizeComment(comment: {
     user: sanitizeCommunityUser(comment.user ?? { id: comment.userId, email: null }),
     replies: normalizedReplies
   }
-}
-
-// Helper function to check if user is admin
-async function isAdmin(userId: string) {
-  return userId === process.env.ALLOWED_ADMIN_USER_ID
 }
 
 async function requireCommunityActor() {

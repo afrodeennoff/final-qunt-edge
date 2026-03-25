@@ -10,11 +10,12 @@ import TeamInvitationEmail from '@/components/emails/team-invitation'
 import { getUserId } from '@/server/auth'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
+import { isAdmin } from '@/server/authz'
 
 export async function checkAdminStatus() {
   try {
     const userId = await getUserId()
-    return userId === process.env.ALLOWED_ADMIN_USER_ID
+    return isAdmin(userId)
   } catch (error) {
     return false
   }

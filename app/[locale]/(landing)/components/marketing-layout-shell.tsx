@@ -2,6 +2,7 @@ import Navbar from './navbar'
 import Footer from './footer'
 import { cn } from '@/lib/utils'
 import { MotionStagger, MotionStaggerItem } from '@/components/motion/motion-primitives'
+import RollingAdBanner from '../../(home)/components/RollingAdBanner'
 
 type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
@@ -18,6 +19,7 @@ export default function MarketingLayoutShell({
     <div className={cn('marketing-shell min-h-screen w-full overflow-x-hidden', className)}>
       <div className="pointer-events-none fixed inset-0 hidden marketing-grid opacity-[0.18] sm:block" />
       <Navbar />
+      <RollingAdBanner />
       <div className={cn('relative z-10 pt-20 sm:pt-28 lg:pt-32', contentClassName)}>
         <MotionStagger>
           <MotionStaggerItem>{children}</MotionStaggerItem>

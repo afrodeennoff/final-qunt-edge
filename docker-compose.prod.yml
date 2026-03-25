@@ -1,3 +1,21 @@
+# Qunt Edge Production Docker Compose
+#
+# Required External Services:
+# - PostgreSQL database (managed by Supabase or self-hosted)
+# - Redis cache (optional, can use Upstash or local)
+#
+# Required Environment Variables:
+# - DATABASE_URL (PostgreSQL connection string)
+# - NEXT_PUBLIC_SUPABASE_URL
+# - NEXT_PUBLIC_SUPABASE_ANON_KEY
+# - SUPABASE_SERVICE_ROLE_KEY
+# - OPENAI_API_KEY or AI_BASE_URL
+# - See .env.example for all required variables
+#
+# Usage:
+#   docker-compose -f docker-compose.prod.yml up -d
+#   docker-compose -f docker-compose.prod.yml up -d --profile migrate
+
 services:
   app:
     build:
@@ -15,10 +33,12 @@ services:
       - "3000:3000"
     volumes:
       - next_cache:/app/.next/cache
+    depends_on:
+      - redis
 
   migrate:
     image: node:20-slim
-    container_name: deltalytix-migrate
+    container_name: quntedge-migrate
     working_dir: /app
     profiles:
       - migrate
@@ -27,6 +47,18 @@ services:
     volumes:
       - ./:/app
     command: sh -c "npm ci && npx prisma migrate deploy"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: quntedge-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   next_cache:
+  redis_data:
