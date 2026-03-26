@@ -23,12 +23,6 @@ function ThemeProbe() {
       <button data-testid="setDark" onClick={() => setTheme('dark')} type="button">
         dark
       </button>
-      <button data-testid="setLight" onClick={() => setTheme('light')} type="button">
-        light
-      </button>
-      <button data-testid="setSystem" onClick={() => setTheme('system')} type="button">
-        system
-      </button>
     </div>
   )
 }
@@ -49,8 +43,8 @@ describe('ThemeProvider', () => {
     localStorage.clear()
   })
 
-  it('resolves system theme and toggles from effective system theme', async () => {
-    localStorage.setItem('theme', 'system')
+  it('enforces dark theme even when localStorage has a legacy value', async () => {
+    localStorage.setItem('theme', 'light')
 
     container = document.createElement('div')
     document.body.appendChild(container)
@@ -68,7 +62,7 @@ describe('ThemeProvider', () => {
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
     const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
 
-    expect(theme?.textContent).toBe('system')
+    expect(theme?.textContent).toBe('dark')
     expect(effectiveTheme?.textContent).toBe('dark')
     expect(document.documentElement.classList.contains('dark')).toBe(true)
 
@@ -76,8 +70,8 @@ describe('ThemeProvider', () => {
       toggleTheme.click()
     })
 
-    expect(theme?.textContent).toBe('light')
-    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(theme?.textContent).toBe('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
   })
 
   it('defaults to dark theme', async () => {
@@ -114,13 +108,13 @@ describe('ThemeProvider', () => {
       )
     })
 
-    const setLight = container.querySelector('[data-testid="setLight"]') as HTMLButtonElement
+    const setDark = container.querySelector('[data-testid="setDark"]') as HTMLButtonElement
 
     await act(async () => {
-      setLight.click()
+      setDark.click()
     })
 
-    expect(localStorage.getItem('theme')).toBe('light')
-    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
   })
 })
