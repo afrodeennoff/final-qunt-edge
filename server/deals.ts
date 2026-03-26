@@ -481,7 +481,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     }
 
     logDealsFallback('getActiveDeals', error)
-    return []
+    return getFallbackDeals()
   }
 }
 
