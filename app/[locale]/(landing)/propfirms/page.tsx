@@ -131,12 +131,21 @@ export default async function PropFirmsPage({
     stats: PropfirmCatalogueStats
   }> = Object.entries(propFirms).map(([key, firm]) => buildCatalogueFirm(key, firm, slugMap, unifiedFirmMap, statsMap))
 
+  const statsSummary = {
+    totalPaid: firms.reduce((sum, f) => sum + f.stats.payouts.paidAmount, 0),
+    totalPending: firms.reduce((sum, f) => sum + f.stats.payouts.pendingAmount, 0),
+    totalRefused: firms.reduce((sum, f) => sum + f.stats.payouts.refusedAmount, 0),
+    totalAccounts: firms.reduce((sum, f) => sum + f.stats.accountsCount, 0),
+    totalFirms: firms.length,
+  }
+
   return (
     <PropFirmCatalogueExperience
       locale={locale}
       title={t('landing.propfirms.title')}
       description={t('landing.propfirms.description')}
       firms={firms}
+      statsSummary={statsSummary}
     />
   )
 }

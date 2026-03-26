@@ -22,6 +22,13 @@ interface PropFirmCatalogueExperienceProps {
     hasInstantFunding: boolean
     stats: PropfirmCatalogueStats
   }>
+  statsSummary: {
+    totalPaid: number
+    totalPending: number
+    totalRefused: number
+    totalAccounts: number
+    totalFirms: number
+  }
 }
 
 type SortKey = 'accounts' | 'paidPayout' | 'accountValue' | 'refusedPayout'
@@ -100,6 +107,7 @@ export function PropFirmCatalogueExperience({
   title,
   description,
   firms,
+  statsSummary,
 }: PropFirmCatalogueExperienceProps) {
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
@@ -234,7 +242,10 @@ export function PropFirmCatalogueExperience({
         </section>
 
         {topFirms.length > 0 ? (
-          <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+          <>
+            <StatsSummaryRow stats={statsSummary} />
+
+            <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
@@ -262,6 +273,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           </section>
+          </>
         ) : null}
 
         <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
@@ -421,6 +433,63 @@ function StatCard({
         {label}
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+    </div>
+  )
+}
+
+function StatsSummaryRow({
+  stats,
+}: {
+  stats: PropFirmCatalogueExperienceProps['statsSummary']
+}) {
+  const items = [
+    {
+      label: 'Total Paid',
+      value: formatCompactCurrency(stats.totalPaid),
+      dot: 'bg-emerald-500',
+      text: 'text-emerald-500',
+      border: 'border-emerald-500/30',
+      bg: 'bg-emerald-500/10',
+    },
+    {
+      label: 'Total Pending',
+      value: formatCompactCurrency(stats.totalPending),
+      dot: 'bg-yellow-500',
+      text: 'text-yellow-500',
+      border: 'border-yellow-500/30',
+      bg: 'bg-yellow-500/10',
+    },
+    {
+      label: 'Total Refused',
+      value: formatCompactCurrency(stats.totalRefused),
+      dot: 'bg-red-500',
+      text: 'text-red-500',
+      border: 'border-red-500/30',
+      bg: 'bg-red-500/10',
+    },
+    {
+      label: 'Tracked Firms',
+      value: stats.totalFirms.toString(),
+      dot: 'bg-blue-500',
+      text: 'text-blue-500',
+      border: 'border-blue-500/30',
+      bg: 'bg-blue-500/10',
+    },
+  ]
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {items.map((item) => (
+        <div
+          key={item.label}
+          className={`rounded-[1.2rem] border ${item.border} ${item.bg} p-4`}
+        >
+          <div className="flex items-center gap-2">
+            <span className={`h-2 w-2 rounded-full ${item.dot}`} />
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
+          </div>
+          <p className={`mt-2 text-xl font-semibold tabular-nums ${item.text}`}>{item.value}</p>
+        </div>
+      ))}
     </div>
   )
 }
