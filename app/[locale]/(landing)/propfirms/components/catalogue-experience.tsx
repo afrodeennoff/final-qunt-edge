@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { ArrowRight, Banknote, Building2, Search, ShieldCheck, Sparkles, Wallet } from 'lucide-react'
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { PropfirmCatalogueStats } from '../actions/types'
 import { StatsSummaryRow } from './stats-summary-row'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
@@ -486,38 +486,42 @@ function RegisteredAccountsChart({
 }) {
   const topFirm = data[0]
   const totalRegistered = data.reduce((sum, entry) => sum + entry.accounts, 0)
+  const maxRegistered = data.reduce((max, entry) => (entry.accounts > max ? entry.accounts : max), 0)
 
   return (
-    <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+    <section className="rounded-[1.8rem] border border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.95)] sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Chart</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Registered Accounts by Prop Firm</h2>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary/90">Chart Insights</p>
+          <h2 className="mt-2 text-[clamp(1.4rem,3.2vw,2rem)] font-semibold tracking-tight text-foreground">Registered Accounts by Prop Firm</h2>
         </div>
-        <p className="text-sm text-muted-foreground">Top firms sorted by registered accounts.</p>
+        <p className="text-sm text-muted-foreground">Top firms ranked by total registered accounts.</p>
       </div>
 
       {data.length > 0 ? (
-        <div className="mt-5 rounded-[1.2rem] border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-4 sm:p-5">
+        <div className="mt-5 rounded-[1.2rem] border border-border/70 bg-[hsl(var(--background))] p-4 ring-1 ring-white/[0.03] sm:p-5">
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-xs text-muted-foreground">
+            <span className="rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
               {`Top firm: ${topFirm?.name ?? '—'}`}
             </span>
-            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-xs text-muted-foreground">
+            <span className="rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
               {`Total shown: ${totalRegistered.toLocaleString()} accounts`}
+            </span>
+            <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              {`Peak: ${maxRegistered.toLocaleString()}`}
             </span>
           </div>
 
-          <div className="h-[360px] w-full overflow-x-auto">
+          <div className="h-[400px] w-full overflow-x-auto">
             <div className="h-full min-w-[760px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data}
-                margin={{ top: 10, right: 10, left: 0, bottom: 72 }}
+                margin={{ top: 18, right: 16, left: 6, bottom: 72 }}
               >
                 <CartesianGrid
                   strokeDasharray="3 6"
-                  stroke="hsl(var(--border) / 0.55)"
+                  stroke="hsl(var(--border) / 0.45)"
                   vertical
                 />
                 <XAxis
@@ -531,8 +535,8 @@ function RegisteredAccountsChart({
                   tickMargin={12}
                   tickFormatter={(value: string) => (value.length > 16 ? `${value.slice(0, 16)}…` : value)}
                   tick={{
-                    fontSize: 12,
-                    fill: 'hsl(var(--muted-foreground))',
+                    fontSize: 12.5,
+                    fill: 'hsl(var(--foreground) / 0.88)',
                   }}
                 />
                 <YAxis
@@ -541,16 +545,17 @@ function RegisteredAccountsChart({
                   axisLine={false}
                   tickMargin={10}
                   width={44}
+                  domain={[0, (max: number) => Math.max(5, Math.ceil(max * 1.18))]}
                   tick={{
-                    fontSize: 12,
-                    fill: 'hsl(var(--muted-foreground))',
+                    fontSize: 12.5,
+                    fill: 'hsl(var(--foreground) / 0.86)',
                   }}
                 />
                 <Tooltip
-                  cursor={{ fill: 'hsl(var(--foreground) / 0.05)' }}
+                  cursor={{ fill: 'hsl(var(--primary) / 0.08)' }}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--primary) / 0.3)',
                     borderRadius: 12,
                     color: 'hsl(var(--foreground))',
                     boxShadow: '0 10px 35px -20px rgba(0, 0, 0, 0.9)',
@@ -560,11 +565,23 @@ function RegisteredAccountsChart({
                 <Bar
                   dataKey="accounts"
                   name="Registered Accounts"
-                  fill="hsl(var(--chart-2))"
+                  fill="hsl(var(--primary))"
                   radius={[8, 8, 0, 0]}
                   maxBarSize={52}
                   background={{ fill: 'hsl(var(--foreground) / 0.03)' }}
-                />
+                >
+                  <LabelList
+                    dataKey="accounts"
+                    position="top"
+                    offset={8}
+                    style={{
+                      fill: 'hsl(var(--foreground))',
+                      fontSize: 12,
+                      fontWeight: 600,
+                    }}
+                    formatter={(value: number) => value.toLocaleString()}
+                  />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
             </div>
