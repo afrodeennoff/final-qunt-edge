@@ -10,16 +10,12 @@ import React, {
   useState,
 } from 'react'
 
-type Theme = 'light' | 'dark' | 'system'
+type Theme = 'dark'
 
-export const DASHBOARD_THEMES = [
-  { value: 'dark', label: 'Dark', primary: '#171717' },
-  { value: 'light', label: 'Light', primary: '#ffffff' },
-  { value: 'system', label: 'System', primary: 'auto' },
-] as const
+const INTERFACE_THEME: Theme = 'dark'
 
 const THEME_STORAGE_KEY = 'theme'
-const DEFAULT_THEME: Theme = 'dark'
+const DEFAULT_THEME: Theme = INTERFACE_THEME
 
 type ThemeContextType = {
   theme: Theme
@@ -38,29 +34,23 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useTheme = () => useContext(ThemeContext)
 
 function resolveEffectiveTheme(theme: Theme, prefersDark: boolean): 'light' | 'dark' {
-  if (theme === 'system') {
-    return prefersDark ? 'dark' : 'light'
-  }
-  return theme
+  void theme
+  void prefersDark
+  return INTERFACE_THEME
 }
 
 function isValidTheme(value: string | null): value is Theme {
-  return value === 'light' || value === 'dark' || value === 'system'
+  return value === INTERFACE_THEME
 }
 
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') {
-    return DEFAULT_THEME
+  if (typeof window !== 'undefined') {
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+    if (isValidTheme(savedTheme)) {
+      return savedTheme
+    }
   }
-  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
-  return isValidTheme(savedTheme) ? savedTheme : DEFAULT_THEME
-}
-
-function getInitialSystemPreference(): boolean {
-  if (typeof window === 'undefined') {
-    return false
-  }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
+  return DEFAULT_THEME
 }
 
 function applyThemeToDocument(theme: 'light' | 'dark'): void {
@@ -77,8 +67,7 @@ export function ThemeProvider({
   scope?: 'dashboard' | 'fixed-blue'
 }) {
   const [theme, setThemeState] = useState<Theme>(getInitialTheme)
-  const [prefersDark, setPrefersDark] = useState<boolean>(getInitialSystemPreference)
-  const effectiveTheme = resolveEffectiveTheme(theme, prefersDark)
+  const effectiveTheme = resolveEffectiveTheme(theme, true)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dashboardScope = scope // Reserved for future use
@@ -91,27 +80,14 @@ export function ThemeProvider({
     localStorage.setItem(THEME_STORAGE_KEY, theme)
   }, [theme])
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = (event: MediaQueryListEvent) => {
-      setPrefersDark(event.matches)
-    }
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
-
   const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme)
+    void newTheme
+    setThemeState(INTERFACE_THEME)
   }, [])
 
   const toggleTheme = useCallback(() => {
-    setThemeState(prevTheme => {
-      if (prevTheme === 'system') {
-        return effectiveTheme === 'light' ? 'dark' : 'light'
-      }
-      return prevTheme === 'light' ? 'dark' : 'light'
-    })
-  }, [effectiveTheme])
+    setThemeState(INTERFACE_THEME)
+  }, [])
 
   const value = useMemo(() => ({
     theme,

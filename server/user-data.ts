@@ -364,7 +364,7 @@ export async function updateIsFirstConnectionAction(isFirstConnection: boolean) 
   revalidateTag(`user-data-${userId}`, { expire: 0 })
 }
 
-const VALID_DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose'] as const
+export const VALID_DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose'] as const
 type DashboardTheme = typeof VALID_DASHBOARD_THEMES[number]
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {

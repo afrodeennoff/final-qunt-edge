@@ -12,7 +12,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
-import { useTheme } from '@/context/theme-provider'
 import {
   User,
   Settings,
@@ -20,8 +19,6 @@ import {
   Shield,
   Globe,
   Moon,
-  Sun,
-  Laptop,
   Clock,
   CreditCard,
   Database,
@@ -62,7 +59,6 @@ import { LinkedAccounts } from "@/components/linked-accounts"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
 
 type Locale = 'en' | 'fr'
-type ThemeMode = 'light' | 'dark' | 'system'
 type TranslateFn = ReturnType<typeof useI18n>
 type TeamSummary = {
   id: string
@@ -86,22 +82,6 @@ const timezones = [
   'Australia/Sydney',
   // Add more common timezones as needed
 ];
-
-const THEME_MODE_LABELS: Record<ThemeMode, string> = {
-  light: 'Light',
-  dark: 'Dark',
-  system: 'System',
-}
-
-function getThemeIcon(theme: ThemeMode) {
-  if (theme === 'light') return <Sun className="h-4 w-4" />
-  if (theme === 'dark') return <Moon className="h-4 w-4" />
-  if (typeof window !== 'undefined') {
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    return isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />
-  }
-  return <Laptop className="h-4 w-4" />
-}
 
 function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message) {
@@ -318,7 +298,6 @@ export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
-  const { theme, setTheme } = useTheme()
   const user = useUserStore(state => state.supabaseUser)
   const timezone = useUserStore(state => state.timezone)
   const setTimezone = useUserStore(state => state.setTimezone)
@@ -340,12 +319,6 @@ export default function SettingsPage() {
     { value: 'en', label: 'English' },
     { value: 'fr', label: 'Français' },
   ]
-
-  const handleThemeChange = (value: string) => {
-    setTheme(value as ThemeMode)
-  }
-
-  const currentThemeLabel = THEME_MODE_LABELS[theme]
 
   const refreshTeams = async () => {
     const result = await getUserTeams()
@@ -481,28 +454,10 @@ export default function SettingsPage() {
               <div className="mt-2 grid gap-3">
                 <div className="rounded-md border border-border/50 bg-background/30 p-3">
                   <p className="mb-2 text-sm font-medium">Interface mode</p>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start sm:w-[200px]">
-                        {getThemeIcon(theme)}
-                        <span className="ml-2">{currentThemeLabel}</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => handleThemeChange("light")}>
-                        <Sun className="mr-2 h-4 w-4" />
-                        <span>Light</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
-                        <Moon className="mr-2 h-4 w-4" />
-                        <span>Dark</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleThemeChange("system")}>
-                        <Laptop className="mr-2 h-4 w-4" />
-                        <span>System</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Button variant="outline" className="w-full justify-start sm:w-[200px]" disabled>
+                    <Moon className="mr-2 h-4 w-4" />
+                    <span>Dark (fixed)</span>
+                  </Button>
                 </div>
               </div>
             </div>

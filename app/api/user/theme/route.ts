@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getUserDashboardTheme, setUserDashboardTheme } from '@/server/user-data'
+import { getUserDashboardTheme, setUserDashboardTheme, VALID_DASHBOARD_THEMES } from '@/server/user-data'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-import { DASHBOARD_THEMES } from '@/context/theme-provider'
 
 export const dynamic = 'force-dynamic'
 
@@ -60,8 +59,8 @@ export async function PUT(request: Request) {
       })
     }
 
-    if (!DASHBOARD_THEMES.includes(theme as any)) {
-      return apiError('VALIDATION_FAILED', `Invalid theme. Must be one of: ${DASHBOARD_THEMES.join(', ')}`, 400, undefined, {
+    if (!VALID_DASHBOARD_THEMES.includes(theme as any)) {
+      return apiError('VALIDATION_FAILED', `Invalid theme. Must be one of: ${VALID_DASHBOARD_THEMES.join(', ')}`, 400, undefined, {
         'Cache-Control': 'no-store, max-age=0',
       })
     }

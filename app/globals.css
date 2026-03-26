@@ -124,6 +124,33 @@
   --accent-rose: var(--accent);
   --accent-bronze: var(--accent);
   /* mk-* tokens are defined in styles/tokens.css (extended token file) */
+
+  /* Dark-only mode defaults */
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.14 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+  --primary: oklch(0.5683 0.2366 264.2478);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.22 0.01 270);
+  --secondary-foreground: oklch(0.93 0 0);
+  --muted: oklch(0.18 0.01 270);
+  --muted-foreground: oklch(0.76 0.015 275);
+  --accent: oklch(0.24 0.03 265);
+  --accent-foreground: oklch(0.95 0 0);
+  --border: oklch(0.34 0.015 275);
+  --input: oklch(0.24 0.02 268);
+  --sidebar: oklch(0.1684 0 0);
+  --sidebar-background: oklch(0.1684 0 0);
+  --sidebar-foreground: oklch(0.8853 0 0);
+  --sidebar-primary: oklch(0.5784 0.2303 263.8862);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.188 0.0868 261.9799);
+  --sidebar-accent-foreground: oklch(0.5683 0.2366 264.2478);
+  --sidebar-border: oklch(0.3706 0.0642 269.1117);
+  --sidebar-ring: oklch(0.5784 0.2303 263.8862);
 }
 
 .dark {

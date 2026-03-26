@@ -120,10 +120,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  themeColor: "black",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -176,10 +173,9 @@ export default async function RootLayout({
             (function() {
               try {
                 var root = document.documentElement;
-                var savedTheme = localStorage.getItem('theme');
-                var isDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 root.classList.remove('light', 'dark');
-                root.classList.add(isDark ? 'dark' : 'light');
+                root.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
               } catch (e) {
                 // Fail silently to avoid blocking render
               }

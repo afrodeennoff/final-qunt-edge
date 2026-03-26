@@ -5,8 +5,9 @@
 - Keep backward compatibility while migrating away from legacy aliases.
 
 ## Canonical Source
-- Canonical definitions live in [`styles/tokens.css`](/Users/timon/Downloads/final-qunt-edge-main/styles/tokens.css).
-- [`app/globals.css`](/Users/timon/Downloads/final-qunt-edge-main/app/globals.css) should only contain global behaviors/utilities, not duplicate semantic token definitions.
+- Canonical core semantic definitions live in [`app/globals.css`](/Users/timon/Downloads/qunt-edge/app/globals.css) (`:root` and `.dark`).
+- Extended marketing/utility tokens live in [`styles/tokens.css`](/Users/timon/Downloads/qunt-edge/styles/tokens.css).
+- Keep token ownership clear: do not duplicate core semantic token definitions across both files.
 
 ## Canonical Tokens
 
@@ -69,7 +70,8 @@
 - Phase C (completed 2026-03-03): legacy alias removed after grep and verification gates.
 
 ## Adding New Tokens
-1. Add token under canonical block in `styles/tokens.css` for both `:root` and `.dark` when required.
-2. If token is a color used by utilities, add it in `@theme inline` as a color mapping.
-3. Update `tailwind.config.ts` only when a new semantic utility name is needed.
-4. Avoid redefining semantic tokens in `app/globals.css`.
+1. Add core semantic tokens to `app/globals.css` (`:root` and `.dark`).
+2. Add extended/marketing tokens to `styles/tokens.css`.
+3. If token is a color used by utilities, add it in `@theme inline` as a color mapping.
+4. Update `tailwind.config.ts` only when a new semantic utility name is needed.
+5. Avoid redefining core semantic tokens in `styles/tokens.css`.
