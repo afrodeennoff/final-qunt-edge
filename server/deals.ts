@@ -455,6 +455,10 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       orderBy: { discountPercent: 'desc' },
     })
 
+    if (coupons.length === 0) {
+      return getFallbackDeals()
+    }
+
     return coupons.map((coupon) => ({
       id: coupon.id,
       firmId: coupon.propFirm.id,
@@ -479,6 +483,32 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     logDealsFallback('getActiveDeals', error)
     return []
   }
+}
+
+function getFallbackDeals(): DealItem[] {
+  return PROP_FIRM_MATCH_SPOTLIGHTS.map((spotlight) => {
+    const match = spotlight.promoText.match(/(\d+)%?\s*off/i)
+    const discountPercent = match ? parseInt(match[1], 10) : 0
+    const category: MarketType = spotlight.category === 'Futures' ? 'Futures' : 'Forex'
+    const platform: TradingPlatform = spotlight.category === 'Futures' ? 'Tradovate' : 'MetaTrader 5'
+    const challengeFee = Math.round(250 * (1 - discountPercent / 100))
+    return {
+      id: `fallback-${spotlight.slug}`,
+      firmId: `fallback-${spotlight.slug}`,
+      firmSlug: spotlight.slug,
+      firmName: spotlight.name,
+      logoUrl: undefined,
+      category,
+      platform,
+      payoutModel: 'Monthly' as PayoutModel,
+      drawdownType: 'Static' as DrawdownType,
+      discountPercent,
+      couponCode: spotlight.promoCode ?? 'PROMO',
+      challengeFee: Math.max(challengeFee, 0),
+      expiryDate: 'No expiry',
+      claimUrl: spotlight.sourceUrl,
+    }
+  })
 }
 
 export const getActiveDeals = unstable_cache(
@@ -588,7 +618,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
     const firm = await prisma.propFirm.findUnique({
       where: { id: firmId, isActive: true },
     })
-    if (!firm) return []
+    if (!firm) return getFallbackDealsForFirm(firmId)
 
     const coupons = await prisma.propFirmCoupon.findMany({
       where: {
@@ -616,6 +646,10 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       orderBy: { discountPercent: 'desc' },
     })
 
+    if (coupons.length === 0) {
+      return getFallbackDealsForFirm(firmId)
+    }
+
     return coupons.map((coupon) => ({
       id: coupon.id,
       firmId: coupon.propFirm.id,
@@ -638,8 +672,34 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
     }
 
     logDealsFallback('getFirmDeals', error)
-    return []
+    return getFallbackDealsForFirm(firmId)
   }
+}
+
+function getFallbackDealsForFirm(firmId: string): DealItem[] {
+  const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find((s) => s.slug === firmId || `fallback-${slugifyFirmName(s.name)}` === firmId)
+  if (!spotlight) return []
+  const match = spotlight.promoText.match(/(\d+)%?\s*off/i)
+  const discountPercent = match ? parseInt(match[1], 10) : 0
+  const category: MarketType = spotlight.category === 'Futures' ? 'Futures' : 'Forex'
+  const platform: TradingPlatform = spotlight.category === 'Futures' ? 'Tradovate' : 'MetaTrader 5'
+  const challengeFee = Math.round(250 * (1 - discountPercent / 100))
+  return [{
+    id: `fallback-${spotlight.slug}`,
+    firmId: `fallback-${spotlight.slug}`,
+    firmSlug: spotlight.slug,
+    firmName: spotlight.name,
+    logoUrl: undefined,
+    category,
+    platform,
+    payoutModel: 'Monthly' as PayoutModel,
+    drawdownType: 'Static' as DrawdownType,
+    discountPercent,
+    couponCode: spotlight.promoCode ?? 'PROMO',
+    challengeFee: Math.max(challengeFee, 0),
+    expiryDate: 'No expiry',
+    claimUrl: spotlight.sourceUrl,
+  }]
 }
 
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [
