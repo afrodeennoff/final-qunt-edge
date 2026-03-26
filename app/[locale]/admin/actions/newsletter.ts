@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache"
 import { parse } from "csv-parse"
 import { render } from "@react-email/render"
 import { buildUnsubscribeUrl } from "@/lib/unsubscribe-url"
+import { assertAdminAccess } from "@/server/authz"
 
 interface SendNewsletterParams {
   subject: string
@@ -18,6 +19,7 @@ interface SendNewsletterParams {
 }
 
 export async function getSubscribers() {
+  await assertAdminAccess()
   try {
     const subscribers = await prisma.newsletter.findMany({
       select: {
@@ -35,6 +37,7 @@ export async function getSubscribers() {
 }
 
 export async function deleteSubscriber(email: string) {
+  await assertAdminAccess()
   try {
     await prisma.newsletter.delete({
       where: { email }
@@ -48,6 +51,7 @@ export async function deleteSubscriber(email: string) {
 }
 
 export async function importSubscribers(file: File) {
+  await assertAdminAccess()
   try {
     const text = await file.text()
     const records: Record<string, string>[] = await new Promise((resolve, reject) => {
@@ -99,6 +103,7 @@ export async function sendNewsletter({
   introMessage,
   features,
 }: SendNewsletterParams) {
+  await assertAdminAccess()
   try {
     if (!process.env.RESEND_API_KEY) {
       throw new Error("RESEND_API_KEY is not configured")
@@ -180,6 +185,7 @@ export async function sendNewsletter({
 
 
 export async function sendTestNewsletter(email: string, firstName: string, params: SendNewsletterParams) {
+  await assertAdminAccess()
   try {
     if (!process.env.RESEND_API_KEY) {
       throw new Error("RESEND_API_KEY is not configured")
@@ -221,6 +227,7 @@ export async function renderEmailPreview(params: {
   firstName: string
   subject?: string
 }) {
+  await assertAdminAccess()
   try {
     const html = await render(
       NewsletterEmail({

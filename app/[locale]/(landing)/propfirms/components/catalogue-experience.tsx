@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { ArrowRight, Banknote, Building2, Search, ShieldCheck, Sparkles, Wallet } from 'lucide-react'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { PropfirmCatalogueStats } from '../actions/types'
 import { StatsSummaryRow } from './stats-summary-row'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
@@ -137,6 +138,17 @@ export function PropFirmCatalogueExperience({
   const leadingPlatforms = useMemo(() => {
     return Array.from(new Set(firms.map((firm) => firm.platform).filter((platform) => platform !== 'Unknown'))).sort()
   }, [firms])
+  const registeredAccountsChartData = useMemo(() => {
+    const ranked = firms
+      .map((firm) => ({
+        name: firm.name,
+        accounts: firm.stats.accountsCount,
+      }))
+      .sort((a, b) => b.accounts - a.accounts)
+
+    const nonZero = ranked.filter((entry) => entry.accounts > 0)
+    return (nonZero.length > 0 ? nonZero : ranked).slice(0, 12)
+  }, [firms])
   const hasActiveFilters =
     search.trim().length > 0 ||
     payoutFilter !== 'all' ||
@@ -237,6 +249,8 @@ export function PropFirmCatalogueExperience({
         {topFirms.length > 0 ? (
           <>
             <StatsSummaryRow />
+
+            <RegisteredAccountsChart data={registeredAccountsChartData} />
 
             <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -465,11 +479,85 @@ function PayoutPill({
   )
 }
 
-function BoardMetric({ label, value }: { label: string; value: string }) {
+function RegisteredAccountsChart({
+  data,
+}: {
+  data: Array<{ name: string; accounts: number }>
+}) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/65 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
-    </div>
+    <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Chart</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Registered Accounts by Prop Firm</h2>
+        </div>
+        <p className="text-sm text-muted-foreground">Top firms sorted by account registrations.</p>
+      </div>
+
+      {data.length > 0 ? (
+        <div className="mt-6 h-[360px] w-full overflow-x-auto rounded-[1.2rem] border border-border/60 bg-[hsl(var(--background))] p-4 sm:p-5">
+          <div className="h-full min-w-[720px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 10, right: 10, left: 0, bottom: 72 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 6"
+                  stroke="hsl(var(--border) / 0.55)"
+                  vertical
+                />
+                <XAxis
+                  dataKey="name"
+                  angle={-45}
+                  textAnchor="end"
+                  interval={0}
+                  height={72}
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={12}
+                  tick={{
+                    fontSize: 12,
+                    fill: 'hsl(var(--muted-foreground))',
+                  }}
+                />
+                <YAxis
+                  allowDecimals={false}
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={10}
+                  width={44}
+                  tick={{
+                    fontSize: 12,
+                    fill: 'hsl(var(--muted-foreground))',
+                  }}
+                />
+                <Tooltip
+                  cursor={{ fill: 'hsl(var(--foreground) / 0.05)' }}
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: 12,
+                    color: 'hsl(var(--foreground))',
+                  }}
+                  formatter={(value: number) => [value.toLocaleString(), 'Registered Accounts']}
+                />
+                <Bar
+                  dataKey="accounts"
+                  name="Registered Accounts"
+                  fill="hsl(var(--chart-2))"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={56}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-6 rounded-[1.2rem] border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          No account registrations available yet.
+        </div>
+      )}
+    </section>
   )
 }

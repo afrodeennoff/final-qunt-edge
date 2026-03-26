@@ -2,6 +2,7 @@
 
 import { generateText, Output } from "ai"
 import { z } from 'zod';
+import { assertAdminAccess } from "@/server/authz"
 
 const newsletterSchema = z.object({
   subject: z.string().describe("Un titre accrocheur en français de maximum 4 mots"),
@@ -17,6 +18,7 @@ interface GenerateNewsletterProps {
 }
 
 export async function generateNewsletterContent({ description }: GenerateNewsletterProps) {
+  await assertAdminAccess()
   try {
     const { output } = await generateText({
       model: 'openai/gpt-5-mini',

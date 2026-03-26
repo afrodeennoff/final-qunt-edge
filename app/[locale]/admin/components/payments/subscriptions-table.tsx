@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 
 interface Subscription {
     id: string
+    userId: string
     plan: string
     status: string
     interval: string | null
@@ -78,7 +79,7 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
                                         variant="ghost"
                                         size="sm"
                                         className="text-semantic-error hover:text-semantic-error hover:bg-semantic-error-bg"
-                                        onClick={() => handleCancel(sub.user.email)}
+                                        onClick={() => handleCancel(sub.userId)}
                                     >
                                         Cancel
                                     </Button>

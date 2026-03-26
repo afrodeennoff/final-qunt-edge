@@ -3,12 +3,14 @@
 import { render } from "@react-email/render"
 import WelcomeEmail from "@/components/emails/welcome"
 import { getLatestVideoFromPlaylist } from "./youtube"
+import { assertAdminAccess } from "@/server/authz"
 
 export async function renderWelcomeEmailPreview(params: {
   firstName: string
   email: string
   language: string
 }) {
+  await assertAdminAccess()
   try {
     // Get the latest YouTube video ID
     const youtubeId = await getLatestVideoFromPlaylist() || 'ugvyK1c3yPc' // Default video ID if null

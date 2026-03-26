@@ -190,3 +190,32 @@ export async function getFreeUsers() {
 
   return mappedUsers
 }
+
+export async function getNewsletterStats() {
+  await assertAdminAccess()
+
+  try {
+    const [totalSubscribers, activeSubscribers, inactiveSubscribers] = await Promise.all([
+      prisma.newsletter.count(),
+      prisma.newsletter.count({ where: { isActive: true } }),
+      prisma.newsletter.count({ where: { isActive: false } }),
+    ])
+
+    return {
+      totalSubscribers,
+      activeSubscribers,
+      inactiveSubscribers,
+    }
+  } catch (error) {
+    if (!isAdminDataUnavailableError(error)) {
+      throw error
+    }
+
+    console.warn('[AdminStats] Newsletter stats unavailable:', error)
+    return {
+      totalSubscribers: 0,
+      activeSubscribers: 0,
+      inactiveSubscribers: 0,
+    }
+  }
+}

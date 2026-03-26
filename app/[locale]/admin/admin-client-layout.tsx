@@ -4,12 +4,12 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Head from "next/head"
 import { toast } from "sonner"
-import { AIModelSidebar } from "@/components/sidebar/aimodel-sidebar"
 import { useCurrentLocale } from "@/locales/client"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { RootProviders } from "@/components/providers/root-providers"
 import { DashboardProviders } from "@/components/providers/dashboard-providers"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
+import { SidebarNav } from "./components/sidebar-nav"
 
 export function AdminClientLayout({
   children,
@@ -41,7 +41,7 @@ export function AdminClientLayout({
       <SidebarProvider defaultOpen={true}>
         <AuthTimeout />
         <div className="flex min-h-screen w-full bg-background text-foreground">
-          <AIModelSidebar />
+          <SidebarNav />
           <SidebarInset className="flex-1 relative overflow-hidden bg-transparent">
             <header className="h-16 border-b border-border/60 flex items-center justify-between px-4 md:px-8 sticky top-0 z-50 bg-background/95 backdrop-blur-md">
               <div className="flex items-center gap-4 flex-shrink-0">
