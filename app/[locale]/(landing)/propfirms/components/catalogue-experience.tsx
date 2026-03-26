@@ -293,7 +293,7 @@ export function PropFirmCatalogueExperience({
           </div>
 
           {filteredFirms.length > 0 ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
               {filteredFirms.map((firm) => (
                 <Link
                   key={firm.key}
@@ -320,7 +320,7 @@ export function PropFirmCatalogueExperience({
                     </span>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-2">
+                  <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-3">
                     <PayoutPill
                       label="Paid"
                       amount={firm.stats.payouts.paidAmount}
