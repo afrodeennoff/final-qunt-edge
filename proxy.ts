@@ -33,6 +33,10 @@ function isAllowedOrigin(origin: string | null): boolean {
   return ALLOWED_ORIGINS.has(origin)
 }
 
+function parseCsvEnv(value?: string): string[] {
+  return value?.split(',').map(s => s.trim()).filter(Boolean) ?? []
+}
+
 function handleCronAuth(request: NextRequest): NextResponse | null {
   const cronSecret = process.env.CRON_SECRET
   const vercelCronSecret = process.env.VERCEL_CRON_SECRET
@@ -554,10 +558,12 @@ export default async function middleware(req: NextRequest) {
       return redirectWithPrivateNoStore(authUrl)
     }
 
-    const allowedAdminIds = [process.env.ADMIN_USER_ID, process.env.ALLOWED_ADMIN_USER_ID]
-      .filter((value): value is string => Boolean(value && value.trim()))
+    const allowedAdminIds = (
+      [process.env.ADMIN_USER_ID, ...parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)]
+    ).filter((v): v is string => Boolean(v))
 
-    if (!allowedAdminIds.includes(user.id)) {
+    const userIdLower = user.id.toLowerCase()
+    if (!allowedAdminIds.map((id: string) => id.toLowerCase()).includes(userIdLower)) {
       return redirectWithPrivateNoStore(new URL(`/${locale}/dashboard`, req.url))
     }
   }

@@ -63,7 +63,7 @@ export function isAdmin(userId: string): boolean {
   return false
 }
 
-function isAdminUser(user: User): boolean {
+export function isAdminUser(user: User): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
   const adminDomains = parseCsvEnv(process.env.ADMIN_EMAIL_DOMAINS)
   const email = user.email?.toLowerCase()
