@@ -31,6 +31,10 @@ function isAllowedOrigin(origin: string | null): boolean {
   return ALLOWED_ORIGINS.has(origin)
 }
 
+function parseCsvEnv(value?: string): string[] {
+  return value?.split(',').map(s => s.trim()).filter(Boolean) ?? []
+}
+
 // Use redirect strategy to ensure users are always on valid localized paths
 const I18nMiddleware = createI18nMiddleware({
   locales: ["en", "fr", "de", "es", "it", "pt", "vi", "hi", "ja", "zh", "yo"],
@@ -438,10 +442,12 @@ export default async function middleware(req: NextRequest) {
       return redirectWithPrivateNoStore(authUrl)
     }
 
-    const allowedAdminIds = [process.env.ADMIN_USER_ID, process.env.ALLOWED_ADMIN_USER_ID]
-      .filter((value): value is string => Boolean(value && value.trim()))
+    const allowedAdminIds = (
+      [process.env.ADMIN_USER_ID, ...parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)]
+    ).filter((v): v is string => Boolean(v))
 
-    if (!allowedAdminIds.includes(user.id)) {
+    const userIdLower = user.id.toLowerCase()
+    if (!allowedAdminIds.map((id: string) => id.toLowerCase()).includes(userIdLower)) {
       return redirectWithPrivateNoStore(new URL(`/${locale}/dashboard`, req.url))
     }
   }

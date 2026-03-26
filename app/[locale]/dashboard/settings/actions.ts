@@ -7,17 +7,16 @@ import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import TeamInvitationEmail from '@/components/emails/team-invitation'
-import { getUserId } from '@/server/auth'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
+import { isAdminUser } from '@/server/authz'
 
 export async function checkAdminStatus(): Promise<boolean> {
   try {
-    const userId = await getUserId()
-    if (!userId) return false
-    const allowedIds = process.env.ALLOWED_ADMIN_USER_ID?.split(',').map(id => id.trim().toLowerCase()) || []
-    const adminId = process.env.ADMIN_USER_ID?.trim().toLowerCase()
-    return allowedIds.includes(userId.toLowerCase()) || (!!adminId && userId.toLowerCase() === adminId)
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+    return isAdminUser(user)
   } catch (error) {
     return false
   }

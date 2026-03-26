@@ -48,7 +48,7 @@ function parseCsvEnv(value?: string): string[] {
     .filter(Boolean)
 }
 
-function isAdminUser(user: User): boolean {
+export function isAdminUser(user: User): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
   const adminUserId = process.env.ADMIN_USER_ID?.trim()
   const adminDomains = parseCsvEnv(process.env.ADMIN_EMAIL_DOMAINS)
