@@ -157,15 +157,6 @@ export function NewsletterEditor() {
               onSegmentsCreated={(segments) => {
                 toast.success(`Created ${segments.length} audio segments`)
               }}
-              onTranscriptionComplete={(transcriptions) => {
-                toast.success(`Transcription completed: ${transcriptions.length} segments`)
-                // You can use these transcriptions to populate the description field
-                const fullText = transcriptions
-                  .sort((a, b) => a.segmentIndex - b.segmentIndex)
-                  .map(t => t.text)
-                  .join(' ')
-                setDescription(fullText)
-              }}
             />
           </div>
           <div className="space-y-2">

@@ -20,6 +20,65 @@ interface User {
   created_at: string
 }
 
+interface WeeklyRecapPreviewDeps {
+  selectedUserId: string | null
+  isContextLoading: boolean
+  debouncedContent: WeeklyRecapContent
+  setUsers: (users: User[]) => void
+  setSelectedUserId: (userId: string) => void
+  setSelectedEmail: (email: string) => void
+  setError: (error: string | null) => void
+  setLoadingState: (state: "idle" | "analyzing" | "rendering" | "complete") => void
+  setEmailHtml: (html: string) => void
+}
+
+async function loadWeeklyRecapUsers({
+  selectedUserId,
+  setUsers,
+  setSelectedUserId,
+  setSelectedEmail,
+}: Pick<WeeklyRecapPreviewDeps, "selectedUserId" | "setUsers" | "setSelectedUserId" | "setSelectedEmail">) {
+  const userList = await listUsers()
+  setUsers(userList)
+
+  if (userList.length > 0 && !selectedUserId) {
+    setSelectedUserId(userList[0].id)
+    setSelectedEmail(userList[0].email ?? '')
+  }
+}
+
+async function updateWeeklyRecapPreview({
+  isContextLoading,
+  debouncedContent,
+  setError,
+  setLoadingState,
+  setEmailHtml,
+}: Pick<WeeklyRecapPreviewDeps, "isContextLoading" | "debouncedContent" | "setError" | "setLoadingState" | "setEmailHtml">) {
+  if (isContextLoading) return
+  if (debouncedContent.dailyPnL.length === 0) {
+    setError("No trading data available to preview")
+    return
+  }
+
+  setError(null)
+  setLoadingState("analyzing")
+
+  const analysisResult = await generateAnalysis(debouncedContent)
+  if (!analysisResult.success || !analysisResult.analysis) {
+    throw new Error(analysisResult.error || "Failed to generate analysis")
+  }
+
+  setLoadingState("rendering")
+
+  const renderResult = await renderEmail(debouncedContent, analysisResult.analysis)
+  if (!renderResult.success || !renderResult.html) {
+    throw new Error(renderResult.error || "Failed to render email")
+  }
+
+  setEmailHtml(renderResult.html)
+  setLoadingState("complete")
+}
+
 export function WeeklyRecapPreview() {
   const { content, setContent, isLoading: isContextLoading, selectedUserId, setSelectedUserId, setSelectedEmail } = useWeeklyRecap()
   const [emailHtml, setEmailHtml] = useState("")
@@ -34,27 +93,22 @@ export function WeeklyRecapPreview() {
 
   // Load users on component mount
   useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        const userList = await listUsers()
-        setUsers(userList)
-        if (userList.length > 0 && !selectedUserId) {
-          setSelectedUserId(userList[0].id)
-          setSelectedEmail(userList[0].email)
-        }
-      } catch (err) {
-        console.error("Error loading users:", err)
-        toast.error("Error", {
-          description: "Failed to load users",
-        })
-      }
-    }
-    loadUsers()
+    void loadWeeklyRecapUsers({
+      selectedUserId,
+      setUsers,
+      setSelectedUserId,
+      setSelectedEmail,
+    }).catch((err) => {
+      console.error("Error loading users:", err)
+      toast.error("Error", {
+        description: "Failed to load users",
+      })
+    })
   }, [selectedUserId, setSelectedUserId, setSelectedEmail])
 
   const filteredUsers = React.useMemo(() => {
     if (!searchQuery) return users
-    return users.filter(user => 
+    return users.filter((user) =>
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [users, searchQuery])
@@ -63,41 +117,17 @@ export function WeeklyRecapPreview() {
   const debouncedContent = useDebounce(content, 500)
 
   useEffect(() => {
-    const updatePreview = async () => {
-      if (isContextLoading) return
-      if (debouncedContent.dailyPnL.length === 0) {
-        setError("No trading data available to preview")
-        return
-      }
-
-      try {
-        setError(null)
-        setLoadingState("analyzing")
-
-        // First generate the analysis
-        const analysisResult = await generateAnalysis(debouncedContent)
-        if (!analysisResult.success || !analysisResult.analysis) {
-          throw new Error(analysisResult.error || "Failed to generate analysis")
-        }
-
-        setLoadingState("rendering")
-
-        // Then render the email with the analysis
-        const renderResult = await renderEmail(debouncedContent, analysisResult.analysis)
-        if (renderResult.success && renderResult.html) {
-          setEmailHtml(renderResult.html)
-          setLoadingState("complete")
-        } else {
-          throw new Error(renderResult.error || "Failed to render email")
-        }
-      } catch (err) {
-        console.error("Error generating preview:", err)
-        setError(err instanceof Error ? err.message : "An error occurred while generating the preview")
-        setLoadingState("idle")
-      }
-    }
-
-    updatePreview()
+    void updateWeeklyRecapPreview({
+      isContextLoading,
+      debouncedContent,
+      setError,
+      setLoadingState,
+      setEmailHtml,
+    }).catch((err) => {
+      console.error("Error generating preview:", err)
+      setError(err instanceof Error ? err.message : "An error occurred while generating the preview")
+      setLoadingState("idle")
+    })
   }, [debouncedContent, isContextLoading])
 
   useEffect(() => {

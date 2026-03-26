@@ -43,7 +43,7 @@ export function ChartSurface({
   const renderBody = () => {
     if (state === "loading") {
       return (
-        <div className="space-y-[var(--space-3)] p-[var(--space-3)]">
+        <div className="gap-[var(--space-3)] p-[var(--space-3)]">
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-[220px] w-full" />
         </div>

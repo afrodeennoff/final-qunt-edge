@@ -85,7 +85,7 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
       </div>
 
         <CardHeader size={size}>
-          <div className="space-y-1">
+          <div className="gap-1">
             <CardTitle className={cn(currentSize.title, "line-clamp-2")}>
               {title}
             </CardTitle>

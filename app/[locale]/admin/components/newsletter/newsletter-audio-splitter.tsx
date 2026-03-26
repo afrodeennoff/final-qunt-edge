@@ -15,10 +15,9 @@ interface AudioSegment {
 
 interface AudioSplitterProps {
   onSegmentsCreated?: (segments: AudioSegment[]) => void
-  onTranscriptionComplete?: (transcriptions: any[]) => void
 }
 
-export function AudioSplitter({ onSegmentsCreated, onTranscriptionComplete }: AudioSplitterProps) {
+export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [segments, setSegments] = useState<AudioSegment[]>([])

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -25,67 +25,75 @@ interface SortConfig {
   direction: 'asc' | 'desc'
 }
 
+function getEarliestEntryDate(trades: Trade[]) {
+  return trades.reduce((earliest, trade) =>
+    trade.entryDate < earliest ? trade.entryDate : earliest,
+    trades[0]?.entryDate
+  )
+}
+
+function getLatestEntryDate(trades: Trade[]) {
+  return trades.reduce((latest, trade) =>
+    trade.entryDate > latest ? trade.entryDate : latest,
+    trades[0]?.entryDate
+  )
+}
+
+function compareEntryDates(a?: Date | string | null, b?: Date | string | null) {
+  if (!a || !b) return 0
+  const aTime = new Date(a).getTime()
+  const bTime = new Date(b).getTime()
+  return aTime - bTime
+}
+
+function compareUsers(a: FreeUser, b: FreeUser, sortConfig: SortConfig) {
+  if (sortConfig.key === 'tradeCount') {
+    return sortConfig.direction === 'asc'
+      ? a.trades.length - b.trades.length
+      : b.trades.length - a.trades.length
+  }
+
+  if (sortConfig.key === 'tradeStart') {
+    const result = compareEntryDates(getEarliestEntryDate(a.trades), getEarliestEntryDate(b.trades))
+    return sortConfig.direction === 'asc' ? result : -result
+  }
+
+  if (sortConfig.key === 'tradeLast') {
+    const result = compareEntryDates(getLatestEntryDate(a.trades), getLatestEntryDate(b.trades))
+    return sortConfig.direction === 'asc' ? result : -result
+  }
+
+  return sortConfig.direction === 'asc'
+    ? a.email.localeCompare(b.email)
+    : b.email.localeCompare(a.email)
+}
+
 export function FreeUsersTable() {
   const [users, setUsers] = useState<FreeUser[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: 'email',
     direction: 'asc'
   })
 
   const fetchUsers = async () => {
-    const data = await getFreeUsers()
-    setUsers(data)
+    setIsLoading(true)
+    try {
+      const data = await getFreeUsers()
+      setUsers(data)
+    } catch (error) {
+      console.error('Failed to load free users:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
+  useEffect(() => {
+    void fetchUsers()
+  }, [])
+
   const sortData = (data: FreeUser[]) => {
-    return [...data].sort((a, b) => {
-      if (sortConfig.key === 'tradeCount') {
-        return sortConfig.direction === 'asc'
-          ? a.trades.length - b.trades.length
-          : b.trades.length - a.trades.length
-      }
-      else if (sortConfig.key === 'tradeStart') {
-        const aFirst = a.trades.reduce((earliest, trade) =>
-          trade.entryDate < earliest ? trade.entryDate : earliest,
-          a.trades[0]?.entryDate
-        )
-        const bFirst = b.trades.reduce((earliest, trade) =>
-          trade.entryDate < earliest ? trade.entryDate : earliest,
-          b.trades[0]?.entryDate
-        )
-
-        if (!aFirst || !bFirst) return 0
-        const aTime = new Date(aFirst).getTime()
-        const bTime = new Date(bFirst).getTime()
-
-        return sortConfig.direction === 'asc'
-          ? aTime - bTime
-          : bTime - aTime
-      }
-      else if (sortConfig.key === 'tradeLast') {
-        const aLatest = a.trades.reduce((latest, trade) =>
-          trade.entryDate > latest ? trade.entryDate : latest,
-          a.trades[0]?.entryDate
-        )
-        const bLatest = b.trades.reduce((latest, trade) =>
-          trade.entryDate > latest ? trade.entryDate : latest,
-          b.trades[0]?.entryDate
-        )
-
-        if (!aLatest || !bLatest) return 0
-        const aTime = new Date(aLatest).getTime()
-        const bTime = new Date(bLatest).getTime()
-
-        return sortConfig.direction === 'asc'
-          ? aTime - bTime
-          : bTime - aTime
-      }
-      else {
-        return sortConfig.direction === 'asc'
-          ? a.email.localeCompare(b.email)
-          : b.email.localeCompare(a.email)
-      }
-    })
+    return [...data].sort((a, b) => compareUsers(a, b, sortConfig))
   }
 
   const handleSort = (key: SortConfig['key']) => {
@@ -147,6 +155,20 @@ export function FreeUsersTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={4} className="py-8 text-center text-sm text-muted-foreground">
+                  Loading free users...
+                </TableCell>
+              </TableRow>
+            )}
+            {!isLoading && users.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} className="py-8 text-center text-sm text-muted-foreground">
+                  No free users found.
+                </TableCell>
+              </TableRow>
+            )}
             {sortData(users).map((user) => (
               <TableRow key={user.email}>
                 <TableCell>{user.email}</TableCell>

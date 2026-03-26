@@ -19,9 +19,9 @@ function Skeleton({
 
 export function DashboardHeaderSkeleton() {
   return (
-    <div className="space-y-3 mb-6">
+    <div className="gap-3 mb-6">
       <div className="flex items-center justify-between">
-        <div className="space-y-2">
+        <div className="gap-2">
           <Skeleton className="h-7 w-48" />
           <Skeleton className="h-4 w-32" />
         </div>
@@ -52,12 +52,12 @@ export function WidgetGridSkeleton() {
 
 export function TableSkeleton() {
   return (
-    <div className="space-y-3">
+    <div className="gap-3">
       <div className="flex items-center justify-between">
         <Skeleton className="h-10 w-64" />
         <Skeleton className="h-10 w-32" />
       </div>
-      <div className="space-y-2">
+      <div className="gap-2">
         {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton key={i} className="h-12 w-full" />
         ))}
@@ -68,13 +68,13 @@ export function TableSkeleton() {
 
 export function AccountsSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className="gap-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-24 w-full" />
         <Skeleton className="h-24 w-full" />
       </div>
-      <div className="space-y-2">
+      <div className="gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}

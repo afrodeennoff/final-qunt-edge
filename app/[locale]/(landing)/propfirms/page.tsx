@@ -7,6 +7,7 @@ import type { PropfirmCatalogueStats } from './actions/types'
 import { PropFirmCatalogueExperience } from './components/catalogue-experience'
 import { getUnifiedFirms } from '@/server/deals'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 
 function buildEmptyStats(name: string): PropfirmCatalogueStats {
   return {
@@ -33,12 +34,14 @@ function getUnifiedFirmDisplayData(
   unifiedFirmMap: Map<string, Awaited<ReturnType<typeof getUnifiedFirms>>[number]>
 ) {
   const unifiedFirm = unifiedFirmMap.get(normalizedName)
+  const profile = unifiedFirm ? undefined : getVerifiedPropFirmProfileByName(normalizedName)
 
   return {
-    platform: unifiedFirm?.platform ?? 'Unknown',
-    payoutModel: unifiedFirm?.payoutModel ?? 'Unknown',
-    drawdownType: unifiedFirm?.drawdownType ?? 'Unknown',
-    category: unifiedFirm?.category ?? 'Unknown',
+    platform: unifiedFirm?.platform ?? profile?.platform ?? 'Unknown',
+    payoutModel: unifiedFirm?.payoutModel ?? profile?.payoutModel ?? 'Unknown',
+    drawdownType: unifiedFirm?.drawdownType ?? profile?.drawdownType ?? 'Unknown',
+    category: unifiedFirm?.category ?? profile?.category ?? 'Unknown',
+    fallbackSlug: profile?.slug,
   }
 }
 
@@ -54,10 +57,13 @@ function buildCatalogueFirm(
 
   return {
     key,
-    slug: slugMap.get(normalizedName) ?? key,
+    slug: slugMap.get(normalizedName) ?? displayData.fallbackSlug ?? key,
     name: firm.name,
     accountTemplatesCount: Object.keys(firm.accountSizes).length,
-    ...displayData,
+    platform: displayData.platform,
+    payoutModel: displayData.payoutModel,
+    drawdownType: displayData.drawdownType,
+    category: displayData.category,
     hasInstantFunding: Object.values(firm.accountSizes).some((size) => !size.evaluation),
     stats: statsMap.get(normalizedName) ?? buildEmptyStats(firm.name),
   }

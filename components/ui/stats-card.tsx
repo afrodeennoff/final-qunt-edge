@@ -63,7 +63,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
         aria-label={title}
         {...props}
       >
-        <CardContent size={size} className="space-y-[var(--space-3)]">
+        <CardContent size={size} className="gap-[var(--space-3)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
               {Icon && (

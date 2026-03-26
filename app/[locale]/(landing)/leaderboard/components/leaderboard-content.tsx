@@ -45,7 +45,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
 
   if (initialEntries.length === 0) {
     return (
-      <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-8 text-center">
+      <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-8 text-center shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
         <div className="mx-auto max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <Trophy className="h-3.5 w-3.5 text-primary" />
@@ -61,14 +61,14 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
   }
 
   return (
-    <div className="space-y-8">
-      <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-card/50 p-6 lg:grid-cols-[1.05fr_0.95fr] lg:p-8">
+    <div className="space-y-7">
+      <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-6 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] lg:grid-cols-[1.05fr_0.95fr] lg:p-8">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <Trophy className="h-3.5 w-3.5 text-primary" />
             Public rankings
           </div>
-          <h2 className="mt-5 text-[clamp(2.2rem,5vw,4.6rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
+          <h2 className="mt-5 text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
             Real traders. Real monthly performance.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
@@ -84,7 +84,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 key={item.key}
                 type="button"
                 onClick={() => updateSort(item.key)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
                   currentSort === item.key
                     ? 'border-foreground/15 bg-foreground text-background'
                     : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
@@ -101,7 +101,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
           <SummaryCard label="Combined PnL" value={formatCurrency(summary.totalPnl)} icon={Wallet} />
           <SummaryCard label="Average win rate" value={`${summary.avgWinRate}%`} icon={Activity} />
           <SummaryCard label="Trades logged" value={summary.totalTrades.toLocaleString()} icon={Shield} />
-          <div className="sm:col-span-2 rounded-[1.4rem] border border-border/60 bg-background/75 p-4">
+          <div className="sm:col-span-2 rounded-[1.4rem] border border-border/60 bg-background/70 p-4">
             <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Methodology</p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Rankings are based on public opt-in accounts and the current month&apos;s trade data. Sort changes recalculate only the ordering, not the underlying dataset.
@@ -111,7 +111,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
       </section>
 
       {topThree.length > 0 ? (
-        <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+        <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Podium</p>
@@ -125,7 +125,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
             ))}
           </div>
           {remainingEntries.length === 0 ? (
-            <div className="mt-5 rounded-[1.3rem] border border-border/60 bg-background/70 p-4 text-sm text-muted-foreground">
+            <div className="mt-5 rounded-[1.3rem] border border-border/60 bg-background/65 p-4 text-sm text-muted-foreground">
               All currently ranked traders are already shown in the podium above.
             </div>
           ) : null}
@@ -159,7 +159,7 @@ function SummaryCard({
   icon: typeof Trophy
 }) {
   return (
-    <div className="rounded-[1.4rem] border border-border/60 bg-background/75 p-4">
+    <div className="rounded-[1.4rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
       <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -173,14 +173,14 @@ function PodiumCard({ entry, locale }: { entry: LeaderboardEntry; locale: string
   return (
     <Link
       href={`/${locale}/trader/${entry.userId}`}
-      className="group rounded-[1.4rem] border border-border/60 bg-background/75 p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+      className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.5))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Rank #{entry.rank}</p>
           <h4 className="mt-2 text-xl font-semibold tracking-tight text-foreground">{entry.username}</h4>
         </div>
-        <div className="rounded-full border border-border/60 bg-card px-3 py-2 text-sm font-semibold text-foreground">
+        <div className="rounded-full border border-border/60 bg-card/70 px-3 py-2 text-sm font-semibold text-foreground">
           {entry.winRate}%
         </div>
       </div>
@@ -202,7 +202,7 @@ function PodiumCard({ entry, locale }: { entry: LeaderboardEntry; locale: string
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/65 p-3">
+    <div className="rounded-[1rem] border border-border/60 bg-card/55 p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
     </div>

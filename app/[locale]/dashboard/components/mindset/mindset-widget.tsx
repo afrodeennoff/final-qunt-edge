@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { WidgetShell } from "@/components/ui/widget-shell"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Journaling } from "./journaling"
 import { Timeline } from "./timeline"
@@ -312,76 +312,53 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
     }
   ]
 
+  const widgetActions = (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
+        {steps.map((_, index) => (
+          <div
+            key={index}
+            className={cn(
+              "h-1.5 w-1.5 rounded-full transition-colors",
+              current === index
+                ? "bg-primary"
+                : "bg-muted"
+            )}
+          />
+        ))}
+      </div>
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => api?.scrollPrev()}
+          disabled={current === 0}
+          className="h-6 w-6"
+        >
+          <ChevronLeft className="h-3 w-3" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => api?.scrollNext()}
+          disabled={current === steps.length - 1}
+          className="h-6 w-6"
+        >
+          <ChevronRight className="h-3 w-3" />
+        </Button>
+      </div>
+    </div>
+  )
+
   return (
-    <Card className="flex flex-col p-0 h-full w-full">
-      <CardHeader
-        className={cn(
-          "flex flex-row items-center justify-between space-y-0 border-b shrink-0",
-          size === 'small' ? "p-2 h-10" : "p-3 sm:p-4 h-14"
-        )}
-      >
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-1.5">
-            <CardTitle
-              className={cn(
-                "line-clamp-1",
-                size === 'small' ? "text-sm" : "text-base"
-              )}
-            >
-              {t('mindset.title')}
-            </CardTitle>
-            <TooltipProvider>
-              <UITooltip>
-                <TooltipTrigger asChild>
-                  <Info className={cn(
-                    "text-muted-foreground hover:text-foreground transition-colors cursor-help",
-                    size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
-                  )} />
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  <p>{t('mindset.description')}</p>
-                </TooltipContent>
-              </UITooltip>
-            </TooltipProvider>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              {steps.map((_, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "h-1.5 w-1.5 rounded-full transition-colors",
-                    current === index
-                      ? "bg-primary"
-                      : "bg-muted"
-                  )}
-                />
-              ))}
-            </div>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => api?.scrollPrev()}
-                disabled={current === 0}
-                className="h-6 w-6"
-              >
-                <ChevronLeft className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => api?.scrollNext()}
-                disabled={current === steps.length - 1}
-                className="h-6 w-6"
-              >
-                <ChevronRight className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-hidden p-0 flex flex-row relative">
+    <WidgetShell
+      title={t('mindset.title')}
+      icon={<Info className={cn("text-muted-foreground", size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4")} />}
+      info={t('mindset.description')}
+      actions={widgetActions}
+      className="flex flex-col h-full w-full"
+      contentClassName="flex-1 overflow-hidden p-0 flex flex-row relative"
+    >
         {/* Timeline with animation */}
         <div
           className={cn(
@@ -469,7 +446,6 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
             ))}
           </CarouselContent>
         </Carousel>
-      </CardContent>
-    </Card>
+    </WidgetShell>
   )
 } 

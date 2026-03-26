@@ -20,6 +20,7 @@ const PaginationContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
+    data-slot="pagination-content"
     className={cn("flex flex-row items-center gap-1", className)}
     {...props}
   />
@@ -30,7 +31,7 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("", className)} {...props} />
+  <li ref={ref} data-slot="pagination-item" className={cn("", className)} {...props} />
 ))
 PaginationItem.displayName = "PaginationItem"
 
@@ -46,6 +47,7 @@ const PaginationLink = ({
   ...props
 }: PaginationLinkProps) => (
   <a
+    data-slot="pagination-link"
     aria-current={isActive ? "page" : undefined}
     className={cn(
       buttonVariants({
@@ -97,6 +99,7 @@ const PaginationEllipsis = ({
 }: React.ComponentProps<"span">) => (
   <span
     aria-hidden
+    data-slot="pagination-ellipsis"
     className={cn("flex h-9 w-9 items-center justify-center", className)}
     {...props}
   >

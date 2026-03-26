@@ -6,6 +6,7 @@ import { AlertCircle, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -51,7 +52,7 @@ export function WidgetShell({
   const renderContent = () => {
     if (state === "loading") {
       return (
-        <div className="space-y-[var(--space-3)] p-[var(--space-4)]">
+        <div className="gap-[var(--space-3)] p-[var(--space-4)]">
           <Skeleton className="h-4 w-1/3" />
           <Skeleton className="h-28 w-full" />
           <Skeleton className="h-4 w-2/3" />
@@ -94,7 +95,7 @@ export function WidgetShell({
       {(title || actions || icon || description) && (
         <CardHeader className="border-b border-border px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
-            <div className="min-w-0 space-y-[var(--space-2)]">
+            <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (
                 <div className="flex items-center gap-[var(--space-2)]">
                   {icon ? <span className="text-fg-muted">{icon}</span> : null}
@@ -133,7 +134,10 @@ export function WidgetShell({
       </CardContent>
 
       {footer ? (
-        <CardFooter className="border-t border-border p-[var(--space-4)] sm:p-[var(--space-4)]">{footer}</CardFooter>
+        <CardFooter className="flex flex-col p-0">
+          <Separator className="-mx-[var(--space-4)] mb-0" />
+          <div className="p-[var(--space-4)]">{footer}</div>
+        </CardFooter>
       ) : null}
     </Card>
   )

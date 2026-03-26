@@ -32,6 +32,64 @@ interface GeneratePromptOptions {
   includeTimestamps?: boolean
 }
 
+async function fetchVideoHtml(videoId: string): Promise<string> {
+  const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
+  if (!response.ok) {
+    throw new Error("Failed to fetch video data")
+  }
+
+  return response.text()
+}
+
+function extractTranscriptUrlFromHtml(html: string): string {
+  const captionsMatch = html.match(/"captions":\s*({[^}]+})/)
+  if (!captionsMatch) {
+    throw new Error("No captions data found")
+  }
+
+  const captionsData = JSON.parse(captionsMatch[1])
+  const transcriptUrl = captionsData?.playerCaptionsTracklistRenderer?.captionTracks?.[0]?.baseUrl
+
+  if (!transcriptUrl) {
+    throw new Error("No transcript URL found")
+  }
+
+  return transcriptUrl
+}
+
+async function fetchTranscriptXml(transcriptUrl: string): Promise<string> {
+  const response = await fetch(transcriptUrl)
+  if (!response.ok) {
+    throw new Error("Failed to fetch transcript")
+  }
+
+  return response.text()
+}
+
+function buildPromptFromSegments(
+  segments: TranscriptSegment[],
+  maxLength: number,
+  includeTimestamps: boolean
+): string {
+  let prompt = ""
+  let currentLength = 0
+
+  for (const segment of segments) {
+    const segmentText = includeTimestamps
+      ? `[${formatTimestamp(segment.start)}] ${segment.text}`
+      : segment.text
+
+    if (currentLength + segmentText.length > maxLength) {
+      break
+    }
+
+    prompt += `${segmentText} `
+    currentLength += segmentText.length
+  }
+
+  return prompt.trim()
+}
+
 /**
  * Generates a base prompt from a YouTube video transcript
  * @param videoId The YouTube video ID
@@ -45,57 +103,13 @@ export async function generateBasePrompt(
   const { maxLength = 2000, includeTimestamps = false } = options
 
   try {
-    // Fetch transcript using YouTube's captions API
-    const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch video data')
-    }
-
-    const html = await response.text()
-    
-    // Extract captions data from YouTube's initial data
-    const captionsMatch = html.match(/"captions":\s*({[^}]+})/);
-    if (!captionsMatch) {
-      throw new Error('No captions data found')
-    }
-
-    // Parse captions data
-    const captionsData = JSON.parse(captionsMatch[1])
-    const transcriptUrl = captionsData?.playerCaptionsTracklistRenderer?.captionTracks?.[0]?.baseUrl
-
-    if (!transcriptUrl) {
-      throw new Error('No transcript URL found')
-    }
-
-    // Fetch and parse transcript
-    const transcriptResponse = await fetch(transcriptUrl)
-    if (!transcriptResponse.ok) {
-      throw new Error('Failed to fetch transcript')
-    }
-
-    const transcript = await transcriptResponse.text()
+    const html = await fetchVideoHtml(videoId)
+    const transcriptUrl = extractTranscriptUrlFromHtml(html)
+    const transcript = await fetchTranscriptXml(transcriptUrl)
     const segments = parseTranscript(transcript)
-
-    // Generate prompt from transcript
-    let prompt = ''
-    let currentLength = 0
-
-    for (const segment of segments) {
-      const segmentText = includeTimestamps 
-        ? `[${formatTimestamp(segment.start)}] ${segment.text}`
-        : segment.text
-
-      if (currentLength + segmentText.length > maxLength) {
-        break
-      }
-
-      prompt += segmentText + ' '
-      currentLength += segmentText.length
-    }
-
-    return prompt.trim()
+    return buildPromptFromSegments(segments, maxLength, includeTimestamps)
   } catch (error) {
-    console.error('Error generating base prompt:', error)
+    console.error("Error generating base prompt:", error)
     return null
   }
 }

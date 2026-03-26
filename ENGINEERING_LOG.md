@@ -4,6 +4,119 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
+### 2026-03-27: Prisma Boot Guard + Lazy No-DB Proxy
+
+- **What changed:** Removed the import-time Prisma crash when database env vars are missing and replaced it with a lazy proxy that keeps the app bootable while still failing loudly on the first real DB call.
+
+- **What I want:** The app should start cleanly in local/dev and only require database configuration when a route or action actually needs Prisma.
+
+- **What I don't want:** A missing `DATABASE_URL` or Supabase pooler URL taking down the whole app before any request is handled.
+
+- **How we fixed that:**
+  - Refactored `lib/prisma.ts` so it returns a lazy throwing proxy when no runtime database URL is configured instead of throwing during module import.
+  - Preserved the normal pooled Prisma client path when a database URL is present, including pool sizing, SSL handling, and Supabase pooler normalization.
+  - Added a regression test that verifies Prisma can be imported without DB env vars and only throws when a query method is actually invoked.
+
+- **Key Files:**
+  - Prisma bootstrap: `lib/prisma.ts`
+  - Regression test: `tests/lib/prisma-fallback.test.ts`
+
+- **Verification:**
+  - `npm run lint -- lib/prisma.ts tests/lib/prisma-fallback.test.ts` -> passed.
+  - `npx vitest run tests/lib/prisma-fallback.test.ts` -> passed.
+  - `npm run typecheck` -> passed.
+
+### 2026-03-27: Full App Cleanup Pass - Home, Landing Pages, Admin Coupons, Prop Firm Data, Theme + Typing Fixes
+
+- **What changed:** Completed a wide cross-section cleanup across the app, focusing on the home route, landing pages, firm/propfirm data surfaces, admin power tools, and remaining TypeScript/admin flow issues.
+
+- **What I want:** A stable production-ready codebase where the main UI surfaces share one visual language, prop-firm data falls back to verified source-of-truth values when the database is sparse, and admins can manage coupon codes from a dedicated workspace.
+
+- **What I don't want:** Cropped headers, crowded card layouts, placeholder-filled prop-firm data, hidden coupon workflows, or admin components failing typecheck because of nullable state mismatches.
+
+- **How we fixed that:**
+  - Synced the home route from `main` and kept the core home experience aligned with the current branch structure.
+  - Refined the `/deals`, `/propfirms`, `/leaderboard`, and `/firm/[slug]` surfaces for spacing, hierarchy, and card balance.
+  - Tightened the prop-firm catalogue/chart experience to show all firms, including zero-record firms, with cleaner sorting and less visual crowding.
+  - Added a verified prop-firm profile source of truth and wired fallback enrichment into runtime prop-firm data reads so missing DB fields resolve from audited values instead of empty placeholders.
+  - Unified prop-firm seeding around the verified profile list so the bootstrap data stays aligned with the audited names/metadata.
+  - Added a dedicated admin coupons workspace at `/${locale}/admin/coupons` to manage coupon codes globally, not just inside one prop-firm detail screen.
+  - Kept prop-firm detail coupon CRUD intact while giving admins a faster top-level route and sidebar access.
+  - Fixed admin typing regressions in weekly recap and send-email flows so nullable state is narrowed before use.
+  - Confirmed the admin gate still protects the entire admin shell while allowing the new coupons workspace.
+
+- **Key Files:**
+  - Home sync: `app/[locale]/(home)/*`
+  - Landing redesigns: `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `app/[locale]/(landing)/propfirms/components/catalogue-experience.tsx`, `app/[locale]/(landing)/propfirms/components/stats-summary-row.tsx`, `app/[locale]/(landing)/leaderboard/page.tsx`, `app/[locale]/(landing)/leaderboard/components/leaderboard-content.tsx`, `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`, `app/[locale]/(landing)/firm/[slug]/page-client.tsx`
+  - Prop-firm data: `lib/prop-firms/verified-profiles.ts`, `server/deals.ts`, `app/[locale]/(landing)/propfirms/page.tsx`, `prisma/seeders/prop-firms-seeder.ts`
+  - Admin coupons: `app/[locale]/admin/coupons/page.tsx`, `app/[locale]/admin/components/sidebar-nav.tsx`
+  - Admin typing fixes: `app/[locale]/admin/actions/weekly-recap.ts`, `app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx`, `app/[locale]/admin/components/newsletter/subscriber-table.tsx`, `app/[locale]/admin/components/send-email/send-email-page-client.tsx`
+  - Theme primitives: `components/ui/card.tsx`, `components/ui/progress.tsx`, `components/ui/separator.tsx`, and other shared UI primitives touched in the design sweep
+  - Audit doc: `docs/propfirm-audit-2026-03-27.md`
+
+- **Verification:**
+  - `npx eslint app/[locale]/admin/coupons/page.tsx app/[locale]/admin/components/send-email/send-email-page-client.tsx app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx app/[locale]/admin/actions/weekly-recap.ts app/[locale]/admin/components/sidebar-nav.tsx app/[locale]/admin/components/newsletter/subscriber-table.tsx` -> passed.
+  - `npm run typecheck` -> passed.
+  - `npm run dev -- -p 3000` -> running successfully on port `3000`.
+
+### 2026-03-27: Remote Admin Parity + Admin Cleanup Pass
+
+- **What changed:** Aligned the local admin surface more closely with the remote repo’s admin workflows, then cleaned the remaining admin lint and type issues so the whole area is stable again.
+
+- **What I want:** A remote-style internal ops console that is easy to navigate, correctly guarded, and free of refactor regressions.
+
+- **What I don't want:** Wrong admin navigation, brittle newsletter/send-email flows, stale helper complexity, or type drift after splitting large components.
+
+- **How we fixed that:**
+  - Standardized admin access checks to `isAdminUser(user)` in both admin and dashboard layouts so approved admins are not blocked by a single ID-based gate.
+  - Restored the admin shell to the proper `SidebarNav` and kept the remote-style dashboard operations cards and newsletter stats visible from one place.
+  - Tightened the dashboard free-user and subscription behaviors so the tables auto-load, handle empty/error states, and call the correct subscription target.
+  - Refactored the newsletter subscriber table into smaller typed pieces, including typed name-inference results and safer upload/delete/test handlers.
+  - Broke the send-email screen into smaller cards and prop-field helpers, then moved send validation into a dedicated helper to remove complexity hotspots.
+  - Split the weekly recap preview helper flow and YouTube prompt builder into smaller steps so the admin utility code is easier to maintain.
+  - Cleaned the newsletter transcription and audio splitter/editor wiring so there are no dead props or stale helper references.
+
+- **Key Files:**
+  - Layout/gating: `app/[locale]/admin/layout.tsx`, `app/[locale]/dashboard/layout.tsx`, `app/[locale]/admin/admin-client-layout.tsx`, `app/[locale]/admin/components/sidebar-nav.tsx`
+  - Dashboard: `app/[locale]/admin/components/dashboard/admin-dashboard.tsx`, `app/[locale]/admin/components/dashboard/free-users-table.tsx`, `app/[locale]/admin/components/dashboard/user-growth-chart.tsx`
+  - Newsletter: `app/[locale]/admin/components/newsletter/subscriber-table.tsx`, `app/[locale]/admin/components/newsletter/newsletter-transcription.tsx`, `app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx`, `app/[locale]/admin/components/newsletter/newsletter-editor.tsx`
+  - Send email: `app/[locale]/admin/components/send-email/send-email-page-client.tsx`
+  - Weekly recap: `app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx`, `app/[locale]/admin/actions/weekly-recap.ts`
+  - Utilities: `app/[locale]/admin/utils/youtube.ts`
+
+- **Verification:**
+  - `npm run lint -- app/[locale]/admin` -> passed with 0 warnings.
+  - `npm run typecheck` -> passed.
+
+### 2026-03-27: Admin Coupon Workspace + Prop Firm Audit/Data Fallback + Theme Cleanup
+
+- **What changed:** Finished a broad admin/data cleanup pass focused on prop firms, coupon management, weekly recap/send-email typing issues, and the visual system across the landing/admin surfaces.
+
+- **What I want:** A reliable admin workflow for prop-firm coupons, clean fallback data when the database is incomplete, and a consistent theme system across the app without breaking existing flows.
+
+- **What I don't want:** Hidden coupon editing only inside a single firm page, nullable admin preview data leaking into typed actions, or visual/theme drift across major app surfaces.
+
+- **How we fixed that:**
+  - Added a dedicated admin coupons workspace at `/${locale}/admin/coupons` so admins can create, edit, and delete coupon codes in one place across all prop firms.
+  - Wired the admin sidebar to the new Coupons route for direct access.
+  - Kept prop-firm detail coupon CRUD intact and aligned it with the new central coupons workflow.
+  - Fixed weekly recap preview typing so selected user/email setters are explicit functions instead of mismatched dispatch signatures.
+  - Fixed send-email preview/send logic to narrow nullable template state before passing it into the send routine.
+  - Hardened prop-firm fallback data through verified profiles so missing DB fields resolve from audited source-of-truth values instead of generic placeholders.
+  - Refined the landing pages for `/deals`, `/propfirms`, `/leaderboard`, and the prop-firm detail surface to reduce crowding and improve hierarchy.
+
+- **Key Files:**
+  - Admin coupons: `app/[locale]/admin/coupons/page.tsx`
+  - Admin sidebar: `app/[locale]/admin/components/sidebar-nav.tsx`
+  - Weekly recap: `app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx`, `app/[locale]/admin/actions/weekly-recap.ts`
+  - Send email: `app/[locale]/admin/components/send-email/send-email-page-client.tsx`
+  - Prop-firm fallback: `lib/prop-firms/verified-profiles.ts`, `server/deals.ts`, `app/[locale]/(landing)/propfirms/page.tsx`
+  - Theme polish: `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `app/[locale]/(landing)/propfirms/components/catalogue-experience.tsx`, `app/[locale]/(landing)/leaderboard/components/leaderboard-content.tsx`
+
+- **Verification:**
+  - `npx eslint app/[locale]/admin/coupons/page.tsx app/[locale]/admin/components/send-email/send-email-page-client.tsx app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx app/[locale]/admin/actions/weekly-recap.ts app/[locale]/admin/components/sidebar-nav.tsx app/[locale]/admin/components/newsletter/subscriber-table.tsx` -> passed.
+  - Full `npm run typecheck` re-run passed after the fixes.
+
 ### 2026-03-23: PropFirm Pages + Home/Leaderboard/Deals Redesign + AI Cleanup
 
 - **What changed:** Completed a multi-part cleanup and feature project including AI codebase audit, propfirm page fixes, admin CRUD, and three new page designs (home/leaderboard/deals).

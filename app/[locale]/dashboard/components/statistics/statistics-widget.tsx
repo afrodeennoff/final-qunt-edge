@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn, calculateStatistics } from "@/lib/utils"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { Trade } from "@/lib/data-types"
 import { WidgetShell } from "@/components/ui/widget-shell"
@@ -215,7 +216,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
               </div>
 
               {/* Divider */}
-              <div className="border-t border-border/55 border-dashed my-1"></div>
+              <Separator className="my-1" />
 
               {/* Net Result */}
               <div className="flex justify-between items-center">

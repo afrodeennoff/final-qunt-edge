@@ -1,7 +1,7 @@
 import { createClient } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { AdminClientLayout } from "./admin-client-layout"
-import { isAdmin } from "@/server/authz"
+import { isAdminUser } from "@/server/authz"
 
 export default async function AdminLayout({
   children,
@@ -20,7 +20,7 @@ export default async function AdminLayout({
     redirect(`/${locale}/authentication?next=%2F${locale}%2Fadmin`)
   }
 
-  if (!isAdmin(user.id)) {
+  if (!isAdminUser(user)) {
     redirect(`/${locale}/dashboard`)
   }
 

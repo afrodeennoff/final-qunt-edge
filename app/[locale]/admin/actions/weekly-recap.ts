@@ -154,7 +154,13 @@ export async function loadInitialContent(email?: string, userId?: string) {
 export async function listUsers() {
   await assertAdminAccess()
   const supabase = getSupabaseAdminClient()
-  let allUsers: any[] = []
+  type SupabaseAdminUser = {
+    id: string
+    email: string | null
+    created_at: string
+  }
+
+  let allUsers: SupabaseAdminUser[] = []
   let page = 1
   const perPage = 1000
   let hasMore = true
@@ -170,17 +176,21 @@ export async function listUsers() {
       break
     }
 
-    if (data.users.length === 0) {
+    const pageUsers = (data.users as SupabaseAdminUser[])
+      .filter((user) => Boolean(user.email))
+      .map((user) => ({
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at,
+      }))
+
+    if (pageUsers.length === 0) {
       hasMore = false
     } else {
-      allUsers = [...allUsers, ...data.users]
+      allUsers = [...allUsers, ...pageUsers]
       page++
     }
   }
 
-  return allUsers.map(user => ({
-    id: user.id,
-    email: user.email,
-    created_at: user.created_at
-  }))
-} 
+  return allUsers.filter((user): user is SupabaseAdminUser & { email: string } => Boolean(user.email))
+}

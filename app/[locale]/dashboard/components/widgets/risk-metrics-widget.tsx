@@ -6,6 +6,7 @@ import { useDashboardStats } from "@/context/data-provider"
 import { calculateAdvancedMetrics } from "@/lib/advanced-metrics"
 import { ShieldAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Progress } from "@/components/ui/progress"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { WidgetShell } from "@/components/ui/widget-shell"
 
@@ -118,9 +119,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
                                 </span>
                             </div>
                         </div>
-                        <div className="w-full h-1 bg-secondary/22 rounded-full overflow-hidden">
-                            <div className="h-full bg-foreground/40 w-full" />
-                        </div>
+                        <Progress value={100} className="h-1" indicatorClassName="bg-foreground/40" />
                     </div>
                 </div>
             </div>

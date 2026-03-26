@@ -8,6 +8,7 @@ import {
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
@@ -75,6 +76,10 @@ export interface UnifiedFirm {
     reviews: number
     coupons: number
   }
+  liveReviewStats: {
+    averageRating: number | null
+    approvedCount: number
+  }
 }
 
 interface FirmCoupon {
@@ -119,7 +124,7 @@ interface FirmRecord {
   profitSplit: string | null
   maxAllocation: string | null
   coupons: CouponRecord[]
-  reviews: Array<{ id: string }>
+  reviews: Array<{ id: string; rating: number; status: string }>
   _count: {
     reviews: number
     coupons: number
@@ -143,6 +148,14 @@ export interface DealsSpotlightCollection {
 
 function withTextFallback(value: string | null | undefined, fallback: string): string {
   return value ?? fallback
+}
+
+function withMeaningfulText(value: string | null | undefined): string | null {
+  const trimmed = value?.trim()
+  if (!trimmed) return null
+  const normalized = trimmed.toLowerCase()
+  if (normalized === 'unknown' || normalized === 'n/a' || normalized === 'na') return null
+  return trimmed
 }
 
 function withNumberFallback(value: number | null | undefined, fallback = 0): number {
@@ -215,10 +228,19 @@ function buildUnifiedFirm(
   catalogueEntry?: Parameters<typeof buildCatalogueStats>[0],
   spotlight: PropFirmMatchSpotlight | null = null
 ): UnifiedFirm {
-  const description = firm.description ?? undefined
-  const shortDesc = firm.shortDesc ?? undefined
-  const referralUrl = firm.referralUrl ?? undefined
+  const profile = getVerifiedPropFirmProfileByName(firm.name)
+  const description = withMeaningfulText(firm.description) ?? profile?.shortDesc
+  const shortDesc = withMeaningfulText(firm.shortDesc) ?? profile?.shortDesc
+  const referralUrl = withMeaningfulText(firm.referralUrl) ?? profile?.referralUrl
   const logoUrl = firm.logoUrl ?? undefined
+
+  const approvedReviews = firm.reviews.filter((review) => review.status.toLowerCase() === 'approved')
+  const ratingValues = approvedReviews
+    .map((review) => review.rating)
+    .filter((rating) => Number.isFinite(rating) && rating > 0)
+  const averageRating = ratingValues.length > 0
+    ? ratingValues.reduce((sum, rating) => sum + rating, 0) / ratingValues.length
+    : null
 
   return {
     id: firm.id,
@@ -228,12 +250,12 @@ function buildUnifiedFirm(
     shortDesc,
     referralUrl,
     logoUrl,
-    category: mapFirmCategory(firm.category),
-    platform: mapFirmPlatform(firm.platform),
-    payoutModel: mapFirmPayoutModel(firm.payoutModel),
-    drawdownType: mapFirmDrawdownType(firm.drawdownType),
-    profitSplit: withTextFallback(firm.profitSplit, '80/20'),
-    maxAllocation: withTextFallback(firm.maxAllocation, '$100K'),
+    category: mapFirmCategory(withMeaningfulText(firm.category) ?? profile?.category ?? 'Futures'),
+    platform: mapFirmPlatform(withMeaningfulText(firm.platform) ?? profile?.platform ?? 'Tradovate'),
+    payoutModel: mapFirmPayoutModel(withMeaningfulText(firm.payoutModel) ?? profile?.payoutModel ?? 'Monthly'),
+    drawdownType: mapFirmDrawdownType(withMeaningfulText(firm.drawdownType) ?? profile?.drawdownType ?? 'Static'),
+    profitSplit: withTextFallback(withMeaningfulText(firm.profitSplit), profile?.profitSplit ?? '80/20'),
+    maxAllocation: withTextFallback(withMeaningfulText(firm.maxAllocation), profile?.maxAllocation ?? '$100K'),
     challengeCount: firm.reviews.length,
     spotlight,
     catalogueStats: buildCatalogueStats(catalogueEntry),
@@ -242,6 +264,10 @@ function buildUnifiedFirm(
     _count: {
       reviews: firm._count.reviews,
       coupons: firm._count.coupons,
+    },
+    liveReviewStats: {
+      averageRating,
+      approvedCount: approvedReviews.length,
     },
   }
 }
@@ -297,20 +323,21 @@ function logDealsFallback(source: string, error: unknown) {
 }
 
 function buildFallbackUnifiedFirmFromConfig(key: string, firm: (typeof propFirms)[keyof typeof propFirms]): UnifiedFirm {
+  const profile = getVerifiedPropFirmProfileByName(firm.name)
   return {
     id: `fallback-${key}`,
-    slug: slugifyFirmName(firm.name),
+    slug: profile?.slug ?? slugifyFirmName(firm.name),
     name: firm.name,
-    description: undefined,
-    shortDesc: undefined,
-    referralUrl: undefined,
+    description: profile?.shortDesc,
+    shortDesc: profile?.shortDesc,
+    referralUrl: profile?.referralUrl,
     logoUrl: undefined,
-    category: 'Futures',
-    platform: 'Tradovate',
-    payoutModel: 'Monthly',
-    drawdownType: 'Static',
-    profitSplit: '80/20',
-    maxAllocation: '$100K',
+    category: profile?.category ?? 'Futures',
+    platform: profile?.platform ?? 'Tradovate',
+    payoutModel: profile?.payoutModel ?? 'Monthly',
+    drawdownType: profile?.drawdownType ?? 'Static',
+    profitSplit: profile?.profitSplit ?? '80/20',
+    maxAllocation: profile?.maxAllocation ?? '$100K',
     challengeCount: 0,
     spotlight: findSpotlight(firm.name),
     catalogueStats: buildCatalogueStats(),
@@ -319,6 +346,10 @@ function buildFallbackUnifiedFirmFromConfig(key: string, firm: (typeof propFirms
     _count: {
       reviews: 0,
       coupons: 0,
+    },
+    liveReviewStats: {
+      averageRating: null,
+      approvedCount: 0,
     },
   }
 }
@@ -369,7 +400,7 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
             { discountPercent: 'desc' },
           ],
         },
-        reviews: { select: { id: true } },
+        reviews: { select: { id: true, rating: true, status: true } },
         _count: { select: { reviews: true, coupons: true } },
       },
     })
@@ -544,7 +575,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
             { discountPercent: 'desc' },
           ],
         },
-        reviews: { select: { id: true } },
+        reviews: { select: { id: true, rating: true, status: true } },
         _count: { select: { reviews: true, coupons: true } },
       },
       orderBy: { name: 'asc' },

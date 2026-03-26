@@ -75,9 +75,9 @@ export function ColumnConfigDialog({ tableId, trigger }: ColumnConfigDialogProps
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="space-y-3">
+          <div className="gap-3">
             {columns.map((column) => (
-              <div key={column.id} className="flex items-center space-x-2">
+              <div key={column.id} className="flex items-center gap-2">
                 <Checkbox
                   id={column.id}
                   checked={currentVisibility[column.id] !== false}

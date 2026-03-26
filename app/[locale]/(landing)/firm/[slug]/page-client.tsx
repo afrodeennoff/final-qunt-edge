@@ -3,8 +3,10 @@
 import React from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BadgeV2, CardV2, CardV2Content, CardV2Description, CardV2Title, SkeletonV2 } from '@/components/ui/v2'
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import {
   Building2,
   Check,
@@ -55,6 +57,10 @@ type FirmData = {
   referralUrl?: string | null
   logoUrl?: string | null
   _count?: { reviews?: number; coupons?: number }
+  liveReviewStats?: {
+    averageRating: number | null
+    approvedCount: number
+  }
   spotlight?: {
     slug: string
     name: string
@@ -96,6 +102,13 @@ const trustChecklist = [
   'Review and coupon tabs stay connected to the same profile.',
   'Cleaner hierarchy for scanning payouts, split, and platform details.',
 ]
+
+const radarChartConfig = {
+  score: {
+    label: 'Score',
+    color: 'hsl(var(--chart-1))',
+  },
+} satisfies ChartConfig
 
 type AccountSizeEntry = [string, NonNullable<FirmData['accountSizes']>[string]]
 type FactIcon = React.ComponentType<{ className?: string }>
@@ -233,14 +246,35 @@ function getRadarPayoutsMade(firm: FirmData): number {
   return Math.min(100, Math.round((paidPayoutCount / 50) * 100))
 }
 
-function getRadarConsistencyScore(firm: FirmData): number {
-  const rating = firm.spotlight?.rating ?? 4.0
+function getRadarRatingScore(firm: FirmData): number {
+  const rating = firm.liveReviewStats?.averageRating ?? 0
   return Math.round((rating / 5) * 100)
 }
 
-function getRadarSupportQuality(firm: FirmData): number {
-  const reviewCount = firm._count?.reviews ?? 0
-  return Math.min(100, Math.round((reviewCount / 20) * 100))
+function parseProfitSplitAsPercent(profitSplit?: string | null): number {
+  if (!profitSplit) return 70
+  const match = profitSplit.match(/(\d{1,3})/)
+  if (!match) return 70
+  const parsed = Number.parseInt(match[1], 10)
+  if (!Number.isFinite(parsed)) return 70
+  return Math.max(0, Math.min(100, parsed))
+}
+
+function getPayoutModelScore(payoutModel?: string | null): number {
+  if (!payoutModel) return 70
+  const normalized = payoutModel.toLowerCase()
+  if (normalized.includes('on-demand') || normalized.includes('ondemand')) return 95
+  if (normalized.includes('weekly')) return 85
+  if (normalized.includes('bi-week')) return 75
+  if (normalized.includes('monthly')) return 60
+  return 70
+}
+
+function getRadarRulesScore(firm: FirmData): number {
+  const drawdownScore = getRuleFlexibility(firm.drawdownType ?? 'Static')
+  const payoutScore = getPayoutModelScore(firm.payoutModel)
+  const splitScore = parseProfitSplitAsPercent(firm.profitSplit)
+  return Math.round((drawdownScore * 0.4) + (payoutScore * 0.35) + (splitScore * 0.25))
 }
 
 function getRadarValueForMoney(firm: FirmData): number {
@@ -254,25 +288,10 @@ function buildRadarMetrics(firm: FirmData): Array<{ label: string; value: number
   return [
     { label: 'Total Accounts Funded', value: getRadarAccountsFunded(firm), max: 100 },
     { label: 'Total Payouts Made', value: getRadarPayoutsMade(firm), max: 100 },
-    { label: 'Consistency Score', value: getRadarConsistencyScore(firm), max: 100 },
-    { label: 'Support Quality', value: getRadarSupportQuality(firm), max: 100 },
-    { label: 'Rule Flexibility', value: getRuleFlexibility(firm.drawdownType ?? 'Static'), max: 100 },
+    { label: 'Rating', value: getRadarRatingScore(firm), max: 100 },
+    { label: 'Rules', value: getRadarRulesScore(firm), max: 100 },
     { label: 'Value for Money', value: getRadarValueForMoney(firm), max: 100 },
   ]
-}
-
-function getRadarPoint(index: number, value: number, totalMetrics: number) {
-  const centerX = 150
-  const centerY = 150
-  const radius = 120
-  const angleStep = (2 * Math.PI) / totalMetrics
-  const angle = index * angleStep - Math.PI / 2
-  const scaledRadius = (value / 100) * radius
-
-  return {
-    x: centerX + scaledRadius * Math.cos(angle),
-    y: centerY + scaledRadius * Math.sin(angle),
-  }
 }
 
 function getDrawdownDescription(drawdownType?: string | null): string {
@@ -359,9 +378,9 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+    <div className="rounded-2xl border border-border/50 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-card/5">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-card/35">
           <Icon className="h-4 w-4 text-v2-accent" />
         </div>
         <div>
@@ -375,7 +394,14 @@ function FactTile({
 
 function MetricCard({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded-2xl border border-border/40 bg-card/5 px-4 py-4">
+    <div
+      className={cn(
+        'rounded-2xl border border-border/50 px-4 py-4',
+        highlight
+          ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
+          : 'bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))]'
+      )}
+    >
       <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
       <p className={`mt-2 text-2xl font-semibold tracking-[-0.03em] ${highlight ? 'text-v2-success' : 'text-foreground'}`}>{value}</p>
     </div>
@@ -428,7 +454,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
           href={referralUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-v2-accent px-6 py-3 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
         >
           Visit Firm
           <ExternalLink className="h-4 w-4" />
@@ -562,7 +588,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
@@ -626,7 +652,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   const researchSnapshot = buildResearchSnapshot(firm)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
@@ -686,8 +712,6 @@ function OverviewSection({ firm }: { firm: FirmData }) {
         </CardV2>
       </section>
 
-      <RADARAnalysisWidget firm={firm} />
-      
       <AdditionalDetailsSection firm={firm} />
 
       {firm.referralUrl ? <ReferralCTA referralUrl={firm.referralUrl} /> : null}
@@ -759,113 +783,6 @@ function SocialIcon({ type, url }: { type: 'website' | 'twitter' | 'discord' | '
     >
       {icons[type]}
     </a>
-  )
-}
-
-function RADARAnalysisWidget({ firm }: { firm: FirmData }) {
-  const metrics = buildRadarMetrics(firm)
-  const totalMetrics = metrics.length
-
-  return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
-        <div className="flex items-center gap-2">
-          <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          <CardV2Title className="text-2xl text-foreground">RADAR Analysis</CardV2Title>
-        </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Performance metrics derived from platform data and user reviews.
-        </CardV2Description>
-
-        <div className="mt-6 flex flex-col items-center">
-          <svg width="300" height="300" viewBox="0 0 300 300" className="w-full max-w-[300px]">
-            {[0.2, 0.4, 0.6, 0.8, 1].map((scale) => (
-              <polygon
-                key={scale}
-                points={metrics
-                  .map((_, index) => {
-                    const point = getRadarPoint(index, scale * 100, totalMetrics)
-                    return `${point.x},${point.y}`
-                  })
-                  .join(' ')}
-                fill="none"
-                stroke="rgba(255,255,255,0.1)"
-                strokeWidth="1"
-              />
-            ))}
-
-            {metrics.map((_, index) => {
-              const point = getRadarPoint(index, 100, totalMetrics)
-              return (
-                <line
-                  key={index}
-                  x1={150}
-                  y1={150}
-                  x2={point.x}
-                  y2={point.y}
-                  stroke="rgba(255,255,255,0.1)"
-                  strokeWidth="1"
-                />
-              )
-            })}
-
-            <polygon
-              points={metrics
-                .map((_, index) => {
-                  const point = getRadarPoint(index, metrics[index].value, totalMetrics)
-                  return `${point.x},${point.y}`
-                })
-                .join(' ')}
-              fill="rgba(88,129,255,0.2)"
-              stroke="rgba(88,129,255,0.8)"
-              strokeWidth="2"
-            />
-
-            {metrics.map((metric, index) => {
-              const point = getRadarPoint(index, 110, totalMetrics)
-              return (
-                <text
-                  key={index}
-                  x={point.x}
-                  y={point.y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  className="fill-foreground/70 text-[10px]"
-                >
-                  {metric.label}
-                </text>
-              )
-            })}
-
-            {metrics.map((metric, index) => {
-              const point = getRadarPoint(index, metric.value, totalMetrics)
-              return (
-                <circle
-                  key={index}
-                  cx={point.x}
-                  cy={point.y}
-                  r="4"
-                  fill="rgba(88,129,255,1)"
-                  stroke="white"
-                  strokeWidth="2"
-                />
-              )
-            })}
-          </svg>
-
-          <div className="mt-6 grid w-full grid-cols-2 gap-3 sm:grid-cols-3">
-            {metrics.map((metric) => (
-              <div key={metric.label} className="rounded-2xl border border-border/40 bg-background/40 px-3 py-3">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{metric.label}</p>
-                <p className="mt-1 text-lg font-semibold text-foreground">{metric.value}/100</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardV2Content>
-    </CardV2>
   )
 }
 
@@ -1016,7 +933,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
   const rules = buildRules(firm)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
@@ -1149,7 +1066,7 @@ function HeaderRatingSummary({
   headerMetaItems: string[]
 }) {
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-4">
+    <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
       {spotlightRating !== null ? (
         <>
           <StarRating rating={Math.round(spotlightRating)} size="lg" />
@@ -1162,7 +1079,10 @@ function HeaderRatingSummary({
         <span className="text-sm text-muted-foreground">No verified rating yet</span>
       )}
       {headerMetaItems.map((item) => (
-        <span key={item} className="text-sm text-muted-foreground">
+        <span
+          key={item}
+          className="rounded-full border border-border/40 bg-background/45 px-2.5 py-1 text-xs text-muted-foreground"
+        >
           {item}
         </span>
       ))}
@@ -1183,11 +1103,61 @@ function HeaderActions({ referralUrl }: { referralUrl?: string | null }) {
         href={referralUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-v2-accent-hover"
+        className="inline-flex items-center gap-2 rounded-full bg-v2-accent px-5 py-2.5 text-sm font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
       >
         Visit Official Website
         <ExternalLink className="h-4 w-4" />
       </a>
+    </div>
+  )
+}
+
+function HeaderRadarMini({ firm }: { firm: FirmData }) {
+  const metrics = buildRadarMetrics(firm)
+  const chartData = metrics.map((metric) => ({
+    metric: metric.label,
+    score: metric.value,
+  }))
+  const averageScore = metrics.length > 0
+    ? Math.round(metrics.reduce((sum, metric) => sum + metric.value, 0) / metrics.length)
+    : 0
+
+  return (
+    <div className="w-full lg:w-auto">
+      <CardV2 className="w-full rounded-[24px] border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+        <CardV2Content className="flex flex-col items-center p-3.5">
+          <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
+          <ChartContainer
+            config={radarChartConfig}
+            className="mx-auto mt-2.5 aspect-square max-h-[220px] w-full"
+          >
+            <RadarChart data={chartData}>
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value) => [`${Number(value).toLocaleString()}/100`, 'Score']}
+                  />
+                }
+              />
+              <PolarAngleAxis
+                dataKey="metric"
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+              />
+              <PolarGrid />
+              <Radar
+                dataKey="score"
+                fill="var(--color-score)"
+                fillOpacity={0.45}
+                stroke="var(--color-score)"
+                strokeWidth={2}
+                dot={{ r: 3.5, fill: 'var(--color-score)', fillOpacity: 1 }}
+              />
+            </RadarChart>
+          </ChartContainer>
+          <p className="mt-1.5 text-center text-xs text-muted-foreground">{`Live score: ${averageScore}/100`}</p>
+        </CardV2Content>
+      </CardV2>
     </div>
   )
 }
@@ -1199,10 +1169,10 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-[34px] border border-border/40 bg-background/80 p-6 sm:p-8 lg:p-10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.2),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_36%)]" />
-      <div className="relative">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+    <section className="relative overflow-hidden rounded-[34px] border border-border/50 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_rgba(0,0,0,0.95)] sm:p-7 lg:p-9">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_40%)]" />
+      <div className="relative space-y-6">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-5">
             <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] border border-border/40 bg-card/10 overflow-hidden shadow-lg shadow-black/20">
               {firm.logoUrl ? (
@@ -1229,10 +1199,10 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                 )}
               </div>
               
-              <h1 className="mt-3 text-4xl font-bold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="mt-3 text-[clamp(2.2rem,5.8vw,4.85rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
                 {firm.name}
                 {spotlightPromoText && (
-                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-v2-accent px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-v2-accent-foreground">
+                  <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-v2-accent px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-v2-accent-foreground">
                     {spotlightPromoText}
                   </span>
                 )}
@@ -1242,13 +1212,16 @@ function FirmHeader({ firm }: { firm: FirmData }) {
             </div>
           </div>
 
-          <HeaderActions referralUrl={firm.referralUrl} />
-          
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {headerMetrics.map((metric) => (
-              <MetricCard key={metric.label} label={metric.label} value={metric.value} />
-            ))}
+          <div className="flex w-full flex-col items-start gap-4 lg:items-end">
+            <HeaderRadarMini firm={firm} />
+            <HeaderActions referralUrl={firm.referralUrl} />
           </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {headerMetrics.map((metric) => (
+            <MetricCard key={metric.label} label={metric.label} value={metric.value} />
+          ))}
         </div>
       </div>
     </section>
@@ -1259,12 +1232,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const [activeTab, setActiveTab] = React.useState('overview')
 
   return (
-    <div className="min-h-screen bg-v2-bg-base">
-      <div className="mx-auto max-w-[1240px] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(88,129,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
+      <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-          <TabsList className="h-auto w-full flex-wrap justify-start gap-2 rounded-[22px] border border-border/40 bg-card/5 p-2">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-[22px] border border-border/50 bg-background/70 p-2 backdrop-blur">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -1279,8 +1252,9 @@ function FirmHeader({ firm }: { firm: FirmData }) {
                 key={value}
                 value={value}
                 className={cn(
-                  'rounded-2xl px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'data-[state=active]:bg-v2-accent data-[state=active]:text-black'
+                  'shrink-0 rounded-2xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
+                  'hover:border-border/50 hover:bg-card/50',
+                  'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
                 )}
               >
                 {label}
@@ -1288,35 +1262,35 @@ function FirmHeader({ firm }: { firm: FirmData }) {
             ))}
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-5">
             <OverviewSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="challenges" className="mt-6">
+          <TabsContent value="challenges" className="mt-5">
             <ChallengesSection accountSizes={firm.accountSizes} profitSplit={firm.profitSplit ?? 'N/A'} />
           </TabsContent>
 
-          <TabsContent value="rules" className="mt-6">
+          <TabsContent value="rules" className="mt-5">
             <RulesSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="roi" className="mt-6">
+          <TabsContent value="roi" className="mt-5">
             <ROISection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="payouts" className="mt-6">
+          <TabsContent value="payouts" className="mt-5">
             <PayoutHistorySection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="proof" className="mt-6">
+          <TabsContent value="proof" className="mt-5">
             <PayoutProofSection firm={firm} />
           </TabsContent>
 
-          <TabsContent value="reviews" className="mt-6">
+          <TabsContent value="reviews" className="mt-5">
             <FirmReviewsSection firmId={firm.id} />
           </TabsContent>
 
-          <TabsContent value="coupons" className="mt-6">
+          <TabsContent value="coupons" className="mt-5">
             <FirmCouponsSection firmId={firm.id} />
           </TabsContent>
         </Tabs>

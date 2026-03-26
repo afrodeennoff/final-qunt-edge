@@ -30,6 +30,14 @@ interface UserGrowthChartProps {
   allUsers: User[]
 }
 
+interface ChartClickPayload {
+  activePayload?: Array<{
+    payload: {
+      date: string
+    }
+  }>
+}
+
 function valueFormatter(number: number) {
   return `${Intl.NumberFormat('us').format(number).toString()}`
 }
@@ -76,9 +84,10 @@ export function UserGrowthChart({ dailyData, allUsers }: UserGrowthChartProps) {
     }
   }
 
-  const handleChartClick = (data: any) => {
-    if (data && data.activePayload && data.activePayload[0]) {
-      setSelectedMonth(data.activePayload[0].payload.date)
+  const handleChartClick = (data: ChartClickPayload | undefined) => {
+    const clickedDate = data?.activePayload?.[0]?.payload.date
+    if (clickedDate) {
+      setSelectedMonth(clickedDate)
       setIsDialogOpen(true)
     }
   }

@@ -11,6 +11,8 @@ const globalForPrisma = globalThis as unknown as {
 const isProduction = process.env.NODE_ENV === 'production'
 const isNextBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const MAX_POOL_LIMIT = 20
+const MISSING_CONNECTION_ERROR =
+  '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
 
 const selectRuntimeConnectionString = (): string => {
   // Prefer provider-specific pooled URLs when available.
@@ -22,6 +24,30 @@ const selectRuntimeConnectionString = (): string => {
     process.env.POSTGRES_URL_NON_POOLING ||
     ''
   )
+}
+
+function createMissingConnectionProxy(): PrismaClient {
+  const createCallableProxy = (path: string[] = []): unknown =>
+    new Proxy(function missingPrismaMethod() {}, {
+      get(_target, property) {
+        if (property === 'then') return undefined
+        if (property === Symbol.toStringTag) return 'PrismaClient'
+        if (property === 'toJSON') {
+          return () => '[Prisma missing connection proxy]'
+        }
+        return createCallableProxy([...path, String(property)])
+      },
+      apply() {
+        const accessPath = path.length > 0 ? `prisma.${path.join('.')}` : 'prisma'
+        throw new Error(`${MISSING_CONNECTION_ERROR} Attempted to access ${accessPath}.`)
+      },
+      construct() {
+        const accessPath = path.length > 0 ? `prisma.${path.join('.')}` : 'prisma'
+        throw new Error(`${MISSING_CONNECTION_ERROR} Attempted to access ${accessPath}.`)
+      },
+    })
+
+  return createCallableProxy() as PrismaClient
 }
 
 const normalizeSupabasePoolerMode = (connectionString: string): string => {
@@ -122,116 +148,128 @@ const shouldRejectUnauthorized = (connectionString: string): boolean => {
 // Runtime should prefer pooled DATABASE_URL (Supabase pooler).
 // DIRECT_URL is intended for migrations/admin operations.
 const connectionString = normalizeSupabasePoolerMode(selectRuntimeConnectionString())
-if (!connectionString && !isNextBuildPhase) {
-  throw new Error(
-    '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
-  )
-}
 const parsedPoolMax = Number.parseInt(process.env.PG_POOL_MAX ?? '', 10)
 const parsedPoolMin = Number.parseInt(process.env.PG_POOL_MIN ?? '', 10)
 
-// Production-grade pool settings: max 20, min 5 for production
-const defaultPoolMax = isProduction ? (isNextBuildPhase ? 1 : 20) : 5
-const defaultPoolMin = isProduction ? 5 : 2
+let pool: pg.Pool | undefined
+let prisma: PrismaClient
 
-const poolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
-  ? Math.min(parsedPoolMax, MAX_POOL_LIMIT)
-  : defaultPoolMax
-
-const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin > 0 && parsedPoolMin <= poolMax
-  ? parsedPoolMin
-  : defaultPoolMin
-
-if (Number.isFinite(parsedPoolMax) && parsedPoolMax > MAX_POOL_LIMIT) {
-  console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${MAX_POOL_LIMIT}; using ${MAX_POOL_LIMIT}.`)
-}
-
-// Production-grade timeout settings
-const defaultIdleTimeout = isProduction ? 30000 : 10000  // 30s in prod, 10s in dev
-const defaultConnTimeout = isProduction ? 10000 : 15000  // 10s fail-fast in prod
-
-const parsedIdleTimeout = Number.parseInt(process.env.PG_POOL_IDLE_TIMEOUT_MS ?? '', 10)
-const idleTimeoutMillis = Number.isFinite(parsedIdleTimeout) && parsedIdleTimeout > 0 ? parsedIdleTimeout : defaultIdleTimeout
-const parsedConnTimeout = Number.parseInt(process.env.PG_POOL_CONNECT_TIMEOUT_MS ?? '', 10)
-const connectionTimeoutMillis = Number.isFinite(parsedConnTimeout) && parsedConnTimeout > 0 ? parsedConnTimeout : defaultConnTimeout
-
-const poolConfig: pg.PoolConfig = {
-  connectionString: forceIPv4ConnectionString(connectionString),
-  max: poolMax,
-  min: poolMin,
-  idleTimeoutMillis,
-  connectionTimeoutMillis,
-}
-
-if (shouldEnableSsl(connectionString)) {
-  const rejectUnauthorized = shouldRejectUnauthorized(connectionString)
-  poolConfig.ssl = { rejectUnauthorized }
-  const explicitInsecureTls = parseBooleanEnv(process.env.PGSSL_REJECT_UNAUTHORIZED) === false
-
-  if (isProduction && !isNextBuildPhase && rejectUnauthorized === false && explicitInsecureTls) {
+if (!connectionString) {
+  if (process.env.NODE_ENV !== 'test') {
     console.warn(
-      "[Prisma] SSL certificate verification is disabled (PGSSL_REJECT_UNAUTHORIZED=false). " +
-      "Enable certificate verification in production unless your provider explicitly requires insecure TLS."
+      '[Prisma] No database connection configured. Exporting a lazy Prisma proxy; database-backed features will fail when used until env vars are set.'
     )
   }
-}
 
-const pool = globalForPrisma.pool ?? new pg.Pool(poolConfig)
+  prisma = globalForPrisma.prisma ?? createMissingConnectionProxy()
+} else {
+  // Production-grade pool settings: max 20, min 5 for production
+  const defaultPoolMax = isProduction ? (isNextBuildPhase ? 1 : 20) : 5
+  const defaultPoolMin = isProduction ? 5 : 2
 
-if (isProduction && !isNextBuildPhase) {
-  console.info('[Prisma] Pool initialized', {
-    host: (() => {
-      try {
-        return new URL(poolConfig.connectionString ?? '').host
-      } catch {
-        return 'unknown'
-      }
-    })(),
-    max: poolConfig.max,
-    min: poolConfig.min,
-    idleTimeoutMillis: poolConfig.idleTimeoutMillis,
-    connectionTimeoutMillis: poolConfig.connectionTimeoutMillis,
-    ssl: Boolean(poolConfig.ssl),
-    rejectUnauthorized:
-      typeof poolConfig.ssl === 'object' ? poolConfig.ssl.rejectUnauthorized : undefined,
-  })
-}
+  const poolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
+    ? Math.min(parsedPoolMax, MAX_POOL_LIMIT)
+    : defaultPoolMax
 
-pool.on('error', (err) => {
-  console.error('[Prisma] Unexpected error on idle client', err)
-})
+  const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin > 0 && parsedPoolMin <= poolMax
+    ? parsedPoolMin
+    : defaultPoolMin
 
-// Monitor pool utilization - log when at 80% capacity
-pool.on('acquire', () => {
-  const totalCount = pool.totalCount
-  const idleCount = pool.idleCount
-  const activeConnections = totalCount - idleCount
+  if (Number.isFinite(parsedPoolMax) && parsedPoolMax > MAX_POOL_LIMIT) {
+    console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${MAX_POOL_LIMIT}; using ${MAX_POOL_LIMIT}.`)
+  }
 
-  // Log warning when pool is at 80% capacity (16/20 connections)
-  if (activeConnections >= Math.ceil(poolMax * 0.8)) {
-    const utilization = ((activeConnections / poolMax) * 100).toFixed(0)
+  // Production-grade timeout settings
+  const defaultIdleTimeout = isProduction ? 30000 : 10000  // 30s in prod, 10s in dev
+  const defaultConnTimeout = isProduction ? 10000 : 15000  // 10s fail-fast in prod
 
-    // Use logger.warn for production logging
-    if (isProduction) {
-      logger.warn('[DB Pool] High connection usage', {
-        active: activeConnections,
-        max: poolMax,
-        utilization: `${utilization}%`,
-        idle: idleCount,
-        total: totalCount
-      })
-    } else {
-      console.warn(`[DB Pool] High connection usage: ${activeConnections}/${poolMax} active (${utilization}% utilization)`)
+  const parsedIdleTimeout = Number.parseInt(process.env.PG_POOL_IDLE_TIMEOUT_MS ?? '', 10)
+  const idleTimeoutMillis = Number.isFinite(parsedIdleTimeout) && parsedIdleTimeout > 0 ? parsedIdleTimeout : defaultIdleTimeout
+  const parsedConnTimeout = Number.parseInt(process.env.PG_POOL_CONNECT_TIMEOUT_MS ?? '', 10)
+  const connectionTimeoutMillis = Number.isFinite(parsedConnTimeout) && parsedConnTimeout > 0 ? parsedConnTimeout : defaultConnTimeout
+
+  const poolConfig: pg.PoolConfig = {
+    connectionString: forceIPv4ConnectionString(connectionString),
+    max: poolMax,
+    min: poolMin,
+    idleTimeoutMillis,
+    connectionTimeoutMillis,
+  }
+
+  if (shouldEnableSsl(connectionString)) {
+    const rejectUnauthorized = shouldRejectUnauthorized(connectionString)
+    poolConfig.ssl = { rejectUnauthorized }
+    const explicitInsecureTls = parseBooleanEnv(process.env.PGSSL_REJECT_UNAUTHORIZED) === false
+
+    if (isProduction && !isNextBuildPhase && rejectUnauthorized === false && explicitInsecureTls) {
+      console.warn(
+        "[Prisma] SSL certificate verification is disabled (PGSSL_REJECT_UNAUTHORIZED=false). " +
+        "Enable certificate verification in production unless your provider explicitly requires insecure TLS."
+      )
     }
   }
-})
 
-const adapter = new PrismaPg(pool)
+  pool = globalForPrisma.pool ?? new pg.Pool(poolConfig)
+  const activePool = pool
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  adapter,
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-})
+  if (isProduction && !isNextBuildPhase) {
+    console.info('[Prisma] Pool initialized', {
+      host: (() => {
+        try {
+          return new URL(poolConfig.connectionString ?? '').host
+        } catch {
+          return 'unknown'
+        }
+      })(),
+      max: poolConfig.max,
+      min: poolConfig.min,
+      idleTimeoutMillis: poolConfig.idleTimeoutMillis,
+      connectionTimeoutMillis: poolConfig.connectionTimeoutMillis,
+      ssl: Boolean(poolConfig.ssl),
+      rejectUnauthorized:
+        typeof poolConfig.ssl === 'object' ? poolConfig.ssl.rejectUnauthorized : undefined,
+    })
+  }
+
+  activePool.on('error', (err) => {
+    console.error('[Prisma] Unexpected error on idle client', err)
+  })
+
+  // Monitor pool utilization - log when at 80% capacity
+  activePool.on('acquire', () => {
+    const totalCount = activePool.totalCount
+    const idleCount = activePool.idleCount
+    const activeConnections = totalCount - idleCount
+
+    // Log warning when pool is at 80% capacity (16/20 connections)
+    if (activeConnections >= Math.ceil(poolMax * 0.8)) {
+      const utilization = ((activeConnections / poolMax) * 100).toFixed(0)
+
+      // Use logger.warn for production logging
+      if (isProduction) {
+        logger.warn('[DB Pool] High connection usage', {
+          active: activeConnections,
+          max: poolMax,
+          utilization: `${utilization}%`,
+          idle: idleCount,
+          total: totalCount
+        })
+      } else {
+        console.warn(`[DB Pool] High connection usage: ${activeConnections}/${poolMax} active (${utilization}% utilization)`)
+      }
+    }
+  })
+
+  const adapter = new PrismaPg(pool)
+
+  prisma = globalForPrisma.prisma ?? new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  })
+
+  globalForPrisma.pool = pool
+}
 
 globalForPrisma.prisma = prisma
-globalForPrisma.pool = pool
+
+export { prisma }

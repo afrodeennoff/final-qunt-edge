@@ -31,7 +31,7 @@ export function LeaderboardTableSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }, (_, index) => (
-        <div key={index} className="rounded-[1.4rem] border border-border/60 bg-card/45 p-5">
+        <div key={index} className="rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5">
           <SkeletonV2 className="h-5 w-20" />
           <SkeletonV2 className="mt-4 h-7 w-40" />
           <div className="mt-5 grid grid-cols-2 gap-3">
@@ -52,7 +52,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
   isLoading = false,
 }: LeaderboardTableProps) {
   return (
-    <section className="space-y-5 rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+    <section className="space-y-5 rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaderboard table</p>
@@ -62,7 +62,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
       </div>
 
       {entries.length === 0 ? (
-        <div className="rounded-[1.4rem] border border-dashed border-border bg-background/70 p-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-[1.4rem] border border-dashed border-border bg-background/65 p-8 text-center text-sm text-muted-foreground">
           The remaining traders list is empty because all visible entries are already highlighted in the podium above.
         </div>
       ) : (
@@ -82,7 +82,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
   return (
     <Link
       href={`/${locale}/trader/${entry.userId}`}
-      className="group rounded-[1.4rem] border border-border/60 bg-background/75 p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+      className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.5))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -131,7 +131,7 @@ function Metric({
   value: string
 }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/65 p-3">
+    <div className="rounded-[1rem] border border-border/60 bg-card/55 p-3">
       <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}

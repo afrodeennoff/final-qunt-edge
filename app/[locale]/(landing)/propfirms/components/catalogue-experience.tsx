@@ -3,10 +3,12 @@
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
 import { ArrowRight, Banknote, Building2, Search, ShieldCheck, Sparkles, Wallet } from 'lucide-react'
-import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts'
 import type { PropfirmCatalogueStats } from '../actions/types'
 import { StatsSummaryRow } from './stats-summary-row'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 
 interface PropFirmCatalogueExperienceProps {
   locale: string
@@ -26,29 +28,28 @@ interface PropFirmCatalogueExperienceProps {
   }>
 }
 
-type SortKey = 'accounts' | 'paidPayout' | 'accountValue' | 'refusedPayout'
 type PayoutFilter = 'all' | 'high-paid' | 'low-refused'
 type PlatformFilter = 'all' | 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
 type ChallengeFilter = 'all' | 'instant' | 'evaluation'
 
-const sortOptions: Array<{ key: SortKey; label: string; summaryLabel: string }> = [
-  { key: 'accounts', label: 'Most accounts', summaryLabel: 'most accounts' },
-  { key: 'paidPayout', label: 'Most paid', summaryLabel: 'most paid' },
-  { key: 'accountValue', label: 'Largest value', summaryLabel: 'largest value' },
-  { key: 'refusedPayout', label: 'Lowest refused', summaryLabel: 'lowest refused' },
-]
-
-const payoutOptions: ReadonlyArray<{ key: PayoutFilter; label: string }> = [
-  { key: 'all', label: 'All firms' },
-  { key: 'high-paid', label: 'High paid' },
-  { key: 'low-refused', label: 'Low refused' },
-]
-
-const challengeOptions: ReadonlyArray<{ key: ChallengeFilter; label: string }> = [
-  { key: 'all', label: 'All challenges' },
-  { key: 'instant', label: 'Instant funded' },
-  { key: 'evaluation', label: 'Evaluation' },
-]
+const registeredAccountsChartConfig = {
+  accounts: {
+    label: 'Registered Accounts',
+    color: 'hsl(var(--chart-1))',
+  },
+  value: {
+    label: 'Account Value',
+    color: 'hsl(var(--chart-2))',
+  },
+  payouts: {
+    label: 'Payouts',
+    color: 'hsl(var(--chart-3))',
+  },
+  sized: {
+    label: 'Sized Accounts',
+    color: 'hsl(var(--chart-4))',
+  },
+} satisfies ChartConfig
 
 function matchesSearch(
   firm: PropFirmCatalogueExperienceProps['firms'][number],
@@ -86,15 +87,9 @@ function matchesChallengeFilter(
 }
 
 function sortFirms(
-  firms: PropFirmCatalogueExperienceProps['firms'],
-  sortKey: SortKey
+  firms: PropFirmCatalogueExperienceProps['firms']
 ) {
-  return [...firms].sort((a, b) => {
-    if (sortKey === 'paidPayout') return b.stats.payouts.paidAmount - a.stats.payouts.paidAmount
-    if (sortKey === 'refusedPayout') return a.stats.payouts.refusedAmount - b.stats.payouts.refusedAmount
-    if (sortKey === 'accountValue') return b.stats.totalAccountValue - a.stats.totalAccountValue
-    return b.stats.accountsCount - a.stats.accountsCount
-  })
+  return [...firms].sort((a, b) => b.stats.accountsCount - a.stats.accountsCount)
 }
 
 export function PropFirmCatalogueExperience({
@@ -105,7 +100,6 @@ export function PropFirmCatalogueExperience({
 }: PropFirmCatalogueExperienceProps) {
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
-  const [sortKey, setSortKey] = useState<SortKey>('accounts')
   const [payoutFilter, setPayoutFilter] = useState<PayoutFilter>('all')
   const [platformFilter, setPlatformFilter] = useState<PlatformFilter>('all')
   const [challengeFilter, setChallengeFilter] = useState<ChallengeFilter>('all')
@@ -122,8 +116,8 @@ export function PropFirmCatalogueExperience({
       )
     })
 
-    return sortFirms(next, sortKey)
-  }, [challengeFilter, deferredSearch, firms, payoutFilter, platformFilter, sortKey])
+    return sortFirms(next)
+  }, [challengeFilter, deferredSearch, firms, payoutFilter, platformFilter])
 
   const overview = useMemo(() => {
     return {
@@ -134,40 +128,36 @@ export function PropFirmCatalogueExperience({
   }, [firms])
 
   const topFirms = filteredFirms.slice(0, 3)
-  const activeSort = sortOptions.find((option) => option.key === sortKey) ?? sortOptions[0]
-  const leadingPlatforms = useMemo(() => {
-    return Array.from(new Set(firms.map((firm) => firm.platform).filter((platform) => platform !== 'Unknown'))).sort()
-  }, [firms])
   const registeredAccountsChartData = useMemo(() => {
     const ranked = firms
       .map((firm) => ({
         name: firm.name,
         accounts: firm.stats.accountsCount,
+        sized: firm.stats.sizedAccountsCount,
+        value: firm.stats.totalAccountValue,
+        payouts: firm.stats.payouts.paidAmount,
       }))
       .sort((a, b) => b.accounts - a.accounts)
 
-    const nonZero = ranked.filter((entry) => entry.accounts > 0)
-    return (nonZero.length > 0 ? nonZero : ranked).slice(0, 12)
+    return ranked
   }, [firms])
   const hasActiveFilters =
     search.trim().length > 0 ||
     payoutFilter !== 'all' ||
     platformFilter !== 'all' ||
-    challengeFilter !== 'all' ||
-    sortKey !== 'accounts'
+    challengeFilter !== 'all'
 
   const resetFilters = () => {
     setSearch('')
-    setSortKey('accounts')
     setPayoutFilter('all')
     setPlatformFilter('all')
     setChallengeFilter('all')
   }
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_20%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-card/50 p-6 shadow-[0_24px_120px_-60px_rgba(0,0,0,0.85)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_20%,hsl(var(--background))_100%)]">
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-6 shadow-[0_34px_110px_-70px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -197,62 +187,13 @@ export function PropFirmCatalogueExperience({
           </div>
         </section>
 
-        <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search prop firm"
-                className="h-12 w-full rounded-2xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground/60"
-              />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <SortPillGroup<SortKey>
-                options={sortOptions}
-                selected={sortKey}
-                onChange={setSortKey}
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-col gap-4">
-            <FilterRow<PayoutFilter> options={payoutOptions} selected={payoutFilter} onChange={setPayoutFilter} />
-            <FilterRow<ChallengeFilter> options={challengeOptions} selected={challengeFilter} onChange={setChallengeFilter} />
-            <FilterRow<PlatformFilter>
-              options={[{ key: 'all', label: 'All platforms' }, ...leadingPlatforms.map((platform) => ({ key: platform as PlatformFilter, label: platform }))]}
-              selected={platformFilter}
-              onChange={setPlatformFilter}
-            />
-          </div>
-
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-border/60 bg-background/60 px-4 py-3 text-sm text-muted-foreground">
-            <span>{filteredFirms.length} result{filteredFirms.length === 1 ? '' : 's'}</span>
-            <span>Sorted by {activeSort.summaryLabel}</span>
-          </div>
-
-          {hasActiveFilters ? (
-            <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-dashed border-border/60 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
-              <span>Minimal board mode is active. Reset to return to the full catalogue.</span>
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card"
-              >
-                Reset
-              </button>
-            </div>
-          ) : null}
-        </section>
-
         {topFirms.length > 0 ? (
           <>
             <StatsSummaryRow />
 
             <RegisteredAccountsChart data={registeredAccountsChartData} />
 
-            <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+            <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
@@ -283,7 +224,33 @@ export function PropFirmCatalogueExperience({
           </>
         ) : null}
 
-        <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+        <section className="rounded-[1.4rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.56),hsl(var(--background)/0.46))] p-3 shadow-[0_18px_70px_-60px_rgba(0,0,0,0.95)] sm:p-4">
+          <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/65" />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search firm..."
+                className="h-9 w-full rounded-lg border border-border/60 bg-background/60 pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55"
+              />
+            </div>
+            <span className="shrink-0 text-xs text-muted-foreground">
+              {filteredFirms.length} result{filteredFirms.length === 1 ? '' : 's'}
+            </span>
+            {hasActiveFilters ? (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="shrink-0 rounded-lg border border-border/60 bg-background/55 px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-card"
+              >
+                Reset
+              </button>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Catalogue board</p>
@@ -293,12 +260,12 @@ export function PropFirmCatalogueExperience({
           </div>
 
           {filteredFirms.length > 0 ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {filteredFirms.map((firm) => (
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="group rounded-[1.4rem] border border-border/60 bg-background/75 p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+                  className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -356,70 +323,12 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-[1.4rem] border border-dashed border-border bg-background/70 p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-[1.4rem] border border-dashed border-border bg-background/65 p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}
         </section>
       </div>
-    </div>
-  )
-}
-
-function SortPillGroup<T extends string>({
-  options,
-  selected,
-  onChange,
-}: {
-  options: ReadonlyArray<{ key: T; label: string }>
-  selected: T
-  onChange: (value: T) => void
-}) {
-  return (
-    <>
-      {options.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          onClick={() => onChange(item.key)}
-          className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-            selected === item.key
-              ? 'border-foreground/15 bg-foreground text-background'
-              : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          {item.label}
-        </button>
-      ))}
-    </>
-  )
-}
-
-function FilterRow<T extends string>({
-  options,
-  selected,
-  onChange,
-}: {
-  options: ReadonlyArray<{ key: T; label: string }>
-  selected: T
-  onChange: (value: T) => void
-}) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          onClick={() => onChange(item.key)}
-          className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
-            selected === item.key
-              ? 'border-foreground/15 bg-foreground text-background'
-              : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          {item.label}
-        </button>
-      ))}
     </div>
   )
 }
@@ -434,7 +343,7 @@ function StatCard({
   icon: typeof Building2
 }) {
   return (
-    <div className="rounded-[1.3rem] border border-border/60 bg-background/75 p-4">
+    <div className="rounded-[1.3rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
       <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -455,26 +364,44 @@ function PayoutPill({
   count: number
   variant: 'paid' | 'pending' | 'refused'
 }) {
-  const styles = {
-    paid: 'border-emerald-500/30 bg-emerald-500/10 text-foreground',
-    pending: 'border-yellow-500/30 bg-yellow-500/10 text-foreground',
-    refused: 'border-red-500/30 bg-red-500/10 text-foreground',
+  const borderStyles = {
+    paid: 'border-emerald-500/30 bg-[linear-gradient(135deg,rgba(16,185,129,0.14),rgba(16,185,129,0.05))]',
+    pending: 'border-amber-500/30 bg-[linear-gradient(135deg,rgba(245,158,11,0.14),rgba(245,158,11,0.05))]',
+    refused: 'border-rose-500/30 bg-[linear-gradient(135deg,rgba(244,63,94,0.14),rgba(244,63,94,0.05))]',
   }
-  const dotColors = {
-    paid: 'bg-emerald-500',
-    pending: 'bg-yellow-500',
-    refused: 'bg-red-500',
+
+  const labelStyles = {
+    paid: 'text-emerald-300',
+    pending: 'text-amber-300',
+    refused: 'text-rose-300',
   }
+
+  const amountStyles = {
+    paid: 'text-emerald-100',
+    pending: 'text-amber-100',
+    refused: 'text-rose-100',
+  }
+
+  const amountLabel = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount)
+
+  const countLabel = count === 0 ? 'No payouts' : `${count} payout${count === 1 ? '' : 's'}`
+
   return (
-    <div className={`rounded-[1rem] border p-3 ${styles[variant]}`}>
-      <div className="flex items-center gap-1.5">
-        <span className={`h-1.5 w-1.5 rounded-full ${dotColors[variant]}`} />
-        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className={`rounded-[1.4rem] border px-4 py-3 ${borderStyles[variant]}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className={`text-base font-medium ${labelStyles[variant]}`}>{label}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{countLabel}</p>
+        </div>
+        <p className={`text-xl font-semibold tracking-tight ${amountStyles[variant]}`}>
+          {amountLabel}
+        </p>
       </div>
-      <p className="mt-1.5 text-sm font-semibold">{formatCompactCurrency(amount)}</p>
-      <p className="text-[10px] text-muted-foreground">
-        {count} {count === 1 ? 'request' : 'requests'}
-      </p>
     </div>
   )
 }
@@ -482,116 +409,142 @@ function PayoutPill({
 function RegisteredAccountsChart({
   data,
 }: {
-  data: Array<{ name: string; accounts: number }>
+  data: Array<{ name: string; accounts: number; sized: number; value: number; payouts: number }>
 }) {
-  const topFirm = data[0]
-  const totalRegistered = data.reduce((sum, entry) => sum + entry.accounts, 0)
-  const maxRegistered = data.reduce((max, entry) => (entry.accounts > max ? entry.accounts : max), 0)
+  type MetricKey = 'payouts' | 'value' | 'accounts' | 'sized'
+  const [activeMetric, setActiveMetric] = useState<MetricKey>('accounts')
+  const metricTabs: Array<{ key: MetricKey; label: string }> = [
+    { key: 'payouts', label: 'Payouts' },
+    { key: 'value', label: 'Value' },
+    { key: 'accounts', label: 'Reg' },
+    { key: 'sized', label: 'Sized' },
+  ]
+  const formatMetricValue = (value: number, key: MetricKey) => {
+    if (key === 'value' || key === 'payouts') return formatCompactCurrency(value)
+    return value.toLocaleString()
+  }
+  const chartData = useMemo(
+    () =>
+      [...data]
+        .sort((a, b) => b[activeMetric] - a[activeMetric])
+        .map((entry) => ({
+          firm: entry.name,
+          shortFirm: entry.name.length > 9 ? `${entry.name.slice(0, 9)}...` : entry.name,
+          metricValue: entry[activeMetric],
+        })),
+    [activeMetric, data]
+  )
+  const renderBottomLabel = (props: {
+    x?: string | number
+    y?: string | number
+    width?: string | number
+    height?: string | number
+    value?: string | number
+  }) => {
+    const { x, y, width, height, value } = props
+    const numericX = typeof x === 'number' ? x : Number(x)
+    const numericY = typeof y === 'number' ? y : Number(y)
+    const numericWidth = typeof width === 'number' ? width : Number(width)
+    const numericHeight = typeof height === 'number' ? height : Number(height)
+    if (!Number.isFinite(numericX) || !Number.isFinite(numericY) || !Number.isFinite(numericWidth) || !Number.isFinite(numericHeight)) {
+      return null
+    }
+    const label = String(value ?? '')
+    return (
+      <text
+        x={numericX + numericWidth / 2}
+        y={numericY + numericHeight + 14}
+        textAnchor="middle"
+        dominantBaseline="hanging"
+        className="fill-muted-foreground text-[10px]"
+      >
+        {label}
+      </text>
+    )
+  }
 
   return (
-    <section className="rounded-[1.8rem] border border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] p-5 shadow-[0_30px_90px_-60px_rgba(0,0,0,0.95)] sm:p-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary/90">Chart Insights</p>
-          <h2 className="mt-2 text-[clamp(1.4rem,3.2vw,2rem)] font-semibold tracking-tight text-foreground">Registered Accounts by Prop Firm</h2>
-        </div>
-        <p className="text-sm text-muted-foreground">Top firms ranked by total registered accounts.</p>
-      </div>
-
-      {data.length > 0 ? (
-        <div className="mt-5 rounded-[1.2rem] border border-border/70 bg-[hsl(var(--background))] p-4 ring-1 ring-white/[0.03] sm:p-5">
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
-              {`Top firm: ${topFirm?.name ?? '—'}`}
-            </span>
-            <span className="rounded-full border border-border/70 bg-card px-3 py-1 text-xs text-muted-foreground">
-              {`Total shown: ${totalRegistered.toLocaleString()} accounts`}
-            </span>
-            <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-              {`Peak: ${maxRegistered.toLocaleString()}`}
-            </span>
+    <Card className="overflow-hidden rounded-[1.9rem] border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)]">
+      <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,hsl(var(--background)/0.55)_0%,transparent_100%)] px-6 pb-3 pt-4">
+        <div className="flex flex-col gap-2">
+          <div className="min-w-0">
+            <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">Registered Accounts by Prop Firm</CardTitle>
           </div>
-
-          <div className="h-[400px] w-full overflow-x-auto">
-            <div className="h-full min-w-[760px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={data}
-                margin={{ top: 18, right: 16, left: 6, bottom: 72 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 6"
-                  stroke="hsl(var(--border) / 0.45)"
-                  vertical
-                />
-                <XAxis
-                  dataKey="name"
-                  angle={-45}
-                  textAnchor="end"
-                  interval={0}
-                  height={72}
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={12}
-                  tickFormatter={(value: string) => (value.length > 16 ? `${value.slice(0, 16)}…` : value)}
-                  tick={{
-                    fontSize: 12.5,
-                    fill: 'hsl(var(--foreground) / 0.88)',
-                  }}
-                />
-                <YAxis
-                  allowDecimals={false}
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={10}
-                  width={44}
-                  domain={[0, (max: number) => Math.max(5, Math.ceil(max * 1.18))]}
-                  tick={{
-                    fontSize: 12.5,
-                    fill: 'hsl(var(--foreground) / 0.86)',
-                  }}
-                />
-                <Tooltip
-                  cursor={{ fill: 'hsl(var(--primary) / 0.08)' }}
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--primary) / 0.3)',
-                    borderRadius: 12,
-                    color: 'hsl(var(--foreground))',
-                    boxShadow: '0 10px 35px -20px rgba(0, 0, 0, 0.9)',
-                  }}
-                  formatter={(value: number) => [value.toLocaleString(), 'Registered Accounts']}
-                />
-                <Bar
-                  dataKey="accounts"
-                  name="Registered Accounts"
-                  fill="hsl(var(--primary))"
-                  radius={[8, 8, 0, 0]}
-                  maxBarSize={52}
-                  background={{ fill: 'hsl(var(--foreground) / 0.03)' }}
+          <div className="flex w-full items-center justify-between gap-3 overflow-x-auto">
+            <span className="shrink-0 text-xs text-muted-foreground">
+              {registeredAccountsChartConfig[activeMetric].label}
+            </span>
+            <div className="inline-flex shrink-0 rounded-full border border-border/60 bg-background/70 p-1">
+              {metricTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveMetric(tab.key)}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                    activeMetric === tab.key
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  <LabelList
-                    dataKey="accounts"
-                    position="top"
-                    offset={8}
-                    style={{
-                      fill: 'hsl(var(--foreground))',
-                      fontSize: 12,
-                      fontWeight: 600,
-                    }}
-                    formatter={(value: number) => value.toLocaleString()}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
-      ) : (
-        <div className="mt-6 rounded-[1.2rem] border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
-          No account registrations available yet.
-        </div>
-      )}
-    </section>
+      </CardHeader>
+      <CardContent className="pt-3">
+        {chartData.length > 0 ? (
+          <div className="overflow-hidden rounded-[1.4rem] border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background)/0.9)_0%,hsl(var(--card)/0.45)_100%)] p-3">
+            <ChartContainer config={registeredAccountsChartConfig} className="h-[360px] w-full overflow-hidden">
+              <BarChart
+                accessibilityLayer
+                data={chartData}
+                margin={{ top: 28, right: 10, left: 10, bottom: 52 }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="shortFirm"
+                  tick={false}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      hideLabel
+                      formatter={(value, _name, item) => {
+                        const firmName = (item?.payload as { firm?: string } | undefined)?.firm ?? 'Firm'
+                        return [formatMetricValue(Number(value), activeMetric), String(firmName)]
+                      }}
+                    />
+                  }
+                />
+                <Bar dataKey="metricValue" fill={`var(--color-${activeMetric})`} radius={10} maxBarSize={60}>
+                  <LabelList
+                    dataKey="metricValue"
+                    position="top"
+                    offset={10}
+                    className="fill-foreground"
+                    fontSize={12}
+                    formatter={(value: number) => formatMetricValue(value, activeMetric)}
+                  />
+                  <LabelList
+                    dataKey="shortFirm"
+                    position="bottom"
+                    content={renderBottomLabel}
+                  />
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          </div>
+        ) : (
+          <div className="rounded-[1.2rem] border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+            No account registrations available yet.
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }

@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Separator } from "@/components/ui/separator"
 import { WidgetShell } from "@/components/ui/widget-shell"
 
 interface CumulativePnlCardProps {
@@ -91,7 +92,8 @@ export default function CumulativePnlCard({ size = 'medium' }: CumulativePnlCard
         {isPositive ? '+' : '-'}{formatCurrency(netPnl)}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/55 border-dashed">
+      <div className="grid grid-cols-2 gap-2 pt-2">
+        <Separator className="col-span-2 border-dashed" />
         <div className="flex flex-col gap-0.5">
           <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Profits</span>
           <span className="micro-sans text-[11px] font-bold text-foreground tabular-nums">{formatCurrency(safeGrossWin)}</span>

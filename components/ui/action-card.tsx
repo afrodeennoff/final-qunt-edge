@@ -81,7 +81,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
         className={className}
         {...props}
       >
-        <CardHeader size={size} className="space-y-3">
+        <CardHeader size={size} className="gap-3">
           <div className="flex items-start gap-4">
             {Icon && (
               <div className={cn(
@@ -92,7 +92,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
                 <Icon className={currentSize.iconInner} />
               </div>
             )}
-            <div className="flex-1 space-y-1 min-w-0">
+            <div className="flex-1 gap-1 min-w-0">
               <CardTitle className={cn(currentSize.title, "line-clamp-2")}>
                 {title}
               </CardTitle>

@@ -8,7 +8,7 @@ import { SidebarRootProviders } from "@/components/providers/root-providers";
 import { DashboardScrollReset } from "./components/dashboard-scroll-reset";
 import { ErrorBoundary } from "@/components/error-boundary";
 import dynamic from "next/dynamic";
-import { isAdmin as checkIsAdmin } from "@/server/authz";
+import { isAdminUser } from "@/server/authz";
 
 const DashboardSidebar = dynamic(
   () => import("@/components/sidebar/dashboard-sidebar").then((m) => m.DashboardSidebar),
@@ -51,7 +51,7 @@ export default async function DashboardLayout({
     redirect(`/${safeLocale}/authentication?next=${nextPath}`);
   }
 
-  const isAdmin = checkIsAdmin(user.id);
+  const isAdmin = isAdminUser(user);
 
   return (
     <SidebarRootProviders withAuthTimeout>

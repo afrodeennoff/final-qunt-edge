@@ -10,6 +10,7 @@ const Drawer = ({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
+    data-slot="drawer"
     shouldScaleBackground={shouldScaleBackground}
     {...props}
   />
@@ -28,6 +29,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
+    data-slot="drawer-overlay"
     className={cn("fixed inset-0 z-50 bg-background/80", className)}
     {...props}
   />
@@ -42,6 +44,7 @@ const DrawerContent = React.forwardRef<
     <DrawerOverlay />
     <DrawerPrimitive.Content
       ref={ref}
+      data-slot="drawer-content"
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto max-h-[calc(100dvh-env(safe-area-inset-top)-0.75rem)] flex-col overflow-hidden rounded-t-[10px] border bg-background pb-[max(env(safe-area-inset-bottom),0.75rem)] pl-[max(env(safe-area-inset-left),0px)] pr-[max(env(safe-area-inset-right),0px)]",
         className
@@ -60,6 +63,7 @@ const DrawerHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
+    data-slot="drawer-header"
     className={cn("grid gap-1.5 p-4 text-center sm:text-left", className)}
     {...props}
   />
@@ -71,6 +75,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
+    data-slot="drawer-footer"
     className={cn("mt-auto flex flex-col gap-2 p-4", className)}
     {...props}
   />
@@ -83,6 +88,7 @@ const DrawerTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Title
     ref={ref}
+    data-slot="drawer-title"
     className={cn(
       "text-lg font-semibold leading-none tracking-tight",
       className
@@ -98,6 +104,7 @@ const DrawerDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Description
     ref={ref}
+    data-slot="drawer-description"
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />

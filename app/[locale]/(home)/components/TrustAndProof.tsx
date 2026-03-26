@@ -9,7 +9,7 @@ const trustPillars = [
   },
   {
     title: 'Reliable Operations',
-    body: 'Fail-closed budget enforcement, explicit error contracts, and hardened routes that don\'t silently fall back.',
+    body: 'Fail-closed budget enforcement, explicit error contracts, and hardened routes that don’t silently fall back.',
     icon: Server,
   },
   {
@@ -82,7 +82,7 @@ export default function TrustAndProof() {
           {testimonials.map((item) => (
             <article key={item.role} className="marketing-panel rounded-2xl p-6">
               <MessageSquareQuote className="h-5 w-5 text-foreground" />
-              <p className="mt-3 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">"{item.quote}"</p>
+              <p className="mt-3 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">“{item.quote}”</p>
               <p className="mt-3 text-[11px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">{item.role}</p>
             </article>
           ))}

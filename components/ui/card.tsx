@@ -149,6 +149,19 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
 )
 CardStatusDot.displayName = "CardStatusDot"
 
+export interface CardActionProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const CardAction = React.forwardRef<HTMLDivElement, CardActionProps>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("shrink-0", className)}
+      {...props}
+    />
+  )
+)
+CardAction.displayName = "CardAction"
+
 export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   size?: "sm" | "md" | "lg" | "xl"
 }
@@ -230,4 +243,4 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
 )
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardStatusDot }
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardAction, CardStatusDot }

@@ -18,14 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { WidgetShell } from '@/components/ui/widget-shell'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Tooltip,
@@ -287,142 +280,113 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
 
   return (
     <>
-      <Card className="h-full flex flex-col">
-        <CardHeader
-          className={cn(
-            "flex flex-row items-center justify-between space-y-0 pb-2 shrink-0",
-            size === 'small' ? "p-2 h-10" : "p-3 sm:p-4 h-14"
-          )}
-        >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-1.5">
-              <CardTitle
+      <WidgetShell
+        title={t('widgets.tags.title')}
+        icon={<Info className={cn("text-muted-foreground", size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4")} />}
+        info={t('widgets.tags.description')}
+        actions={
+          <div className="flex items-center gap-2">
+            {tagFilter.tags.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
                 className={cn(
-                  "line-clamp-1",
-                  size === 'small' ? "text-sm" : "text-base"
+                  "h-8 px-2 lg:px-3 text-xs hover:bg-muted/50",
+                  size === 'small' ? "h-6" : "h-8"
                 )}
+                onClick={() => setTagFilter({ tags: [] })}
               >
-                {t('widgets.tags.title')}
-              </CardTitle>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className={cn(
-                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
-                      size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
-                    )} />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="max-w-[300px]">
-                    <div className="space-y-1">
-                      <p className="font-medium wrap-break-word">{t('widgets.tags.description')}</p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="flex items-center gap-2">
-              {tagFilter.tags.length > 0 && (
+                {t('widgets.tags.clearFilter')}
+              </Button>
+            )}
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   className={cn(
-                    "h-8 px-2 lg:px-3 text-xs hover:bg-muted/50",
-                    size === 'small' ? "h-6" : "h-8"
+                    "shrink-0 hover:bg-muted/50",
+                    size === 'small' ? "h-6 w-6" : "h-8 w-8"
                   )}
-                  onClick={() => setTagFilter({ tags: [] })}
+                  disabled={isLoading}
                 >
-                  {t('widgets.tags.clearFilter')}
+                  <Plus className={cn(
+                    size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
+                  )} />
                 </Button>
-              )}
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn(
-                      "shrink-0 hover:bg-muted/50",
-                      size === 'small' ? "h-6 w-6" : "h-8 w-8"
-                    )}
-                    disabled={isLoading}
-                  >
-                    <Plus className={cn(
-                      size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
-                    )} />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingTag ? t('widgets.tags.editTag') : t('widgets.tags.addTag')}
-                    </DialogTitle>
-                    <DialogDescription>
-                      {t('widgets.tags.description')}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">{t('widgets.tags.name')}</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder={t('widgets.tags.namePlaceholder')}
-                          disabled={isLoading}
-                          className="h-9"
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingTag ? t('widgets.tags.editTag') : t('widgets.tags.addTag')}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {t('widgets.tags.description')}
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">{t('widgets.tags.name')}</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder={t('widgets.tags.namePlaceholder')}
+                        disabled={isLoading}
+                        className="h-9"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description">{t('widgets.tags.description')}</Label>
+                      <Textarea
+                        id="description"
+                        value={formData.description || ''}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder={t('widgets.tags.descriptionPlaceholder')}
+                        disabled={isLoading}
+                        className="resize-none h-20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t('widgets.tags.color')}</Label>
+                      <div className="flex gap-4 items-start">
+                        <div
+                          className="w-10 h-10 rounded-md border shadow-xs"
+                          style={{ backgroundColor: formData.color }}
                         />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="description">{t('widgets.tags.description')}</Label>
-                        <Textarea
-                          id="description"
-                          value={formData.description || ''}
-                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                          placeholder={t('widgets.tags.descriptionPlaceholder')}
-                          disabled={isLoading}
-                          className="resize-none h-20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>{t('widgets.tags.color')}</Label>
-                        <div className="flex gap-4 items-start">
-                          <div
-                            className="w-10 h-10 rounded-md border shadow-xs"
-                            style={{ backgroundColor: formData.color }}
+                        <div className="flex-1">
+                          <HexColorPicker
+                            color={formData.color}
+                            onChange={(color) => setFormData({ ...formData, color })}
                           />
-                          <div className="flex-1">
-                            <HexColorPicker
-                              color={formData.color}
-                              onChange={(color) => setFormData({ ...formData, color })}
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <DialogFooter>
-                      <Button type="submit" disabled={isLoading}>
-                        {isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-                            {t('widgets.tags.saving')}
-                          </div>
-                        ) : (
-                          editingTag ? t('widgets.tags.save') : t('widgets.tags.create')
-                        )}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                          {t('widgets.tags.saving')}
+                        </div>
+                      ) : (
+                        editingTag ? t('widgets.tags.save') : t('widgets.tags.create')
+                      )}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
-        </CardHeader>
-        <CardContent
-          className={cn(
-            "flex-1 min-h-0 overflow-hidden pt-0",
-            size === 'small' ? "px-1" : "px-2 sm:px-4"
-          )}
-        >
+        }
+        className="h-full flex flex-col"
+        contentClassName={cn(
+          "flex-1 min-h-0 overflow-hidden pt-0",
+          size === 'small' ? "px-1" : "px-2 sm:px-4"
+        )}
+      >
           <div className="flex flex-col h-full space-y-3">
             {/* Search input */}
             <div className="flex items-center gap-2 shrink-0 bg-muted/30 rounded-md px-2">
@@ -554,8 +518,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
               </ScrollArea>
             </div>
           </div>
-        </CardContent>
-      </Card>
+      </WidgetShell>
 
       <AlertDialog open={!!tagToDelete} onOpenChange={(open) => !open && setTagToDelete(null)}>
         <AlertDialogContent>

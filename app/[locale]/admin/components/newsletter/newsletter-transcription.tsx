@@ -36,6 +36,84 @@ interface TranscriptionComponentProps {
   onTranscriptionComplete?: (results: TranscriptionResult[]) => void
 }
 
+function createErrorResult(segment: AudioSegment): TranscriptionResult {
+  return {
+    text: 'Erreur de transcription',
+    language: 'fr',
+    duration: 0,
+    segmentIndex: segment.index
+  }
+}
+
+async function transcribeSegment(segment: AudioSegment): Promise<TranscriptionResult> {
+  const audioBlob = new Blob([segment.buffer], { type: 'audio/wav' })
+  const formData = new FormData()
+  formData.append('audio', audioBlob, `segment_${segment.index}.wav`)
+
+  const response = await fetch('/api/ai/transcribe', {
+    method: 'POST',
+    body: formData
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    const errorMessage = errorData?.error?.message || `API error: ${response.status}`
+    throw new Error(errorMessage)
+  }
+
+  const data = await response.json()
+  const validatedData = transcriptionSchema.parse(data)
+  const duration = segment.buffer.byteLength / (16000 * 2)
+
+  return {
+    text: validatedData.transcription || 'Transcription non disponible',
+    language: validatedData.language || 'fr',
+    duration,
+    segmentIndex: segment.index
+  }
+}
+
+async function transcribeAllSegments(
+  segments: AudioSegment[],
+  onProgress: (segmentIndex: number, progressPercent: number) => void
+): Promise<TranscriptionResult[]> {
+  const results: TranscriptionResult[] = []
+
+  for (let index = 0; index < segments.length; index++) {
+    const segment = segments[index]
+    onProgress(segment.index, ((index + 1) / segments.length) * 100)
+
+    try {
+      results.push(await transcribeSegment(segment))
+    } catch (error) {
+      console.error(`Failed to transcribe segment ${segment.index}:`, error)
+      results.push(createErrorResult(segment))
+    }
+  }
+
+  return results
+}
+
+function buildTranscriptionText(results: TranscriptionResult[]) {
+  return results
+    .slice()
+    .sort((a, b) => a.segmentIndex - b.segmentIndex)
+    .map(result => `Segment ${result.segmentIndex} (${result.duration.toFixed(1)}s): ${result.text}`)
+    .join('\n\n')
+}
+
+function downloadTextFile(filename: string, text: string) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
 export function TranscriptionComponent({ segments, onTranscriptionComplete }: TranscriptionComponentProps) {
   const [isTranscribing, setIsTranscribing] = useState(false)
   const [transcriptionResults, setTranscriptionResults] = useState<TranscriptionResult[]>([])
@@ -43,73 +121,17 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
   const [currentSegment, setCurrentSegment] = useState<number | null>(null)
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
 
-  const transcribeAllSegments = async () => {
+  const handleTranscribeAllSegments = async () => {
     if (segments.length === 0) return
 
     try {
       setIsTranscribing(true)
       setProgress(0)
       setTranscriptionResults([])
-
-      const results: TranscriptionResult[] = []
-
-      for (let i = 0; i < segments.length; i++) {
-        const segment = segments[i]
-        setCurrentSegment(i + 1)
-        
-        try {
-          // Convert ArrayBuffer to Blob for API call
-          const audioBlob = new Blob([segment.buffer], { type: 'audio/wav' })
-          
-          // Create FormData for the API call
-          const formData = new FormData()
-          formData.append('audio', audioBlob, `segment_${segment.index}.wav`)
-
-          // Call the transcription API
-          const response = await fetch('/api/ai/transcribe', {
-            method: 'POST',
-            body: formData
-          })
-
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}))
-            const errorMessage = errorData?.error?.message || `API error: ${response.status}`
-            console.error('Transcription failed:', errorMessage)
-            throw new Error(errorMessage)
-          }
-
-          const data = await response.json()
-          const validatedData = transcriptionSchema.parse(data)
-
-          // Calculate duration (approximate based on buffer size)
-          const duration = segment.buffer.byteLength / (16000 * 2) // Assuming 16kHz, 16-bit audio
-
-          const result: TranscriptionResult = {
-            text: validatedData.transcription || 'Transcription non disponible',
-            language: validatedData.language || 'fr',
-            duration,
-            segmentIndex: segment.index
-          }
-
-          results.push(result)
-          
-          // Update progress
-          const progressPercent = ((i + 1) / segments.length) * 100
-          setProgress(progressPercent)
-          
-        } catch (segmentError) {
-          console.error(`Failed to transcribe segment ${segment.index}:`, segmentError)
-          
-          // Add error result
-          const errorResult: TranscriptionResult = {
-            text: 'Erreur de transcription',
-            language: 'fr',
-            duration: 0,
-            segmentIndex: segment.index
-          }
-          results.push(errorResult)
-        }
-      }
+      const results = await transcribeAllSegments(segments, (segmentIndex, progressPercent) => {
+        setCurrentSegment(segmentIndex)
+        setProgress(progressPercent)
+      })
 
       setTranscriptionResults(results)
       
@@ -143,21 +165,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
   const downloadTranscription = () => {
     if (transcriptionResults.length === 0) return
-
-    const fullText = transcriptionResults
-      .sort((a, b) => a.segmentIndex - b.segmentIndex)
-      .map(result => `Segment ${result.segmentIndex} (${result.duration.toFixed(1)}s): ${result.text}`)
-      .join('\n\n')
-
-    const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'transcription_complete.txt'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    downloadTextFile('transcription_complete.txt', buildTranscriptionText(transcriptionResults))
   }
 
   const getTotalDuration = () => {
@@ -198,7 +206,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
           </div>
           
           <Button
-            onClick={transcribeAllSegments}
+            onClick={handleTranscribeAllSegments}
             disabled={isTranscribing}
             className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground"
           >

@@ -1,7 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Lock, ShieldCheck, FileDown, Workflow } from 'lucide-react'
-import { motion } from 'framer-motion'
 
 const proofItems = [
   {
@@ -24,19 +23,6 @@ const proofItems = [
     description: 'Connect, import, or upload CSVs without rebuilding your execution workflow.',
     icon: Workflow,
   },
-]
-
-const logos = [
-  { name: 'Tradovate', abbr: 'TV' },
-  { name: 'Rithmic', abbr: 'RI' },
-  { name: 'MetaTrader 5', abbr: 'MT5' },
-  { name: 'Interactive Brokers', abbr: 'IB' },
-  { name: 'FTMO', abbr: 'FT' },
-  { name: 'Topstep', abbr: 'TS' },
-  { name: 'Apex Trader', abbr: 'AX' },
-  { name: 'TFT', abbr: 'TF' },
-  { name: 'Blue Wave', abbr: 'BW' },
-  { name: 'MyFundedFX', abbr: 'MF' },
 ]
 
 export default function ProofStrip() {
@@ -84,37 +70,6 @@ export default function ProofStrip() {
             </div>
           </CardContent>
         </Card>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="mt-8"
-        >
-          <div className="mb-3 text-center">
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/60 [font-family:var(--home-copy)]">
-              Trusted by traders at
-            </p>
-          </div>
-          <div className="overflow-hidden py-4">
-            <div className="animate-marquee flex animate-marquee-pause gap-8">
-              {[...logos, ...logos, ...logos].map((logo, idx) => (
-                <div
-                  key={`${logo.name}-${idx}`}
-                  className="flex shrink-0 items-center gap-2 rounded-lg border border-border/40 bg-background/40 px-4 py-2.5"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-foreground/10 text-xs font-semibold text-foreground/80">
-                    {logo.abbr}
-                  </div>
-                  <span className="whitespace-nowrap text-sm font-medium text-foreground/70">
-                    {logo.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   )

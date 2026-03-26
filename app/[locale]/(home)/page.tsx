@@ -3,9 +3,8 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getStaticParams } from "@/locales/server";
 import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
-import { getActiveDeals, getDealsOverview, getUnifiedFirms } from '@/server/deals'
 
-const SITE_ORIGIN = 'https://quntedge.com'
+const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
 
 export function generateStaticParams() {
     return getStaticParams();
@@ -21,7 +20,6 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
     const { locale } = await params;
-    setStaticParamsLocale(locale);
     const canonical = `${SITE_ORIGIN}/${locale}`;
 
     return {
@@ -57,39 +55,30 @@ export default async function HomePage({
     const { locale } = await params;
     setStaticParamsLocale(locale);
 
-    let firms: Awaited<ReturnType<typeof getUnifiedFirms>> = []
-    let deals: Awaited<ReturnType<typeof getActiveDeals>> = []
-    let overview: Awaited<ReturnType<typeof getDealsOverview>> = {
-      totalTrackedFirms: 0,
-      totalLiveDeals: 0,
-      totalAccounts: 0,
-      totalAccountValue: 0,
-      totalPaidPayoutAmount: 0,
-      totalPaidPayoutCount: 0,
-    }
-
-    const results = await Promise.allSettled([
-      getUnifiedFirms(),
-      getActiveDeals(),
-      getDealsOverview(),
-    ])
-
-    firms = results[0].status === 'fulfilled' ? results[0].value : []
-    deals = results[1].status === 'fulfilled' ? results[1].value : []
-    overview = results[2].status === 'fulfilled' ? results[2].value : overview
-
-    const websiteSchema = {
+    const softwareSchema = {
       '@context': 'https://schema.org',
-      '@type': 'WebSite',
+      '@type': 'SoftwareApplication',
       name: 'Qunt Edge',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        ratingCount: '200',
+      },
       description: 'AI-backed trading journal and execution review platform for discretionary traders and teams.',
       url: `${SITE_ORIGIN}/${locale}`,
     };
 
     return (
       <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
-        <HomeContent locale={locale} firms={firms} deals={deals} overview={overview} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <HomeContent locale={locale} />
       </>
     );
 }

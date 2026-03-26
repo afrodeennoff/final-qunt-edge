@@ -135,9 +135,9 @@ function getTopDiscountDeal(deals: DealItem[]): DealItem | null {
 
 function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-border/60 bg-card/55 p-8 text-center">
+        <div className="rounded-[2rem] border border-border/60 bg-[linear-gradient(155deg,hsl(var(--card)/0.65),hsl(var(--background)/0.55))] p-8 text-center shadow-[0_28px_90px_-64px_rgba(0,0,0,0.95)]">
           <BadgePercent className="mx-auto h-10 w-10 text-muted-foreground" />
           <h1 className="mt-5 text-4xl font-semibold tracking-tight text-foreground">No live deals right now</h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
@@ -309,8 +309,8 @@ function DealsBoard({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <DealsHero localePrefix={localePrefix} overview={overview} />
 
         <section className="grid gap-4 lg:grid-cols-3">
@@ -445,7 +445,7 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Browse all live deals</p>
@@ -481,12 +481,12 @@ function BrowseDealsSection({
 
 function DealsFaqSection({ faqs }: { faqs: FaqItem[] }) {
   return (
-    <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">FAQ</p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">What traders usually ask before they click through</h2>
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {faqs.slice(0, 6).map((faq) => (
-          <div key={faq.question} className="rounded-[1.3rem] border border-border/60 bg-background/70 p-4">
+          <div key={faq.question} className="rounded-[1.3rem] border border-border/60 bg-background/65 p-4">
             <h3 className="text-sm font-semibold text-foreground">{faq.question}</h3>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">{faq.answer}</p>
           </div>
@@ -504,7 +504,7 @@ function DealsHero({
   overview: DealsOverview
 }) {
   return (
-    <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-card/50 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+    <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-[linear-gradient(152deg,hsl(var(--card)/0.7),hsl(var(--background)/0.5))] p-6 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -575,7 +575,7 @@ function DealsFilterPanel({
 }) {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
+      <div className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -583,7 +583,7 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-12 w-full rounded-2xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-foreground/20"
+              className="h-11 w-full rounded-xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-foreground/20"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -599,7 +599,7 @@ function DealsFilterPanel({
                 key={option.value}
                 type="button"
                 onClick={() => onDiscountChange(option.value)}
-                className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   selectedDiscount === option.value
                     ? 'border-foreground/15 bg-foreground text-background'
                     : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
@@ -615,7 +615,7 @@ function DealsFilterPanel({
                 key={item.key}
                 type="button"
                 onClick={() => onSortChange(item.key)}
-                className={`rounded-full border px-3 py-2 text-xs font-medium transition-colors ${
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   sortKey === item.key
                     ? 'border-foreground/15 bg-foreground text-background'
                     : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
@@ -641,14 +641,14 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
-      <div className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5">
+      <div className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Editorial radar</p>
         <div className="mt-4 space-y-3">
           <RadarRow label="Market coverage" value={`${spotlights.futures.length} futures spotlights`} />
           <RadarRow label="CFD spotlights" value={`${spotlights.cfd.length} tracked firms`} />
           <RadarRow label="Source updated" value={lastUpdated ?? spotlights.updatedAt} />
         </div>
-        <div className="mt-5 rounded-[1.2rem] border border-border/60 bg-background/70 p-4">
+        <div className="mt-5 rounded-[1.2rem] border border-border/60 bg-background/65 p-4">
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Top payout firms</p>
           <div className="mt-3 space-y-2">
             {topFirms.map((firm) => (
@@ -680,7 +680,7 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
+    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{title}</p>
       <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
@@ -708,10 +708,10 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="rounded-[1.4rem] border border-border/60 bg-background/75 p-4">
+    <div className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.5))] p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="inline-flex items-center rounded-full border border-border/60 bg-card px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="inline-flex items-center rounded-full border border-border/60 bg-card/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {deal.category}
           </div>
           <h3 className="mt-3 text-lg font-semibold text-foreground">{deal.firmName}</h3>
@@ -719,7 +719,7 @@ function DealCard({
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-card px-3 py-2 text-right">
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-right">
           <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Discount</p>
           <p className="mt-1 text-xl font-semibold text-foreground">{deal.discountPercent}%</p>
         </div>
@@ -736,14 +736,14 @@ function DealCard({
         <button
           type="button"
           onClick={() => onCopyCode(deal.couponCode)}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-2 text-sm font-medium text-foreground"
         >
           <Copy className="h-4 w-4" />
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
         <Link
           href={`/${locale}/firm/${deal.firmSlug}`}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-2 text-sm font-medium text-foreground"
         >
           View firm
         </Link>
@@ -781,7 +781,7 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
-    <div className="rounded-[1.3rem] border border-border/60 bg-background/75 p-4">
+    <div className="rounded-[1.3rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
       <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -793,7 +793,7 @@ function StatCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/65 p-3">
+    <div className="rounded-[1rem] border border-border/60 bg-card/55 p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
     </div>
@@ -802,7 +802,7 @@ function StatPill({ label, value }: { label: string; value: string }) {
 
 function RadarRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-[1rem] border border-border/60 bg-background/70 px-3 py-3">
+    <div className="flex items-center justify-between rounded-[1rem] border border-border/60 bg-background/60 px-3 py-3">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-foreground">{value}</span>
     </div>
@@ -819,7 +819,7 @@ function InsightCard({
   helper: string
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-border/60 bg-card/45 p-5">
+    <div className="rounded-[1.5rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.6),hsl(var(--background)/0.5))] p-5 shadow-[0_18px_80px_-65px_rgba(0,0,0,0.95)]">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{helper}</p>
@@ -840,7 +840,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-12 rounded-2xl border border-border/70 bg-background/80 px-4 text-sm text-foreground outline-none"
+      className="h-11 rounded-xl border border-border/70 bg-background/80 px-4 text-sm text-foreground outline-none"
     >
       {options.map((option) => (
         <option key={option} value={option}>

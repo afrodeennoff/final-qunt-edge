@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, BarChart, UserPlus, Send, Building2 } from "lucide-react"
+import { Mail, BarChart, UserPlus, Send, Building2, Tags } from "lucide-react"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { useCurrentLocale } from "@/locales/client"
 
@@ -12,6 +12,11 @@ export function SidebarNav() {
       href: `/${locale}/admin/propfirms`,
       label: "Prop Firms",
       icon: <Building2 className="size-4" />,
+    },
+    {
+      href: `/${locale}/admin/coupons`,
+      label: "Coupons",
+      icon: <Tags className="size-4" />,
     },
     {
       href: `/${locale}/admin/newsletter-builder`,
