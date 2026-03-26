@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
-import { getUserDashboardTheme, setUserDashboardTheme, VALID_DASHBOARD_THEMES } from '@/server/user-data'
+import { getUserDashboardTheme, setUserDashboardTheme } from '@/server/user-data'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
+import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
 
 export const dynamic = 'force-dynamic'
 

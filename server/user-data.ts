@@ -12,6 +12,7 @@ import { logger } from '@/lib/logger'
 import { cacheQuery } from '@/lib/cache/query-cache'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
+import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 
 export type SharedDataResponse = {
   trades: Trade[]
@@ -363,9 +364,6 @@ export async function updateIsFirstConnectionAction(isFirstConnection: boolean) 
   })
   revalidateTag(`user-data-${userId}`, { expire: 0 })
 }
-
-export const VALID_DASHBOARD_THEMES = ['blue', 'violet', 'emerald', 'amber', 'rose'] as const
-type DashboardTheme = typeof VALID_DASHBOARD_THEMES[number]
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
   const authUserId = await getUserId()
