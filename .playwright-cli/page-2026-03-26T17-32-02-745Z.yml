@@ -1,0 +1,83 @@
+- generic:
+  - generic [active]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - navigation [ref=e7]:
+            - button "previous" [disabled] [ref=e8]:
+              - img "previous" [ref=e9]
+            - generic [ref=e11]:
+              - generic [ref=e12]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e13]:
+              - img "next" [ref=e14]
+          - img
+        - generic [ref=e16]:
+          - link "Next.js 16.1.6 (stale) Turbopack" [ref=e17] [cursor=pointer]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+            - img [ref=e18]
+            - generic "There is a newer version (16.2.1) available, upgrade recommended!" [ref=e20]: Next.js 16.1.6 (stale)
+            - generic [ref=e21]: Turbopack
+          - img
+      - generic [ref=e22]:
+        - dialog "Runtime Error" [ref=e23]:
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]:
+                - generic [ref=e30]: Runtime Error
+                - generic [ref=e31]:
+                  - button "Copy Error Info" [ref=e32] [cursor=pointer]:
+                    - img [ref=e33]
+                  - button "No related documentation found" [disabled] [ref=e35]:
+                    - img [ref=e36]
+                  - button "Attach Node.js inspector" [ref=e38] [cursor=pointer]:
+                    - img [ref=e39]
+              - generic [ref=e48]: "[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING."
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - paragraph [ref=e52]:
+                  - img [ref=e54]
+                  - generic [ref=e58]: lib/prisma.ts (126:9) @ <unknown>
+                  - button "Open in editor" [ref=e59] [cursor=pointer]:
+                    - img [ref=e61]
+                - generic [ref=e64]:
+                  - generic [ref=e65]: 124 | const connectionString = normalizeSupabasePoolerMode(selectRuntimeConnectionString())
+                  - generic [ref=e66]: "125 | if (!connectionString && !isNextBuildPhase) {"
+                  - generic [ref=e67]: "> 126 | throw new Error("
+                  - generic [ref=e68]: "| ^"
+                  - generic [ref=e69]: 127 | '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
+                  - generic [ref=e70]: 128 | )
+                  - generic [ref=e71]: "129 | }"
+              - generic [ref=e72]:
+                - paragraph [ref=e74]:
+                  - text: Call Stack
+                  - generic [ref=e75]: "1"
+                - generic [ref=e76]:
+                  - generic [ref=e77]:
+                    - text: <unknown>
+                    - button "Open <unknown> in editor" [ref=e78] [cursor=pointer]:
+                      - img [ref=e79]
+                  - text: lib/prisma.ts (126:9)
+          - generic [ref=e81]: "1"
+          - generic [ref=e82]: "2"
+        - contentinfo [ref=e83]:
+          - region "Error feedback" [ref=e84]:
+            - paragraph [ref=e85]:
+              - link "Was this helpful?" [ref=e86] [cursor=pointer]:
+                - /url: https://nextjs.org/telemetry#error-feedback
+            - button "Mark as helpful" [ref=e87] [cursor=pointer]:
+              - img [ref=e88]
+            - button "Mark as not helpful" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+    - generic [ref=e98] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e99]:
+        - img [ref=e100]
+      - generic [ref=e104]:
+        - button "Open issues overlay" [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]: "0"
+            - generic [ref=e108]: "1"
+          - generic [ref=e109]: Issue
+        - button "Collapse issues badge" [ref=e110]:
+          - img [ref=e111]
+  - alert [ref=e1]

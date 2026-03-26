@@ -320,7 +320,7 @@ export function PropFirmCatalogueExperience({
                     </span>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  <div className="mt-5 grid grid-cols-1 gap-2">
                     <PayoutPill
                       label="Paid"
                       amount={firm.stats.payouts.paidAmount}
@@ -484,6 +484,9 @@ function RegisteredAccountsChart({
 }: {
   data: Array<{ name: string; accounts: number }>
 }) {
+  const topFirm = data[0]
+  const totalRegistered = data.reduce((sum, entry) => sum + entry.accounts, 0)
+
   return (
     <section className="rounded-[1.8rem] border border-border/60 bg-card/45 p-5 sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -491,12 +494,22 @@ function RegisteredAccountsChart({
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Chart</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Registered Accounts by Prop Firm</h2>
         </div>
-        <p className="text-sm text-muted-foreground">Top firms sorted by account registrations.</p>
+        <p className="text-sm text-muted-foreground">Top firms sorted by registered accounts.</p>
       </div>
 
       {data.length > 0 ? (
-        <div className="mt-6 h-[360px] w-full overflow-x-auto rounded-[1.2rem] border border-border/60 bg-[hsl(var(--background))] p-4 sm:p-5">
-          <div className="h-full min-w-[720px]">
+        <div className="mt-5 rounded-[1.2rem] border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-4 sm:p-5">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-xs text-muted-foreground">
+              {`Top firm: ${topFirm?.name ?? '—'}`}
+            </span>
+            <span className="rounded-full border border-border/60 bg-background/70 px-3 py-1 text-xs text-muted-foreground">
+              {`Total shown: ${totalRegistered.toLocaleString()} accounts`}
+            </span>
+          </div>
+
+          <div className="h-[360px] w-full overflow-x-auto">
+            <div className="h-full min-w-[760px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={data}
@@ -516,6 +529,7 @@ function RegisteredAccountsChart({
                   tickLine={false}
                   axisLine={false}
                   tickMargin={12}
+                  tickFormatter={(value: string) => (value.length > 16 ? `${value.slice(0, 16)}…` : value)}
                   tick={{
                     fontSize: 12,
                     fill: 'hsl(var(--muted-foreground))',
@@ -535,10 +549,11 @@ function RegisteredAccountsChart({
                 <Tooltip
                   cursor={{ fill: 'hsl(var(--foreground) / 0.05)' }}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
+                    backgroundColor: 'hsl(var(--background))',
                     border: '1px solid hsl(var(--border))',
                     borderRadius: 12,
                     color: 'hsl(var(--foreground))',
+                    boxShadow: '0 10px 35px -20px rgba(0, 0, 0, 0.9)',
                   }}
                   formatter={(value: number) => [value.toLocaleString(), 'Registered Accounts']}
                 />
@@ -546,11 +561,13 @@ function RegisteredAccountsChart({
                   dataKey="accounts"
                   name="Registered Accounts"
                   fill="hsl(var(--chart-2))"
-                  radius={[6, 6, 0, 0]}
-                  maxBarSize={56}
+                  radius={[8, 8, 0, 0]}
+                  maxBarSize={52}
+                  background={{ fill: 'hsl(var(--foreground) / 0.03)' }}
                 />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
         </div>
       ) : (
