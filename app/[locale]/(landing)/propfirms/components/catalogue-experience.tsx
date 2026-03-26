@@ -285,26 +285,49 @@ export function PropFirmCatalogueExperience({
                     <div>
                       <h3 className="text-xl font-semibold tracking-tight text-foreground">{firm.name}</h3>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {firm.platform} • {firm.payoutModel} • {firm.accountTemplatesCount} account templates
+                        {firm.platform} • {firm.payoutModel} • {firm.accountTemplatesCount} templates
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-border/60 bg-card px-3 py-2 text-right">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Paid count</p>
-                      <p className="mt-1 text-lg font-semibold text-foreground">{firm.stats.payouts.paidCount}</p>
-                    </div>
+                    <span
+                      className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${
+                        firm.category === 'Forex'
+                          ? 'border-blue-500/30 bg-blue-500/10 text-blue-500'
+                          : firm.category === 'Futures'
+                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
+                            : 'border-border bg-card text-muted-foreground'
+                      }`}
+                    >
+                      {firm.category}
+                    </span>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <BoardMetric label="Accounts" value={firm.stats.accountsCount.toLocaleString()} />
-                    <BoardMetric label="Account value" value={formatCompactCurrency(firm.stats.totalAccountValue)} />
-                    <BoardMetric label="Paid out" value={formatCompactCurrency(firm.stats.payouts.paidAmount)} />
-                    <BoardMetric label="Drawdown" value={firm.drawdownType} />
-                    <BoardMetric label="Access" value={firm.hasInstantFunding ? 'Instant + eval' : 'Evaluation'} />
-                    <BoardMetric label="Category" value={firm.category} />
+                  <div className="mt-5 grid grid-cols-3 gap-2">
+                    <PayoutPill
+                      label="Paid"
+                      amount={firm.stats.payouts.paidAmount}
+                      count={firm.stats.payouts.paidCount}
+                      variant="paid"
+                    />
+                    <PayoutPill
+                      label="Pending"
+                      amount={firm.stats.payouts.pendingAmount}
+                      count={firm.stats.payouts.pendingCount}
+                      variant="pending"
+                    />
+                    <PayoutPill
+                      label="Refused"
+                      amount={firm.stats.payouts.refusedAmount}
+                      count={firm.stats.payouts.refusedCount}
+                      variant="refused"
+                    />
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-border/60 pt-4">
-                    <p className="max-w-[75%] text-sm text-muted-foreground">{firm.stats.sizeBreakdown}</p>
+                    <p className="max-w-[75%] text-sm text-muted-foreground">
+                      {firm.stats.sizeBreakdown === 'No sized accounts'
+                        ? `${firm.stats.accountsCount.toLocaleString()} accounts • ${formatCompactCurrency(firm.stats.totalAccountValue)} total`
+                        : firm.stats.sizeBreakdown}
+                    </p>
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
                       View firm
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -398,6 +421,41 @@ function StatCard({
         {label}
       </div>
       <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+    </div>
+  )
+}
+
+function PayoutPill({
+  label,
+  amount,
+  count,
+  variant,
+}: {
+  label: string
+  amount: number
+  count: number
+  variant: 'paid' | 'pending' | 'refused'
+}) {
+  const styles = {
+    paid: 'border-emerald-500/30 bg-emerald-500/10 text-foreground',
+    pending: 'border-yellow-500/30 bg-yellow-500/10 text-foreground',
+    refused: 'border-red-500/30 bg-red-500/10 text-foreground',
+  }
+  const dotColors = {
+    paid: 'bg-emerald-500',
+    pending: 'bg-yellow-500',
+    refused: 'bg-red-500',
+  }
+  return (
+    <div className={`rounded-[1rem] border p-3 ${styles[variant]}`}>
+      <div className="flex items-center gap-1.5">
+        <span className={`h-1.5 w-1.5 rounded-full ${dotColors[variant]}`} />
+        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      </div>
+      <p className="mt-1.5 text-sm font-semibold">{formatCompactCurrency(amount)}</p>
+      <p className="text-[10px] text-muted-foreground">
+        {count} {count === 1 ? 'request' : 'requests'}
+      </p>
     </div>
   )
 }
