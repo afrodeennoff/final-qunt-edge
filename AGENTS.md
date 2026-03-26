@@ -19,6 +19,24 @@ This file tracks significant architectural changes, engineering insights, and cr
   - `npm run typecheck` -> passes
   - Admin layout now properly wraps sidebar with DashboardProviders
 
+### 2026-03-26: Admin Auth Hardening (CSV Parsing + isAdminUser Reuse + Locale Redirects)
+- **What changed:** Fixed critical admin auth inconsistencies: middleware CSV parsing bug, duplicate broken admin checks, and hardcoded locale redirects across admin/auth surfaces.
+- **What I want:** All admin auth checks (middleware, server layouts, server actions) should use the same `isAdminUser()` function from `authz.ts` with proper CSV parsing, case-insensitive comparison, and locale-aware redirects.
+- **What I don't want:** Middleware treating `ALLOWED_ADMIN_USER_ID="id1,id2"` as a single string literal, duplicate broken admin checks in layouts that bypass `isAdminUser`, or hardcoded `/en/` redirect paths in locale-routed layouts.
+- **How we fixed that:**
+  - Added `parseCsvEnv()` helper to `proxy.ts` and fixed admin ID check to use it with case-insensitive comparison (previously `allowedAdminIds.includes(user.id)` failed for CSV values like `"user1,user2"`).
+  - Exported `isAdminUser` from `server/authz.ts` for reuse across all admin surfaces.
+  - Updated `app/[locale]/admin/layout.tsx` to: accept `params: Promise<{ locale: string }>`, use `isAdminUser(user)` instead of broken string comparison, use dynamic locale redirects.
+  - Updated `app/[locale]/dashboard/layout.tsx` to use `isAdminUser(user)` instead of broken string comparison.
+  - Updated `app/[locale]/dashboard/settings/actions.ts#checkAdminStatus` to use `isAdminUser(user)` from `authz.ts` instead of duplicated logic.
+  - Added `ALLOWED_ADMIN_USER_ID` to `.env.example` admin section (was used in 10+ places but missing from template).
+  - AuthTimeout already fixed to 30 minutes (committed in prior session).
+- **Key Files:** `proxy.ts`, `server/authz.ts`, `.env.example`, `app/[locale]/admin/layout.tsx`, `app/[locale]/dashboard/layout.tsx`, `app/[locale]/dashboard/settings/actions.ts`
+- **Verification:**
+  - `npm run typecheck` -> passes (0 errors)
+  - `npm run build` -> passes (all routes)
+  - Oracle verification: all 6 fixes confirmed present and correct
+
 ### 2026-03-15: Phase 7 - AI Endpoints Consolidation (Unified Analyze Route)
 - **What changed:** Consolidated three separate AI analysis endpoints (`accounts`, `instrument`, `time-of-day`) into a single unified endpoint with type-based dispatch.
 - **What I want:** A single unified `/api/ai/analyze` endpoint that dispatches based on `type` field, with the old routes maintained as thin backward-compatible wrappers.
