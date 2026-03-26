@@ -10,14 +10,12 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { RootProviders } from "@/components/providers/root-providers"
 import { DashboardProviders } from "@/components/providers/dashboard-providers"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
-import type { User } from "@supabase/supabase-js"
+
 
 export function AdminClientLayout({
   children,
-  user,
 }: {
   children: React.ReactNode
-  user: User
 }) {
   const router = useRouter()
   const locale = useCurrentLocale()
