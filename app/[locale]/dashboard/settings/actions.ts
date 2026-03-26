@@ -11,10 +11,13 @@ import { getUserId } from '@/server/auth'
 import { MemberRole } from '@/prisma/generated/prisma'
 import { ensureTeamMembership, resolveTeamUserId } from '@/server/team-membership'
 
-export async function checkAdminStatus() {
+export async function checkAdminStatus(): Promise<boolean> {
   try {
     const userId = await getUserId()
-    return userId === process.env.ALLOWED_ADMIN_USER_ID
+    if (!userId) return false
+    const allowedIds = process.env.ALLOWED_ADMIN_USER_ID?.split(',').map(id => id.trim().toLowerCase()) || []
+    const adminId = process.env.ADMIN_USER_ID?.trim().toLowerCase()
+    return allowedIds.includes(userId.toLowerCase()) || (!!adminId && userId.toLowerCase() === adminId)
   } catch (error) {
     return false
   }
