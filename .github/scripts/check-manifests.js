@@ -67,7 +67,7 @@ function validateWidgetManifest(widgetName, manifestPath, errors, warnings) {
     checkManifestSLOs(manifest, widgetName, warnings)
     checkManifestUpdates(manifest, widgetName, warnings)
 
-    console.log(`✓ ${widgetName} manifest valid`)
+    console.warn(`✓ ${widgetName} manifest valid`)
   } catch (error) {
     errors.push(`Failed to parse manifest for ${widgetName}: ${error.message}`)
   }
@@ -86,7 +86,7 @@ function checkManifests() {
   const widgetFiles = fs.readdirSync(widgetsDir)
     .filter((file) => file.endsWith('-widget.tsx') || file.endsWith('-widget.ts'))
 
-  console.log(`Checking ${widgetFiles.length} widget files...`)
+  console.warn(`Checking ${widgetFiles.length} widget files...`)
 
   for (const file of widgetFiles) {
     const widgetName = file.replace(/\-widget\.(tsx|ts)$/, '')
@@ -108,7 +108,7 @@ function checkManifests() {
     process.exit(1)
   }
 
-  console.log('\n✅ All manifest checks passed')
+  console.warn('\n✅ All manifest checks passed')
   return { errors, warnings }
 }
 

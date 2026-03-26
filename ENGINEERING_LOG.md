@@ -4,28 +4,6 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
-### 2026-03-27: Prisma Boot Guard + Lazy No-DB Proxy
-
-- **What changed:** Removed the import-time Prisma crash when database env vars are missing and replaced it with a lazy proxy that keeps the app bootable while still failing loudly on the first real DB call.
-
-- **What I want:** The app should start cleanly in local/dev and only require database configuration when a route or action actually needs Prisma.
-
-- **What I don't want:** A missing `DATABASE_URL` or Supabase pooler URL taking down the whole app before any request is handled.
-
-- **How we fixed that:**
-  - Refactored `lib/prisma.ts` so it returns a lazy throwing proxy when no runtime database URL is configured instead of throwing during module import.
-  - Preserved the normal pooled Prisma client path when a database URL is present, including pool sizing, SSL handling, and Supabase pooler normalization.
-  - Added a regression test that verifies Prisma can be imported without DB env vars and only throws when a query method is actually invoked.
-
-- **Key Files:**
-  - Prisma bootstrap: `lib/prisma.ts`
-  - Regression test: `tests/lib/prisma-fallback.test.ts`
-
-- **Verification:**
-  - `npm run lint -- lib/prisma.ts tests/lib/prisma-fallback.test.ts` -> passed.
-  - `npx vitest run tests/lib/prisma-fallback.test.ts` -> passed.
-  - `npm run typecheck` -> passed.
-
 ### 2026-03-27: Full App Cleanup Pass - Home, Landing Pages, Admin Coupons, Prop Firm Data, Theme + Typing Fixes
 
 - **What changed:** Completed a wide cross-section cleanup across the app, focusing on the home route, landing pages, firm/propfirm data surfaces, admin power tools, and remaining TypeScript/admin flow issues.
@@ -40,6 +18,8 @@ This file tracks significant architectural changes, engineering insights, and cr
   - Tightened the prop-firm catalogue/chart experience to show all firms, including zero-record firms, with cleaner sorting and less visual crowding.
   - Added a verified prop-firm profile source of truth and wired fallback enrichment into runtime prop-firm data reads so missing DB fields resolve from audited values instead of empty placeholders.
   - Unified prop-firm seeding around the verified profile list so the bootstrap data stays aligned with the audited names/metadata.
+  - Made the Prisma bootstrap degrade gracefully in local development when no database URL is configured, so the app can still boot and render instead of failing at import time.
+  - Quieted the dev-only CSP noise by switching local CSP off by default and adding a public CSP report endpoint so the browser console stays clean while preserving production security settings.
   - Added a dedicated admin coupons workspace at `/${locale}/admin/coupons` to manage coupon codes globally, not just inside one prop-firm detail screen.
   - Kept prop-firm detail coupon CRUD intact while giving admins a faster top-level route and sidebar access.
   - Fixed admin typing regressions in weekly recap and send-email flows so nullable state is narrowed before use.
@@ -49,6 +29,8 @@ This file tracks significant architectural changes, engineering insights, and cr
   - Home sync: `app/[locale]/(home)/*`
   - Landing redesigns: `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `app/[locale]/(landing)/propfirms/components/catalogue-experience.tsx`, `app/[locale]/(landing)/propfirms/components/stats-summary-row.tsx`, `app/[locale]/(landing)/leaderboard/page.tsx`, `app/[locale]/(landing)/leaderboard/components/leaderboard-content.tsx`, `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`, `app/[locale]/(landing)/firm/[slug]/page-client.tsx`
   - Prop-firm data: `lib/prop-firms/verified-profiles.ts`, `server/deals.ts`, `app/[locale]/(landing)/propfirms/page.tsx`, `prisma/seeders/prop-firms-seeder.ts`
+  - Prisma fallback: `lib/prisma.ts`
+  - CSP dev cleanup: `lib/security/csp.ts`, `proxy.ts`, `app/api/csp-report/route.ts`
   - Admin coupons: `app/[locale]/admin/coupons/page.tsx`, `app/[locale]/admin/components/sidebar-nav.tsx`
   - Admin typing fixes: `app/[locale]/admin/actions/weekly-recap.ts`, `app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx`, `app/[locale]/admin/components/newsletter/subscriber-table.tsx`, `app/[locale]/admin/components/send-email/send-email-page-client.tsx`
   - Theme primitives: `components/ui/card.tsx`, `components/ui/progress.tsx`, `components/ui/separator.tsx`, and other shared UI primitives touched in the design sweep
@@ -58,6 +40,7 @@ This file tracks significant architectural changes, engineering insights, and cr
   - `npx eslint app/[locale]/admin/coupons/page.tsx app/[locale]/admin/components/send-email/send-email-page-client.tsx app/[locale]/admin/components/weekly-stats/weekly-recap-preview.tsx app/[locale]/admin/actions/weekly-recap.ts app/[locale]/admin/components/sidebar-nav.tsx app/[locale]/admin/components/newsletter/subscriber-table.tsx` -> passed.
   - `npm run typecheck` -> passed.
   - `npm run dev -- -p 3000` -> running successfully on port `3000`.
+  - Browser check against `http://localhost:3000` -> loaded successfully with `0` console errors after the Prisma/CSP fixes.
 
 ### 2026-03-27: Remote Admin Parity + Admin Cleanup Pass
 

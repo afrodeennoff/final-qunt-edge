@@ -352,6 +352,7 @@ export default function PdfProcessing({
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderTradeRow = (row: any) => {
     const trade = row.original;
     const tradeOrders = getTradeOrders(trade);

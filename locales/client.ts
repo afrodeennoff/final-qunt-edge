@@ -1,11 +1,32 @@
 "use client"
 import { createI18nClient } from 'next-international/client'
+import React from 'react'
 
-export const { useI18n, useScopedI18n, I18nProviderClient, useChangeLocale, useCurrentLocale } = createI18nClient({
+const raw = createI18nClient({
   en: () => import('./en'),
   fr: () => import('./fr'),
-  hi: () => import('./en'), // Placeholder
-  ja: () => import('./en'), // Placeholder
-  es: () => import('./en'), // Placeholder
-  it: () => import('./en'), // Placeholder
+  hi: () => import('./en'),
+  ja: () => import('./en'),
+  es: () => import('./en'),
+  it: () => import('./en'),
 })
+
+export const {
+  useI18n: useRawI18n,
+  useScopedI18n,
+  I18nProviderClient,
+  useChangeLocale,
+  useCurrentLocale,
+} = raw
+
+export type TypedT = (key: string, params?: Record<string, unknown>) => React.ReactNode
+
+export function useTypedI18n(): TypedT {
+  const rawT = useRawI18n()
+  return React.useCallback((key: string, params?: Record<string, unknown>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (rawT as any)(key, params) as React.ReactNode
+  }, [rawT])
+}
+
+export { useRawI18n as useI18n }

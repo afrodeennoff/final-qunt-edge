@@ -601,6 +601,35 @@ Verification: `npx eslint app/[locale]/teams/components/user-equity/team-equity-
   - Manual QA: light/dark walkthrough via local app + browser automation on authentication and docs surfaces; dashboard auth redirect path also checked.
 - Residual risk:
   - Some legacy color classes remain in untouched files outside this migration batch (notably email templates and additional long-tail route components).
+## Task: Feature Flags Investigation + Tailwind Sync (2026-03-27)
+
+- [x] Task 1: Verify Tailwind version sync — all packages already at 4.1.18
+- [x] Task 2: Investigate all 6 feature flags (grep, read files, check git history)
+- [x] Task 3: Compile investigation report with recommendations
+- [x] Task 4: Create `.env.local` with recommended flag settings
+
+### Investigation Report Summary
+
+| Flag | Status | Risk | Recommendation |
+|------|--------|------|----------------|
+| `ENABLE_SKELETON_LOADING` | ACTIVE | LOW | ✅ **ENABLE** |
+| `ENABLE_QUERY_CACHING` | ACTIVE | MEDIUM | ✅ **ENABLE** |
+| `ENABLE_DEFERRED_COMPUTATIONS` | DEAD | LOW | 🔍 Investigate/Remove |
+| `ENABLE_LAZY_LOADING` | DEAD | LOW | 🔍 Investigate/Remove |
+| `PERF_ROLLOUT_PCT` | CONTROL | LOW | ⏸️ Keep at 0 |
+| `EMERGENCY_ROLLBACK` | SAFETY | HIGH | ❌ Keep at FALSE |
+
+### Key Findings
+- `ENABLE_SKELETON_LOADING`: Used in `dashboard-tab-shell.tsx`, provides visual feedback
+- `ENABLE_QUERY_CACHING`: Used in `server/accounts.ts` and `server/user-data.ts` for tagged caching
+- `ENABLE_DEFERRED_COMPUTATIONS`: Flag defined but hook `hooks/use-deferred-computation.ts` never created
+- `ENABLE_LAZY_LOADING`: Flag defined but no code consumes it
+- Dead flags should be cleaned up or implemented per `docs/superpowers/plans/2026-03-12-performance-optimization-production.md`
+
+### .env.local Created
+Enabled: `ENABLE_SKELETON_LOADING=true`, `ENABLE_QUERY_CACHING=true`
+Disabled: `DEFERRED_COMPUTATIONS=false`, `LAZY_LOADING=false`, `EMERGENCY_ROLLBACK=false`
+
 ## Task: TweakCN theme extraction (2026-03-16)
 
 - [ ] Locate the online TweakCN interface or API endpoint that shows the requested theme slugs so I know where to grab the CSS variables from.

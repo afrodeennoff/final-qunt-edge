@@ -8,11 +8,11 @@ const eslintConfig = defineConfig([
   {
     rules: {
       // Transitional hardening: keep signal while reducing legacy churn.
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-require-imports": "warn",
       "@typescript-eslint/no-this-alias": "warn",
       "@typescript-eslint/no-unused-expressions": "warn",
-      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/ban-ts-comment": "error",
       "@typescript-eslint/no-empty-object-type": "warn",
       "@next/next/no-html-link-for-pages": "warn",
       "no-unreachable": "warn",
@@ -30,6 +30,7 @@ const eslintConfig = defineConfig([
       "react-hooks/set-state-in-effect": "warn",
       "react-hooks/static-components": "warn",
       "react-hooks/use-memo": "warn",
+      "no-console": ["error", { "allow": ["warn", "error"] }],
     },
   },
   // Override default ignores of eslint-config-next.
