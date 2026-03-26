@@ -154,7 +154,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
           </div>
         ) : referralData ? (
-          <div className="space-y-4">
+          <div className="gap-4">
             <div className="flex items-center justify-between">
               <h4 className="font-semibold text-lg">{t('referral.title')}</h4>
               {getTierIcon(referralData.referral.tier.level)}
@@ -183,7 +183,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
             <Separator />
 
             {/* Referral Link */}
-            <div className="space-y-2">
+            <div className="gap-2">
               <div className="flex items-center gap-2">
                 <label className="text-sm font-medium text-muted-foreground">
                   {t('referral.yourLink')}
@@ -211,14 +211,14 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
             <Separator />
 
             {/* Current Tier */}
-            <div className="space-y-3">
+            <div className="gap-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{t('referral.currentTier')}</span>
                 <Badge variant="secondary">
                   {t('referral.tier', { level: referralData.referral.tier.level })}
                 </Badge>
               </div>
-              <div className="space-y-3">
+              <div className="gap-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{t('referral.referrals')}</span>
                   <span className="font-medium">{referralData.referral.count}</span>
@@ -270,7 +270,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                 </div>
 
                 {/* Tier Rewards */}
-                <div className="space-y-2 pt-4">
+                <div className="gap-2 pt-4">
                   {[
                     { count: 1, reward: t('referral.landing.tier1Reward') },
                     { count: 3, reward: t('referral.landing.tier2Reward') },
@@ -306,7 +306,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
 
             {/* Referred Users */}
             {referralData.referral.referredUsers.length > 0 && (
-              <div className="space-y-2">
+              <div className="gap-2">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">
@@ -314,7 +314,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                   </span>
                 </div>
                 <ScrollArea className="h-32">
-                  <div className="space-y-2">
+                  <div className="gap-2">
                     {referralData.referral.referredUsers.map((user) => (
                       <div
                         key={user.id}

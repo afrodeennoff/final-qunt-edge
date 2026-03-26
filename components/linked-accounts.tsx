@@ -176,12 +176,12 @@ export function LinkedAccounts() {
           {t('auth.linkedAccountsDescription')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="gap-6">
         {/* Current Linked Accounts */}
         {identities.length > 0 && (
           <div>
             <h4 className="text-sm font-medium mb-3">{t('auth.primaryAccount')}</h4>
-            <div className="space-y-3">
+            <div className="gap-3">
               {identities.map((identity, index) => (
                 <div key={identity.id || index} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center gap-3">
@@ -246,7 +246,7 @@ export function LinkedAccounts() {
           <p className="text-sm text-muted-foreground mb-4">
             {t('auth.linkAccountDescription')}
           </p>
-          <div className="space-y-2">
+          <div className="gap-2">
             {!isDiscordLinked && (
               <Button 
                 variant="outline" 

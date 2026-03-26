@@ -52,7 +52,7 @@ function RiskBlock({ result, onRetry }: RiskBlockProps) {
         {result.mitigations.length > 0 && (
           <div className="text-left mb-4">
             <p className="text-sm font-medium mb-2">Required Actions:</p>
-            <ul className="text-sm text-muted-foreground space-y-1">
+            <ul className="text-sm text-muted-foreground gap-1">
               {result.mitigations.map((mitigation, index) => (
                 <li key={index} className="flex items-start">
                   <span className="mr-2">•</span>
@@ -86,7 +86,7 @@ function RiskConsent({ result, onConsent, onDeny }: RiskConsentProps) {
         {result.mitigations.length > 0 && (
           <div className="text-left mb-4">
             <p className="text-sm font-medium mb-2">Conditions:</p>
-            <ul className="text-sm text-muted-foreground space-y-1">
+            <ul className="text-sm text-muted-foreground gap-1">
               {result.mitigations.map((mitigation, index) => (
                 <li key={index} className="flex items-start">
                   <span className="mr-2">•</span>

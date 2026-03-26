@@ -200,10 +200,10 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                 <CardTitle className="text-base">Select Data</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="gap-4">
                   <div>
                     <Label className="text-base">Select Accounts</Label>
-                    <div className="flex items-center space-x-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2">
                       <Checkbox
                         id="selectAllAccounts"
                         checked={selectAllAccounts}
@@ -215,7 +215,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                     </div>
                     <ScrollArea className="h-[100px] mt-2 rounded border p-2">
                       {accounts.map(account => (
-                        <div key={account} className="flex items-center space-x-2 mb-2">
+                        <div key={account} className="flex items-center gap-2 mb-2">
                           <Checkbox
                             id={`account-${account}`}
                             checked={selectedAccounts.includes(account)}
@@ -230,7 +230,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                   </div>
                   <div>
                     <Label className="text-base">Select Instruments</Label>
-                    <div className="flex items-center space-x-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2">
                       <Checkbox
                         id="selectAllInstruments"
                         checked={selectAllInstruments}
@@ -242,7 +242,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                     </div>
                     <ScrollArea className="h-[100px] mt-2 rounded border p-2">
                       {instruments.map(instrument => (
-                        <div key={instrument} className="flex items-center space-x-2 mb-2">
+                        <div key={instrument} className="flex items-center gap-2 mb-2">
                           <Checkbox
                             id={`instrument-${instrument}`}
                             checked={selectedInstruments.includes(instrument)}
@@ -264,7 +264,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                 <CardTitle className="text-base">Select Date Range</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="gap-4">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {quickSelectors.map((selector, index) => (
                       <Button

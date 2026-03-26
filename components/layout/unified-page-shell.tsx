@@ -65,7 +65,7 @@ export function UnifiedPageHeader({
       )}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
+        <div className="gap-2">
           {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.14em] text-fg-muted">{eyebrow}</p> : null}
           <h1 className="text-3xl font-semibold tracking-tight text-fg-primary sm:text-4xl">{title}</h1>
           {description ? <p className="max-w-3xl text-sm text-fg-muted sm:text-base">{description}</p> : null}

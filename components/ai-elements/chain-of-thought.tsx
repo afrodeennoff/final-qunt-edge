@@ -60,7 +60,7 @@ export const ChainOfThought = memo(
     return (
       <ChainOfThoughtContext.Provider value={{ isOpen, setIsOpen }}>
         <div
-          className={cn("not-prose max-w-prose space-y-4", className)}
+          className={cn("not-prose max-w-prose gap-4", className)}
           {...props}
         >
           {children}
@@ -140,7 +140,7 @@ export const ChainOfThoughtStep = memo(
           <Icon className="size-4" />
           <div className="-mx-px absolute top-7 bottom-0 left-1/2 w-px bg-border" />
         </div>
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 gap-2">
           <div>{label}</div>
           {description && (
             <div className="text-muted-foreground text-xs">{description}</div>
@@ -186,7 +186,7 @@ export const ChainOfThoughtContent = memo(
       <Collapsible open={isOpen}>
         <CollapsibleContent
           className={cn(
-            "mt-2 space-y-3",
+            "mt-2 gap-3",
             "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-popover-foreground outline-hidden data-[state=closed]:animate-out data-[state=open]:animate-in",
             className
           )}
@@ -205,7 +205,7 @@ export type ChainOfThoughtImageProps = ComponentProps<"div"> & {
 
 export const ChainOfThoughtImage = memo(
   ({ className, children, caption, ...props }: ChainOfThoughtImageProps) => (
-    <div className={cn("mt-2 space-y-2", className)} {...props}>
+    <div className={cn("mt-2 gap-2", className)} {...props}>
       <div className="relative flex max-h-88 items-center justify-center overflow-hidden rounded-lg bg-muted p-3">
         {children}
       </div>

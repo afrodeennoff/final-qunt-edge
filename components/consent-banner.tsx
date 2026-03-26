@@ -193,7 +193,7 @@ export function ConsentBanner() {
                 </DialogHeader>
 
                 <div className="px-6 pb-6">
-                  <div className="space-y-4">
+                  <div className="gap-4">
                     <div className="flex items-start gap-3 min-h-[44px]">
                       <input
                         id="consent-necessary-desktop"
@@ -284,7 +284,7 @@ export function ConsentBanner() {
                 </DrawerHeader>
 
                 <div className="flex-1 overflow-y-auto px-6">
-                  <div className="space-y-4 pb-6">
+                  <div className="gap-4 pb-6">
                     <div className="flex items-start gap-3">
                       <input
                         id="consent-necessary-mobile"

@@ -107,7 +107,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     <div
       ref={ref}
         className={cn(
-          "relative flex flex-col space-y-[var(--space-2)]",
+          "relative flex flex-col gap-[var(--space-2)]",
           {
             "p-[var(--space-4)]": size === "sm",
             "p-[var(--space-6)]": size === "md",

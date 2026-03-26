@@ -312,7 +312,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             <div className="text-4xl font-bold mb-4">
               {t('pricing.free.name')}
             </div>
-            <ul className="space-y-2">
+            <ul className="gap-2">
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-start">
                   {index > 2 ? (
@@ -325,7 +325,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
               ))}
             </ul>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-3">
+          <CardFooter className="flex flex-col gap-3">
             {isModal ? (
               <Button onClick={onClose} className="">
                 {t('pricing.keepBasic')}
@@ -442,7 +442,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             <CardDescription>{plan.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-muted/50 rounded-lg p-4 mb-4 space-y-3">
+            <div className="bg-muted/50 rounded-lg p-4 mb-4 gap-3">
               <span className="text-sm font-medium block text-center">
                 {t('pricing.billingPeriod')}
               </span>
@@ -533,7 +533,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
                 </div>
               )}
             </div>
-            <ul className="space-y-2">
+            <ul className="gap-2">
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-start">
                   <Check className="h-4 w-4 text-foreground mr-2 mt-1 shrink-0" />
@@ -545,7 +545,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             {/* Lifetime disclaimers */}
             {billingPeriod === 'lifetime' && (
               <div className="mt-4 pt-3 border-t border-border">
-                <div className="space-y-1">
+                <div className="gap-1">
                   <p className="text-xs text-muted-foreground">
                     • {t('pricing.lifetimeDisclaimer1')}
                   </p>
@@ -556,7 +556,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
               </div>
             )}
           </CardContent>
-          <CardFooter className="flex flex-col space-y-3">
+          <CardFooter className="flex flex-col gap-3">
             <Button
               onClick={handlePrimaryClick}
               disabled={isLoading || isCurrent || isBlocked}
@@ -594,15 +594,15 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
               {t('pricing.lifetimeUpgrade.description')}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="gap-4 py-4">
             <div className="bg-semantic-warning-bg border border-semantic-warning-border rounded-lg p-4">
               <div className="flex items-start">
                 <AlertCircle className="h-5 w-5 text-semantic-warning mr-3 mt-0.5 shrink-0" />
-                <div className="space-y-2">
+                <div className="gap-2">
                   <p className="text-sm font-medium text-semantic-warning">
                     {t('pricing.lifetimeUpgrade.warning')}
                   </p>
-                  <ul className="list-disc pl-5 space-y-1 text-sm text-semantic-warning">
+                  <ul className="list-disc pl-5 gap-1 text-sm text-semantic-warning">
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.currentPlan')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.immediateCancel')}</li>
                     <li>{t('pricing.lifetimeUpgrade.warningPoints.oneTimePayment')}</li>
@@ -614,7 +614,7 @@ export default function PricingPlans({ isModal, onClose, trigger, currentSubscri
             {currentSubscription && (
               <div className="bg-muted rounded-lg p-4">
                 <h4 className="font-medium mb-2">{t('pricing.lifetimeUpgrade.currentSubscription')}</h4>
-                <div className="text-sm text-muted-foreground space-y-1">
+                <div className="text-sm text-muted-foreground gap-1">
                   <p><strong>{t('billing.currentPlan')}:</strong> {currentSubscription.plan.name}</p>
                   <p><strong>{t('billing.billingPeriod')}:</strong> {currentSubscription.plan.interval}</p>
                   <p><strong>{t('billing.status.active')}:</strong> {t('billing.status.active')}</p>

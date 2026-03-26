@@ -156,7 +156,7 @@ export const ContextContentHeader = ({
   }).format(maxTokens);
 
   return (
-    <div className={cn("w-full space-y-2 p-3", className)} {...props}>
+    <div className={cn("w-full gap-2 p-3", className)} {...props}>
       {children ?? (
         <>
           <div className="flex items-center justify-between gap-3 text-xs">
@@ -165,7 +165,7 @@ export const ContextContentHeader = ({
               {used} / {total}
             </p>
           </div>
-          <div className="space-y-2">
+          <div className="gap-2">
             <Progress className="bg-muted" value={usedPercent * PERCENT_MAX} />
           </div>
         </>

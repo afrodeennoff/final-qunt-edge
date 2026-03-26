@@ -125,7 +125,7 @@ export default function RenewalNoticeEmail({
                   {t.accountDetails}
                 </Heading>
                 
-                <div className="space-y-3">
+                <div className="gap-3">
                   <div className="flex justify-between">
                     <Text className="text-gray-600 margin-0">{t.account}:</Text>
                     <Text className="text-gray-900 font-medium margin-0">{accountName}</Text>
