@@ -11,13 +11,11 @@ const raw = createI18nClient({
   it: () => import('./en'),
 })
 
-export const {
-  useI18n: useRawI18n,
-  useScopedI18n,
-  I18nProviderClient,
-  useChangeLocale,
-  useCurrentLocale,
-} = raw
+export const useRawI18n = raw.useI18n
+export const useScopedI18n = raw.useScopedI18n
+export const I18nProviderClient = raw.I18nProviderClient
+export const useChangeLocale = raw.useChangeLocale
+export const useCurrentLocale = raw.useCurrentLocale
 
 export type TypedT = (key: string, params?: Record<string, unknown>) => React.ReactNode
 

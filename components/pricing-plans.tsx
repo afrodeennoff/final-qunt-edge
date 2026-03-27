@@ -55,6 +55,13 @@ type CurrentSubscription = {
   };
 } | null
 
+const PREVIOUS_PRICING = {
+  yearly: 300,
+  quarterly: 82.5,
+  monthly: 29.99,
+  lifetime: 500,
+}
+
 interface PricingPlansProps {
   isModal?: boolean;
   onClose?: () => void;
