@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { AccountCoin, type Account } from "./account-coin"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { InputV2 } from "@/components/ui/v2"
 import { MoreHorizontal, Edit2, Trash2, EyeOff } from "lucide-react"
@@ -76,7 +76,7 @@ export function AccountGroup({
   }
 
   return (
-    <Card
+    <CardV2
       className={cn(
         "transition-all duration-300 ease-out",
         isDragOver && "ring-2 ring-primary shadow-lg scale-[1.02]",
@@ -87,7 +87,7 @@ export function AccountGroup({
       onDragOver={handleDragOver}
       onDragLeave={onDragLeave}
     >
-      <CardHeader className="pb-3">
+      <CardV2Header className="pb-3">
         <div className="flex items-center justify-between">
           {isEditing ? (
             <InputV2
@@ -99,10 +99,10 @@ export function AccountGroup({
               autoFocus
             />
           ) : (
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardV2Title className="text-lg flex items-center gap-2">
               {isHiddenGroup && <EyeOff className="h-4 w-4 text-destructive" />}
               {isHiddenGroup ? t("filters.hiddenAccounts") : group.name}
-            </CardTitle>
+            </CardV2Title>
           )}
 
           {!isHiddenGroup && (
@@ -128,9 +128,9 @@ export function AccountGroup({
         <p className="text-sm text-muted-foreground">
           {group.accounts.length} {group.accounts.length !== 1 ? t("filters.accounts") : t("filters.account")}
         </p>
-      </CardHeader>
+      </CardV2Header>
 
-      <CardContent>
+      <CardV2Content>
         {group.accounts.length === 0 ? (
           <div className="flex items-center justify-center h-16 border-2 border-dashed border-border rounded-lg">
             <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
@@ -151,7 +151,7 @@ export function AccountGroup({
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }

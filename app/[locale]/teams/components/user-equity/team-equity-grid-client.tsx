@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2, InputV2 } from "@/components/ui/v2"
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Filter, X } from 'lucide-react'

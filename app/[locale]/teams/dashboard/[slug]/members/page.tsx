@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowRight, Settings, Users } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { CardV2, CardV2Content } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { TeamManagement } from "../../../components/team-management"
 
@@ -45,11 +45,11 @@ export default function TeamMembersPage() {
         </div>
       </header>
 
-      <Card className="border-border/70 bg-card/75">
-        <CardContent className="p-2 sm:p-3">
+      <CardV2 className="border-border/70 bg-card/75">
+        <CardV2Content className="p-2 sm:p-3">
           <TeamManagement />
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     </section>
   )
 }

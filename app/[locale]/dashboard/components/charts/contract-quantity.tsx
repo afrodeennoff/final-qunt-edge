@@ -12,12 +12,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardV2,
+  CardV2Content,
+  CardV2Description,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useDashboardStats } from "@/context/data-provider";
@@ -140,14 +140,14 @@ export default React.memo(function ContractQuantityChart({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <CardTitle
+            <CardV2Title
               className={cn(
                 "line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
               {t("contracts.title")}
-            </CardTitle>
+            </CardV2Title>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>

@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { toast } from "sonner"
 import { deleteSubscriber, getSubscribers, importSubscribers, sendTestNewsletter } from "@/app/[locale]/admin/actions/newsletter"
 import { useNewsletter, type NewsletterContent } from "./newsletter-context"
@@ -201,7 +201,7 @@ function InferenceResultRow({ result }: { result: InferenceResult }) {
               ? "default"
               : result.status === "skipped"
                 ? "secondary"
-                : "destructive"
+                : "error"
           }
         >
           {result.status}
@@ -659,9 +659,9 @@ export function SubscriberTable() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
+    <CardV2>
+      <CardV2Header>
+        <CardV2Title className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span>Subscribers</span>
             <span className="text-sm text-muted-foreground">
@@ -682,9 +682,9 @@ export function SubscriberTable() {
             onToggleFilter={() => setShowOnlyTraders(!showOnlyTraders)}
             onCSVUpload={handleCSVUpload}
           />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </CardV2Title>
+      </CardV2Header>
+      <CardV2Content>
         <SubscriberTableBody
           loading={loading}
           filteredSubscribers={filteredSubscribers}
@@ -698,7 +698,7 @@ export function SubscriberTable() {
           onSendTest={handleSendTest}
           onDelete={handleDelete}
         />
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }

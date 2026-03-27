@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { Card } from "@/components/ui/card"
+import { CardV2 } from "@/components/ui/v2"
 import { useEffect, useState } from 'react'
 import { getNewsletterStats, getUserStats } from '../../actions/stats'
 import { BadgeV2 } from "@/components/ui/v2"
@@ -138,7 +138,7 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+      <CardV2 className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Admin Tools</p>
@@ -213,26 +213,26 @@ export function AdminDashboard() {
             )
           })}
         </div>
-      </Card>
+      </CardV2>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <CardV2 className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Active subscribers</p>
           <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.activeSubscribers)}</div>
           <p className="mt-1 text-sm text-muted-foreground">
             People currently receiving newsletter sends.
           </p>
-        </Card>
+        </CardV2>
 
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <CardV2 className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Paused subscribers</p>
           <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.inactiveSubscribers)}</div>
           <p className="mt-1 text-sm text-muted-foreground">
             Unsubscribed or inactive newsletter records.
           </p>
-        </Card>
+        </CardV2>
 
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <CardV2 className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Newsletter coverage</p>
           <div className="mt-2 text-3xl font-semibold">
             {userStats.totalUsers > 0
@@ -242,7 +242,7 @@ export function AdminDashboard() {
           <p className="mt-1 text-sm text-muted-foreground">
             Active subscribers compared with total platform users.
           </p>
-        </Card>
+        </CardV2>
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
@@ -254,13 +254,13 @@ export function AdminDashboard() {
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="space-y-2 border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+            <CardV2 className="space-y-2 border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium">Total Users</h3>
                 <BadgeV2 variant="secondary">Active</BadgeV2>
               </div>
               <div className="text-3xl font-bold">{valueFormatter(userStats.totalUsers)}</div>
-            </Card>
+            </CardV2>
           </div>
 
           <UserGrowthChart
@@ -270,29 +270,29 @@ export function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="users">
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <CardV2 className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Free Users</h3>
               <BadgeV2 variant="secondary">Active</BadgeV2>
             </div>
             <FreeUsersTable />
-          </Card>
+          </CardV2>
         </TabsContent>
 
         <TabsContent value="payments" className="space-y-6">
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <CardV2 className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Recent Transactions</h3>
             </div>
             <TransactionsTable transactions={paymentData.transactions} />
-          </Card>
+          </CardV2>
 
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <CardV2 className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Active Subscriptions</h3>
             </div>
             <SubscriptionsTable subscriptions={paymentData.subscriptions} />
-          </Card>
+          </CardV2>
         </TabsContent>
       </Tabs>
     </div>

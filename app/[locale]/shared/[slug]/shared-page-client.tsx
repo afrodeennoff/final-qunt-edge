@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { format } from "date-fns"
 import { useData } from "@/context/data-provider"
 import { SharedWidgetCanvas } from "./shared-widget-canvas"
@@ -156,14 +156,14 @@ export function SharedPageClient() {
       <div className="flex flex-col min-h-screen">
         <TopBanner t={t} />
         <div className="w-full mx-auto flex-1 flex items-center justify-center p-4 pt-28 sm:pt-32">
-          <Card className="max-w-lg w-full">
-            <CardHeader>
-              <CardTitle>{t('shared.notFound')}</CardTitle>
-              <CardDescription>
+          <CardV2 className="max-w-lg w-full">
+            <CardV2Header>
+              <CardV2Title>{t('shared.notFound')}</CardV2Title>
+              <CardV2Description>
                 {t('shared.notFoundDescription')}
-              </CardDescription>
-            </CardHeader>
-          </Card>
+              </CardV2Description>
+            </CardV2Header>
+          </CardV2>
         </div>
       </div>
     )
@@ -176,26 +176,26 @@ export function SharedPageClient() {
       <TopBanner t={t} />
       <div className="container-fluid flex-1 pt-28 sm:pt-32">
         <main className="w-full py-6 lg:py-8">
-          <Card className="mb-6 w-full">
-            <CardHeader className="space-y-3">
+          <CardV2 className="mb-6 w-full">
+            <CardV2Header className="space-y-3">
               <div className="flex flex-col gap-2">
-                <CardTitle className="text-xl sm:text-2xl">
+                <CardV2Title className="text-xl sm:text-2xl">
                   {sharedParams.title || t('shared.title')}
-                </CardTitle>
-                <CardDescription className="text-sm sm:text-base">
+                </CardV2Title>
+                <CardV2Description className="text-sm sm:text-base">
                   {sharedParams.description || t('shared.description')}
-                </CardDescription>
+                </CardV2Description>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
+            </CardV2Header>
+            <CardV2Content className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <Card className="p-4 border-none shadow-none bg-muted/50">
+                <CardV2 className="p-4 border-none shadow-none bg-muted/50">
                   <p className="text-sm font-medium mb-1">{t('shared.sharedOn')}</p>
                   <p className="text-sm text-muted-foreground">
                     {format(new Date(sharedParams.createdAt || new Date()), "PPP")}
                   </p>
-                </Card>
-                <Card className="p-4 border-none shadow-none bg-muted/50">
+                </CardV2>
+                <CardV2 className="p-4 border-none shadow-none bg-muted/50">
                   <p className="text-sm font-medium mb-1">
                     {dateRange.to ? t('shared.period') : t('shared.since')}
                   </p>
@@ -210,14 +210,14 @@ export function SharedPageClient() {
                       format(new Date(dateRange.from), "PPP")
                     )}
                   </p>
-                </Card>
+                </CardV2>
               </div>
               
-              <Card className="p-4 border-none shadow-none bg-muted/50">
+              <CardV2 className="p-4 border-none shadow-none bg-muted/50">
                 <AccountsSelector accounts={sharedParams.accountNumbers} />
-              </Card>
-            </CardContent>
-          </Card>
+              </CardV2>
+            </CardV2Content>
+          </CardV2>
 
           <SharedWidgetCanvas />
         </main>

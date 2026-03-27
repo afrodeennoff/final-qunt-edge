@@ -4,12 +4,12 @@ import React from 'react'
 import { BarChart, Bar, Cell, Tooltip, ResponsiveContainer, XAxis, YAxis, CartesianGrid, ComposedChart, ReferenceLine, Line } from "recharts"
 import { cn } from "@/lib/utils"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardV2,
+  CardV2Content,
+  CardV2Description,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2"
 import {
   ChartConfig,
   ChartContainer,
@@ -204,16 +204,16 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
 
   return (
     <div className="space-y-4">
-      <Card data-chart-surface="modern" className="w-full">
-        <CardHeader>
-          <CardTitle className="text-base md:text-lg">
+      <CardV2 data-chart-surface="modern" className="w-full">
+        <CardV2Header>
+          <CardV2Title className="text-base md:text-lg">
             {isWeekly ? t('calendar.charts.weeklyEquityVariation') : t('calendar.charts.equityVariation')}
-          </CardTitle>
-          <CardDescription className="text-xs md:text-sm">
+          </CardV2Title>
+          <CardV2Description className="text-xs md:text-sm">
             {t('calendar.charts.finalBalance')}: {formatCurrency(equityChartData[equityChartData.length - 1]?.balance || 0)}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="h-[200px] md:h-[250px]">
+          </CardV2Description>
+        </CardV2Header>
+        <CardV2Content className="h-[200px] md:h-[250px]">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart
@@ -276,19 +276,19 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
               </ComposedChart>
             </ResponsiveContainer>
           </ChartContainer>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
 
-      <Card data-chart-surface="modern" className="w-full">
-        <CardHeader>
-          <CardTitle className="text-base md:text-lg">
+      <CardV2 data-chart-surface="modern" className="w-full">
+        <CardV2Header>
+          <CardV2Title className="text-base md:text-lg">
             {isWeekly ? t('calendar.charts.weeklyPnlDistribution') : t('calendar.charts.dailyPnlDistribution')}
-          </CardTitle>
-          <CardDescription className="text-xs md:text-sm">
+          </CardV2Title>
+          <CardV2Description className="text-xs md:text-sm">
             {isWeekly ? t('calendar.charts.weeklyTotalPnlAfterComm') : t('calendar.charts.totalPnlAfterComm')}: {formatCurrency(totalPnL)}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="h-[250px] md:h-[300px] pb-8 md:pb-16">
+          </CardV2Description>
+        </CardV2Header>
+        <CardV2Content className="h-[250px] md:h-[300px] pb-8 md:pb-16">
           <ChartContainer config={chartConfig} className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -355,8 +355,8 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     </div>
   )
 }

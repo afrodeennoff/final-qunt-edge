@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BadgeV2 } from "@/components/ui/v2"
+import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
 import { Progress } from '@/components/ui/progress'
 import { Loader2, Mic, FileText, Download, Copy, Check } from 'lucide-react'
 import { toast } from 'sonner'

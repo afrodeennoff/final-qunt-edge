@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { TextareaV2 } from "@/components/ui/v2"
@@ -126,11 +126,11 @@ export function NewsletterEditor() {
   }
 
   return (
-    <Card className="border-border bg-card">
-      <CardHeader>
-        <CardTitle className="text-foreground">Composer une Newsletter</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <CardV2 className="border-border bg-card">
+      <CardV2Header>
+        <CardV2Title className="text-foreground">Composer une Newsletter</CardV2Title>
+      </CardV2Header>
+      <CardV2Content>
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="youtubeUrl" className="text-muted-foreground">URL de la vidéo YouTube</Label>
@@ -206,7 +206,7 @@ export function NewsletterEditor() {
             </ButtonV2>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 } 

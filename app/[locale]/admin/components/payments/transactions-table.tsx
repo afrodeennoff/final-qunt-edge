@@ -75,7 +75,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                                 <BadgeV2
                                     variant={
                                         txn.status === 'COMPLETED' ? 'default' :
-                                            txn.status === 'PENDING' ? 'secondary' : 'destructive'
+                                            txn.status === 'PENDING' ? 'secondary' : 'error'
                                     }
                                 >
                                     {txn.status}

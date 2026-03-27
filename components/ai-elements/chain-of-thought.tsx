@@ -160,7 +160,7 @@ export const ChainOfThoughtSearchResults = memo(
   )
 );
 
-export type ChainOfThoughtSearchResultProps = ComponentProps<typeof Badge>;
+export type ChainOfThoughtSearchResultProps = ComponentProps<typeof BadgeV2>;
 
 export const ChainOfThoughtSearchResult = memo(
   ({ className, children, ...props }: ChainOfThoughtSearchResultProps) => (

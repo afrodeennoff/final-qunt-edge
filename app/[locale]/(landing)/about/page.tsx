@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { BadgeV2 } from "@/components/ui/v2"
 import { BookOpen, Code, LineChart, GraduationCap } from "lucide-react"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
@@ -58,38 +58,38 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </header>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="border-border/60 bg-card/70">
-          <CardHeader>
-            <CardTitle className="text-2xl">Our Mission</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <CardV2 className="border-border/60 bg-card/70">
+          <CardV2Header>
+            <CardV2Title className="text-2xl">Our Mission</CardV2Title>
+          </CardV2Header>
+          <CardV2Content>
             <p className="text-muted-foreground">
               At Qunt Edge, we&apos;re on a mission to empower traders with advanced analytics and AI-driven insights. 
               Our platform is designed to help you understand your trading patterns, optimize your strategies, 
               and ultimately become a better trader through comprehensive backtesting and analysis of your real track record.
             </p>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
-        <Card className="border-border/60 bg-card/70">
-          <CardHeader>
-            <CardTitle className="text-2xl">THE TRADER BEHIND TIMON|</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <CardV2 className="border-border/60 bg-card/70">
+          <CardV2Header>
+            <CardV2Title className="text-2xl">THE TRADER BEHIND TIMON|</CardV2Title>
+          </CardV2Header>
+          <CardV2Content>
             <p className="mb-4 text-muted-foreground">
               I&apos;m Timon - a futures trader and trading educator. After years of studying price action, market behavior, and trading psychology, I developed a structured approach focused on clarity, simplicity, and consistent execution.
             </p>
             <p className="text-muted-foreground">
               This method is built to help traders avoid common mistakes, reduce noise, and progress with better decision-making and discipline. The focus is straightforward: strategy, execution, and mindset. No distractions. Just a process designed to support steady improvement over time.
             </p>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
-        <Card className="border-border/60 bg-card/70 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-2xl">Founder&apos;s Expertise</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <CardV2 className="border-border/60 bg-card/70 md:col-span-2">
+          <CardV2Header>
+            <CardV2Title className="text-2xl">Founder&apos;s Expertise</CardV2Title>
+          </CardV2Header>
+          <CardV2Content>
             <div className="flex flex-wrap gap-2">
               {founderSkills.map((skill, index) => (
                 <BadgeV2 key={index} variant="secondary" className="border-border/60 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
@@ -98,14 +98,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 </BadgeV2>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
-        <Card className="border-border/60 bg-card/70 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-2xl">Why Qunt Edge?</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <CardV2 className="border-border/60 bg-card/70 md:col-span-2">
+          <CardV2Header>
+            <CardV2Title className="text-2xl">Why Qunt Edge?</CardV2Title>
+          </CardV2Header>
+          <CardV2Content>
             <ul className="list-disc list-inside space-y-2 text-muted-foreground">
               <li>Built by a trader, for traders</li>
               <li>Advanced analytics powered by real-world trading experience</li>
@@ -113,8 +113,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               <li>AI-driven insights to improve your trading psychology</li>
               <li>Tailored to serious traders looking to elevate their performance</li>
             </ul>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
       </div>
     </UnifiedPageShell>
   )

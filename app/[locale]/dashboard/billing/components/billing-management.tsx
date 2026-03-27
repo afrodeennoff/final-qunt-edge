@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { AlertCircle, CheckCircle2, CalendarDays, Clock, CreditCard, History, Receipt, FileText } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"
 import { BadgeV2 } from "@/components/ui/v2"
@@ -88,9 +88,9 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
-      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardHeader className="px-0">
-          <CardTitle>{t('billing.currentPlan')}</CardTitle>
+      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardV2Header className="px-0">
+          <CardV2Title>{t('billing.currentPlan')}</CardV2Title>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
             {isLoading ? (
               <>
@@ -141,8 +141,8 @@ export default function BillingManagement() {
               </>
             )}
           </div>
-        </CardHeader>
-        <CardContent className="px-0">
+        </CardV2Header>
+        <CardV2Content className="px-0">
           <div className="space-y-6 rounded-2xl border border-border/70 bg-background/70 p-4 sm:p-6">
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -317,13 +317,13 @@ export default function BillingManagement() {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
 
       {/* Subscription Management */}
       {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
-        <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-          <CardContent className="px-0">
+        <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+          <CardV2Content className="px-0">
             <div className="flex flex-col gap-4">
               {!subscription.cancel_at_period_end && (
                 <div className="flex flex-wrap items-center gap-4">
@@ -438,28 +438,28 @@ export default function BillingManagement() {
                     </div>
                   )}
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
       )}
 
       {/* Available Plans */}
-      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardHeader className="px-0">
-          <CardTitle>{t('billing.availablePlans')}</CardTitle>
-          <CardDescription>{t('billing.choosePlan')}</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0">
+      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardV2Header className="px-0">
+          <CardV2Title>{t('billing.availablePlans')}</CardV2Title>
+          <CardV2Description>{t('billing.choosePlan')}</CardV2Description>
+        </CardV2Header>
+        <CardV2Content className="px-0">
           <PricingPlans currentSubscription={subscription} onSuccess={refreshSubscription} />
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
 
       {/* Payment History */}
-      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardHeader className="px-0">
-          <CardTitle>{t('billing.paymentHistory')}</CardTitle>
-          <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0">
+      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardV2Header className="px-0">
+          <CardV2Title>{t('billing.paymentHistory')}</CardV2Title>
+          <CardV2Description>{t('billing.paymentHistoryDesc')}</CardV2Description>
+        </CardV2Header>
+        <CardV2Content className="px-0">
           <div className="rounded-2xl border border-border/70 bg-background/70">
             {isLoading ? (
               <div className="p-4 space-y-4">
@@ -529,8 +529,8 @@ export default function BillingManagement() {
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     </div>
   )
 } 

@@ -5,7 +5,7 @@ import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterv
 import { formatInTimeZone } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Newspaper, Calendar, CalendarDays } from "lucide-react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { BadgeV2 } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
@@ -534,18 +534,18 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   }, [calendarData, currentDate, viewMode])
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
-      <CardHeader
+    <CardV2 className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
+      <CardV2Header
         className="shrink-0 border-b border-border/60 px-4 py-3 sm:px-5 sm:py-4"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-2">
-              <CardTitle className="truncate text-base font-semibold capitalize sm:text-lg">
+              <CardV2Title className="truncate text-base font-semibold capitalize sm:text-lg">
                 {viewMode === 'daily'
                   ? formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })
                   : formatInTimeZone(currentDate, timezone, 'yyyy', { locale: dateLocale })}
-              </CardTitle>
+              </CardV2Title>
               <span className="rounded-md border border-border/60 bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {viewMode === 'daily' ? 'PnL Month' : 'PnL Year'}
               </span>
@@ -612,8 +612,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
             </div>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 min-h-0 p-2 sm:p-3">
+      </CardV2Header>
+      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-3">
         {viewMode === 'daily' ? (
           <>
             <div className="mb-2 grid grid-cols-8 gap-1">
@@ -768,7 +768,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
             year={getYear(currentDate)}
           />
         )}
-      </CardContent>
+      </CardV2Content>
       <CalendarModal
         isOpen={selectedDate !== null && selectedDate !== undefined}
         onOpenChange={(open) => {
@@ -787,7 +787,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
         calendarData={calendarData}
         isLoading={isLoading}
       />
-      <CardFooter className="flex justify-end border-t border-border/60 bg-background/30 px-3 py-2">
+      <CardV2Footer className="flex justify-end border-t border-border/60 bg-background/30 px-3 py-2">
         {/* View Mode Toggle */}
         <div className="flex items-center gap-1 rounded-lg border border-border/60 bg-secondary/30 p-1">
           <ButtonV2 
@@ -815,7 +815,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
             <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.weekly')}</span>
           </ButtonV2>
         </div>
-      </CardFooter>
-    </Card>
+      </CardV2Footer>
+    </CardV2>
   )
 }

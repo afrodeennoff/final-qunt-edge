@@ -39,12 +39,12 @@ export class ErrorBoundary extends Component<Props, State> {
               </p>
             )}
           </div>
-          <ButtonV2 
+          <Button 
             onClick={() => window.location.reload()}
             variant="outline"
           >
             Reload Dashboard
-          </ButtonV2>
+          </Button>
         </div>
       )
     }

@@ -52,12 +52,12 @@ import {
 import { DataTableColumnHeader } from "./column-header";
 import { createClient } from "@/lib/supabase";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+  CardV2,
+  CardV2Content,
+  CardV2Header,
+  CardV2Title,
+  CardV2Footer,
+} from "@/components/ui/v2";
 import {
   Select,
   SelectContent,
@@ -1296,17 +1296,17 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
   }, []);
 
   return (
-    <Card
+    <CardV2
       className="flex h-full w-full flex-col border-border/70 bg-card/80 shadow-[0_20px_40px_-32px_hsl(var(--foreground)/0.55)] backdrop-blur-sm"
       style={cardStyle}
     >
       {showHeader && (
-        <CardHeader className="h-[56px] shrink-0 border-b border-border/70 bg-muted/25 p-3 sm:p-4">
+        <CardV2Header className="h-[56px] shrink-0 border-b border-border/70 bg-muted/25 p-3 sm:p-4">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-1.5">
-              <CardTitle className="line-clamp-1 text-base">
+              <CardV2Title className="line-clamp-1 text-base">
                 {t("trade-table.title")}
-              </CardTitle>
+              </CardV2Title>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -1421,9 +1421,9 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               )}
             </div>
           </div>
-        </CardHeader>
+        </CardV2Header>
       )}
-      <CardContent
+      <CardV2Content
         ref={tableViewportRef}
         className="min-h-0 flex-1 overflow-x-auto overflow-y-auto p-0"
         role="region"
@@ -1655,8 +1655,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             </tfoot>
           </table>
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between border-t border-border/70 bg-background/80 px-4 py-3 backdrop-blur-sm">
+      </CardV2Content>
+      <CardV2Footer className="flex items-center justify-between border-t border-border/70 bg-background/80 px-4 py-3 backdrop-blur-sm">
         <div className="text-sm text-muted-foreground">
           {t("trade-table.totalTrades", { count: totalTradeCount })}
         </div>
@@ -1721,7 +1721,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             {t("trade-table.maxPageSize")}
           </ButtonV2>
         </div>
-      </CardFooter>
+      </CardV2Footer>
 
       {showBulkEdit && (
         <BulkEditPanel
@@ -1731,7 +1731,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           onClose={() => setShowBulkEdit(false)}
         />
       )}
-    </Card>
+    </CardV2>
   );
 }
 

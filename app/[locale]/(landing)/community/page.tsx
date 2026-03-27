@@ -23,10 +23,10 @@ export default async function CommunityPage() {
             <p className="mt-1 text-fg-muted">{t('community.description')}</p>
           </div>
           <CreatePost>
-            <ButtonV2 >
+            <Button >
               <Plus className="mr-2 h-4 w-4" />
               {t('community.newPost')}
-            </ButtonV2>
+            </Button>
           </CreatePost>
         </div>
         <PostList initialPosts={posts} />

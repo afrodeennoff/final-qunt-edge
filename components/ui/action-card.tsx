@@ -11,6 +11,7 @@ import {
   CardProps,
 } from "./card"
 import { Button } from "./button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { LucideIcon } from "lucide-react"
 
 export interface ActionCardProps extends CardProps {

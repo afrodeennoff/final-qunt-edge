@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { useNewsletter } from "./newsletter-context"
 import { useEffect, useState } from "react"
 import { renderEmailPreview } from "../../actions/newsletter"
@@ -60,10 +60,10 @@ export function NewsletterPreview() {
   }
 
   return (
-    <Card className="h-full">
-      <CardHeader>
+    <CardV2 className="h-full">
+      <CardV2Header>
         <div className="flex items-center justify-between">
-          <CardTitle>Aperçu en Direct</CardTitle>
+          <CardV2Title>Aperçu en Direct</CardV2Title>
           <ButtonV2 
             variant="outline"
             size="sm"
@@ -82,8 +82,8 @@ export function NewsletterPreview() {
             )}
           </ButtonV2>
         </div>
-      </CardHeader>
-      <CardContent>
+      </CardV2Header>
+      <CardV2Content>
         {isEditing ? (
           <div className="space-y-6">
             <div className="space-y-2">
@@ -148,7 +148,7 @@ export function NewsletterPreview() {
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 } 

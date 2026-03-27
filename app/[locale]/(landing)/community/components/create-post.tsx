@@ -226,7 +226,7 @@ export function CreatePost({ children }: Props) {
                                 height={100}
                                 className="rounded-md object-cover"
                               />
-                              <ButtonV2 
+                              <Button 
                                 type="button"
                                 variant="destructive"
                                 size="icon"
@@ -234,7 +234,7 @@ export function CreatePost({ children }: Props) {
                                 onClick={() => removeScreenshot(index)}
                               >
                                 <X className="h-4 w-4" />
-                              </ButtonV2>
+                              </Button>
                             </div>
                           ))}
                         </div>
@@ -252,7 +252,7 @@ export function CreatePost({ children }: Props) {
                               id="screenshot-upload"
                               disabled={isUploading}
                             />
-                            <ButtonV2 
+                            <Button 
                               type="button"
                               variant="outline"
                               asChild
@@ -263,7 +263,7 @@ export function CreatePost({ children }: Props) {
                                 <ImagePlus className="mr-2 h-4 w-4" />
                                 {t('community.createPost.addScreenshot')}
                               </label>
-                            </ButtonV2>
+                            </Button>
                           </div>
                         )}
                       </div>
@@ -272,9 +272,9 @@ export function CreatePost({ children }: Props) {
                   </FormItem>
                 )}
               />
-              <ButtonV2  type="submit" className="w-full">
+              <Button  type="submit" className="w-full">
                 {t('community.createPost.createButton')}
-              </ButtonV2>
+              </Button>
             </form>
           </Form>
         </DialogContent>

@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardV2,
+  CardV2Content,
+  CardV2Description,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2";
 import { BadgeV2 } from "@/components/ui/v2";
 import { ButtonV2 } from "@/components/ui/v2";
 import { useI18n, useCurrentLocale } from "@/locales/client";
@@ -201,17 +201,17 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
 
 
   return (
-    <Card className="relative">
-      <CardHeader>
+    <CardV2 className="relative">
+      <CardV2Header>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
+            <CardV2Title className="flex items-center gap-2">
               <Users className="h-6 w-6 text-primary" />
               {t("analysis.accounts.title")}
-            </CardTitle>
-            <CardDescription>
+            </CardV2Title>
+            <CardV2Description>
               {t("analysis.accounts.description")}
-            </CardDescription>
+            </CardV2Description>
           </div>
           <div className="flex items-center gap-2">
             {status === "streaming" ? (
@@ -251,9 +251,9 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
             )}
           </div>
         </div>
-      </CardHeader>
+      </CardV2Header>
 
-      <CardContent className="space-y-6">
+      <CardV2Content className="space-y-6">
         {error && (
           <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
             <p className="text-sm text-destructive">
@@ -274,7 +274,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
 
             {/* Portfolio Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="p-4">
+              <CardV2 className="p-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">
                     $
@@ -285,8 +285,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                     {t("analysis.totalPortfolioValue")}
                   </p>
                 </div>
-              </Card>
-              <Card className="p-4">
+              </CardV2>
+              <CardV2 className="p-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold">
                     {accountPerformanceData.accounts?.length || 0}
@@ -295,8 +295,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                     {t("analysis.totalAccounts")}
                   </p>
                 </div>
-              </Card>
-              <Card className="p-4">
+              </CardV2>
+              <CardV2 className="p-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold capitalize">
                     {accountPerformanceData.portfolioRisk || "N/A"}
@@ -305,13 +305,13 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                     {t("analysis.portfolioRisk")}
                   </p>
                 </div>
-              </Card>
+              </CardV2>
             </div>
 
             {/* Account Performance Table */}
             {accountPerformanceData.accounts &&
               accountPerformanceData.accounts.length > 0 && (
-                <Card className="p-4">
+                <CardV2 className="p-4">
                   <h5 className="font-medium mb-4">
                     {t("analysis.accountComparison")}
                   </h5>
@@ -380,7 +380,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                       </tbody>
                     </table>
                   </div>
-                </Card>
+                </CardV2>
               )}
 
             {/* Best/Worst Performing Accounts */}
@@ -388,7 +388,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
               accountPerformanceData.worstPerformingAccount) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {accountPerformanceData.bestPerformingAccount && (
-                    <Card className="p-4 border-primary/20 bg-primary/5 backdrop-blur-sm">
+                    <CardV2 className="p-4 border-primary/20 bg-primary/5 backdrop-blur-sm">
                       <h5 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">
                         {t("analysis.bestPerformingAccount")}
                       </h5>
@@ -408,10 +408,10 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                           <span className="font-medium">{accountPerformanceData.bestPerformingAccount.winRate?.toFixed(1) || 0}%</span>
                         </div>
                       </div>
-                    </Card>
+                    </CardV2>
                   )}
                   {accountPerformanceData.worstPerformingAccount && (
-                    <Card className="p-4 border-destructive/20 bg-destructive/5 backdrop-blur-sm">
+                    <CardV2 className="p-4 border-destructive/20 bg-destructive/5 backdrop-blur-sm">
                       <h5 className="text-[10px] font-bold uppercase tracking-widest text-destructive mb-3">
                         {t("analysis.worstPerformingAccount")}
                       </h5>
@@ -431,7 +431,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                           <span className="font-medium">{accountPerformanceData.worstPerformingAccount.winRate?.toFixed(1) || 0}%</span>
                         </div>
                       </div>
-                    </Card>
+                    </CardV2>
                   )}
                 </div>
               )}
@@ -480,7 +480,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                     {/* Data Summary Cards */}
                     {(analysisResult || storedAnalysisResult)?.dataSummary && (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <Card className="p-4">
+                        <CardV2 className="p-4">
                           <div className="text-center">
                             <div className="text-2xl font-bold text-primary">
                               {
@@ -492,8 +492,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                               {t("analysis.totalAccounts")}
                             </p>
                           </div>
-                        </Card>
-                        <Card className="p-4">
+                        </CardV2>
+                        <CardV2 className="p-4">
                           <div className="text-center">
                             <div className="text-2xl font-bold text-primary">
                               $
@@ -506,8 +506,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                               {t("analysis.totalPortfolioValue")}
                             </p>
                           </div>
-                        </Card>
-                        <Card className="p-4">
+                        </CardV2>
+                        <CardV2 className="p-4">
                           <div className="text-center">
                             <div className="text-lg font-bold capitalize">
                               {
@@ -519,8 +519,8 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                               {t("analysis.portfolioRisk")}
                             </p>
                           </div>
-                        </Card>
-                        <Card className="p-4">
+                        </CardV2>
+                        <CardV2 className="p-4">
                           <div className="text-center">
                             <div className="text-sm font-bold">
                               {
@@ -532,7 +532,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                               {t("analysis.bestAccount")}
                             </p>
                           </div>
-                        </Card>
+                        </CardV2>
                       </div>
                     )}
 
@@ -541,7 +541,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                       ?.structuredAnalysis && (
                         <div className="space-y-6">
                           {/* Summary */}
-                          <Card className="p-6">
+                          <CardV2 className="p-6">
                             <h4 className="font-semibold mb-3 flex items-center gap-2">
                               <Activity className="h-4 w-4" />
                               {t("analysis.summary")}
@@ -552,11 +552,11 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                   ?.structuredAnalysis.summary
                               }
                             </p>
-                          </Card>
+                          </CardV2>
 
                           {/* Strengths and Improvements */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
+                            <CardV2 className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
                               <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-primary">
                                 {t("analysis.strengths")}
                               </h4>
@@ -575,9 +575,9 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                   ),
                                 )}
                               </ul>
-                            </Card>
+                            </CardV2>
 
-                            <Card className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
+                            <CardV2 className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
                               <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-warning">
                                 {t("analysis.improvements")}
                               </h4>
@@ -596,11 +596,11 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                   ),
                                 )}
                               </ul>
-                            </Card>
+                            </CardV2>
                           </div>
 
                           {/* Recommendations */}
-                          <Card className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
+                          <CardV2 className="p-6 border-border/40 bg-background/30 backdrop-blur-sm">
                             <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-semantic-info">
                               {t("analysis.recommendations")}
                             </h4>
@@ -619,7 +619,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                 ),
                               )}
                             </ul>
-                          </Card>
+                          </CardV2>
                         </div>
                       )}
 
@@ -653,7 +653,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
             </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   );
 }

@@ -24,7 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { BadgeV2 } from "@/components/ui/v2"
+import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
 import { Trade } from "@/lib/data-types"
 import { useUserStore } from '@/store/user-store'
 import { createTagAction } from '@/server/tags'

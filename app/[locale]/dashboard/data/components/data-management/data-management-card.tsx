@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { InputV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
 import { TrashIcon, AlertCircle, ChevronDown, ChevronUp, MoreVertical, Edit2, Loader2 } from "lucide-react"
@@ -295,9 +295,9 @@ export function DataManagementCard() {
     </Alert>
   )
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 justify-between items-start md:items-center">
+    <CardV2>
+      <CardV2Header>
+        <CardV2Title className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 justify-between items-start md:items-center">
           <span className="text-xl md:text-2xl">{t('dataManagement.title')}</span>
           <div className="flex flex-wrap gap-2 w-full md:w-auto">
             <ExportButton trades={trades} />
@@ -375,10 +375,10 @@ export function DataManagementCard() {
               </AlertDialogContent>
             </AlertDialog>
           </div>
-        </CardTitle>
-        <CardDescription>{t('dataManagement.description')}</CardDescription>
-      </CardHeader>
-      <CardContent>
+        </CardV2Title>
+        <CardV2Description>{t('dataManagement.description')}</CardV2Description>
+      </CardV2Header>
+      <CardV2Content>
         <div className="space-y-6">
           {Object.entries(groupedTrades).map(([accountNumber, instruments]) => (
             <div key={accountNumber} className="border-b pb-4 last:border-b-0">
@@ -566,7 +566,7 @@ export function DataManagementCard() {
             </div>
           ))}
         </div>
-      </CardContent>
+      </CardV2Content>
       <Dialog open={renameInstrumentDialogOpen} onOpenChange={setRenameInstrumentDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -663,6 +663,6 @@ export function DataManagementCard() {
           </form>
         </DialogContent>
       </Dialog>
-    </Card>
+    </CardV2>
   )
 } 

@@ -5,7 +5,7 @@ import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { ButtonV2 } from "@/components/ui/v2";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { CardV2, CardV2Content } from "@/components/ui/v2";
 import { motion, AnimatePresence } from "framer-motion";
 import type { UIMessage } from "ai";
 import { useChat } from "@ai-sdk/react";
@@ -100,7 +100,7 @@ const ResumeScrollButton = () => {
             onClick={handleScrollToBottom}
             size="sm"
             className="shadow-lg hover:shadow-xl transition-shadow"
-            variant="secondary"
+            variant="ghost"
           >
             <ChevronDown className="h-4 w-4 mr-1" />
             {t("chat.overlay.resumeScroll")}
@@ -343,14 +343,14 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
   }, [setMessages, setStoredMessages, setIsStarted]);
 
   return (
-    <Card className="h-full flex flex-col bg-background border-none shadow-none relative overflow-clip">
+    <CardV2 className="h-full flex flex-col bg-background border-none shadow-none relative overflow-clip">
       <ChatHeader
         title="AI Assistant"
         onReset={handleReset}
         isLoading={isProcessingResponse}
         size={size}
       />
-      <CardContent className="flex-1 flex flex-col min-h-0 p-0 relative">
+      <CardV2Content className="flex-1 flex flex-col min-h-0 p-0 relative">
         <StickToBottom
           className="flex-1 min-h-0 w-full overflow-y-auto"
           initial="smooth"
@@ -515,7 +515,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                     {part.input?.message}
                                     <div className="flex gap-2 mt-2">
                                       <ButtonV2 
-                                        variant="secondary"
+                                        variant="ghost"
                                         size="sm"
                                         onClick={() =>
                                           addToolResult({
@@ -528,7 +528,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                         Yes
                                       </ButtonV2>
                                       <ButtonV2 
-                                        variant="secondary"
+                                        variant="ghost"
                                         size="sm"
                                         onClick={() =>
                                           addToolResult({
@@ -681,7 +681,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           onFilesChange={setFiles}
           files={files}
         />
-      </CardContent>
+      </CardV2Content>
       {!isStarted && !isLoadingMessages && storedMessages.length === 0 && (
         <div className="absolute inset-0 bg-background/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-md p-4 sm:p-6 gap-4 sm:gap-6 text-center">
@@ -713,6 +713,6 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           </div>
         </div>
       )}
-    </Card>
+    </CardV2>
   );
 }

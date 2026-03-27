@@ -11,7 +11,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider";

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useI18n } from "@/locales/client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
@@ -688,13 +688,13 @@ export function TeamManagement({
           const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
           return (
-            <Card key={team.id} className={cn(
+            <CardV2 key={team.id} className={cn(
               "cursor-pointer transition-colors shadow-xs hover:shadow-md",
               isActive 
                 ? "border-primary ring-2 ring-primary/20" 
                 : "hover:border-primary/50"
             )}>
-              <CardHeader className="pb-3">
+              <CardV2Header className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div className={cn(
@@ -702,7 +702,7 @@ export function TeamManagement({
                       getStatusIndicator(access, isOwner)
                     )} />
                     <div className="min-w-0 flex-1">
-                      <CardTitle className={cn(
+                      <CardV2Title className={cn(
                         "text-sm truncate flex items-center gap-2",
                         isActive && "text-primary"
                       )}>
@@ -712,15 +712,15 @@ export function TeamManagement({
                             {t('teams.management.active')}
                           </BadgeV2>
                         )}
-                      </CardTitle>
+                      </CardV2Title>
                       <p className="text-xs text-muted-foreground mt-1">
                         {getAccessLabel(access, isOwner)}
                       </p>
                     </div>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-0 space-y-3">
+              </CardV2Header>
+              <CardV2Content className="pt-0 space-y-3">
                 <div className="flex justify-between items-baseline text-sm">
                   <span className="text-muted-foreground">{t('dashboard.teams.traders')}</span>
                   <span className="font-medium">{team.traderIds.length}</span>
@@ -828,8 +828,8 @@ export function TeamManagement({
                     </AlertDialog>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </CardV2Content>
+            </CardV2>
           )
         })}
 
@@ -837,17 +837,17 @@ export function TeamManagement({
         {filteredTeams.length > 0 && (
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer transition-colors shadow-xs hover:shadow-md border-dashed border-2 border-muted-foreground/25 hover:border-primary/50">
-                <CardContent className="flex flex-col items-center justify-center h-48 p-6">
+              <CardV2 className="cursor-pointer transition-colors shadow-xs hover:shadow-md border-dashed border-2 border-muted-foreground/25 hover:border-primary/50">
+                <CardV2Content className="flex flex-col items-center justify-center h-48 p-6">
                   <Plus className="h-12 w-12 text-muted-foreground mb-4" />
-                  <CardTitle className="text-lg text-center mb-2">
+                  <CardV2Title className="text-lg text-center mb-2">
                     {t('teams.management.component.createButtonText')}
-                  </CardTitle>
+                  </CardV2Title>
                   <p className="text-sm text-muted-foreground text-center">
                     {t('teams.management.createTeamDescription')}
                   </p>
-                </CardContent>
-              </Card>
+                </CardV2Content>
+              </CardV2>
             </DialogTrigger>
             <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
               <DialogHeader>

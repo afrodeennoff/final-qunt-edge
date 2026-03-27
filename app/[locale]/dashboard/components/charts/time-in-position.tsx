@@ -11,7 +11,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardStats } from "@/context/data-provider";
@@ -136,14 +136,14 @@ export default React.memo(function TimeInPositionChart({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <CardTitle
+            <CardV2Title
               className={cn(
                 "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
               {t("timeInPosition.title")}
-            </CardTitle>
+            </CardV2Title>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>

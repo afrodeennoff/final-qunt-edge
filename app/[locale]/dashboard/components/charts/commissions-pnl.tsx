@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { CardTitle } from "@/components/ui/card";
+import { CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardStats } from "@/context/data-provider";
@@ -148,14 +148,14 @@ export default React.memo(function CommissionsPnLChart({
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardTitle
+            <CardV2Title
               className={cn(
                 "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === 'small' ? "text-sm" : "text-base"
               )}
             >
               {t("commissions.title")}
-            </CardTitle>
+            </CardV2Title>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>

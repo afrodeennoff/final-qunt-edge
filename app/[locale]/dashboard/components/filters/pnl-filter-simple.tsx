@@ -6,7 +6,7 @@ import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState } from "react"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
+import { CardV2, CardV2Content } from "@/components/ui/v2"
 
 interface PnlFilterSimpleProps {
   className?: string
@@ -36,28 +36,28 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium">{t('filters.pnl')}</Label>
-      <Card>
-        <CardContent className="p-3 space-y-3">
+      <CardV2>
+        <CardV2Content className="p-3 space-y-3">
           {/* Preset buttons */}
           <div className="space-y-2">
-            <ButtonV2 
-              variant={isPresetActive(undefined, undefined) ? "default" : "outline"}
+            <ButtonV2
+              variant={isPresetActive(undefined, undefined) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, undefined)}
             >
               {t('filters.allTrades')}
             </ButtonV2>
-            <ButtonV2 
-              variant={isPresetActive(0, undefined) ? "default" : "outline"}
+            <ButtonV2
+              variant={isPresetActive(0, undefined) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(0, undefined)}
             >
               {t('filters.profitableTrades')}
             </ButtonV2>
-            <ButtonV2 
-              variant={isPresetActive(undefined, 0) ? "default" : "outline"}
+            <ButtonV2
+              variant={isPresetActive(undefined, 0) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, 0)}
@@ -85,17 +85,17 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
                 className="h-8 text-xs"
               />
             </div>
-            <ButtonV2  
+            <ButtonV2
               onClick={handleCustomRangeApply}
               size="sm"
               className="w-full"
-              variant="secondary"
+              variant="ghost"
             >
               {t('filters.apply')}
             </ButtonV2>
           </div>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     </div>
   )
 } 

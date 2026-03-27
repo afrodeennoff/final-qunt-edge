@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card } from "@/components/ui/card"
+import { CardV2 } from "@/components/ui/v2"
 import { Frown, Meh, Smile } from "lucide-react"
 import { useI18n } from '@/locales/client'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -110,7 +110,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
   }
 
   return (
-    <Card className="h-full">
+    <CardV2 className="h-full">
       <div className="flex items-center justify-between h-full p-2">
         <span className="text-sm font-medium">{t('mood.question')}</span>
         <div className="flex items-center gap-2">
@@ -172,6 +172,6 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
           </TooltipProvider>
         </div>
       </div>
-    </Card>
+    </CardV2>
   )
 } 

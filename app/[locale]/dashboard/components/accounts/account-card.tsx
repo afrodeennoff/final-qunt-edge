@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
@@ -47,21 +47,21 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
   const minPnlToCountAsDay = Number(account.minPnlToCountAsDay ?? 0)
 
   return (
-    <Card
+    <CardV2
       className={cn(
         "flex flex-col cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl liquid-panel liquid-panel-hover overflow-hidden",
         size === 'small' || size === 'small-long' ? "w-72" : "w-96"
       )}
       onClick={onClick}
     >
-      <CardHeader className={cn(
+      <CardV2Header className={cn(
         "flex-none pb-2",
         size === 'small' || size === 'small-long' ? "p-2" : "p-3"
       )}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0 w-full">
             <div className="truncate w-full">
-              <CardTitle className={cn(
+              <CardV2Title className={cn(
                 "truncate flex items-center gap-2 w-full",
                 size === 'small' || size === 'small-long' ? "text-xs" : "text-sm"
               )}>
@@ -81,7 +81,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
                     )
                   }
                 </div>
-              </CardTitle>
+              </CardV2Title>
               <p className={cn(
                 "text-muted-foreground truncate font-mono",
                 size === 'small' || size === 'small-long' ? "text-[10px]" : "text-[10px]"
@@ -91,8 +91,8 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
             </div>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className={cn(
+      </CardV2Header>
+      <CardV2Content className={cn(
         "flex-1 pt-0",
         size === 'small' || size === 'small-long' ? "p-2 space-y-1.5" : "p-3 space-y-2"
       )}>
@@ -219,7 +219,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
             {t('propFirm.card.needsConfiguration')}
           </p>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 } 

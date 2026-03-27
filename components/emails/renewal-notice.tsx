@@ -166,12 +166,12 @@ export default function RenewalNoticeEmail({
                   {t.actionDescription}
                 </Text>
                 
-                <ButtonV2 
+                <Button 
                   href={dashboardUrl}
                   className="bg-semantic-info-bg hover:bg-semantic-info-bg text-white px-6 py-3 rounded-lg font-medium text-center block w-fit"
                 >
                   {t.manageAccountButton}
-                </ButtonV2>
+                </Button>
               </Section>
 
               {/* Auto-renewal Notice */}
@@ -187,12 +187,12 @@ export default function RenewalNoticeEmail({
                   {t.contactSupport}
                 </Text>
                 
-                <ButtonV2 
+                <Button 
                   href={supportUrl}
                   className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium text-center block w-fit"
                 >
                   {t.supportButton}
-                </ButtonV2>
+                </Button>
               </Section>
 
               <Text className="text-gray-800 mt-8 mb-2">

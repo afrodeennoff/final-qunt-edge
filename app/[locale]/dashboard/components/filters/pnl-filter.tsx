@@ -52,10 +52,10 @@ export function PnlFilter() {
             className="w-full"
           />
         </div>
-        <ButtonV2  
+        <ButtonV2
           onClick={handleCustomRangeApply}
           className="w-full"
-          variant="secondary"
+          variant="ghost"
         >
           {t('filters.apply')}
         </ButtonV2>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { toast } from "sonner"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { InputV2 } from "@/components/ui/v2"
@@ -384,12 +384,12 @@ function TemplatePropsCard({
   const t = useI18n()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("admin.sendEmail.props.title")}</CardTitle>
-        <CardDescription>{t("admin.sendEmail.props.description")}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <CardV2>
+      <CardV2Header>
+        <CardV2Title>{t("admin.sendEmail.props.title")}</CardV2Title>
+        <CardV2Description>{t("admin.sendEmail.props.description")}</CardV2Description>
+      </CardV2Header>
+      <CardV2Content className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="subject">{t("admin.sendEmail.subject.label")}</Label>
           <InputV2
@@ -424,8 +424,8 @@ function TemplatePropsCard({
             )}
           </div>
         </ScrollArea>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }
 
@@ -443,12 +443,12 @@ function RecipientsCard({
   const t = useI18n()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("admin.sendEmail.recipients.title")}</CardTitle>
-        <CardDescription>{t("admin.sendEmail.recipients.description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <CardV2>
+      <CardV2Header>
+        <CardV2Title>{t("admin.sendEmail.recipients.title")}</CardV2Title>
+        <CardV2Description>{t("admin.sendEmail.recipients.description")}</CardV2Description>
+      </CardV2Header>
+      <CardV2Content>
         {loadingUsers ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -456,8 +456,8 @@ function RecipientsCard({
         ) : (
           <UserSelector users={users} selectedUsers={selectedUsers} onSelectionChange={onSelectionChange} />
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }
 
@@ -475,12 +475,12 @@ function PreviewCard({
   const t = useI18n()
 
   return (
-    <Card className="flex h-full flex-col">
-      <CardHeader className="space-y-1">
+    <CardV2 className="flex h-full flex-col">
+      <CardV2Header className="space-y-1">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <CardTitle>{t("admin.sendEmail.preview.title")}</CardTitle>
-            <CardDescription>{t("admin.sendEmail.preview.description")}</CardDescription>
+            <CardV2Title>{t("admin.sendEmail.preview.title")}</CardV2Title>
+            <CardV2Description>{t("admin.sendEmail.preview.description")}</CardV2Description>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground">
@@ -506,8 +506,8 @@ function PreviewCard({
             </div>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 gap-4 flex flex-col">
+      </CardV2Header>
+      <CardV2Content className="flex-1 gap-4 flex flex-col">
         {loadingPreview ? (
           <div className="flex h-full items-center justify-center py-12 text-sm text-muted-foreground">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -530,8 +530,8 @@ function PreviewCard({
             {t("admin.sendEmail.preview.empty")}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }
 

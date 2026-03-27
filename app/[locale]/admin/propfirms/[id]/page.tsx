@@ -14,9 +14,8 @@ import {
   deletePropFirmCoupon,
 } from '@/server/prop-firms'
 import { assertAdminAccess } from '@/server/authz'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2, InputV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
 
@@ -90,13 +89,6 @@ function parseOptionalNumber(value: FormDataEntryValue | null): number | undefin
   if (!text) return undefined
   const parsed = Number.parseFloat(text)
   return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function parseOptionalDate(value: FormDataEntryValue | null): Date | undefined {
-  const text = value?.toString().trim()
-  if (!text) return undefined
-  const parsed = new Date(text)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
 function buildFallbackFirm(id: string): PropFirmData | null {
@@ -220,16 +212,7 @@ export default async function PropFirmEditPage({
     const propFirmId = formData.get('propFirmId') as string
     await createPropFirmCoupon(propFirmId, {
       code: requireText(formData.get('code')),
-      description: normalizeOptionalText(formData.get('description')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('isActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/propfirms/${propFirmId}`)
   }
@@ -240,16 +223,7 @@ export default async function PropFirmEditPage({
     const propFirmId = formData.get('propFirmId') as string
     await updatePropFirmCoupon(couponId, {
       code: requireText(formData.get('code')),
-      description: normalizeOptionalText(formData.get('description')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('isActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/propfirms/${propFirmId}`)
   }
@@ -485,13 +459,8 @@ function CouponsSection({
         <form action={onCreateCoupon}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <div className="flex items-center gap-2">
-            <InputV2 name="code" placeholder="Code" className="w-28" required />
-            <InputV2 name="description" placeholder="Description" className="w-40" />
-            <InputV2 name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-24" />
-            <label className="flex items-center gap-1 text-sm">
-              <input type="checkbox" name="isActive" defaultChecked className="h-4 w-4 rounded border-input accent-primary" />
-              Active
-            </label>
+            <InputV2 name="code" placeholder="Code" className="w-32" required />
+            <InputV2 name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-28" />
             <ButtonV2  type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
             </ButtonV2>
@@ -509,43 +478,12 @@ function CouponsSection({
                   <form action={onUpdateCoupon} className="space-y-2">
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       <InputV2 name="code" defaultValue={coupon.code} placeholder="Code" required />
-                      <InputV2 name="description" defaultValue={coupon.description ?? ''} placeholder="Description" />
                       <InputV2 name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
-                      <InputV2 name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="Challenge Fee" />
                     </div>
-                    <div className="grid grid-cols-4 gap-2">
-                      <InputV2 name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Drawdown Type" />
-                      <InputV2 name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Payout Model" />
-                      <InputV2 name="platform" defaultValue={coupon.platform ?? ''} placeholder="Platform" />
-                      <InputV2 name="claimUrl" defaultValue={coupon.claimUrl ?? ''} placeholder="Claim URL" />
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`startsAt-${coupon.id}`} className="text-sm">Starts:</Label>
-                        <InputV2
-                          id={`startsAt-${coupon.id}`}
-                          name="startsAt"
-                          type="datetime-local"
-                          defaultValue={coupon.startsAt ? new Date(coupon.startsAt).toISOString().slice(0, 16) : ''}
-                          className="w-44"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`expiresAt-${coupon.id}`} className="text-sm">Expires:</Label>
-                        <InputV2
-                          id={`expiresAt-${coupon.id}`}
-                          name="expiresAt"
-                          type="datetime-local"
-                          defaultValue={coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().slice(0, 16) : ''}
-                          className="w-44"
-                        />
-                      </div>
-                      <label className="flex items-center gap-1 text-sm">
-                        <input type="checkbox" name="isActive" defaultChecked={coupon.isActive} className="h-4 w-4 rounded border-input accent-primary" />
-                        Active
-                      </label>
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs text-muted-foreground">Only coupon code and discount percentage are editable here.</p>
                       <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
                     </div>
                   </form>

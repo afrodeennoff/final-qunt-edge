@@ -244,9 +244,9 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <ButtonV2  variant="ghost" size="sm" className="gap-2" aria-label="Post actions" title="Post actions">
+                <Button  variant="ghost" size="sm" className="gap-2" aria-label="Post actions" title="Post actions">
                   <MoreHorizontal className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {!isPostPage && (
@@ -310,7 +310,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                 className="min-h-[100px]"
               />
               <div className="flex justify-end gap-2">
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   onClick={() => {
                     setIsEditing(false)
@@ -318,10 +318,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                   }}
                 >
                   {t('community.post.cancel')}
-                </ButtonV2>
-                <ButtonV2  onClick={handleEdit}>
+                </Button>
+                <Button  onClick={handleEdit}>
                   {t('community.post.save')}
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           ) : (
@@ -343,14 +343,14 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                 {post.screenshots.map((screenshot: string, index: number) => (
                   <Dialog key={index} open={selectedImage === screenshot} onOpenChange={(open) => !open && setSelectedImage(null)}>
                     <DialogTrigger asChild>
-                      <ButtonV2  variant="outline" className="p-0 h-24 w-24 relative overflow-hidden" onClick={() => setSelectedImage(screenshot)}>
+                      <Button  variant="outline" className="p-0 h-24 w-24 relative overflow-hidden" onClick={() => setSelectedImage(screenshot)}>
                         <Image
                           src={screenshot}
                           alt={`Screenshot ${index + 1}`}
                           fill
                           className="object-cover"
                         />
-                      </ButtonV2>
+                      </Button>
                     </DialogTrigger>
                     {selectedImage === screenshot && (
                       <DialogContent className="max-w-4xl">
@@ -373,30 +373,30 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
          <CardFooter className="flex justify-between border-t pt-4">
            <div className="flex items-center gap-x-4">
              <div className="flex items-center gap-x-2">
-               <ButtonV2 
+               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVote(VoteType.UPVOTE)}
               >
                 <ArrowBigUp className="mr-1 h-5 w-5" />
                 {upvotes}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVote(VoteType.DOWNVOTE)}
               >
                 <ArrowBigDown className="mr-1 h-5 w-5" />
                 {downvotes}
-              </ButtonV2>
+              </Button>
               <span className="text-sm text-muted-foreground">
                 {t('community.post.score')}: {score}
               </span>
             </div>
-            <ButtonV2  variant="ghost" size="sm" onClick={handleToggleComments}>
+            <Button  variant="ghost" size="sm" onClick={handleToggleComments}>
               <MessageSquare className="mr-1 h-4 w-4" />
               {commentCount} {t('community.post.comments')}
-            </ButtonV2>
+            </Button>
           </div>
         </CardFooter>
         {isCommentsOpen && (

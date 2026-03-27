@@ -56,7 +56,7 @@ function MetricCard({
 
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   if (!hasConfiguredDatabaseConnection) {
-    const fallbackEntry = getFallbackLeaderboardEntryByUserId(slug)
+    const fallbackEntry = await getFallbackLeaderboardEntryByUserId(slug)
     if (!fallbackEntry) return null
 
     return {

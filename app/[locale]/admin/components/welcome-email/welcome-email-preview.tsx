@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Loader2, ZoomIn, ZoomOut } from "lucide-react"
 import { useWelcomeEmail } from "./welcome-email-context"
@@ -45,10 +45,10 @@ export function WelcomeEmailPreview() {
 
   return (
     <div className="h-screen flex flex-col">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader>
+      <CardV2 className="flex-1 flex flex-col">
+        <CardV2Header>
           <div className="flex items-center justify-between">
-            <CardTitle>Email Preview</CardTitle>
+            <CardV2Title>Email Preview</CardV2Title>
             <div className="flex items-center gap-2">
               <ButtonV2 
                 variant="outline"
@@ -69,8 +69,8 @@ export function WelcomeEmailPreview() {
               </ButtonV2>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="flex-1 p-0">
+        </CardV2Header>
+        <CardV2Content className="flex-1 p-0">
           <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             {/* Edit Form */}
             <div className="p-6 space-y-6 overflow-y-auto">
@@ -134,8 +134,8 @@ export function WelcomeEmailPreview() {
               )}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     </div>
   )
 }

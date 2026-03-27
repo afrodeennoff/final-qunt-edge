@@ -31,12 +31,12 @@ export function AuthPrompt({ open, onOpenChange, action = 'perform this action' 
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-x-2">
-          <ButtonV2  variant="outline" onClick={() => onOpenChange(false)}>
+          <Button  variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
-          </ButtonV2>
-          <ButtonV2  onClick={() => router.push('/authentication?next=/community')}>
+          </Button>
+          <Button  onClick={() => router.push('/authentication?next=/community')}>
             {t('auth.signIn')}
-          </ButtonV2>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

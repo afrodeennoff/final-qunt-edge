@@ -1,5 +1,5 @@
 import { WidgetSize } from "../../types/dashboard"
-import { CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { RotateCcw } from "lucide-react"
@@ -17,14 +17,14 @@ export function ChatHeader({
 }) {
     const t = useI18n();
     return (
-        <CardHeader
+        <CardV2Header
             className={cn(
                 "flex flex-row items-center justify-between gap-0 border-b shrink-0",
                 size === "small-long" ? "p-2 h-[40px]" : "p-3 sm:p-4 h-[56px]",
             )}
         >
             <div className="flex items-center gap-1.5">
-                <CardTitle className={cn("line-clamp-1", size === "small-long" ? "text-sm" : "text-base")}>{t('chat.title')}</CardTitle>
+                <CardV2Title className={cn("line-clamp-1", size === "small-long" ? "text-sm" : "text-base")}>{t('chat.title')}</CardV2Title>
             </div>
             <ButtonV2 
                 variant="ghost"
@@ -36,6 +36,6 @@ export function ChatHeader({
             >
                 <RotateCcw className={cn(size === "small-long" ? "h-3.5 w-3.5" : "h-4 w-4")} />
             </ButtonV2>
-        </CardHeader>
+        </CardV2Header>
     )
 }

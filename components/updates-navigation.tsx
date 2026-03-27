@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonV2 } from '@/components/ui/v2'
 
 interface UpdatesNavigationProps {
   previous: { slug: string; title: string } | null

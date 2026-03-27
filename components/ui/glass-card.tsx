@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
+import { CardV2 } from "@/components/ui/v2";
 
 export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "strong" | "subtle";
@@ -12,7 +12,7 @@ export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
 const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
   ({ className, variant = "default", hover = false, size = "md", clickable = false, ...props }, ref) => {
     return (
-      <Card
+        <CardV2
         ref={ref}
         className={cn(
           "rounded-[var(--radius)] transition-all duration-200",

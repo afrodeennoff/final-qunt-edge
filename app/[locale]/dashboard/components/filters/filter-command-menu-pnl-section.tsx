@@ -94,11 +94,11 @@ export function PnlSection({ searchValue }: PnlSectionProps) {
               className="h-8 text-sm"
             />
           </div>
-          <ButtonV2 
+          <ButtonV2
             onClick={handleCustomRangeApply}
             size="sm"
             className="w-full h-8"
-            variant="secondary"
+            variant="ghost"
           >
             {t('filters.apply')}
           </ButtonV2>

@@ -473,9 +473,9 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
         </p>
         <div className="flex flex-wrap gap-2">
           {categories.map(category => (
-            <ButtonV2 
+            <ButtonV2
               key={category.id}
-              variant="secondary"
+              variant="ghost"
               size="sm"
               className="h-8 rounded-full"
               onClick={() => handleCategoryClick(category.id)}

@@ -33,7 +33,7 @@ export default function Hero({ locale }: { locale: string }) {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-          <ButtonV2 
+          <Button
             asChild
             size="lg"
             className="bg-[#2962FF] hover:bg-[#2962FF]/90 btn-primary-glow"
@@ -41,8 +41,8 @@ export default function Hero({ locale }: { locale: string }) {
             <Link href={`/${locale}/authentication?next=dashboard`}>
               Start Free Audit
             </Link>
-          </ButtonV2>
-          <ButtonV2 
+          </Button>
+          <Button
             asChild
             size="lg"
             variant="outline"
@@ -52,7 +52,7 @@ export default function Hero({ locale }: { locale: string }) {
               Watch Demo
               <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
-          </ButtonV2>
+          </Button>
         </div>
         
         <p className="text-sm text-[#707070]">

@@ -12,11 +12,11 @@ export default function NotFound() {
         <p className="text-xl text-muted-foreground">
           {t('community.post.notFound')}
         </p>
-        <ButtonV2  asChild>
+        <Button  asChild>
           <Link href="/community">
             {t('common.back')}
           </Link>
-        </ButtonV2>
+        </Button>
       </div>
     </div>
   )

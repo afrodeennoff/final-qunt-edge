@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Info } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useI18n } from '@/locales/client'
@@ -104,11 +104,11 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
   }
 
   return (
-    <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+    <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
+      <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardTitle className="line-clamp-1 text-base">{t('embed.pnlPerContract.title')}</CardTitle>
+            <CardV2Title className="line-clamp-1 text-base">{t('embed.pnlPerContract.title')}</CardV2Title>
             <Popover>
               <PopoverTrigger asChild>
                 <Info className="text-muted-foreground hover:text-foreground transition-colors cursor-help h-4 w-4" />
@@ -119,8 +119,8 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
             </Popover>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 min-h-0 p-2 sm:p-4">
+      </CardV2Header>
+      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-4">
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ left: 10, right: 8, top: 8, bottom: 24 }}>
@@ -154,7 +154,7 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }

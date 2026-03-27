@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { Label } from "@/components/ui/label"
 import { InputV2 } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card } from "@/components/ui/card"
+import { CardV2 } from "@/components/ui/v2"
 import { PlusCircleIcon, CheckCircle2 } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
@@ -62,7 +62,7 @@ export default function AccountSelection({
       <div className="flex-1 overflow-y-auto mt-4 py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {localAccounts.map((account) => (
-            <Card
+            <CardV2
               key={account}
               className={cn(
                 "p-6 cursor-pointer hover:border-primary transition-colors relative group",
@@ -88,11 +88,11 @@ export default function AccountSelection({
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                 )}
               </div>
-            </Card>
+            </CardV2>
           ))}
 
           {/* Add New Account Card */}
-          <Card
+          <CardV2
             className={cn(
               "p-6 cursor-pointer hover:border-primary transition-colors",
               isAddingNewAccount ? "border-primary" : ""
@@ -115,15 +115,15 @@ export default function AccountSelection({
                   }}
                 />
                 <div className="flex gap-2">
-                  <ButtonV2 
-                    variant="default"
+                  <ButtonV2
+                    variant="solid"
                     size="sm"
                     className="w-full"
                     onClick={handleAddAccount}
                   >
                     {t('common.add')}
                   </ButtonV2>
-                  <ButtonV2 
+                  <ButtonV2
                     variant="outline"
                     size="sm"
                     className="w-full"
@@ -145,7 +145,7 @@ export default function AccountSelection({
                 </p>
               </div>
             )}
-          </Card>
+          </CardV2>
         </div>
       </div>
     </div>

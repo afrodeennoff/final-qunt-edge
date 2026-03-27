@@ -1,5 +1,3 @@
-'use server'
-
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
@@ -166,7 +164,7 @@ function getFallbackLeaderboardEntries(sort: LeaderboardSort): LeaderboardEntry[
   return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
 }
 
-export function getFallbackLeaderboardEntryByUserId(userId: string): LeaderboardEntry | null {
+export async function getFallbackLeaderboardEntryByUserId(userId: string): Promise<LeaderboardEntry | null> {
   return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
 }
 

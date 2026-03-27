@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils'
 import { type UseSupabaseUploadReturn } from '@/hooks/use-hash-upload'
 import { Button } from '@/components/ui/button'
+import { ButtonV2 } from '@/components/ui/v2'
 import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react'
 import { createContext, type PropsWithChildren, useCallback, useContext } from 'react'
 import { useI18n } from '@/locales/client'

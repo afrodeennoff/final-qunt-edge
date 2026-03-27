@@ -49,10 +49,10 @@ export function AnalysisOverview() {
           <p className="text-base text-muted-foreground">{t('analysis.description')}</p>
         </div>
         <div className="flex items-center gap-4">
-          <ButtonV2 
+          <ButtonV2
             onClick={() => clearAnalysis()}
             variant="ghost"
-            size="default"
+            size="md"
             title={t('analysis.clearCache')}
             disabled={status.isLoading || !effectiveHasData}
           >

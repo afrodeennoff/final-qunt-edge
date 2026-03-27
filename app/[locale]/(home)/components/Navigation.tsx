@@ -44,12 +44,12 @@ export default function Navigation({ locale }: NavigationProps) {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <ButtonV2  variant="ghost" size="sm">
+            <Button  variant="ghost" size="sm">
               Login
-            </ButtonV2>
-            <ButtonV2  size="sm" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+            </Button>
+            <Button  size="sm" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
               Start Free
-            </ButtonV2>
+            </Button>
           </div>
 
           <button
@@ -80,12 +80,12 @@ export default function Navigation({ locale }: NavigationProps) {
             </Link>
           ))}
           <div className="flex flex-col gap-4 mt-8">
-            <ButtonV2  variant="outline" size="lg">
+            <Button  variant="outline" size="lg">
               Login
-            </ButtonV2>
-            <ButtonV2  size="lg" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+            </Button>
+            <Button  size="lg" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
               Start Free
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       </div>

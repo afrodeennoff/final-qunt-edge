@@ -61,12 +61,12 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                       className="rounded-lg w-full mb-4 shadow-xs"
                     />
                   </Link>
-                  <ButtonV2 
+                  <Button 
                     className="bg-black text-white text-sm px-4 py-2 rounded-md font-medium box-border"
                     href={`https://youtu.be/${youtubeId}`}
                   >
                     ▶️ Voir la dernière vidéo
-                  </ButtonV2>
+                  </Button>
                 </Section>
 
                 <Text className="text-gray-800 mb-4 leading-6">
@@ -78,12 +78,12 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 </Text>
 
                 <Section className="text-center">
-                  <ButtonV2 
+                  <Button 
                     className="bg-black text-white text-sm px-6 py-2.5 rounded-md font-medium box-border"
                     href="https://qunt-edge.vercel.app/dashboard"
                   >
                     Accéder à mon tableau de bord →
-                  </ButtonV2>
+                  </Button>
                 </Section>
 
                 <Hr className="border-gray-200 my-8" />
@@ -134,12 +134,12 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                       className="rounded-lg w-full mb-4 shadow-xs"
                     />
                   </Link>
-                  <ButtonV2 
+                  <Button 
                     className="bg-black text-white text-sm px-4 py-2 rounded-md font-medium box-border"
                     href={`https://youtu.be/${youtubeId}`}
                   >
                     ▶️ Watch the latest video
-                  </ButtonV2>
+                  </Button>
                 </Section>
 
                 <Text className="text-gray-800 mb-4 leading-6">
@@ -151,12 +151,12 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                 </Text>
 
                 <Section className="text-center">
-                  <ButtonV2 
+                  <Button 
                     className="bg-black text-white text-sm px-6 py-2.5 rounded-md font-medium box-border"
                     href="https://qunt-edge.vercel.app/dashboard"
                   >
                     Access my dashboard →
-                  </ButtonV2>
+                  </Button>
                 </Section>
 
                 <Hr className="border-gray-200 my-8" />

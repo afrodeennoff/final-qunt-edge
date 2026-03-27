@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { Info } from "lucide-react";
 import {
   Popover,
@@ -186,13 +186,13 @@ export default function TickDistributionChartEmbed({
   };
 
   return (
-    <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-14">
+    <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
+      <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-14">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardTitle className="line-clamp-1 text-base">
+            <CardV2Title className="line-clamp-1 text-base">
               {t("embed.tickDistribution.title")}
-            </CardTitle>
+            </CardV2Title>
             <Popover>
               <PopoverTrigger asChild>
                 <Info className="text-muted-foreground hover:text-foreground transition-colors cursor-help h-4 w-4" />
@@ -220,8 +220,8 @@ export default function TickDistributionChartEmbed({
             </Select>
           )}
         </div>
-      </CardHeader>
-      <CardContent className="flex-1 min-h-0 p-2 sm:p-4">
+      </CardV2Header>
+      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-4">
         <div className="w-full h-full">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
@@ -320,7 +320,7 @@ export default function TickDistributionChartEmbed({
             </ResponsiveContainer>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   );
 }

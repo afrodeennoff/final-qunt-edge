@@ -13,6 +13,7 @@ import { getFreeUsers } from '../../actions/stats'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { ArrowUpDown } from 'lucide-react'
+import { ButtonV2 } from '@/components/ui/v2'
 import { Trade } from "@/lib/data-types"
 
 interface FreeUser {

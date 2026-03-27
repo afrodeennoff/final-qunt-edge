@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { ButtonV2 } from "@/components/ui/v2";
+import { TextareaV2 } from "@/components/ui/v2";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -521,7 +523,7 @@ export const PromptInputTextarea = ({
         className
       )}
       name="message"
-      onChange={(e) => {
+      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
         onChange?.(e);
       }}
       onKeyDown={handleKeyDown}

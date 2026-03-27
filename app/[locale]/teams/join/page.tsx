@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
 import { useParams } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { BadgeV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
@@ -118,7 +118,7 @@ export default function TeamJoinPage() {
       case 'accepted':
         return <BadgeV2 variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</BadgeV2>
       case 'expired':
-        return <BadgeV2 variant="destructive">{t('teams.invitations.expired')}</BadgeV2>
+        return <BadgeV2 variant="error">{t('teams.invitations.expired')}</BadgeV2>
       default:
         return <BadgeV2 variant="outline">{status}</BadgeV2>
     }
@@ -154,22 +154,22 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <Card>
-            <CardHeader className="text-center">
+          <CardV2>
+            <CardV2Header className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
-              <CardTitle className="text-xl">{t('teams.join.invalid.title')}</CardTitle>
-              <CardDescription>
+              <CardV2Title className="text-xl">{t('teams.join.invalid.title')}</CardV2Title>
+              <CardV2Description>
                 {error}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
+              </CardV2Description>
+            </CardV2Header>
+            <CardV2Content className="text-center">
               <Link href={dashboardRoot}>
                 <ButtonV2  variant="outline" className="w-full">
                   {t('teams.join.goToManage')}
                 </ButtonV2>
               </Link>
-            </CardContent>
-          </Card>
+            </CardV2Content>
+          </CardV2>
         </div>
       </div>
     )
@@ -179,15 +179,15 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <Card>
-            <CardHeader className="text-center">
+          <CardV2>
+            <CardV2Header className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
-              <CardTitle className="text-xl">{t('teams.join.notFound.title')}</CardTitle>
-              <CardDescription>
+              <CardV2Title className="text-xl">{t('teams.join.notFound.title')}</CardV2Title>
+              <CardV2Description>
                 {t('teams.join.notFound.description')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
+              </CardV2Description>
+            </CardV2Header>
+            <CardV2Content className="text-center">
               <Link href={dashboardRoot}>
                 <ButtonV2 
                   variant="outline"
@@ -196,8 +196,8 @@ export default function TeamJoinPage() {
                   {t('teams.join.goToManage')}
                 </ButtonV2>
               </Link>
-            </CardContent>
-          </Card>
+            </CardV2Content>
+          </CardV2>
         </div>
       </div>
     )
@@ -216,20 +216,20 @@ export default function TeamJoinPage() {
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
+        <CardV2>
+          <CardV2Header>
             <div className="flex items-center gap-3">
               <Building2 className="h-8 w-8 text-primary" />
               <div>
-                <CardTitle className="text-xl">{invitation.teamName}</CardTitle>
-                <CardDescription>
+                <CardV2Title className="text-xl">{invitation.teamName}</CardV2Title>
+                <CardV2Description>
                   {t('teams.join.details.title')}
-                </CardDescription>
+                </CardV2Description>
               </div>
             </div>
-          </CardHeader>
+          </CardV2Header>
 
-          <CardContent className="space-y-6">
+          <CardV2Content className="space-y-6">
             {/* Invitation Status */}
             <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -332,8 +332,8 @@ export default function TeamJoinPage() {
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
       </div>
     </div>
   )

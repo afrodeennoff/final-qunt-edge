@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
 import { useDashboardFilters, useDashboardActions } from '@/context/data-provider'
 import { Button } from '@/components/ui/button'
-import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2, InputV2, TextareaV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
-import { TextareaV2 } from "@/components/ui/v2"
 import { Plus, X, Edit2, Trash2, Search, Info } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import {

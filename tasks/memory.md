@@ -1,6 +1,40 @@
 # Session Memory (2026-03-27)
 
-## Last Session: Feature Flags Investigation + Tailwind Version Sync
+## Last Session: shadcn/ui v2 Migration — TypeScript Fixes + Tailwind Build Fix
+
+### Accomplishments
+- **Completed shadcn/ui v2 migration type fixes**: Resolved ~150+ TypeScript errors from the v1→v2 component migration
+  - Added `ButtonV2` import to 14 dashboard/admin files using `<ButtonV2>` JSX without the import
+  - Fixed `<ButtonV2>` → `<Button>` in 8 email template files (react-email uses `Button`, not shadcn)
+  - Fixed `<ButtonV2>` → `<Button>` in `error-boundary.tsx` (only v1 Button imported)
+  - Fixed `BadgeV2` variant `"destructive"` → `"error"` in 4 files
+  - Fixed `Card` variant `"matte"` → `"flat"` in `admin/coupons/page.tsx`
+  - Fixed `ComponentProps<typeof Badge>` → `BadgeV2` in ai-elements type exports
+  - Fixed `</Card>` → `</CardV2>` closing tag in `atas-processor.tsx`
+  - Removed unused `Badge` imports in `chain-of-thought.tsx`, `inline-citation.tsx`
+  - Fixed duplicate import in `updates-navigation.tsx`
+- **Fixed Tailwind v4 `@utility` nesting build error**: `@utility focus-ring` was inside `@layer base` (line 314-537) — moved it to top level after layer closes
+- **TypeScript compilation**: `npm run typecheck` passes with 0 errors
+- **Production build**: `npm run build` succeeds
+
+### Codebase State
+- shadcn v2 design system fully operational: `--v2-*` CSS tokens in `globals.css`, V2 components (CardV2, ButtonV2, BadgeV2, InputV2, etc.) working
+- ~150+ files migrated to v2 components
+- All TypeScript errors resolved
+- Build passes cleanly
+
+### Key Files
+- `app/globals.css` — v2 tokens + `@theme inline` + `@utility` directives (no @utility inside @layer base)
+- `components/ui/v2/*` — V2 component library
+- Dashboard files: `tag-widget.tsx`, `bulk-edit-panel.tsx`, `widget-registry.tsx`, `day-tag-selector.tsx`, etc. — now correctly import ButtonV2
+- Email templates: `welcome.tsx`, `black-friday.tsx`, etc. — use react-email Button
+
+### Blockers
+- None — all work complete
+
+---
+
+## Previous Session: Feature Flags Investigation + Tailwind Version Sync
 
 ### Accomplishments
 - **Tailwind Version Sync**: Verified all Tailwind packages at 4.1.18 (already synced)

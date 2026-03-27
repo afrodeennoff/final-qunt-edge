@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { ButtonV2 } from "@/components/ui/v2";
 import { InputV2 } from "@/components/ui/v2";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { CardV2 } from "@/components/ui/v2";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -617,7 +617,7 @@ export default function AtasProcessor({
                   const isSelected = currentSelectedAccounts.includes(account);
 
                   return (
-                    <Card
+                    <CardV2
                       key={account}
                       className={cn(
                         "p-6 cursor-pointer hover:border-border/60 transition-colors relative group",
@@ -650,7 +650,7 @@ export default function AtasProcessor({
                           <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                         )}
                       </div>
-                    </Card>
+                    </CardV2>
                   );
                 })}
               </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { memo, useState, useMemo, useEffect, useRef } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Progress } from "@/components/ui/progress"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -609,10 +609,10 @@ function PayoutDialog({
             <Label htmlFor="status">{t('propFirm.payout.status')}</Label>
             <div className="grid grid-cols-2 gap-2">
               {statusOptions.map((option) => (
-                <ButtonV2 
+                <ButtonV2
                   key={option.value}
                   type="button"
-                  variant={status === option.value ? "default" : "outline"}
+                  variant={status === option.value ? "solid" : "outline"}
                   className="justify-start text-sm"
                   onClick={() => setStatus(option.value)}
                   disabled={isProcessing}
@@ -1104,13 +1104,13 @@ function AccountsOverviewComponent({
 
 
   return (
-    <Card
+    <CardV2
       className={cn(
         "w-full h-full flex flex-col",
         surface === "embedded" && "border-transparent bg-transparent shadow-none"
       )}
     >
-      <CardHeader
+      <CardV2Header
         className={cn(
           "flex flex-row items-center justify-between gap-0 border-b shrink-0",
           size === 'small' ? "p-2 h-10" : "p-3 sm:p-4 h-14"
@@ -1118,14 +1118,14 @@ function AccountsOverviewComponent({
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardTitle
+            <CardV2Title
               className={cn(
                 "line-clamp-1",
                 size === 'small' ? "text-sm" : "text-base"
               )}
             >
               {t('propFirm.title')}
-            </CardTitle>
+            </CardV2Title>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>
@@ -1320,7 +1320,7 @@ function AccountsOverviewComponent({
             </Tabs>
           </div>
         </div>
-      </CardHeader>
+      </CardV2Header>
 
       {/* Unconfigured accounts banner */}
       {(unconfiguredAccounts.length > 0 && !isLoading) && (
@@ -1375,7 +1375,7 @@ function AccountsOverviewComponent({
         </div>
       )}
 
-      <CardContent
+      <CardV2Content
         className={cn(
           "flex-1 overflow-hidden",
           view === "table" && "p-0"
@@ -1538,8 +1538,8 @@ function AccountsOverviewComponent({
                 </div>
                 <div className="flex items-center gap-2 pr-4">
 
-                  <ButtonV2 
-                    variant="default"
+                  <ButtonV2
+                    variant="solid"
                     onClick={handleSave}
                     disabled={pendingChanges === null}
                   >
@@ -1646,7 +1646,7 @@ function AccountsOverviewComponent({
             </div>
           </DialogContent>
         </Dialog>
-      </CardContent>
+      </CardV2Content>
 
       <PayoutDialog
         key={`${selectedPayout?.id ?? "new"}-${payoutDialogOpen ? "open" : "closed"}`}
@@ -1664,7 +1664,7 @@ function AccountsOverviewComponent({
         isLoading={isSavingPayout}
         isDeleting={isDeletingPayout}
       />
-    </Card>
+    </CardV2>
   )
 }
 

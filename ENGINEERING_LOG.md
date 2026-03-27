@@ -4,6 +4,51 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
+### 2026-03-27: shadcn/ui v2 Migration — TypeScript Error Resolution + Tailwind Build Fix
+
+- **What changed:** Completed the shadcn v1→v2 component migration by resolving all resulting TypeScript errors and fixing the Tailwind v4 build failure.
+
+- **What I want:** A clean codebase with unified v2 design system, zero TypeScript errors, and passing production build.
+
+- **How we fixed that:**
+  - **Import + JSX mismatch (100+ errors):** Added `ButtonV2` imports to 14 dashboard/admin files that used `<ButtonV2>` JSX tags without importing it
+  - **Email templates:** Fixed 8 email files using `<ButtonV2>` to use react-email's `Button` component instead
+  - **Variant prop fixes:** `BadgeV2`: `"destructive"` → `"error"` in 4 files; `Card`: `"matte"` → `"flat"` in admin/coupons
+  - **Type exports:** `chain-of-thought.tsx`, `inline-citation.tsx` — `Badge` → `BadgeV2` component props type
+  - **Closing tag:** Fixed `</Card>` → `</CardV2>` in `atas-processor.tsx`
+  - **Tailwind `@utility` nesting:** `@utility focus-ring` was inside `@layer base` (line 314-537) — invalid in Tailwind v4. Moved it to top level after layer closes at line 537
+  - **Duplicate imports:** Fixed `updates-navigation.tsx` duplicate `ButtonV2` import
+
+- **Key Files:**
+  - `app/globals.css` — Fixed `@utility focus-ring` placement (moved outside `@layer base`)
+  - `app/[locale]/dashboard/components/filters/tag-widget.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/components/tables/bulk-edit-panel.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/components/tables/editable-instrument-cell.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/components/tables/editable-time-cell.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/components/tables/trade-video-url.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/components/mindset/day-tag-selector.tsx` — Added ButtonV2 import
+  - `app/[locale]/dashboard/config/widget-registry.tsx` — Added ButtonV2 import
+  - `app/[locale]/admin/components/dashboard/free-users-table.tsx` — Added ButtonV2 import
+  - `app/[locale]/admin/components/newsletter/newsletter-transcription.tsx` — Added ButtonV2 import
+  - `app/[locale]/admin/propfirms/page.tsx` — Added ButtonV2 import
+  - `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx` — Added ButtonV2 import
+  - `components/emails/*.tsx` — ButtonV2 → Button (react-email component)
+  - `components/ai-elements/chain-of-thought.tsx` — Badge → BadgeV2 type
+  - `components/ai-elements/inline-citation.tsx` — Badge → BadgeV2 type
+  - `app/[locale]/admin/components/newsletter/subscriber-table.tsx` — BadgeV2 variant fix
+  - `app/[locale]/admin/components/payments/transactions-table.tsx` — BadgeV2 variant fix
+  - `app/[locale]/dashboard/components/import/ibkr-pdf/pdf-processing.tsx` — BadgeV2 variant fix
+  - `app/[locale]/teams/join/page.tsx` — BadgeV2 variant fix
+
+- **Verification:**
+  - `npm run typecheck` → **0 errors**
+  - `npm run build` → **Build succeeded**
+  - All v2 component imports verified, all JSX tags match imported components
+
+- **Lesson:** When migrating component imports, always rename BOTH import path AND JSX tag in the same pass. Also: `@utility` in Tailwind v4 must be at top level, never inside `@layer`.
+
+---
+
 ### 2026-03-27: Full App Cleanup Pass - Home, Landing Pages, Admin Coupons, Prop Firm Data, Theme + Typing Fixes
 
 - **What changed:** Completed a wide cross-section cleanup across the app, focusing on the home route, landing pages, firm/propfirm data surfaces, admin power tools, and remaining TypeScript/admin flow issues.

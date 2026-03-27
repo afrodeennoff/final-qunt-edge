@@ -99,12 +99,12 @@ export default function TeamInvitationEmail({
               </Text>
 
               <Section className="text-center mb-8">
-                <ButtonV2 
+                <Button 
                   className="bg-[#3b82f6] text-white text-sm px-[24px] py-[10px] rounded-[4px] font-medium box-border"
                   href={joinUrl}
                 >
                   {t.joinButton}
-                </ButtonV2>
+                </Button>
               </Section>
 
               <Text className="text-gray-800 mt-8 mb-4">

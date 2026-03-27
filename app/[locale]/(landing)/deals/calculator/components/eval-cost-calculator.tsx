@@ -112,7 +112,7 @@ export function EvalCostCalculator() {
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Cost-to-Payout Ratio</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">{values.minReturnNeeded.toFixed(1)}%</p>
           <p className="mt-2">
-            <BadgeV2 variant={values.riskBand === 'high' ? 'destructive' : values.riskBand === 'mid' ? 'default' : 'secondary'}>
+            <BadgeV2 variant={values.riskBand === 'high' ? 'error' : values.riskBand === 'mid' ? 'default' : 'secondary'}>
               {values.riskBand === 'high' ? 'High pressure band' : values.riskBand === 'mid' ? 'Manageable band' : 'Healthy planning range'}
             </BadgeV2>
           </p>

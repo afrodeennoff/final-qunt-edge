@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { BadgeV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
@@ -146,37 +146,37 @@ export function LinkedAccounts() {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <CardV2>
+        <CardV2Header>
+          <CardV2Title className="flex items-center gap-2">
             <Link className="h-5 w-5" />
             {t('auth.linkedAccounts')}
-          </CardTitle>
-          <CardDescription>
+          </CardV2Title>
+          <CardV2Description>
             {t('auth.linkedAccountsDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </CardV2Description>
+        </CardV2Header>
+        <CardV2Content>
           <div className="text-center py-8 text-muted-foreground">
             Loading...
           </div>
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <CardV2>
+      <CardV2Header>
+        <CardV2Title className="flex items-center gap-2">
           <Link className="h-5 w-5" />
           {t('auth.linkedAccounts')}
-        </CardTitle>
-        <CardDescription>
+        </CardV2Title>
+        <CardV2Description>
           {t('auth.linkedAccountsDescription')}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="gap-6">
+        </CardV2Description>
+      </CardV2Header>
+      <CardV2Content className="gap-6">
         {/* Current Linked Accounts */}
         {identities.length > 0 && (
           <div>
@@ -276,7 +276,7 @@ export function LinkedAccounts() {
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 } 

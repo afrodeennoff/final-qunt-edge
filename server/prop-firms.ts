@@ -145,16 +145,7 @@ export async function deletePropFirmReview(id: string) {
 
 export type PropFirmCouponInput = {
   code: string
-  description?: string
   discountPercent?: number
-  challengeFee?: number
-  drawdownType?: string
-  payoutModel?: string
-  platform?: string
-  claimUrl?: string
-  isActive?: boolean
-  startsAt?: Date
-  expiresAt?: Date
 }
 
 export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCouponInput) {

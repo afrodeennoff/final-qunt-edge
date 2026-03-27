@@ -11,12 +11,12 @@ import { useCurrentLocale } from "@/locales/client";
 import { useSyncContext } from "@/context/sync-context"
 import { useDashboardActions } from "@/context/data-provider"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardV2,
+  CardV2Content,
+  CardV2Description,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ButtonV2 } from "@/components/ui/v2";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
@@ -171,9 +171,9 @@ export default function ImportCallbackPageClient() {
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <CardV2>
+        <CardV2Header>
+          <CardV2Title className="flex items-center gap-2">
             {status === "loading" && (
               <Loader2 className="h-5 w-5 animate-spin" />
             )}
@@ -182,14 +182,14 @@ export default function ImportCallbackPageClient() {
             )}
             {status === "error" && <XCircle className="h-5 w-5 text-semantic-error" />}
             {t("tradovateSync.callback.title")}
-          </CardTitle>
-          <CardDescription>
+          </CardV2Title>
+          <CardV2Description>
             {status === "loading" && t("tradovateSync.callback.processing")}
             {status === "success" && t("tradovateSync.callback.success")}
             {status === "error" && t("tradovateSync.callback.error")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </CardV2Description>
+        </CardV2Header>
+        <CardV2Content className="space-y-4">
           {status === "loading" && (
             <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -233,8 +233,8 @@ export default function ImportCallbackPageClient() {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
       </div>
     </div>
   );

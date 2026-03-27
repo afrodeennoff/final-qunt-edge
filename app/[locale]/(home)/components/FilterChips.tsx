@@ -40,7 +40,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
               </p>
             </div>
             {hasActiveFilters ? (
-              <ButtonV2 
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ platform: 'All', challengeType: 'All', drawdown: 'All' })}
@@ -48,7 +48,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
               >
                 <X className="h-3 w-3" />
                 Reset
-              </ButtonV2>
+              </Button>
             ) : null}
           </div>
 

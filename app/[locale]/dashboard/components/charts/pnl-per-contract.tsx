@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { CardTitle } from "@/components/ui/card";
+import { CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { useDashboardStats } from "@/context/data-provider";
 import { cn } from "@/lib/utils";
@@ -160,14 +160,14 @@ export default React.memo(function PnLPerContractChart({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <CardTitle
+            <CardV2Title
               className={cn(
                 "line-clamp-1 font-bold tracking-tight text-foreground",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
               {t("pnlPerContract.title")}
-            </CardTitle>
+            </CardV2Title>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>

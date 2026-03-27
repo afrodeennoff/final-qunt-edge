@@ -9,7 +9,7 @@ import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { CalendarModal } from "./daily-modal"
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
-import { Card, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Title } from "@/components/ui/v2"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { useUserStore } from "../../../../../store/user-store"
 
@@ -153,13 +153,13 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
   }, [calendarData])
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
+    <CardV2 className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
       <div className="shrink-0 border-b border-border/60 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <CardTitle className="truncate text-base font-semibold capitalize">
+            <CardV2Title className="truncate text-base font-semibold capitalize">
               {formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })}
-            </CardTitle>
+            </CardV2Title>
             <div className={cn(
               "mt-1 text-lg font-black tracking-tight",
               monthlyTotal >= 0 ? "text-semantic-success" : "text-semantic-error"
@@ -286,7 +286,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
         dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
         isLoading={isLoading}
       />
-    </Card>
+    </CardV2>
   )
 }
 

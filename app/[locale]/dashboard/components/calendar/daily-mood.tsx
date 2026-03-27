@@ -4,11 +4,11 @@ import React from 'react'
 import { Frown, Meh, Smile } from "lucide-react"
 import { ButtonV2 } from "@/components/ui/v2"
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardV2,
+  CardV2Content,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2"
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { toast } from "sonner"
 import { useI18n } from '@/locales/client'
@@ -106,14 +106,14 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
   if (!dayData?.trades?.length) {
     return (
       <div className="space-y-4">
-        <Card className="flex flex-col">
-          <CardHeader className="pb-1 flex-1">
-            <CardTitle className="text-base md:text-lg">
+        <CardV2 className="flex flex-col">
+          <CardV2Header className="pb-1 flex-1">
+            <CardV2Title className="text-base md:text-lg">
               {isWeekly ? t('calendar.charts.weeklyMood') : t('calendar.charts.howWasYourDay')}
-            </CardTitle>
-          </CardHeader>
+            </CardV2Title>
+          </CardV2Header>
           {!isWeekly && (
-            <CardContent className="pt-2 mt-auto">
+            <CardV2Content className="pt-2 mt-auto">
               <div className="flex justify-around items-center">
                 <ButtonV2 
                   variant="ghost"
@@ -148,30 +148,30 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
               <p className="text-sm text-muted-foreground mt-4 text-center">
                 {t('calendar.modal.noTrades')}
               </p>
-            </CardContent>
+            </CardV2Content>
           )}
           {isWeekly && (
-            <CardContent className="pt-2 mt-auto">
+            <CardV2Content className="pt-2 mt-auto">
               <p className="text-sm text-muted-foreground">
                 {t('calendar.charts.weeklyMoodNotAvailable')}
               </p>
-            </CardContent>
+            </CardV2Content>
           )}
-        </Card>
+        </CardV2>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      <Card className="flex flex-col">
-        <CardHeader className="pb-1 flex-1">
-          <CardTitle className="text-base md:text-lg">
+      <CardV2 className="flex flex-col">
+        <CardV2Header className="pb-1 flex-1">
+          <CardV2Title className="text-base md:text-lg">
             {isWeekly ? t('calendar.charts.weeklyMood') : t('calendar.charts.howWasYourDay')}
-          </CardTitle>
-        </CardHeader>
+          </CardV2Title>
+        </CardV2Header>
         {!isWeekly && (
-          <CardContent className="pt-2 mt-auto">
+          <CardV2Content className="pt-2 mt-auto">
             <div className="flex justify-around items-center">
               <ButtonV2 
                 variant="ghost"
@@ -203,16 +203,16 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 <Smile className={`h-6 w-6 ${isLoading === 'great' ? 'animate-pulse' : ''}`} />
               </ButtonV2>
             </div>
-          </CardContent>
+          </CardV2Content>
         )}
         {isWeekly && (
-          <CardContent className="pt-2 mt-auto">
+          <CardV2Content className="pt-2 mt-auto">
             <p className="text-sm text-muted-foreground">
               {t('calendar.charts.weeklyMoodNotAvailable')}
             </p>
-          </CardContent>
+          </CardV2Content>
         )}
-      </Card>
+      </CardV2>
     </div>
   )
 } 

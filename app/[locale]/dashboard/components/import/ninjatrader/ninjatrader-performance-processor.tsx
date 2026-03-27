@@ -7,12 +7,12 @@ import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardV2,
+  CardV2Content,
+  CardV2Footer,
+  CardV2Header,
+  CardV2Title,
+} from "@/components/ui/v2"
 
 
 /**
@@ -346,13 +346,13 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
   const uniqueInstruments = useMemo(() => Array.from(new Set(trades.map(trade => trade.instrument))), [trades]);
 
   return (
-    <Card className="h-full flex flex-col w-full overflow-x-scroll">
-      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
-        <CardTitle className="line-clamp-1 text-base">
+    <CardV2 className="h-full flex flex-col w-full overflow-x-scroll">
+      <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+        <CardV2Title className="line-clamp-1 text-base">
           Processed Trades NinjaTrader
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 min-h-0 overflow-auto p-0">
+        </CardV2Title>
+      </CardV2Header>
+      <CardV2Content className="flex-1 min-h-0 overflow-auto p-0">
         <div className="flex h-full flex-col min-w-fit">
           <Table className="w-full h-full border-separate border-spacing-0">
             <TableHeader className="sticky top-0 z-10 bg-muted/90 backdrop-blur-xs shadow-xs border-b">
@@ -447,8 +447,8 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
             </TableBody>
           </Table>
         </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between border-t bg-background px-4 py-3 shrink-0">
+      </CardV2Content>
+      <CardV2Footer className="flex items-center justify-between border-t bg-background px-4 py-3 shrink-0">
         <div className="flex items-center gap-6">
           <div>
             <h3 className="text-sm font-semibold mb-1">Total PnL</h3>
@@ -477,7 +477,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
             ))}
           </div>
         </div>
-      </CardFooter>
-    </Card>
+      </CardV2Footer>
+    </CardV2>
   )
 }

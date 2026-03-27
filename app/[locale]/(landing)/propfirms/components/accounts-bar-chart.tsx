@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
@@ -113,16 +113,15 @@ export function AccountsBarChart({
   )
 
   return (
-    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
-      <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <CardV2 data-chart-surface="modern" className="border-border/70 bg-card/90">
+      <CardV2Header className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <CardTitle>{chartTitle}</CardTitle>
+          <CardV2Title>{chartTitle}</CardV2Title>
           <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <ButtonV2 
+          <ButtonV2
             type="button"
-            variant="mono"
             size="sm"
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
@@ -135,9 +134,8 @@ export function AccountsBarChart({
           >
             Payouts
           </ButtonV2>
-          <ButtonV2 
+          <ButtonV2
             type="button"
-            variant="mono"
             size="sm"
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
@@ -150,9 +148,8 @@ export function AccountsBarChart({
           >
             Value
           </ButtonV2>
-          <ButtonV2 
+          <ButtonV2
             type="button"
-            variant="mono"
             size="sm"
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
@@ -165,9 +162,8 @@ export function AccountsBarChart({
           >
             Reg
           </ButtonV2>
-          <ButtonV2 
+          <ButtonV2
             type="button"
-            variant="mono"
             size="sm"
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
@@ -180,9 +176,8 @@ export function AccountsBarChart({
           >
             Sized
           </ButtonV2>
-          <ButtonV2 
+          <ButtonV2
             type="button"
-            variant="mono"
             size="sm"
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
@@ -196,8 +191,8 @@ export function AccountsBarChart({
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
           </ButtonV2>
         </div>
-      </CardHeader>
-      <CardContent className="border-t border-border/70 pt-4">
+      </CardV2Header>
+      <CardV2Content className="border-t border-border/70 pt-4">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
@@ -378,7 +373,7 @@ export function AccountsBarChart({
             ) : null}
           </ComposedChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }

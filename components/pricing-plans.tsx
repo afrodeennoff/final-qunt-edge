@@ -4,10 +4,11 @@ import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { BadgeV2 } from "@/components/ui/v2"
+import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Check, X, AlertCircle } from 'lucide-react'
+import { Check, X, AlertCircle, Sparkles } from 'lucide-react'
 import { useCurrentLocale, useI18n } from '@/locales/client'
+import NumberFlow from '@number-flow/react'
 import {
   Dialog,
   DialogContent,
@@ -108,21 +109,26 @@ function formatPlanAmount(
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'marketing-panel flex w-full flex-col rounded-3xl border-[hsl(var(--mk-border)/0.32)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.35)]',
-    popular && 'relative overflow-hidden border-[hsl(var(--primary)/0.45)]',
+    'marketing-panel relative flex w-full flex-col rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:border-border/70 hover:-translate-y-1 hover:shadow-xl overflow-hidden',
+    popular && 'border-primary/30 shadow-lg shadow-primary/10 before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/10 before:via-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
   )
 }
 
 function getPlanCtaClassName(): string {
-  return 'h-12 w-full rounded-2xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90 [font-family:var(--home-copy)]'
+  return cn(
+    'h-12 w-full rounded-xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground',
+    'shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 active:shadow-md',
+    '[font-family:var(--home-copy)]'
+  )
 }
 
 function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
 
   return (
-    <div className="absolute right-4 top-4 z-20 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-      Popular
+    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary backdrop-blur-sm shadow-lg shadow-primary/10">
+      <Sparkles className="h-3 w-3" />
+      <span>Popular</span>
     </div>
   )
 }
@@ -191,33 +197,43 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle>{plan.name}</CardTitle>
-          <CardDescription>{plan.description}</CardDescription>
+          <CardTitle className="text-xl">{plan.name}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="mb-4 text-4xl font-bold">
-            {t('pricing.free.name')}
+        <CardContent className="space-y-4">
+          <div className="mb-2">
+            <NumberFlow
+              value={0}
+              format={{
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }}
+              className="text-4xl font-bold tracking-tight"
+            />
+            <span className="text-sm text-muted-foreground ml-1">{t('pricing.free.name')}</span>
           </div>
-          <ul className="gap-2">
+          <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-start">
+              <li key={index} className="flex items-start gap-2">
                 {index > 2 ? (
-                  <X className="mr-2 mt-1 h-4 w-4 shrink-0 text-semantic-error" />
+                  <X className="h-4 w-4 shrink-0 text-destructive mt-0.5" />
                 ) : (
-                  <Check className="mr-2 mt-1 h-4 w-4 shrink-0 text-foreground" />
+                  <Check className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
                 )}
-                <span className="text-sm">{feature}</span>
+                <span className="text-sm text-foreground/90">{feature}</span>
               </li>
             ))}
           </ul>
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           {isModal ? (
-            <ButtonV2  onClick={onClose} className={getPlanCtaClassName()}>
+            <ButtonV2 onClick={onClose} className={getPlanCtaClassName()}>
               {t('pricing.keepBasic')}
             </ButtonV2>
           ) : (
-            <ButtonV2  asChild className={getPlanCtaClassName()}>
+            <ButtonV2 asChild className={getPlanCtaClassName()}>
               <Link href={href}>{t('pricing.startBasic')}</Link>
             </ButtonV2>
           )}
@@ -337,87 +353,105 @@ function PlusPlanCard({
 
   return (
     <div className="relative z-10 w-full">
-      <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-b from-primary/5 to-transparent" />
+      <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-b from-primary/5 to-transparent animate-pulse-slow" />
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle>{plan.name}</CardTitle>
-          <CardDescription>{plan.description}</CardDescription>
+          <CardTitle className="text-xl">{plan.name}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 rounded-lg bg-muted/50 p-4 gap-3">
-            <span className="block text-center text-sm font-medium">
+          <div className="mb-4 rounded-xl bg-muted/50 p-4 space-y-3 border border-border/30">
+            <span className="block text-center text-sm font-medium text-foreground">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-md border border-border/50 bg-card p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-lg border border-border/50 bg-card p-1">
               {recurringBillingOptions.map((option) => (
-                <ButtonV2 
+                <button
                   key={option.key}
-                  variant="ghost"
-                  size="sm"
                   className={cn(
-                    'border border-transparent text-xs capitalize',
-                    billingPeriod === option.key && 'border-primary',
+                    'text-xs capitalize rounded-md py-2 px-3 transition-all',
+                    billingPeriod === option.key
+                      ? 'bg-primary text-primary-foreground font-medium'
+                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
                 >
                   {option.label}
-                </ButtonV2>
+                </button>
               ))}
             </div>
 
-            <div className="border-t border-border pt-2">
-              <ButtonV2 
-                variant="outline"
-                size="sm"
+            <div className="border-t border-border/50 pt-3">
+              <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 border border-border',
-                  billingPeriod === 'lifetime' && 'border-primary',
+                  'flex w-full items-center justify-center gap-2 rounded-lg border py-2 px-3 text-xs font-medium transition-all',
+                  billingPeriod === 'lifetime'
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >
                 {t('pricing.lifetimeAccess')}
                 <BadgeV2
                   variant="secondary"
-                  className="border border-semantic-warning-border bg-semantic-warning-bg px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-semantic-warning"
+                  className="border border-warning bg-warning/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-warning"
                 >
                   {t('pricing.limitedTimeOffer')}
                 </BadgeV2>
-              </ButtonV2>
+              </button>
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 text-center">
             {billingPeriod === 'lifetime' ? (
-              <div className="text-center">
-                <div className="mb-3 flex flex-col items-center">
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="relative text-lg text-muted-foreground">
-                      {formatPlanAmount(previousPrice, currency, displayLocale, 0)}
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="h-px w-full bg-current" />
-                      </div>
-                    </div>
-                    <div className="text-muted-foreground">→</div>
-                    <div className="flex items-baseline text-4xl font-bold">
-                      {formatPlanAmount(currentPricing, currency, displayLocale, 0)}
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="relative text-lg text-muted-foreground">
+                    <NumberFlow
+                      value={previousPrice}
+                      format={{
+                        style: 'currency',
+                        currency: currency,
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }}
+                    />
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="h-px w-full bg-current" />
                     </div>
                   </div>
-                  <p className="mt-2 text-center text-xs text-muted-foreground">
-                    {t('pricing.oneTimePayment')}
-                  </p>
+                  <span className="text-muted-foreground">→</span>
+                  <NumberFlow
+                    value={currentPricing}
+                    format={{
+                      style: 'currency',
+                      currency: currency,
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }}
+                    className="text-4xl font-bold tracking-tight"
+                  />
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  {t('pricing.oneTimePayment')}
+                </p>
               </div>
             ) : (
-              <div className="text-center">
-                <div className="mb-3 flex items-baseline justify-center">
-                  <span className="text-4xl font-bold">
-                    {formatPlanAmount(currentPricing, currency, displayLocale, 2)}
-                  </span>
-                </div>
-                <p className="mt-2 text-center text-xs text-muted-foreground">
+              <div className="space-y-2">
+                <NumberFlow
+                  value={currentPricing}
+                  format={{
+                    style: 'currency',
+                    currency: currency,
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }}
+                  className="text-4xl font-bold tracking-tight"
+                />
+                <p className="text-xs text-muted-foreground">
                   {billingPeriod === 'monthly'
                     ? t('pricing.monthlyFlexibility')
                     : billingPeriod === 'yearly'
@@ -428,11 +462,11 @@ function PlusPlanCard({
             )}
           </div>
 
-          <ul className="gap-2">
+          <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-start">
-                <Check className="mr-2 mt-1 h-4 w-4 shrink-0 text-foreground" />
-                <span className="text-sm">{feature}</span>
+              <li key={index} className="flex items-start gap-2">
+                <Check className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
+                <span className="text-sm text-foreground/90">{feature}</span>
               </li>
             ))}
           </ul>
@@ -549,7 +583,7 @@ function PricingPlansContent({
 
   return (
     <div className="sm:px-6">
-      <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 stagger-reveal">
         <FreePlanCard plan={plans.basic} isModal={isModal} onClose={onClose} locale={locale} currency={currency} />
         <PlusPlanCard
           plan={plans.plus}
@@ -621,7 +655,7 @@ function PricingPlansContent({
         </DialogContent>
       </Dialog>
 
-      <p className="mt-6 text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">
+          <p className="mt-8 text-center text-xs text-muted-foreground/80 [font-family:var(--home-copy)]">
         Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
       </p>
     </div>

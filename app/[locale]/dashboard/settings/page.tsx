@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
@@ -100,17 +100,17 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-border/12 bg-popover/45 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+      <CardV2Header>
+        <CardV2Title className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
           Team
-        </CardTitle>
-        <CardDescription>
+        </CardV2Title>
+        <CardV2Description>
           Manage your team connections
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </CardV2Description>
+      </CardV2Header>
+      <CardV2Content className="space-y-6">
         {hasTeams && (
           <div>
             <Label className="text-base font-medium">Current Teams</Label>
@@ -190,8 +190,8 @@ function TeamSettingsCard({
             </Link>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }
 
@@ -219,17 +219,17 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-border/12 bg-popover/45 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+      <CardV2Header>
+        <CardV2Title className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
           {t('auth.setPassword')}
-        </CardTitle>
-        <CardDescription>
+        </CardV2Title>
+        <CardV2Description>
           {t('auth.setPasswordDescription')}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </CardV2Description>
+      </CardV2Header>
+      <CardV2Content className="space-y-4">
         <div className="grid gap-4">
           <div>
             <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
@@ -289,8 +289,8 @@ function PasswordSettingsCard({
           </div>
           <ButtonV2  onClick={onUpdatePassword}>{t('auth.setPassword')}</ButtonV2>
         </div>
-      </CardContent>
-    </Card>
+      </CardV2Content>
+    </CardV2>
   )
 }
 
@@ -387,17 +387,17 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+          <CardV2Header>
+            <CardV2Title className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {t('dashboard.profile')}
-            </CardTitle>
-            <CardDescription>
+            </CardV2Title>
+            <CardV2Description>
               Manage your personal information and account details
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </CardV2Description>
+          </CardV2Header>
+          <CardV2Content className="space-y-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={user?.user_metadata.avatar_url} />
@@ -433,21 +433,21 @@ export default function SettingsPage() {
               </div>
               <ButtonV2 >Update Profile</ButtonV2>
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
         {/* Preferences Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+          <CardV2Header>
+            <CardV2Title className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
               Preferences
-            </CardTitle>
-            <CardDescription>
+            </CardV2Title>
+            <CardV2Description>
               Customize your dashboard appearance and behavior
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            </CardV2Description>
+          </CardV2Header>
+          <CardV2Content className="space-y-6">
             {/* Theme Settings */}
             <div>
               <Label className="text-base font-medium">Theme</Label>
@@ -535,21 +535,21 @@ export default function SettingsPage() {
                 </DropdownMenu>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
         {/* Notifications Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+          <CardV2Header>
+            <CardV2Title className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               Notifications
-            </CardTitle>
-            <CardDescription>
+            </CardV2Title>
+            <CardV2Description>
               Configure how you receive notifications and alerts
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </CardV2Description>
+          </CardV2Header>
+          <CardV2Content className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="email-notifications">Email Notifications</Label>
@@ -605,8 +605,8 @@ export default function SettingsPage() {
                 onCheckedChange={setWeeklyReports}
               />
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
 
         <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} />
 
@@ -627,17 +627,17 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
+          <CardV2Header>
+            <CardV2Title className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
               Account Management
-            </CardTitle>
-            <CardDescription>
+            </CardV2Title>
+            <CardV2Description>
               Manage your account settings and data
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </CardV2Description>
+          </CardV2Header>
+          <CardV2Content className="space-y-4">
             <div className="grid gap-4">
               <Link href="/dashboard/billing">
                 <ButtonV2  variant="outline" className="w-full justify-start">
@@ -671,8 +671,8 @@ export default function SettingsPage() {
                 Sign Out
               </ButtonV2>
             </div>
-          </CardContent>
-        </Card>
+          </CardV2Content>
+        </CardV2>
       </div>
     </UnifiedPageShell>
   )

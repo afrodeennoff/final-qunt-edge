@@ -5,7 +5,7 @@ import { AlertCircle, Info } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -84,23 +84,31 @@ export function WidgetShell({
   }
 
   return (
-    <Card
+    <CardV2
       data-widget-shell="v2"
       className={cn(
-        "h-full overflow-hidden rounded-[var(--radius)] border-border bg-card shadow-none transition-all duration-200",
-        variant === "hoverable" && "hover:shadow-md hover:border-border",
+        "relative overflow-hidden rounded-xl border",
+        "border-[hsl(var(--border))_/_0.65]",
+        "bg-[hsl(var(--card))_/_0.95]",
+        "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.05)]",
+        "transition-all duration-[180ms] ease-out",
+        "hover:border-[hsl(var(--border))_/_0.70]",
+        "hover:bg-[hsl(var(--card))_/_0.99]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
+        "h-full shadow-none",
+        variant === "hoverable" && "hover:shadow-md",
         className
       )}
     >
       {(title || actions || icon || description) && (
-        <CardHeader className="border-b border-border px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+        <CardV2Header className="border-b border-border px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
             <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (
                 <div className="flex items-center gap-[var(--space-2)]">
                   {icon ? <span className="text-fg-muted">{icon}</span> : null}
                   {title ? (
-                    <CardTitle className="line-clamp-1 text-sm font-semibold text-fg-primary sm:text-[15px]">{title}</CardTitle>
+                    <CardV2Title className="line-clamp-1 text-sm font-semibold text-fg-primary sm:text-[15px]">{title}</CardV2Title>
                   ) : null}
                   {info ? (
                     <TooltipProvider>
@@ -126,19 +134,19 @@ export function WidgetShell({
             </div>
             {actions ? <div className="shrink-0">{actions}</div> : null}
           </div>
-        </CardHeader>
+        </CardV2Header>
       )}
 
-      <CardContent className={cn("flex-1 min-h-0 p-0", contentClassName)}>
+      <CardV2Content className={cn("flex-1 min-h-0 p-0", contentClassName)}>
         {renderContent()}
-      </CardContent>
+      </CardV2Content>
 
       {footer ? (
-        <CardFooter className="flex flex-col p-0">
+        <CardV2Footer className="flex flex-col p-0">
           <Separator className="-mx-[var(--space-4)] mb-0" />
           <div className="p-[var(--space-4)]">{footer}</div>
-        </CardFooter>
+        </CardV2Footer>
       ) : null}
-    </Card>
+    </CardV2>
   )
 }

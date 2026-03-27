@@ -16,7 +16,7 @@ import {
 } from "lucide-react"
 import { BadgeV2 } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useI18n } from "@/locales/client"
 import type { BehaviorInsights } from "@/lib/behavior-insights"
@@ -160,13 +160,13 @@ export default function DashboardBehaviorPage() {
 
   return (
     <div className="w-full space-y-6 p-3 sm:p-4 lg:p-6">
-      <Card className="rounded-2xl border border-border/60 bg-card shadow-sm">
-        <CardHeader className="pb-4">
+      <CardV2 className="rounded-2xl border border-border/60 bg-card shadow-sm">
+        <CardV2Header className="pb-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 text-foreground" />
-                <CardTitle className="text-xl md:text-2xl">Behavior AI Hub</CardTitle>
+                <CardV2Title className="text-xl md:text-2xl">Behavior AI Hub</CardV2Title>
                 <BadgeV2 variant="secondary" className="border-border/20 text-foreground">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   AI
@@ -195,26 +195,26 @@ export default function DashboardBehaviorPage() {
               </BadgeV2>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="pt-0">
+        </CardV2Header>
+        <CardV2Content className="pt-0">
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <ButtonV2 
+            <ButtonV2
               size="sm"
-              variant={periodDays === 7 ? "default" : "secondary"}
+              variant={periodDays === 7 ? "solid" : "ghost"}
               onClick={() => setPeriodDays(7)}
             >
               7d
             </ButtonV2>
-            <ButtonV2 
+            <ButtonV2
               size="sm"
-              variant={periodDays === 30 ? "default" : "secondary"}
+              variant={periodDays === 30 ? "solid" : "ghost"}
               onClick={() => setPeriodDays(30)}
             >
               30d
             </ButtonV2>
-            <ButtonV2 
+            <ButtonV2
               size="sm"
-              variant={periodDays === 90 ? "default" : "secondary"}
+              variant={periodDays === 90 ? "solid" : "ghost"}
               onClick={() => setPeriodDays(90)}
             >
               90d
@@ -282,8 +282,8 @@ export default function DashboardBehaviorPage() {
           {insightsError ? (
             <p className="mt-3 text-sm text-destructive">{insightsError}</p>
           ) : null}
-        </CardContent>
-      </Card>
+        </CardV2Content>
+      </CardV2>
 
       <Tabs defaultValue="insights" className="space-y-4">
         <TabsList className="h-auto rounded-2xl border border-border/70 bg-card/70 p-1">
@@ -293,11 +293,11 @@ export default function DashboardBehaviorPage() {
 
         <TabsContent value="insights" className="space-y-4">
           <section className="grid gap-4 lg:grid-cols-3">
-            <Card className="border-border/70 bg-card/75 lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="text-base">Behavior Health</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
+            <CardV2 className="border-border/70 bg-card/75 lg:col-span-2">
+              <CardV2Header>
+                <CardV2Title className="text-base">Behavior Health</CardV2Title>
+              </CardV2Header>
+              <CardV2Content className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Risk Alignment</span>
                   <span className="font-medium">{insights?.modules.riskAlignmentScore ?? 0}%</span>
@@ -314,23 +314,23 @@ export default function DashboardBehaviorPage() {
                   <span className="text-muted-foreground">Loss Chasing Events</span>
                   <span className="font-medium">{insights?.summary.lossChasingEvents ?? 0}</span>
                 </div>
-              </CardContent>
-            </Card>
+              </CardV2Content>
+            </CardV2>
 
-            <Card className="border-border/70 bg-card/75">
-              <CardHeader>
-                <CardTitle className="text-base">Live Prompt</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <CardV2 className="border-border/70 bg-card/75">
+              <CardV2Header>
+                <CardV2Title className="text-base">Live Prompt</CardV2Title>
+              </CardV2Header>
+              <CardV2Content className="space-y-3">
                 <p className="text-sm text-muted-foreground">
                   {insights?.prompts.mindful ?? "Before executing: is this trade analysis-driven or emotion-driven?"}
                 </p>
-                <ButtonV2  variant="secondary" className="w-full gap-2" onClick={() => setRefreshKey((value) => value + 1)}>
+                <ButtonV2 variant="ghost" className="w-full gap-2" onClick={() => setRefreshKey((value) => value + 1)}>
                   <PauseCircle className="h-4 w-4" />
                   Refresh Prompt
                 </ButtonV2>
-              </CardContent>
-            </Card>
+              </CardV2Content>
+            </CardV2>
           </section>
 
           {(insights?.drivers?.length ?? 0) > 0 ? (
@@ -354,11 +354,11 @@ export default function DashboardBehaviorPage() {
           ) : null}
 
           <section className="grid gap-4 lg:grid-cols-2">
-            <Card className="border-border/70 bg-card/75">
-              <CardHeader>
-                <CardTitle className="text-base">Training & Reflection</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <CardV2 className="border-border/70 bg-card/75">
+              <CardV2Header>
+                <CardV2Title className="text-base">Training & Reflection</CardV2Title>
+              </CardV2Header>
+              <CardV2Content className="space-y-3">
                 {trainingModules.map((module) => (
                   <div key={module.title} className="rounded-xl border border-border/70 bg-background/60 p-3">
                     <p className="text-sm font-medium">{module.title}</p>
@@ -372,14 +372,14 @@ export default function DashboardBehaviorPage() {
                     <span className="font-medium">{module.value}</span>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </CardV2Content>
+            </CardV2>
 
-            <Card className="border-border/70 bg-card/75">
-              <CardHeader>
-                <CardTitle className="text-base">Achievements & Guidance</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <CardV2 className="border-border/70 bg-card/75">
+              <CardV2Header>
+                <CardV2Title className="text-base">Achievements & Guidance</CardV2Title>
+              </CardV2Header>
+              <CardV2Content className="space-y-3">
                 {gamificationModules.map((module) => (
                   <div key={module.badge} className="rounded-xl border border-border/70 bg-background/60 p-3">
                     <p className="text-sm font-medium flex items-center gap-2">
@@ -397,8 +397,8 @@ export default function DashboardBehaviorPage() {
                   <p className="text-sm font-medium mb-1">Risk Guard</p>
                   <p className="text-xs text-muted-foreground">{insights?.prompts.riskGuard}</p>
                 </div>
-              </CardContent>
-            </Card>
+              </CardV2Content>
+            </CardV2>
           </section>
 
           {recommendationList.length > 0 ? (
@@ -414,7 +414,7 @@ export default function DashboardBehaviorPage() {
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm text-muted-foreground">{recommendation.text}</p>
                         <BadgeV2
-                          variant={recommendation.priority === "high" ? "destructive" : recommendation.priority === "medium" ? "secondary" : "outline"}
+                          variant={recommendation.priority === "high" ? "error" : recommendation.priority === "medium" ? "secondary" : "outline"}
                         >
                           {recommendation.priority}
                         </BadgeV2>

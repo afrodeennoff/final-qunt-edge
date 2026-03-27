@@ -118,9 +118,9 @@ function CommentComponent({
             {isAuthor && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button  variant="ghost" size="sm" className="h-8 w-8 p-0">
                     <MoreHorizontal className="h-4 w-4" />
-                  </ButtonV2>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
                   <DropdownMenuItem onClick={() => setIsEditing(true)}>
@@ -145,15 +145,15 @@ function CommentComponent({
                 disabled={isSubmitting}
               />
               <div className="flex justify-end gap-2">
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditing(false)}
                   disabled={isSubmitting}
                 >
                   {t('community.comments.cancel')}
-                </ButtonV2>
-                <ButtonV2  
+                </Button>
+                <Button  
                   size="sm" 
                   onClick={handleEdit}
                   disabled={isSubmitting || !content.trim()}
@@ -164,14 +164,14 @@ function CommentComponent({
                       {t('common.saving')}
                     </div>
                   ) : t('community.comments.save')}
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           ) : (
             <div className="text-sm leading-relaxed">{comment.content}</div>
           )}
           <div className="flex items-center gap-2 pt-1">
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               className="h-auto px-2 text-muted-foreground hover:text-foreground"
@@ -180,7 +180,7 @@ function CommentComponent({
             >
               <Reply className="mr-1 h-3 w-3" />
               {t('community.comments.reply')}
-            </ButtonV2>
+            </Button>
           </div>
           {isReplying && (
             <div className="mt-4 space-y-2">
@@ -192,7 +192,7 @@ function CommentComponent({
                 disabled={isSubmitting}
               />
               <div className="flex justify-end gap-2">
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="sm"
                   onClick={() => {
@@ -202,8 +202,8 @@ function CommentComponent({
                   disabled={isSubmitting}
                 >
                   {t('community.comments.cancel')}
-                </ButtonV2>
-                <ButtonV2  
+                </Button>
+                <Button  
                   size="sm" 
                   onClick={handleReply}
                   disabled={isSubmitting || !replyContent.trim()}
@@ -214,7 +214,7 @@ function CommentComponent({
                       {t('common.saving')}
                     </div>
                   ) : t('community.comments.reply')}
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           )}
@@ -288,7 +288,7 @@ export function CommentSection({
               disabled={isSubmitting}
             />
             <div className="flex justify-end">
-              <ButtonV2  
+              <Button  
                 onClick={handleAddComment}
                 disabled={isSubmitting || !newComment.trim()}
               >
@@ -298,7 +298,7 @@ export function CommentSection({
                     {t('common.saving')}
                   </div>
                 ) : t('community.comments.comment')}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Progress } from "@/components/ui/progress"
 import { RefreshCw } from "lucide-react"
@@ -14,15 +14,15 @@ export function AnalysisSkeleton({ icon: Icon, title, description }: AnalysisSke
   const t = useI18n()
   
   return (
-    <Card className="relative overflow-hidden">
-      <CardHeader>
+    <CardV2 className="relative overflow-hidden">
+      <CardV2Header>
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <CardTitle className="flex items-center gap-2">
+            <CardV2Title className="flex items-center gap-2">
               <Icon className="h-5 w-5" />
               {title}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
+            </CardV2Title>
+            <CardV2Description>{description}</CardV2Description>
           </div>
           <div className="flex items-center gap-2">
             <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -30,9 +30,9 @@ export function AnalysisSkeleton({ icon: Icon, title, description }: AnalysisSke
           </div>
         </div>
         <Progress value={0} className="w-full opacity-50" />
-      </CardHeader>
+      </CardV2Header>
       
-      <CardContent className="space-y-4">
+      <CardV2Content className="space-y-4">
         {/* Key Insights Skeleton */}
         <div className="space-y-3">
           <Skeleton className="h-4 w-20" />
@@ -62,7 +62,7 @@ export function AnalysisSkeleton({ icon: Icon, title, description }: AnalysisSke
             ))}
           </div>
         </div>
-      </CardContent>
+      </CardV2Content>
       
       {/* Loading overlay */}
       <div className="absolute inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center">
@@ -71,6 +71,6 @@ export function AnalysisSkeleton({ icon: Icon, title, description }: AnalysisSke
           {t('analysis.loading')}
         </div>
       </div>
-    </Card>
+    </CardV2>
   )
 } 
