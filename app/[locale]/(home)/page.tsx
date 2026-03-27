@@ -3,8 +3,9 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getStaticParams } from "@/locales/server";
 import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
+import { getSiteOrigin } from "@/lib/site-url";
 
-const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
+const SITE_ORIGIN = getSiteOrigin();
 
 export function generateStaticParams() {
     return getStaticParams();

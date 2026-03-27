@@ -7,10 +7,11 @@ import {
   getUnifiedFirms,
 } from '@/server/deals'
 import { DealsExperience } from './components/deals-experience'
+import { getSiteOrigin } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 
-const SITE_ORIGIN = 'https://quntedge.com'
+const SITE_ORIGIN = getSiteOrigin()
 
 export async function generateMetadata({
   params,

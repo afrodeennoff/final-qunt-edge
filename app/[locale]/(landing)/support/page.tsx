@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import SupportPageClient from "./page-client";
+import { getSiteOrigin } from "@/lib/site-url";
 
-const SITE_ORIGIN = "https://quntedge.com";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/support";
 
 export async function generateMetadata({

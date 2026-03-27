@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
 
 import { GuideLibrary } from './components/guide-library'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
+const SITE_ORIGIN = getSiteOrigin()
 const PAGE_PATH = '/deals/guides'
 
 export async function generateMetadata({

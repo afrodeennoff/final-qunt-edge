@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
 import { getUnifiedFirms } from '@/server/deals'
 import { FirmComparisonGrid } from './components/firm-comparison-grid'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/deals/compare";
 
 export async function generateMetadata({

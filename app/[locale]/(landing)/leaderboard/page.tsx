@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-query'
 import { LeaderboardContent } from './components/leaderboard-content'
+import { getSiteOrigin } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 
 const VALID_SORTS: LeaderboardSort[] = ['monthly_pnl', 'winrate', 'totalTrades']
-const SITE_ORIGIN = 'https://quntedge.com'
+const SITE_ORIGIN = getSiteOrigin()
 
 export async function generateMetadata({
   params,

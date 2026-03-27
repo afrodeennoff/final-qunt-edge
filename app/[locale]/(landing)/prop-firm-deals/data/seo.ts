@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import type { FaqItem } from './types'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
+const SITE_ORIGIN = getSiteOrigin()
 const PAGE_PATH = '/prop-firm-deals'
 
 export const PROP_FIRM_DEALS_LAST_UPDATED = 'March 13, 2026'

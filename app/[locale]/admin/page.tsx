@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from 'react';
 import { AdminDashboard } from '@/app/[locale]/admin/components/dashboard/admin-dashboard';
+import { getSiteOrigin } from '@/lib/site-url';
 
 export const dynamic = "force-dynamic";
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/admin";
 
 export async function generateMetadata({

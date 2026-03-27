@@ -6,8 +6,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
 import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
 import { getUiVariant } from "@/lib/ui-v2";
+import { getSiteOrigin } from "@/lib/site-url";
 
-const siteOrigin = "https://qunt-edge.vercel.app";
+const siteOrigin = getSiteOrigin();
 
 const fontSans = Geist({
   subsets: ["latin"],

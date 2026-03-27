@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { PricingPageClient } from "./pricing-page-client";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const revalidate = 300;
 export const dynamic = "force-static";
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/pricing";
 
 export async function generateMetadata({

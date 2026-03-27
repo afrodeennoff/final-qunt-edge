@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { PublicFlowShell } from '../_components/public-flow-shell'
 
 import { EvalCostCalculator } from './components/eval-cost-calculator'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = 'https://qunt-edge.vercel.app'
+const SITE_ORIGIN = getSiteOrigin()
 const PAGE_PATH = '/deals/calculator'
 
 export async function generateMetadata({

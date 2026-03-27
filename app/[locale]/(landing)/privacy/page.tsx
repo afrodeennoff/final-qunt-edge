@@ -1,8 +1,9 @@
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
 import type { Metadata } from "next";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const revalidate = 3600;
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/privacy";
 
 export async function generateMetadata({

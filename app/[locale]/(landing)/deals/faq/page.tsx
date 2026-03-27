@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { PublicFlowShell } from '../_components/public-flow-shell'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/deals/faq";
 
 export async function generateMetadata({

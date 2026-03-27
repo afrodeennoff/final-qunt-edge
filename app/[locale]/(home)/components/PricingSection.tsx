@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { useCurrentLocale } from '@/locales/client'
 import { Check } from 'lucide-react'
+import { formatCurrencyAmount } from '@/lib/formatting/currency'
 import { cn } from '@/lib/utils'
 import { buildWhopCheckoutUrl } from '@/lib/whop-checkout'
 import { useCurrency } from '@/hooks/use-currency'
@@ -78,8 +79,8 @@ function getPlanHref({
 }
 
 function getPlanPriceText(plan: (typeof plans)[number], billingMode: BillingMode): string {
-  if (plan.monthlyPrice === 0) return '$0'
-  return `$${billingMode === 'annual' ? plan.yearlyPrice : plan.monthlyPrice}`
+  const amount = billingMode === 'annual' ? plan.yearlyPrice : plan.monthlyPrice
+  return formatCurrencyAmount(amount, 'USD', { locale: 'en-US', maximumFractionDigits: amount % 1 === 0 ? 0 : 2 })
 }
 
 function getPlanPeriodText(plan: (typeof plans)[number], periodLabel: string): string {
@@ -121,7 +122,7 @@ function PlanSavingsNote({ show, savings }: { show: boolean; savings: number }) 
   if (!show) return null
   return (
     <p className="mt-2 text-xs text-foreground [font-family:var(--home-copy)]">
-      Save ${savings}/month with annual billing
+      Save {formatCurrencyAmount(savings, 'USD', { locale: 'en-US', maximumFractionDigits: savings % 1 === 0 ? 0 : 2 })}/month with annual billing
     </p>
   )
 }
@@ -198,11 +199,12 @@ export default function PricingSection() {
   const locale = useCurrentLocale()
   const { currency } = useCurrency()
   const [billingMode, setBillingMode] = useState<BillingMode>('annual')
+  const displayLocale = currency === 'EUR' ? 'fr-FR' : 'en-US'
 
   const periodLabel = billingMode === 'annual' ? '/month, billed yearly' : '/month'
 
   return (
-    <section id="pricing" className="relative border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+    <section id="pricing" className="relative scroll-mt-28 border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
           <Badge variant="outline" className="mb-4 border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
@@ -244,15 +246,16 @@ export default function PricingSection() {
 
         <div className="grid gap-8 lg:grid-cols-3">
           {plans.map((plan) => (
-            <PlanCard
-              key={plan.name}
-              plan={plan}
-              billingMode={billingMode}
-              currency={currency}
-              locale={locale}
-              periodLabel={periodLabel}
-            />
-          ))}
+              <PlanCard
+                key={plan.name}
+                plan={plan}
+                billingMode={billingMode}
+                currency={currency}
+                locale={locale}
+                displayLocale={displayLocale}
+                periodLabel={periodLabel}
+              />
+            ))}
         </div>
         <p className="mt-6 text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">
           Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.

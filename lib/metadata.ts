@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
+import { getSiteOrigin } from '@/lib/site-url';
 
-const siteOrigin = "https://qunt-edge.vercel.app";
+const siteOrigin = getSiteOrigin();
 
 export function generateMetadata({
   title,

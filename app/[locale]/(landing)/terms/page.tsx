@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { TermsPageClient } from './terms-page-client';
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const revalidate = 3600;
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/terms";
 
 export async function generateMetadata({

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { WeeklyRecapProvider } from "../components/weekly-stats/weekly-recap-context";
 import { WeeklyRecapPreview } from "../components/weekly-stats/weekly-recap-preview";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
-const SITE_ORIGIN = "https://qunt-edge.vercel.app";
+const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/admin/weekly-recap";
 
 export async function generateMetadata({
