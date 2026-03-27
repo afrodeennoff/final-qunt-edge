@@ -50,7 +50,7 @@ export class SidebarErrorBoundary extends React.Component<
             onClick={() => window.location.reload()}
           >
             Reload Page
-          </Button>
+          </ButtonV2>
         </div>
       )
     }

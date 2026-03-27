@@ -114,7 +114,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
                 onClick={secondaryAction.onClick}
               >
                 {secondaryAction.label}
-              </Button>
+              </ButtonV2>
             )}
             {primaryAction && (
               <ButtonV2 
@@ -123,7 +123,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
                 onClick={primaryAction.onClick}
               >
                 {primaryAction.label}
-              </Button>
+              </ButtonV2>
             )}
           </CardFooter>
         )}

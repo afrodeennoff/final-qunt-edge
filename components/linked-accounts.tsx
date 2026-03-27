@@ -210,7 +210,7 @@ export function LinkedAccounts() {
                           <ButtonV2  variant="outline" size="sm">
                             <Unlink className="mr-2 h-4 w-4" />
                             {t('auth.unlinkAccount')}
-                          </Button>
+                          </ButtonV2>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -256,7 +256,7 @@ export function LinkedAccounts() {
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 {t('auth.linkDiscord')}
-              </Button>
+              </ButtonV2>
             )}
             {!isGoogleLinked && (
               <ButtonV2  
@@ -267,7 +267,7 @@ export function LinkedAccounts() {
               >
                 <Chrome className="mr-2 h-4 w-4" />
                 {t('auth.linkGoogle')}
-              </Button>
+              </ButtonV2>
             )}
             {!isDiscordLinked && !isGoogleLinked && (
               <p className="text-sm text-muted-foreground text-center py-4">

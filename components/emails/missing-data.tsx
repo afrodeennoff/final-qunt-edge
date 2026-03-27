@@ -180,7 +180,7 @@ export default function MissingYouEmail({
                   href="https://qunt-edge.vercel.app/authentication"
                 >
                   {t.importButton}
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Text className="text-gray-800 mt-8 mb-4">

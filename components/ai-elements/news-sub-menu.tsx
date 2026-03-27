@@ -83,7 +83,7 @@ export function NewsSubMenu({
           ) : (
             <span>{t('mindset.editor.news.title')}</span>
           )}
-        </Button>
+        </ButtonV2>
       </PopoverTrigger>
       <PopoverContent
         className="w-[500px] p-0 z-50"

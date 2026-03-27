@@ -112,7 +112,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
                   href="https://qunt-edge.vercel.app/pricing"
                 >
                   {content.cta}
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Text className="text-black mb-[16px] leading-6">

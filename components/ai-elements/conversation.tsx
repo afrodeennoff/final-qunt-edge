@@ -91,7 +91,7 @@ export const ConversationScrollButton = ({
         {...props}
       >
         <ArrowDownIcon className="size-4" />
-      </Button>
+      </ButtonV2>
     )
   );
 };

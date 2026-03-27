@@ -104,7 +104,7 @@ export default function TeamInvitationEmail({
                   href={joinUrl}
                 >
                   {t.joinButton}
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Text className="text-gray-800 mt-8 mb-4">

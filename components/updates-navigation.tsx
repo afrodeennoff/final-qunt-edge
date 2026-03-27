@@ -38,7 +38,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
                   </span>
                 </div>
               </div>
-            </Button>
+            </ButtonV2>
           </Link>
         ) : (
           <div />
@@ -58,7 +58,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
                 </div>
                 <ChevronRight className="h-5 w-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
               </div>
-            </Button>
+            </ButtonV2>
           </Link>
         ) : (
           <div />

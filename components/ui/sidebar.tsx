@@ -106,7 +106,7 @@ const SidebarProvider = React.forwardRef<
             try {
               document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; SameSite=Lax`
             } catch (e) {
-              console.debug('Could not write sidebar state cookie:', e)
+              console.warn('Could not write sidebar state cookie:', e)
             }
           }, 0)
         })

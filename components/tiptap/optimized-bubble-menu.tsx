@@ -62,7 +62,7 @@ export function OptimizedBubbleMenu({
         title="Bold"
       >
         <Bold className="h-4 w-4" />
-      </Button>
+      </ButtonV2>
       <ButtonV2 
         variant="ghost"
         size="sm"
@@ -72,7 +72,7 @@ export function OptimizedBubbleMenu({
         title="Italic"
       >
         <Italic className="h-4 w-4" />
-      </Button>
+      </ButtonV2>
       <ButtonV2 
         variant="ghost"
         size="sm"
@@ -82,7 +82,7 @@ export function OptimizedBubbleMenu({
         title="Underline"
       >
         <UnderlineIcon className="h-4 w-4" />
-      </Button>
+      </ButtonV2>
       <ButtonV2 
         variant="ghost"
         size="sm"
@@ -92,7 +92,7 @@ export function OptimizedBubbleMenu({
         title="Strikethrough"
       >
         <Strikethrough className="h-4 w-4" />
-      </Button>
+      </ButtonV2>
       <ButtonV2 
         variant="ghost"
         size="sm"
@@ -102,7 +102,7 @@ export function OptimizedBubbleMenu({
         title="Highlight"
       >
         <Highlighter className="h-4 w-4" />
-      </Button>
+      </ButtonV2>
 
       {/* Table Menu - Show when inside a table */}
       {editorState.isTable && (
@@ -117,7 +117,7 @@ export function OptimizedBubbleMenu({
                 title="Table Options"
               >
                 <Table2 className="h-4 w-4" />
-              </Button>
+              </ButtonV2>
             </PopoverTrigger>
             <PopoverContent className="w-56 p-1" align="start">
               <button
@@ -222,7 +222,7 @@ export function OptimizedBubbleMenu({
             ) : (
               <Sparkles className="h-4 w-4" />
             )}
-          </Button>
+          </ButtonV2>
         </PopoverTrigger>
         <PopoverContent className="w-56 p-1" align="start">
           <button

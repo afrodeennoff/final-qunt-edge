@@ -51,6 +51,6 @@ export const Suggestion = ({
       {...props}
     >
       {children || suggestion}
-    </Button>
+    </ButtonV2>
   );
 };

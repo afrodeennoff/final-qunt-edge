@@ -130,7 +130,7 @@ export default function Modals() {
               }}
             >
               {t('modals.subscription.manage')}
-            </Button>
+            </ButtonV2>
           </div>
         </DialogContent>
       </Dialog>
@@ -169,7 +169,7 @@ export default function Modals() {
           <div className="mt-4 text-center">
             <ButtonV2  variant='link' onClick={async () => await signOut()}>
               {t('modals.changeAccount')}
-            </Button>
+            </ButtonV2>
           </div>
         </DialogContent>
       </Dialog>

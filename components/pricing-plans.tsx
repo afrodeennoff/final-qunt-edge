@@ -215,11 +215,11 @@ function FreePlanCard({
           {isModal ? (
             <ButtonV2  onClick={onClose} className={getPlanCtaClassName()}>
               {t('pricing.keepBasic')}
-            </Button>
+            </ButtonV2>
           ) : (
             <ButtonV2  asChild className={getPlanCtaClassName()}>
               <Link href={href}>{t('pricing.startBasic')}</Link>
-            </Button>
+            </ButtonV2>
           )}
 
           <p className="text-center text-xs text-muted-foreground">
@@ -364,7 +364,7 @@ function PlusPlanCard({
                   title={option.description}
                 >
                   {option.label}
-                </Button>
+                </ButtonV2>
               ))}
             </div>
 
@@ -385,7 +385,7 @@ function PlusPlanCard({
                 >
                   {t('pricing.limitedTimeOffer')}
                 </Badge>
-              </Button>
+              </ButtonV2>
             </div>
           </div>
 
@@ -458,7 +458,7 @@ function PlusPlanCard({
             className={`w-full ${getPlanCtaClassName()}`}
           >
             {primaryButtonText}
-          </Button>
+          </ButtonV2>
 
           <p className="text-center text-xs text-muted-foreground">
             {t('terms.pricing.disclaimer')}
@@ -610,13 +610,13 @@ function PricingPlansContent({
               disabled={isLoading}
             >
               {t('pricing.lifetimeUpgrade.cancel')}
-            </Button>
+            </ButtonV2>
             <ButtonV2 
               onClick={handleLifetimeConfirm}
               disabled={isLoading}
             >
               {isLoading ? t('billing.lifetimeUpgrade') : t('pricing.lifetimeUpgrade.confirm')}
-            </Button>
+            </ButtonV2>
           </DialogFooter>
         </DialogContent>
       </Dialog>

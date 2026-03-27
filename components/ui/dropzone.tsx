@@ -151,7 +151,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                 onClick={() => handleRemoveFile(file.name)}
               >
                 <X />
-              </Button>
+              </ButtonV2>
             )}
           </div>
         )
@@ -176,7 +176,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             ) : (
               <>{t('dropzone.uploadFiles')}</>
             )}
-          </Button>
+          </ButtonV2>
         </div>
       )}
     </div>

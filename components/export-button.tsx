@@ -183,7 +183,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
         <DialogTrigger asChild>
           <ButtonV2  size="sm">
             <Download className="mr-2 h-4 w-4" /> Export Trades
-          </Button>
+          </ButtonV2>
         </DialogTrigger>
       )}
       <DialogContent className="max-w-full h-[90vh] w-full flex flex-col">
@@ -274,7 +274,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                         onClick={() => setDateRange(selector.getRange())}
                       >
                         {selector.label}
-                      </Button>
+                      </ButtonV2>
                     ))}
                   </div>
                   <Calendar
@@ -388,7 +388,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
             className="w-full max-w-xl mx-auto"
           >
             <Download className="mr-2 h-4 w-4" /> Export {filteredTrades.length} Trades
-          </Button>
+          </ButtonV2>
         </div>
       </DialogContent>
     </Dialog>

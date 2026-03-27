@@ -45,7 +45,7 @@ export const Action = ({
     >
       {children}
       <span className="sr-only">{label || tooltip}</span>
-    </Button>
+    </ButtonV2>
   );
 
   if (tooltip) {

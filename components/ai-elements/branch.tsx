@@ -159,7 +159,7 @@ export const BranchPrevious = ({
       {...props}
     >
       {children ?? <ChevronLeftIcon size={14} />}
-    </Button>
+    </ButtonV2>
   );
 };
 
@@ -189,7 +189,7 @@ export const BranchNext = ({
       {...props}
     >
       {children ?? <ChevronRightIcon size={14} />}
-    </Button>
+    </ButtonV2>
   );
 };
 

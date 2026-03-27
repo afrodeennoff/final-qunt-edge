@@ -59,7 +59,7 @@ export function ColumnConfigDialog({ tableId, trigger }: ColumnConfigDialogProps
     <ButtonV2  variant="outline" className="w-[180px] h-10 font-normal">
       <Settings className="h-4 w-4 mr-2" />
       Configuration
-    </Button>
+    </ButtonV2>
   )
 
   return (
@@ -101,7 +101,7 @@ export function ColumnConfigDialog({ tableId, trigger }: ColumnConfigDialogProps
               <ButtonV2  variant="outline" className="w-[180px] h-10">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 {t('trade-table.resetConfig')}
-              </Button>
+              </ButtonV2>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

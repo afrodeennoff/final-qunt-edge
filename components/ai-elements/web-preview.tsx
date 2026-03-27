@@ -115,7 +115,7 @@ export const WebPreviewNavigationButton = ({
           {...props}
         >
           {children}
-        </Button>
+        </ButtonV2>
       </TooltipTrigger>
       <TooltipContent>
         <p>{tooltip}</p>
@@ -215,7 +215,7 @@ export const WebPreviewConsole = ({
               consoleOpen && "rotate-180"
             )}
           />
-        </Button>
+        </ButtonV2>
       </CollapsibleTrigger>
       <CollapsibleContent
         className={cn(

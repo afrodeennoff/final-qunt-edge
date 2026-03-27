@@ -167,7 +167,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                   {t('referral.landing.affiliateCta')}
                   <ExternalLink className="ml-1 h-3.5 w-3.5" />
                 </Link>
-              </Button>
+              </ButtonV2>
             </div>
 
             {/* How It Works Link */}
@@ -204,7 +204,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                   ) : (
                     <Copy className="h-4 w-4" />
                   )}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
 

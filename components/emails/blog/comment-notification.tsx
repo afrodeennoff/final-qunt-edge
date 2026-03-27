@@ -102,7 +102,7 @@ const CommentNotificationEmail = ({
                   href={postUrl}
                 >
                   {i18n.viewComment} →
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Hr className="border-gray-200 my-8" />

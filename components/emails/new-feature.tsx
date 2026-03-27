@@ -61,7 +61,7 @@ export default function NewsletterEmail({
                   href={`https://youtu.be/${youtubeId}`}
                 >
                   ▶️ Voir la dernière vidéo
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Section className="mb-6">
@@ -86,7 +86,7 @@ export default function NewsletterEmail({
                   href="https://qunt-edge.vercel.app/dashboard"
                 >
                   Accéder à mon tableau de bord →
-                </Button>
+                </ButtonV2>
               </Section>
 
               <Text className="text-gray-800 mt-8 mb-4">

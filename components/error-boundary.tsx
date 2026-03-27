@@ -44,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
             variant="outline"
           >
             Reload Dashboard
-          </Button>
+          </ButtonV2>
         </div>
       )
     }

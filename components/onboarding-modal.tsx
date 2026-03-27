@@ -133,7 +133,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
                 <div className="mt-6 flex justify-end">
                   <ButtonV2  onClick={handleGetStarted}>
                     {t('onboarding.getStarted')}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             </CarouselItem>

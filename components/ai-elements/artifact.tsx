@@ -59,7 +59,7 @@ export const ArtifactClose = ({
   >
     {children ?? <XIcon className="size-4" />}
     <span className="sr-only">Close</span>
-  </Button>
+  </ButtonV2>
 );
 
 export type ArtifactTitleProps = HTMLAttributes<HTMLParagraphElement>;
@@ -118,7 +118,7 @@ export const ArtifactAction = ({
     >
       {Icon ? <Icon className="size-4" /> : children}
       <span className="sr-only">{label || tooltip}</span>
-    </Button>
+    </ButtonV2>
   );
 
   if (tooltip) {

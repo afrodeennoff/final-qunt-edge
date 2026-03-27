@@ -66,7 +66,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                     href={`https://youtu.be/${youtubeId}`}
                   >
                     ▶️ Voir la dernière vidéo
-                  </Button>
+                  </ButtonV2>
                 </Section>
 
                 <Text className="text-gray-800 mb-4 leading-6">
@@ -83,7 +83,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                     href="https://qunt-edge.vercel.app/dashboard"
                   >
                     Accéder à mon tableau de bord →
-                  </Button>
+                  </ButtonV2>
                 </Section>
 
                 <Hr className="border-gray-200 my-8" />
@@ -139,7 +139,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                     href={`https://youtu.be/${youtubeId}`}
                   >
                     ▶️ Watch the latest video
-                  </Button>
+                  </ButtonV2>
                 </Section>
 
                 <Text className="text-gray-800 mb-4 leading-6">
@@ -156,7 +156,7 @@ export default function WelcomeEmail({ firstName = 'trader', email, language, yo
                     href="https://qunt-edge.vercel.app/dashboard"
                   >
                     Access my dashboard →
-                  </Button>
+                  </ButtonV2>
                 </Section>
 
                 <Hr className="border-gray-200 my-8" />

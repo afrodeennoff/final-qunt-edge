@@ -66,7 +66,7 @@ export function CountryFilter({ countries, value, onValueChange, className }: Co
             </Badge>
           )}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
-        </Button>
+        </ButtonV2>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[300px]">
         <Command>

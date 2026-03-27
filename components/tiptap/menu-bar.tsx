@@ -470,7 +470,7 @@ export function ResponsiveMenuBar({
                     ) : (
                       <IconComponent className="h-4 w-4" />
                     )}
-                  </Button>
+                  </ButtonV2>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
@@ -526,7 +526,7 @@ export function ResponsiveMenuBar({
               ) : (
                 <IconComponent className="h-4 w-4" />
               )}
-            </Button>
+            </ButtonV2>
           );
         })}
       </div>
@@ -569,7 +569,7 @@ export function ResponsiveMenuBar({
             <DropdownMenuTrigger asChild>
               <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreHorizontal className="h-4 w-4" />
-              </Button>
+              </ButtonV2>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48" sideOffset={4}>
               {overflowItems.map((item) => {
@@ -639,7 +639,7 @@ export function ResponsiveMenuBar({
           ) : (
             <Maximize2 className="h-4 w-4" />
           )}
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   );

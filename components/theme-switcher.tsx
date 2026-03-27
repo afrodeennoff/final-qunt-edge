@@ -8,6 +8,6 @@ export function ThemeSwitcher() {
     <ButtonV2  variant="ghost" size="icon" aria-label="Dark theme enabled">
       <Moon className="h-[1.2rem] w-[1.2rem]" />
       <span className="sr-only">Dark theme enabled</span>
-    </Button>
+    </ButtonV2>
   )
 }

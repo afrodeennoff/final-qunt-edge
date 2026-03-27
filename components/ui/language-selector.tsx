@@ -64,7 +64,7 @@ export function LanguageSelector({
               <span className="ml-2">{t('landing.navbar.changeLanguage')}</span>
             </>
           )}
-        </Button>
+        </ButtonV2>
       </PopoverTrigger>
       <PopoverContent className={`w-[200px] p-0 ${className}`} align={align}>
         <Command>

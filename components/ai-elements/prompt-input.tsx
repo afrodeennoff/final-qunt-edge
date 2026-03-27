@@ -112,7 +112,7 @@ export function PromptInputAttachment({
         variant="outline"
       >
         <XIcon className="h-3 w-3" />
-      </Button>
+      </ButtonV2>
     </div>
   );
 }
@@ -661,7 +661,7 @@ export const PromptInputSubmit = ({
       {...props}
     >
       {children ?? Icon}
-    </Button>
+    </ButtonV2>
   );
 };
 
