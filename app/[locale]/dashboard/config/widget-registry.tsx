@@ -472,7 +472,7 @@ function createSmartInsightsPreview() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 p-4 space-y-3">
+      <CardContent className="flex-1 p-4 gap-3">
         <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-card/5 p-3">
           <div className="h-8 w-8 rounded-full bg-semantic-info-bg/10 border border-semantic-info-border/20 flex items-center justify-center">
             <Brain className="h-4 w-4 text-semantic-info" />

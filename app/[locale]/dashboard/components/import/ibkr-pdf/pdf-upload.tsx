@@ -112,7 +112,7 @@ export default function PdfUpload({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-none space-y-4 mb-4">
+      <div className="flex-none gap-4 mb-4">
         <h2 className="text-xl font-semibold text-center">
           {t('import.upload.title')}
         </h2>

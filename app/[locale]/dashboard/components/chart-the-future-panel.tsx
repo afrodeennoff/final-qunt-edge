@@ -152,7 +152,7 @@ function AssistantPanel() {
         <Bot className="size-4 text-primary" />
       </div>
 
-      <div className="flex-1 space-y-2 overflow-y-auto p-4">
+      <div className="flex-1 gap-2 overflow-y-auto p-4">
         {messages.map((message) => (
           <div
             key={message.id}

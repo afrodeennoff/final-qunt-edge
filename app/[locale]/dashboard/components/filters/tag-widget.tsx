@@ -412,7 +412,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                 type="hover"
               >
                 <div className={cn(
-                  "space-y-0.5",
+                  "gap-0.5",
                   size === 'small' ? "min-h-[150px]" : "min-h-[200px]"
                 )}>
                   {filteredTags.map((tag) => (

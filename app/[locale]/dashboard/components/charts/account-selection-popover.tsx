@@ -91,7 +91,7 @@ export const AccountSelectionPopover = React.memo(({
                 />
               </div>
               
-              <div className="flex-1 overflow-y-auto space-y-1 pr-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+              <div className="flex-1 overflow-y-auto gap-1 pr-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
                 {filteredAccounts.length === 0 ? (
                   <div className="text-xs text-muted-foreground text-center py-4">
                     {searchTerm ? 'No accounts found' : 'No accounts available'}

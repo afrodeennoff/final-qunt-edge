@@ -189,7 +189,7 @@ function ReviewSkeleton() {
     <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
       <div className="flex items-start gap-4">
         <SkeletonV2 className="h-10 w-10 rounded-full" />
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 gap-3">
           <div className="flex items-center justify-between">
             <SkeletonV2 className="h-4 w-24" />
             <SkeletonV2 className="h-3 w-16" />
