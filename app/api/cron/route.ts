@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
 import { requireServiceAuth, toErrorResponse } from "@/server/authz"
+import { getSiteUrl } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -121,7 +122,7 @@ export async function GET(req: Request) {
           try {
             // Get email data from the weekly summary endpoint with retry logic
             const response = await fetchWithRetry(
-              `${process.env.NEXT_PUBLIC_APP_URL}/api/email/weekly-summary/${user.id}`,
+              getSiteUrl(`/api/email/weekly-summary/${user.id}`),
               {
                 method: 'POST',
                 headers: {

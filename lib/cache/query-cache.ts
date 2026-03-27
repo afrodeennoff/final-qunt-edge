@@ -10,7 +10,7 @@
  * @module lib/cache/query-cache
  */
 
-import { unstable_cache } from 'next/cache'
+import { revalidateTag, unstable_cache } from 'next/cache'
 import { logger } from '@/lib/logger'
 
 export interface CacheOptions {
@@ -78,36 +78,8 @@ export function cacheQuery<T>(
 export function invalidateCache(tags: string[]): void {
   logger.info('[Cache] Invalidating cache tags', { tags })
 
-  // Next.js 15+ provides unstable_expireTag for immediate expiration
-  // This is more reliable than revalidateTag for immediate invalidation
-  if (typeof require !== 'undefined') {
-    try {
-      const nextCache = require('next/cache')
-      const expireTag = nextCache.unstable_expireTag
-
-      if (typeof expireTag === 'function') {
-        tags.forEach((tag) => expireTag(tag))
-        logger.debug('[Cache] Successfully expired tags', { tags })
-        return
-      }
-    } catch (e) {
-      logger.warn('[Cache] unstable_expireTag not available, using revalidateTag', {
-        error: e instanceof Error ? e.message : String(e),
-      })
-    }
-  }
-
-  // Fallback to revalidateTag for older Next.js versions
-  try {
-    const { revalidateTag } = require('next/cache')
-    tags.forEach((tag) => revalidateTag(tag, { expire: 0 }))
-    logger.debug('[Cache] Revalidated tags (fallback)', { tags })
-  } catch (e) {
-    logger.error('[Cache] Failed to invalidate cache', {
-      error: e instanceof Error ? e.message : String(e),
-      tags,
-    })
-  }
+  tags.forEach((tag) => revalidateTag(tag, { expire: 0 }))
+  logger.debug('[Cache] Revalidated tags', { tags })
 }
 
 /**

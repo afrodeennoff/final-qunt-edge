@@ -96,8 +96,13 @@ export default function Navbar() {
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" className="h-10 w-10 rounded-full text-[hsl(var(--mk-text))] lg:hidden">
-                  <Menu className="h-4.5 w-4.5" />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="h-10 w-10 rounded-full text-[hsl(var(--mk-text))] lg:hidden"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu className="h-4.5 w-4.5" aria-hidden="true" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[88vw] max-w-[320px] border-l border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-bg-1))] p-0">

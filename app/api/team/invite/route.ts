@@ -8,6 +8,7 @@ import { createRouteClient } from "@/lib/supabase/route-client"
 import { createRateLimitResponse, rateLimit } from "@/lib/rate-limit"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 import { apiError } from "@/lib/api-response"
+import { getSiteUrl } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 const inviteRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "team-invite" })
@@ -146,13 +147,12 @@ export async function POST(req: Request) {
     })
 
     // Generate join URL
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin
     const inviteLocale =
       existingUser?.language && SUPPORTED_LOCALES.has(existingUser.language)
         ? existingUser.language
         : "en"
 
-    const joinUrl = `${appUrl}/${inviteLocale}/teams/join?invitation=${invitation.id}`
+    const joinUrl = getSiteUrl(`/${inviteLocale}/teams/join?invitation=${invitation.id}`)
 
     // Render email
     const emailHtml = await render(

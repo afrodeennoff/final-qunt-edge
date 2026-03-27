@@ -61,7 +61,7 @@ function getPlanHref({
 }: {
   planName: string
   billingMode: BillingMode
-  currency: string
+  currency: 'USD' | 'EUR'
   locale: string
 }): string {
   if (planName === 'Pro AI') {

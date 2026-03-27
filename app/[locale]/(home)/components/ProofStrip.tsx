@@ -58,7 +58,7 @@ export default function ProofStrip() {
                     className="rounded-xl border border-border/70 bg-background/35 p-4 transition-colors hover:bg-background/55"
                   >
                     <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/70 bg-background/45 text-primary">
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-4 w-4" aria-hidden="true" />
                     </div>
                     <h3 className="text-sm font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">

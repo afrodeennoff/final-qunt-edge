@@ -115,8 +115,14 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                     {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="lg:hidden text-foreground hover:text-foreground/80">
-                                <Menu className="w-6 h-6" />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="lg:hidden text-foreground hover:text-foreground/80"
+                                aria-label="Open navigation menu"
+                            >
+                                <Menu className="w-6 h-6" aria-hidden="true" />
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[min(88vw,360px)] border-border/50 bg-background/95 p-0 backdrop-blur-xl flex flex-col justify-between">

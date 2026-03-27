@@ -154,6 +154,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
                   <PricingPlans 
                     isModal={true} 
                     onClose={handlePricingClose}
+                    onSuccess={handlePricingClose}
                     currentSubscription={currentSubscription}
                   />
                 </div>

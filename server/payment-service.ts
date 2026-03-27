@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { whop } from '@/lib/whop'
 import { logger } from '@/lib/logger'
+import { getSiteUrl } from '@/lib/site-url'
 import crypto from 'crypto'
 import { PromotionType, TransactionStatus, TransactionType, InvoiceStatus } from '@/prisma/generated/prisma'
 import type { Prisma } from '@/prisma/generated/prisma'
@@ -104,7 +105,7 @@ export class PaymentService {
         company_id: companyId,
         plan_id: plan.id,
         metadata: checkoutMetadata,
-        redirect_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard?success=true`,
+        redirect_url: getSiteUrl('/dashboard?success=true'),
       })
 
       logger.info('[PaymentService] Checkout session created', {

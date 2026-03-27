@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
+import { getSiteUrl } from '@/lib/site-url'
 
 export async function GET() {
-  return NextResponse.redirect(new URL('/authentication', process.env.NEXT_PUBLIC_APP_URL));
+  return NextResponse.redirect(getSiteUrl('/authentication'));
 }
 
 export async function POST() {
-  return NextResponse.redirect(new URL('/authentication', process.env.NEXT_PUBLIC_APP_URL));
+  return NextResponse.redirect(getSiteUrl('/authentication'));
 }
-

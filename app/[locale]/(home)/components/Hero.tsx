@@ -15,7 +15,7 @@ export default function Hero({ locale }: { locale: string }) {
         <div className="absolute inset-x-10 top-8 h-px bg-[linear-gradient(90deg,transparent,hsl(var(--foreground)/0.34),transparent)]" />
 
         <div className="absolute inset-0 opacity-[0.03]">
-          <svg className="h-full w-full" preserveAspectRatio="none">
+          <svg className="h-full w-full motion-reduce:opacity-0" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <defs>
               <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.3" />
@@ -28,7 +28,7 @@ export default function Hero({ locale }: { locale: string }) {
               stroke="url(#chart-gradient)"
               strokeWidth="2"
               fill="none"
-              className="animate-pulse"
+              className="animate-pulse motion-reduce:animate-none"
               style={{ animationDuration: '4s' }}
             />
           </svg>
@@ -41,8 +41,8 @@ export default function Hero({ locale }: { locale: string }) {
             variant="secondary"
             className="relative border-border/70 bg-card/70 px-5 py-2 text-[10px] font-medium uppercase tracking-[0.22em] backdrop-blur-sm [font-family:var(--home-copy)]"
           >
-            <span className="absolute inset-0 animate-pulse rounded bg-primary/20" />
-            <Sparkles className="relative mr-2 h-3.5 w-3.5 text-primary" />
+            <span className="absolute inset-0 animate-pulse rounded bg-primary/20 motion-reduce:animate-none" />
+            <Sparkles className="relative mr-2 h-3.5 w-3.5 text-primary" aria-hidden="true" />
             <span className="relative">Live decision telemetry for discretionary traders</span>
           </Badge>
         </div>
@@ -67,7 +67,7 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <Link href={`/${locale}/authentication?next=dashboard`}>
               <span className="relative z-10">Start Free Audit</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite] motion-reduce:animate-none motion-reduce:opacity-0" />
             </Link>
           </Button>
           <Button
@@ -78,7 +78,7 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <Link href={`/${locale}/#pricing`}>
               See Pricing
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </Link>
           </Button>
         </div>
@@ -110,7 +110,7 @@ export default function Hero({ locale }: { locale: string }) {
               </div>
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
                 <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-foreground/60 [font-family:var(--home-mono)]">
@@ -125,7 +125,7 @@ export default function Hero({ locale }: { locale: string }) {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative">
                     <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-primary/30 bg-primary/10">
-                      <Target className="h-4 w-4 text-primary" />
+                      <Target className="h-4 w-4 text-primary" aria-hidden="true" />
                     </div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/70 [font-family:var(--home-copy)]">
                       Session Grade Confidence
@@ -134,7 +134,7 @@ export default function Hero({ locale }: { locale: string }) {
                       94<span className="text-2xl">%</span>
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-emerald-500 [font-family:var(--home-mono)]">
-                      <Activity className="h-3 w-3" />
+                      <Activity className="h-3 w-3" aria-hidden="true" />
                       +2.4% WoW
                     </div>
                   </div>
@@ -144,7 +144,7 @@ export default function Hero({ locale }: { locale: string }) {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative">
                     <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-primary/30 bg-primary/10">
-                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <TrendingUp className="h-4 w-4 text-primary" aria-hidden="true" />
                     </div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/70 [font-family:var(--home-copy)]">
                       Rule Adherence Uplift
@@ -153,7 +153,7 @@ export default function Hero({ locale }: { locale: string }) {
                       +37<span className="text-2xl">%</span>
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-emerald-500 [font-family:var(--home-mono)]">
-                      <Activity className="h-3 w-3" />
+                      <Activity className="h-3 w-3" aria-hidden="true" />
                       +5.1% WoW
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export default function Hero({ locale }: { locale: string }) {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative">
                     <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-primary/30 bg-primary/10">
-                      <Activity className="h-4 w-4 text-primary" />
+                      <Activity className="h-4 w-4 text-primary" aria-hidden="true" />
                     </div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/70 [font-family:var(--home-copy)]">
                       Impulse Trades Reduced
@@ -172,7 +172,7 @@ export default function Hero({ locale }: { locale: string }) {
                       -42<span className="text-2xl">%</span>
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-emerald-500 [font-family:var(--home-mono)]">
-                      <Activity className="h-3 w-3" />
+                      <Activity className="h-3 w-3" aria-hidden="true" />
                       -8.3% WoW
                     </div>
                   </div>

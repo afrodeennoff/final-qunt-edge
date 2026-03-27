@@ -449,7 +449,7 @@ export default function BillingManagement() {
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
-          <PricingPlans currentSubscription={subscription} />
+          <PricingPlans currentSubscription={subscription} onSuccess={refreshSubscription} />
         </CardContent>
       </Card>
 
@@ -483,7 +483,7 @@ export default function BillingManagement() {
                   <div key={invoice.id} className="flex items-center justify-between p-4">
                     <div className="space-y-1">
                       <p className="text-sm font-medium">
-                        €{(invoice.amount_paid / 100).toFixed(2)}
+                        {formatAmount(invoice.amount_paid)}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {formatWhopDate(invoice.created)}

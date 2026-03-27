@@ -163,6 +163,7 @@ export default function Modals() {
           <PricingPlans
             isModal={true}
             onClose={() => setIsPaywallOpen(false)}
+            onSuccess={() => setIsPaywallOpen(false)}
           />
 
           <div className="mt-4 text-center">
