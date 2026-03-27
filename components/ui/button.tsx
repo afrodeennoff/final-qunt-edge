@@ -66,17 +66,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"
     const isShimmer = variant === "shimmer"
-
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        disabled={isLoading || disabled}
-        aria-busy={isLoading || undefined}
-        {...props}
-      >
+    
+    const content = (
+      <>
         {isShimmer && isLoading && (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -92,7 +85,33 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           children
         )}
         {rightIcon && !isLoading && <span className="shrink-0">{rightIcon}</span>}
-      </Comp>
+      </>
+    )
+
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          {...props}
+        >
+          <span className="inline-flex items-center justify-center gap-2">
+            {content}
+          </span>
+        </Slot>
+      )
+    }
+
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={isLoading || disabled}
+        aria-busy={isLoading || undefined}
+        {...props}
+      >
+        {content}
+      </button>
     )
   }
 )

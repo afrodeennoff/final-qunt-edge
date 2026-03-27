@@ -58,7 +58,7 @@ export default function LeaderboardPreview({ locale, entries }: LeaderboardPrevi
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Trophy className="mr-1.5 h-3 w-3" />
               Leaderboard
             </BadgeV2>
@@ -87,7 +87,7 @@ export default function LeaderboardPreview({ locale, entries }: LeaderboardPrevi
             return (
               <Card
                 key={entry.userId}
-                className={`overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.4)] ${
+                className={`overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] transition-all duration-300 hover:border-primary/40 ${
                   isTop3 ? 'bg-[hsl(var(--mk-surface)/0.8)]' : 'bg-[hsl(var(--mk-surface)/0.5)]'
                 }`}
               >
@@ -104,7 +104,7 @@ export default function LeaderboardPreview({ locale, entries }: LeaderboardPrevi
                   {/* Avatar + Name */}
                   <div className="flex items-center gap-3 min-w-0">
                     <Avatar className="h-10 w-10 shrink-0 border border-[hsl(var(--mk-border)/0.28)]">
-                      <AvatarFallback className="bg-[hsl(var(--primary)/0.12)] text-xs font-semibold text-primary">
+                      <AvatarFallback className="bg-primary/15 text-xs font-semibold text-primary">
                         {getInitials(entry.username)}
                       </AvatarFallback>
                     </Avatar>

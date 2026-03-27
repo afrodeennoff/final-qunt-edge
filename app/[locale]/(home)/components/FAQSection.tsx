@@ -89,7 +89,7 @@ export default function FAQSection(_props: FAQSectionProps) {
     <section id="faq" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 text-center">
-          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <HelpCircle className="mr-1.5 h-3 w-3" />
             FAQ
           </BadgeV2>

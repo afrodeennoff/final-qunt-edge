@@ -49,10 +49,10 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
           <div key={item.title}>
             <Card
               variant="glass"
-              className="h-full rounded-[28px] border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)]"
+              className="h-full rounded-2xl border border-border/70 bg-card/80 p-5 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)]"
             >
               <CardHeader className="space-y-3 px-0 pb-0">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.14)] text-foreground">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-primary/50 bg-primary/15 text-foreground">
                   <Icon className="h-5 w-5" />
                 </div>
                 <CardTitle className="text-base font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
@@ -73,11 +73,11 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
 export default function AIFuturesSection() {
   return (
     <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-      <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
+      <div className="mx-auto max-w-6xl space-y-8 rounded-3xl border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
         <div className="space-y-3 text-center">
           <BadgeV2
             variant="outline"
-            className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
+            className="border-border/60 bg-primary/20 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
           >
             Must-Have AI Features
           </BadgeV2>
@@ -88,16 +88,16 @@ export default function AIFuturesSection() {
         </div>
 
         <Tabs defaultValue="intelligence" className="w-full">
-          <TabsList className="h-auto w-full justify-start rounded-[28px] border border-border/70 bg-card/70 p-1">
+          <TabsList className="h-auto w-full justify-start rounded-2xl border border-border/70 bg-card/70 p-1">
             <TabsTrigger
               value="intelligence"
-              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-primary/25 data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
             >
               Intelligence
             </TabsTrigger>
             <TabsTrigger
               value="automation"
-              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-[hsl(var(--primary)/0.25)] data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
+              className="rounded-lg px-4 py-2 text-xs uppercase tracking-[0.12em] text-muted-foreground transition duration-150 data-[state=active]:bg-primary/25 data-[state=active]:text-foreground data-[state=active]:shadow-[0_8px_35px_-20px_hsl(var(--foreground)/0.9)] [font-family:var(--home-copy)]"
             >
               Automation
             </TabsTrigger>
@@ -113,7 +113,7 @@ export default function AIFuturesSection() {
 
         <Card
           variant="glass"
-          className="mt-6 rounded-[28px] border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
+          className="mt-6 rounded-2xl border border-border/70 bg-card/80 shadow-[0_12px_50px_-26px_hsl(var(--foreground)/0.9)]"
         >
           <CardContent className="flex flex-col gap-3 p-6 text-sm text-muted-foreground [font-family:var(--home-copy)] sm:flex-row sm:items-center sm:justify-between">
             <p className="leading-relaxed">
@@ -121,7 +121,7 @@ export default function AIFuturesSection() {
             </p>
             <BadgeV2
               variant="outline"
-              className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
+              className="w-fit border-primary/35 bg-primary/15 text-foreground"
             >
               Explainable AI
             </BadgeV2>

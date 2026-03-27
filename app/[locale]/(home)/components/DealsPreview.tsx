@@ -42,7 +42,7 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Zap className="mr-1.5 h-3 w-3" />
               Hot Deals
             </BadgeV2>
@@ -67,7 +67,7 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
           {displayDeals.map((deal) => (
             <Card
               key={deal.id}
-              className="group overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.4)] hover:shadow-lg hover:shadow-[hsl(var(--primary)/0.08)]"
+              className="group overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10"
             >
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
@@ -75,7 +75,7 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
                     <p className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{deal.firmName}</p>
                     <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">{deal.category}</p>
                   </div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary)/0.12)] text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary">
                     <Percent className="h-5 w-5" />
                   </div>
                 </div>

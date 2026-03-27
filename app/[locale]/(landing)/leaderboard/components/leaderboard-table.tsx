@@ -33,7 +33,7 @@ function rankClass(rank: number): string {
 
 export function LeaderboardTableSkeleton() {
   return (
-    <section className="overflow-hidden rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+    <section className="overflow-hidden rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
       <div className="border-b border-border/60 px-5 py-5 sm:px-6">
         <SkeletonV2 className="h-3.5 w-28" />
         <SkeletonV2 className="mt-3 h-8 w-56" />
@@ -96,7 +96,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
   isLoading = false,
 }: LeaderboardTableProps) {
   return (
-    <section className="overflow-hidden rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+    <section className="overflow-hidden rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border/60 px-5 py-5 sm:px-6">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaderboard table</p>
@@ -110,7 +110,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
 
       {entries.length === 0 ? (
         <div className="px-5 py-10 sm:px-6">
-          <div className="rounded-[1.4rem] border border-dashed border-border/60 bg-background/65 p-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-border/60 bg-background/65 p-8 text-center text-sm text-muted-foreground">
             No public traders are available yet. Once users opt in from Trader Profile, they will appear here.
           </div>
         </div>

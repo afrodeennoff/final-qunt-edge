@@ -45,7 +45,7 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Building2 className="mr-1.5 h-3 w-3" />
               Featured Firms
             </BadgeV2>
@@ -69,7 +69,7 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {displayFirms.map((firm) => (
             <Link key={firm.id} href={`/${locale}/firm/${firm.slug}`} className="block">
-              <Card className="group h-full overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.4)] hover:shadow-lg hover:shadow-[hsl(var(--primary)/0.08)]">
+              <Card className="group h-full overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10">
                 <CardContent className="flex h-full flex-col p-5">
                   <div className="flex items-start justify-between">
                     <div>
@@ -83,7 +83,7 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
                         </BadgeV2>
                       </div>
                     </div>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary)/0.12)] text-primary transition-transform group-hover:scale-110">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary transition-transform group-hover:scale-110">
                       <Building2 className="h-5 w-5" />
                     </div>
                   </div>

@@ -8,7 +8,7 @@ import Footer from './Footer'
 
 export default function HomeContent({ locale }: { locale: string }) {
   return (
-    <div className="relative overflow-x-hidden bg-[#050505] selection:bg-[#2962FF]/30 selection:text-[#E0E0E0]">
+    <div className="relative overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground">
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_480px_at_50%_-10%,hsl(var(--foreground)/0.06),transparent_68%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.3)_36%,hsl(var(--background))_100%)]" />
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.15] sm:block" />

@@ -413,7 +413,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-v2-accent" />
@@ -476,7 +476,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2 className="rounded-2xl border-white/10 bg-white/[0.03]">
         <CardV2Content className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">Write a Review</h3>
@@ -631,7 +631,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0A0A0A] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-card p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="p-1 hover:bg-white/5 rounded">
@@ -678,7 +678,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2 className="rounded-2xl border-white/10 bg-white/[0.03]">
         <CardV2Content className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-white">

@@ -1,6 +1,6 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-03-27
+**Last Updated:** 2026-03-28
 
 ---
 
@@ -85,3 +85,61 @@ When editing `globals.css`:
 
 ### Fix
 Move `@utility focus-ring { ... }` from inside `@layer base` to after the layer closes.
+
+---
+
+## NEW (2026-03-28): Subagent HSL refactoring — fix agent mistakes immediately after they complete
+
+### What happened
+Subagents were delegated to replace `bg-[hsl(var(--primary)/...)]` patterns with semantic tokens. They completed but made mistakes:
+- Landing agent created `via-border-primary/35` (wrong — confused `--primary` with `--border`)
+- Landing agent missed `bg-[hsl(var(--primary-foreground)/0.2)]` in hero.tsx
+- Landing agent missed `bg-[hsl(var(--foreground)/0.04)]` in hero.tsx
+
+### Root Cause
+The prompt mapping only listed `--primary` patterns, but the agent didn't check for `--primary-foreground` and `--foreground` variants that also need conversion.
+
+### Rule
+After any subagent bulk refactoring:
+1. Always run follow-up grep to find remaining patterns the agent may have missed
+2. Check for variants: `--foreground`, `--primary-foreground`, `--secondary-foreground` alongside `--primary` and `--secondary`
+3. Fix agent mistakes immediately while the work is fresh
+4. For HSL patterns: verify with `grep -rn '\[hsl(var(--' --include="*.tsx"` after delegation
+
+### Example
+```bash
+# After agent completes, run these to catch misses:
+grep -rn '\[hsl(var(--primary' .../components/ --include="*.tsx"
+grep -rn '\[hsl(var(--foreground' .../components/ --include="*.tsx"
+grep -rn 'via-border-primary\|via-primary-foreground' .../components/ --include="*.tsx"
+```
+
+---
+
+## NEW (2026-03-28): UltraWork verification — run EXACT verification commands before claiming done
+
+### What happened
+RALPH loop flagged verification failures across 6+ iterations. Root cause: my audit commands were imprecise and I was claiming done based on partial audits.
+
+### Root Cause
+1. Used `|| echo "NONE"` logic which misleadingly printed "FOUND" for empty results
+2. Hex grep patterns matched URL hash fragments (`/#features`) as "hex colors"
+3. Only audited a subset of the 17 component groups instead of all of them
+
+### Rule
+For design system refactoring audits, use PRECISE verification:
+```bash
+# Count-based (returns 0 = clean):
+grep -c 'pattern' ... --include="*.tsx" | grep -v ':0$'
+
+# OR line-based (empty output = clean):
+grep -rn 'pattern' ... --include="*.tsx" | grep -v 'opengraph'
+```
+
+### Fix
+Run comprehensive 5-point audit after every refactoring session:
+1. `grep -c` for hex in className/style → must be 0
+2. `grep -c` for non-standard rounded → must be 0 (or 1 with documented intent)
+3. `grep -c` for primary/secondary HSL → must be 0
+4. `npx tsc --noEmit` → must exit 0
+5. Audit ALL 17 component groups individually, not just a sample

@@ -27,7 +27,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
 
   return (
     <section className="py-5">
-      <div className="rounded-[1.9rem] border border-border/60 bg-background/70 p-4 sm:p-5">
+      <div className="rounded-3xl border border-border/60 bg-background/70 p-4 sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
             <div>

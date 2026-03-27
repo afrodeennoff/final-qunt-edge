@@ -259,7 +259,7 @@ const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ? "text
 const getHeroSignClass = (isPositive: boolean): string => (isPositive ? "text-foreground/70" : "text-foreground/45")
 
 const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn(
-    "px-2.5 py-1 rounded-[6px] text-[10px] font-bold transition-all",
+    "px-2.5 py-1 rounded-sm text-[10px] font-bold transition-all",
     mode === currentMode ? "bg-secondary/35 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
 )
 

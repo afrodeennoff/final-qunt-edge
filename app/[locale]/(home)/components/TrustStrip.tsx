@@ -10,7 +10,7 @@ const brokers = [
 
 export default function TrustStrip() {
   return (
-    <section className="border-y border-[#1A1A21] bg-[#0b0b0d]">
+    <section className="border-y border-border bg-card">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Security Badges */}
@@ -31,13 +31,13 @@ export default function TrustStrip() {
 
           {/* Integrations */}
           <div className="flex items-center gap-4 flex-wrap justify-center">
-            <span className="text-xs text-[#707070] uppercase tracking-wider mr-2">
+            <span className="text-xs text-muted-foreground uppercase tracking-wider mr-2">
               Integrations
             </span>
             {brokers.map((broker) => (
               <span
                 key={broker}
-                className="text-sm text-[#9E9E9E] hover:text-[#E0E0E0] transition-colors"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {broker}
               </span>
@@ -45,9 +45,9 @@ export default function TrustStrip() {
           </div>
 
           {/* Social Proof */}
-          <p className="text-[#9E9E9E]">
+          <p className="text-muted-foreground">
             Trusted by{' '}
-            <span className="text-[#E0E0E0] font-medium">
+            <span className="text-foreground font-medium">
               50,000+
             </span>{' '}
             traders
@@ -67,10 +67,10 @@ function TrustBadge({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="w-8 h-8 rounded-lg border border-[#1A1A21] bg-[#101014] flex items-center justify-center">
-        <Icon className="w-4 h-4 text-[#2962FF]" />
+      <div className="w-8 h-8 rounded-lg border border-border bg-card flex items-center justify-center">
+        <Icon className="w-4 h-4 text-primary" />
       </div>
-      <span className="text-sm text-[#9E9E9E]">{label}</span>
+      <span className="text-sm text-muted-foreground">{label}</span>
     </div>
   )
 }

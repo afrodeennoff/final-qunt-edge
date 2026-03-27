@@ -47,7 +47,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
   ]
   
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white p-6">
+    <div className="min-h-screen bg-background text-white p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

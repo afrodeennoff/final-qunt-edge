@@ -48,12 +48,12 @@ export default function Hero({  }: HeroProps) {
       <div className="noise pointer-events-none"></div>
 
       <motion.div style={{ opacity }} className="absolute inset-0 pointer-events-none">
-         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.06)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.06)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.06)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.06)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,hsl(0_0%_0%)_70%,transparent_100%)]"></div>
 
-         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl sm:max-w-6xl md:max-w-7xl h-[300px] sm:h-[400px] md:h-[600px] bg-[hsl(var(--primary)/0.15)] blur-[80px] sm:blur-[100px] md:blur-[120px] rounded-full animate-pulse-slow"></div>
+         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl sm:max-w-6xl md:max-w-7xl h-[300px] sm:h-[400px] md:h-[600px] bg-primary/15 blur-[80px] sm:blur-[100px] md:blur-[120px] rounded-full animate-pulse-slow"></div>
 
-         <div className="absolute top-[20%] left-[10%] w-[200px] h-[200px] bg-[hsl(var(--foreground)/0.04)] blur-[60px] rounded-full animate-float"></div>
-         <div className="absolute bottom-[20%] right-[10%] w-[180px] h-[180px] bg-[hsl(var(--primary)/0.08)] blur-[50px] rounded-full animate-float" style={{ animationDelay: '1.5s' }}></div>
+         <div className="absolute top-[20%] left-[10%] w-[200px] h-[200px] bg-foreground/5 blur-[60px] rounded-full animate-float"></div>
+         <div className="absolute bottom-[20%] right-[10%] w-[180px] h-[180px] bg-primary/10 blur-[50px] rounded-full animate-float" style={{ animationDelay: '1.5s' }}></div>
 
          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[hsl(var(--mk-bg-1)/0.3)] to-[hsl(var(--mk-bg-1)/0.8)] pointer-events-none"></div>
       </motion.div>
@@ -66,8 +66,8 @@ export default function Hero({  }: HeroProps) {
         className="max-w-7xl mx-auto relative z-10 w-full"
       >
         <motion.div variants={item} className="mb-6 sm:mb-8">
-           <div className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-[hsl(var(--mk-border)/0.55)] bg-[hsl(var(--mk-surface)/0.72)] px-3 py-1.5 backdrop-blur-md shadow-lg animate-fade-in hover:border-[hsl(var(--primary)/0.4)] transition-colors duration-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_hsl(var(--primary)/0.6)]"></span>
+           <div className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-[hsl(var(--mk-border)/0.55)] bg-[hsl(var(--mk-surface)/0.72)] px-3 py-1.5 backdrop-blur-md shadow-lg animate-fade-in hover:border-primary/40 transition-colors duration-300">
+               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_hsl(var(--primary)/0.6)]"></span>
               <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] sm:tracking-[0.3em] text-[hsl(var(--mk-text-muted))]">Institutional Intelligence Layer</span>
            </div>
         </motion.div>
@@ -96,12 +96,12 @@ export default function Hero({  }: HeroProps) {
             className="touch-target btn-primary-glow group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-primary px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-primary-foreground transition-all shadow-[0_12px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90 hover:shadow-[0_16px_32px_-12px_hsl(var(--primary)/0.5)] sm:w-auto sm:text-xs overflow-hidden"
           >
             <span className="relative z-10">Start Free Audit</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--primary-foreground)/0.2)] to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
           </Link>
 
           <Link
             href={`/${locale}/updates`}
-            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.5)] bg-[hsl(var(--mk-surface)/0.6)] backdrop-blur-sm px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-[hsl(var(--mk-text))] transition-all hover:bg-[hsl(var(--mk-surface)/0.8)] hover:border-[hsl(var(--primary)/0.4)] hover:shadow-[0_8px_20px_-8px_hsl(var(--primary)/0.3)] sm:w-auto sm:text-xs"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.5)] bg-[hsl(var(--mk-surface)/0.6)] backdrop-blur-sm px-8 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-[hsl(var(--mk-text))] transition-all hover:bg-[hsl(var(--mk-surface)/0.8)] hover:border-primary/40 hover:shadow-[0_8px_20px_-8px_hsl(var(--primary)/0.3)] sm:w-auto sm:text-xs"
           >
              View Product Updates
              <svg className="h-3 w-3 transition-transform group-hover:translate-x-1 group-hover:text-primary sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>

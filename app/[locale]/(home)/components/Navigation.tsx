@@ -22,13 +22,13 @@ export default function Navigation({ locale }: NavigationProps) {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 border-b border-[#1A1A21] bg-[#050505]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href={`/${locale}`} className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#2962FF] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-white font-bold text-sm">Q</span>
             </div>
-            <span className="font-semibold text-[#E0E0E0]">Qunt Edge</span>
+            <span className="font-semibold text-foreground">Qunt Edge</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -36,7 +36,7 @@ export default function Navigation({ locale }: NavigationProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-[#9E9E9E] hover:text-[#E0E0E0] transition-colors"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>
@@ -47,13 +47,13 @@ export default function Navigation({ locale }: NavigationProps) {
             <Button  variant="ghost" size="sm">
               Login
             </Button>
-            <Button  size="sm" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+            <Button  size="sm" className="bg-primary hover:bg-primary/90">
               Start Free
             </Button>
           </div>
 
           <button
-            className="md:hidden p-2 text-[#E0E0E0]"
+            className="md:hidden p-2 text-foreground"
             onClick={() => setIsOpen(!isOpen)}
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
@@ -64,7 +64,7 @@ export default function Navigation({ locale }: NavigationProps) {
 
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-[#050505]/95 backdrop-blur-xl md:hidden transition-transform duration-300',
+          'fixed inset-0 z-40 bg-background/95 backdrop-blur-xl md:hidden transition-transform duration-300',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
       >
@@ -73,7 +73,7 @@ export default function Navigation({ locale }: NavigationProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="py-4 text-lg text-[#E0E0E0] border-b border-[#1A1A21]"
+              className="py-4 text-lg text-foreground border-b border-border"
               onClick={() => setIsOpen(false)}
             >
               {link.label}
@@ -83,7 +83,7 @@ export default function Navigation({ locale }: NavigationProps) {
             <Button  variant="outline" size="lg">
               Login
             </Button>
-            <Button  size="lg" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+            <Button  size="lg" className="bg-primary hover:bg-primary/90">
               Start Free
             </Button>
           </div>

@@ -34,7 +34,7 @@ export default function ProblemStatement() {
               into a repeatable performance system.
             </p>
 
-            <div className="mt-6 rounded-2xl border border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] p-4">
+            <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/10 p-4">
               <p className="text-[10px] uppercase tracking-[0.18em] text-foreground [font-family:var(--home-copy)]">Mindset Upgrade</p>
               <p className="mt-1 text-sm text-foreground/85 [font-family:var(--home-copy)]">
                 Promote process to first-class data. Let profit follow your standards.
@@ -50,7 +50,7 @@ export default function ProblemStatement() {
                    key={item.title}
                    className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.7)] p-5"
                  >
-                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-foreground">
+                    <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-foreground">
                      <Icon className="h-4 w-4" />
                    </div>
                    <h3 className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{item.title}</h3>

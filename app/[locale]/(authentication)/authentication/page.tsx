@@ -38,7 +38,7 @@ export default function AuthenticationPage() {
       </div>
 
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10">
-        <div className="w-full overflow-hidden rounded-[32px] border border-border/60 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
+        <div className="w-full overflow-hidden rounded-2xl border border-border/60 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]">
         <section className="p-6 sm:p-8 lg:border-r lg:border-border/60 lg:p-10">
           <div className="flex items-center justify-between">

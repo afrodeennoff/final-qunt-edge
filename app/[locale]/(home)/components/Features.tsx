@@ -43,14 +43,14 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 bg-[#050505]">
+    <section className="py-24 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-semibold mb-4 text-[#E0E0E0]">
+          <h2 className="text-4xl font-semibold mb-4 text-foreground">
             Everything you need to{' '}
-            <span className="text-[#2962FF]">trade smarter</span>
+            <span className="text-primary">trade smarter</span>
           </h2>
-          <p className="text-lg text-[#9E9E9E] max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Powerful analytics, AI insights, and team collaboration in one platform.
           </p>
         </div>
@@ -64,30 +64,30 @@ export default function Features() {
               <div
                 key={feature.title}
                 className={`
-                  bento-card rounded-xl border border-[#1A1A21] bg-[#0b0b0d] p-6
+                  bento-card rounded-xl border border-border bg-card p-6
                   ${isLarge ? 'lg:col-span-2' : ''}
-                  ${feature.highlight ? 'border-[#2962FF]/30' : ''}
+                  ${feature.highlight ? 'border-primary/30' : ''}
                 `}
               >
                 <div className="mb-4">
                   <div className={`
                     w-12 h-12 rounded-lg flex items-center justify-center border
-                    ${feature.highlight 
-                      ? 'bg-[#2962FF]/10 border-[#2962FF]/30' 
-                      : 'bg-[#101014] border-[#1A1A21]'}
+                    ${feature.highlight
+                      ? 'bg-primary/10 border-primary/30'
+                      : 'bg-input border-border'}
                   `}>
                     <Icon className={`
                       w-6 h-6
-                      ${feature.highlight ? 'text-[#2962FF]' : 'text-[#9E9E9E]'}
+                      ${feature.highlight ? 'text-primary' : 'text-muted-foreground'}
                     `} />
                   </div>
                 </div>
 
-                <h3 className="text-lg font-medium text-[#E0E0E0] mb-2">
+                <h3 className="text-lg font-medium text-foreground mb-2">
                   {feature.title}
                 </h3>
 
-                <p className="text-sm text-[#707070]">
+                <p className="text-sm text-muted-foreground">
                   {feature.description}
                 </p>
               </div>

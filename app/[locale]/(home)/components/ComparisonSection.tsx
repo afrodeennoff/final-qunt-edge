@@ -35,7 +35,7 @@ export default function ComparisonSection() {
     <section className="relative border-y border-border/30 bg-card/20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center sm:mb-12">
-          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-primary/35 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
           </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.7vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">

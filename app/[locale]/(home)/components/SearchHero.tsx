@@ -17,7 +17,7 @@ export default function SearchHero({
   filteredCount,
 }: SearchHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden rounded-[1.8rem] border border-border/60 bg-background/75 px-4 py-6 sm:px-6 sm:py-8">
+    <section className="relative isolate overflow-hidden rounded-3xl border border-border/60 bg-background/75 px-4 py-6 sm:px-6 sm:py-8">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(75%_60%_at_50%_0%,hsl(var(--foreground)/0.06),transparent_70%)]" />
 
       <div className="max-w-3xl">

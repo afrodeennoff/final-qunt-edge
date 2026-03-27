@@ -100,7 +100,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
     <section id="reviews" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center">
-          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <Star className="mr-1.5 h-3 w-3" />
             Reviews
           </BadgeV2>
@@ -117,13 +117,13 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
           {displayReviews.map((review) => (
             <Card
               key={review.id}
-              className="group overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.4)]"
+              className="group overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-primary/40"
             >
               <CardContent className="flex h-full flex-col p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <StarRating rating={review.rating} />
                   {review.verified && (
-                    <BadgeV2 variant="secondary" className="border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
+                    <BadgeV2 variant="secondary" className="border-primary/30 bg-primary/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
                       Verified
                     </BadgeV2>
                   )}
@@ -138,7 +138,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
 
                 <div className="mt-4 flex items-center gap-3 border-t border-[hsl(var(--mk-border)/0.28)] pt-4">
                   <Avatar className="h-9 w-9 border border-[hsl(var(--mk-border)/0.28)]">
-                    <AvatarFallback className="bg-[hsl(var(--primary)/0.12)] text-xs font-semibold text-primary">
+                    <AvatarFallback className="bg-primary/15 text-xs font-semibold text-primary">
                       {getInitials(review.username)}
                     </AvatarFallback>
                   </Avatar>

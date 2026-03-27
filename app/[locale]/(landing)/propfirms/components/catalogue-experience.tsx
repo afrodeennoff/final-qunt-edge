@@ -157,7 +157,7 @@ export function PropFirmCatalogueExperience({
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_20%,hsl(var(--background))_100%)]">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-6 shadow-[0_34px_110px_-70px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+        <section className="grid gap-6 rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-6 shadow-[0_34px_110px_-70px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -193,7 +193,7 @@ export function PropFirmCatalogueExperience({
 
             <RegisteredAccountsChart data={registeredAccountsChartData} />
 
-            <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+            <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
@@ -207,7 +207,7 @@ export function PropFirmCatalogueExperience({
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="rounded-[1.2rem] border border-border/60 bg-background/70 px-4 py-4 transition-colors hover:bg-background"
+                  className="rounded-xl border border-border/60 bg-background/70 px-4 py-4 transition-colors hover:bg-background"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -224,7 +224,7 @@ export function PropFirmCatalogueExperience({
           </>
         ) : null}
 
-        <section className="rounded-[1.4rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.56),hsl(var(--background)/0.46))] p-3 shadow-[0_18px_70px_-60px_rgba(0,0,0,0.95)] sm:p-4">
+        <section className="rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.56),hsl(var(--background)/0.46))] p-3 shadow-[0_18px_70px_-60px_rgba(0,0,0,0.95)] sm:p-4">
           <div className="flex items-center gap-2">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/65" />
@@ -250,7 +250,7 @@ export function PropFirmCatalogueExperience({
           </div>
         </section>
 
-        <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+        <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Catalogue board</p>
@@ -265,7 +265,7 @@ export function PropFirmCatalogueExperience({
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+                  className="group rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -323,7 +323,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-[1.4rem] border border-dashed border-border bg-background/65 p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-3xl border border-dashed border-border bg-background/65 p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}
@@ -343,7 +343,7 @@ function StatCard({
   icon: typeof Building2
 }) {
   return (
-    <div className="rounded-[1.3rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
+    <div className="rounded-2xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
       <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -392,7 +392,7 @@ function PayoutPill({
   const countLabel = count === 0 ? 'No payouts' : `${count} payout${count === 1 ? '' : 's'}`
 
   return (
-    <div className={`rounded-[1.4rem] border px-4 py-3 ${borderStyles[variant]}`}>
+    <div className={`rounded-3xl border px-4 py-3 ${borderStyles[variant]}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className={`text-base font-medium ${labelStyles[variant]}`}>{label}</p>
@@ -464,7 +464,7 @@ function RegisteredAccountsChart({
   }
 
   return (
-    <Card className="overflow-hidden rounded-[1.9rem] border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)]">
+    <Card className="overflow-hidden rounded-3xl border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)]">
       <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,hsl(var(--background)/0.55)_0%,transparent_100%)] px-6 pb-3 pt-4">
         <div className="flex flex-col gap-2">
           <div className="min-w-0">
@@ -495,7 +495,7 @@ function RegisteredAccountsChart({
       </CardHeader>
       <CardContent className="pt-3">
         {chartData.length > 0 ? (
-          <div className="overflow-hidden rounded-[1.4rem] border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background)/0.9)_0%,hsl(var(--card)/0.45)_100%)] p-3">
+          <div className="overflow-hidden rounded-3xl border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background)/0.9)_0%,hsl(var(--card)/0.45)_100%)] p-3">
             <ChartContainer config={registeredAccountsChartConfig} className="h-[360px] w-full overflow-hidden">
               <BarChart
                 accessibilityLayer
@@ -540,7 +540,7 @@ function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-[1.2rem] border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

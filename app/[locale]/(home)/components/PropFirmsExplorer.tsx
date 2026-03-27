@@ -74,7 +74,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
   }, [deferredQuery, filters, firms])
 
   return (
-    <section className="rounded-[2rem] border border-border/60 bg-card/45 p-4 sm:p-6 lg:p-8">
+    <section className="rounded-3xl border border-border/60 bg-card/45 p-4 sm:p-6 lg:p-8">
       <SearchHero
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -92,7 +92,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
       <FirmCardsGrid firms={filteredFirms} locale={locale} />
 
       <div className="px-4 pt-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-3 rounded-[28px] border border-border/70 bg-background/55 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background/55 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
             <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Need the full board?</p>
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">Open the complete firm catalogue.</h2>

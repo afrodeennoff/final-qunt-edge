@@ -41,9 +41,9 @@ export function PublicFlowShell({
           <>
             <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-5 sm:p-7">
               <div className="pointer-events-none absolute inset-0">
-                <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-[hsl(var(--foreground)/0.08)] blur-3xl" />
-                <div className="absolute right-6 top-8 h-32 w-32 rounded-full bg-[hsl(var(--foreground)/0.08)] blur-2xl" />
-                <div className="absolute -bottom-16 right-24 h-44 w-44 rounded-full bg-[hsl(var(--foreground)/0.04)] blur-3xl" />
+                <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
+                <div className="absolute right-6 top-8 h-32 w-32 rounded-full bg-foreground/10 blur-2xl" />
+                <div className="absolute -bottom-16 right-24 h-44 w-44 rounded-full bg-foreground/5 blur-3xl" />
                 <div className="absolute inset-0 bg-[linear-gradient(130deg,hsl(var(--foreground)/0.08),transparent_48%,hsl(var(--foreground)/0.03))]" />
               </div>
 

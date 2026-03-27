@@ -38,13 +38,13 @@ export default function HowItWorks() {
 
           <div className="hidden lg:block absolute top-[28px] left-[10%] w-[80%] h-[2px] z-0">
              <div className="absolute inset-0 bg-[hsl(var(--mk-border)/0.34)]"></div>
-             <motion.div
-               initial={{ width: 0 }}
-               whileInView={{ width: '100%' }}
-               viewport={{ once: true }}
-               transition={{ duration: 1.5, ease: "easeInOut" }}
-               className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-[hsl(var(--primary)/0.35)] to-[hsl(var(--mk-border)/0.34)]"
-             />
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: '100%' }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-primary/35 to-[hsl(var(--mk-border)/0.34)]"
+              />
           </div>
 
           {steps.map((step, i) => (

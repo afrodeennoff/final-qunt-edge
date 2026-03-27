@@ -65,7 +65,7 @@ export default function AnalysisDemo() {
           </p>
         </div>
 
-        <div className="marketing-panel overflow-hidden rounded-[28px]">
+        <div className="marketing-panel overflow-hidden rounded-2xl">
           <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
             <div className="border-b border-[hsl(var(--mk-border)/0.3)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <div className="mb-6 flex items-center justify-between">
@@ -73,7 +73,7 @@ export default function AnalysisDemo() {
                   <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Execution Stream</p>
                   <p className="mt-1 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
                 </div>
-                <span className="rounded-full border border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
+                <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
                   +1.27%
                 </span>
               </div>
@@ -113,7 +113,7 @@ export default function AnalysisDemo() {
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.3)]">
                   <div
                     style={{ width: '72%' }}
-                    className="h-full rounded-full bg-[hsl(var(--primary))]"
+                    className="h-full rounded-full bg-primary"
                   />
                 </div>
               </div>

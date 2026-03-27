@@ -51,7 +51,7 @@ export default function TrustAndProof() {
     <section className="relative bg-gradient-to-b from-card/5 to-background px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
-          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-primary/35 bg-primary/10 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Trust Architecture
           </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.4rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">

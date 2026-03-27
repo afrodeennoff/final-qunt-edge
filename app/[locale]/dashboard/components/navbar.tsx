@@ -55,7 +55,7 @@ export default function Navbar() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-[2.5rem] border border-border/60 bg-card/80 sm:shadow-xl transition-all duration-300"
+        className="pointer-events-auto flex flex-col rounded-3xl sm:rounded-[2.5rem] border border-border/60 bg-card/80 sm:shadow-xl transition-all duration-300"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
 
@@ -74,7 +74,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
 
             {/* Config Group */}
-            <div className="flex items-center gap-2 p-1.5 bg-secondary/20 backdrop-blur-xl rounded-[1.5rem] border border-border/50">
+            <div className="flex items-center gap-2 p-1.5 bg-secondary/20 backdrop-blur-xl rounded-2xl border border-border/50">
               <ButtonV2 
                 id="customize-mode"
                 variant="ghost"

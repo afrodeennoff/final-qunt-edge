@@ -102,7 +102,7 @@ export default function Features() {
     {
       id: "ai-journaling",
       title: t("landing.features.ai-journaling.title"),
-      icon: <Brain className="h-5 w-5 text-[hsl(var(--primary))]" />,
+      icon: <Brain className="h-5 w-5 text-primary" />,
       description: t("landing.features.ai-journaling.description"),
       stat: t("landing.features.ai-journaling.stat"),
       image: <TradingChatAssistant />
@@ -110,7 +110,7 @@ export default function Features() {
     {
       id: "performance-visualization",
       title: t("landing.features.performance-visualization.title"),
-      icon: <BarChart3 className="h-5 w-5 text-[hsl(var(--primary))]" />,
+      icon: <BarChart3 className="h-5 w-5 text-primary" />,
       description: t("landing.features.performance-visualization.description"),
       stat: t("landing.features.performance-visualization.stat"),
       image: <PnlPerContractPreview />,
@@ -119,7 +119,7 @@ export default function Features() {
     {
       id: "daily-performance",
       title: t("landing.features.daily-performance.title"),
-      icon: <Calendar className="h-5 w-5 text-[hsl(var(--primary))]" />,
+      icon: <Calendar className="h-5 w-5 text-primary" />,
       description: t("landing.features.daily-performance.description"),
       stat: t("landing.features.daily-performance.stat"),
       image: <CalendarFeaturePreview />,
@@ -128,7 +128,7 @@ export default function Features() {
     {
       id: "data-import",
       title: t("landing.features.data-import.title"),
-      icon: <Database className="h-5 w-5 text-[hsl(var(--primary))]" />,
+      icon: <Database className="h-5 w-5 text-primary" />,
       description: t("landing.features.data-import.description"),
       stat: t("landing.features.data-import.stat"),
       image: <ImportFeature />

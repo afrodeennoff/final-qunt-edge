@@ -46,7 +46,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
-    <div className="space-y-4 rounded-[28px] border border-border/70 bg-card/60 p-4 sm:p-5">
+    <div className="space-y-4 rounded-2xl border border-border/70 bg-card/60 p-4 sm:p-5">
       {/* Search Bar */}
       <div className="relative">
         <svg

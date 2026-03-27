@@ -1,6 +1,42 @@
-# Session Memory (2026-03-27)
+# Session Memory (2026-03-28)
 
-## Last Session: shadcn/ui v2 Migration — TypeScript Fixes + Tailwind Build Fix
+## Last Session: Design System Refactoring — Hex, Border-Radius, HSL Token Cleanup
+
+### Accomplishments
+- **Hex color → CSS variable**: 14+ files across all component groups. Zero hardcoded hex colors in `app/[locale]/` TSX files.
+- **Border-radius → Tailwind scale**: 22+ files standardized. `rounded-[Nrem]` / `rounded-[Npx]` → `rounded-2xl`, `rounded-xl`, `rounded-sm`, `rounded-3xl`.
+- **Raw HSL → semantic tokens**: ~95 patterns replaced across (home) and (landing) components.
+  - `bg-[hsl(var(--primary)/0.08)]` → `bg-primary/10`
+  - `border-[hsl(var(--primary)/0.35)]` → `border-primary/35`
+  - `text-[hsl(var(--primary))]` → `text-primary`
+  - `bg-[hsl(var(--foreground)/0.04)]` → `bg-foreground/5`
+  - `via-[hsl(var(--primary-foreground)/0.2)]` → `via-primary-foreground/20`
+- **Preserved correctly**: `--mk-*` tokens (marketing surface, no semantic aliases), `--chart-*` tokens (chart-specific).
+- **Verified**: 0 TypeScript errors, 0 ESLint errors on modified files, Oracle-verified complete.
+- **All 17 component groups audited**: `(auth)`, `(home)`, `(landing)`, `community`, `deals`, `deals/compare`, `deals/calculator`, `deals/guides`, `firm/[slug]`, `leaderboard`, `prop-firm-deals`, `propfirms`, `support`, `admin`, `embed`, `teams`, `teams/user-equity` — all clean.
+
+### Codebase State
+- Design system tokens: `--primary`, `--secondary`, `--foreground`, `--border`, `--card`, `--mk-*`, `--chart-*`
+- V1 semantic tokens aliased to V2 oklch in `app/globals.css`
+- Font tokens: `--home-display`, `--home-copy` added
+- Component imports: V2 components (CardV2, ButtonV2, BadgeV2) used throughout
+
+### Key Files Changed
+- `app/[locale]/(home)/components/*` — 12 files (HSL→semantic)
+- `app/[locale]/(landing)/components/*` — 5 files (hero, navbar, features, how-it-works, partners)
+- `app/[locale]/(landing)/deals/_components/public-flow-shell.tsx`
+- `app/[locale]/shared/[slug]/shared-page-client.tsx`
+- `app/[locale]/dashboard/components/navbar.tsx` (border-radius)
+- `app/[locale]/dashboard/components/daily-summary-modal.tsx` (border-radius)
+- `app/[locale]/admin/actions/weekly-recap.ts` (hex→HSL email template)
+- `app/globals.css` (font tokens)
+
+### Blockers
+- None
+
+---
+
+## Previous Session: shadcn/ui v2 Migration — TypeScript Fixes + Tailwind Build Fix
 
 ### Accomplishments
 - **Completed shadcn/ui v2 migration type fixes**: Resolved ~150+ TypeScript errors from the v1→v2 component migration
@@ -38,34 +74,14 @@
 
 ### Accomplishments
 - **Tailwind Version Sync**: Verified all Tailwind packages at 4.1.18 (already synced)
-  - `@tailwindcss/cli`: 4.1.18
-  - `@tailwindcss/postcss`: 4.1.18
-  - `@tailwindcss/typography`: 0.5.19
-  - `tailwindcss`: 4.1.18
-
 - **Feature Flags Investigation**: Completed full investigation of all 6 feature flags
   - Found `lib/feature-flags.ts` as single source of truth
-  - `ENABLE_SKELETON_LOADING`: ACTIVE - used in dashboard-tab-shell.tsx
-  - `ENABLE_QUERY_CACHING`: ACTIVE - used in server/accounts.ts, server/user-data.ts
-  - `ENABLE_DEFERRED_COMPUTATIONS`: DEAD - hook never implemented
-  - `ENABLE_LAZY_LOADING`: DEAD - no implementation consumes this flag
-  - `PERF_ROLLOUT_PCT`: CONTROL - used in shouldShowOptimizations for gradual rollout
-  - `EMERGENCY_ROLLBACK`: SAFETY - global kill switch
-
-- **Created `.env.local`**: With recommended flag settings (ENABLE_SKELETON_LOADING=true, ENABLE_QUERY_CACHING=true)
-
-### Codebase State
-- Feature flag system in `lib/feature-flags.ts` (119 lines)
-- Flag usage patterns found:
-  - `FEATURE_FLAGS` import used in server-side code and dashboard components
-  - `shouldShowOptimizations()` helper for gradual rollout (unused in actual components, only tested)
-- Two dead flags identified: `ENABLE_DEFERRED_COMPUTATIONS`, `ENABLE_LAZY_LOADING`
+  - `ENABLE_SKELETON_LOADING`: ACTIVE
+  - `ENABLE_QUERY_CACHING`: ACTIVE
+  - `ENABLE_DEFERRED_COMPUTATIONS`: DEAD
+  - `ENABLE_LAZY_LOADING`: DEAD
+  - `PERF_ROLLOUT_PCT`: CONTROL
+  - `EMERGENCY_ROLLBACK`: SAFETY
 
 ### Blockers
 - None
-
-### Key Files
-- `lib/feature-flags.ts` - Feature flag system
-- `.env.local` - Created with recommended settings
-- `docs/superpowers/plans/2026-03-12-performance-optimization-production.md` - Full plan
-- `docs/skeleton-loading-system.md` - Skeleton loading docs

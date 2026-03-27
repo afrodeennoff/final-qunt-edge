@@ -30,29 +30,29 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#1A1A21] bg-[#0b0b0d]">
+    <footer className="border-t border-border bg-card">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[#2962FF] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-white font-bold text-sm">Q</span>
               </div>
-              <span className="font-semibold text-[#E0E0E0]">Qunt Edge</span>
+              <span className="font-semibold text-foreground">Qunt Edge</span>
             </Link>
-            <p className="text-sm text-[#707070] max-w-xs">
+            <p className="text-sm text-muted-foreground max-w-xs">
               The trading journal and analytics platform for discretionary traders who take their craft seriously.
             </p>
           </div>
 
           <div>
-            <h4 className="font-medium text-[#E0E0E0] mb-4">Product</h4>
+            <h4 className="font-medium text-foreground mb-4">Product</h4>
             <ul className="space-y-2">
               {footerLinks.product.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -62,13 +62,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-medium text-[#E0E0E0] mb-4">Resources</h4>
+            <h4 className="font-medium text-foreground mb-4">Resources</h4>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -78,13 +78,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-medium text-[#E0E0E0] mb-4">Company</h4>
+            <h4 className="font-medium text-foreground mb-4">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -93,8 +93,8 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[#1A1A21]">
-          <p className="text-sm text-[#707070]">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border">
+          <p className="text-sm text-muted-foreground">
             © 2026 Qunt Edge. All rights reserved.
           </p>
           <div className="flex items-center gap-4 mt-4 md:mt-0">
@@ -106,7 +106,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   aria-label={social.label}
                 >
                   <Icon className="w-5 h-5" />

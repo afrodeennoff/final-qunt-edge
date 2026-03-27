@@ -491,7 +491,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
@@ -539,7 +539,7 @@ function ChallengeCard({
   const dailyLossValue = getDailyLossValue(size)
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
@@ -635,7 +635,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
@@ -651,7 +651,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-v2-accent" />
@@ -676,7 +676,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -716,7 +716,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
           <CardV2Title className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardV2Title>
@@ -763,7 +763,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       </CardV2>
 
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
             <CardV2Title className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardV2Title>
@@ -779,7 +779,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
           </CardV2Content>
         </CardV2>
 
-        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
             <CardV2Title className="mt-4 text-3xl text-foreground">What to check before you click out</CardV2Title>
@@ -879,7 +879,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -896,7 +896,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-v2-accent" />
@@ -948,7 +948,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -963,7 +963,7 @@ function ROISection({ firm }: { firm: FirmData }) {
   }
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-v2-accent" />
@@ -1028,7 +1028,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-v2-accent" />
@@ -1065,7 +1065,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
       </CardV2>
 
       {accountSizes.length > 0 && (
-        <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
           <CardV2Content className="p-6">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-v2-accent" />
@@ -1110,7 +1110,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
+    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
       <CardV2Content className="p-6">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-v2-accent" />
@@ -1232,7 +1232,7 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <CardV2 className="w-full rounded-[24px] border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+      <CardV2 className="w-full rounded-2xl border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
         <CardV2Content className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
@@ -1277,12 +1277,12 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-[34px] border border-border/50 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_rgba(0,0,0,0.95)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-3xl border border-border/50 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_rgba(0,0,0,0.95)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[28px] border border-border/40 bg-card/10 overflow-hidden shadow-lg shadow-black/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-border/40 bg-card/10 overflow-hidden shadow-lg shadow-black/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1348,7 +1348,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
-          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-[22px] border border-border/50 bg-background/70 p-2 backdrop-blur">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl border border-border/50 bg-background/70 p-2 backdrop-blur">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],

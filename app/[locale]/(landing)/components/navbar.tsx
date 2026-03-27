@@ -79,7 +79,7 @@ export default function Navbar() {
                   className={cn(
                     'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-[hsl(var(--primary)/0.14)] text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
+                      ? 'bg-primary/15 text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
                       : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >

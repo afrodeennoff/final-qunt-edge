@@ -103,7 +103,7 @@ export async function renderEmail(content: WeeklyRecapContent, analysis: { resul
                 font-weight: 600; 
                 margin-bottom: 1rem;
                 padding: 0.5rem;
-                background-color: #f3f4f6;
+                background-color: hsl(220 13% 91%);
                 border-radius: 0.375rem;
               }
             </style>
