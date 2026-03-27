@@ -212,7 +212,7 @@ export default async function Page({ params }: PageProps) {
                 : meta.status === "completed"
                   ? "Completed"
                   : "Upcoming"}
-            </Badge>
+            </BadgeV2>
           </div>
         </div>
 

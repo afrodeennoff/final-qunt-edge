@@ -252,7 +252,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
                         <div className="animate-spin rounded-full h-3 w-3 border-2 border-current border-t-transparent ml-1" />
                       )}
                     </span>
-                  </Badge>
+                  </BadgeV2>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>

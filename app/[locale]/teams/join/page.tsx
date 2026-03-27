@@ -114,13 +114,13 @@ export default function TeamJoinPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <BadgeV2 variant="secondary">{t('teams.management.pending')}</Badge>
+        return <BadgeV2 variant="secondary">{t('teams.management.pending')}</BadgeV2>
       case 'accepted':
-        return <BadgeV2 variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</Badge>
+        return <BadgeV2 variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</BadgeV2>
       case 'expired':
-        return <BadgeV2 variant="destructive">{t('teams.invitations.expired')}</Badge>
+        return <BadgeV2 variant="destructive">{t('teams.invitations.expired')}</BadgeV2>
       default:
-        return <BadgeV2 variant="outline">{status}</Badge>
+        return <BadgeV2 variant="outline">{status}</BadgeV2>
     }
   }
 

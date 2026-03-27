@@ -289,7 +289,7 @@ export function CardShowcase() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Analytics Dashboard</CardTitle>
-                <BadgeV2>Pro</Badge>
+                <BadgeV2>Pro</BadgeV2>
               </div>
               <CardDescription>Real-time performance metrics</CardDescription>
             </CardHeader>
@@ -335,7 +335,7 @@ export function CardShowcase() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-foreground/80">Plan</span>
-                  <BadgeV2 variant="secondary">Enterprise</Badge>
+                  <BadgeV2 variant="secondary">Enterprise</BadgeV2>
                 </div>
               </div>
             </CardContent>

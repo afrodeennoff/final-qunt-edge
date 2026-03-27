@@ -36,7 +36,7 @@ export default function ProofStrip() {
               className="border-border/70 bg-card/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.22em] backdrop-blur-sm [font-family:var(--home-copy)]"
             >
               Trust and Proof
-            </Badge>
+            </BadgeV2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-foreground/85 [font-family:var(--home-copy)]">
               Social proof should be earned. Until then, we lead with enforceable constraints and an observable review loop.
             </p>

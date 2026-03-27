@@ -151,7 +151,7 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
         >
           <Newspaper className="h-2.5 w-2.5" />
           {filteredEvents.length}
-        </Badge>
+        </BadgeV2>
       </PopoverTrigger>
       <PopoverContent
         className="w-[400px] p-0 z-50"
@@ -193,7 +193,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
         >
           <Calendar className="h-2.5 w-2.5" />
           {renewals.length}
-        </Badge>
+        </BadgeV2>
       </PopoverTrigger>
       <PopoverContent
         className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-lg bg-card/96 backdrop-blur-xl border-border/55"

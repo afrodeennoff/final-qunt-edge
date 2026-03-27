@@ -36,7 +36,7 @@ export default function OnboardingJourney() {
         <div className="mb-10 text-center sm:mb-14">
           <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Onboarding System
-          </Badge>
+          </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">
             First value in one session,
             <span className="block text-foreground">then compounding weekly gains</span>

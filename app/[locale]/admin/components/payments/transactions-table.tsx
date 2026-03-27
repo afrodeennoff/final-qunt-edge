@@ -69,7 +69,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                             <TableCell>{txn.user.email}</TableCell>
                             <TableCell>${(txn.amount / 100).toFixed(2)}</TableCell>
                             <TableCell>
-                                <BadgeV2 variant="outline">{txn.type}</Badge>
+                                <BadgeV2 variant="outline">{txn.type}</BadgeV2>
                             </TableCell>
                             <TableCell>
                                 <BadgeV2
@@ -79,7 +79,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                                     }
                                 >
                                     {txn.status}
-                                </Badge>
+                                </BadgeV2>
                             </TableCell>
                             <TableCell>
                                 {txn.status === 'COMPLETED' && (

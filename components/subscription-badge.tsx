@@ -65,7 +65,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
         )}
       >
         {t('pricing.loading')}
-      </Badge>
+      </BadgeV2>
     )
   }
 
@@ -81,7 +81,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
         )}
       >
         {t('pricing.free.name')}
-      </Badge>
+      </BadgeV2>
     )
   }
 
@@ -144,7 +144,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
               )}
             >
               {badge.text}
-            </Badge>
+            </BadgeV2>
           </Link>
         </TooltipTrigger>
         {badge.tooltip && (

@@ -577,7 +577,7 @@ export function AccountGroupBoard() {
               {selectedAccounts.length === 0 ? (
                 <BadgeV2 variant="secondary" className="gap-2 whitespace-nowrap h-8">
                   <span className="text-xs text-muted-foreground">{t("filters.noAccounts")}</span>
-                </Badge>
+                </BadgeV2>
               ) : (
                 selectedAccounts.map(account => (
                   <BadgeV2
@@ -596,7 +596,7 @@ export function AccountGroupBoard() {
                   >
                     <span className="truncate max-w-[180px]">{account.number}</span>
                     <X className="h-3 w-3" />
-                  </Badge>
+                  </BadgeV2>
                 ))
               )}
             </div>
@@ -710,7 +710,7 @@ export function AccountGroupBoard() {
                           </ButtonV2>
                         )}
                       </div>
-                      <BadgeV2 variant="outline">{group.accounts.length}</Badge>
+                      <BadgeV2 variant="outline">{group.accounts.length}</BadgeV2>
                     </div>
                   </div>
 

@@ -239,7 +239,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     <X 
                       className="h-3 w-3" 
                     />
-                  </Badge>
+                  </BadgeV2>
                 </motion.div>
               )}
 
@@ -262,7 +262,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     <X 
                       className="h-3 w-3" 
                     />
-                  </Badge>
+                  </BadgeV2>
                 </motion.div>
               )}
 
@@ -285,7 +285,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     <X 
                       className="h-3 w-3" 
                     />
-                  </Badge>
+                  </BadgeV2>
                 </motion.div>
               )}
 
@@ -308,7 +308,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     <X 
                       className="h-3 w-3" 
                     />
-                  </Badge>
+                  </BadgeV2>
                 </motion.div>
               ))}
 
@@ -331,7 +331,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     <X 
                       className="h-3 w-3" 
                     />
-                  </Badge>
+                  </BadgeV2>
                 </motion.div>
               ))}
 
@@ -365,7 +365,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                       <X 
                         className="h-3 w-3" 
                       />
-                    </Badge>
+                    </BadgeV2>
                   </motion.div>
                 )
               })}

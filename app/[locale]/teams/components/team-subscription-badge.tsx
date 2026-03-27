@@ -32,7 +32,7 @@ export async function TeamSubscriptionBadge({
         )}
       >
         {t('pricing.free.name')}
-      </Badge>
+      </BadgeV2>
     )
   }
 
@@ -134,7 +134,7 @@ export async function TeamSubscriptionBadge({
               )}
             >
               {badge.text}
-            </Badge>
+            </BadgeV2>
           </Link>
         </TooltipTrigger>
         {badge.tooltip && (

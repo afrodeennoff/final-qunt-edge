@@ -710,7 +710,7 @@ export function TeamManagement({
                         {isActive && (
                           <BadgeV2 variant="default" className="text-[10px] px-1.5 py-0 h-4">
                             {t('teams.management.active')}
-                          </Badge>
+                          </BadgeV2>
                         )}
                       </CardTitle>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -985,7 +985,7 @@ export function TeamManagement({
                         <div key={trader.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
                           <span>{trader.email}</span>
                           <div className="flex items-center gap-2">
-                            <BadgeV2 variant="outline">{t('teams.management.member')}</Badge>
+                            <BadgeV2 variant="outline">{t('teams.management.member')}</BadgeV2>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <ButtonV2  variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
@@ -1052,7 +1052,7 @@ export function TeamManagement({
                       <div key={invitation.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
                         <span>{invitation.email}</span>
                         <div className="flex items-center gap-2">
-                          <BadgeV2 variant="outline">{t('teams.management.pending')}</Badge>
+                          <BadgeV2 variant="outline">{t('teams.management.pending')}</BadgeV2>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <ButtonV2  variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
@@ -1105,7 +1105,7 @@ export function TeamManagement({
                           <div className="flex items-center gap-2">
                             <BadgeV2 variant="outline">
                               {manager.access === 'admin' ? t('dashboard.teams.admin') : t('dashboard.teams.viewer')}
-                            </Badge>
+                            </BadgeV2>
                             <Select
                               value={manager.access}
                               onValueChange={(value: 'admin' | 'viewer') => handleUpdateManagerAccess(manager.managerId, value)}

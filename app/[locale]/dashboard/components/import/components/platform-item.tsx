@@ -70,7 +70,7 @@ export function PlatformItem({
               <>
                 <BadgeV2 variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105">
                   {t('import.type.badge.maintenance')}
-                </Badge>
+                </BadgeV2>
                 <AlertTriangle className="h-4 w-4 text-semantic-warning animate-pulse" />
               </>
             )}
@@ -78,7 +78,7 @@ export function PlatformItem({
               <>
                 <BadgeV2 variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105 bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20">
                   {t('import.type.badge.comingSoon')}
-                </Badge>
+                </BadgeV2>
               </>
             )}
             {!platform.isDisabled && platform.isRithmic && isWeekend && (

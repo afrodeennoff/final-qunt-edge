@@ -98,7 +98,7 @@ export function RithmicSyncFeedback({ totalAccounts }: RithmicSyncFeedbackProps)
                     className="ml-2"
                   >
                     {getAccountStatus(accountId, progress).label}
-                  </Badge>
+                  </BadgeV2>
                 </div>
                 
                 <Progress 

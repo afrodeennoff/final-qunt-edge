@@ -266,7 +266,7 @@ export default function PdfProcessing({
       cell: ({ row }) => (
         <BadgeV2 variant={row.original.side === 'long' ? 'default' : 'destructive'}>
           {row.original.side?.toUpperCase()}
-        </Badge>
+        </BadgeV2>
       ),
       size: 100,
     },
@@ -314,7 +314,7 @@ export default function PdfProcessing({
       cell: ({ row }) => (
         <BadgeV2 variant={row.original.pnl >= 0 ? 'default' : 'destructive'}>
           ${Number(row.original.pnl).toFixed(2)}
-        </Badge>
+        </BadgeV2>
       ),
       size: 100,
     },
@@ -448,7 +448,7 @@ export default function PdfProcessing({
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm">
           <BadgeV2 variant={totals.totalPnl >= 0 ? 'default' : 'destructive'} className="font-semibold">
             ${totals.totalPnl.toFixed(2)}
-          </Badge>
+          </BadgeV2>
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm">
           {parsePositionTime(totals.totalTimeInPosition)}

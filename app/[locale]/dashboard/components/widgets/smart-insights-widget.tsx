@@ -168,7 +168,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                                     {insight.confidence && (
                                         <BadgeV2 variant="secondary" className="text-[10px] h-5 px-1.5 bg-secondary/22 border-border/55 text-muted-foreground">
                                             {insight.confidence}% Conf.
-                                        </Badge>
+                                        </BadgeV2>
                                     )}
                                 </div>
 

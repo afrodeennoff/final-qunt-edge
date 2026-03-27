@@ -228,10 +228,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
              <div className="flex items-center gap-x-2">
                <BadgeV2 variant="secondary" className={typeColors[post.type as PostType]}>
                 {(post.type as string).replace('_', ' ')}
-              </Badge>
+              </BadgeV2>
               <BadgeV2 variant="outline" className={statusColors[post.status as PostStatus]}>
                 {(post.status as string).replace('_', ' ')}
-              </Badge>
+              </BadgeV2>
             </div>
             <h3 className="font-semibold">{post.title}</h3>
             <p className="text-sm text-muted-foreground">

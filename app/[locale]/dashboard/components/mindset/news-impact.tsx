@@ -81,7 +81,7 @@ export function NewsImpact({ onNext, onBack, selectedNews, onNewsSelection, date
             >
               {selectedNews.length} selected
               <X className="h-3 w-3 opacity-50 hover:opacity-100 transition-opacity" />
-            </Badge>
+            </BadgeV2>
           )}
           <ImportanceFilter
             value={impactLevels}

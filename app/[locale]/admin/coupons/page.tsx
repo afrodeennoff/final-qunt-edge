@@ -109,11 +109,11 @@ function CouponBadges({
     <div className="flex flex-wrap items-center gap-2">
       <BadgeV2 variant={active ? 'default' : 'secondary'}>
         {active ? 'Active' : 'Inactive'}
-      </Badge>
+      </BadgeV2>
       {expiringSoon ? (
         <BadgeV2 variant="outline" className="border-amber-500/40 text-amber-300">
           Expires soon
-        </Badge>
+        </BadgeV2>
       ) : null}
     </div>
   )
@@ -433,7 +433,7 @@ export default async function AdminCouponsPage({
                 Create a new code, attach it to a prop firm, and publish it immediately.
               </p>
             </div>
-            <BadgeV2 variant="secondary">{firms.length} firms available</Badge>
+            <BadgeV2 variant="secondary">{firms.length} firms available</BadgeV2>
           </div>
         </CardHeader>
         <CardContent size="sm" className="pt-4">

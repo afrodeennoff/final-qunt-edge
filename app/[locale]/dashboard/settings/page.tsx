@@ -123,7 +123,7 @@ function TeamSettingsCard({
                       {team.traderIds.length} traders
                     </p>
                   </div>
-                  <BadgeV2 variant="secondary">Owner</Badge>
+                  <BadgeV2 variant="secondary">Owner</BadgeV2>
                 </div>
               ))}
 
@@ -408,7 +408,7 @@ export default function SettingsPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{user?.email}</h3>
-                  <BadgeV2 variant="secondary">Active</Badge>
+                  <BadgeV2 variant="secondary">Active</BadgeV2>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Member since {new Date(user?.created_at || '').toLocaleDateString()}

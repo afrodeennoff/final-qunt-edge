@@ -460,7 +460,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             className="absolute -right-1.5 -top-1.5 border border-border/70 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
                         >
                             {t('auth.new')}
-                        </Badge>
+                        </BadgeV2>
                     </TabsTrigger>
                 </TabsList>
 

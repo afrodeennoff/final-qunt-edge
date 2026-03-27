@@ -80,7 +80,7 @@ export default function AIFuturesSection() {
             className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
           >
             Must-Have AI Features
-          </Badge>
+          </BadgeV2>
           <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             AI that improves
             <span className="block text-foreground">decision quality, not just reporting</span>
@@ -124,7 +124,7 @@ export default function AIFuturesSection() {
               className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
             >
               Explainable AI
-            </Badge>
+            </BadgeV2>
           </CardContent>
         </Card>
       </div>

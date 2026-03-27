@@ -413,7 +413,7 @@ function TemplatePropsCard({
                     {requiredProps.includes(key) && (
                       <BadgeV2 variant="outline" className="text-xs">
                         {t("admin.sendEmail.props.requiredBadge")}
-                      </Badge>
+                      </BadgeV2>
                     )}
                   </div>
                   <TemplatePropField propKey={key} value={value} onChange={onPropChange} />

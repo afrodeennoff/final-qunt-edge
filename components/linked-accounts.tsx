@@ -202,7 +202,7 @@ export function LinkedAccounts() {
                   </div>
                   <div className="flex items-center gap-2">
                     {identity.provider === 'email' && (
-                      <BadgeV2 variant="secondary">{t('auth.primary')}</Badge>
+                      <BadgeV2 variant="secondary">{t('auth.primary')}</BadgeV2>
                     )}
                     {identity.provider !== 'email' && (
                       <AlertDialog>

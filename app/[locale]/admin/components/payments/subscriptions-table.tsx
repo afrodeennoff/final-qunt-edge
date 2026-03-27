@@ -67,7 +67,7 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
                                     variant={sub.status === 'ACTIVE' ? 'default' : 'secondary'}
                                 >
                                     {sub.status}
-                                </Badge>
+                                </BadgeV2>
                             </TableCell>
                             <TableCell className="capitalize">{sub.interval || '-'}</TableCell>
                             <TableCell>

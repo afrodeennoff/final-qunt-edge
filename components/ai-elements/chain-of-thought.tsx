@@ -170,7 +170,7 @@ export const ChainOfThoughtSearchResult = memo(
       {...props}
     >
       {children}
-    </Badge>
+    </BadgeV2>
   )
 );
 

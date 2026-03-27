@@ -372,7 +372,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                   }
                                 >
                                   {account.riskLevel || "N/A"}
-                                </Badge>
+                                </BadgeV2>
                               </td>
                             </tr>
                           ),

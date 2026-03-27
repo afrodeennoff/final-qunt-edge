@@ -189,7 +189,7 @@ export default function BillingManagement() {
                               : subscription.promotion.amount_off 
                                 ? `${formatAmount(subscription.promotion.amount_off)} OFF`
                                 : "Discount Applied"}
-                          </Badge>
+                          </BadgeV2>
                           <span className="text-sm text-muted-foreground">
                             {subscription.promotion.duration.duration === 'forever' && (
                               <span className="ml-1">({t('billing.promotionDuration.forever')})</span>
@@ -493,7 +493,7 @@ export default function BillingManagement() {
                       {invoice.status === 'paid' && (
                         <BadgeV2 variant="secondary" className="bg-secondary/25 text-foreground">
                           {t('billing.paymentStatus.succeeded')}
-                        </Badge>
+                        </BadgeV2>
                       )}
                       <div className="flex items-center gap-2">
                         {invoice.hosted_invoice_url && (

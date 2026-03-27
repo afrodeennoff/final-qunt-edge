@@ -170,7 +170,7 @@ export default function DashboardBehaviorPage() {
                 <BadgeV2 variant="secondary" className="border-border/20 text-foreground">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   AI
-                </Badge>
+                </BadgeV2>
               </div>
               <p className="text-sm text-muted-foreground">
                 {t("analysis.description")}
@@ -180,19 +180,19 @@ export default function DashboardBehaviorPage() {
               <BadgeV2 variant="outline" className="gap-1">
                 <TrendingUp className="h-3.5 w-3.5" />
                 Performance
-              </Badge>
+              </BadgeV2>
               <BadgeV2 variant="outline" className="gap-1">
                 <Bot className="h-3.5 w-3.5" />
                 Coach
-              </Badge>
+              </BadgeV2>
               <BadgeV2 variant="outline" className="gap-1">
                 <MessageSquareText className="h-3.5 w-3.5" />
                 Journal
-              </Badge>
+              </BadgeV2>
               <BadgeV2 variant="outline" className="gap-1">
                 <Gauge className="h-3.5 w-3.5" />
                 Stress Monitor
-              </Badge>
+              </BadgeV2>
             </div>
           </div>
         </CardHeader>
@@ -253,12 +253,12 @@ export default function DashboardBehaviorPage() {
               <BadgeV2 variant="outline" className="gap-1">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 Updating insights
-              </Badge>
+              </BadgeV2>
             ) : null}
             {!isLoadingInsights ? (
               <BadgeV2 variant="outline" className="gap-1">
                 Confidence: {insights?.summary.confidenceScore ?? 0}% ({insights?.summary.confidenceBand ?? "low"})
-              </Badge>
+              </BadgeV2>
             ) : null}
           </div>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -346,7 +346,7 @@ export default function DashboardBehaviorPage() {
                     <p className="text-xs text-muted-foreground">{driver.explanation}</p>
                     <BadgeV2 variant="secondary" className="mt-2">
                       Contribution: {driver.contribution}
-                    </Badge>
+                    </BadgeV2>
                   </div>
                 ))}
               </div>
@@ -363,7 +363,7 @@ export default function DashboardBehaviorPage() {
                   <div key={module.title} className="rounded-xl border border-border/70 bg-background/60 p-3">
                     <p className="text-sm font-medium">{module.title}</p>
                     <p className="text-xs text-muted-foreground">{module.description}</p>
-                    <BadgeV2 variant="secondary" className="mt-2">{module.metric}</Badge>
+                    <BadgeV2 variant="secondary" className="mt-2">{module.metric}</BadgeV2>
                   </div>
                 ))}
                 {reflectionModules.map((module) => (
@@ -417,7 +417,7 @@ export default function DashboardBehaviorPage() {
                           variant={recommendation.priority === "high" ? "destructive" : recommendation.priority === "medium" ? "secondary" : "outline"}
                         >
                           {recommendation.priority}
-                        </Badge>
+                        </BadgeV2>
                       </div>
                     </div>
                   ))

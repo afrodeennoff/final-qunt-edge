@@ -19,7 +19,7 @@ export default function Hero({ locale }: { locale: string }) {
         >
           <span className="w-2 h-2 rounded-full bg-[#089981] animate-pulse mr-2" />
           Live Decision Telemetry
-        </Badge>
+        </BadgeV2>
         
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-[#E0E0E0]">
           Build repeatable edge.

@@ -384,7 +384,7 @@ function PlusPlanCard({
                   className="border border-semantic-warning-border bg-semantic-warning-bg px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-semantic-warning"
                 >
                   {t('pricing.limitedTimeOffer')}
-                </Badge>
+                </BadgeV2>
               </ButtonV2>
             </div>
           </div>

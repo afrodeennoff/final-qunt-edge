@@ -150,7 +150,7 @@ export function AdminDashboard() {
           <BadgeV2 variant="secondary" className="w-fit">
             <Sparkles className="mr-2 h-3.5 w-3.5" />
             Internal only
-          </Badge>
+          </BadgeV2>
         </div>
 
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -257,7 +257,7 @@ export function AdminDashboard() {
             <Card className="space-y-2 border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium">Total Users</h3>
-                <BadgeV2 variant="secondary">Active</Badge>
+                <BadgeV2 variant="secondary">Active</BadgeV2>
               </div>
               <div className="text-3xl font-bold">{valueFormatter(userStats.totalUsers)}</div>
             </Card>
@@ -273,7 +273,7 @@ export function AdminDashboard() {
           <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Free Users</h3>
-              <BadgeV2 variant="secondary">Active</Badge>
+              <BadgeV2 variant="secondary">Active</BadgeV2>
             </div>
             <FreeUsersTable />
           </Card>

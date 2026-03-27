@@ -76,7 +76,7 @@ export const InlineCitationCardTrigger = ({
       ) : (
         "unknown"
       )}
-    </Badge>
+    </BadgeV2>
   </HoverCardTrigger>
 );
 

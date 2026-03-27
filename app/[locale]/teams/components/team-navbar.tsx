@@ -152,7 +152,7 @@ export default function TeamNavbar() {
                     <span className="font-bold text-xl">Qunt Edge</span>
                     <BadgeV2 variant="secondary" className="text-xs">
                         {t('teams.badge')}
-                    </Badge>
+                    </BadgeV2>
                 </Link>
                 <div className="hidden lg:block">
                     <NavigationMenu>

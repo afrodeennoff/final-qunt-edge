@@ -39,7 +39,7 @@ export default function ReferralPage() {
               <div className="space-y-4">
                 <BadgeV2 className="w-fit bg-card/25 text-foreground hover:bg-card/35">
                   {t('referral.landing.heroBadge')}
-                </Badge>
+                </BadgeV2>
                 <h1 className="text-3xl font-bold leading-tight md:text-5xl">
                   {t('referral.landing.heroTitle')}
                 </h1>
@@ -153,7 +153,7 @@ export default function ReferralPage() {
                   <div className="mb-4">{tier.icon}</div>
                   <BadgeV2 variant="secondary" className="mb-3">
                     {t('referral.landing.tierBadge', { count: tier.count })}
-                  </Badge>
+                  </BadgeV2>
                   <p className="text-sm text-muted-foreground">{tier.reward}</p>
                 </div>
               ))}

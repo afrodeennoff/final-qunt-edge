@@ -45,7 +45,7 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
             <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Zap className="mr-1.5 h-3 w-3" />
               Hot Deals
-            </Badge>
+            </BadgeV2>
             <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
               Save on prop firm
               <span className="block text-foreground">challenge fees today</span>

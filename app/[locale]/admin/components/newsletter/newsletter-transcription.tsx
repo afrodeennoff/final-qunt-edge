@@ -199,7 +199,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
           <div className="flex items-center gap-2">
             <BadgeV2 variant="default">
               Prêt
-            </Badge>
+            </BadgeV2>
             <span className="text-sm text-muted-foreground">
               {segments.length} segments disponibles
             </span>
@@ -249,7 +249,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
               <div className="flex items-center gap-2">
                 <BadgeV2 variant="outline">
                   {getTotalDuration().toFixed(1)}s total
-                </Badge>
+                </BadgeV2>
                 <ButtonV2 
                   onClick={downloadTranscription}
                   variant="outline"
@@ -275,7 +275,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                         <div className="flex items-center gap-2 mb-2">
                           <BadgeV2 variant="secondary" className="text-xs">
                             Segment {result.segmentIndex}
-                          </Badge>
+                          </BadgeV2>
                           <span className="text-xs text-muted-foreground dark:text-muted-foreground">
                             {result.duration.toFixed(1)}s
                           </span>

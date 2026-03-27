@@ -479,7 +479,7 @@ function FinancialEventCard({ event, onClick, timezone, dateLocale, expanded = f
         {event.country && (
           <BadgeV2 variant="outline" className="text-xs h-5 px-1.5 rounded-sm font-normal">
             {event.country}
-          </Badge>
+          </BadgeV2>
         )}
 
         <div className="flex items-center">

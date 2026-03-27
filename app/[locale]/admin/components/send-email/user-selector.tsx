@@ -103,7 +103,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
           {selectedUsers.length} of {filteredUsers.length} filtered users selected
           {languageFilter !== "all" && ` (${filteredLanguageTotal} total ${languageFilter === "fr" ? "FR" : "EN"} users)`}
         </span>
-        {selectedUsers.length > 0 && <BadgeV2 variant="secondary">{selectedUsers.length}</Badge>}
+        {selectedUsers.length > 0 && <BadgeV2 variant="secondary">{selectedUsers.length}</BadgeV2>}
       </div>
 
       <ScrollArea className="h-[500px] rounded-md border p-4">
@@ -133,7 +133,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
                   </div>
                   <BadgeV2 variant="outline" className="text-xs">
                     {user.language}
-                  </Badge>
+                  </BadgeV2>
                 </div>
               )
             })

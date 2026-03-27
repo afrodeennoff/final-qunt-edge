@@ -75,6 +75,6 @@ export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: Syn
     <BadgeV2 variant={isAutoSyncing ? "default" : "secondary"} className="ml-2">
       <Clock className="h-3 w-3 mr-1" />
       {timeLeft}
-    </Badge>
+    </BadgeV2>
   )
 } 

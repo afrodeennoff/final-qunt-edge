@@ -216,7 +216,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                 <span className="text-sm font-medium">{t('referral.currentTier')}</span>
                 <BadgeV2 variant="secondary">
                   {t('referral.tier', { level: referralData.referral.tier.level })}
-                </Badge>
+                </BadgeV2>
               </div>
               <div className="gap-3">
                 <div className="flex items-center justify-between text-sm">

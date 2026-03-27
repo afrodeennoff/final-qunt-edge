@@ -114,7 +114,7 @@ export function NewsSubMenu({
                 >
                   {t('mindset.editor.news.selectedCount', { count: selectedNews.length })}
                   <X className="h-3 w-3 opacity-50 hover:opacity-100 transition-opacity" />
-                </Badge>
+                </BadgeV2>
               </div>
             )}
           </div>

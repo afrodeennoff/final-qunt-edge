@@ -61,7 +61,7 @@ export function AnalysisOverview() {
           <BadgeV2 variant="secondary" className="flex items-center gap-2">
             {status.isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4" />}
             {statusLabel}
-          </Badge>
+          </BadgeV2>
         </div>
       </div>
 

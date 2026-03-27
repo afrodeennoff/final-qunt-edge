@@ -134,7 +134,7 @@ export function BulkEditPanel({
             {t('trade-table.bulkEdit.title')}
             <BadgeV2 variant="secondary" className="text-xs">
               {selectedTrades.length} {t('trade-table.bulkEdit.trades')}
-            </Badge>
+            </BadgeV2>
           </CardTitle>
           <ButtonV2 
             variant="ghost"

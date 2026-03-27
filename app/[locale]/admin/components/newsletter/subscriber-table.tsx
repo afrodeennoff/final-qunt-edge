@@ -205,7 +205,7 @@ function InferenceResultRow({ result }: { result: InferenceResult }) {
           }
         >
           {result.status}
-        </Badge>
+        </BadgeV2>
       </div>
     </div>
   )

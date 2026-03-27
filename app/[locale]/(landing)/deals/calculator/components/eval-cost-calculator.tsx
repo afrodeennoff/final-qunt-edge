@@ -114,7 +114,7 @@ export function EvalCostCalculator() {
           <p className="mt-2">
             <BadgeV2 variant={values.riskBand === 'high' ? 'destructive' : values.riskBand === 'mid' ? 'default' : 'secondary'}>
               {values.riskBand === 'high' ? 'High pressure band' : values.riskBand === 'mid' ? 'Manageable band' : 'Healthy planning range'}
-            </Badge>
+            </BadgeV2>
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
             {values.riskBand === 'high'

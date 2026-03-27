@@ -103,7 +103,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
           <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <Star className="mr-1.5 h-3 w-3" />
             Reviews
-          </Badge>
+          </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Trusted by serious
             <span className="block text-foreground">discretionary traders</span>
@@ -125,7 +125,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
                   {review.verified && (
                     <BadgeV2 variant="secondary" className="border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
                       Verified
-                    </Badge>
+                    </BadgeV2>
                   )}
                 </div>
 

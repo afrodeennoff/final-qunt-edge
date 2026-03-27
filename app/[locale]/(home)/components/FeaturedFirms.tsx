@@ -48,7 +48,7 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
             <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Building2 className="mr-1.5 h-3 w-3" />
               Featured Firms
-            </Badge>
+            </BadgeV2>
             <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
               Top prop firms
               <span className="block text-foreground">tracked by our community</span>
@@ -77,10 +77,10 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
                       <div className="mt-1 flex items-center gap-2">
                         <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
                           {firm.category}
-                        </Badge>
+                        </BadgeV2>
                         <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
                           {firm.platform}
-                        </Badge>
+                        </BadgeV2>
                       </div>
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary)/0.12)] text-primary transition-transform group-hover:scale-110">

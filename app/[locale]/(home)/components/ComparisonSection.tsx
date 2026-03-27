@@ -37,7 +37,7 @@ export default function ComparisonSection() {
         <div className="mb-8 text-center sm:mb-12">
           <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
-          </Badge>
+          </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.7vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Why we’re different
             <span className="block text-foreground">from standard trading analytics tools</span>

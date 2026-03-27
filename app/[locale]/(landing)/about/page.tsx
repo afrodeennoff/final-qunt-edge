@@ -95,7 +95,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 <BadgeV2 key={index} variant="secondary" className="border-border/60 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
                   {skill.icon}
                   {skill.name}
-                </Badge>
+                </BadgeV2>
               ))}
             </div>
           </CardContent>

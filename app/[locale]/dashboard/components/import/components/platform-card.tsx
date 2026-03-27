@@ -98,7 +98,7 @@ export function PlatformCard({
                         className="bg-semantic-warning-bg/10 text-semantic-warning hover:bg-semantic-warning-bg/20"
                     >
                         {t("import.type.badge.maintenance")}
-                    </Badge>
+                    </BadgeV2>
                 )}
                 {platform.isComingSoon && !platform.isDisabled && (
                     <BadgeV2
@@ -106,7 +106,7 @@ export function PlatformCard({
                         className="bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20"
                     >
                         {t("import.type.badge.comingSoon")}
-                    </Badge>
+                    </BadgeV2>
                 )}
                 {!platform.isDisabled && platform.isRithmic && isWeekend && (
                     <BadgeV2
@@ -115,7 +115,7 @@ export function PlatformCard({
                     >
                         <AlertTriangle className="mr-1 h-3 w-3" />
                         Weekend
-                    </Badge>
+                    </BadgeV2>
                 )}
             </div>
         </motion.div>

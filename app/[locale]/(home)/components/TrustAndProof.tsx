@@ -53,7 +53,7 @@ export default function TrustAndProof() {
         <div className="mb-10 text-center sm:mb-14">
           <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Trust Architecture
-          </Badge>
+          </BadgeV2>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.4rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">
             Built like a trading system:
             <span className="block text-foreground">secure, observable, and review-ready</span>

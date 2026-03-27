@@ -63,7 +63,7 @@ export function CountryFilter({ countries, value, onValueChange, className }: Co
           {value.length > 0 && (
             <BadgeV2 variant="secondary" className="ml-1">
               {value.length}
-            </Badge>
+            </BadgeV2>
           )}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
         </ButtonV2>

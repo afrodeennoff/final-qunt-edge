@@ -215,7 +215,7 @@ export function AccountTable({
                   variant={metric.payout.status === 'PENDING' ? 'secondary' : 'default'}
                 >
                   {metric.payout.status}
-                </Badge>
+                </BadgeV2>
               </div>
               {onDeletePayout && (
                 <AlertDialog>
