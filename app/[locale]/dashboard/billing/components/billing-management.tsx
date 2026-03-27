@@ -13,6 +13,8 @@ import { useI18n, useCurrentLocale } from "@/locales/client"
 import PricingPlans from "@/components/pricing-plans"
 import Link from "next/link"
 import { useSubscriptionStore } from "@/store/subscription-store"
+import { formatCurrencyAmount } from "@/lib/formatting/currency"
+import { useCurrency } from "@/hooks/use-currency"
 
 export default function BillingManagement() {
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
@@ -20,6 +22,15 @@ export default function BillingManagement() {
   const [feedback, setFeedback] = useState("")
   const t = useI18n()
   const locale = useCurrentLocale()
+  const { currency } = useCurrency()
+  const displayLocale = currency === 'EUR' ? 'fr-FR' : 'en-US'
+
+  const formatAmount = (amountInMinorUnits: number) =>
+    formatCurrencyAmount(amountInMinorUnits / 100, currency, {
+      locale: displayLocale,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
   
   // Use store instead of local state
   const subscription = useSubscriptionStore(state => state.subscription)
@@ -159,10 +170,13 @@ export default function BillingManagement() {
                       <div className="space-y-1">
                         <div className="text-2xl font-bold flex items-center gap-2">
                           <span className="text-muted-foreground line-through">
-                            €{(subscription.plan.amount / 100).toFixed(2)}
+                            {formatAmount(subscription.plan.amount)}
                           </span>
                           <span>
-                            €{((subscription.plan.amount - (subscription.promotion.amount_off || (subscription.promotion.percent_off ? subscription.plan.amount * subscription.promotion.percent_off / 100 : 0))) / 100).toFixed(2)}
+                            {formatAmount(
+                              subscription.plan.amount -
+                                (subscription.promotion.amount_off || (subscription.promotion.percent_off ? subscription.plan.amount * subscription.promotion.percent_off / 100 : 0)),
+                            )}
                             <span className="text-lg font-normal text-muted-foreground">
                               /{subscription.plan.interval}
                             </span>
@@ -173,7 +187,7 @@ export default function BillingManagement() {
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
                               : subscription.promotion.amount_off 
-                                ? `€${(subscription.promotion.amount_off / 100).toFixed(2)} OFF`
+                                ? `${formatAmount(subscription.promotion.amount_off)} OFF`
                                 : "Discount Applied"}
                           </Badge>
                           <span className="text-sm text-muted-foreground">
@@ -194,7 +208,7 @@ export default function BillingManagement() {
                         {subscription?.plan?.amount 
                           ? (
                             <>
-                              €{(subscription.plan.amount / 100).toFixed(2)}
+                              {formatAmount(subscription.plan.amount)}
                               <span className="text-lg font-normal text-muted-foreground">
                                 /{subscription.plan.interval === 'year' ? t('pricing.year') : subscription.plan.interval === 'month' ? t('pricing.month') : subscription.plan.interval === 'quarter' ? t('pricing.quarter') : t('pricing.lifetime')}
                               </span>

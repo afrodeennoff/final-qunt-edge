@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,6 +21,7 @@ import { toast } from 'sonner'
 import { cn } from "@/lib/utils"
 import { buildWhopCheckoutUrl } from '@/lib/whop-checkout'
 import { useCurrency } from '@/hooks/use-currency'
+import { formatCurrencyAmount } from '@/lib/formatting/currency'
 
 type BillingPeriod = 'monthly' | 'quarterly' | 'yearly' | 'lifetime';
 
@@ -43,19 +45,22 @@ type Plans = {
   [key: string]: Plan;
 };
 
+type CurrentSubscription = {
+  id: string;
+  status: string;
+  plan: {
+    id: string;
+    name: string;
+    interval: string;
+  };
+} | null
+
 interface PricingPlansProps {
   isModal?: boolean;
   onClose?: () => void;
+  onSuccess?: () => void | Promise<void>;
   trigger?: React.ReactNode;
-  currentSubscription?: {
-    id: string;
-    status: string;
-    plan: {
-      id: string;
-      name: string;
-      interval: string;
-    };
-  } | null;
+  currentSubscription?: CurrentSubscription;
 }
 
 export default function PricingPlans({ isModal, onClose, trigger, currentSubscription }: PricingPlansProps) {
