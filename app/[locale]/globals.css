@@ -79,4 +79,77 @@
 
 .coin-expand {
   animation: coinExpand 0.2s ease-out forwards;
-} 
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes slide-indicator {
+  0% {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes mesh-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes status-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.55 0.22 264 / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px oklch(0.55 0.22 264 / 0);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-slide-indicator {
+  animation: slide-indicator 0.3s ease-out;
+}
+
+.animate-mesh-gradient {
+  background-size: 200% 200%;
+  animation: mesh-gradient 8s ease infinite;
+}
+
+.animate-status-ring {
+  animation: status-ring 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}

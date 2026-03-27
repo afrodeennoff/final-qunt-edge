@@ -98,44 +98,57 @@ export function DashboardHeader() {
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 overflow-hidden border-b border-border/40 bg-background/95 backdrop-blur-xl",
+                "sticky top-0 z-50 overflow-hidden border-b backdrop-blur-xl transition-all duration-300",
+                "border-v2-border/40 bg-v2-bg-base/95",
+                "supports-[backdrop-filter]:bg-v2-bg-base/85 supports-[backdrop-filter]:backdrop-blur-xl",
                 isMobile ? "pt-safe" : "h-14"
             )}
             data-dashboard-header="true"
         >
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground) / 0.35),transparent_25%,transparent_75%,hsl(var(--foreground) / 0.35))]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground) / 0.12),transparent_25%,transparent_75%,hsl(var(--foreground) / 0.12))]" />
             <div className={cn("relative flex items-center justify-between gap-3 px-3 sm:px-6", isMobile ? "h-14" : "h-full")}>
                 <div className="flex items-center gap-3 relative z-10 pointer-events-auto">
-                    <SidebarTrigger className="h-11 w-11 md:h-7 md:w-7 text-muted-foreground hover:text-foreground" />
+                    <SidebarTrigger className="h-11 w-11 md:h-7 md:w-7 text-v2-text-muted hover:text-v2-text-primary transition-colors" />
                     <div className="flex min-w-0 items-start gap-3">
-                        <div className="mt-0.5 hidden h-7 w-px bg-border/40 sm:block" />
+                        <div className="mt-0.5 hidden h-7 w-px bg-v2-border/30 sm:block" />
                         <div className="min-w-0">
                             <div className="flex items-center gap-2">
                                 {showSectionLabel && (
-                                    <span className="hidden sm:inline-flex rounded-full border border-border/40 bg-muted/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                                    <span className={cn(
+                                        "hidden sm:inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
+                                        "border-v2-border/40 bg-v2-bg-surface/40 text-v2-text-muted",
+                                        "backdrop-blur-sm transition-all duration-200",
+                                        "hover:border-v2-border/60 hover:bg-v2-bg-surface/60"
+                                    )}>
                                         {sectionLabel}
                                     </span>
                                 )}
-                                <h1 className="truncate whitespace-nowrap text-[11px] sm:text-sm font-bold uppercase tracking-[0.16em] text-foreground">
+                                <h1 className="truncate whitespace-nowrap text-[11px] sm:text-sm font-bold uppercase tracking-[0.16em] text-v2-text-primary">
                                     {title}
                                 </h1>
                             </div>
-                            <p className="hidden truncate pt-1 text-xs text-muted-foreground lg:block">{subtitle}</p>
+                            <p className="hidden truncate pt-1 text-xs text-v2-text-secondary lg:block">{subtitle}</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Side: Actions & Configuration */}
                 <div className={cn(
                     "flex min-w-0 items-center gap-2",
                     isMobile
                         ? "rounded-none border-0 bg-transparent p-0 shadow-none"
-                        : "rounded-2xl border border-border/40 bg-muted/20 p-1 shadow-sm"
+                        : cn(
+                            "rounded-2xl border p-1 shadow-sm transition-all duration-200",
+                            "border-v2-border/40 bg-v2-bg-surface/30 backdrop-blur-sm",
+                            "hover:border-v2-border/60 hover:bg-v2-bg-surface/40 hover:shadow-md"
+                        )
                 )}>
-                    {/* Global Utilities Group */}
                     <div className={cn(
                         "flex shrink-0 items-center gap-1",
-                        isMobile ? "" : "rounded-xl bg-background/50 px-1 py-0.5 ring-1 ring-border/10"
+                        isMobile ? "" : cn(
+                            "rounded-xl bg-v2-bg-base/60 px-1 py-0.5 ring-1",
+                            "ring-v2-border/10 transition-all duration-200",
+                            "hover:ring-v2-border/20 hover:bg-v2-bg-base/80"
+                        )
                     )}>
                         <FilterCommandMenu variant="navbar" />
 
@@ -144,33 +157,39 @@ export function DashboardHeader() {
                         {!isMobile && <DailySummaryModal />}
                     </div>
 
-                    <div className="h-6 w-px bg-border/40 mx-1 hidden sm:block" />
+                    <div className="h-6 w-px bg-v2-border/30 mx-1 hidden sm:block" />
 
-                    {/* Operations & Status Group */}
                     <div className="hidden sm:flex items-center gap-2">
                         <ImportButton />
 
                         {!isPlusUser() && (
                             <Link href={billingHref}>
-                                <button className="group flex h-8 items-center gap-2 rounded-lg border border-border/60 bg-secondary px-4 text-[9px] font-bold uppercase tracking-[0.2em] text-foreground transition-all hover:bg-accent hover:border-primary/50">
-                                    <Sparkles className="h-3 w-3 animate-pulse" />
+                                <button className={cn(
+                                    "group flex h-8 items-center gap-2 rounded-lg border bg-v2-bg-surface px-4",
+                                    "text-[9px] font-bold uppercase tracking-[0.2em] text-v2-text-primary",
+                                    "border-v2-border/60 transition-all duration-200",
+                                    "hover:bg-v2-accent/10 hover:border-v2-accent/50 hover:shadow-md",
+                                    "active:scale-95"
+                                )}>
+                                    <Sparkles className="h-3 w-3 animate-pulse text-v2-accent" />
                                     <span>UPGRADE</span>
                                 </button>
                             </Link>
                         )}
                     </div>
 
-                    {/* Customization Group (Conditional) */}
                     {isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
                 </div>
             </div>
 
-            {/* Sub-Navigation: Filters (Preserved Mapping) */}
             {
                 isMobile ? (
                     hasActiveFilters && (
                         <div className="relative px-3 pb-3 pt-1">
-                            <div className="rounded-xl border border-border/60 bg-card/60 px-2 py-1.5">
+                            <div className={cn(
+                                "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
+                                "border-v2-border/60 bg-v2-bg-surface/60"
+                            )}>
                                 <ActiveFilterTags showAccountNumbers={true} />
                             </div>
                         </div>
@@ -178,7 +197,10 @@ export function DashboardHeader() {
                 ) : (
                     hasActiveFilters && (
                         <div className="relative px-4 pb-3 pt-1 sm:px-8">
-                            <div className="rounded-xl border border-border/60 bg-card/60 px-2 py-1.5">
+                            <div className={cn(
+                                "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
+                                "border-v2-border/60 bg-v2-bg-surface/60"
+                            )}>
                                 <ActiveFilterTags showAccountNumbers={true} />
                             </div>
                         </div>

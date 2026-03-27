@@ -41,12 +41,30 @@ const config = {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
+				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+				// Premium Gradient Utilities
+				'gradient-premium': 'linear-gradient(135deg, var(--tw-gradient-stops))',
+				'gradient-mesh': 'radial-gradient(at 20% 30%, var(--tw-gradient-stops))',
+				'gradient-mesh-2': 'radial-gradient(at 80% 20%, var(--tw-gradient-stops))',
+				'gradient-mesh-3': 'radial-gradient(at 40% 80%, var(--tw-gradient-stops))',
+				'gradient-mesh-complex': 'radial-gradient(at 20% 30%, hsl(var(--primary) / 0.3) 0px, transparent 50%), radial-gradient(at 80% 70%, hsl(var(--accent) / 0.3) 0px, transparent 50%)',
+				'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+				'gradient-shine': 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%)',
+			},
+			backgroundSize: {
+				'300': '300%',
+				'400': '400%',
+			},
+			backgroundPosition: {
+				'gradient-shine': '200% center',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				// Premium Border Utilities
+				'4xl': '2rem',
+				'5xl': '2.5rem',
 			},
 			fontSize: {
 				'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem)',
@@ -75,6 +93,28 @@ const config = {
 				'fluid-3xl': 'clamp(5rem, 4.5rem + 2.5vw, 10rem)',
 				'18': '4.5rem',
 				'128': '32rem',
+				// Enhanced Spacing - subtle gap variations
+				'4.5': '1.125rem',
+				'5.5': '1.375rem',
+				'6.5': '1.625rem',
+				'7.5': '1.875rem',
+				'8.5': '2.125rem',
+				'9.5': '2.375rem',
+				'10.5': '2.625rem',
+				'11.5': '2.875rem',
+				'12.5': '3.125rem',
+				'13.5': '3.375rem',
+				'14.5': '3.625rem',
+				'15.5': '3.875rem',
+				'16.5': '4.125rem',
+				'17.5': '4.375rem',
+				'18.5': '4.625rem',
+				'19.5': '4.875rem',
+				'20.5': '5.125rem',
+				'21.5': '5.375rem',
+				'22.5': '5.625rem',
+				'23.5': '5.875rem',
+				'24.5': '6.125rem',
 			},
 			maxWidth: {
 				'xs': '20rem',
@@ -86,6 +126,13 @@ const config = {
 				'container-2xl': '1440px',
 				'container-3xl': '1920px',
 				'container-4xl': '2560px',
+				// Container refinements - intermediate sizes
+				'container-xs-plus': '360px',
+				'container-sm-plus': '540px',
+				'container-md-plus': '840px',
+				'container-lg-plus': '1120px',
+				'container-xl-plus': '1320px',
+				'container-2xl-plus': '1600px',
 			},
 			gridTemplateColumns: {
 				'13': 'repeat(13, minmax(0, 1fr))',
@@ -103,6 +150,94 @@ const config = {
 				...Object.fromEntries(
 					Object.entries(Z_INDEX).map(([key, value]) => [key, String(value)])
 				),
+			},
+			// Refined Shadow Utilities
+			boxShadow: {
+				// Layered shadows - small
+				'sm-layered': '0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.1)',
+				// Layered shadows - medium
+				'md-layered': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 6px 8px -4px rgb(0 0 0 / 0.1)',
+				// Layered shadows - large
+				'lg-layered': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 20px 25px -5px rgb(0 0 0 / 0.1)',
+				// Layered shadows - xl
+				'xl-layered': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 25px 50px -12px rgb(0 0 0 / 0.25)',
+				// Inner shadows
+				'inner-sm': 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				'inner-md': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
+				'inner-lg': 'inset 0 4px 8px 0 rgb(0 0 0 / 0.12)',
+				'inner-xl': 'inset 0 8px 16px 0 rgb(0 0 0 / 0.15)',
+				// Colored shadows - accent glows
+				'glow-primary': '0 0 20px rgb(var(--primary) / 0.3), 0 0 40px rgb(var(--primary) / 0.2)',
+				'glow-primary-md': '0 0 30px rgb(var(--primary) / 0.4), 0 0 60px rgb(var(--primary) / 0.3)',
+				'glow-primary-lg': '0 0 40px rgb(var(--primary) / 0.5), 0 0 80px rgb(var(--primary) / 0.4)',
+				'glow-accent': '0 0 20px rgb(var(--accent) / 0.3), 0 0 40px rgb(var(--accent) / 0.2)',
+				'glow-accent-md': '0 0 30px rgb(var(--accent) / 0.4), 0 0 60px rgb(var(--accent) / 0.3)',
+				'glow-accent-lg': '0 0 40px rgb(var(--accent) / 0.5), 0 0 80px rgb(var(--accent) / 0.4)',
+				// Semantic colored shadows
+				'glow-success': '0 0 20px rgb(var(--semantic-success) / 0.3), 0 0 40px rgb(var(--semantic-success) / 0.2)',
+				'glow-warning': '0 0 20px rgb(var(--semantic-warning) / 0.3), 0 0 40px rgb(var(--semantic-warning) / 0.2)',
+				'glow-error': '0 0 20px rgb(var(--semantic-error) / 0.3), 0 0 40px rgb(var(--semantic-error) / 0.2)',
+				'glow-info': '0 0 20px rgb(var(--semantic-info) / 0.3), 0 0 40px rgb(var(--semantic-info) / 0.2)',
+				// Premium soft shadows
+				'soft-sm': '0 2px 8px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.06)',
+				'soft-md': '0 4px 12px rgb(0 0 0 / 0.06), 0 2px 4px rgb(0 0 0 / 0.08)',
+				'soft-lg': '0 8px 24px rgb(0 0 0 / 0.08), 0 4px 8px rgb(0 0 0 / 0.10)',
+				'soft-xl': '0 16px 48px rgb(0 0 0 / 0.10), 0 8px 16px rgb(0 0 0 / 0.12)',
+				// Dramatic shadows
+				'dramatic-sm': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06), 0 0 0 1px rgb(0 0 0 / 0.05)',
+				'dramatic-md': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05), 0 0 0 1px rgb(0 0 0 / 0.05)',
+				'dramatic-lg': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -4px rgb(0 0 0 / 0.04), 0 0 0 1px rgb(0 0 0 / 0.05)',
+				'dramatic-xl': '0 25px 50px -12px rgb(0 0 0 / 0.25), 0 12px 24px -4px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.05)',
+			},
+			// Glass & Blur Utilities
+			backdropBlur: {
+				xs: '2px',
+				'3xl': '64px',
+				'4xl': '96px',
+			},
+			// Premium Border Utilities
+			borderColor: {
+				'glass': 'rgba(255, 255, 255, 0.1)',
+				'glass-dark': 'rgba(0, 0, 0, 0.1)',
+				'glow-primary': 'rgb(var(--primary) / 0.5)',
+				'glow-accent': 'rgb(var(--accent) / 0.5)',
+			},
+			// Enhanced transition utilities
+			transitionTimingFunction: {
+				'spring-smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+				'spring-bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'spring-out': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'spring-in': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
+				'spring-in-out': 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
+				'ease-out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'ease-in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
+				'ease-out-back-custom': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+				'ease-elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'ease-overstep': 'cubic-bezier(0.7, 0, 0.3, 1)',
+			},
+			transitionDuration: {
+				'400': '400ms',
+				'600': '600ms',
+				'800': '800ms',
+				'1200': '1200ms',
+				'1600': '1600ms',
+				'2000': '2000ms',
+			},
+			// Staggered animation delays
+			animationDelay: {
+				'75': '75ms',
+				'100': '100ms',
+				'150': '150ms',
+				'200': '200ms',
+				'250': '250ms',
+				'300': '300ms',
+				'400': '400ms',
+				'500': '500ms',
+				'600': '600ms',
+				'700': '700ms',
+				'800': '800ms',
+				'900': '900ms',
+				'1000': '1000ms',
 			},
 			colors: {
 				background: 'hsl(var(--background))',
@@ -256,35 +391,35 @@ const config = {
 					layer: '#101014',
 					line: '#1a1a21',
 				},
-					precision: {
-						cobalt: 'hsl(var(--primary))',
-						'highlight': '#F5F5F5',
-						'line': 'hsl(var(--primary) / 0.06)',
-					},
-					'precision-blue': 'hsl(var(--primary))',
-					'steel-grey': '#565B66',
-					'cyber-pink': 'hsl(222 68% 66%)',
+				precision: {
+					cobalt: 'hsl(var(--primary))',
+					'highlight': '#F5F5F5',
+					'line': 'hsl(var(--primary) / 0.06)',
+				},
+				'precision-blue': 'hsl(var(--primary))',
+				'steel-grey': '#565B66',
+				'cyber-pink': 'hsl(222 68% 66%)',
 				'matte-black': '#050505',
 				'obsidian': '#0D0D0D',
-					semantic: {
-						success: 'hsl(var(--semantic-success))',
-						'success-fg': 'hsl(var(--semantic-success-fg))',
-						'success-bg': 'hsl(var(--semantic-success-bg))',
-						'success-border': 'hsl(var(--semantic-success-border))',
-						warning: 'hsl(var(--semantic-warning))',
-						'warning-fg': 'hsl(var(--semantic-warning-fg))',
-						'warning-bg': 'hsl(var(--semantic-warning-bg))',
-						'warning-border': 'hsl(var(--semantic-warning-border))',
-						error: 'hsl(var(--semantic-error))',
-						'error-fg': 'hsl(var(--semantic-error-fg))',
-						'error-bg': 'hsl(var(--semantic-error-bg))',
-						'error-border': 'hsl(var(--semantic-error-border))',
-						info: 'hsl(var(--semantic-info))',
-						'info-fg': 'hsl(var(--semantic-info-fg))',
-						'info-bg': 'hsl(var(--semantic-info-bg))',
-						'info-border': 'hsl(var(--semantic-info-border))'
-					}
-				},
+				semantic: {
+					success: 'hsl(var(--semantic-success))',
+					'success-fg': 'hsl(var(--semantic-success-fg))',
+					'success-bg': 'hsl(var(--semantic-success-bg))',
+					'success-border': 'hsl(var(--semantic-success-border))',
+					warning: 'hsl(var(--semantic-warning))',
+					'warning-fg': 'hsl(var(--semantic-warning-fg))',
+					'warning-bg': 'hsl(var(--semantic-warning-bg))',
+					'warning-border': 'hsl(var(--semantic-warning-border))',
+					error: 'hsl(var(--semantic-error))',
+					'error-fg': 'hsl(var(--semantic-error-fg))',
+					'error-bg': 'hsl(var(--semantic-error-bg))',
+					'error-border': 'hsl(var(--semantic-error-border))',
+					info: 'hsl(var(--semantic-info))',
+					'info-fg': 'hsl(var(--semantic-info-fg))',
+					'info-bg': 'hsl(var(--semantic-info-bg))',
+					'info-border': 'hsl(var(--semantic-info-border))'
+				}
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -356,6 +491,144 @@ const config = {
 					'100%': {
 						transform: 'translateX(100%)'
 					}
+				},
+				// Enhanced Animation System - Spring-based
+				'spring-in': {
+					'0%': {
+						transform: 'scale(0.9)',
+						opacity: '0'
+					},
+					'50%': {
+						transform: 'scale(1.02)'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'spring-out': {
+					'0%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'scale(0.9)',
+						opacity: '0'
+					}
+				},
+				'bounce-in': {
+					'0%': {
+						transform: 'scale(0)',
+						opacity: '0'
+					},
+					'50%': {
+						transform: 'scale(1.1)'
+					},
+					'70%': {
+						transform: 'scale(0.95)'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'bounce-out': {
+					'0%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					},
+					'30%': {
+						transform: 'scale(1.05)'
+					},
+					'100%': {
+						transform: 'scale(0)',
+						opacity: '0'
+					}
+				},
+				'slide-up-spring': {
+					'0%': {
+						transform: 'translateY(20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateY(0)',
+						opacity: '1'
+					}
+				},
+				'slide-down-spring': {
+					'0%': {
+						transform: 'translateY(-20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateY(0)',
+						opacity: '1'
+					}
+				},
+				'slide-left-spring': {
+					'0%': {
+						transform: 'translateX(20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateX(0)',
+						opacity: '1'
+					}
+				},
+				'slide-right-spring': {
+					'0%': {
+						transform: 'translateX(-20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateX(0)',
+						opacity: '1'
+					}
+				},
+				'shimmer': {
+					'0%': {
+						backgroundPosition: '-200% 0'
+					},
+					'100%': {
+						backgroundPosition: '200% 0'
+					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						opacity: '1',
+						boxShadow: '0 0 20px rgb(var(--primary) / 0.4)'
+					},
+					'50%': {
+						opacity: '0.8',
+						boxShadow: '0 0 40px rgb(var(--primary) / 0.6)'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'wiggle': {
+					'0%, 100%': {
+						transform: 'rotate(0deg)'
+					},
+					'25%': {
+						transform: 'rotate(3deg)'
+					},
+					'75%': {
+						transform: 'rotate(-3deg)'
+					}
+				},
+				'morph': {
+					'0%, 100%': {
+						borderRadius: '40% 60% 60% 40% / 60% 30% 70% 40%'
+					},
+					'50%': {
+						borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%'
+					}
 				}
 			},
 			animation: {
@@ -365,7 +638,21 @@ const config = {
 				'glow-subtle': 'glow-subtle 3s ease-in-out infinite',
 				'glow-success': 'glow-success 2s ease-in-out infinite',
 				'success-pulse': 'success-pulse 3s ease-in-out infinite',
-				'success-sweep': 'success-sweep 1.5s ease-in-out forwards'
+				'success-sweep': 'success-sweep 1.5s ease-in-out forwards',
+				// Enhanced animations
+				'spring-in': 'spring-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'spring-out': 'spring-out 0.4s cubic-bezier(0.36, 0, 0.66, -0.56)',
+				'bounce-in': 'bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'bounce-out': 'bounce-out 0.4s cubic-bezier(0.36, 0, 0.66, -0.56)',
+				'slide-up-spring': 'slide-up-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'slide-down-spring': 'slide-down-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'slide-left-spring': 'slide-left-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'slide-right-spring': 'slide-right-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'shimmer': 'shimmer 2s linear infinite',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'wiggle': 'wiggle 0.5s ease-in-out',
+				'morph': 'morph 8s ease-in-out infinite',
 			},
 			typography: {
 				DEFAULT: {

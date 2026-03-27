@@ -1,5 +1,4 @@
 import { DataProvider } from "@/context/data-provider";
-import WidgetCanvas from "@/app/[locale]/dashboard/components/widget-canvas";
 import { Toaster } from "@/components/ui/sonner";
 import { TraderInfo } from "../../../components/trader-info";
 import { Suspense } from "react";

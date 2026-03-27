@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import React from 'react'
-import Image from 'next/image'
-import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Title } from '@/components/ui/v2'
+import { CardV2 } from '@/components/ui/v2'
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
+import { Zap, Lock } from 'lucide-react'
 
 type TraderSnapshot = {
   username: string
@@ -17,6 +17,20 @@ type TraderSnapshot = {
   demo: boolean
 }
 
+function formatSigned(value: number, digits = 2): string {
+  if (!Number.isFinite(value)) return "0.00"
+  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`
+}
+
+function formatCapitalCompact(value: number): string {
+  if (!Number.isFinite(value)) return "0"
+  const sign = value < 0 ? "-" : ""
+  const abs = Math.abs(value)
+  if (abs >= 1_000_000) return `${sign}${(abs / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}m`
+  if (abs >= 1_000) return `${sign}${(abs / 1_000).toFixed(abs >= 100_000 ? 0 : 1)}k`
+  return `${sign}${abs.toFixed(0)}`
+}
+
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -25,33 +39,8 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
-function MetricCard({
-  title,
-  value,
-  hint,
-  tone = 'default',
-}: {
-  title: string
-  value: string
-  hint?: string
-  tone?: 'default' | 'positive' | 'negative'
-}) {
-  const toneClass =
-    tone === 'positive'
-      ? 'text-emerald-400'
-      : tone === 'negative'
-        ? 'text-red-400'
-        : 'text-foreground'
-
-  return (
-    <CardV2>
-      <CardV2Title>{title}</CardV2Title>
-      <CardV2Content>
-        <div className={toneClass}>{value}</div>
-        {hint ? <p className="mt-2 text-sm text-muted-foreground">{hint}</p> : null}
-      </CardV2Content>
-    </CardV2>
-  )
+function formatValue(value: number, digits = 2): string {
+  return Number.isFinite(value) ? value.toFixed(digits) : "0.00"
 }
 
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
@@ -95,33 +84,33 @@ export default async function TraderProfilePage({
 
   if (!snapshot) {
     return (
-      <div className="min-h-screen bg-v2-bg-base">
-        <div className="mx-auto max-w-5xl px-6 py-10">
-          <div className="rounded-[1.8rem] border border-border/60 bg-card/70 p-8 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+      <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
+        <div className="relative mx-auto w-full max-w-[1600px]">
+          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
+                <p className="text-sm uppercase tracking-[0.18em] text-fg-muted">Trader profile</p>
                 <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{slug}</h1>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-fg-muted">
                   This profile is not available yet. Once the trader has public stats or the database is connected, it will appear here.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href={`/${locale}/leaderboard`}
-                  className="rounded-full border border-border/60 bg-background/70 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-primary/5"
+                  className="rounded-full border border-border/15 bg-card/5 px-4 py-2 text-sm font-medium text-fg-primary transition-all duration-300 hover:border-border/20 hover:bg-card/10"
                 >
                   Back to leaderboard
                 </Link>
                 <Link
                   href={`/${locale}/dashboard/trader-profile`}
-                  className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
+                  className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all duration-300 hover:opacity-90"
                 >
                   Manage profile
                 </Link>
               </div>
             </div>
-          </div>
+          </CardV2>
         </div>
       </div>
     )
@@ -131,65 +120,187 @@ export default async function TraderProfilePage({
   const negative = snapshot.totalPnl < 0
 
   return (
-    <div className="min-h-screen bg-v2-bg-base">
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="rounded-[1.8rem] border border-border/60 bg-card/70 p-6 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/images/trader-avatar-placeholder.png"
-                alt="avatar"
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-full"
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-xl font-semibold text-foreground">Trader: {snapshot.username}</div>
+    <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
+      <div className="relative mx-auto grid w-full max-w-[1600px] gap-3 sm:gap-4 xl:grid-cols-[1.35fr_1fr]">
+        <section className="space-y-3 sm:space-y-4">
+          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <div className="flex items-start gap-4">
+              <Avatar className="h-20 w-20 border border-border/10 bg-card/5 shadow-xl ring-2 ring-border/5 transition-transform duration-500 hover:scale-105 hover:ring-primary/30">
+                <AvatarFallback className="bg-card/10 text-xl font-semibold text-fg-primary">
+                  {snapshot.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[2.25rem] font-bold leading-tight text-foreground">{snapshot.username}</p>
+                <p className="mt-1 text-sm text-fg-muted">Public profile</p>
+                <div className="mt-2.5 flex flex-wrap gap-1.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                    <Zap className="h-3 w-3" />
+                    Trader Profile
+                  </span>
                   {snapshot.demo ? (
-                  <BadgeV2 variant="secondary" className="border border-primary/20 bg-primary/10 text-primary">
-                    Demo profile preview
-                  </BadgeV2>
-                ) : null}
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                      Demo profile preview
+                    </span>
+                  ) : null}
+                  <span className="inline-flex items-center rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                    Total Trades {snapshot.totalTrades}
+                  </span>
                 </div>
-                <div className="text-sm text-muted-foreground">Public profile</div>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href={`/${locale}/leaderboard`}
-                className="rounded-full border border-border/60 bg-background/70 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-primary/5"
-              >
-                Back to leaderboard
-              </Link>
-              <Link
-                href={`/${locale}/dashboard/trader-profile`}
-                className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
-              >
-                Manage profile
-              </Link>
+            <div className="mt-3 grid gap-1.5 sm:grid-cols-3">
+              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
+                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
+                <p className="mt-1 text-lg font-semibold text-fg-primary">{snapshot.totalTrades.toLocaleString()}</p>
+              </div>
+              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
+                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total PnL</p>
+                <p className={`mt-1 text-lg font-semibold ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-fg-primary'}`}>
+                  {formatSigned(snapshot.totalPnl)}
+                </p>
+              </div>
+              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
+                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Type</p>
+                <p className="mt-1 text-lg font-semibold text-fg-primary">
+                  {snapshot.demo ? 'Demo' : 'Live'}
+                </p>
+              </div>
             </div>
+          </CardV2>
+
+          <div className="grid gap-1.5 sm:grid-cols-2">
+            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Profit</p>
+              <p className={`mt-1 text-2xl font-semibold ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-fg-primary'}`}>
+                {formatCurrency(snapshot.totalPnl)}
+              </p>
+              <p className="mt-2 text-xs text-fg-muted">Current public performance snapshot</p>
+            </CardV2>
+
+            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
+              <p className="mt-1 text-2xl font-semibold text-fg-primary">{snapshot.totalTrades.toLocaleString()}</p>
+              <p className="mt-2 text-xs text-fg-muted">Visible public trades</p>
+            </CardV2>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <MetricCard title="Total Trades" value={snapshot.totalTrades.toLocaleString()} hint="Visible public trades" />
-            <MetricCard
-              title="Total Profit"
-              value={`${positive ? '+' : ''}${formatCurrency(snapshot.totalPnl)}`}
-              tone={positive ? 'positive' : negative ? 'negative' : 'default'}
-              hint="Current public performance snapshot"
-            />
-          </div>
+          {snapshot.demo && snapshot.winRate !== undefined ? (
+            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+              <div className="mb-2.5 flex items-center justify-between">
+                <p className="text-sm font-semibold text-fg-primary">Demo Leaderboard Stats</p>
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                  <Lock className="h-3 w-3" />
+                  Preview Data
+                </span>
+              </div>
 
-          {snapshot.demo ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <MetricCard title="Win Rate" value={`${snapshot.winRate?.toFixed(1) ?? '0.0'}%`} hint="Demo leaderboard data" />
-              <MetricCard title="Return" value={`${snapshot.returnPct?.toFixed(1) ?? '0.0'}%`} hint="Demo leaderboard data" />
-              <MetricCard title="Avg Duration" value={`${snapshot.avgDurationMinutes?.toFixed(0) ?? '0'}m`} hint={`Top instrument ${snapshot.topInstrument ?? 'N/A'}`} />
-            </div>
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
+                  <p className="mt-1 text-3xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
+                  <div className="mt-3 h-2 rounded-full bg-card/10">
+                    <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+                  </div>
+                </div>
+
+                {snapshot.returnPct !== undefined && (
+                  <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
+                    <p className="text-[10px] uppercase tracking-wider text-fg-muted">Return</p>
+                    <p className={`mt-1 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {formatSigned(snapshot.returnPct)}%
+                    </p>
+                    <div className="mt-3 h-2 rounded-full bg-card/10">
+                      <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-emerald-400/35' : 'bg-red-400/35'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
+                    </div>
+                  </div>
+                )}
+
+                {snapshot.topInstrument && (
+                  <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
+                    <p className="text-[10px] uppercase tracking-wider text-fg-muted">Top Instrument</p>
+                    <p className="mt-1 text-3xl font-semibold text-fg-primary">{snapshot.topInstrument}</p>
+                    {snapshot.avgDurationMinutes !== undefined && (
+                      <p className="mt-2 text-xs text-fg-muted">
+                        Avg Duration: {formatValue(snapshot.avgDurationMinutes, 0)}m
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </CardV2>
           ) : null}
-        </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/${locale}/leaderboard`}
+              className="inline-flex items-center justify-center rounded-full border border-border/15 bg-card/5 px-6 py-2.5 text-sm font-semibold text-fg-primary transition-all duration-300 hover:border-border/20 hover:bg-card/10"
+            >
+              Back to leaderboard
+            </Link>
+            <Link
+              href={`/${locale}/dashboard/trader-profile`}
+              className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:opacity-90"
+            >
+              Manage profile
+            </Link>
+          </div>
+        </section>
+
+        <aside className="mx-auto w-full max-w-[430px] space-y-2 xl:max-w-none">
+          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <div className="grid gap-2">
+              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
+                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Capital</p>
+                <p className="mt-1 text-3xl font-semibold text-fg-primary">{formatCapitalCompact(snapshot.totalPnl)}</p>
+              </div>
+            </div>
+          </CardV2>
+
+          {snapshot.demo && snapshot.winRate !== undefined && (
+            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
+              <p className="mt-1 text-4xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <div className="h-2 rounded-full bg-card/10">
+                  <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+                </div>
+                <div className="h-2 rounded-full bg-card/10">
+                  <div className="h-full rounded-full bg-card/20" style={{ width: `${Math.min(100, Math.max(8, 100 - snapshot.winRate))}%` }} />
+                </div>
+              </div>
+            </CardV2>
+          )}
+
+          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
+              <span className="inline-flex items-center rounded-md border border-border/20 bg-card/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-fg-primary">
+                {snapshot.totalTrades > 100 ? 'Active Trader' : 'Growing'}
+              </span>
+            </div>
+            <p className="mt-1 text-4xl font-semibold text-fg-primary">{snapshot.totalTrades}</p>
+            <div className="mt-3 h-2 rounded-full bg-card/10">
+              <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
+            </div>
+          </CardV2>
+
+          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Status</p>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                <Lock className="h-3 w-3" />
+                {snapshot.demo ? 'Demo' : 'Live'}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-fg-muted">
+              {snapshot.demo
+                ? 'This is a demo profile with preview data from the leaderboard.'
+                : 'Live trading profile with verified performance data.'}
+            </p>
+          </CardV2>
+        </aside>
       </div>
     </div>
   )

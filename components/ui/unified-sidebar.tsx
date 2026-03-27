@@ -230,29 +230,36 @@ export function UnifiedSidebar({
   const initials = useMemo(() => getUserInitials(user), [user])
 
   return (
-    <Sidebar collapsible="icon" className="pointer-events-auto border-r border-sidebar-border/60 bg-sidebar/95 text-sidebar-foreground backdrop-blur-sm">
-      <SidebarHeader className="h-14 border-b border-sidebar-border/40 px-2 py-0">
+    <Sidebar collapsible="icon" className="pointer-events-auto border-r border-sidebar-border/40 text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient">
+      <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-xl" />
+      <SidebarHeader className="h-16 border-b border-sidebar-border/30 px-2 py-0 relative bg-gradient-to-b from-sidebar-accent/20 to-transparent">
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex items-center gap-2">
-              <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 transition-colors hover:bg-sidebar-accent/70">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_10px_24px_-16px_hsl(var(--foreground))]">
-                  <Logo className="size-5 fill-current" />
+              <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 transition-all duration-300 hover:bg-sidebar-accent/40 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/80 text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/20 relative">
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent" />
+                  <Logo className="size-5 fill-current relative z-10" />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none px-1 overflow-hidden">
-                  <span className="truncate font-bold tracking-tight text-sm uppercase">Qunt Edge</span>
-                  <span className="truncate text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-medium">Workspace</span>
+                <div className="flex flex-col gap-0.5 leading-none px-1.5 overflow-hidden relative z-10">
+                  <div className="flex items-center gap-1.5">
+                    <span className="truncate font-bold tracking-tight text-sm uppercase bg-gradient-to-r from-sidebar-foreground to-sidebar-foreground/70 bg-clip-text text-transparent">Qunt Edge</span>
+                    <div className="size-1.5 rounded-full bg-sidebar-primary/60 animate-glow-pulse" />
+                  </div>
+                  <span className="truncate text-[9px] text-sidebar-foreground/50 uppercase tracking-[0.2em] font-medium">Workspace</span>
                 </div>
               </SidebarMenuButton>
             </div>
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sidebar-border/50 to-transparent" />
       </SidebarHeader>
 
-      <SidebarContent className="scrollbar-thin scrollbar-thumb-sidebar-border scrollbar-track-transparent px-1">
+      <SidebarContent className="px-1.5 scrollbar-thin scrollbar-thumb-sidebar-border/40 scrollbar-track-transparent hover:scrollbar-thumb-sidebar-border/60 scrollbar-w-[3px]">
         {groupedItems.order.map((groupName, groupIndex) => (
-          <SidebarGroup key={groupName} className="px-2 py-2">
-            <SidebarGroupLabel className="mb-1 text-[10px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/55" id={`sidebar-group-${groupIndex}`}>
+          <SidebarGroup key={groupName} className="px-2 py-2.5">
+            <SidebarGroupLabel className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-sidebar-foreground/40 pl-1" id={`sidebar-group-${groupIndex}`}>
               {groupName}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -267,7 +274,10 @@ export function UnifiedSidebar({
                   )
 
                   return (
-                    <SidebarMenuItem key={`${groupName}-${item.label}-${index}`}>
+                    <SidebarMenuItem key={`${groupName}-${item.label}-${index}`} className="relative">
+                      {itemIsActive && (
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-gradient-to-b from-sidebar-primary via-sidebar-primary to-sidebar-primary rounded-r-full animate-slide-indicator shadow-[0_0_8px_oklch(0.55_0.22_264/_0.5)]" />
+                      )}
                       <SidebarMenuButton
                         asChild={!!href}
                         isActive={itemIsActive}
@@ -278,12 +288,16 @@ export function UnifiedSidebar({
                           if (isMobile) setOpenMobile(false)
                         } : undefined}
                         className={cn(
-                          "pointer-events-auto rounded-lg font-medium transition-colors duration-150",
+                          "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
                           itemIsActive
-                            ? "font-semibold shadow-[inset_0_0_0_1px_hsl(var(--sidebar-border))]"
-                            : "hover:bg-sidebar-accent/65"
+                            ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
+                            : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
                         )}
                       >
+                        <div className={cn(
+                          "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
+                          itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
+                        )} />
                         {href ? (
                           <Link
                             href={href}
@@ -305,20 +319,32 @@ export function UnifiedSidebar({
                                 setOpenMobile(false)
                               }
                             }}
-                            className="flex items-center w-full"
+                            className="flex items-center w-full relative z-10"
                             aria-busy={isPendingItem}
                           >
                             {isPendingItem || (isLoading && itemIsActive) ? (
                               <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
                             ) : (
-                              <span className="shrink-0">{item.icon}</span>
+                              <span className={cn(
+                                "shrink-0 transition-all duration-200",
+                                itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                              )}>{item.icon}</span>
                             )}
-                            <span className="ml-3 truncate">{label}</span>
+                            <span className={cn(
+                              "ml-3 truncate transition-all duration-200",
+                              itemIsActive ? "font-semibold" : ""
+                            )}>{label}</span>
                           </Link>
                         ) : (
-                          <div className="flex items-center w-full">
-                            <span className="shrink-0">{item.icon}</span>
-                            <span className="ml-3 truncate">{label}</span>
+                          <div className="flex items-center w-full relative z-10">
+                            <span className={cn(
+                              "shrink-0 transition-all duration-200",
+                              itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                            )}>{item.icon}</span>
+                            <span className={cn(
+                              "ml-3 truncate transition-all duration-200",
+                              itemIsActive ? "font-semibold" : ""
+                            )}>{label}</span>
                           </div>
                         )}
                       </SidebarMenuButton>
@@ -342,57 +368,64 @@ export function UnifiedSidebar({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/40 p-2">
+      <SidebarFooter className="border-t border-sidebar-border/30 p-2 relative bg-gradient-to-t from-sidebar-accent/10 to-transparent">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sidebar-border/40 to-transparent" />
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full"
+                  className="data-[state=open]:bg-sidebar-accent/50 data-[state=open]:text-sidebar-accent-foreground w-full transition-all duration-200 hover:bg-sidebar-accent/30 group/user relative overflow-hidden"
                 >
-                  <Avatar className="h-8 w-8 rounded-lg overflow-hidden border border-sidebar-border shadow-sm">
-                    <AvatarImage src={user?.avatar_url} alt={displayName} />
-                    <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
-                      {initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight ml-1.5">
-                    <span className="truncate font-semibold">{displayName}</span>
-                    <span className="truncate text-xs text-sidebar-foreground/60">{user?.email || "Free Plan"}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover/user:opacity-100 transition-opacity duration-300" />
+                  <div className="relative z-10 flex items-center gap-2.5 w-full">
+                    <div className="relative">
+                      <Avatar className="h-9 w-9 rounded-xl overflow-hidden border-2 border-sidebar-border/50 shadow-lg ring-2 ring-sidebar-primary/20 transition-all duration-300 group-hover/user:ring-sidebar-primary/40 group-hover/user:border-sidebar-primary/30">
+                        <AvatarImage src={user?.avatar_url} alt={displayName} />
+                        <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="absolute -bottom-0.5 -right-0.5 size-3 bg-[oklch(0.55_0.15_166)] rounded-full border-2 border-sidebar animate-status-ring" />
+                    </div>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold text-sidebar-foreground">{displayName}</span>
+                      <span className="truncate text-xs text-sidebar-foreground/50">{user?.email || "Free Plan"}</span>
+                    </div>
+                    <MoreHorizontal className="ml-auto size-4 text-sidebar-foreground/40 transition-transform duration-200 group-hover/user:rotate-90 group-hover/user:text-sidebar-foreground/60" />
                   </div>
-                  <MoreHorizontal className="ml-auto size-4 text-sidebar-foreground/50" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-lg border-sidebar-border"
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-xl border-sidebar-border/40 bg-sidebar/95 backdrop-blur-xl"
                 side={isMobile ? "bottom" : "right"}
                 align="end"
                 sideOffset={6}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2.5 px-3 py-2.5 text-left text-sm bg-sidebar-accent/50 dark:bg-sidebar-accent/10">
-                    <Avatar className="h-8 w-8 rounded-lg border border-sidebar-border shadow-sm">
+                  <div className="flex items-center gap-2.5 px-3 py-2.5 text-left text-sm bg-gradient-to-r from-sidebar-accent/30 to-sidebar-accent/10">
+                    <Avatar className="h-8 w-8 rounded-lg border border-sidebar-border/50 shadow-sm">
                       <AvatarImage src={user?.avatar_url} alt={displayName} />
-                      <AvatarFallback className="rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
+                      <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{displayName}</span>
-                      <span className="truncate text-xs opacity-80">{user?.email}</span>
+                      <span className="truncate font-semibold text-sidebar-foreground">{displayName}</span>
+                      <span className="truncate text-xs text-sidebar-foreground/60">{user?.email}</span>
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-sidebar-border/30" />
                 {timezone && (
-                  <div className="px-2 py-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50 px-1 mb-1.5">Timezone</p>
+                  <div className="px-2.5 py-2.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/40 px-1 mb-2">Timezone</p>
                     <div className="relative">
                       <select
                         value={timezone.value}
                         onChange={(e) => timezone.onChange(e.target.value)}
-                        className="w-full bg-transparent text-sm p-1.5 focus:outline-none cursor-pointer border rounded-md border-sidebar-border/50 hover:bg-sidebar-accent/50 hover:border-sidebar-border transition-colors appearance-none"
+                        className="w-full bg-sidebar-accent/30 text-sm p-2 focus:outline-none cursor-pointer border rounded-lg border-sidebar-border/40 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/30 transition-all duration-200 appearance-none pr-8 text-sidebar-foreground"
                       >
                         {timezone.options.map((tz) => (
                           <option key={tz} value={tz} className="bg-popover text-popover-foreground">
@@ -400,14 +433,19 @@ export function UnifiedSidebar({
                           </option>
                         ))}
                       </select>
+                      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-sidebar-foreground/40">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 )}
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-sidebar-border/30" />
                 {onLogout && (
                   <DropdownMenuItem
                     onClick={onLogout}
-                    className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer my-1 mx-1"
+                    className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-all duration-200 hover:bg-destructive/10"
                   >
                     <LogOut className="mr-2 size-4" />
                     <span className="font-medium">Log out</span>
@@ -419,6 +457,7 @@ export function UnifiedSidebar({
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
+      <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/20" />
     </Sidebar>
   )
 }

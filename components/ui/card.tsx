@@ -3,11 +3,12 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "glass" | "elevated" | "outlined" | "flat"
+  variant?: "default" | "glass" | "elevated" | "outlined" | "flat" | "gradient-border"
   hover?: boolean
   size?: "sm" | "md" | "lg"
   clickable?: boolean
   status?: CardStatusTone
+  isLoading?: boolean
 }
 
 export type CardStatusTone = "live" | "synced" | "idle" | "error"
@@ -21,6 +22,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       size = "md",
       clickable = false,
       status,
+      isLoading = false,
       onClick,
       children,
       ...props
@@ -43,12 +45,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm",
+          "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm transition-all duration-300",
           variant === "default" && "border-v2-border bg-v2-bg-surface",
-          variant === "glass" && "border-v2-border bg-v2-bg-surface/10 backdrop-blur-md",
-          variant === "elevated" && "border-v2-border bg-v2-bg-surface shadow-md",
+          variant === "glass" && "border-v2-border/30 bg-v2-bg-surface/20 backdrop-blur-xl shadow-lg",
+          variant === "elevated" && "border-v2-border bg-v2-bg-surface shadow-xl shadow-v2-accent/10",
           variant === "outlined" && "border-2 border-v2-border bg-transparent shadow-none",
           variant === "flat" && "border-0 bg-transparent shadow-none",
+          variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg",
           {
             "text-sm": size === "sm",
             "text-base": size === "md",
@@ -56,24 +59,33 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           },
           {
             "cursor-pointer": isInteractive,
-            "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md": hover || isInteractive,
+            "hover:-translate-y-1 hover:shadow-xl hover:shadow-v2-accent/20": hover || isInteractive,
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base":
               isInteractive,
           },
+          isLoading && "pointer-events-none opacity-80",
           className
         )}
         onClick={isInteractive ? onClick : undefined}
         {...props}
       >
+        {variant === "gradient-border" && (
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-v2-accent via-v2-accent-hover to-v2-accent opacity-20 blur-sm -z-10" />
+        )}
+        {isLoading && (
+          <div className="absolute inset-0 overflow-hidden rounded-xl z-20">
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          </div>
+        )}
         {status && (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-v2-border bg-v2-bg-base/80 px-2 py-1 backdrop-blur-sm">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-v2-border/50 bg-v2-bg-base/90 backdrop-blur-md px-2 py-1 shadow-sm">
             <div
               className={cn(
-                "status-dot",
-                status === "live" && "bg-emerald-500 animate-pulse",
-                status === "synced" && "bg-blue-500",
+                "status-dot size-2 rounded-full",
+                status === "live" && "bg-emerald-500 animate-pulse shadow-lg shadow-emerald-500/50",
+                status === "synced" && "bg-blue-500 shadow-lg shadow-blue-500/50",
                 status === "idle" && "bg-gray-500",
-                status === "error" && "bg-red-500"
+                status === "error" && "bg-red-500 shadow-lg shadow-red-500/50"
               )}
             />
             <span className="text-[10px] font-semibold uppercase leading-none tracking-widest text-v2-text-muted">
@@ -82,7 +94,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         )}
 
-        <div className="relative z-10">{children}</div>
+        <div className={cn("relative z-10 rounded-xl", variant === "gradient-border" && "bg-v2-bg-surface")}>{children}</div>
       </div>
     )
   }
