@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { format, differenceInDays } from "date-fns"
 import {
@@ -56,7 +56,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
   // Show loading state only when actually loading
   if (isLoading) {
     return (
-      <Badge
+      <BadgeV2
         variant="secondary"
         className={cn(
           "px-2 py-0.5 text-xs whitespace-nowrap",
@@ -72,7 +72,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
   // If no subscription data after loading, user is on Free plan
   if (!subscription) {
     return (
-      <Badge
+      <BadgeV2
         variant="secondary"
         className={cn(
           "px-2 py-0.5 text-xs whitespace-nowrap",
@@ -131,7 +131,7 @@ export function SubscriptionBadge({ className }: { className?: string }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <Link href={`/${locale}/dashboard/billing`}>
-            <Badge
+            <BadgeV2
               variant="secondary"
               className={cn(
                 "px-2 py-0.5 text-xs whitespace-nowrap cursor-help transition-colors",

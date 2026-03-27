@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, CheckCircle2, CalendarDays, Clock, CreditCard, History, Receipt, FileText } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Skeleton } from "@/components/ui/skeleton"
 import { updateSubscription, collectSubscriptionFeedback } from "../../../../../server/billing"
 import { toast } from "sonner"
@@ -183,7 +183,7 @@ export default function BillingManagement() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="bg-secondary/25 text-foreground">
+                          <BadgeV2 variant="secondary" className="bg-secondary/25 text-foreground">
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
                               : subscription.promotion.amount_off 
@@ -329,12 +329,12 @@ export default function BillingManagement() {
                 <div className="flex flex-wrap items-center gap-4">
                   <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button 
+                      <ButtonV2  
                         variant="destructive" 
                         className="sm:w-auto"
                       >
                         {t('billing.cancelSubscription')}
-                      </Button>
+                      </ButtonV2>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -393,13 +393,13 @@ export default function BillingManagement() {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button
+                        <ButtonV2 
                           variant="outline"
                           onClick={() => setIsCancelDialogOpen(false)}
                         >
                           {t('pricing.cancelSubscription.cancel')}
-                        </Button>
-                        <Button
+                        </ButtonV2>
+                        <ButtonV2 
                           variant="destructive"
                           onClick={() => {
                             handleSubscriptionAction('cancel')
@@ -407,11 +407,11 @@ export default function BillingManagement() {
                           }}
                         >
                           {t('pricing.cancelSubscription.confirm')}
-                        </Button>
+                        </ButtonV2>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
-                  <Button
+                  <ButtonV2 
                     variant="outline"
                     className="sm:w-auto"
                     asChild
@@ -420,12 +420,12 @@ export default function BillingManagement() {
                           <CreditCard className="h-4 w-4 mr-2" />
                           {t('billing.managePaymentMethod')}
                         </Link>
-                      </Button>
+                      </ButtonV2>
                     </div>
                   )}
                   {subscription.cancel_at_period_end && (
                     <div className="flex flex-wrap items-center gap-4">
-                      <Button 
+                      <ButtonV2  
                         variant="outline"
                         className="sm:w-auto"
                         asChild
@@ -434,7 +434,7 @@ export default function BillingManagement() {
                           <CreditCard className="h-4 w-4 mr-2" />
                           {t('billing.managePaymentMethod')}
                         </Link>
-                      </Button>
+                      </ButtonV2>
                     </div>
                   )}
             </div>
@@ -491,13 +491,13 @@ export default function BillingManagement() {
                     </div>
                     <div className="flex items-center gap-2">
                       {invoice.status === 'paid' && (
-                        <Badge variant="secondary" className="bg-secondary/25 text-foreground">
+                        <BadgeV2 variant="secondary" className="bg-secondary/25 text-foreground">
                           {t('billing.paymentStatus.succeeded')}
                         </Badge>
                       )}
                       <div className="flex items-center gap-2">
                         {invoice.hosted_invoice_url && (
-                          <Button
+                          <ButtonV2 
                             variant="outline"
                             size="sm"
                             className="h-8"
@@ -505,10 +505,10 @@ export default function BillingManagement() {
                           >
                             <Receipt className="h-4 w-4 mr-2" />
                             {t('billing.viewInvoice')}
-                          </Button>
+                          </ButtonV2>
                         )}
                         {invoice.invoice_pdf && (
-                          <Button
+                          <ButtonV2 
                             variant="outline"
                             size="sm"
                             className="h-8"
@@ -516,7 +516,7 @@ export default function BillingManagement() {
                           >
                             <FileText className="h-4 w-4 mr-2" />
                             {t('billing.downloadPdf')}
-                          </Button>
+                          </ButtonV2>
                         )}
                       </div>
                     </div>

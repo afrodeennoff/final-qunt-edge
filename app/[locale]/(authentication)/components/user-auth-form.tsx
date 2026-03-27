@@ -4,8 +4,8 @@ import { signInWithDiscord, signInWithEmail, verifyOtp, signInWithGoogle, signIn
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Icons } from "@/components/icons"
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,7 +28,7 @@ import {
     InputOTPSeparator
 } from "@/components/ui/input-otp"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 // Link removed; unauthenticated users can't reach settings
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
 
@@ -455,7 +455,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         className="relative h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                         <span className="truncate">{t('auth.tabs.password')}</span>
-                        <Badge
+                        <BadgeV2
                             variant="secondary"
                             className="absolute -right-1.5 -top-1.5 border border-border/70 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
                         >
@@ -474,7 +474,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Email</FormLabel>
                                         <FormControl>
-                                            <Input
+                                            <InputV2
                                                 id="email"
                                                 placeholder={t('auth.emailPlaceholder')}
                                                 type="email"
@@ -491,7 +491,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 )}
                             />
                             {!isEmailSent ? (
-                                <Button
+                                <ButtonV2 
                                     disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
                                     type="submit"
                                     className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
@@ -500,10 +500,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
                                     {t('auth.signInWithEmail')}
-                                </Button>
+                                </ButtonV2>
                             ) : (
                                 <div className="space-y-2">
-                                    <Button
+                                    <ButtonV2 
                                         type="button"
                                         variant="outline"
                                         className="h-11 w-full rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
@@ -512,8 +512,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     >
                                         <Icons.envelope className="mr-2 h-4 w-4" />
                                         {t('auth.openMailbox')}
-                                    </Button>
-                                    <Button
+                                    </ButtonV2>
+                                    <ButtonV2 
                                         type="submit"
                                         variant="ghost"
                                         className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
@@ -524,7 +524,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         ) : (
                                             t('auth.resendEmail')
                                         )}
-                                    </Button>
+                                    </ButtonV2>
                                 </div>
                             )}
                         </form>
@@ -566,7 +566,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         </FormItem>
                                     )}
                                 />
-                                <Button
+                                <ButtonV2 
                                     type="submit"
                                     className="h-11 w-full rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
                                     disabled={isLoading}
@@ -575,7 +575,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     ) : null}
                                     {t('auth.verifyCode')}
-                                </Button>
+                                </ButtonV2>
                             </form>
                         </Form>
                     )}
@@ -591,7 +591,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Email</FormLabel>
                                         <FormControl>
-                                            <Input
+                                            <InputV2
                                                 id="email_password"
                                                 placeholder={t('auth.emailPlaceholder')}
                                                 type="email"
@@ -614,7 +614,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Password</FormLabel>
                                         <FormControl>
-                                            <Input
+                                            <InputV2
                                                 id="password_login"
                                                 placeholder={t('auth.passwordPlaceholder')}
                                                 type="password"
@@ -628,7 +628,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     </FormItem>
                                 )}
                             />
-                            <Button
+                            <ButtonV2 
                                 disabled={isLoading}
                                 type="submit"
                                 className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
@@ -637,7 +637,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                 )}
                                 {t('auth.signInWithPassword')}
-                            </Button>
+                            </ButtonV2>
                         </form>
                     </Form>
                 </TabsContent>
@@ -654,7 +654,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </div>
             </div>
 
-            <Button
+            <ButtonV2 
                 variant="outline"
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
@@ -667,8 +667,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     <Icons.discord className="mr-2 h-4 w-4" />
                 )}{" "}
                 {t('auth.signInWithDiscord')}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
                 variant="outline"
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
@@ -681,7 +681,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     <Icons.google className="mr-2 h-4 w-4" />
                 )}{" "}
                 {t('auth.signInWithGoogle')}
-            </Button>
+            </ButtonV2>
         </div>
     )
 }

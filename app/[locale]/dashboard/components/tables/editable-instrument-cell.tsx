@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { Button } from '@/components/ui/button'
 import { Edit3, Check, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -83,7 +83,7 @@ export function EditableInstrumentCell({
   if (isEditing) {
     return (
       <div className="flex items-center gap-1 min-w-[120px]">
-        <Input
+        <InputV2
           ref={inputRef}
           value={tempValue}
           onChange={(e) => setTempValue(e.target.value)}
@@ -93,7 +93,7 @@ export function EditableInstrumentCell({
           className="h-7 text-xs font-medium border-border/65 focus-visible:ring-1"
           disabled={isSaving}
         />
-        <Button
+        <ButtonV2 
           size="sm"
           variant="ghost"
           className="h-7 w-7 p-0 hover:bg-secondary/30"
@@ -101,8 +101,8 @@ export function EditableInstrumentCell({
           disabled={isSaving}
         >
           <Check className="h-3 w-3 text-foreground" />
-        </Button>
-        <Button
+        </ButtonV2>
+        <ButtonV2 
           size="sm"
           variant="ghost"
           className="h-7 w-7 p-0 hover:bg-secondary/22"
@@ -110,7 +110,7 @@ export function EditableInstrumentCell({
           disabled={isSaving}
         >
           <X className="h-3 w-3 text-muted-foreground" />
-        </Button>
+        </ButtonV2>
       </div>
     )
   }

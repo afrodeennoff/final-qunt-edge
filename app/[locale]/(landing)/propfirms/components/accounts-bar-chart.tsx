@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
@@ -120,7 +120,7 @@ export function AccountsBarChart({
           <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button
+          <ButtonV2 
             type="button"
             variant="mono"
             size="sm"
@@ -134,8 +134,8 @@ export function AccountsBarChart({
             )}
           >
             Payouts
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             type="button"
             variant="mono"
             size="sm"
@@ -149,8 +149,8 @@ export function AccountsBarChart({
             )}
           >
             Value
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             type="button"
             variant="mono"
             size="sm"
@@ -164,8 +164,8 @@ export function AccountsBarChart({
             )}
           >
             Reg
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             type="button"
             variant="mono"
             size="sm"
@@ -179,8 +179,8 @@ export function AccountsBarChart({
             )}
           >
             Sized
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             type="button"
             variant="mono"
             size="sm"
@@ -194,7 +194,7 @@ export function AccountsBarChart({
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
-          </Button>
+          </ButtonV2>
         </div>
       </CardHeader>
       <CardContent className="border-t border-border/70 pt-4">

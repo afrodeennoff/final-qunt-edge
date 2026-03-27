@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Download, CalendarIcon } from 'lucide-react'
 import { Trade } from "@/lib/data-types"
@@ -181,7 +181,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {externalOpen === undefined && (
         <DialogTrigger asChild>
-          <Button size="sm">
+          <ButtonV2  size="sm">
             <Download className="mr-2 h-4 w-4" /> Export Trades
           </Button>
         </DialogTrigger>
@@ -267,7 +267,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                 <div className="gap-4">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {quickSelectors.map((selector, index) => (
-                      <Button
+                      <ButtonV2 
                         key={index}
                         variant="outline"
                         className="w-full"
@@ -382,7 +382,7 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
           </div>
         </div>
         <div className="p-4 bg-background border-t mt-auto">
-          <Button
+          <ButtonV2 
             onClick={handleExport}
             disabled={selectedAccounts.length === 0 || selectedInstruments.length === 0}
             className="w-full max-w-xl mx-auto"

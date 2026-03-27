@@ -1,0 +1,429 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e7]:
+        - link "Qunt Edge" [ref=e8] [cursor=pointer]:
+          - /url: /en
+          - img [ref=e10]
+          - generic [ref=e13]: Qunt Edge
+        - navigation [ref=e14]:
+          - link "Features" [ref=e16] [cursor=pointer]:
+            - /url: /en#features
+          - link "Pricing" [ref=e18] [cursor=pointer]:
+            - /url: /en/pricing
+          - link "Prop Firms" [ref=e20] [cursor=pointer]:
+            - /url: /en/propfirms
+          - link "Deals" [ref=e22] [cursor=pointer]:
+            - /url: /en/deals
+          - link "Leaderboard" [ref=e24] [cursor=pointer]:
+            - /url: /en/leaderboard
+          - link "Teams" [ref=e26] [cursor=pointer]:
+            - /url: /en/teams
+          - link "Support" [ref=e28] [cursor=pointer]:
+            - /url: /en/support
+        - link "Start Free Audit" [ref=e30] [cursor=pointer]:
+          - /url: /en/authentication
+      - generic [ref=e32]:
+        - link "FTMO Challenge 15% OFF" [ref=e33] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e34]
+          - generic [ref=e37]: FTMO Challenge
+          - generic [ref=e38]: 15% OFF
+        - link "TOPSTEP50 $50 OFF" [ref=e39] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e40]
+          - generic [ref=e44]: TOPSTEP50
+          - generic [ref=e45]: $50 OFF
+        - link "Apex Trader Funded 20% OFF" [ref=e46] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e47]
+          - generic [ref=e50]: Apex Trader Funded
+          - generic [ref=e51]: 20% OFF
+        - link "BLUEWAVE25 25% OFF" [ref=e52] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e53]
+          - generic [ref=e57]: BLUEWAVE25
+          - generic [ref=e58]: 25% OFF
+        - link "TFT Evaluation 10% OFF" [ref=e59] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e60]
+          - generic [ref=e63]: TFT Evaluation
+          - generic [ref=e64]: 10% OFF
+        - link "MYFUNDEDFX $100 OFF" [ref=e65] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e66]
+          - generic [ref=e70]: MYFUNDEDFX
+          - generic [ref=e71]: $100 OFF
+        - link "FundedNext 25% OFF" [ref=e72] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e73]
+          - generic [ref=e76]: FundedNext
+          - generic [ref=e77]: 25% OFF
+        - link "URFUNDED30 30% OFF" [ref=e78] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e79]
+          - generic [ref=e83]: URFUNDED30
+          - generic [ref=e84]: 30% OFF
+        - link "FTMO Challenge 15% OFF" [ref=e85] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e86]
+          - generic [ref=e89]: FTMO Challenge
+          - generic [ref=e90]: 15% OFF
+        - link "TOPSTEP50 $50 OFF" [ref=e91] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e92]
+          - generic [ref=e96]: TOPSTEP50
+          - generic [ref=e97]: $50 OFF
+        - link "Apex Trader Funded 20% OFF" [ref=e98] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e99]
+          - generic [ref=e102]: Apex Trader Funded
+          - generic [ref=e103]: 20% OFF
+        - link "BLUEWAVE25 25% OFF" [ref=e104] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e105]
+          - generic [ref=e109]: BLUEWAVE25
+          - generic [ref=e110]: 25% OFF
+        - link "TFT Evaluation 10% OFF" [ref=e111] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e112]
+          - generic [ref=e115]: TFT Evaluation
+          - generic [ref=e116]: 10% OFF
+        - link "MYFUNDEDFX $100 OFF" [ref=e117] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e118]
+          - generic [ref=e122]: MYFUNDEDFX
+          - generic [ref=e123]: $100 OFF
+        - link "FundedNext 25% OFF" [ref=e124] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e125]
+          - generic [ref=e128]: FundedNext
+          - generic [ref=e129]: 25% OFF
+        - link "URFUNDED30 30% OFF" [ref=e130] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e131]
+          - generic [ref=e135]: URFUNDED30
+          - generic [ref=e136]: 30% OFF
+        - link "FTMO Challenge 15% OFF" [ref=e137] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e138]
+          - generic [ref=e141]: FTMO Challenge
+          - generic [ref=e142]: 15% OFF
+        - link "TOPSTEP50 $50 OFF" [ref=e143] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e144]
+          - generic [ref=e148]: TOPSTEP50
+          - generic [ref=e149]: $50 OFF
+        - link "Apex Trader Funded 20% OFF" [ref=e150] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e151]
+          - generic [ref=e154]: Apex Trader Funded
+          - generic [ref=e155]: 20% OFF
+        - link "BLUEWAVE25 25% OFF" [ref=e156] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e157]
+          - generic [ref=e161]: BLUEWAVE25
+          - generic [ref=e162]: 25% OFF
+        - link "TFT Evaluation 10% OFF" [ref=e163] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e164]
+          - generic [ref=e167]: TFT Evaluation
+          - generic [ref=e168]: 10% OFF
+        - link "MYFUNDEDFX $100 OFF" [ref=e169] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e170]
+          - generic [ref=e174]: MYFUNDEDFX
+          - generic [ref=e175]: $100 OFF
+        - link "FundedNext 25% OFF" [ref=e176] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e177]
+          - generic [ref=e180]: FundedNext
+          - generic [ref=e181]: 25% OFF
+        - link "URFUNDED30 30% OFF" [ref=e182] [cursor=pointer]:
+          - /url: /deals
+          - img [ref=e183]
+          - generic [ref=e187]: URFUNDED30
+          - generic [ref=e188]: 30% OFF
+      - generic [ref=e194]:
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e201]: T
+              - generic [ref=e202]:
+                - generic [ref=e203]:
+                  - generic [ref=e204]: Futures
+                  - generic [ref=e205]: Tradovate
+                  - generic [ref=e206]: On-demand
+                - heading "TopStep" [level=1] [ref=e207]
+                - generic [ref=e208]:
+                  - generic [ref=e209]: No approved user rating yet
+                  - generic [ref=e210]: (0 user reviews)
+                - paragraph [ref=e211]: Approved trader reviews sit beside database-backed payout totals and verified profile notes, so the tabs below stay grounded in source data.
+            - generic [ref=e212]:
+              - generic [ref=e216]:
+                - paragraph [ref=e217]: Radar Snapshot
+                - paragraph [ref=e220]: "Live score: 17/100"
+              - generic [ref=e221]:
+                - link [ref=e223] [cursor=pointer]:
+                  - /url: https://www.topstep.com
+                  - img [ref=e224]
+                - link "Visit Official Website" [ref=e226] [cursor=pointer]:
+                  - /url: https://www.topstep.com
+                  - text: Visit Official Website
+                  - img [ref=e227]
+          - generic [ref=e231]:
+            - generic [ref=e232]:
+              - paragraph [ref=e233]: Profit Split
+              - paragraph [ref=e234]: 90/10
+            - generic [ref=e235]:
+              - paragraph [ref=e236]: Max Allocation
+              - paragraph [ref=e237]: Up to $750K across 5 Express accounts
+            - generic [ref=e238]:
+              - paragraph [ref=e239]: Drawdown Type
+              - paragraph [ref=e240]: End-of-day
+            - generic [ref=e241]:
+              - paragraph [ref=e242]: Active Coupons
+              - paragraph [ref=e243]: "0"
+        - generic [ref=e244]:
+          - tablist [ref=e245]:
+            - tab "Overview" [selected] [ref=e246]
+            - tab "Challenges" [ref=e247]
+            - tab "Rules" [ref=e248]
+            - tab "ROI" [ref=e249]
+            - tab "Payouts" [ref=e250]
+            - tab "Payout Proof" [ref=e251]
+            - tab "Reviews (0)" [ref=e252]
+            - tab "Coupons (0)" [ref=e253]
+          - tabpanel "Overview" [ref=e254]:
+            - generic [ref=e255]:
+              - generic [ref=e258]:
+                - paragraph [ref=e259]: Research snapshot
+                - heading "A quick read on reviews, payouts, and fit." [level=3] [ref=e260]
+                - paragraph [ref=e261]: Use this snapshot to scan the current profile before opening the tabs below.
+                - generic [ref=e262]:
+                  - generic [ref=e263]: User reviews
+                  - generic [ref=e264]: Database payouts
+                  - generic [ref=e265]: Verified profile notes
+                - generic [ref=e266]:
+                  - generic [ref=e267]:
+                    - paragraph [ref=e268]: User review score
+                    - paragraph [ref=e269]: Not rated
+                    - paragraph [ref=e270]: No visible user reviews yet
+                  - generic [ref=e271]:
+                    - paragraph [ref=e272]: Database payouts
+                    - paragraph [ref=e273]: "0"
+                    - paragraph [ref=e274]: $0 paid out
+                  - generic [ref=e275]:
+                    - paragraph [ref=e276]: Tracked accounts
+                    - paragraph [ref=e277]: "0"
+                    - paragraph [ref=e278]: No live account data yet
+                  - generic [ref=e279]:
+                    - paragraph [ref=e280]: Trading fit
+                    - paragraph [ref=e281]: Tradovate
+                    - paragraph [ref=e282]: End-of-day • On-demand
+              - generic [ref=e283]:
+                - generic [ref=e286]:
+                  - paragraph [ref=e287]: Profile summary
+                  - heading "Firm profile at a glance" [level=3] [ref=e288]
+                  - paragraph [ref=e289]: Futures evaluation path with daily payout eligibility once funded milestones are met.
+                  - generic [ref=e290]:
+                    - generic [ref=e292]:
+                      - img [ref=e294]
+                      - generic [ref=e298]:
+                        - paragraph [ref=e299]: Platform
+                        - paragraph [ref=e300]: Tradovate
+                    - generic [ref=e302]:
+                      - img [ref=e304]
+                      - generic [ref=e307]:
+                        - paragraph [ref=e308]: Payout model
+                        - paragraph [ref=e309]: On-demand
+                    - generic [ref=e311]:
+                      - img [ref=e313]
+                      - generic [ref=e315]:
+                        - paragraph [ref=e316]: Drawdown type
+                        - paragraph [ref=e317]: End-of-day
+                    - generic [ref=e319]:
+                      - img [ref=e321]
+                      - generic [ref=e324]:
+                        - paragraph [ref=e325]: Profit split
+                        - paragraph [ref=e326]: 90/10
+                    - generic [ref=e328]:
+                      - img [ref=e330]
+                      - generic [ref=e337]:
+                        - paragraph [ref=e338]: Max allocation
+                        - paragraph [ref=e339]: Up to $750K across 5 Express accounts
+                    - generic [ref=e341]:
+                      - img [ref=e343]
+                      - generic [ref=e351]:
+                        - paragraph [ref=e352]: Category
+                        - paragraph [ref=e353]: Futures
+                - generic [ref=e356]:
+                  - paragraph [ref=e357]: Trust signals
+                  - heading "What to check before you click out" [level=3] [ref=e358]
+                  - generic [ref=e359]:
+                    - generic [ref=e360]:
+                      - img [ref=e361]
+                      - paragraph [ref=e363]: Approved trader reviews stay separate from the firm facts.
+                    - generic [ref=e364]:
+                      - img [ref=e365]
+                      - paragraph [ref=e367]: Payout totals and counts come from tracked account records in the database.
+                    - generic [ref=e368]:
+                      - img [ref=e369]
+                      - paragraph [ref=e371]: Profile, rules, and ROI tabs stay tied to the same firm record.
+                  - generic [ref=e372]:
+                    - generic [ref=e373]:
+                      - paragraph [ref=e374]: Accounts
+                      - paragraph [ref=e375]: "0"
+                    - generic [ref=e376]:
+                      - paragraph [ref=e377]: Total Value
+                      - paragraph [ref=e378]: $0
+                    - generic [ref=e379]:
+                      - paragraph [ref=e380]: Paid Out
+                      - paragraph [ref=e381]: $0
+                    - generic [ref=e382]:
+                      - paragraph [ref=e383]: Payout Count
+                      - paragraph [ref=e384]: "0"
+                    - generic [ref=e385]:
+                      - paragraph [ref=e386]: User reviews
+                      - paragraph [ref=e387]: "0"
+                    - generic [ref=e388]:
+                      - paragraph [ref=e389]: Coupons
+                      - paragraph [ref=e390]: "0"
+              - generic [ref=e393]:
+                - generic [ref=e394]:
+                  - img [ref=e395]
+                  - heading "Additional Details" [level=3] [ref=e397]
+                - paragraph [ref=e398]: Key profile details pulled from the current firm record and verified public sources.
+                - generic [ref=e399]:
+                  - generic [ref=e401]:
+                    - img [ref=e403]
+                    - generic [ref=e411]:
+                      - paragraph [ref=e412]: Category
+                      - paragraph [ref=e413]: Futures
+                  - generic [ref=e415]:
+                    - img [ref=e417]
+                    - generic [ref=e424]:
+                      - paragraph [ref=e425]: Founded
+                      - paragraph [ref=e426]: Unavailable
+                  - generic [ref=e428]:
+                    - img [ref=e430]
+                    - generic [ref=e432]:
+                      - paragraph [ref=e433]: Drawdown Type
+                      - paragraph [ref=e434]: End-of-day
+                  - generic [ref=e436]:
+                    - img [ref=e438]
+                    - generic [ref=e441]:
+                      - paragraph [ref=e442]: Max Allocation
+                      - paragraph [ref=e443]: Up to $750K across 5 Express accounts
+                  - generic [ref=e445]:
+                    - img [ref=e447]
+                    - generic [ref=e450]:
+                      - paragraph [ref=e451]: Profit Split
+                      - paragraph [ref=e452]: 90/10
+                  - generic [ref=e454]:
+                    - img [ref=e456]
+                    - generic [ref=e459]:
+                      - paragraph [ref=e460]: Payout Frequency
+                      - paragraph [ref=e461]: On-demand
+                  - generic [ref=e463]:
+                    - img [ref=e465]
+                    - generic [ref=e469]:
+                      - paragraph [ref=e470]: Platform
+                      - paragraph [ref=e471]: Tradovate
+                  - generic [ref=e473]:
+                    - img [ref=e475]
+                    - generic [ref=e478]:
+                      - paragraph [ref=e479]: Country
+                      - paragraph [ref=e480]: Unavailable
+              - generic [ref=e483]:
+                - generic [ref=e484]:
+                  - paragraph [ref=e485]: Referral link
+                  - heading "Open the official company site." [level=3] [ref=e486]
+                  - paragraph [ref=e487]: Use the firm link below if you want to continue from research into signup.
+                  - generic [ref=e488]:
+                    - code [ref=e489]: https://www.topstep.com
+                    - button "Copy link" [ref=e490]:
+                      - img [ref=e491]
+                - link "Visit Firm" [ref=e494] [cursor=pointer]:
+                  - /url: https://www.topstep.com
+                  - text: Visit Firm
+                  - img [ref=e495]
+      - generic "Footer" [ref=e499]:
+        - heading "Footer" [level=2] [ref=e500]
+        - generic [ref=e501]:
+          - generic [ref=e502]:
+            - generic [ref=e503]:
+              - generic [ref=e504]:
+                - img [ref=e506]
+                - generic [ref=e509]:
+                  - generic [ref=e510]: Qunt Edge
+                  - generic [ref=e511]: Trading Intelligence
+              - paragraph [ref=e512]: Advanced analytics for modern traders.
+              - generic [ref=e513]:
+                - link "Contact Support" [ref=e514] [cursor=pointer]:
+                  - /url: /en/support
+                - link "Start Free Audit" [ref=e515] [cursor=pointer]:
+                  - /url: /en/authentication?next=dashboard
+              - generic [ref=e517]:
+                - link "GitHub" [ref=e518] [cursor=pointer]:
+                  - /url: https://github.com/afrodeennoff/lassttry-edge-
+                  - img [ref=e519]
+                - link "YouTube" [ref=e522] [cursor=pointer]:
+                  - /url: https://www.youtube.com/@TIMON
+                  - img [ref=e523]
+            - generic [ref=e526]:
+              - generic [ref=e527]:
+                - heading "Product" [level=3] [ref=e528]
+                - list [ref=e529]:
+                  - listitem [ref=e530]:
+                    - link "Features" [ref=e531] [cursor=pointer]:
+                      - /url: /en#features
+                  - listitem [ref=e532]:
+                    - link "Pricing" [ref=e533] [cursor=pointer]:
+                      - /url: /en/pricing
+                  - listitem [ref=e534]:
+                    - link "Prop Firms" [ref=e535] [cursor=pointer]:
+                      - /url: /en/propfirms
+                  - listitem [ref=e536]:
+                    - link "Deals" [ref=e537] [cursor=pointer]:
+                      - /url: /en/deals
+                  - listitem [ref=e538]:
+                    - link "Teams" [ref=e539] [cursor=pointer]:
+                      - /url: /en/teams
+              - generic [ref=e540]:
+                - heading "Support" [level=3] [ref=e541]
+                - list [ref=e542]:
+                  - listitem [ref=e543]:
+                    - link "Support" [ref=e544] [cursor=pointer]:
+                      - /url: /en/support
+                  - listitem [ref=e545]:
+                    - link "Community" [ref=e546] [cursor=pointer]:
+                      - /url: /en/community
+                  - listitem [ref=e547]:
+                    - link "Roadmap" [ref=e548] [cursor=pointer]:
+                      - /url: /en/updates
+                  - listitem [ref=e549]:
+                    - link "FAQ" [ref=e550] [cursor=pointer]:
+                      - /url: /en/faq
+              - generic [ref=e551]:
+                - heading "Legal" [level=3] [ref=e552]
+                - list [ref=e553]:
+                  - listitem [ref=e554]:
+                    - link "About" [ref=e555] [cursor=pointer]:
+                      - /url: /en/about
+                  - listitem [ref=e556]:
+                    - link "Privacy" [ref=e557] [cursor=pointer]:
+                      - /url: /en/privacy
+                  - listitem [ref=e558]:
+                    - link "Terms" [ref=e559] [cursor=pointer]:
+                      - /url: /en/terms
+                  - listitem [ref=e560]:
+                    - link "Disclaimers" [ref=e561] [cursor=pointer]:
+                      - /url: /en/disclaimers
+          - generic [ref=e562]:
+            - paragraph [ref=e563]: © 2026 Qunt Edge. All rights reserved.
+            - paragraph [ref=e564]: Trading in futures and forex markets involves significant risks and is not suitable for all investors. An investor could potentially lose all or a portion of their initial investment. Risk capital is money that can be lost without jeopardizing one's financial security or lifestyle. Only risk capital should be used for trading, and only those with sufficient risk capital should consider trading. Past performance is not necessarily indicative of future results.
+  - button "Open Next.js Dev Tools" [ref=e570] [cursor=pointer]:
+    - img [ref=e571]

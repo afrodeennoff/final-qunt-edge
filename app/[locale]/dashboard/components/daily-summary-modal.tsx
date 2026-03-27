@@ -1,7 +1,7 @@
 "use client"
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Zap, BarChart3, Eye, EyeOff, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import React, { useState, useRef, useMemo, useEffect, type Dispatch, type SetStateAction } from "react"
@@ -439,10 +439,10 @@ export function DailySummaryModal() {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 flex border-border hover:bg-accent/50 bg-background/50 backdrop-blur-sm group h-10 items-center px-3 md:px-4">
+                <ButtonV2  variant="outline" className="gap-2 flex border-border hover:bg-accent/50 bg-background/50 backdrop-blur-sm group h-10 items-center px-3 md:px-4">
                     <BarChart3 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                     <span className="hidden md:inline">PnL Summary</span>
-                </Button>
+                </ButtonV2>
             </DialogTrigger>
             <DialogContent className="sm:max-w-4xl bg-transparent border-none shadow-none p-0 overflow-visible flex flex-col items-center [&>button]:hidden">
                 <div className="sr-only">Trading Summary</div>

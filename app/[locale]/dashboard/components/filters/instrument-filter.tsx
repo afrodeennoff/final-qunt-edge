@@ -4,7 +4,7 @@ import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState, useEffect } from "react"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useTradesStore } from "../../../../../store/trades-store"
@@ -38,7 +38,7 @@ export function InstrumentFilter() {
 
   return (
     <div className="p-2 space-y-2">
-      <Input
+      <InputV2
         placeholder={t('filters.searchInstrument')}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

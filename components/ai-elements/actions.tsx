@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   Tooltip,
   TooltipContent,
@@ -33,7 +33,7 @@ export const Action = ({
   ...props
 }: ActionProps) => {
   const button = (
-    <Button
+    <ButtonV2 
       className={cn(
         "relative size-9 p-1.5 text-muted-foreground hover:text-foreground",
         className

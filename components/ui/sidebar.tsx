@@ -7,8 +7,8 @@ import { PanelLeft } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -302,13 +302,13 @@ const Sidebar = React.forwardRef<
 Sidebar.displayName = "Sidebar"
 
 const SidebarTrigger = React.forwardRef<
-  React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
+  React.ElementRef<typeof ButtonV2>,
+  React.ComponentProps<typeof ButtonV2>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = useSidebar()
 
   return (
-    <Button
+    <ButtonV2 
       ref={ref}
       data-sidebar="trigger"
       variant="ghost"
@@ -322,7 +322,7 @@ const SidebarTrigger = React.forwardRef<
     >
       <PanelLeft />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    </ButtonV2>
   )
 })
 SidebarTrigger.displayName = "SidebarTrigger"
@@ -379,7 +379,7 @@ const SidebarInput = React.forwardRef<
   React.ComponentProps<typeof Input>
 >(({ className, ...props }, ref) => {
   return (
-    <Input
+    <InputV2
       ref={ref}
       data-sidebar="input"
       className={cn(

@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useI18n } from '@/locales/client'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -162,7 +162,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
 
             <div className="rounded-lg border border-subtle bg-surface-subtle p-3">
               <p className="text-sm font-semibold">{t('referral.landing.heroTitle')}</p>
-              <Button asChild size="sm" className="mt-2 h-8 w-full">
+              <ButtonV2  asChild size="sm" className="mt-2 h-8 w-full">
                 <Link href={affiliateUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
                   {t('referral.landing.affiliateCta')}
                   <ExternalLink className="ml-1 h-3.5 w-3.5" />
@@ -193,7 +193,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
                 <div className="flex-1 px-3 py-2 bg-muted rounded-md text-sm break-all">
                   {typeof window !== 'undefined' ? `${window.location.origin}?ref=${referralData.referral.slug}` : referralData.referral.slug}
                 </div>
-                <Button
+                <ButtonV2 
                   size="sm"
                   variant="outline"
                   onClick={copyReferralCode}
@@ -214,7 +214,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
             <div className="gap-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{t('referral.currentTier')}</span>
-                <Badge variant="secondary">
+                <BadgeV2 variant="secondary">
                   {t('referral.tier', { level: referralData.referral.tier.level })}
                 </Badge>
               </div>

@@ -1,0 +1,135 @@
+[    1497ms] [WARNING] [JavaScript Warning: "Content-Security-Policy: This site (http://127.0.0.1:3000) has a Report-Only policy without a report-uri directive nor a report-to directive. CSP will not block and cannot report violations of this policy." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[    1501ms] [ERROR] [JavaScript Error: "Content-Security-Policy: (Report-Only policy) The page’s settings would block an inline script (script-src-elem) from being executed because it violates the following directive: “script-src 'self' 'nonce-yrOt1QeWDVAlxvHQWhxT9g==' 'unsafe-eval'”. Consider using a hash ('sha256-fj+5NV1MSdOMSHmf4hvDiC5mhVpS3ItcQdKbjiZ+dqU=') or a nonce." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 1}] @ http://127.0.0.1:3000/en/firm/topstep:1
+[    4610ms] [ERROR] Failed to fetch RSC payload for http://127.0.0.1:3000/en/firm/topstep. Falling back to browser navigation. Error @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[    4612ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[    5521ms] [WARNING] [JavaScript Warning: "Content-Security-Policy: This site (http://127.0.0.1:3000) has a Report-Only policy without a report-uri directive nor a report-to directive. CSP will not block and cannot report violations of this policy." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[    5530ms] [ERROR] [JavaScript Error: "Content-Security-Policy: (Report-Only policy) The page’s settings would block an inline script (script-src-elem) from being executed because it violates the following directive: “script-src 'self' 'nonce-9nVa/tc/BtwCWUzqaEjhKw==' 'unsafe-eval'”. Consider using a hash ('sha256-fj+5NV1MSdOMSHmf4hvDiC5mhVpS3ItcQdKbjiZ+dqU=') or a nonce." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 1}] @ http://127.0.0.1:3000/en/firm/topstep:1
+[   15522ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/37786be940ec402b-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   15523ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/4cf2300e9c8272f7-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   15523ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/7b89a4fd5e90ede0-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   15523ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/98e207f02528a563-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   15523ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/d3ebbfd689654d3a-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   15523ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/db96af6b531dc71f-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   58577ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   59046ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   59113ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   60267ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   60958ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   61498ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   62088ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   62667ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   63074ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   63616ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   64198ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   64858ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   65369ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   65857ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   66475ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   66878ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   67463ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   68121ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   68646ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   69318ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[   69769ms] [WARNING] [JavaScript Warning: "This site appears to use a scroll-linked positioning effect. This may not work well with asynchronous panning; see https://firefox-source-docs.mozilla.org/performance/scroll-linked_effects.html for further details and to join the discussion on related tools and features!" {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   72649ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/css/app/layout.css?v=1774612568186” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[   80281ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/css/app/layout.css?v=1774612575850” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/firm/topstep" line: 0}] @ http://127.0.0.1:3000/en/firm/topstep:0
+[  236233ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  237285ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  239573ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  242509ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  244005ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  245076ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  248637ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  250666ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  251859ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  253166ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  258792ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  260212ms] [WARNING]  Server   [Leaderboard] Database connection is missing; returning demo leaderboard entries. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  264959ms] [ERROR] Failed to fetch RSC payload for http://127.0.0.1:3000/en/trader/demo-risk-master. Falling back to browser navigation. Error @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  264969ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  264981ms] [WARNING] [JavaScript Warning: "Loading failed for the <script> with source “http://127.0.0.1:3000/_next/static/webpack/webpack.a3813dc3a3a890d9.hot-update.js”." {file: "http://127.0.0.1:3000/en/leaderboard" line: 1}] @ http://127.0.0.1:3000/en/leaderboard:1
+[  264981ms] [WARNING] [JavaScript Warning: "Loading failed for the <script> with source “http://127.0.0.1:3000/_next/static/webpack/app/[locale]/(landing)/firm/[slug]/page.a3813dc3a3a890d9.hot-update.js”." {file: "http://127.0.0.1:3000/en/leaderboard" line: 1}] @ http://127.0.0.1:3000/en/leaderboard:1
+[  264993ms] [WARNING] [JavaScript Warning: "Loading failed for the <script> with source “http://127.0.0.1:3000/_next/static/webpack/app/layout.a3813dc3a3a890d9.hot-update.js”." {file: "http://127.0.0.1:3000/en/leaderboard" line: 1}] @ http://127.0.0.1:3000/en/leaderboard:1
+[  268490ms] [WARNING] [JavaScript Warning: "Content-Security-Policy: This site (http://127.0.0.1:3000) has a Report-Only policy without a report-uri directive nor a report-to directive. CSP will not block and cannot report violations of this policy." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  268513ms] [ERROR] [JavaScript Error: "Content-Security-Policy: (Report-Only policy) The page’s settings would block an inline script (script-src-elem) from being executed because it violates the following directive: “script-src 'self' 'nonce-zDUjS66xa9gR0+v2pTtGSA==' 'unsafe-eval'”. Consider using a hash ('sha256-fj+5NV1MSdOMSHmf4hvDiC5mhVpS3ItcQdKbjiZ+dqU=') or a nonce." {file: "http://127.0.0.1:3000/en/leaderboard" line: 1}] @ http://127.0.0.1:3000/en/leaderboard:1
+[  271221ms] [WARNING] [JavaScript Warning: "Loading failed for the <script> with source “http://127.0.0.1:3000/_next/static/chunks/main-app.js?v=1774612774000”." {file: "http://127.0.0.1:3000/en/leaderboard" line: 1}] @ http://127.0.0.1:3000/en/leaderboard:1
+[  278510ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/37786be940ec402b-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  278516ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/4cf2300e9c8272f7-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  278516ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/7b89a4fd5e90ede0-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  278516ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/98e207f02528a563-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  278516ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/d3ebbfd689654d3a-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  278516ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/db96af6b531dc71f-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/en/leaderboard" line: 0}] @ http://127.0.0.1:3000/en/leaderboard:0
+[  283868ms] [WARNING] [JavaScript Warning: "Content-Security-Policy: This site (http://127.0.0.1:3000) has a Report-Only policy without a report-uri directive nor a report-to directive. CSP will not block and cannot report violations of this policy." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  283874ms] [ERROR] [JavaScript Error: "Content-Security-Policy: (Report-Only policy) The page’s settings would block an inline script (script-src-elem) from being executed because it violates the following directive: “script-src 'self' 'nonce-f6zcugB5zY5qQCnDfmNCKw==' 'unsafe-eval'”. Consider using a hash ('sha256-fj+5NV1MSdOMSHmf4hvDiC5mhVpS3ItcQdKbjiZ+dqU=') or a nonce." {file: "http://127.0.0.1:3000/fr" line: 1}] @ http://127.0.0.1:3000/fr:1
+[  294152ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/37786be940ec402b-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  294153ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/4cf2300e9c8272f7-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  294153ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/7b89a4fd5e90ede0-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  294153ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/98e207f02528a563-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  294153ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/d3ebbfd689654d3a-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  294153ms] [WARNING] [JavaScript Warning: "The resource at “http://127.0.0.1:3000/_next/static/media/db96af6b531dc71f-s.p.woff2” preloaded with link preload was not used within a few seconds. Make sure all attributes of the preload tag are set correctly." {file: "http://127.0.0.1:3000/fr" line: 0}] @ http://127.0.0.1:3000/fr:0
+[  360280ms] [ERROR] ./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+Error:   × Server Actions must be async functions.
+
+     ╭─[/Users/timon/Downloads/qunt-edge/app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts:169:1]
+ 166 │   return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
+ 167 │ }
+ 168 │ 
+ 169 │ export function getFallbackLeaderboardEntryByUserId(userId: string): LeaderboardEntry | null {
+     ·                 ───────────────────────────────────
+ 170 │   return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
+ 171 │ }
+     ╰────
+
+Import trace for requested module:
+./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+./app/[locale]/(landing)/leaderboard/page.tsx @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  391531ms] [ERROR] ./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+Error:   × Server Actions must be async functions.
+
+     ╭─[/Users/timon/Downloads/qunt-edge/app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts:169:1]
+ 166 │   return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
+ 167 │ }
+ 168 │ 
+ 169 │ export function getFallbackLeaderboardEntryByUserId(userId: string): LeaderboardEntry | null {
+     ·                 ───────────────────────────────────
+ 170 │   return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
+ 171 │ }
+     ╰────
+
+Import trace for requested module:
+./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+./app/[locale]/(landing)/leaderboard/page.tsx @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  394533ms] [ERROR] ./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+Error:   × Server Actions must be async functions.
+
+     ╭─[/Users/timon/Downloads/qunt-edge/app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts:169:1]
+ 166 │   return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
+ 167 │ }
+ 168 │ 
+ 169 │ export function getFallbackLeaderboardEntryByUserId(userId: string): LeaderboardEntry | null {
+     ·                 ───────────────────────────────────
+ 170 │   return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
+ 171 │ }
+     ╰────
+
+Import trace for requested module:
+./app/[locale]/(landing)/leaderboard/data/leaderboard-query.ts
+./app/[locale]/(landing)/leaderboard/page.tsx @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  400973ms] [ERROR] Failed to fetch RSC payload for http://127.0.0.1:3000/fr. Falling back to browser navigation. Error @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  400998ms] [ERROR] Failed to fetch RSC payload for http://127.0.0.1:3000/fr/leaderboard. Falling back to browser navigation. Error @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  401001ms] [ERROR] Failed to fetch RSC payload for http://127.0.0.1:3000/fr. Falling back to browser navigation. Error @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:51
+[  427776ms] [WARNING] [JavaScript Warning: "Content-Security-Policy: This site (http://127.0.0.1:3000) has a Report-Only policy without a report-uri directive nor a report-to directive. CSP will not block and cannot report violations of this policy." {file: "http://127.0.0.1:3000/en" line: 0}] @ http://127.0.0.1:3000/en:0

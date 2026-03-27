@@ -22,8 +22,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { InputV2 } from "@/components/ui/v2"
+import { TextareaV2 } from "@/components/ui/v2"
 import {
   Select,
   SelectContent,
@@ -185,7 +185,7 @@ export function CreatePost({ children }: Props) {
                   <FormItem>
                     <FormLabel>{t('community.createPost.postTitle')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('community.createPost.titlePlaceholder')} {...field} />
+                      <InputV2 placeholder={t('community.createPost.titlePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,7 +198,7 @@ export function CreatePost({ children }: Props) {
                   <FormItem>
                     <FormLabel>{t('community.createPost.content')}</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <TextareaV2
                         placeholder={t('community.createPost.contentPlaceholder')}
                         className="resize-none text-lg sm:text-sm"
                         {...field}
@@ -226,7 +226,7 @@ export function CreatePost({ children }: Props) {
                                 height={100}
                                 className="rounded-md object-cover"
                               />
-                              <Button
+                              <ButtonV2 
                                 type="button"
                                 variant="destructive"
                                 size="icon"
@@ -234,13 +234,13 @@ export function CreatePost({ children }: Props) {
                                 onClick={() => removeScreenshot(index)}
                               >
                                 <X className="h-4 w-4" />
-                              </Button>
+                              </ButtonV2>
                             </div>
                           ))}
                         </div>
                         {(field.value?.length ?? 0) < 3 && (
                           <div className="flex items-center">
-                            <Input
+                            <InputV2
                               type="file"
                               accept={ACCEPTED_IMAGE_TYPES.join(',')}
                               onChange={(e) => {
@@ -252,7 +252,7 @@ export function CreatePost({ children }: Props) {
                               id="screenshot-upload"
                               disabled={isUploading}
                             />
-                            <Button
+                            <ButtonV2 
                               type="button"
                               variant="outline"
                               asChild
@@ -263,7 +263,7 @@ export function CreatePost({ children }: Props) {
                                 <ImagePlus className="mr-2 h-4 w-4" />
                                 {t('community.createPost.addScreenshot')}
                               </label>
-                            </Button>
+                            </ButtonV2>
                           </div>
                         )}
                       </div>
@@ -272,9 +272,9 @@ export function CreatePost({ children }: Props) {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <ButtonV2  type="submit" className="w-full">
                 {t('community.createPost.createButton')}
-              </Button>
+              </ButtonV2>
             </form>
           </Form>
         </DialogContent>

@@ -7,7 +7,7 @@ import { ImportType } from './import-type-selection'
 import { Progress } from "@/components/ui/progress"
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { platforms } from './config/platforms'
@@ -383,7 +383,7 @@ export default function FileUpload({
                   value={uploadProgress[file.name] || 0} 
                   className="w-24 h-2"
                 />
-                <Button 
+                <ButtonV2  
                   variant="ghost" 
                   size="icon"
                   onClick={() => removeFile(index)}
@@ -391,7 +391,7 @@ export default function FileUpload({
                 >
                   <XIcon className="h-4 w-4" />
                   <span className="sr-only">{t('import.upload.removeFile')}</span>
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           ))}

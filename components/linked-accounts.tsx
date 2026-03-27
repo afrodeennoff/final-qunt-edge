@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { ButtonV2 } from "@/components/ui/v2"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import { 
   Link, 
@@ -202,12 +202,12 @@ export function LinkedAccounts() {
                   </div>
                   <div className="flex items-center gap-2">
                     {identity.provider === 'email' && (
-                      <Badge variant="secondary">{t('auth.primary')}</Badge>
+                      <BadgeV2 variant="secondary">{t('auth.primary')}</Badge>
                     )}
                     {identity.provider !== 'email' && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm">
+                          <ButtonV2  variant="outline" size="sm">
                             <Unlink className="mr-2 h-4 w-4" />
                             {t('auth.unlinkAccount')}
                           </Button>
@@ -248,7 +248,7 @@ export function LinkedAccounts() {
           </p>
           <div className="gap-2">
             {!isDiscordLinked && (
-              <Button 
+              <ButtonV2  
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={handleLinkDiscord}
@@ -259,7 +259,7 @@ export function LinkedAccounts() {
               </Button>
             )}
             {!isGoogleLinked && (
-              <Button 
+              <ButtonV2  
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={handleLinkGoogle}

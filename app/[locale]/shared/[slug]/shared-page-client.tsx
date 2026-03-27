@@ -5,7 +5,7 @@ import { format } from "date-fns"
 import { useData } from "@/context/data-provider"
 import { SharedWidgetCanvas } from "./shared-widget-canvas"
 import { Logo } from "@/components/logo"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { useCurrentLocale, useI18n } from "@/locales/client"
@@ -45,7 +45,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
         <p className="text-sm font-medium">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
@@ -58,16 +58,16 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
                 "h-3 w-3 transition-transform shrink-0",
                 isExpanded ? "rotate-180" : ""
               )} />
-            </Button>
+            </ButtonV2>
           )}
-          <Button 
+          <ButtonV2  
             variant="ghost" 
             size="sm"
             onClick={toggleAll}
             className="h-7 text-xs whitespace-nowrap min-w-0"
           >
             {accountNumbers.length === accounts.length ? t('shared.deselectAll') : t('shared.selectAll')}
-          </Button>
+          </ButtonV2>
         </div>
       </div>
       <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 xs:gap-2">
@@ -122,9 +122,9 @@ function TopBanner({ t }: { t: I18nFn }) {
           <div className="ml-auto flex items-center gap-2">
             <LanguageSelector languages={languages} />
             <Link href={`/${locale}/authentication`}>
-              <Button size="sm" className="h-10 rounded-full bg-[hsl(var(--primary))] px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary)/0.9)]">
+              <ButtonV2  size="sm" className="h-10 rounded-full bg-[hsl(var(--primary))] px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary)/0.9)]">
                 {t('shared.createAccount')}
-              </Button>
+              </ButtonV2>
             </Link>
           </div>
         </div>

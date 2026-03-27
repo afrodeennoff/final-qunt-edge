@@ -1,5 +1,5 @@
 "use client"
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
@@ -75,7 +75,7 @@ export default function AIFuturesSection() {
     <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
         <div className="space-y-3 text-center">
-          <Badge
+          <BadgeV2
             variant="outline"
             className="border-border/60 bg-[hsl(var(--primary)/0.18)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
           >
@@ -119,7 +119,7 @@ export default function AIFuturesSection() {
             <p className="leading-relaxed">
               AI decisions stay auditable with a transparent reason trail, so every recommendation can be reviewed.
             </p>
-            <Badge
+            <BadgeV2
               variant="outline"
               className="w-fit border-[hsl(var(--primary)/0.35)] bg-[hsl(var(--primary)/0.12)] text-foreground"
             >

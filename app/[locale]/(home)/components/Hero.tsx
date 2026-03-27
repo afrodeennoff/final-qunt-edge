@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import DashboardPreview from './DashboardPreview'
 
 export default function Hero({ locale }: { locale: string }) {
@@ -13,7 +13,7 @@ export default function Hero({ locale }: { locale: string }) {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(26,26,33,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(26,26,33,0.5)_1px,transparent_1px)] bg-[size:64px_64px]" />
       
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        <Badge
+        <BadgeV2
           variant="outline"
           className="mb-6 border-[#1A1A21] bg-[#0b0b0d]/50 backdrop-blur-sm"
         >
@@ -33,7 +33,7 @@ export default function Hero({ locale }: { locale: string }) {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-          <Button
+          <ButtonV2 
             asChild
             size="lg"
             className="bg-[#2962FF] hover:bg-[#2962FF]/90 btn-primary-glow"
@@ -41,8 +41,8 @@ export default function Hero({ locale }: { locale: string }) {
             <Link href={`/${locale}/authentication?next=dashboard`}>
               Start Free Audit
             </Link>
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             asChild
             size="lg"
             variant="outline"
@@ -52,7 +52,7 @@ export default function Hero({ locale }: { locale: string }) {
               Watch Demo
               <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
-          </Button>
+          </ButtonV2>
         </div>
         
         <p className="text-sm text-[#707070]">

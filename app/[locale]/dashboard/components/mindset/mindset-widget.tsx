@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard"
 import type { EmblaCarouselType as CarouselApi } from "embla-carousel"
 import { toast } from "sonner"
@@ -328,7 +328,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
         ))}
       </div>
       <div className="flex items-center gap-1">
-        <Button
+        <ButtonV2 
           variant="ghost"
           size="icon"
           onClick={() => api?.scrollPrev()}
@@ -336,8 +336,8 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
           className="h-6 w-6"
         >
           <ChevronLeft className="h-3 w-3" />
-        </Button>
-        <Button
+        </ButtonV2>
+        <ButtonV2 
           variant="ghost"
           size="icon"
           onClick={() => api?.scrollNext()}
@@ -345,7 +345,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
           className="h-6 w-6"
         >
           <ChevronRight className="h-3 w-3" />
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   )
@@ -379,7 +379,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>
-                  <Button
+                  <ButtonV2 
                     variant="secondary"
                     size="icon"
                     onClick={toggleTimeline}
@@ -390,7 +390,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
                     ) : (
                       <ChevronRight className="h-3 w-3" />
                     )}
-                  </Button>
+                  </ButtonV2>
                 </TooltipTrigger>
                 <TooltipContent side="left">
                   <p>{isTimelineVisible ? t('mindset.hideTimeline') : t('mindset.showTimeline')}</p>
@@ -406,14 +406,14 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>
-                  <Button
+                  <ButtonV2 
                     variant="secondary"
                     size="icon"
                     onClick={toggleTimeline}
                     className="h-8 w-4 rounded-l-none rounded-r-md border-l-0"
                   >
                     <ChevronRight className="h-3 w-3" />
-                  </Button>
+                  </ButtonV2>
                 </TooltipTrigger>
                 <TooltipContent side="right">
                   <p>{t('mindset.showTimeline')}</p>

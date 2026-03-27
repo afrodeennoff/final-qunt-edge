@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Star, Quote } from 'lucide-react'
@@ -100,7 +100,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
     <section id="reviews" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 text-center">
-          <Badge variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <Star className="mr-1.5 h-3 w-3" />
             Reviews
           </Badge>
@@ -123,7 +123,7 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
                 <div className="mb-3 flex items-center justify-between">
                   <StarRating rating={review.rating} />
                   {review.verified && (
-                    <Badge variant="secondary" className="border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
+                    <BadgeV2 variant="secondary" className="border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.08)] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
                       Verified
                     </Badge>
                   )}

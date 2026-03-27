@@ -53,9 +53,9 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Prop Firms</h1>
-        <Button asChild>
+        <ButtonV2  asChild>
           <Link href={`/${locale}/admin/propfirms/new`}>Add Firm</Link>
-        </Button>
+        </ButtonV2>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -102,14 +102,14 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                       </td>
                       <td className="py-3">
                         <div className="flex items-center gap-2">
-                          <Button variant="ghost" size="sm" asChild>
+                          <ButtonV2  variant="ghost" size="sm" asChild>
                             <Link href={`/${locale}/admin/propfirms/${f.id}`}>Edit</Link>
-                          </Button>
+                          </ButtonV2>
                           <form action={handleDelete}>
                             <input type="hidden" name="id" value={f.id} />
-                            <Button variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                            <ButtonV2  variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                               <Trash2 className="w-4 h-4" />
-                            </Button>
+                            </ButtonV2>
                           </form>
                         </div>
                       </td>

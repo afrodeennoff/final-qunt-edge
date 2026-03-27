@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card } from "@/components/ui/card"
 import { PlusCircleIcon, CheckCircle2 } from 'lucide-react'
 import { cn } from "@/lib/utils"
@@ -101,7 +101,7 @@ export default function AccountSelection({
           >
             {isAddingNewAccount ? (
               <div className="space-y-4">
-                <Input
+                <InputV2
                   id="newAccountNumber"
                   value={newAccountNumber}
                   onChange={(e) => setNewAccountNumber(e.target.value)}
@@ -115,15 +115,15 @@ export default function AccountSelection({
                   }}
                 />
                 <div className="flex gap-2">
-                  <Button
+                  <ButtonV2 
                     variant="default"
                     size="sm"
                     className="w-full"
                     onClick={handleAddAccount}
                   >
                     {t('common.add')}
-                  </Button>
-                  <Button
+                  </ButtonV2>
+                  <ButtonV2 
                     variant="outline"
                     size="sm"
                     className="w-full"
@@ -134,7 +134,7 @@ export default function AccountSelection({
                     }}
                   >
                     {t('common.cancel')}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             ) : (

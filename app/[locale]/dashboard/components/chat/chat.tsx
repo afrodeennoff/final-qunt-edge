@@ -3,7 +3,7 @@
 import type React from "react";
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
@@ -96,7 +96,7 @@ const ResumeScrollButton = () => {
           exit={{ opacity: 0, y: 20, scale: 0.8 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
-          <Button
+          <ButtonV2 
             onClick={handleScrollToBottom}
             size="sm"
             className="shadow-lg hover:shadow-xl transition-shadow"
@@ -104,7 +104,7 @@ const ResumeScrollButton = () => {
           >
             <ChevronDown className="h-4 w-4 mr-1" />
             {t("chat.overlay.resumeScroll")}
-          </Button>
+          </ButtonV2>
         </motion.div>
       )}
     </AnimatePresence>
@@ -360,7 +360,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           <StickToBottom.Content className="p-4">
             {hasMoreMessages && (
               <div className="text-center mb-4">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   size="sm"
                   onClick={loadMoreMessages}
@@ -368,7 +368,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                 >
                   Load earlier messages (
                   {messages.length - visibleMessages.length} more)
-                </Button>
+                </ButtonV2>
               </div>
             )}
 
@@ -385,7 +385,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                       An error occurred while processing your message.
                     </span>
                     {/* v5: no reload helper; allow page refresh for now */}
-                    <Button
+                    <ButtonV2 
                       type="button"
                       onClick={() => window.location.reload()}
                       size="sm"
@@ -393,7 +393,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                     >
                       <RotateCcw className="h-3 w-3 mr-1" />
                       Retry
-                    </Button>
+                    </ButtonV2>
                   </div>
                 </motion.div>
               )}
@@ -514,7 +514,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                   >
                                     {part.input?.message}
                                     <div className="flex gap-2 mt-2">
-                                      <Button
+                                      <ButtonV2 
                                         variant="secondary"
                                         size="sm"
                                         onClick={() =>
@@ -526,8 +526,8 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                         }
                                       >
                                         Yes
-                                      </Button>
-                                      <Button
+                                      </ButtonV2>
+                                      <ButtonV2 
                                         variant="secondary"
                                         size="sm"
                                         onClick={() =>
@@ -539,7 +539,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                         }
                                       >
                                         No
-                                      </Button>
+                                      </ButtonV2>
                                     </div>
                                   </BotMessage>
                                 );
@@ -698,7 +698,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                 {t("chat.overlay.description")}
               </p>
             </div>
-            <Button
+            <ButtonV2 
               onClick={() => {
                 setIsStarted(true);
                 setHideFirstMessage(true);
@@ -709,7 +709,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
               className="w-full text-sm sm:text-base animate-in fade-in zoom-in"
             >
               {t("chat.overlay.startButton")}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { FirmCard } from "./firm-card"
 import { cn } from "@/lib/utils"
 import { useCallback, useTransition } from "react"
@@ -89,7 +89,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-1.5 pt-4">
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             onClick={() => goToPage(currentPage - 1)}
@@ -100,7 +100,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Previous
-          </Button>
+          </ButtonV2>
 
           <div className="flex items-center gap-1">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
@@ -125,7 +125,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
               if (!showPage) return null
 
               return (
-                <Button
+                <ButtonV2 
                   key={page}
                   variant="ghost"
                   size="sm"
@@ -139,12 +139,12 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
                   )}
                 >
                   {page}
-                </Button>
+                </ButtonV2>
               )
             })}
           </div>
 
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             onClick={() => goToPage(currentPage + 1)}
@@ -155,7 +155,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
             <svg className="w-3.5 h-3.5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </Button>
+          </ButtonV2>
         </div>
       )}
     </div>

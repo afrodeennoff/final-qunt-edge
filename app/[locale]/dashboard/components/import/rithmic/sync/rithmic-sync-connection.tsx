@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2 } from 'lucide-react'
@@ -475,18 +475,18 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                 <h2 className="text-lg font-semibold">
                   {currentCredentialId ? t('rithmic.editCredentials') : t('rithmic.addNewCredentials')}
                 </h2>
-                <Button
+                <ButtonV2 
                   type="button"
                   variant="outline"
                   onClick={() => setShowCredentialsManager(true)}
                 >
                   {t('rithmic.backToList')}
-                </Button>
+                </ButtonV2>
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="rithmic-username">{t('rithmic.usernameLabel')}</Label>
-                <Input 
+                <InputV2 
                   id="rithmic-username" 
                   name="username"
                   autoComplete="username"
@@ -499,7 +499,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
               
               <div className="space-y-2">
                 <Label htmlFor="rithmic-password">{t('rithmic.passwordLabel')}</Label>
-                <Input 
+                <InputV2 
                   id="rithmic-password" 
                   name="password"
                   type="password" 
@@ -572,14 +572,14 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
               </div>
 
               <div className="flex justify-between">
-                <Button 
+                <ButtonV2  
                   type="submit" 
                   disabled={isLoading || !credentials.server_type || !credentials.location} 
                   className="w-full"
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {t('rithmic.getAccounts')}
-                </Button>
+                </ButtonV2>
               </div>
             </form>
           )}
@@ -616,19 +616,19 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                 {!allAccounts && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <Input
+                      <InputV2
                         placeholder={t('rithmic.searchAccounts')}
                         value={accountSearch}
                         onChange={(e) => setAccountSearch(e.target.value)}
                         className="flex-1"
                       />
-                      <Button
+                      <ButtonV2 
                         variant="outline"
                         size="sm"
                         onClick={() => setAccountSearch('')}
                       >
                         {t('common.clear')}
-                      </Button>
+                      </ButtonV2>
                     </div>
 
                     <div className="flex items-center gap-2 p-2 rounded bg-accent/50">
@@ -682,7 +682,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
               </div>
 
               <div className="flex gap-2">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   onClick={() => {
                     setStep('credentials')
@@ -694,8 +694,8 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                   disabled={isLoading}
                 >
                   {t('common.back')}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   onClick={handleStartProcessing}
                   disabled={isLoading || (!allAccounts && selectedAccounts.length === 0)}
                   className="flex-1"
@@ -707,7 +707,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                       ? t('rithmic.startProcessing.one', { count: 1 })
                       : t('rithmic.startProcessing.other', { count: selectedAccounts.length })
                   }
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           )}

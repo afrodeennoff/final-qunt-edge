@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
@@ -467,13 +467,13 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
           <h3 className="text-sm font-semibold">Instruments:</h3>
           <div className="flex flex-wrap gap-2">
             {uniqueInstruments.map((instrument) => (
-              <Button
+              <ButtonV2 
                 key={instrument}
                 variant="outline"
                 size="sm"
               >
                 {instrument}
-              </Button>
+              </ButtonV2>
             ))}
           </div>
         </div>

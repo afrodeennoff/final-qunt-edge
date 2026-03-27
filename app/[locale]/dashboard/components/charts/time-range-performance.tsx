@@ -16,7 +16,7 @@ import {
 import { WidgetSize } from '@/app/[locale]/dashboard/types/dashboard'
 import { useI18n } from "@/locales/client"
 import { Trade } from "@/lib/data-types"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { ChartConfig } from "@/components/ui/chart"
 
 interface TimeRangePerformanceChartProps {
@@ -208,14 +208,14 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
             </TooltipProvider>
           </div>
           {timeRange.range && (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
               onClick={() => setTimeRange({ range: null })}
             >
               {t('timeRangePerformance.clearFilter')}
-            </Button>
+            </ButtonV2>
           )}
         </div>
       </div>

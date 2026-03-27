@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
 import { useDashboardFilters } from '@/context/data-provider'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -58,7 +58,7 @@ export function TagFilter({ className }: TagFilterProps) {
         <div className="border-b">
           <div className="flex items-center gap-2 px-3 py-2">
             <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
+            <InputV2
               placeholder={t('widgets.tags.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

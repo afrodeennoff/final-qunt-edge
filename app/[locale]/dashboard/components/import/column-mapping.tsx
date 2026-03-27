@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { XIcon, AlertTriangleIcon, InfoIcon, RefreshCwIcon, SparklesIcon } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { ImportType } from './import-type-selection'
@@ -196,7 +196,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                   <p className="text-sm mt-1">Use AI to automatically map your CSV columns to the correct fields.</p>
                 </div>
               </div>
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="sm"
                 onClick={requestAIMapping}
@@ -204,7 +204,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
               >
                 <RefreshCwIcon className={cn("h-4 w-4", isLoading && "animate-spin")} />
                 Use AI for mapping
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         )}
@@ -238,7 +238,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
               <TableHead className="flex items-center gap-2">
                 Actions
                 {Object.keys(mappings).length > 0 && (
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     onClick={handleUnmapAll}
@@ -246,7 +246,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                     title="Unmap all fields"
                   >
                     <XIcon className="h-3 w-3" />
-                  </Button>
+                  </ButtonV2>
                 )}
               </TableHead>
             </TableRow>
@@ -296,13 +296,13 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                   </TableCell>
                   <TableCell>
                     {mappings[uniqueId] && (
-                      <Button
+                      <ButtonV2 
                         variant="ghost"
                         size="sm"
                         onClick={() => handleRemoveMapping(uniqueId)}
                       >
                         <XIcon className="h-4 w-4" />
-                      </Button>
+                      </ButtonV2>
                     )}
                   </TableCell>
                 </TableRow>

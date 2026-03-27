@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { useCurrentLocale, useI18n } from "@/locales/client"
 import { getUserShared, deleteShared } from "@/server/shared"
 import { toast } from "sonner"
@@ -167,7 +167,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
     <div className="flex flex-col h-full">
       <div className="shrink-0 px-3 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60 sticky top-0 z-10">
         <div className="flex items-center justify-between w-full">
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             onClick={onBack}
@@ -175,7 +175,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('share.backToShare')}
-          </Button>
+          </ButtonV2>
         </div>
       </div>
 
@@ -240,7 +240,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                 </CardContent>
                 <CardFooter className="p-4 pt-3 border-t flex flex-col gap-2">
                   <div className="flex gap-2 justify-center w-full">
-                    <Button
+                    <ButtonV2 
                       variant="outline"
                       size="sm"
                       onClick={() => visitSharedLayout(layout.slug)}
@@ -248,8 +248,8 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                     >
                       <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                       <span className="text-xs">{t('share.visit')}</span>
-                    </Button>
-                    <Button
+                    </ButtonV2>
+                    <ButtonV2 
                       variant="outline"
                       size="sm"
                       onClick={() => copyShareLink(layout.slug)}
@@ -257,9 +257,9 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                     >
                       <Link className="h-3.5 w-3.5 mr-1.5" />
                       <span className="text-xs">{t('share.copyUrl')}</span>
-                    </Button>
+                    </ButtonV2>
                   </div>
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     onClick={() => {
@@ -270,7 +270,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                   >
                     <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                     <span className="text-xs">{t('share.delete')}</span>
-                  </Button>
+                  </ButtonV2>
                 </CardFooter>
               </Card>
             ))}
@@ -287,20 +287,20 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button
+            <ButtonV2 
               variant="outline"
               onClick={() => setDeleteDialogOpen(false)}
               className="sm:flex-1"
             >
               {t('share.cancel')}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="destructive"
               onClick={handleDelete}
               className="sm:flex-1"
             >
               {t('share.confirmDelete')}
-            </Button>
+            </ButtonV2>
           </DialogFooter>
         </DialogContent>
       </Dialog>

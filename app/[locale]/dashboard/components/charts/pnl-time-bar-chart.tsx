@@ -27,7 +27,7 @@ import {
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { formatInTimeZone } from "date-fns-tz";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { useUserStore } from "../../../../../store/user-store";
 
 interface TimeOfDayTradeChartProps {
@@ -171,14 +171,14 @@ export default React.memo(function TimeOfDayTradeChart({
             </TooltipProvider>
           </div>
           {hourFilter.hour !== null && (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setHourFilter({ hour: null })}
             >
               {t("pnlTime.clearFilter")}
-            </Button>
+            </ButtonV2>
           )}
         </div>
       </div>

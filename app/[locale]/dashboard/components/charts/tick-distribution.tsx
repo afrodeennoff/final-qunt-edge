@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useI18n } from "@/locales/client";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 
 interface TickDistributionProps {
@@ -171,14 +171,14 @@ export default React.memo(function TickDistributionChart({
             </TooltipProvider>
           </div>
           {tickFilter.value && (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setTickFilter({ value: null })}
             >
               {t("tickDistribution.clearFilter")}
-            </Button>
+            </ButtonV2>
           )}
         </div>
       </div>

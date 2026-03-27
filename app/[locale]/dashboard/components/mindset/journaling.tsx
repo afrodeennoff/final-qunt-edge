@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { useI18n } from "@/locales/client"
 import { EmotionSelector } from "./emotion-selector"
 import { EmotionGauge } from "./emotion-gauge"
@@ -76,12 +76,12 @@ export function Journaling({
       </div>
 
       <div className="flex-none flex gap-4 mt-6">
-        <Button
+        <ButtonV2 
           onClick={onSave}
           className="w-full"
         >
           {t('mindset.journaling.save')}
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   )

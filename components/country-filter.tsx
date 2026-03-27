@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useI18n } from "@/locales/client"
@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 
 interface CountryFilterProps {
   countries: string[]
@@ -50,7 +50,7 @@ export function CountryFilter({ countries, value, onValueChange, className }: Co
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
+        <ButtonV2 
           variant="outline"
           size="sm"
           className={cn(
@@ -61,7 +61,7 @@ export function CountryFilter({ countries, value, onValueChange, className }: Co
         >
           <Globe className="h-4 w-4" />
           {value.length > 0 && (
-            <Badge variant="secondary" className="ml-1">
+            <BadgeV2 variant="secondary" className="ml-1">
               {value.length}
             </Badge>
           )}

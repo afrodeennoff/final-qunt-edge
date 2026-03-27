@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowRight, Percent, Clock, Zap } from 'lucide-react'
 
@@ -42,7 +42,7 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <Badge variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Zap className="mr-1.5 h-3 w-3" />
               Hot Deals
             </Badge>

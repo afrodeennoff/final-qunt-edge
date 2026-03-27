@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import { Plus, ChevronRight, Trash2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { CommandItem } from "@/components/ui/command"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { TextareaV2 } from "@/components/ui/v2"
 import { Popover, PopoverContent, PopoverAnchor } from "@/components/ui/popover"
 import { HexColorPicker } from "react-colorful"
 import { useI18n } from "@/locales/client"
@@ -218,7 +218,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-xs">{t('widgets.tags.name')}</Label>
-                <Input
+                <InputV2
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -230,7 +230,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-xs">{t('widgets.tags.description')}</Label>
-                <Textarea
+                <TextareaV2
                   id="description"
                   value={formData.description || ''}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -254,7 +254,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                   </div>
                 </div>
               </div>
-              <Button type="submit" disabled={isLoading} className="w-full h-8 text-sm">
+              <ButtonV2  type="submit" disabled={isLoading} className="w-full h-8 text-sm">
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-background border-t-transparent" />
@@ -263,7 +263,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                 ) : (
                   t('widgets.tags.create')
                 )}
-              </Button>
+              </ButtonV2>
             </form>
           </div>
         </PopoverContent>
@@ -310,7 +310,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
               </span>
             </CommandItem>
             <PopoverAnchor asChild>
-              <Button
+              <ButtonV2 
                 variant="ghost"
                 size="icon"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -321,7 +321,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                 disabled={isLoading}
               >
                 <Trash2 className="h-3.5 w-3.5 text-destructive" />
-              </Button>
+              </ButtonV2>
             </PopoverAnchor>
             <PopoverContent 
               className="w-64 p-3" 
@@ -338,7 +338,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                   </p>
                 </div>
                 <div className="flex gap-2 justify-end">
-                  <Button
+                  <ButtonV2 
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
@@ -349,8 +349,8 @@ export function TagSection({ searchValue }: TagSectionProps) {
                     disabled={isLoading}
                   >
                     {t('widgets.tags.cancel')}
-                  </Button>
-                  <Button
+                  </ButtonV2>
+                  <ButtonV2 
                     variant="destructive"
                     size="sm"
                     className="h-7 text-xs"
@@ -365,7 +365,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                     ) : (
                       t('widgets.tags.confirmDelete')
                     )}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             </PopoverContent>

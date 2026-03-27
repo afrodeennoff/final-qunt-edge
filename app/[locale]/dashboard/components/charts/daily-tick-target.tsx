@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { useI18n } from "@/locales/client"
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider"
 import { useDailyTickTargetStore } from "@/store/daily-tick-target-store"
@@ -239,33 +239,33 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
 
           {/* Target controls */}
           <div className="flex items-center gap-1">
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(-1)}
               className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Minus className="h-3 w-3" />
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(1)}
               className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Plus className="h-3 w-3" />
-            </Button>
+            </ButtonV2>
 
             {/* Target setting dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground rounded-full transition-colors"
                 >
                   <Target className="h-3 w-3" />
-                </Button>
+                </ButtonV2>
               </DialogTrigger>
               <DialogContent className="border-border/55 bg-background/95 backdrop-blur-xl">
                 <DialogHeader>
@@ -283,7 +283,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                         : t("widgets.dailyTickTarget.displayMode.ticks")}
                       )
                     </label>
-                    <Input
+                    <InputV2
                       type="number"
                       value={targetValue}
                       onChange={(e) => setTargetValue(e.target.value)}
@@ -292,12 +292,12 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
+                    <ButtonV2  variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
                       {t("common.cancel")}
-                    </Button>
-                    <Button onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
+                    </ButtonV2>
+                    <ButtonV2  onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
                       {t("common.save")}
-                    </Button>
+                    </ButtonV2>
                   </div>
                 </div>
               </DialogContent>

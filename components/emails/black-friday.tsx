@@ -107,7 +107,7 @@ const BlackFridayEmail = (props: { firstName: string; locale?: Locale }) => {
               </Text>
 
               <Section className="text-center mb-[32px]">
-                <Button
+                <ButtonV2 
                   className="bg-[#007BFF] text-white text-[16px] px-[24px] py-[12px] rounded-[6px] font-medium box-border"
                   href="https://qunt-edge.vercel.app/pricing"
                 >

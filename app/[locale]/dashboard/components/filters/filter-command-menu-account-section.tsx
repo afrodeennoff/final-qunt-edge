@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
 import { CommandItem } from "@/components/ui/command"
 import { Settings, Trash2 } from "lucide-react"
@@ -239,7 +239,7 @@ export function AccountSection({ searchValue }: AccountSectionProps) {
               />
               <span className="text-sm font-medium">{group.name}</span>
             </div>
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-destructive"
@@ -251,7 +251,7 @@ export function AccountSection({ searchValue }: AccountSectionProps) {
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">{t('filters.deleteGroupTitle')}</span>
-            </Button>
+            </ButtonV2>
           </CommandItem>
           {group.accounts.map(account => (
             <CommandItem

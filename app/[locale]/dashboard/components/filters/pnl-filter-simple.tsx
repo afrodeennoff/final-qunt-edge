@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState } from "react"
@@ -40,44 +40,44 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
         <CardContent className="p-3 space-y-3">
           {/* Preset buttons */}
           <div className="space-y-2">
-            <Button
+            <ButtonV2 
               variant={isPresetActive(undefined, undefined) ? "default" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, undefined)}
             >
               {t('filters.allTrades')}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant={isPresetActive(0, undefined) ? "default" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(0, undefined)}
             >
               {t('filters.profitableTrades')}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant={isPresetActive(undefined, 0) ? "default" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, 0)}
             >
               {t('filters.losingTrades')}
-            </Button>
+            </ButtonV2>
           </div>
 
           {/* Custom range */}
           <div className="space-y-2 pt-2 border-t">
             <div className="text-xs text-muted-foreground">{t('filters.customRange')}</div>
             <div className="flex gap-2">
-              <Input
+              <InputV2
                 type="number"
                 placeholder={t('filters.min')}
                 value={customMin}
                 onChange={(e) => setCustomMin(e.target.value)}
                 className="h-8 text-xs"
               />
-              <Input
+              <InputV2
                 type="number"
                 placeholder={t('filters.max')}
                 value={customMax}
@@ -85,14 +85,14 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
                 className="h-8 text-xs"
               />
             </div>
-            <Button 
+            <ButtonV2  
               onClick={handleCustomRangeApply}
               size="sm"
               className="w-full"
               variant="secondary"
             >
               {t('filters.apply')}
-            </Button>
+            </ButtonV2>
           </div>
         </CardContent>
       </Card>

@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Popover, PopoverContent, PopoverAnchor } from "@/components/ui/popover"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList, CommandSeparator } from "@/components/ui/command"
@@ -271,7 +271,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
 
   // Trigger on mobile: button that opens drawer
   const MobileTriggerButton = (
-    <Button
+    <ButtonV2 
       variant="outline"
       className={cn(
         variant === "navbar"
@@ -287,7 +287,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
       {variant !== "navbar" && (
         <span className="text-muted-foreground">{t('filters.commandMenu.placeholder')}</span>
       )}
-    </Button>
+    </ButtonV2>
   )
 
   // Check if search value contains date keywords to show hint
@@ -327,7 +327,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
     <PopoverAnchor asChild>
       <div className={cn("relative w-[400px]", className)}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
-        <Input
+        <InputV2
           ref={inputRef}
           value={searchValue}
           onChange={(e) => handleSearchChange(e.target.value)}
@@ -473,7 +473,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
         </p>
         <div className="flex flex-wrap gap-2">
           {categories.map(category => (
-            <Button
+            <ButtonV2 
               key={category.id}
               variant="secondary"
               size="sm"
@@ -481,7 +481,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
               onClick={() => handleCategoryClick(category.id)}
             >
               {category.label}
-            </Button>
+            </ButtonV2>
           ))}
         </div>
       </div>

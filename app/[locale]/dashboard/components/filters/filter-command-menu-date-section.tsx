@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { CalendarIcon, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
@@ -389,7 +389,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
           <CalendarIcon className="h-4 w-4" />
           <span className="text-sm">{t('filters.commandMenu.dateRange.weekdayFilter')}: {formatWeekdayFilter()}</span>
           <div className="ml-auto">
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="icon"
               className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -399,7 +399,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
               }}
             >
               <X className="h-3 w-3 text-destructive" />
-            </Button>
+            </ButtonV2>
           </div>
         </CommandItem>
       )}
@@ -428,7 +428,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                   {dateRange?.from ? formatDate(dateRange.from) : "\u00A0"}
                 </span>
                 {dateRange?.from && (
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="icon"
                     className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -438,7 +438,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                     }}
                   >
                     <X className="h-3 w-3 text-destructive" />
-                  </Button>
+                  </ButtonV2>
                 )}
               </div>
             </CommandItem>
@@ -485,7 +485,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                   {dateRange?.to ? formatDate(dateRange.to) : "\u00A0"}
                 </span>
                 {dateRange?.to && (
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="icon"
                     className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -495,7 +495,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                     }}
                   >
                     <X className="h-3 w-3 text-destructive" />
-                  </Button>
+                  </ButtonV2>
                 )}
               </div>
             </CommandItem>
@@ -542,7 +542,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                   {dateRange?.from && dateRange?.to && dateRange.from.getTime() === dateRange.to.getTime() ? formatDate(dateRange.from) : "\u00A0"}
                 </span>
                 {dateRange?.from && dateRange?.to && dateRange.from.getTime() === dateRange.to.getTime() && (
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="icon"
                     className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -552,7 +552,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                     }}
                   >
                     <X className="h-3 w-3 text-destructive" />
-                  </Button>
+                  </ButtonV2>
                 )}
               </div>
             </CommandItem>

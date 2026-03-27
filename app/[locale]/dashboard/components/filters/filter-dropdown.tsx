@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +39,7 @@ export function FilterDropdown() {
         }}
       >
         <DropdownMenuTrigger asChild>
-          <Button
+          <ButtonV2 
             variant="ghost"
             className={cn(
               "h-10 rounded-full flex items-center justify-center transition-transform active:scale-95",
@@ -52,7 +52,7 @@ export function FilterDropdown() {
                 {t('filters.title')}
               </span>
             )}
-          </Button>
+          </ButtonV2>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuSub>

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useEffect, useState } from 'react'
 import { getNewsletterStats, getUserStats } from '../../actions/stats'
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { UserGrowthChart } from './user-growth-chart'
 import { FreeUsersTable } from './free-users-table'
 import {
@@ -147,7 +147,7 @@ export function AdminDashboard() {
               Fast access to the same internal admin workflows used for newsletters, recap emails, and platform management.
             </p>
           </div>
-          <Badge variant="secondary" className="w-fit">
+          <BadgeV2 variant="secondary" className="w-fit">
             <Sparkles className="mr-2 h-3.5 w-3.5" />
             Internal only
           </Badge>
@@ -257,7 +257,7 @@ export function AdminDashboard() {
             <Card className="space-y-2 border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium">Total Users</h3>
-                <Badge variant="secondary">Active</Badge>
+                <BadgeV2 variant="secondary">Active</Badge>
               </div>
               <div className="text-3xl font-bold">{valueFormatter(userStats.totalUsers)}</div>
             </Card>
@@ -273,7 +273,7 @@ export function AdminDashboard() {
           <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Free Users</h3>
-              <Badge variant="secondary">Active</Badge>
+              <BadgeV2 variant="secondary">Active</Badge>
             </div>
             <FreeUsersTable />
           </Card>

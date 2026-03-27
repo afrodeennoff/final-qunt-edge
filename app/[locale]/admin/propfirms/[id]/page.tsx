@@ -16,7 +16,7 @@ import {
 import { assertAdminAccess } from '@/server/authz'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
 
@@ -267,9 +267,9 @@ export default async function PropFirmEditPage({
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
+        <ButtonV2  variant="ghost" size="sm" asChild>
           <Link href={`/${locale}/admin/propfirms`}>← Back</Link>
-        </Button>
+        </ButtonV2>
         <h1 className="text-2xl font-semibold tracking-tight">
           {isNew ? 'Add Prop Firm' : 'Edit Prop Firm'}
         </h1>
@@ -285,56 +285,56 @@ export default async function PropFirmEditPage({
 
             <div className={fieldClass}>
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
+              <InputV2 id="name" name="name" defaultValue={firm?.name ?? ''} required />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="slug">Slug</Label>
-                <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
+                <InputV2 id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="category">Category</Label>
-                <Input id="category" name="category" defaultValue={firm?.category ?? ''} placeholder="Futures, Forex, Crypto..." />
+                <InputV2 id="category" name="category" defaultValue={firm?.category ?? ''} placeholder="Futures, Forex, Crypto..." />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="platform">Platform</Label>
-                <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
+                <InputV2 id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="payoutModel">Payout Model</Label>
-                <Input id="payoutModel" name="payoutModel" defaultValue={firm?.payoutModel ?? ''} />
+                <InputV2 id="payoutModel" name="payoutModel" defaultValue={firm?.payoutModel ?? ''} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="drawdownType">Drawdown Type</Label>
-                <Input id="drawdownType" name="drawdownType" defaultValue={firm?.drawdownType ?? ''} />
+                <InputV2 id="drawdownType" name="drawdownType" defaultValue={firm?.drawdownType ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="profitSplit">Profit Split</Label>
-                <Input id="profitSplit" name="profitSplit" defaultValue={firm?.profitSplit ?? ''} />
+                <InputV2 id="profitSplit" name="profitSplit" defaultValue={firm?.profitSplit ?? ''} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="maxAllocation">Max Allocation</Label>
-                <Input id="maxAllocation" name="maxAllocation" defaultValue={firm?.maxAllocation ?? ''} />
+                <InputV2 id="maxAllocation" name="maxAllocation" defaultValue={firm?.maxAllocation ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="referralUrl">Referral URL</Label>
-                <Input id="referralUrl" name="referralUrl" type="url" defaultValue={firm?.referralUrl ?? ''} />
+                <InputV2 id="referralUrl" name="referralUrl" type="url" defaultValue={firm?.referralUrl ?? ''} />
               </div>
             </div>
 
             <div className={fieldClass}>
               <Label htmlFor="logoUrl">Logo URL</Label>
-              <Input id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
+              <InputV2 id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
             </div>
 
             <div className={fieldClass}>
@@ -350,7 +350,7 @@ export default async function PropFirmEditPage({
 
             <div className={fieldClass}>
               <Label htmlFor="shortDesc">Short Description</Label>
-              <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
+              <InputV2 id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
             </div>
 
             <div className="flex items-center gap-2">
@@ -366,10 +366,10 @@ export default async function PropFirmEditPage({
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="outline" asChild>
+              <ButtonV2  variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
-              </Button>
-              <Button type="submit">{isNew ? 'Create' : 'Save Changes'}</Button>
+              </ButtonV2>
+              <ButtonV2  type="submit">{isNew ? 'Create' : 'Save Changes'}</ButtonV2>
             </div>
           </CardContent>
         </Card>
@@ -411,16 +411,16 @@ function ReviewsSection({
         <form action={onCreateReview}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <div className="flex items-center gap-2">
-            <Input name="title" placeholder="Review title" className="w-40" />
-            <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
-            <Input name="content" placeholder="Content" className="w-60" />
+            <InputV2 name="title" placeholder="Review title" className="w-40" />
+            <InputV2 name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
+            <InputV2 name="content" placeholder="Content" className="w-60" />
             <label className="flex items-center gap-1 text-sm">
               <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
               Verified
             </label>
-            <Button type="submit" size="sm" variant="outline">
+            <ButtonV2  type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
-            </Button>
+            </ButtonV2>
           </div>
         </form>
       </CardHeader>
@@ -436,13 +436,13 @@ function ReviewsSection({
                     <input type="hidden" name="reviewId" value={review.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
                     <div className="flex items-center gap-2">
-                      <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
-                      <Input name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
+                      <InputV2 name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
+                      <InputV2 name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
                       <label className="flex items-center gap-1 text-sm">
                         <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
                         Verified
                       </label>
-                      <Button type="submit" size="sm" variant="outline">Save</Button>
+                      <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
                     </div>
                     <textarea
                       name="content"
@@ -459,9 +459,9 @@ function ReviewsSection({
                 <form action={onDeleteReview}>
                   <input type="hidden" name="reviewId" value={review.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <ButtonV2  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </ButtonV2>
                 </form>
               </div>
             ))}
@@ -485,16 +485,16 @@ function CouponsSection({
         <form action={onCreateCoupon}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <div className="flex items-center gap-2">
-            <Input name="code" placeholder="Code" className="w-28" required />
-            <Input name="description" placeholder="Description" className="w-40" />
-            <Input name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-24" />
+            <InputV2 name="code" placeholder="Code" className="w-28" required />
+            <InputV2 name="description" placeholder="Description" className="w-40" />
+            <InputV2 name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-24" />
             <label className="flex items-center gap-1 text-sm">
               <input type="checkbox" name="isActive" defaultChecked className="h-4 w-4 rounded border-input accent-primary" />
               Active
             </label>
-            <Button type="submit" size="sm" variant="outline">
+            <ButtonV2  type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
-            </Button>
+            </ButtonV2>
           </div>
         </form>
       </CardHeader>
@@ -510,21 +510,21 @@ function CouponsSection({
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
                     <div className="grid grid-cols-4 gap-2">
-                      <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
-                      <Input name="description" defaultValue={coupon.description ?? ''} placeholder="Description" />
-                      <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
-                      <Input name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="Challenge Fee" />
+                      <InputV2 name="code" defaultValue={coupon.code} placeholder="Code" required />
+                      <InputV2 name="description" defaultValue={coupon.description ?? ''} placeholder="Description" />
+                      <InputV2 name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
+                      <InputV2 name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="Challenge Fee" />
                     </div>
                     <div className="grid grid-cols-4 gap-2">
-                      <Input name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Drawdown Type" />
-                      <Input name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Payout Model" />
-                      <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Platform" />
-                      <Input name="claimUrl" defaultValue={coupon.claimUrl ?? ''} placeholder="Claim URL" />
+                      <InputV2 name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Drawdown Type" />
+                      <InputV2 name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Payout Model" />
+                      <InputV2 name="platform" defaultValue={coupon.platform ?? ''} placeholder="Platform" />
+                      <InputV2 name="claimUrl" defaultValue={coupon.claimUrl ?? ''} placeholder="Claim URL" />
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
                         <Label htmlFor={`startsAt-${coupon.id}`} className="text-sm">Starts:</Label>
-                        <Input
+                        <InputV2
                           id={`startsAt-${coupon.id}`}
                           name="startsAt"
                           type="datetime-local"
@@ -534,7 +534,7 @@ function CouponsSection({
                       </div>
                       <div className="flex items-center gap-2">
                         <Label htmlFor={`expiresAt-${coupon.id}`} className="text-sm">Expires:</Label>
-                        <Input
+                        <InputV2
                           id={`expiresAt-${coupon.id}`}
                           name="expiresAt"
                           type="datetime-local"
@@ -546,7 +546,7 @@ function CouponsSection({
                         <input type="checkbox" name="isActive" defaultChecked={coupon.isActive} className="h-4 w-4 rounded border-input accent-primary" />
                         Active
                       </label>
-                      <Button type="submit" size="sm" variant="outline">Save</Button>
+                      <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
                     </div>
                   </form>
                   <p className="text-xs text-muted-foreground">
@@ -556,9 +556,9 @@ function CouponsSection({
                 <form action={onDeleteCoupon}>
                   <input type="hidden" name="couponId" value={coupon.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <ButtonV2  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </ButtonV2>
                 </form>
               </div>
             ))}

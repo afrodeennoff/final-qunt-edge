@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import { ArrowBigDown, ArrowBigUp, MessageSquare, ImageIcon, Pencil, ExternalLink, Copy, Check, MoreHorizontal, Settings2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { useI18n, useCurrentLocale } from '@/locales/client'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
@@ -35,7 +35,7 @@ import { toast } from 'sonner'
 import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { CommentSection } from './comment-section'
-import { Textarea } from '@/components/ui/textarea'
+import { TextareaV2 } from "@/components/ui/v2"
 import { AuthPrompt } from './auth-prompt'
 import { CopyNotification } from './copy-notification'
 import { useUserStore } from '@/store/user-store'
@@ -226,10 +226,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
         <CardHeader className="flex-row items-start justify-between gap-0">
            <div className="space-y-1">
              <div className="flex items-center gap-x-2">
-               <Badge variant="secondary" className={typeColors[post.type as PostType]}>
+               <BadgeV2 variant="secondary" className={typeColors[post.type as PostType]}>
                 {(post.type as string).replace('_', ' ')}
               </Badge>
-              <Badge variant="outline" className={statusColors[post.status as PostStatus]}>
+              <BadgeV2 variant="outline" className={statusColors[post.status as PostStatus]}>
                 {(post.status as string).replace('_', ' ')}
               </Badge>
             </div>
@@ -244,9 +244,9 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2" aria-label="Post actions" title="Post actions">
+                <ButtonV2  variant="ghost" size="sm" className="gap-2" aria-label="Post actions" title="Post actions">
                   <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {!isPostPage && (
@@ -304,13 +304,13 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
         <CardContent className="space-y-4">
           {isEditing ? (
             <div className="space-y-2">
-              <Textarea
+              <TextareaV2
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 className="min-h-[100px]"
               />
               <div className="flex justify-end gap-2">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   onClick={() => {
                     setIsEditing(false)
@@ -318,10 +318,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                   }}
                 >
                   {t('community.post.cancel')}
-                </Button>
-                <Button onClick={handleEdit}>
+                </ButtonV2>
+                <ButtonV2  onClick={handleEdit}>
                   {t('community.post.save')}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           ) : (
@@ -343,14 +343,14 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
                 {post.screenshots.map((screenshot: string, index: number) => (
                   <Dialog key={index} open={selectedImage === screenshot} onOpenChange={(open) => !open && setSelectedImage(null)}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="p-0 h-24 w-24 relative overflow-hidden" onClick={() => setSelectedImage(screenshot)}>
+                      <ButtonV2  variant="outline" className="p-0 h-24 w-24 relative overflow-hidden" onClick={() => setSelectedImage(screenshot)}>
                         <Image
                           src={screenshot}
                           alt={`Screenshot ${index + 1}`}
                           fill
                           className="object-cover"
                         />
-                      </Button>
+                      </ButtonV2>
                     </DialogTrigger>
                     {selectedImage === screenshot && (
                       <DialogContent className="max-w-4xl">
@@ -373,30 +373,30 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
          <CardFooter className="flex justify-between border-t pt-4">
            <div className="flex items-center gap-x-4">
              <div className="flex items-center gap-x-2">
-               <Button
+               <ButtonV2 
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVote(VoteType.UPVOTE)}
               >
                 <ArrowBigUp className="mr-1 h-5 w-5" />
                 {upvotes}
-              </Button>
-              <Button
+              </ButtonV2>
+              <ButtonV2 
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVote(VoteType.DOWNVOTE)}
               >
                 <ArrowBigDown className="mr-1 h-5 w-5" />
                 {downvotes}
-              </Button>
+              </ButtonV2>
               <span className="text-sm text-muted-foreground">
                 {t('community.post.score')}: {score}
               </span>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleToggleComments}>
+            <ButtonV2  variant="ghost" size="sm" onClick={handleToggleComments}>
               <MessageSquare className="mr-1 h-4 w-4" />
               {commentCount} {t('community.post.comments')}
-            </Button>
+            </ButtonV2>
           </div>
         </CardFooter>
         {isCommentsOpen && (

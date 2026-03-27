@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
+import { InputV2 } from "@/components/ui/v2";
 import {
   Tooltip,
   TooltipContent,
@@ -106,7 +106,7 @@ export const WebPreviewNavigationButton = ({
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
+        <ButtonV2 
           className="h-8 w-8 p-0 hover:text-foreground"
           disabled={disabled}
           onClick={onClick}
@@ -143,7 +143,7 @@ export const WebPreviewUrl = ({
   };
 
   return (
-    <Input
+    <InputV2
       className="h-8 flex-1 text-sm"
       onChange={onChange}
       onKeyDown={handleKeyDown}
@@ -204,7 +204,7 @@ export const WebPreviewConsole = ({
       {...props}
     >
       <CollapsibleTrigger asChild>
-        <Button
+        <ButtonV2 
           className="flex w-full items-center justify-between p-4 text-left font-medium hover:bg-muted/50"
           variant="ghost"
         >

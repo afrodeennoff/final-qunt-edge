@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import {
@@ -25,7 +25,7 @@ export function TeamSubscriptionBadge({
   // If no subscription data, user is on Free plan
   if (!subscription) {
     return (
-      <Badge
+      <BadgeV2
         variant="secondary"
         className={cn(
           "px-2 py-0.5 text-xs whitespace-nowrap",
@@ -123,7 +123,7 @@ export function TeamSubscriptionBadge({
       <Tooltip>
         <TooltipTrigger asChild>
           <Link href="/dashboard/billing">
-            <Badge
+            <BadgeV2
               variant="secondary"
               className={cn(
                 "px-2 py-0.5 text-xs whitespace-nowrap cursor-help transition-colors",

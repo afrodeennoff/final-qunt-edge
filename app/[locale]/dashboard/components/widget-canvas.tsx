@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import {
   Popover,
   PopoverContent,
@@ -65,9 +65,9 @@ function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
       state="error"
       errorMessage={t('widgets.deprecated.description')}
       actions={(
-        <Button variant="destructive" size="sm" onClick={onRemove}>
+        <ButtonV2  variant="destructive" size="sm" onClick={onRemove}>
           {t('widgets.deprecated.remove')}
-        </Button>
+        </ButtonV2>
       )}
     />
   )
@@ -131,20 +131,20 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
           <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
             <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
               <PopoverTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 rounded-full border-border/25 bg-popover/55 text-foreground hover:bg-popover/75 hover:border-border/40 backdrop-blur-md"
                   aria-label="Change widget size"
                 >
                   <Maximize2 className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </PopoverTrigger>
               <PopoverContent className="w-56 border-border/15 bg-popover/85 p-2 text-foreground backdrop-blur-xl">
                 <div className="flex flex-col gap-1">
                   {isMobile ? (
                     <>
-                      <Button
+                      <ButtonV2 
                         variant={size === 'tiny' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('tiny')}
@@ -157,8 +157,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.small')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'medium' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('medium')}
@@ -171,8 +171,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.medium')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('large')}
@@ -185,11 +185,11 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.large')}</span>
                         </div>
-                      </Button>
+                      </ButtonV2>
                     </>
                   ) : (
                     <>
-                      <Button
+                      <ButtonV2 
                         variant={size === 'tiny' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('tiny')}
@@ -202,8 +202,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.tiny')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'small' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('small')}
@@ -216,8 +216,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.small')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'medium' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('medium')}
@@ -230,8 +230,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.medium')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('large')}
@@ -244,8 +244,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.large')}</span>
                         </div>
-                      </Button>
-                      <Button
+                      </ButtonV2>
+                      <ButtonV2 
                         variant={size === 'extra-large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('extra-large')}
@@ -258,7 +258,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.extra-large')}</span>
                         </div>
-                      </Button>
+                      </ButtonV2>
                     </>
                   )}
                 </div>
@@ -266,14 +266,14 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
             </Popover>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="destructive"
                   size="icon"
                   className="h-8 w-8 rounded-full border border-border/20 bg-semantic-error-bg/80 text-foreground hover:bg-semantic-error-bg"
                   aria-label="Remove widget"
                 >
                   <Minus className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -567,19 +567,19 @@ export default function WidgetCanvas() {
             {(t as any)("widgets.emptyLayoutDescription") ?? "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
-            <Button
+            <ButtonV2 
               onClick={restoreDefaultLayout}
               className="bg-card text-foreground hover:bg-card/90 font-semibold"
             >
               {(t as any)("widgets.restoreDefaults") ?? "Restore default layout"}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="outline"
               onClick={() => setIsCustomizing(true)}
               className="border-border/15 bg-transparent text-foreground hover:bg-card/5 hover:text-foreground"
             >
               {(t as any)("widgets.edit") ?? "Edit"}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 'use client'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
 import { TrashIcon, AlertCircle, ChevronDown, ChevronUp, MoreVertical, Edit2, Loader2 } from "lucide-react"
 import {
@@ -303,7 +303,7 @@ export function DataManagementCard() {
             <ExportButton trades={trades} />
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="destructive"
                   size="sm"
                   className="flex-1 md:flex-none"
@@ -321,7 +321,7 @@ export function DataManagementCard() {
                   ) : (
                     <>{t('dataManagement.deleteSelected')} ({selectedAccounts.length})</>
                   )}
-                </Button>
+                </ButtonV2>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -340,7 +340,7 @@ export function DataManagementCard() {
             </AlertDialog>
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="destructive"
                   size="sm"
                   disabled={deleteLoading}
@@ -357,7 +357,7 @@ export function DataManagementCard() {
                   ) : (
                     <>{t('dataManagement.deleteAll')}</>
                   )}
-                </Button>
+                </ButtonV2>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -403,10 +403,10 @@ export function DataManagementCard() {
                     <div className="flex items-center sm:hidden ml-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
+                          <ButtonV2  variant="ghost" size="sm">
                             <MoreVertical className="h-4 w-4" />
                             <span className="sr-only">{t('dataManagement.moreOptions')}</span>
-                          </Button>
+                          </ButtonV2>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
@@ -435,7 +435,7 @@ export function DataManagementCard() {
                   </div>
                 </div>
                 <div className="hidden sm:flex items-center w-auto justify-end gap-2">
-                  <Button
+                  <ButtonV2 
                     variant="outline"
                     size="sm"
                     onClick={() => {
@@ -445,8 +445,8 @@ export function DataManagementCard() {
                   >
                     <Edit2 className="w-4 h-4 mr-2" />
                     {t('dataManagement.rename')}
-                  </Button>
-                  <Button
+                  </ButtonV2>
+                  <ButtonV2 
                     variant="outline"
                     size="sm"
                     className="text-destructive"
@@ -458,7 +458,7 @@ export function DataManagementCard() {
                   >
                     <TrashIcon className="w-4 h-4 mr-2" />
                     {t('dataManagement.delete')}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
               {expandedAccounts[accountNumber] && (
@@ -470,7 +470,7 @@ export function DataManagementCard() {
                           <h3 className="text-md font-medium">
                             {instrumentGroup}
                           </h3>
-                          <Button
+                          <ButtonV2 
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
@@ -481,11 +481,11 @@ export function DataManagementCard() {
                           >
                             <Edit2 className="h-4 w-4" />
                             <span className="sr-only">{t('dataManagement.renameInstrument.title')}</span>
-                          </Button>
+                          </ButtonV2>
                         </div>
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                           <div className="relative w-full sm:w-32">
-                            <Input
+                            <InputV2
                               type="number"
                               placeholder="Commission"
                               defaultValue={Number(trades[0].commission) / Number(trades[0].quantity || 1)}
@@ -510,7 +510,7 @@ export function DataManagementCard() {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Button
+                                    <ButtonV2 
                                       variant="outline"
                                       size="sm"
                                       className="absolute right-1 top-1/2 -translate-y-1/2 h-6 px-2 text-xs"
@@ -522,7 +522,7 @@ export function DataManagementCard() {
                                       ) : (
                                         '✓'
                                       )}
-                                    </Button>
+                                    </ButtonV2>
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>{t('dataManagement.validate')}</p>
@@ -533,14 +533,14 @@ export function DataManagementCard() {
                           </div>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button
+                              <ButtonV2 
                                 variant="outline"
                                 size="sm"
                                 className="w-full sm:w-auto whitespace-nowrap"
                               >
                                 <TrashIcon className="w-4 h-4 mr-2" />
                                 {t('dataManagement.removeInstrument')}
-                              </Button>
+                              </ButtonV2>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
@@ -584,7 +584,7 @@ export function DataManagementCard() {
                 <Label htmlFor="newInstrumentName" className="text-right">
                   {t('dataManagement.renameInstrument.newName')}
                 </Label>
-                <Input
+                <InputV2
                   id="newInstrumentName"
                   value={newInstrumentName}
                   onChange={(e) => setNewInstrumentName(e.target.value)}
@@ -596,7 +596,7 @@ export function DataManagementCard() {
               </div>
             </div>
             <DialogFooter>
-              <Button
+              <ButtonV2 
                 type="submit"
                 disabled={renameLoading || !newInstrumentName}
               >
@@ -608,7 +608,7 @@ export function DataManagementCard() {
                 ) : (
                   t('dataManagement.rename')
                 )}
-              </Button>
+              </ButtonV2>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -634,7 +634,7 @@ export function DataManagementCard() {
                 <Label htmlFor="newAccountNumber" className="text-right">
                   {t('dataManagement.renameAccount.newNumber')}
                 </Label>
-                <Input
+                <InputV2
                   id="newAccountNumber"
                   value={newAccountNumber}
                   onChange={(e) => setNewAccountNumber(e.target.value)}
@@ -646,7 +646,7 @@ export function DataManagementCard() {
               </div>
             </div>
             <DialogFooter>
-              <Button
+              <ButtonV2 
                 type="submit"
                 disabled={renameLoading || !newAccountNumber}
               >
@@ -658,7 +658,7 @@ export function DataManagementCard() {
                 ) : (
                   t('dataManagement.rename')
                 )}
-              </Button>
+              </ButtonV2>
             </DialogFooter>
           </form>
         </DialogContent>

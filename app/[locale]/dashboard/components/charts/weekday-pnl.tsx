@@ -26,7 +26,7 @@ import {
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { translateWeekdayPnL } from "@/lib/translation-utils";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 
 const daysOfWeek = [0, 1, 2, 3, 4, 5, 6]; // Sunday = 0, Saturday = 6
 
@@ -202,14 +202,14 @@ export default React.memo(function WeekdayPNLChart({
             </TooltipProvider>
           </div>
           {weekdayFilter.days && weekdayFilter.days.length > 0 && (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
               onClick={() => setWeekdayFilter({ days: [] })}
             >
               {t("weekdayPnl.clearFilter")}
-            </Button>
+            </ButtonV2>
           )}
         </div>
       </div>

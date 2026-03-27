@@ -340,22 +340,22 @@ function CreateCalendarPreview() {
             <CardTitle className="text-sm font-medium">Calendar</CardTitle>
           </div>
           <div className="flex items-center gap-1.5">
-            <Button
+            <ButtonV2 
               variant="outline"
               size="icon"
               className="h-7 w-7 sm:h-8 sm:w-8"
               aria-label="Previous month"
             >
               <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="outline"
               size="icon"
               className="h-7 w-7 sm:h-8 sm:w-8"
               aria-label="Next month"
             >
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </CardHeader>
@@ -396,9 +396,9 @@ function CreateChatPreview() {
       <CardHeader className="pb-3 border-b">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium">AI Assistant</CardTitle>
-          <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+          <ButtonV2  variant="ghost" size="sm" className="h-6 px-2 text-xs">
             Reset
-          </Button>
+          </ButtonV2>
         </div>
       </CardHeader>
 
@@ -447,9 +447,9 @@ function CreateChatPreview() {
             <div className="flex-1 h-9 bg-muted rounded-md border flex items-center px-3">
               <div className="h-3 w-24 bg-muted-foreground/20 rounded" />
             </div>
-            <Button size="sm" className="h-9 px-3">
+            <ButtonV2  size="sm" className="h-9 px-3">
               Send
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </CardContent>

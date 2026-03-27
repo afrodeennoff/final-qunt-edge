@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type React from "react"
 import { Streamdown } from "streamdown"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { toast } from "sonner"
 import { useRef } from "react"
 import { ClipboardCheckIcon, type ClipboardCheckIconHandle } from "@/components/animated-icons/clipboard-check"
@@ -51,7 +51,7 @@ export function BotMessage({ children, status }: { children: React.ReactNode, st
           {status === "streaming" ? <span className="terminal-cursor text-primary" aria-hidden /> : null}
         </div>
         {typeof children === "string" && status === "ready" && (
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             className="self-start"
@@ -59,7 +59,7 @@ export function BotMessage({ children, status }: { children: React.ReactNode, st
           >
             <ClipboardCheckIcon ref={clipboardRef} size={16} className="mr-2" />
             {t('chat.copy')}
-          </Button>
+          </ButtonV2>
         )}
       </div>
     </motion.div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -103,7 +103,7 @@ export function PromptInputAttachment({
           <PaperclipIcon className="size-4" />
         </div>
       )}
-      <Button
+      <ButtonV2 
         aria-label="Remove attachment"
         className="-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100"
         onClick={() => attachments.remove(data.id)}
@@ -511,7 +511,7 @@ export const PromptInputTextarea = ({
   };
 
   return (
-    <Textarea
+    <TextareaV2
       className={cn(
         "text-lg sm:text-sm",
         "w-full resize-none rounded-none border-none p-3 shadow-none outline-hidden ring-0",
@@ -572,7 +572,7 @@ export const PromptInputButton = ({
     (size ?? Children.count(props.children) > 1) ? "default" : "icon";
 
   return (
-    <Button
+    <ButtonV2 
       className={cn(
         "shrink-0 gap-1.5 rounded-lg",
         variant === "ghost" && "text-muted-foreground",
@@ -653,7 +653,7 @@ export const PromptInputSubmit = ({
   }
 
   return (
-    <Button
+    <ButtonV2 
       className={cn("gap-1.5 rounded-lg", className)}
       size={size}
       type="submit"

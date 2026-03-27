@@ -90,20 +90,20 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <Button asChild className="hidden h-10 rounded-full bg-primary px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90 md:inline-flex">
+            <ButtonV2  asChild className="hidden h-10 rounded-full bg-primary px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90 md:inline-flex">
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
-            </Button>
+            </ButtonV2>
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
-                <Button
+                <ButtonV2 
                   type="button"
                   variant="ghost"
                   className="h-10 w-10 rounded-full text-[hsl(var(--mk-text))] lg:hidden"
                   aria-label="Open navigation menu"
                 >
                   <Menu className="h-4.5 w-4.5" aria-hidden="true" />
-                </Button>
+                </ButtonV2>
               </SheetTrigger>
               <SheetContent side="right" className="w-[88vw] max-w-[320px] border-l border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-bg-1))] p-0">
                 <div className="flex h-full flex-col p-6">
@@ -123,11 +123,11 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
-                  <Button asChild className="mt-auto h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  <ButtonV2  asChild className="mt-auto h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
                     <Link href={`/${locale}/authentication`} onClick={() => setMobileOpen(false)}>
                       Start Free Audit
                     </Link>
-                  </Button>
+                  </ButtonV2>
                 </div>
               </SheetContent>
             </Sheet>

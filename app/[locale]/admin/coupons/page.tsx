@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { ReactNode } from 'react'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+import { TextareaV2 } from "@/components/ui/v2"
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import {
@@ -107,11 +107,11 @@ function CouponBadges({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Badge variant={active ? 'default' : 'secondary'}>
+      <BadgeV2 variant={active ? 'default' : 'secondary'}>
         {active ? 'Active' : 'Inactive'}
       </Badge>
       {expiringSoon ? (
-        <Badge variant="outline" className="border-amber-500/40 text-amber-300">
+        <BadgeV2 variant="outline" className="border-amber-500/40 text-amber-300">
           Expires soon
         </Badge>
       ) : null}
@@ -175,12 +175,12 @@ function CouponEditCard({
             </p>
           </div>
 
-          <Button variant="ghost" size="sm" asChild>
+          <ButtonV2  variant="ghost" size="sm" asChild>
             <Link href={`/${locale}/admin/propfirms/${coupon.propFirm.id}`}>
               <Building2 className="h-4 w-4" />
               Firm
             </Link>
-          </Button>
+          </ButtonV2>
         </div>
       </CardHeader>
 
@@ -192,11 +192,11 @@ function CouponEditCard({
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor={`code-${coupon.id}`}>Code</Label>
-              <Input id={`code-${coupon.id}`} name="code" defaultValue={coupon.code} required />
+              <InputV2 id={`code-${coupon.id}`} name="code" defaultValue={coupon.code} required />
             </div>
             <div className="space-y-2 md:col-span-2 xl:col-span-3">
               <Label htmlFor={`description-${coupon.id}`}>Description</Label>
-              <Textarea
+              <TextareaV2
                 id={`description-${coupon.id}`}
                 name="description"
                 defaultValue={coupon.description ?? ''}
@@ -209,7 +209,7 @@ function CouponEditCard({
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor={`discountPercent-${coupon.id}`}>Discount %</Label>
-              <Input
+              <InputV2
                 id={`discountPercent-${coupon.id}`}
                 name="discountPercent"
                 type="number"
@@ -220,7 +220,7 @@ function CouponEditCard({
             </div>
             <div className="space-y-2">
               <Label htmlFor={`challengeFee-${coupon.id}`}>Challenge Fee</Label>
-              <Input
+              <InputV2
                 id={`challengeFee-${coupon.id}`}
                 name="challengeFee"
                 type="number"
@@ -231,7 +231,7 @@ function CouponEditCard({
             </div>
             <div className="space-y-2">
               <Label htmlFor={`drawdownType-${coupon.id}`}>Drawdown Type</Label>
-              <Input
+              <InputV2
                 id={`drawdownType-${coupon.id}`}
                 name="drawdownType"
                 defaultValue={coupon.drawdownType ?? ''}
@@ -240,7 +240,7 @@ function CouponEditCard({
             </div>
             <div className="space-y-2">
               <Label htmlFor={`payoutModel-${coupon.id}`}>Payout Model</Label>
-              <Input
+              <InputV2
                 id={`payoutModel-${coupon.id}`}
                 name="payoutModel"
                 defaultValue={coupon.payoutModel ?? ''}
@@ -252,7 +252,7 @@ function CouponEditCard({
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor={`platform-${coupon.id}`}>Platform</Label>
-              <Input
+              <InputV2
                 id={`platform-${coupon.id}`}
                 name="platform"
                 defaultValue={coupon.platform ?? ''}
@@ -261,7 +261,7 @@ function CouponEditCard({
             </div>
             <div className="space-y-2 md:col-span-1 xl:col-span-2">
               <Label htmlFor={`claimUrl-${coupon.id}`}>Claim URL</Label>
-              <Input
+              <InputV2
                 id={`claimUrl-${coupon.id}`}
                 name="claimUrl"
                 type="url"
@@ -271,7 +271,7 @@ function CouponEditCard({
             </div>
             <div className="space-y-2">
               <Label htmlFor={`startsAt-${coupon.id}`}>Starts At</Label>
-              <Input
+              <InputV2
                 id={`startsAt-${coupon.id}`}
                 name="startsAt"
                 type="datetime-local"
@@ -283,7 +283,7 @@ function CouponEditCard({
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor={`expiresAt-${coupon.id}`}>Expires At</Label>
-              <Input
+              <InputV2
                 id={`expiresAt-${coupon.id}`}
                 name="expiresAt"
                 type="datetime-local"
@@ -302,9 +302,9 @@ function CouponEditCard({
               </label>
             </div>
             <div className="md:col-span-2 flex items-end justify-end gap-2">
-              <Button type="submit" variant="outline" size="sm">
+              <ButtonV2  type="submit" variant="outline" size="sm">
                 Save coupon
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         </form>
@@ -316,7 +316,7 @@ function CouponEditCard({
           <form action={onDeleteCoupon}>
             <input type="hidden" name="couponId" value={coupon.id} />
             <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
-            <Button
+            <ButtonV2 
               type="submit"
               size="sm"
               variant="ghost"
@@ -324,7 +324,7 @@ function CouponEditCard({
             >
               <Trash2 className="h-4 w-4" />
               Delete
-            </Button>
+            </ButtonV2>
           </form>
         </div>
       </CardContent>
@@ -408,12 +408,12 @@ export default async function AdminCouponsPage({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" asChild>
+          <ButtonV2  variant="outline" asChild>
             <Link href={`/${locale}/admin/propfirms`}>
               <Building2 className="h-4 w-4" />
               Prop firms
             </Link>
-          </Button>
+          </ButtonV2>
         </div>
       </div>
 
@@ -433,7 +433,7 @@ export default async function AdminCouponsPage({
                 Create a new code, attach it to a prop firm, and publish it immediately.
               </p>
             </div>
-            <Badge variant="secondary">{firms.length} firms available</Badge>
+            <BadgeV2 variant="secondary">{firms.length} firms available</Badge>
           </div>
         </CardHeader>
         <CardContent size="sm" className="pt-4">
@@ -461,52 +461,52 @@ export default async function AdminCouponsPage({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-code">Code</Label>
-                  <Input id="new-code" name="code" required placeholder="SAVE20" />
+                  <InputV2 id="new-code" name="code" required placeholder="SAVE20" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-discountPercent">Discount %</Label>
-                  <Input id="new-discountPercent" name="discountPercent" type="number" step="0.01" placeholder="20" />
+                  <InputV2 id="new-discountPercent" name="discountPercent" type="number" step="0.01" placeholder="20" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-challengeFee">Challenge Fee</Label>
-                  <Input id="new-challengeFee" name="challengeFee" type="number" step="0.01" placeholder="0" />
+                  <InputV2 id="new-challengeFee" name="challengeFee" type="number" step="0.01" placeholder="0" />
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="new-description">Description</Label>
-                  <Textarea id="new-description" name="description" rows={2} placeholder="Promo notes, restrictions, or seasonal campaign details" />
+                  <TextareaV2 id="new-description" name="description" rows={2} placeholder="Promo notes, restrictions, or seasonal campaign details" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-drawdownType">Drawdown Type</Label>
-                  <Input id="new-drawdownType" name="drawdownType" placeholder="Static" />
+                  <InputV2 id="new-drawdownType" name="drawdownType" placeholder="Static" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-payoutModel">Payout Model</Label>
-                  <Input id="new-payoutModel" name="payoutModel" placeholder="Monthly" />
+                  <InputV2 id="new-payoutModel" name="payoutModel" placeholder="Monthly" />
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div className="space-y-2">
                   <Label htmlFor="new-platform">Platform</Label>
-                  <Input id="new-platform" name="platform" placeholder="Tradovate" />
+                  <InputV2 id="new-platform" name="platform" placeholder="Tradovate" />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="new-claimUrl">Claim URL</Label>
-                  <Input id="new-claimUrl" name="claimUrl" type="url" placeholder="https://..." />
+                  <InputV2 id="new-claimUrl" name="claimUrl" type="url" placeholder="https://..." />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-startsAt">Starts At</Label>
-                  <Input id="new-startsAt" name="startsAt" type="datetime-local" />
+                  <InputV2 id="new-startsAt" name="startsAt" type="datetime-local" />
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <div className="space-y-2">
                   <Label htmlFor="new-expiresAt">Expires At</Label>
-                  <Input id="new-expiresAt" name="expiresAt" type="datetime-local" />
+                  <InputV2 id="new-expiresAt" name="expiresAt" type="datetime-local" />
                 </div>
                 <div className="flex items-end">
                   <label className="flex items-center gap-2 text-sm text-foreground">
@@ -515,10 +515,10 @@ export default async function AdminCouponsPage({
                   </label>
                 </div>
                 <div className="md:col-span-2 flex items-end justify-end">
-                  <Button type="submit">
+                  <ButtonV2  type="submit">
                     <Plus className="h-4 w-4" />
                     Create coupon
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             </form>

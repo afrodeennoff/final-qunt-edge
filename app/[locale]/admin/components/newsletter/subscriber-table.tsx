@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 import { deleteSubscriber, getSubscribers, importSubscribers, sendTestNewsletter } from "@/app/[locale]/admin/actions/newsletter"
@@ -17,7 +17,7 @@ import { useNewsletter, type NewsletterContent } from "./newsletter-context"
 import { Brain, Loader2, Filter, Eye } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
 
 interface Subscriber {
@@ -195,7 +195,7 @@ function InferenceResultRow({ result }: { result: InferenceResult }) {
             </div>
           )}
         </div>
-        <Badge
+        <BadgeV2
           variant={
             result.status === "updated"
               ? "default"
@@ -223,14 +223,14 @@ function InferenceResultsDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button
+        <ButtonV2 
           variant="outline"
           size="sm"
           className="flex items-center gap-2"
         >
           <Eye className="h-4 w-4" />
           View Results
-        </Button>
+        </ButtonV2>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
@@ -303,7 +303,7 @@ function SubscriberTableHeaderActions({
 
   return (
     <div className="flex items-center gap-4">
-      <Button
+      <ButtonV2 
         variant="secondary"
         size="sm"
         disabled={inferringNames || selectedCount === 0}
@@ -321,8 +321,8 @@ function SubscriberTableHeaderActions({
             {t('newsletter.admin.inferNames')} ({selectedCount})
           </>
         )}
-      </Button>
-      <Button
+      </ButtonV2>
+      <ButtonV2 
         variant={showOnlyTraders ? "default" : "outline"}
         size="sm"
         onClick={onToggleFilter}
@@ -330,9 +330,9 @@ function SubscriberTableHeaderActions({
       >
         <Filter className="h-4 w-4" />
         {showOnlyTraders ? t('newsletter.admin.filter.showAll') : t('newsletter.admin.filter.showTradersOnly')}
-      </Button>
+      </ButtonV2>
       {needsInference > 0 && (
-        <Button
+        <ButtonV2 
           variant="secondary"
           disabled={inferringNames}
           onClick={onInferNames}
@@ -349,7 +349,7 @@ function SubscriberTableHeaderActions({
               {t('newsletter.admin.inferNames')} ({needsInference})
             </>
           )}
-        </Button>
+        </ButtonV2>
       )}
       {lastInferenceResults && (
         <InferenceResultsDialog
@@ -366,13 +366,13 @@ function SubscriberTableHeaderActions({
         onChange={onCSVUpload}
         disabled={uploading}
       />
-      <Button
+      <ButtonV2 
         variant="outline"
         disabled={uploading}
         onClick={() => fileInputRef.current?.click()}
       >
         {uploading ? "Importing..." : "Import CSV"}
-      </Button>
+      </ButtonV2>
     </div>
   )
 }
@@ -425,7 +425,7 @@ function SubscriberRow({
         </span>
       </TableCell>
       <TableCell className="text-right gap-x-2">
-        <Button
+        <ButtonV2 
           variant="outline"
           size="sm"
           onClick={() => onSendTest(subscriber.email, subscriber.firstName)}
@@ -440,14 +440,14 @@ function SubscriberRow({
           ) : (
             "Send Test"
           )}
-        </Button>
-        <Button
+        </ButtonV2>
+        <ButtonV2 
           variant="destructive"
           size="sm"
           onClick={() => onDelete(subscriber.email)}
         >
           Delete
-        </Button>
+        </ButtonV2>
       </TableCell>
     </TableRow>
   )

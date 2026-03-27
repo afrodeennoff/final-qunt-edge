@@ -108,7 +108,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
         {(primaryAction || secondaryAction) && (
           <CardFooter size={size} className="gap-2">
             {secondaryAction && (
-              <Button
+              <ButtonV2 
                 variant="outline"
                 className={cn("flex-1", currentSize.button)}
                 onClick={secondaryAction.onClick}
@@ -117,7 +117,7 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
               </Button>
             )}
             {primaryAction && (
-              <Button
+              <ButtonV2 
                 variant={primaryAction.variant || "default"}
                 className={cn("flex-1", currentSize.button)}
                 onClick={primaryAction.onClick}

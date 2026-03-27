@@ -144,7 +144,7 @@ export default function PricingSection() {
               </ul>
 
               {/* CTA */}
-              <Button
+              <ButtonV2 
                 variant={plan.variant === 'featured' ? 'default' : 'outline'}
                 className={`w-full ${
                   plan.variant === 'featured'
@@ -153,7 +153,7 @@ export default function PricingSection() {
                 }`}
               >
                 {plan.cta}
-              </Button>
+              </ButtonV2>
             </div>
           ))}
         </div>

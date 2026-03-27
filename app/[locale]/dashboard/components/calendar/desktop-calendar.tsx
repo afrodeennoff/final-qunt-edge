@@ -6,8 +6,8 @@ import { formatInTimeZone } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Newspaper, Calendar, CalendarDays } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { BadgeV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { CalendarModal } from "./daily-modal"
@@ -138,7 +138,7 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Badge
+        <BadgeV2
           variant="outline"
           className={cn(
             "h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1",
@@ -180,7 +180,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Badge
+        <BadgeV2
           variant="outline"
           className={cn(
             "h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1",
@@ -578,7 +578,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="flex items-center gap-1.5">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="icon"
                 onClick={() => viewMode === 'daily' ? handlePrevMonth() : setCurrentDate(new Date(getYear(currentDate) - 1, 0, 1))}
@@ -586,8 +586,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                 aria-label={viewMode === 'daily' ? "Previous month" : "Previous year"}
               >
                 <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
+              </ButtonV2>
+              <ButtonV2 
                 variant="outline"
                 size="icon"
                 onClick={() => viewMode === 'daily' ? handleNextMonth() : setCurrentDate(new Date(getYear(currentDate) + 1, 0, 1))}
@@ -595,7 +595,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                 aria-label={viewMode === 'daily' ? "Next month" : "Next year"}
               >
                 <ChevronRight className="h-4 w-4" />
-              </Button>
+              </ButtonV2>
             </div>
             <div className={cn("flex items-center gap-2", hideFiltersOnMobile && "max-sm:hidden")}>
               <ImportanceFilter
@@ -790,7 +790,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
       <CardFooter className="flex justify-end border-t border-border/60 bg-background/30 px-3 py-2">
         {/* View Mode Toggle */}
         <div className="flex items-center gap-1 rounded-lg border border-border/60 bg-secondary/30 p-1">
-          <Button
+          <ButtonV2 
             variant={viewMode === 'daily' ? 'default' : 'ghost'}
             size="sm"
             className={cn(
@@ -801,8 +801,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           >
             <Calendar className="h-4 w-4 mr-1" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.daily')}</span>
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             variant={viewMode === 'weekly' ? 'default' : 'ghost'}
             size="sm"
             className={cn(
@@ -813,7 +813,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           >
             <CalendarDays className="h-4 w-4 mr-1" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.weekly')}</span>
-          </Button>
+          </ButtonV2>
         </div>
       </CardFooter>
     </Card>

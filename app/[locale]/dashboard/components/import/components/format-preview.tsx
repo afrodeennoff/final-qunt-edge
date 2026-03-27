@@ -13,7 +13,7 @@ import {
 import { format, isValid } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils"; // Assuming you have a utility for className merging
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { parsePositionTime } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -792,42 +792,42 @@ export function FormatPreview({
         </div>
         <div className="flex items-center gap-2">
           {!isAutoProcessing && completedBatches.size === 0 && (
-            <Button
+            <ButtonV2 
               onClick={startProcessing}
               disabled={isProcessing}
               className="bg-muted/50 hover:bg-muted/50 text-foreground"
             >
               {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
-            </Button>
+            </ButtonV2>
           )}
           
           {isAutoProcessing && (
-            <Button
+            <ButtonV2 
               onClick={stopProcessing}
               variant="destructive"
             >
               {t('import.processing.stopProcessing')}
-            </Button>
+            </ButtonV2>
           )}
           
           {!isAutoProcessing && completedBatches.size > 0 && (
-        <Button
+        <ButtonV2 
               onClick={startProcessing}
               disabled={isProcessing}
           variant="outline"
         >
               {isProcessing ? t('import.processing.resuming') : t('import.processing.resumeProcessing')}
-        </Button>
+        </ButtonV2>
           )}
           
-          <Button
+          <ButtonV2 
             onClick={resetProcessing}
             disabled={isProcessing}
             variant="outline"
             className="border-semantic-error-border text-semantic-error hover:bg-semantic-error-bg"
         >
           {t('import.processing.reset')}
-          </Button>
+          </ButtonV2>
         </div>
       </div>
       

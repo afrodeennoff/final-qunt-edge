@@ -18,7 +18,7 @@ import {
   ExpandedState,
   OnChangeFn,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   ChevronRight,
   ChevronDown,
@@ -74,7 +74,7 @@ import {
   calculateTicksAndPointsForTrades,
   calculateTicksAndPointsForGroupedTrade,
 } from "@/lib/tick-calculations";
-import { Input } from "@/components/ui/input";
+import { InputV2 } from "@/components/ui/v2";
 import { toast } from "sonner";
 import { Trash } from "lucide-react";
 import {
@@ -128,7 +128,7 @@ function TagsColumnHeader() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button
+        <ButtonV2 
           variant="ghost"
           size="sm"
           className={cn(
@@ -140,7 +140,7 @@ function TagsColumnHeader() {
           {hasActiveFilter && (
             <Filter className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
           )}
-        </Button>
+        </ButtonV2>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-80">
         <DropdownMenuSub>
@@ -162,7 +162,7 @@ function TagsColumnHeader() {
               {/* Search input */}
               <div className="flex items-center gap-2 bg-muted/30 rounded-md px-2">
                 <Search className="h-4 w-4 text-muted-foreground" />
-                <Input
+                <InputV2
                   placeholder={t("widgets.tags.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -218,7 +218,7 @@ function TagsColumnHeader() {
 
               {/* Action buttons */}
               <div className="flex items-center gap-2">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   size="sm"
                   onClick={handleClearFilter}
@@ -226,14 +226,14 @@ function TagsColumnHeader() {
                   disabled={!hasActiveFilter}
                 >
                   {t("table.clear")}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   size="sm"
                   onClick={() => setIsOpen(false)}
                   className="flex-1"
                 >
                   {t("table.apply")}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           </DropdownMenuSubContent>
@@ -705,7 +705,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           if (trade.trades.length <= 1) return null;
 
           return (
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               onClick={row.getToggleExpandedHandler()}
@@ -716,7 +716,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               ) : (
                 <ChevronRight className="h-4 w-4" />
               )}
-            </Button>
+            </ButtonV2>
           );
         },
         size: 40,
@@ -724,13 +724,13 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       {
         id: "accounts",
         header: () => (
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
             {t("trade-table.accounts")}
-          </Button>
+          </ButtonV2>
         ),
         cell: ({ row }) => {
           const trade = row.original;
@@ -1082,13 +1082,13 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       {
         id: "image",
         header: ({ column }) => (
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
             {t("trade-table.image")}
-          </Button>
+          </ButtonV2>
         ),
         cell: ({ row }) => {
           const trade = row.original;
@@ -1322,14 +1322,14 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               {selectedTrades.length > 0 && (
                 <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                   <AlertDialogTrigger asChild>
-                    <Button
+                    <ButtonV2 
                       variant="destructive"
                       className="h-10 font-normal whitespace-nowrap"
                       onClick={() => setShowDeleteDialog(true)}
                     >
                       <Trash className="mr-2 h-4 w-4" />
                       {t("trade-table.deleteSelected")}
-                    </Button>
+                    </ButtonV2>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -1352,22 +1352,22 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                 </AlertDialog>
               )}
               {config?.groupTrades !== false && selectedTrades.length >= 2 && (
-                <Button
+                <ButtonV2 
                   variant="outline"
                   className="h-10 font-normal whitespace-nowrap"
                   onClick={handleGroupTrades}
                 >
                   {t("trade-table.groupTrades")}
-                </Button>
+                </ButtonV2>
               )}
               {config?.groupTrades !== false && selectedTrades.length > 0 && (
-                <Button
+                <ButtonV2 
                   variant="outline"
                   className="h-10 font-normal whitespace-nowrap"
                   onClick={handleUngroupTrades}
                 >
                   {t("trade-table.ungroupTrades")}
-                </Button>
+                </ButtonV2>
               )}
               {config?.groupTrades !== false && (
                 <Select
@@ -1533,7 +1533,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                     <div className="flex flex-col items-center justify-center p-8 gap-3">
                       <p className="text-muted-foreground">{t("trade-table.noResults") || "No results."}</p>
                       {formattedTrades.length > 0 && columnFilters.length > 0 && (
-                        <Button
+                        <ButtonV2 
                           variant="outline"
                           size="sm"
                           onClick={() => {
@@ -1542,7 +1542,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                           }}
                         >
                           Reset Table Filters
-                        </Button>
+                        </ButtonV2>
                       )}
                     </div>
                   </td>
@@ -1661,7 +1661,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           {t("trade-table.totalTrades", { count: totalTradeCount })}
         </div>
         <div className="flex items-center gap-2">
-          <Button
+          <ButtonV2 
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
@@ -1669,14 +1669,14 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           >
             <ChevronLeft className="h-4 w-4" />
             {t("trade-table.previous")}
-          </Button>
+          </ButtonV2>
           <span className="text-sm">
             {t("trade-table.pageInfo", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),
             })}
           </span>
-          <Button
+          <ButtonV2 
             variant="outline"
             size="sm"
             onClick={() => table.nextPage()}
@@ -1684,8 +1684,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           >
             {t("trade-table.next")}
             <ChevronRight className="h-4 w-4" />
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             variant="outline"
             size="sm"
             onClick={() => {
@@ -1695,8 +1695,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             }}
           >
             {t("trade-table.pageSize")}
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             variant="outline"
             size="sm"
             className="w-[180px]"
@@ -1707,8 +1707,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             }}
           >
             {t("trade-table.resetPageSize")}
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2 
             variant="outline"
             size="sm"
             onClick={() => {
@@ -1719,7 +1719,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             }}
           >
             {t("trade-table.maxPageSize")}
-          </Button>
+          </ButtonV2>
         </div>
       </CardFooter>
 

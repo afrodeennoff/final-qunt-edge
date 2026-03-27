@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Loader2, ZoomIn, ZoomOut } from "lucide-react"
 import { useWelcomeEmail } from "./welcome-email-context"
 import { useDebounce } from "@/hooks/use-debounce"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { renderWelcomeEmailPreview } from "../../actions/welcome"
@@ -50,23 +50,23 @@ export function WelcomeEmailPreview() {
           <div className="flex items-center justify-between">
             <CardTitle>Email Preview</CardTitle>
             <div className="flex items-center gap-2">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom(prev => Math.max(0.5, prev - 0.1))}
                 disabled={zoom <= 0.5}
               >
                 <ZoomOut className="h-4 w-4" />
-              </Button>
+              </ButtonV2>
               <span className="text-sm text-muted-foreground">{Math.round(zoom * 100)}%</span>
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom(prev => Math.min(2, prev + 0.1))}
                 disabled={zoom >= 2}
               >
                 <ZoomIn className="h-4 w-4" />
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         </CardHeader>
@@ -76,7 +76,7 @@ export function WelcomeEmailPreview() {
             <div className="p-6 space-y-6 overflow-y-auto">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input
+                <InputV2
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -85,7 +85,7 @@ export function WelcomeEmailPreview() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
+                <InputV2
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

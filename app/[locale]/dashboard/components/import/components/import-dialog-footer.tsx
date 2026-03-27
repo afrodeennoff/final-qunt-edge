@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { ImportType } from "../import-type-selection"
@@ -45,15 +45,15 @@ export function ImportDialogFooter({
     <div className="flex-none p-4 border-t bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60 h-[68px]">
       <div className="flex justify-end items-center gap-4">
         {currentStepIndex > 0 && (
-          <Button 
+          <ButtonV2  
             variant="outline" 
             onClick={onBack}
             className="w-fit min-w-[100px]"
           >
             {t('import.button.back')}
-          </Button>
+          </ButtonV2>
         )}
-        <Button 
+        <ButtonV2  
           onClick={onNext}
           className={cn(
             "w-fit min-w-[100px]",
@@ -62,7 +62,7 @@ export function ImportDialogFooter({
           disabled={isNextDisabled}
         >
           {getNextButtonText()}
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   )

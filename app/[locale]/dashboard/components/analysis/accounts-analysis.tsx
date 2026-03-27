@@ -8,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { BadgeV2 } from "@/components/ui/v2";
+import { ButtonV2 } from "@/components/ui/v2";
 import { useI18n, useCurrentLocale } from "@/locales/client";
 import { useChat } from "@ai-sdk/react";
 import {
@@ -222,7 +222,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                 </span>
               </div>
             ) : (
-              <Button
+              <ButtonV2 
                 onClick={() =>
                   sendMessage(
                     {
@@ -247,7 +247,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
               >
                 <Play className="h-4 w-4" />
                 {t("analysis.generate")}
-              </Button>
+              </ButtonV2>
             )}
           </div>
         </div>
@@ -361,7 +361,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
                                 {account.profitFactor?.toFixed(2) || 0}
                               </td>
                               <td className="p-2">
-                                <Badge
+                                <BadgeV2
                                   variant="outline"
                                   className={
                                     account.riskLevel === "high"

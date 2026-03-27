@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState } from "react"
@@ -48,10 +48,10 @@ export function PnlRangeFilter() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex gap-2">
+        <ButtonV2  variant="outline" className="flex gap-2">
           {getButtonLabel()}
           <ChevronDown className="h-4 w-4" />
-        </Button>
+        </ButtonV2>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuItem onClick={() => handlePresetSelect(undefined, undefined)}>
@@ -67,14 +67,14 @@ export function PnlRangeFilter() {
         <div className="p-2">
           <div className="space-y-2">
             <div className="flex gap-2">
-              <Input
+              <InputV2
                 type="number"
                 placeholder={t('filters.min')}
                 value={customMin}
                 onChange={(e) => setCustomMin(e.target.value)}
                 className="w-full"
               />
-              <Input
+              <InputV2
                 type="number"
                 placeholder={t('filters.max')}
                 value={customMax}
@@ -82,13 +82,13 @@ export function PnlRangeFilter() {
                 className="w-full"
               />
             </div>
-            <Button 
+            <ButtonV2  
               onClick={handleCustomRangeApply}
               className="w-full"
               variant="secondary"
             >
               {t('filters.apply')}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </DropdownMenuContent>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { useDashboardActions, useDashboardTrades } from '@/context/data-provider'
 import { useI18n, useCurrentLocale } from '@/locales/client'
 import { useUserStore } from '@/store/user-store'
@@ -131,7 +131,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
                 </div>
 
                 <div className="mt-6 flex justify-end">
-                  <Button onClick={handleGetStarted}>
+                  <ButtonV2  onClick={handleGetStarted}>
                     {t('onboarding.getStarted')}
                   </Button>
                 </div>

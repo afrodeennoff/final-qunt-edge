@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { PlatformConfig } from "../config/platforms";
 import { useI18n } from "@/locales/client";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 
 interface PlatformTutorialProps {
   selectedPlatform: PlatformConfig | undefined;
@@ -69,7 +69,7 @@ export function PlatformTutorial({
             : t("import.type.tutorial.title").replace("Video", " ")}
         </h2>
         {selectedPlatform.tutorialLink && (
-          <Button
+          <ButtonV2 
             variant="outline"
             size="sm"
             className="gap-2"
@@ -77,7 +77,7 @@ export function PlatformTutorial({
           >
             <ExternalLink className="h-4 w-4" />
             {t("import.type.tutorial.viewDocs")}
-          </Button>
+          </ButtonV2>
         )}
       </div>
       {selectedPlatform.videoUrl ? (

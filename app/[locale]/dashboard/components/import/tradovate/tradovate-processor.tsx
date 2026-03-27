@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { toast } from 'sonner'
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { useI18n } from '@/locales/client'
@@ -265,7 +265,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                                         <label htmlFor={`commission-${instrument}`} className="min-w-[200px]">
                                             {instrument} - {t('import.commission.perContract')}
                                         </label>
-                                        <Input
+                                        <InputV2
                                             id={`commission-${instrument}`}
                                             type="number"
                                             step="0.01"
@@ -276,9 +276,9 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                                     </div>
                                 ))}
                             </div>
-                            <Button onClick={applyCommissions} className="mt-4">
+                            <ButtonV2  onClick={applyCommissions} className="mt-4">
                                 {t('import.commission.apply')}
-                            </Button>
+                            </ButtonV2>
                         </div>
                     )}
                     {processedTrades.length === 0 && (
@@ -342,12 +342,12 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                         <h3 className="text-lg font-semibold mb-2">Instruments Traded</h3>
                         <div className="flex flex-wrap gap-2">
                             {uniqueInstruments.map((instrument) => (
-                                <Button
+                                <ButtonV2 
                                     key={instrument}
                                     variant="outline"
                                 >
                                     {instrument}
-                                </Button>
+                                </ButtonV2>
                             ))}
                         </div>
                     </div>

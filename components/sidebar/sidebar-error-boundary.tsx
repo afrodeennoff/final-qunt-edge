@@ -2,7 +2,7 @@
 
 import React from "react"
 import { AlertTriangle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 
 interface SidebarErrorBoundaryProps {
   children: React.ReactNode
@@ -44,7 +44,7 @@ export class SidebarErrorBoundary extends React.Component<
           <p className="mb-4 text-sm text-muted-foreground">
             {this.state.error?.message || "An error occurred in the navigation"}
           </p>
-          <Button
+          <ButtonV2 
             variant="outline"
             size="sm"
             onClick={() => window.location.reload()}

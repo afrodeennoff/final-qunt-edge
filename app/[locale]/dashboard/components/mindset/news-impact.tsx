@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { useI18n } from "@/locales/client"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { useCurrentLocale } from "@/locales/client"
 import { X } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { HourlyFinancialTimeline } from "@/app/[locale]/dashboard/components/mindset/hourly-financial-timeline"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImportanceFilter } from "@/app/[locale]/dashboard/components/importance-filter"
@@ -74,7 +74,7 @@ export function NewsImpact({ onNext, onBack, selectedNews, onNewsSelection, date
         <h2 className="text-lg font-semibold">{t('mindset.newsImpact.selectImportantNews')}</h2>
         <div className="flex items-center gap-2">
           {selectedNews.length > 0 && (
-            <Badge 
+            <BadgeV2 
               variant="secondary" 
               className="text-xs cursor-pointer flex items-center gap-1"
               onClick={() => onNewsSelection([])}
@@ -116,19 +116,19 @@ export function NewsImpact({ onNext, onBack, selectedNews, onNewsSelection, date
       </div>
 
       <div className="flex gap-4 border-t pt-4">
-        <Button
+        <ButtonV2 
           variant="outline"
           onClick={onBack}
           className="flex-1 sm:flex-none"
         >
           {t('mindset.back')}
-        </Button>
-        <Button
+        </ButtonV2>
+        <ButtonV2 
           onClick={onNext}
           className="flex-1 sm:flex-none"
         >
           {t('mindset.next')}
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   )

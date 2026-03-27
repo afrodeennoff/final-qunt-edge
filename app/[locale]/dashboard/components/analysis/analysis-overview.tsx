@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo, useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { BadgeV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { useI18n } from "@/locales/client"
 import {
   Clock,
@@ -49,7 +49,7 @@ export function AnalysisOverview() {
           <p className="text-base text-muted-foreground">{t('analysis.description')}</p>
         </div>
         <div className="flex items-center gap-4">
-          <Button
+          <ButtonV2 
             onClick={() => clearAnalysis()}
             variant="ghost"
             size="default"
@@ -57,8 +57,8 @@ export function AnalysisOverview() {
             disabled={status.isLoading || !effectiveHasData}
           >
             <Trash2 className="h-5 w-5" />
-          </Button>
-          <Badge variant="secondary" className="flex items-center gap-2">
+          </ButtonV2>
+          <BadgeV2 variant="secondary" className="flex items-center gap-2">
             {status.isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Clock className="h-4 w-4" />}
             {statusLabel}
           </Badge>

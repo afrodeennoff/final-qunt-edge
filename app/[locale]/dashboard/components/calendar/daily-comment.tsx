@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
@@ -147,13 +147,13 @@ export function DailyComment({ selectedDate }: DailyCommentProps) {
           </div>
         )}
         {saveError && <p className="text-sm text-destructive">{saveError}</p>}
-        <Button
+        <ButtonV2 
           onClick={handleSaveComment}
           disabled={isLoading || isSavingComment || !comment.trim()}
           size="sm"
         >
           {t("calendar.charts.saveComment")}
-        </Button>
+        </ButtonV2>
       </div>
     </div>
   );

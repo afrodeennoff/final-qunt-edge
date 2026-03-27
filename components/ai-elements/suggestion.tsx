@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   ScrollArea,
   ScrollBar,
@@ -42,7 +42,7 @@ export const Suggestion = ({
   };
 
   return (
-    <Button
+    <ButtonV2 
       className={cn("cursor-pointer rounded-full px-4", className)}
       onClick={handleClick}
       size={size}

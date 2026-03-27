@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Frown, Meh, Smile } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import {
   Card,
   CardContent,
@@ -115,7 +115,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
           {!isWeekly && (
             <CardContent className="pt-2 mt-auto">
               <div className="flex justify-around items-center">
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="lg"
                   className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'bad' ? 'text-semantic-error' : ''}`}
@@ -123,9 +123,9 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                   disabled={isLoading !== null}
                 >
                   <Frown className={`h-6 w-6 ${isLoading === 'bad' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
                 
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="lg"
                   className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'okay' ? 'text-semantic-warning' : ''}`}
@@ -133,9 +133,9 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                   disabled={isLoading !== null}
                 >
                   <Meh className={`h-6 w-6 ${isLoading === 'okay' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
                 
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="lg"
                   className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
@@ -143,7 +143,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                   disabled={isLoading !== null}
                 >
                   <Smile className={`h-6 w-6 ${isLoading === 'great' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
               </div>
               <p className="text-sm text-muted-foreground mt-4 text-center">
                 {t('calendar.modal.noTrades')}
@@ -173,7 +173,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
         {!isWeekly && (
           <CardContent className="pt-2 mt-auto">
             <div className="flex justify-around items-center">
-              <Button
+              <ButtonV2 
                 variant="ghost"
                 size="lg"
                 className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'bad' ? 'text-semantic-error' : ''}`}
@@ -181,9 +181,9 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 disabled={isLoading !== null}
               >
                 <Frown className={`h-6 w-6 ${isLoading === 'bad' ? 'animate-pulse' : ''}`} />
-              </Button>
+              </ButtonV2>
               
-              <Button
+              <ButtonV2 
                 variant="ghost"
                 size="lg"
                 className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'okay' ? 'text-semantic-warning' : ''}`}
@@ -191,9 +191,9 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 disabled={isLoading !== null}
               >
                 <Meh className={`h-6 w-6 ${isLoading === 'okay' ? 'animate-pulse' : ''}`} />
-              </Button>
+              </ButtonV2>
               
-              <Button
+              <ButtonV2 
                 variant="ghost"
                 size="lg"
                 className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
@@ -201,7 +201,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 disabled={isLoading !== null}
               >
                 <Smile className={`h-6 w-6 ${isLoading === 'great' ? 'animate-pulse' : ''}`} />
-              </Button>
+              </ButtonV2>
             </div>
           </CardContent>
         )}

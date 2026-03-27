@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   Loader2,
   Trash2,
@@ -321,10 +321,10 @@ export function RithmicCredentialsManager({
           <h2 className="text-lg font-semibold">
             {t("rithmic.savedCredentials")}
           </h2>
-          <Button onClick={onAddNew} size="sm">
+          <ButtonV2  onClick={onAddNew} size="sm">
             <Plus className="h-4 w-4 mr-2" />
             {t("rithmic.addNew")}
-          </Button>
+          </ButtonV2>
         </div>
 
         <div className="flex items-center justify-between gap-4 p-4 bg-muted/50 rounded-lg">
@@ -352,7 +352,7 @@ export function RithmicCredentialsManager({
             </div>
           </div>
 
-          <Button
+          <ButtonV2 
             onClick={() => {
               const allCredentials = Object.values(credentials);
               allCredentials.forEach((cred) => handleSync(cred));
@@ -363,7 +363,7 @@ export function RithmicCredentialsManager({
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             {t("rithmic.actions.syncAll")}
-          </Button>
+          </ButtonV2>
         </div>
       </div>
 
@@ -449,7 +449,7 @@ export function RithmicCredentialsManager({
                     <TableCell>
                       {credential ? (
                         <div className="flex justify-center items-center gap-2">
-                          <Button
+                          <ButtonV2 
                             variant="ghost"
                             size="sm"
                             onClick={() => handleSync(credential)}
@@ -460,20 +460,20 @@ export function RithmicCredentialsManager({
                             ) : (
                               <RefreshCw className="h-4 w-4 text-muted-foreground" />
                             )}
-                          </Button>
+                          </ButtonV2>
                           <Popover modal>
                             <PopoverTrigger asChild>
-                              <Button
+                              <ButtonV2 
                                 variant="ghost"
                                 size="sm"
                                 className="h-8 w-8 p-0"
                               >
                                 <MoreVertical className="h-4 w-4" />
-                              </Button>
+                              </ButtonV2>
                             </PopoverTrigger>
                             <PopoverContent className="w-48 p-2" align="end">
                               <div className="flex flex-col gap-1">
-                                <Button
+                                <ButtonV2 
                                   variant="ghost"
                                   size="sm"
                                   className="justify-start"
@@ -486,8 +486,8 @@ export function RithmicCredentialsManager({
                                     <History className="h-4 w-4 mr-2" />
                                   )}
                                   {t("rithmic.actions.loadMore")}
-                                </Button>
-                                <Button
+                                </ButtonV2>
+                                <ButtonV2 
                                   variant="ghost"
                                   size="sm"
                                   className="justify-start"
@@ -495,8 +495,8 @@ export function RithmicCredentialsManager({
                                 >
                                   <Edit2 className="h-4 w-4 mr-2" />
                                   {t("rithmic.actions.edit")}
-                                </Button>
-                                <Button
+                                </ButtonV2>
+                                <ButtonV2 
                                   variant="ghost"
                                   size="sm"
                                   className="justify-start text-destructive hover:text-destructive"
@@ -507,7 +507,7 @@ export function RithmicCredentialsManager({
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
                                   {t("rithmic.actions.delete")}
-                                </Button>
+                                </ButtonV2>
                               </div>
                             </PopoverContent>
                           </Popover>
@@ -521,7 +521,7 @@ export function RithmicCredentialsManager({
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Button
+                            <ButtonV2 
                               variant="ghost"
                               size="sm"
                               className="justify-start"
@@ -535,8 +535,8 @@ export function RithmicCredentialsManager({
                             >
                               <LogIn className="h-4 w-4 mr-2" />
                               {t("rithmic.actions.login")}
-                            </Button>
-                            <Button
+                            </ButtonV2>
+                            <ButtonV2 
                               variant="ghost"
                               size="sm"
                               className="justify-start text-destructive hover:text-destructive"
@@ -551,7 +551,7 @@ export function RithmicCredentialsManager({
                                 <Trash2 className="h-4 w-4 mr-2" />
                               )}
                               {t("rithmic.actions.deleteSync")}
-                            </Button>
+                            </ButtonV2>
                           </div>
                         </div>
                       )}
@@ -573,20 +573,20 @@ export function RithmicCredentialsManager({
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2 mt-4">
-            <Button
+            <ButtonV2 
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
             >
               {t("common.cancel")}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="destructive"
               onClick={() =>
                 selectedCredentialId && handleDelete(selectedCredentialId)
               }
             >
               {t("common.delete")}
-            </Button>
+            </ButtonV2>
           </div>
         </DialogContent>
       </Dialog>

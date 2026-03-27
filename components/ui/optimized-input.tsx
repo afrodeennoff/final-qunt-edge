@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useCallback, useEffect, forwardRef } from 'react'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { useDebouncedCallback } from '@/lib/performance/render-optimization'
 
 interface OptimizedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -35,7 +35,7 @@ export const OptimizedInput = forwardRef<HTMLInputElement, OptimizedInputProps>(
 
     return (
       <div className="relative">
-        <Input
+        <InputV2
           ref={ref}
           {...props}
           value={localValue}

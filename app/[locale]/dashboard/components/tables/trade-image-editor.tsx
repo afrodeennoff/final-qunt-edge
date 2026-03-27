@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { ZoomIn, ZoomOut, X, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -541,7 +541,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                       </TransformComponent>
 
                       <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/70 backdrop-blur-xs z-50">
-                        <Button
+                        <ButtonV2 
                           variant="ghost"
                           size="icon"
                           className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
@@ -549,11 +549,11 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                           disabled={scale <= 0.5}
                         >
                           <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
-                        </Button>
+                        </ButtonV2>
                         <span className="min-w-10 sm:min-w-12 text-center text-xs sm:text-sm font-medium text-foreground">
                           {Math.round(scale * 100)}%
                         </span>
-                        <Button
+                        <ButtonV2 
                           variant="ghost"
                           size="icon"
                           className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
@@ -561,7 +561,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                           disabled={scale >= 3}
                         >
                           <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
-                        </Button>
+                        </ButtonV2>
                       </div>
                     </>
                   )}
@@ -603,7 +603,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                 ))}
                 {imageArray.length < MAX_IMAGES && (
                   <CarouselItem className="basis-auto">
-                    <Button
+                    <ButtonV2 
                       size={"icon"}
                       variant={"secondary"}
                       onClick={handleUploadClick}
@@ -615,7 +615,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                       )}
                     >
                       <Upload className="h-6 w-6 text-muted-foreground" />
-                    </Button>
+                    </ButtonV2>
                   </CarouselItem>
                 )}
               </CarouselContent>
@@ -672,7 +672,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                       {imageUrl.split("/").pop()?.substring(0, 40)}...
                     </p>
                   </div>
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     onClick={async (e) => {
@@ -687,13 +687,13 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                   >
                     <X className="h-4 w-4" />
                     <span className="hidden sm:inline">Delete</span>
-                  </Button>
+                  </ButtonV2>
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2 border-t pt-4">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 onClick={() => {
                   setShowDeleteConfirm(false);
@@ -701,8 +701,8 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
               className="w-full sm:w-auto transition-colors duration-200"
             >
               Close
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="destructive"
               onClick={async () => {
                 await handleRemoveAllImages();
@@ -713,7 +713,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
             >
               <X className="h-4 w-4" />
               Delete All {imageArray.length} Images
-            </Button>
+            </ButtonV2>
           </DialogFooter>
         </DialogContent>
       </Dialog>

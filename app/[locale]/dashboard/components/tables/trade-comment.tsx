@@ -87,7 +87,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div>
-            <Button
+            <ButtonV2 
               variant="ghost"
               className={cn(
                 "h-8 w-full justify-start px-2 gap-2 truncate",
@@ -99,7 +99,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
                   {localComment}
                 </div>
               ) : t('trade-table.addComment')}
-            </Button>
+            </ButtonV2>
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-4" align="start" forceMount sideOffset={5}>
@@ -146,7 +146,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
               </div>
             </div>
             <div className="flex justify-between">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="sm"
                 disabled={isUpdating || !localComment}
@@ -155,15 +155,15 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 {t('common.clear')}
-              </Button>
-              <Button
+              </ButtonV2>
+              <ButtonV2 
                 size="sm"
                 disabled={isUpdating}
                 onClick={handleSave}
               >
                 <Save className="h-4 w-4 mr-2" />
                 {t('common.save')}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         </PopoverContent>

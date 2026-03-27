@@ -4,7 +4,7 @@ import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { cn } from "@/lib/utils"
 import { ChevronDown, X } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 
 interface EnhancedInputProps {
   label?: string
@@ -215,7 +215,7 @@ export default function EnhancedInput({
             isValid === true ? "border-semantic-success/40" : "",
         )}
       >
-        <Input
+        <InputV2
           ref={inputRef}
           type="text"
           value={value}

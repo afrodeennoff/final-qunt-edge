@@ -24,7 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Trade } from "@/lib/data-types"
 import { useUserStore } from '@/store/user-store'
 import { createTagAction } from '@/server/tags'
@@ -133,7 +133,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
         {/* Add new tag button - still available even with no trades */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <Button 
+            <ButtonV2  
               variant="outline" 
               size="sm" 
               className="h-7 px-2 w-fit"
@@ -141,7 +141,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             >
               <Plus className="h-4 w-4 mr-1" />
               {t('mindset.tags.addNew')}
-            </Button>
+            </ButtonV2>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
             <Command shouldFilter={false}>
@@ -232,7 +232,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             <TooltipProvider key={tag}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge
+                  <BadgeV2
                     variant="secondary"
                     className={cn(
                       "cursor-pointer transition-all hover:scale-105",
@@ -270,7 +270,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
         {/* Add new tag button */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <Button 
+            <ButtonV2  
               variant="outline" 
               size="sm" 
               className="h-7 px-2"
@@ -278,7 +278,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             >
               <Plus className="h-4 w-4 mr-1" />
               {t('mindset.tags.addNew')}
-            </Button>
+            </ButtonV2>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
             <Command shouldFilter={false}>

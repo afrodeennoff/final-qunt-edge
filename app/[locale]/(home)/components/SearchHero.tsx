@@ -1,7 +1,7 @@
 'use client'
 
 import { Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 
 interface SearchHeroProps {
   searchQuery: string
@@ -35,7 +35,7 @@ export default function SearchHero({
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+          <InputV2
             type="text"
             placeholder="Search by firm, platform, or payout model..."
             value={searchQuery}

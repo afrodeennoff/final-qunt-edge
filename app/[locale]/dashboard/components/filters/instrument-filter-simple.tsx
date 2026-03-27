@@ -4,7 +4,7 @@ import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState, useEffect } from "react"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
@@ -59,7 +59,7 @@ export function InstrumentFilterSimple({ className }: InstrumentFilterSimpleProp
         <div className="border-b">
           <div className="flex items-center gap-2 px-3 py-2">
             <Search className="h-4 w-4 text-muted-foreground" />
-            <Input
+            <InputV2
               placeholder={t('filters.searchInstrument')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

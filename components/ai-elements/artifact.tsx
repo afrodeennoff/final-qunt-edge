@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   Tooltip,
   TooltipContent,
@@ -47,7 +47,7 @@ export const ArtifactClose = ({
   variant = "ghost",
   ...props
 }: ArtifactCloseProps) => (
-  <Button
+  <ButtonV2 
     className={cn(
       "size-8 p-0 text-muted-foreground hover:text-foreground",
       className
@@ -106,7 +106,7 @@ export const ArtifactAction = ({
   ...props
 }: ArtifactActionProps) => {
   const button = (
-    <Button
+    <ButtonV2 
       className={cn(
         "size-8 p-0 text-muted-foreground hover:text-foreground",
         className

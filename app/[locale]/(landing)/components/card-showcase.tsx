@@ -5,8 +5,8 @@ import { StatsCard } from "@/components/ui/stats-card"
 import { MediaCard } from "@/components/ui/media-card"
 import { ActionCard } from "@/components/ui/action-card"
 import { GlassCard } from "@/components/ui/glass-card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { ButtonV2 } from "@/components/ui/v2"
+import { BadgeV2 } from "@/components/ui/v2"
 import { TrendingUp, DollarSign, Users, ShoppingCart, Zap, Shield, AlertCircle } from "lucide-react"
 
 export function CardShowcase() {
@@ -188,8 +188,8 @@ export function CardShowcase() {
             badges={[{ label: "Featured" }, { label: "Nature", variant: "secondary" }]}
             actions={
               <div className="flex gap-2 w-full">
-                <Button variant="outline" className="flex-1">Like</Button>
-                <Button className="flex-1">View</Button>
+                <ButtonV2  variant="outline" className="flex-1">Like</ButtonV2>
+                <ButtonV2  className="flex-1">View</ButtonV2>
               </div>
             }
             imageAspect="video"
@@ -202,8 +202,8 @@ export function CardShowcase() {
             badges={[{ label: "New", variant: "default" }]}
             actions={
               <div className="flex gap-2 w-full">
-                <Button variant="outline" className="flex-1">Save</Button>
-                <Button className="flex-1">Explore</Button>
+                <ButtonV2  variant="outline" className="flex-1">Save</ButtonV2>
+                <ButtonV2  className="flex-1">Explore</ButtonV2>
               </div>
             }
             imageAspect="video"
@@ -289,7 +289,7 @@ export function CardShowcase() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Analytics Dashboard</CardTitle>
-                <Badge>Pro</Badge>
+                <BadgeV2>Pro</Badge>
               </div>
               <CardDescription>Real-time performance metrics</CardDescription>
             </CardHeader>
@@ -309,7 +309,7 @@ export function CardShowcase() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">View Details</Button>
+              <ButtonV2  variant="outline" className="w-full">View Details</ButtonV2>
             </CardFooter>
           </Card>
 
@@ -335,13 +335,13 @@ export function CardShowcase() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-foreground/80">Plan</span>
-                  <Badge variant="secondary">Enterprise</Badge>
+                  <BadgeV2 variant="secondary">Enterprise</Badge>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="gap-2">
-              <Button variant="outline" className="flex-1">Edit</Button>
-              <Button className="flex-1">Share</Button>
+              <ButtonV2  variant="outline" className="flex-1">Edit</ButtonV2>
+              <ButtonV2  className="flex-1">Share</ButtonV2>
             </CardFooter>
           </Card>
         </div>

@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Plug, FileDown, ScanSearch, TrendingUp } from 'lucide-react'
 
@@ -34,7 +34,7 @@ export default function OnboardingJourney() {
     <section className="relative bg-gradient-to-b from-background via-card/10 to-background px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
-          <Badge variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Onboarding System
           </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">

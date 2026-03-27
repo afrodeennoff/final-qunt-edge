@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ButtonV2 } from "@/components/ui/v2";
+import { InputV2 } from "@/components/ui/v2";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
@@ -584,7 +584,7 @@ export default function AtasProcessor({
                       {t("import.account.pickAccountsDescription")}
                     </p>
                   </div>
-                  <Button
+                  <ButtonV2 
                     variant="outline"
                     size="sm"
                     onClick={() => {
@@ -606,7 +606,7 @@ export default function AtasProcessor({
                       )
                       ? t("shared.deselectAll")
                       : t("shared.selectAll")}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
 
@@ -687,7 +687,7 @@ export default function AtasProcessor({
                       >
                         {accountNumber} - {instrument} - {t("import.commission.perContract")}
                       </label>
-                      <Input
+                      <InputV2
                         id={`commission-${pair}`}
                         type="number"
                         step="0.01"
@@ -701,9 +701,9 @@ export default function AtasProcessor({
                   );
                 })}
               </div>
-              <Button onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
+              <ButtonV2  onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
                 {t("import.commission.apply")}
-              </Button>
+              </ButtonV2>
             </div>
           )}
 

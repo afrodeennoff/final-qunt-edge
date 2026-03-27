@@ -14,8 +14,8 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { BadgeV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useI18n } from "@/locales/client"
@@ -167,7 +167,7 @@ export default function DashboardBehaviorPage() {
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 text-foreground" />
                 <CardTitle className="text-xl md:text-2xl">Behavior AI Hub</CardTitle>
-                <Badge variant="secondary" className="border-border/20 text-foreground">
+                <BadgeV2 variant="secondary" className="border-border/20 text-foreground">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   AI
                 </Badge>
@@ -177,19 +177,19 @@ export default function DashboardBehaviorPage() {
               </p>
             </div>
             <div className="hidden items-center gap-2 md:flex">
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 <TrendingUp className="h-3.5 w-3.5" />
                 Performance
               </Badge>
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 <Bot className="h-3.5 w-3.5" />
                 Coach
               </Badge>
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 <MessageSquareText className="h-3.5 w-3.5" />
                 Journal
               </Badge>
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 <Gauge className="h-3.5 w-3.5" />
                 Stress Monitor
               </Badge>
@@ -198,28 +198,28 @@ export default function DashboardBehaviorPage() {
         </CardHeader>
         <CardContent className="pt-0">
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <Button
+            <ButtonV2 
               size="sm"
               variant={periodDays === 7 ? "default" : "secondary"}
               onClick={() => setPeriodDays(7)}
             >
               7d
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               size="sm"
               variant={periodDays === 30 ? "default" : "secondary"}
               onClick={() => setPeriodDays(30)}
             >
               30d
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               size="sm"
               variant={periodDays === 90 ? "default" : "secondary"}
               onClick={() => setPeriodDays(90)}
             >
               90d
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               size="sm"
               variant="outline"
               onClick={() => {
@@ -228,8 +228,8 @@ export default function DashboardBehaviorPage() {
               }}
             >
               Open AI Analysis
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               size="sm"
               variant="outline"
               onClick={() => {
@@ -238,8 +238,8 @@ export default function DashboardBehaviorPage() {
               }}
             >
               Ask AI Coach
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               size="sm"
               variant="outline"
               onClick={() => {
@@ -248,15 +248,15 @@ export default function DashboardBehaviorPage() {
               }}
             >
               Open Journal
-            </Button>
+            </ButtonV2>
             {isLoadingInsights ? (
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 Updating insights
               </Badge>
             ) : null}
             {!isLoadingInsights ? (
-              <Badge variant="outline" className="gap-1">
+              <BadgeV2 variant="outline" className="gap-1">
                 Confidence: {insights?.summary.confidenceScore ?? 0}% ({insights?.summary.confidenceBand ?? "low"})
               </Badge>
             ) : null}
@@ -325,10 +325,10 @@ export default function DashboardBehaviorPage() {
                 <p className="text-sm text-muted-foreground">
                   {insights?.prompts.mindful ?? "Before executing: is this trade analysis-driven or emotion-driven?"}
                 </p>
-                <Button variant="secondary" className="w-full gap-2" onClick={() => setRefreshKey((value) => value + 1)}>
+                <ButtonV2  variant="secondary" className="w-full gap-2" onClick={() => setRefreshKey((value) => value + 1)}>
                   <PauseCircle className="h-4 w-4" />
                   Refresh Prompt
-                </Button>
+                </ButtonV2>
               </CardContent>
             </Card>
           </section>
@@ -344,7 +344,7 @@ export default function DashboardBehaviorPage() {
                   <div key={driver.key} className="rounded-xl border border-border/70 bg-background/60 p-3">
                     <p className="text-sm font-medium">{driver.key}</p>
                     <p className="text-xs text-muted-foreground">{driver.explanation}</p>
-                    <Badge variant="secondary" className="mt-2">
+                    <BadgeV2 variant="secondary" className="mt-2">
                       Contribution: {driver.contribution}
                     </Badge>
                   </div>
@@ -363,7 +363,7 @@ export default function DashboardBehaviorPage() {
                   <div key={module.title} className="rounded-xl border border-border/70 bg-background/60 p-3">
                     <p className="text-sm font-medium">{module.title}</p>
                     <p className="text-xs text-muted-foreground">{module.description}</p>
-                    <Badge variant="secondary" className="mt-2">{module.metric}</Badge>
+                    <BadgeV2 variant="secondary" className="mt-2">{module.metric}</Badge>
                   </div>
                 ))}
                 {reflectionModules.map((module) => (
@@ -413,7 +413,7 @@ export default function DashboardBehaviorPage() {
                     <div key={`${recommendation.text}-${index}`} className="rounded-lg border border-border/60 p-3 bg-background/50">
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm text-muted-foreground">{recommendation.text}</p>
-                        <Badge
+                        <BadgeV2
                           variant={recommendation.priority === "high" ? "destructive" : recommendation.priority === "medium" ? "secondary" : "outline"}
                         >
                           {recommendation.priority}

@@ -6,7 +6,7 @@ import { useEditorState } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
 import { Heading1, Heading2, Heading3, List, ListOrdered, Quote, ImageIcon, Loader2, Sparkles, MoreHorizontal, Minimize2, Maximize2, Table2, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { NewsSubMenu } from "@/components/ai-elements/news-sub-menu";
 import z from "zod";
 import { ActionSchema as EditorAction } from "@/app/api/ai/editor/schema";
@@ -453,7 +453,7 @@ export function ResponsiveMenuBar({
             return (
               <DropdownMenu key={item.id}>
                 <DropdownMenuTrigger asChild>
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     disabled={status === "streaming"}
@@ -507,7 +507,7 @@ export function ResponsiveMenuBar({
             );
           }
           return (
-            <Button
+            <ButtonV2 
               key={item.id}
               variant="ghost"
               size="sm"
@@ -567,7 +567,7 @@ export function ResponsiveMenuBar({
         {showDropdown && overflowItems.length > 0 && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -627,7 +627,7 @@ export function ResponsiveMenuBar({
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        <Button
+        <ButtonV2 
           variant="ghost"
           size="sm"
           onClick={onToggleFullscreen}

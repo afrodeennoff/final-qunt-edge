@@ -3,12 +3,12 @@
 import { Group } from "@/lib/data-types"
 import { useDashboardActions } from "@/context/data-provider"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
@@ -488,7 +488,7 @@ export function AccountGroupBoard() {
         <div className="flex flex-wrap items-center gap-2 border-b px-3 py-2">
           <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
+            <InputV2
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder={t("filters.searchAccount")}
@@ -543,7 +543,7 @@ export function AccountGroupBoard() {
                     ))}
                   <Separator className="my-1" />
                   <div className="px-3 py-2 space-y-2">
-                    <Input
+                    <InputV2
                       value={newGroupName}
                       onChange={e => setNewGroupName(e.target.value)}
                       placeholder={t("filters.createNewGroupPlaceholder")}
@@ -555,32 +555,32 @@ export function AccountGroupBoard() {
                         }
                       }}
                     />
-                    <Button
+                    <ButtonV2 
                       className="w-full"
                       size="sm"
                       onClick={() => void handleCreateGroupAndMove()}
                       disabled={isCreating}
                     >
                       {isCreating ? t("common.loading") : t("filters.createAndMove")}
-                    </Button>
+                    </ButtonV2>
                   </div>
                 </SelectContent>
               </Select>
-              <Button variant="ghost" onClick={clearSelection} disabled={selectedAccountIds.length === 0} className="h-9">
+              <ButtonV2  variant="ghost" onClick={clearSelection} disabled={selectedAccountIds.length === 0} className="h-9">
                 {t("filters.clearSelection")}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-3 min-h-[40px]">
             <div className="flex gap-2 items-center pb-1">
               {selectedAccounts.length === 0 ? (
-                <Badge variant="secondary" className="gap-2 whitespace-nowrap h-8">
+                <BadgeV2 variant="secondary" className="gap-2 whitespace-nowrap h-8">
                   <span className="text-xs text-muted-foreground">{t("filters.noAccounts")}</span>
                 </Badge>
               ) : (
                 selectedAccounts.map(account => (
-                  <Badge
+                  <BadgeV2
                     key={account.id}
                     variant="secondary"
                     tabIndex={0}
@@ -651,7 +651,7 @@ export function AccountGroupBoard() {
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1">
                         <div className="relative w-fit">
-                          <Input
+                          <InputV2
                             ref={renameInputRef}
                             value={(isRenaming ? renameValue : group.name) || group.name}
                             readOnly={!isRenaming}
@@ -672,7 +672,7 @@ export function AccountGroupBoard() {
                           />
                         </div>
                         {canRename && (
-                          <Button
+                          <ButtonV2 
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7"
@@ -688,10 +688,10 @@ export function AccountGroupBoard() {
                             aria-label={isRenaming ? t("common.save") : t("common.rename")}
                           >
                             {isRenaming ? <Check className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
-                          </Button>
+                          </ButtonV2>
                         )}
                         {canDelete && (
-                          <Button
+                          <ButtonV2 
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7 text-destructive hover:text-destructive focus-visible:ring-1 focus-visible:ring-destructive/50"
@@ -707,10 +707,10 @@ export function AccountGroupBoard() {
                             ) : (
                               <Trash2 className="h-4 w-4" aria-hidden />
                             )}
-                          </Button>
+                          </ButtonV2>
                         )}
                       </div>
-                      <Badge variant="outline">{group.accounts.length}</Badge>
+                      <BadgeV2 variant="outline">{group.accounts.length}</Badge>
                     </div>
                   </div>
 
@@ -749,7 +749,7 @@ export function AccountGroupBoard() {
                             </div>
                           </div>
                           {!account.isPlaceholder && (
-                            <Button
+                            <ButtonV2 
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 text-destructive hover:text-destructive focus-visible:ring-1 focus-visible:ring-destructive/50"
@@ -769,7 +769,7 @@ export function AccountGroupBoard() {
                               ) : (
                                 <Trash2 className="h-4 w-4" aria-hidden />
                               )}
-                            </Button>
+                            </ButtonV2>
                           )}
                         </CommandItem>
                       ))

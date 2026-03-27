@@ -1,8 +1,8 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { InputV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { useCallback, useTransition } from "react"
 
@@ -62,7 +62,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
-        <Input
+        <InputV2
           type="search"
           placeholder="Search prop firms..."
           defaultValue={search}
@@ -79,7 +79,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
             Payouts
           </span>
           {["", "high-paid", "low-refused"].map((value) => (
-            <Button
+            <ButtonV2 
               key={value || "all"}
               variant="ghost"
               size="sm"
@@ -92,7 +92,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               )}
             >
               {value === "" ? "All" : value === "high-paid" ? "High Paid" : "Low Refused"}
-            </Button>
+            </ButtonV2>
           ))}
         </div>
 
@@ -110,7 +110,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
             { value: "refusedPayout", label: "Refused" },
             { value: "accountValue", label: "Value" },
           ].map(({ value, label }) => (
-            <Button
+            <ButtonV2 
               key={value}
               variant="ghost"
               size="sm"
@@ -123,7 +123,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               )}
             >
               {label}
-            </Button>
+            </ButtonV2>
           ))}
         </div>
 
@@ -131,14 +131,14 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
         {hasActiveFilters && (
           <>
             <div className="w-px h-4 bg-border/40" />
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               onClick={clearAllFilters}
               className="h-8 rounded-full px-3 text-[11px] font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
             >
               Clear All
-            </Button>
+            </ButtonV2>
           </>
         )}
       </div>

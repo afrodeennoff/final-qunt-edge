@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { AccountCoin, type Account } from "./account-coin"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { MoreHorizontal, Edit2, Trash2, EyeOff } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
@@ -90,7 +90,7 @@ export function AccountGroup({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           {isEditing ? (
-            <Input
+            <InputV2
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               onBlur={handleRename}
@@ -108,9 +108,9 @@ export function AccountGroup({
           {!isHiddenGroup && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
                   <MoreHorizontal className="w-4 h-4" />
-                </Button>
+                </ButtonV2>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setIsEditing(true)}>

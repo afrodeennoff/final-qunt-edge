@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useI18n } from "@/locales/client"
 import { LanguageSelector } from "@/components/ui/language-selector"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 
 const ListItem = React.forwardRef<
     React.ComponentRef<"a">,
@@ -92,9 +92,9 @@ function MobileNavContent({
                 </AccordionItem>
 
             </Accordion>
-            <Button asChild variant="outline" className="w-full" onClick={onLinkClick}>
+            <ButtonV2  asChild variant="outline" className="w-full" onClick={onLinkClick}>
                 <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
-            </Button>
+            </ButtonV2>
             <div className="py-4 border-t space-y-4">
                 <div className="flex items-center gap-2 rounded-md border border-border/50 px-3 py-2 text-sm text-muted-foreground">
                     <Moon className="h-4 w-4 text-primary" />
@@ -150,7 +150,7 @@ export default function TeamNavbar() {
                 <Link href="/teams" className="flex items-center gap-2">
                     <Logo className='w-6 h-6 fill-black dark:fill-white' />
                     <span className="font-bold text-xl">Qunt Edge</span>
-                    <Badge variant="secondary" className="text-xs">
+                    <BadgeV2 variant="secondary" className="text-xs">
                         {t('teams.badge')}
                     </Badge>
                 </Link>
@@ -213,24 +213,24 @@ export default function TeamNavbar() {
 
                         </NavigationMenuList>
                         <Separator orientation="vertical" className="h-6 mx-4" />
-                        <Button variant="ghost" className="text-sm font-medium hover:text-accent-foreground" asChild>
+                        <ButtonV2  variant="ghost" className="text-sm font-medium hover:text-accent-foreground" asChild>
                             <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
-                        </Button>
+                        </ButtonV2>
                     </NavigationMenu>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <LanguageSelector />
-                    <Button variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
+                    <ButtonV2  variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
                         <Moon className="h-4 w-4 text-primary" />
                         <span className="text-xs uppercase tracking-[0.14em]">Dark</span>
-                    </Button>
+                    </ButtonV2>
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="flex lg:hidden" onClick={toggleMenu}>
+                            <ButtonV2  variant="ghost" size="icon" className="flex lg:hidden" onClick={toggleMenu}>
                                 <Menu className="h-6 w-6" />
                                 <span className="sr-only">Open menu</span>
-                            </Button>
+                            </ButtonV2>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[300px] sm:w-[400px] lg:hidden">
                             <div className="flex flex-col h-full">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { BadgeV2 } from "@/components/ui/v2";
 import {
   Carousel,
   type CarouselApi,
@@ -63,7 +63,7 @@ export const InlineCitationCardTrigger = ({
   ...props
 }: InlineCitationCardTriggerProps) => (
   <HoverCardTrigger asChild>
-    <Badge
+    <BadgeV2
       className={cn("ml-1 rounded-full", className)}
       variant="secondary"
       {...props}

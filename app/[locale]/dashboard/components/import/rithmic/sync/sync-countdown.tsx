@@ -5,7 +5,7 @@ import { useRithmicSyncStore } from '@/store/rithmic-sync-store'
 
 import { useSyncContext } from '@/context/sync-context'
 
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Clock } from 'lucide-react'
 
 interface SyncCountdownProps {
@@ -72,7 +72,7 @@ export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: Syn
   }
 
   return (
-    <Badge variant={isAutoSyncing ? "default" : "secondary"} className="ml-2">
+    <BadgeV2 variant={isAutoSyncing ? "default" : "secondary"} className="ml-2">
       <Clock className="h-3 w-3 mr-1" />
       {timeLeft}
     </Badge>

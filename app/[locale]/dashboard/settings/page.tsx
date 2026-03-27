@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import {
@@ -123,7 +123,7 @@ function TeamSettingsCard({
                       {team.traderIds.length} traders
                     </p>
                   </div>
-                  <Badge variant="secondary">Owner</Badge>
+                  <BadgeV2 variant="secondary">Owner</Badge>
                 </div>
               ))}
 
@@ -137,9 +137,9 @@ function TeamSettingsCard({
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="sm">
+                      <ButtonV2  variant="outline" size="sm">
                         Leave Team
-                      </Button>
+                      </ButtonV2>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
@@ -171,10 +171,10 @@ function TeamSettingsCard({
             <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
             <div className="mt-4">
               <Link href="/teams/dashboard">
-                <Button>
+                <ButtonV2 >
                   <Building2 className="mr-2 h-4 w-4" />
                   Manage Teams
-                </Button>
+                </ButtonV2>
               </Link>
             </div>
           </div>
@@ -183,10 +183,10 @@ function TeamSettingsCard({
         {hasTeams && (
           <div className="mt-4">
             <Link href="/teams/dashboard">
-              <Button variant="outline" className="w-full">
+              <ButtonV2  variant="outline" className="w-full">
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Teams
-              </Button>
+              </ButtonV2>
             </Link>
           </div>
         )}
@@ -234,7 +234,7 @@ function PasswordSettingsCard({
           <div>
             <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
             <div className="relative">
-              <Input
+              <InputV2
                 id="newPassword"
                 type={showNewPassword ? 'text' : 'password'}
                 placeholder="••••••••"
@@ -242,7 +242,7 @@ function PasswordSettingsCard({
                 onChange={(e) => onNewPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <Button
+              <ButtonV2 
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -256,13 +256,13 @@ function PasswordSettingsCard({
                 ) : (
                   <Eye className="h-4 w-4" />
                 )}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
           <div>
             <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
             <div className="relative">
-              <Input
+              <InputV2
                 id="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="••••••••"
@@ -270,7 +270,7 @@ function PasswordSettingsCard({
                 onChange={(e) => onConfirmPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <Button
+              <ButtonV2 
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -284,10 +284,10 @@ function PasswordSettingsCard({
                 ) : (
                   <Eye className="h-4 w-4" />
                 )}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
-          <Button onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
+          <ButtonV2  onClick={onUpdatePassword}>{t('auth.setPassword')}</ButtonV2>
         </div>
       </CardContent>
     </Card>
@@ -408,7 +408,7 @@ export default function SettingsPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{user?.email}</h3>
-                  <Badge variant="secondary">Active</Badge>
+                  <BadgeV2 variant="secondary">Active</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Member since {new Date(user?.created_at || '').toLocaleDateString()}
@@ -420,18 +420,18 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" placeholder="Enter your first name" />
+                  <InputV2 id="firstName" placeholder="Enter your first name" />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" placeholder="Enter your last name" />
+                  <InputV2 id="lastName" placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={user?.email || ''} disabled />
+                <InputV2 id="email" type="email" value={user?.email || ''} disabled />
               </div>
-              <Button>Update Profile</Button>
+              <ButtonV2 >Update Profile</ButtonV2>
             </div>
           </CardContent>
         </Card>
@@ -454,10 +454,10 @@ export default function SettingsPage() {
               <div className="mt-2 grid gap-3">
                 <div className="rounded-md border border-border/50 bg-background/30 p-3">
                   <p className="mb-2 text-sm font-medium">Interface mode</p>
-                  <Button variant="outline" className="w-full justify-start sm:w-[200px]" disabled>
+                  <ButtonV2  variant="outline" className="w-full justify-start sm:w-[200px]" disabled>
                     <Moon className="mr-2 h-4 w-4" />
                     <span>Dark (fixed)</span>
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             </div>
@@ -473,10 +473,10 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <ButtonV2  variant="outline" className="w-[200px] justify-start">
                       <Globe className="mr-2 h-4 w-4" />
                       {languages.find(lang => lang.value === currentLocale)?.label}
-                    </Button>
+                    </ButtonV2>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuRadioGroup value={currentLocale} aria-label="Language selection">
@@ -507,10 +507,10 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-[200px] justify-start">
+                    <ButtonV2  variant="outline" className="w-[200px] justify-start">
                       <Clock className="mr-2 h-4 w-4" />
                       {timezone}
-                    </Button>
+                    </ButtonV2>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <ScrollArea className="h-[200px]">
@@ -640,25 +640,25 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-4">
               <Link href="/dashboard/billing">
-                <Button variant="outline" className="w-full justify-start">
+                <ButtonV2  variant="outline" className="w-full justify-start">
                   <CreditCard className="mr-2 h-4 w-4" />
                   Billing & Subscription
-                </Button>
+                </ButtonV2>
               </Link>
               <Link href="/dashboard/data">
-                <Button variant="outline" className="w-full justify-start">
+                <ButtonV2  variant="outline" className="w-full justify-start">
                   <Database className="mr-2 h-4 w-4" />
                   Data Management
-                </Button>
+                </ButtonV2>
               </Link>
               <Link href="/support">
-                <Button variant="outline" className="w-full justify-start">
+                <ButtonV2  variant="outline" className="w-full justify-start">
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   Support & Help
-                </Button>
+                </ButtonV2>
               </Link>
               <Separator />
-              <Button
+              <ButtonV2 
                 variant="destructive"
                 className="w-full justify-start"
                 onClick={async () => {
@@ -669,7 +669,7 @@ export default function SettingsPage() {
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
-              </Button>
+              </ButtonV2>
             </div>
           </CardContent>
         </Card>

@@ -129,14 +129,14 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
         onOpenChange={setIsOpen}
       >
         <PopoverTrigger asChild>
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0"
             disabled={isUpdating}
           >
             <Plus className="h-4 w-4" />
-          </Button>
+          </ButtonV2>
         </PopoverTrigger>
         <PopoverContent className="p-0" side="right" align="start">
           <Command shouldFilter={false}>

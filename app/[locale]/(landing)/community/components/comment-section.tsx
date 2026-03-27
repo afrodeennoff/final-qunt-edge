@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import { TextareaV2 } from "@/components/ui/v2"
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { formatDistanceToNow } from 'date-fns'
 import { useUserStore } from '@/store/user-store'
@@ -118,9 +118,9 @@ function CommentComponent({
             {isAuthor && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
                     <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                  </ButtonV2>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-32">
                   <DropdownMenuItem onClick={() => setIsEditing(true)}>
@@ -138,22 +138,22 @@ function CommentComponent({
           </div>
           {isEditing ? (
             <div className="space-y-2">
-              <Textarea
+              <TextareaV2
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="min-h-[100px] w-full resize-none"
                 disabled={isSubmitting}
               />
               <div className="flex justify-end gap-2">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditing(false)}
                   disabled={isSubmitting}
                 >
                   {t('community.comments.cancel')}
-                </Button>
-                <Button 
+                </ButtonV2>
+                <ButtonV2  
                   size="sm" 
                   onClick={handleEdit}
                   disabled={isSubmitting || !content.trim()}
@@ -164,14 +164,14 @@ function CommentComponent({
                       {t('common.saving')}
                     </div>
                   ) : t('community.comments.save')}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           ) : (
             <div className="text-sm leading-relaxed">{comment.content}</div>
           )}
           <div className="flex items-center gap-2 pt-1">
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-auto px-2 text-muted-foreground hover:text-foreground"
@@ -180,11 +180,11 @@ function CommentComponent({
             >
               <Reply className="mr-1 h-3 w-3" />
               {t('community.comments.reply')}
-            </Button>
+            </ButtonV2>
           </div>
           {isReplying && (
             <div className="mt-4 space-y-2">
-              <Textarea
+              <TextareaV2
                 placeholder={t('community.comments.writeReply')}
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
@@ -192,7 +192,7 @@ function CommentComponent({
                 disabled={isSubmitting}
               />
               <div className="flex justify-end gap-2">
-                <Button
+                <ButtonV2 
                   variant="outline"
                   size="sm"
                   onClick={() => {
@@ -202,8 +202,8 @@ function CommentComponent({
                   disabled={isSubmitting}
                 >
                   {t('community.comments.cancel')}
-                </Button>
-                <Button 
+                </ButtonV2>
+                <ButtonV2  
                   size="sm" 
                   onClick={handleReply}
                   disabled={isSubmitting || !replyContent.trim()}
@@ -214,7 +214,7 @@ function CommentComponent({
                       {t('common.saving')}
                     </div>
                   ) : t('community.comments.reply')}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           )}
@@ -280,7 +280,7 @@ export function CommentSection({
             <AvatarFallback>{user?.email?.[0].toUpperCase() || ''}</AvatarFallback>
           </Avatar>
           <div className="flex-1 gap-y-2">
-            <Textarea
+            <TextareaV2
               placeholder={t('community.comments.writeComment')}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -288,7 +288,7 @@ export function CommentSection({
               disabled={isSubmitting}
             />
             <div className="flex justify-end">
-              <Button 
+              <ButtonV2  
                 onClick={handleAddComment}
                 disabled={isSubmitting || !newComment.trim()}
               >
@@ -298,7 +298,7 @@ export function CommentSection({
                     {t('common.saving')}
                   </div>
                 ) : t('community.comments.comment')}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         </div>

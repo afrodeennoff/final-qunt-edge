@@ -20,7 +20,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
           Join 50,000+ traders who have improved their performance with Qunt Edge.
           Start your free audit today.
         </p>
-        <Button
+        <ButtonV2 
           asChild
           size="lg"
           className="bg-[#2962FF] hover:bg-[#2962FF]/90 text-lg px-8 btn-primary-glow"
@@ -28,7 +28,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
           <Link href={`/${locale}/authentication?next=dashboard`}>
             Start Free Audit
           </Link>
-        </Button>
+        </ButtonV2>
         <p className="mt-4 text-sm text-[#707070]">
           No credit card required • Setup in 2 minutes
         </p>

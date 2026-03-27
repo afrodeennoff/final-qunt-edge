@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { Loader2, Trash2, Plus, RefreshCw, MoreVertical } from "lucide-react";
 import {
   Dialog,
@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { InputV2 } from "@/components/ui/v2";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/locales/client";
 import { toast } from "sonner";
@@ -227,7 +227,7 @@ export function TradovateCredentialsManager() {
             <h2 className="text-lg font-semibold">
               {t("tradovateSync.multiAccount.savedAccounts")}
             </h2>
-            <Button
+            <ButtonV2 
               onClick={handleReloadAccounts}
               size="sm"
               variant="ghost"
@@ -239,10 +239,10 @@ export function TradovateCredentialsManager() {
               ) : (
                 <RefreshCw className="h-4 w-4" />
               )}
-            </Button>
+            </ButtonV2>
           </div>
           <div className="flex gap-2 items-center">
-            <Button
+            <ButtonV2 
               onClick={async () => {
                 await performSyncForAllAccounts();
               }}
@@ -253,8 +253,8 @@ export function TradovateCredentialsManager() {
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               {t("tradovateSync.multiAccount.syncAll")}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               onClick={() => handleStartOAuth()}
               disabled={isLoading}
               size="sm"
@@ -266,7 +266,7 @@ export function TradovateCredentialsManager() {
                 <Plus className="h-4 w-4 mr-2" />
               )}
               {t("tradovateSync.multiAccount.addNew")}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </div>
@@ -317,14 +317,14 @@ export function TradovateCredentialsManager() {
                 </TableCell>
                 <TableCell>{formatDate(account.lastSyncedAt.toISOString())}</TableCell>
                 <TableCell>
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     onClick={() => handleSetDailySyncTime(account.accountId, account.dailySyncTime)}
                     className="text-xs"
                   >
                     {formatSyncTime(account.dailySyncTime)}
-                  </Button>
+                  </ButtonV2>
                 </TableCell>
                 <TableCell>
                   <span
@@ -342,16 +342,16 @@ export function TradovateCredentialsManager() {
                 <TableCell>
                   <div className="flex justify-center items-center gap-2">
                     {isExpired && (
-                      <Button
+                      <ButtonV2 
                         variant="outline"
                         size="sm"
                         onClick={() => handleStartOAuth(account.accountId)}
                         className="h-8"
                       >
                         {t("tradovateSync.multiAccount.reconnect")}
-                      </Button>
+                      </ButtonV2>
                     )}
-                    <Button
+                    <ButtonV2 
                       variant="ghost"
                       size="sm"
                       onClick={async () => {
@@ -364,20 +364,20 @@ export function TradovateCredentialsManager() {
                       ) : (
                         <RefreshCw className="h-4 w-4 text-muted-foreground" />
                       )}
-                    </Button>
+                    </ButtonV2>
                     <Popover modal>
                       <PopoverTrigger asChild>
-                        <Button
+                        <ButtonV2 
                           variant="ghost"
                           size="sm"
                           className="h-8 w-8 p-0"
                         >
                           <MoreVertical className="h-4 w-4" />
-                        </Button>
+                        </ButtonV2>
                       </PopoverTrigger>
                       <PopoverContent className="w-48 p-2" align="end">
                         <div className="flex flex-col gap-1">
-                          <Button
+                          <ButtonV2 
                             variant="ghost"
                             size="sm"
                             className="justify-start text-destructive hover:text-destructive"
@@ -388,7 +388,7 @@ export function TradovateCredentialsManager() {
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             {t("tradovateSync.multiAccount.delete")}
-                          </Button>
+                          </ButtonV2>
                         </div>
                       </PopoverContent>
                     </Popover>
@@ -423,20 +423,20 @@ export function TradovateCredentialsManager() {
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2 mt-4">
-            <Button
+            <ButtonV2 
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
             >
               {t("common.cancel")}
-            </Button>
-            <Button
+            </ButtonV2>
+            <ButtonV2 
               variant="destructive"
               onClick={() =>
                 selectedAccountId && handleDelete(selectedAccountId)
               }
             >
               {t("common.delete")}
-            </Button>
+            </ButtonV2>
           </div>
         </DialogContent>
       </Dialog>
@@ -456,7 +456,7 @@ export function TradovateCredentialsManager() {
               <Label htmlFor="syncTime">
                 {t("tradovateSync.multiAccount.dailySyncTimeLabel")}
               </Label>
-              <Input
+              <InputV2
                 id="syncTime"
                 type="time"
                 value={dailySyncTime}
@@ -475,49 +475,49 @@ export function TradovateCredentialsManager() {
             <div className="space-y-2">
               <Label>{t("tradovateSync.multiAccount.quickPresets")}</Label>
               <div className="flex flex-wrap gap-2">
-                <Button
+                <ButtonV2 
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => handlePresetTime('morning')}
                 >
                   {t("tradovateSync.multiAccount.presets.morning")}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => handlePresetTime('midday')}
                 >
                   {t("tradovateSync.multiAccount.presets.midday")}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => handlePresetTime('after-close')}
                 >
                   {t("tradovateSync.multiAccount.presets.afterClose")}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => handlePresetTime('midnight')}
                 >
                   {t("tradovateSync.multiAccount.presets.midnight")}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
             
             <div className="flex justify-end gap-2">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 onClick={() => setIsTimeDialogOpen(false)}
               >
                 {t("common.cancel")}
-              </Button>
-              <Button
+              </ButtonV2>
+              <ButtonV2 
                 onClick={handleSaveDailySyncTime}
                 disabled={isSavingTime}
               >
@@ -529,7 +529,7 @@ export function TradovateCredentialsManager() {
                 ) : (
                   t("common.save")
                 )}
-              </Button>
+              </ButtonV2>
             </div>
           </div>
         </DialogContent>

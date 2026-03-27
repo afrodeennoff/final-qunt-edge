@@ -8,7 +8,7 @@ import {
   CloudUpload,
   CheckCircle2
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import Link from 'next/link'
 import ImportButton from './import/import-button'
 import { useKeyboardShortcuts } from '../../../../hooks/use-keyboard-shortcuts'
@@ -75,7 +75,7 @@ export default function Navbar() {
 
             {/* Config Group */}
             <div className="flex items-center gap-2 p-1.5 bg-secondary/20 backdrop-blur-xl rounded-[1.5rem] border border-border/50">
-              <Button
+              <ButtonV2 
                 id="customize-mode"
                 variant="ghost"
                 size="sm"
@@ -91,10 +91,10 @@ export default function Navbar() {
                 <span className="inline text-[10px] font-black uppercase tracking-widest">
                   {isCustomizing ? "Lock Grid" : "Edit Layout"}
                 </span>
-              </Button>
+              </ButtonV2>
 
               {isCustomizing && autoSaveStatus.hasPending && (
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   onClick={flushPendingSaves}
@@ -102,7 +102,7 @@ export default function Navbar() {
                 >
                   <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
-                </Button>
+                </ButtonV2>
               )}
 
               {!autoSaveStatus.hasPending && isCustomizing && (
@@ -128,7 +128,7 @@ export default function Navbar() {
 
                 {!isPlusUser() && (
                   <Link href="/dashboard/billing">
-                    <Button 
+                    <ButtonV2  
                       variant="ghost" 
                       size="sm" 
                       className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-border/60 text-foreground text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 shadow-none hover:bg-secondary/35"
@@ -136,7 +136,7 @@ export default function Navbar() {
                     >
                       <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
                       <span>Elite</span>
-                    </Button>
+                    </ButtonV2>
                   </Link>
                 )}
               </div>
@@ -145,7 +145,7 @@ export default function Navbar() {
 
               {/* Real-time Actions */}
               <div className="flex items-center gap-2 bg-background/70 p-1.5 rounded-2xl border border-border/50 shadow-inner">
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="icon"
                   onClick={handleRefresh}
@@ -154,7 +154,7 @@ export default function Navbar() {
                   aria-label="Refresh dashboard data"
                 >
                   <RefreshCw className={cn("w-3.5 h-3.5 transition-transform duration-1000", (isRefreshing || isLoading) && "animate-spin")} />
-                </Button>
+                </ButtonV2>
                 <DailySummaryModal />
               </div>
             </div>

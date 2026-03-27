@@ -105,52 +105,52 @@ export function FreeUsersTable() {
 
   return (
     <div className="space-y-4">
-      <Button onClick={fetchUsers} variant="outline">
+      <ButtonV2  onClick={fetchUsers} variant="outline">
         Refresh
-      </Button>
+      </ButtonV2>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   onClick={() => handleSort('email')}
                   className="flex items-center gap-1"
                 >
                   Email
                   <ArrowUpDown className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </TableHead>
               <TableHead>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   onClick={() => handleSort('tradeCount')}
                   className="flex items-center gap-1"
                 >
                   Trades
                   <ArrowUpDown className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </TableHead>
               <TableHead>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   onClick={() => handleSort('tradeStart')}
                   className="flex items-center gap-1"
                 >
                   startDate
                   <ArrowUpDown className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </TableHead>
               <TableHead>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   onClick={() => handleSort('tradeLast')}
                   className="flex items-center gap-1"
                 >
                   lastDate
                   <ArrowUpDown className="h-4 w-4" />
-                </Button>
+                </ButtonV2>
               </TableHead>
             </TableRow>
           </TableHeader>

@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import { Search, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import {
   Popover,
@@ -52,14 +52,14 @@ export const AccountSelectionPopover = React.memo(({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <ButtonV2 
           variant="ghost"
           size="sm"
           className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
         >
           <Settings className="h-3 w-3 mr-1" />
           {t('equity.legend.selectAccounts')}
-        </Button>
+        </ButtonV2>
       </PopoverTrigger>
       <PopoverContent className="w-96 h-80 p-4" align="start">
         <div className="gap-3 h-full flex flex-col">
@@ -69,7 +69,7 @@ export const AccountSelectionPopover = React.memo(({
                   {t('equity.legend.selected')} {actualSelectedCount} {t('equity.legend.of')} {accountNumbers.length}
                 </Label>
                 {searchTerm && (
-                  <Button
+                  <ButtonV2 
                     variant="ghost"
                     size="sm"
                     onClick={clearSearch}
@@ -77,13 +77,13 @@ export const AccountSelectionPopover = React.memo(({
                   >
                     <X className="h-3 w-3 mr-1" />
                     {t('equity.legend.clearSearch')}
-                  </Button>
+                  </ButtonV2>
                 )}
               </div>
               
               <div className="relative">
                 <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-                <Input
+                <InputV2
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={t('equity.legend.search')}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { formatInTimeZone } from 'date-fns-tz'
 import { useUserStore } from '@/store/user-store'
 import { PlatformProcessorProps } from '../config/platforms'
@@ -216,12 +216,12 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                         <h3 className="text-lg font-semibold mb-2">Instruments Traded</h3>
                         <div className="flex flex-wrap gap-2">
                             {uniqueInstruments.map((instrument) => (
-                                <Button
+                                <ButtonV2 
                                     key={instrument}
                                     variant="outline"
                                 >
                                     {instrument}
-                                </Button>
+                                </ButtonV2>
                             ))}
                         </div>
                     </div>

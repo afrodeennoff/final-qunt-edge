@@ -5,7 +5,7 @@ import { format, addMonths, subMonths, getDay, addDays } from "date-fns"
 import { formatInTimeZone, toDate } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { CalendarModal } from "./daily-modal"
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
@@ -168,12 +168,12 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Button variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Previous month">
+            <ButtonV2  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Previous month">
               <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Next month">
+            </ButtonV2>
+            <ButtonV2  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Next month">
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </ButtonV2>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">

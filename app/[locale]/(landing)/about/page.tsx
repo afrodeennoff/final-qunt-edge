@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { BookOpen, Code, LineChart, GraduationCap } from "lucide-react"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
 import Link from "next/link"
@@ -92,7 +92,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {founderSkills.map((skill, index) => (
-                <Badge key={index} variant="secondary" className="border-border/60 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
+                <BadgeV2 key={index} variant="secondary" className="border-border/60 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
                   {skill.icon}
                   {skill.name}
                 </Badge>

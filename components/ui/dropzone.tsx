@@ -144,7 +144,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             </div>
 
             {!loading && !isSuccessfullyUploaded && (
-              <Button
+              <ButtonV2 
                 size="icon"
                 variant="link"
                 className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground"
@@ -163,7 +163,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
       )}
       {files.length > 0 && !exceedMaxFiles && (
         <div className="mt-2">
-          <Button
+          <ButtonV2 
             variant="outline"
             onClick={onUpload}
             disabled={files.some((file) => file.errors.length !== 0) || loading}

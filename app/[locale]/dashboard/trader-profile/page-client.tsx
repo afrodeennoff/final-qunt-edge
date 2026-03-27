@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
@@ -589,14 +589,14 @@ export default function TraderProfilePage() {
                   </Select>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
+                      <ButtonV2 
                         type="button"
                         variant="outline"
                         className="h-9 justify-start border-border/15 bg-[hsl(var(--qe-surface-1))] text-xs text-fg-primary hover:bg-card/10"
                       >
                         <CalendarIcon className="h-3.5 w-3.5" />
                         {dateFilterLabel ?? "Custom Range"}
-                      </Button>
+                      </ButtonV2>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto border-border/15 bg-[hsl(var(--qe-surface-1))] p-2" align="start">
                       <Calendar

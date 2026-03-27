@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { TextareaV2 } from "@/components/ui/v2"
 import { toast } from "sonner"
 import { sendNewsletter } from "@/app/[locale]/admin/actions/newsletter"
 import { useNewsletter } from "./newsletter-context"
@@ -134,7 +134,7 @@ export function NewsletterEditor() {
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="youtubeUrl" className="text-muted-foreground">URL de la vidéo YouTube</Label>
-            <Input
+            <InputV2
               id="youtubeUrl"
               value={youtubeUrl}
               onChange={e => setYoutubeUrl(e.target.value)}
@@ -164,7 +164,7 @@ export function NewsletterEditor() {
               Sur quoi as-tu travaillé ?
               {isLoadingTranscript && " (Chargement de la transcription...)"}
             </Label>
-            <Textarea
+            <TextareaV2
               id="description"
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -176,7 +176,7 @@ export function NewsletterEditor() {
           </div>
 
           <div className="flex gap-2">
-            <Button
+            <ButtonV2 
               type="button"
               className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={handleGenerate}
@@ -193,9 +193,9 @@ export function NewsletterEditor() {
                   Générer & Prévisualiser
                 </>
               )}
-            </Button>
+            </ButtonV2>
 
-            <Button 
+            <ButtonV2  
               type="button"
                variant="outline"
                className="flex-1 border-border bg-muted/40 text-foreground hover:bg-muted"
@@ -203,7 +203,7 @@ export function NewsletterEditor() {
                disabled={loading || generating || !content.subject}
              >
               {loading ? "Envoi..." : "Envoyer la Newsletter"}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
       </CardContent>

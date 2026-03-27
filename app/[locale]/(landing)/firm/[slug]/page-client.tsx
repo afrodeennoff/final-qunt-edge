@@ -103,6 +103,45 @@ const trustChecklist = [
   'Profile, rules, and ROI tabs stay tied to the same firm record.',
 ]
 
+type FirmSourceNotes = {
+  overview: string[]
+  rules: string[]
+}
+
+function getFirmSourceMeta(firm: FirmData) {
+  if (firm.slug.toLowerCase() === 'topstep') {
+    const foundedYear = 2012
+    const currentYear = new Date().getFullYear()
+
+    return {
+      founded: String(foundedYear),
+      countryCode: 'US',
+      yearsInOperation: Math.max(0, currentYear - foundedYear),
+    }
+  }
+
+  return {}
+}
+
+function getFirmSourceNotes(firm: FirmData): FirmSourceNotes {
+  if (firm.slug.toLowerCase() === 'topstep') {
+    return {
+      overview: [
+        'Topstep separates the Trading Combine, Express Funded Account, and Live Funded Account so the current snapshot can show each stage clearly.',
+        'The current Topstep help center documents both Standard and No Activation Fee paths for funding.',
+        'Topstep allows up to five active Express Funded Accounts, which matters when you are comparing allocation and payout capacity.',
+      ],
+      rules: [
+        'Trading Combine and Express Funded Accounts are simulated; Live Funded Accounts trade the live market.',
+        'Trading Combine and Express Funded Accounts use end-of-day maximum loss calculations, while Live Funded Accounts enforce max loss intraday.',
+        'Topstep payout policy unlocks daily payouts after 30 total winning trading days in a Live Funded Account.',
+      ],
+    }
+  }
+
+  return { overview: [], rules: [] }
+}
+
 const radarChartConfig = {
   score: {
     label: 'Score',
@@ -127,7 +166,7 @@ function getAccountSizeEntries(accountSizes?: FirmData['accountSizes']): Account
 }
 
 function withDetailFallback(value?: string | null): string {
-  return value ?? 'Unavailable'
+  return value ?? 'Not listed'
 }
 
 function getVisibleReviewCount(firm: FirmData): number {
@@ -141,26 +180,28 @@ function getVisibleReviewCount(firm: FirmData): number {
 }
 
 function buildAdditionalDetails(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
+  const sourceMeta = getFirmSourceMeta(firm)
+
   return [
     { icon: Building2, label: 'Category', value: withDetailFallback(firm.category) },
-    { icon: Landmark, label: 'Founded', value: withDetailFallback(firm.spotlight?.founded) },
+    { icon: Landmark, label: 'Founded', value: withDetailFallback(firm.spotlight?.founded ?? sourceMeta.founded) },
     { icon: Shield, label: 'Drawdown Type', value: withDetailFallback(firm.drawdownType) },
     { icon: Wallet, label: 'Max Allocation', value: withDetailFallback(firm.maxAllocation) },
     { icon: DollarSign, label: 'Profit Split', value: withDetailFallback(firm.profitSplit) },
     { icon: Clock, label: 'Payout Frequency', value: withDetailFallback(firm.payoutModel) },
     { icon: Layers, label: 'Platform', value: withDetailFallback(firm.platform) },
-    { icon: Award, label: 'Country', value: withDetailFallback(firm.spotlight?.countryCode) },
+    { icon: Award, label: 'Country', value: withDetailFallback(firm.spotlight?.countryCode ?? sourceMeta.countryCode) },
   ]
 }
 
 function buildOverviewFacts(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
   return [
-    { icon: Layers, label: 'Platform', value: firm.platform ?? 'N/A' },
-    { icon: Wallet, label: 'Payout model', value: firm.payoutModel ?? 'N/A' },
-    { icon: Shield, label: 'Drawdown type', value: firm.drawdownType ?? 'N/A' },
-    { icon: DollarSign, label: 'Profit split', value: firm.profitSplit ?? 'N/A' },
-    { icon: Landmark, label: 'Max allocation', value: firm.maxAllocation ?? 'N/A' },
-    { icon: Building2, label: 'Category', value: firm.category ?? 'N/A' },
+    { icon: Layers, label: 'Platform', value: firm.platform ?? 'Not listed' },
+    { icon: Wallet, label: 'Payout model', value: firm.payoutModel ?? 'Not listed' },
+    { icon: Shield, label: 'Drawdown type', value: firm.drawdownType ?? 'Not listed' },
+    { icon: DollarSign, label: 'Profit split', value: firm.profitSplit ?? 'Not listed' },
+    { icon: Landmark, label: 'Max allocation', value: firm.maxAllocation ?? 'Not listed' },
+    { icon: Building2, label: 'Category', value: firm.category ?? 'Not listed' },
   ]
 }
 
@@ -193,7 +234,7 @@ function getResearchRatingHelper(firm: FirmData): string {
   const reviewCount = getVisibleReviewCount(firm)
   return reviewCount > 0
     ? `${reviewCount.toLocaleString()} visible user review${reviewCount === 1 ? '' : 's'}`
-    : 'No visible user reviews yet'
+    : 'No visible user reviews in the current snapshot'
 }
 
 function getResearchPayoutValue(firm: FirmData): string {
@@ -203,7 +244,7 @@ function getResearchPayoutValue(firm: FirmData): string {
 function getResearchPayoutHelper(firm: FirmData): string {
   return firm.catalogueStats
     ? `${formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} paid out`
-    : 'No payout data yet'
+    : 'No payout data in the current snapshot'
 }
 
 function getResearchAccountValue(firm: FirmData): string {
@@ -211,15 +252,15 @@ function getResearchAccountValue(firm: FirmData): string {
 }
 
 function getResearchAccountHelper(firm: FirmData): string {
-  return firm.catalogueStats?.sizeBreakdown ?? 'No live account mix yet'
+  return firm.catalogueStats?.sizeBreakdown ?? 'No live account mix in the current snapshot'
 }
 
 function getResearchFitValue(firm: FirmData): string {
-  return firm.platform ?? 'Platform pending'
+  return firm.platform ?? 'Not listed'
 }
 
 function getResearchFitHelper(firm: FirmData): string {
-  return `${firm.drawdownType ?? 'Drawdown pending'} • ${firm.payoutModel ?? 'Payout pending'}`
+  return `${withDetailFallback(firm.drawdownType)} • ${withDetailFallback(firm.payoutModel)}`
 }
 
 function buildResearchSnapshot(firm: FirmData): Array<{ label: string; value: string; helper: string }> {
@@ -324,22 +365,22 @@ function buildRules(firm: FirmData): Array<{ title: string; value: string; descr
   return [
     {
       title: 'Drawdown Type',
-      value: firm.drawdownType ?? 'N/A',
+      value: firm.drawdownType ?? 'Not listed',
       description: getDrawdownDescription(firm.drawdownType),
     },
     {
       title: 'Payout Model',
-      value: firm.payoutModel ?? 'N/A',
-      description: 'Current payout cadence published for this firm.',
+      value: firm.payoutModel ?? 'Not listed',
+      description: 'Current payout cadence published for this firm record and checked against the current help center where available.',
     },
     {
       title: 'Profit Split',
-      value: firm.profitSplit ?? 'N/A',
+      value: firm.profitSplit ?? 'Not listed',
       description: 'Share of funded profits kept by the trader.',
     },
     {
       title: 'Max Allocation',
-      value: firm.maxAllocation ?? 'N/A',
+      value: firm.maxAllocation ?? 'Not listed',
       description: 'Maximum total capital visible in the current profile.',
     },
   ]
@@ -351,10 +392,15 @@ function getHeaderReviewLabel(firm: FirmData): string {
 }
 
 function getHeaderOptionalItems(firm: FirmData): string[] {
+  const sourceMeta = getFirmSourceMeta(firm)
+  const yearsInOperation = firm.spotlight?.yearsInOperation ?? sourceMeta.yearsInOperation
+  const countryCode = firm.spotlight?.countryCode ?? sourceMeta.countryCode
+  const founded = firm.spotlight?.founded ?? sourceMeta.founded
+
   return [
-    firm.spotlight?.yearsInOperation ? `${firm.spotlight.yearsInOperation} years in operation` : null,
-    firm.spotlight?.countryCode ?? null,
-    firm.spotlight?.founded ? `Founded ${firm.spotlight.founded}` : null,
+    yearsInOperation ? `${yearsInOperation} years in operation` : null,
+    countryCode ?? null,
+    founded ? `Founded ${founded}` : null,
   ].filter((item): item is string => Boolean(item))
 }
 
@@ -364,9 +410,9 @@ function buildHeaderMetaItems(firm: FirmData): string[] {
 
 function buildHeaderMetrics(firm: FirmData): Array<{ label: string; value: string }> {
   return [
-    { label: 'Profit Split', value: firm.profitSplit ?? 'N/A' },
-    { label: 'Max Allocation', value: firm.spotlight?.maxAllocation ?? firm.maxAllocation ?? '$100K' },
-    { label: 'Drawdown Type', value: firm.drawdownType ?? 'N/A' },
+    { label: 'Profit Split', value: firm.profitSplit ?? 'Not listed' },
+    { label: 'Max Allocation', value: firm.spotlight?.maxAllocation ?? firm.maxAllocation ?? 'Not listed' },
+    { label: 'Drawdown Type', value: firm.drawdownType ?? 'Not listed' },
     { label: 'Active Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
   ]
 }
@@ -596,7 +642,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
             <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
           </div>
           <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            No challenge size data available for this firm yet.
+            No challenge size data is available in the current snapshot. The overview above still covers the current platform, payout model, and allocation details.
           </CardV2Description>
         </CardV2Content>
       </CardV2>
@@ -612,7 +658,7 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
           <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Current account sizes, pricing, and trading limits.
+          Current account sizes, pricing, and trading limits from the live snapshot.
         </CardV2Description>
         </CardV2Content>
       </CardV2>
@@ -666,6 +712,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   const overviewFacts = buildOverviewFacts(firm)
   const trustMetrics = buildTrustMetrics(firm)
   const researchSnapshot = buildResearchSnapshot(firm)
+  const sourceNotes = getFirmSourceNotes(firm).overview
 
   return (
     <div className="space-y-5">
@@ -698,6 +745,20 @@ function OverviewSection({ firm }: { firm: FirmData }) {
               </div>
             ))}
           </div>
+
+          {sourceNotes.length > 0 ? (
+            <div className="mt-6 rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official source notes</p>
+              <div className="mt-3 space-y-2">
+                {sourceNotes.map((note) => (
+                  <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
+                    <p>{note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </CardV2Content>
       </CardV2>
 
@@ -909,7 +970,7 @@ function ROISection({ firm }: { firm: FirmData }) {
           <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Illustrative fee-to-target comparison based on the current challenge templates.
+          Illustrative fee-to-target comparison based on the current challenge templates and the published firm path.
         </CardV2Description>
 
         <p className="mt-3 text-xs leading-6 text-muted-foreground">
@@ -963,6 +1024,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 function RulesSection({ firm }: { firm: FirmData }) {
   const accountSizes = getAccountSizeEntries(firm.accountSizes)
   const rules = buildRules(firm)
+  const sourceNotes = getFirmSourceNotes(firm).rules
 
   return (
     <div className="space-y-5">
@@ -985,6 +1047,20 @@ function RulesSection({ firm }: { firm: FirmData }) {
               </div>
             ))}
           </div>
+
+          {sourceNotes.length > 0 ? (
+            <div className="mt-6 rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Official rule notes</p>
+              <div className="mt-3 space-y-2">
+                {sourceNotes.map((note) => (
+                  <div key={note} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-v2-accent" />
+                    <p>{note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </CardV2Content>
       </CardV2>
 
@@ -1263,7 +1339,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   )
 }
 
- export function FirmDetailClient({ firm }: { firm: FirmData }) {
+export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
   const [activeTab, setActiveTab] = React.useState('overview')
 
   return (
@@ -1326,7 +1402,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
           </TabsContent>
 
           <TabsContent value="coupons" className="mt-5">
-            <FirmCouponsSection firmId={firm.id} />
+            <FirmCouponsSection firmId={firm.id} localePrefix={localePrefix} referralUrl={firm.referralUrl} />
           </TabsContent>
         </Tabs>
       </div>

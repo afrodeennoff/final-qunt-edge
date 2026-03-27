@@ -1,5 +1,6 @@
 "use client"
 import React from 'react'
+import Link from 'next/link'
 import { listFirmCoupons } from '@/server/firm-coupons'
 import { CardV2, CardV2Description, BadgeV2, SkeletonV2 } from '@/components/ui/v2'
 import { DealsIcon } from '@/components/icons/svg-icons'
@@ -7,7 +8,15 @@ import { formatCompactCurrency } from '@/lib/formatting/currency'
 
 type FirmCouponItem = Awaited<ReturnType<typeof listFirmCoupons>>[number]
 
-export function FirmCouponsSection({ firmId }: { firmId: string }) {
+export function FirmCouponsSection({
+  firmId,
+  localePrefix,
+  referralUrl,
+}: {
+  firmId: string
+  localePrefix: string
+  referralUrl?: string | null
+}) {
   const [coupons, setCoupons] = React.useState<FirmCouponItem[]>([])
   const [loading, setLoading] = React.useState(true)
 
@@ -36,8 +45,29 @@ export function FirmCouponsSection({ firmId }: { firmId: string }) {
           <SkeletonV2 className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border/60 bg-background/40 py-8 text-center text-sm text-muted-foreground">
-          No active coupons in the current database snapshot.
+        <div className="rounded-2xl border border-dashed border-border/60 bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
+          <p>No active coupons are currently tracked in the database snapshot.</p>
+          <p className="mx-auto mt-2 max-w-lg leading-6">
+            We only show live codes when the firm record has an active coupon attached. Check the Deals board for current offers or visit the official site for the firm&apos;s latest pricing.
+          </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <Link
+              href={`${localePrefix}/deals`}
+              className="rounded-full bg-v2-accent px-4 py-2 text-xs font-semibold text-v2-accent-foreground transition-colors hover:bg-v2-accent-hover"
+            >
+              Browse Deals
+            </Link>
+            {referralUrl ? (
+              <a
+                href={referralUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-border/40 bg-background/50 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-background/80"
+              >
+                Visit Official Site
+              </a>
+            ) : null}
+          </div>
         </div>
       ) : (
         <div className="space-y-3">

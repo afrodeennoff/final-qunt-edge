@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useI18n } from "@/locales/client"
 import { platforms, PlatformConfig } from './config/platforms'
@@ -99,7 +99,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           <div className="p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <InputV2
                 placeholder={t('import.type.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

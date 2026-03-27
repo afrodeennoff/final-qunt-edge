@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent } from '@/components/ui/card'
 import { Lock, ShieldCheck, FileDown, Workflow } from 'lucide-react'
 
@@ -31,7 +31,7 @@ export default function ProofStrip() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <div className="text-center sm:text-left">
-            <Badge
+            <BadgeV2
               variant="secondary"
               className="border-border/70 bg-card/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.22em] backdrop-blur-sm [font-family:var(--home-copy)]"
             >

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { BadgeV2 } from "@/components/ui/v2";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
@@ -93,7 +93,7 @@ export function PlatformCard({
 
             <div className="flex flex-wrap gap-2 w-full mt-auto pt-2">
                 {platform.isDisabled && (
-                    <Badge
+                    <BadgeV2
                         variant="secondary"
                         className="bg-semantic-warning-bg/10 text-semantic-warning hover:bg-semantic-warning-bg/20"
                     >
@@ -101,7 +101,7 @@ export function PlatformCard({
                     </Badge>
                 )}
                 {platform.isComingSoon && !platform.isDisabled && (
-                    <Badge
+                    <BadgeV2
                         variant="secondary"
                         className="bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20"
                     >
@@ -109,7 +109,7 @@ export function PlatformCard({
                     </Badge>
                 )}
                 {!platform.isDisabled && platform.isRithmic && isWeekend && (
-                    <Badge
+                    <BadgeV2
                         variant="outline"
                         className="border-semantic-warning-border/30 bg-semantic-warning-bg/5 text-semantic-warning"
                     >

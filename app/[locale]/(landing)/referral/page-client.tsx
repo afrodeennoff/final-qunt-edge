@@ -1,8 +1,8 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { BadgeV2 } from "@/components/ui/v2"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Gift, Trophy, Sparkles, CheckCircle2, AlertCircle, ArrowUpRight, HandCoins } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import Link from "next/link"
@@ -37,7 +37,7 @@ export default function ReferralPage() {
           <CardContent className="p-6 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-4">
-                <Badge className="w-fit bg-card/25 text-foreground hover:bg-card/35">
+                <BadgeV2 className="w-fit bg-card/25 text-foreground hover:bg-card/35">
                   {t('referral.landing.heroBadge')}
                 </Badge>
                 <h1 className="text-3xl font-bold leading-tight md:text-5xl">
@@ -52,7 +52,7 @@ export default function ReferralPage() {
               </div>
 
               <div className="w-full md:w-auto">
-                <Button
+                <ButtonV2 
                   asChild
                   size="lg"
                   className="h-12 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto"
@@ -62,7 +62,7 @@ export default function ReferralPage() {
                     {t('referral.landing.affiliateCta')}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           </CardContent>
@@ -151,7 +151,7 @@ export default function ReferralPage() {
                   className="p-6 rounded-lg border border-border/60 bg-muted/20 flex flex-col items-center text-center transition-colors hover:bg-muted/35"
                 >
                   <div className="mb-4">{tier.icon}</div>
-                  <Badge variant="secondary" className="mb-3">
+                  <BadgeV2 variant="secondary" className="mb-3">
                     {t('referral.landing.tierBadge', { count: tier.count })}
                   </Badge>
                   <p className="text-sm text-muted-foreground">{tier.reward}</p>

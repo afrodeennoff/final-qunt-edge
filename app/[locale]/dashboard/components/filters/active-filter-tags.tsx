@@ -1,7 +1,7 @@
 "use client"
 
 import { X, ChevronRight } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { format } from "date-fns"
@@ -9,7 +9,7 @@ import { fr } from 'date-fns/locale'
 import { useParams } from "next/navigation"
 import { useRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUserStore } from "@/store/user-store"
 
@@ -230,7 +230,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                   transition={{ duration: 0.15 }}
                   layout
                 >
-                  <Badge 
+                  <BadgeV2 
                     variant="secondary" 
                     className="gap-1 shrink-0 badge cursor-pointer"
                     onClick={handleRemoveDateRange}
@@ -253,7 +253,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                   transition={{ duration: 0.15 }}
                   layout
                 >
-                  <Badge 
+                  <BadgeV2 
                     variant="secondary" 
                     className="gap-1 shrink-0 badge cursor-pointer"
                     onClick={handleRemovePnlRange}
@@ -276,7 +276,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                   transition={{ duration: 0.15 }}
                   layout
                 >
-                  <Badge 
+                  <BadgeV2 
                     variant="secondary" 
                     className="gap-1 shrink-0 badge cursor-pointer"
                     onClick={handleRemoveWeekdayFilter}
@@ -299,7 +299,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                   transition={{ duration: 0.15 }}
                   layout
                 >
-                  <Badge 
+                  <BadgeV2 
                     variant="secondary" 
                     className="gap-1 shrink-0 badge cursor-pointer"
                     onClick={() => handleRemoveFilter('account', account)}
@@ -322,7 +322,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                   transition={{ duration: 0.15 }}
                   layout
                 >
-                  <Badge 
+                  <BadgeV2 
                     variant="secondary" 
                     className="gap-1 shrink-0 badge cursor-pointer"
                     onClick={() => handleRemoveFilter('instrument', instrument)}
@@ -347,7 +347,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
                     transition={{ duration: 0.15 }}
                     layout
                   >
-                    <Badge 
+                    <BadgeV2 
                       variant="secondary" 
                       className="gap-1 shrink-0 badge cursor-pointer"
                       style={{
@@ -379,14 +379,14 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
             animate={{ opacity: canScroll ? 1 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Button
+            <ButtonV2 
               variant="ghost"
               size="sm"
               className="h-full w-8 p-0"
               onClick={scrollToNext}
             >
               <ChevronRight className="h-4 w-4" />
-            </Button>
+            </ButtonV2>
           </motion.div>
         </div>
       </div>

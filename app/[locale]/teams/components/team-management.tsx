@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useI18n } from "@/locales/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ButtonV2 } from "@/components/ui/v2"
+import { InputV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import {
   Building2,
@@ -708,7 +708,7 @@ export function TeamManagement({
                       )}>
                         {team.name}
                         {isActive && (
-                          <Badge variant="default" className="text-[10px] px-1.5 py-0 h-4">
+                          <BadgeV2 variant="default" className="text-[10px] px-1.5 py-0 h-4">
                             {t('teams.management.active')}
                           </Badge>
                         )}
@@ -736,7 +736,7 @@ export function TeamManagement({
                 <div className="flex gap-2 flex-wrap">
                   {/* Manage button - only for owners and admins */}
                   {(isOwner || access === 'admin') && (
-                    <Button
+                    <ButtonV2 
                       variant="outline"
                       size="sm"
                       className="flex-1 text-xs"
@@ -752,12 +752,12 @@ export function TeamManagement({
                     >
                       <Settings className="h-3 w-3 mr-1" />
                       {t('teams.management.manage')}
-                    </Button>
+                    </ButtonV2>
                   )}
 
                   {/* View button - for all team members (owners, admins, regular members, managed teams) */}
                   {(isOwner || isJoined || isManaged) && (
-                    <Button
+                    <ButtonV2 
                       asChild
                       variant="outline"
                       size="sm"
@@ -767,17 +767,17 @@ export function TeamManagement({
                         <Eye className="h-3 w-3 mr-1" />
                         {t('teams.dashboard.view')}
                       </Link>
-                    </Button>
+                    </ButtonV2>
                   )}
 
                   {/* Delete button - only for owners */}
                   {isOwner && (
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm" className="flex-1 text-xs">
+                        <ButtonV2  variant="destructive" size="sm" className="flex-1 text-xs">
                           <Trash2 className="h-3 w-3 mr-1" />
                           {t('teams.management.delete')}
-                        </Button>
+                        </ButtonV2>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[95vw] sm:w-full">
                         <AlertDialogHeader>
@@ -803,10 +803,10 @@ export function TeamManagement({
                   {(isJoined || isManaged) && !isOwner && (
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="flex-1 text-xs">
+                        <ButtonV2  variant="outline" size="sm" className="flex-1 text-xs">
                           <UserMinus className="h-3 w-3 mr-1" />
                           {t('teams.management.leave')}
-                        </Button>
+                        </ButtonV2>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="w-[95vw] sm:w-full">
                         <AlertDialogHeader>
@@ -859,7 +859,7 @@ export function TeamManagement({
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="team-name">{t('teams.management.teamName')}</Label>
-                  <Input
+                  <InputV2
                     id="team-name"
                     value={newTeamName}
                     onChange={(e) => setNewTeamName(e.target.value)}
@@ -868,12 +868,12 @@ export function TeamManagement({
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                <ButtonV2  variant="outline" onClick={() => setCreateDialogOpen(false)}>
                   {t('teams.management.cancel')}
-                </Button>
-                <Button onClick={handleCreateTeam} disabled={isSubmitting}>
+                </ButtonV2>
+                <ButtonV2  onClick={handleCreateTeam} disabled={isSubmitting}>
                   {isSubmitting ? t('teams.management.saving') : t('teams.management.createTeamTitle')}
-                </Button>
+                </ButtonV2>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -893,10 +893,10 @@ export function TeamManagement({
           {(
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <ButtonV2 >
                   <Plus className="h-4 w-4 mr-2" />
                   {t('teams.management.component.createButtonText')}
-                </Button>
+                </ButtonV2>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
                 <DialogHeader>
@@ -908,7 +908,7 @@ export function TeamManagement({
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="team-name">{t('teams.management.teamName')}</Label>
-                    <Input
+                    <InputV2
                       id="team-name"
                       value={newTeamName}
                       onChange={(e) => setNewTeamName(e.target.value)}
@@ -917,12 +917,12 @@ export function TeamManagement({
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
+                  <ButtonV2  variant="outline" onClick={() => setCreateDialogOpen(false)}>
                     {t('teams.management.cancel')}
-                  </Button>
-                  <Button onClick={handleCreateTeam} disabled={isSubmitting}>
+                  </ButtonV2>
+                  <ButtonV2  onClick={handleCreateTeam} disabled={isSubmitting}>
                     {isSubmitting ? t('teams.management.saving') : t('teams.management.startSubscription')}
-                  </Button>
+                  </ButtonV2>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -951,19 +951,19 @@ export function TeamManagement({
             <div>
               <h4 className="font-medium mb-3">{t('teams.rename.title')}</h4>
               <div className="flex gap-2">
-                <Input
+                <InputV2
                   placeholder={t('teams.rename.placeholder')}
                   value={renameTeamName}
                   onChange={(e) => setRenameTeamName(e.target.value)}
                   className="flex-1"
                 />
-                <Button
+                <ButtonV2 
                   onClick={handleRenameTeam}
                   disabled={isSubmitting || !renameTeamName.trim()}
                   size="sm"
                 >
                   {isSubmitting ? t('teams.management.saving') : t('teams.management.rename')}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
 
@@ -985,12 +985,12 @@ export function TeamManagement({
                         <div key={trader.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
                           <span>{trader.email}</span>
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline">{t('teams.management.member')}</Badge>
+                            <BadgeV2 variant="outline">{t('teams.management.member')}</Badge>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
+                                <ButtonV2  variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
                                   <UserMinus className="h-3 w-3" />
-                                </Button>
+                                </ButtonV2>
                               </AlertDialogTrigger>
                               <AlertDialogContent className="w-[95vw] sm:w-full">
                                 <AlertDialogHeader>
@@ -1025,19 +1025,19 @@ export function TeamManagement({
                   {t('teams.traders.add.description')}
                 </p>
                 <div className="flex gap-2">
-                  <Input
+                  <InputV2
                     placeholder={t('teams.traders.add.placeholder')}
                     value={newTraderEmail}
                     onChange={(e) => setNewTraderEmail(e.target.value)}
                     className="flex-1"
                   />
-                  <Button
+                  <ButtonV2 
                     onClick={handleAddTrader}
                     disabled={isSubmitting || !newTraderEmail.trim()}
                     size="sm"
                   >
                     {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
 
@@ -1052,12 +1052,12 @@ export function TeamManagement({
                       <div key={invitation.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
                         <span>{invitation.email}</span>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline">{t('teams.management.pending')}</Badge>
+                          <BadgeV2 variant="outline">{t('teams.management.pending')}</Badge>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
+                              <ButtonV2  variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
                                 <XCircle className="h-3 w-3" />
-                              </Button>
+                              </ButtonV2>
                             </AlertDialogTrigger>
                             <AlertDialogContent className="w-[95vw] sm:w-full">
                               <AlertDialogHeader>
@@ -1103,7 +1103,7 @@ export function TeamManagement({
                         <div key={manager.id} className="flex items-center justify-between bg-muted/50 p-2 rounded-md text-sm">
                           <span>{manager.email}</span>
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline">
+                            <BadgeV2 variant="outline">
                               {manager.access === 'admin' ? t('dashboard.teams.admin') : t('dashboard.teams.viewer')}
                             </Badge>
                             <Select
@@ -1120,9 +1120,9 @@ export function TeamManagement({
                             </Select>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
+                                <ButtonV2  variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground">
                                   <UserMinus className="h-3 w-3" />
-                                </Button>
+                                </ButtonV2>
                               </AlertDialogTrigger>
                               <AlertDialogContent className="w-[95vw] sm:w-full">
                                 <AlertDialogHeader>
@@ -1154,7 +1154,7 @@ export function TeamManagement({
               <div>
                 <h5 className="text-sm font-medium text-muted-foreground mb-2">{t('teams.managers.addNew')}</h5>
                 <div className="flex gap-2">
-                  <Input
+                  <InputV2
                     placeholder={t('dashboard.teams.managerEmail')}
                     value={newManagerEmail}
                     onChange={(e) => setNewManagerEmail(e.target.value)}
@@ -1169,18 +1169,18 @@ export function TeamManagement({
                       <SelectItem value="admin">{t('dashboard.teams.admin')}</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button onClick={handleAddManager} disabled={isSubmitting}>
+                  <ButtonV2  onClick={handleAddManager} disabled={isSubmitting}>
                     {isSubmitting ? t('teams.management.saving') : <UserPlus className="h-4 w-4" />}
-                  </Button>
+                  </ButtonV2>
                 </div>
               </div>
             </div>
           </div>
 
           <DialogFooter className="shrink-0 mt-4">
-            <Button variant="outline" onClick={() => setManageDialogOpen(false)}>
+            <ButtonV2  variant="outline" onClick={() => setManageDialogOpen(false)}>
               {t('teams.management.close')}
-            </Button>
+            </ButtonV2>
           </DialogFooter>
         </DialogContent>
       </Dialog>

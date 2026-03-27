@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 
 export default function ImportCallbackPageClient() {
@@ -216,20 +216,20 @@ export default function ImportCallbackPageClient() {
               </Alert>
 
               <div className="flex flex-col gap-2">
-                <Button
+                <ButtonV2 
                   onClick={handleRetry}
                   variant="outline"
                   className="w-full"
                 >
                   {t("tradovateSync.callback.retry")}
-                </Button>
-                <Button
+                </ButtonV2>
+                <ButtonV2 
                   onClick={() => router.push(`/${locale}/dashboard`)}
                   variant="secondary"
                   className="w-full"
                 >
                   {t("tradovateSync.callback.backToDashboard")}
-                </Button>
+                </ButtonV2>
               </div>
             </div>
           )}

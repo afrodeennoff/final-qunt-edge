@@ -41,9 +41,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params
   const firm = await getUnifiedFirmBySlug(slug)
   if (!firm) notFound()
-  return <FirmDetailClient firm={firm} />
+  return <FirmDetailClient firm={firm} localePrefix={`/${locale}`} />
 }

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowRight, Building2, Users, DollarSign, TrendingUp } from 'lucide-react'
 
@@ -45,7 +45,7 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <Badge variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <BadgeV2 variant="outline" className="border-[hsl(var(--primary)/0.4)] bg-[hsl(var(--primary)/0.08)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
               <Building2 className="mr-1.5 h-3 w-3" />
               Featured Firms
             </Badge>
@@ -75,10 +75,10 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
                     <div>
                       <p className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{firm.name}</p>
                       <div className="mt-1 flex items-center gap-2">
-                        <Badge variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+                        <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
                           {firm.category}
                         </Badge>
-                        <Badge variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+                        <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
                           {firm.platform}
                         </Badge>
                       </div>

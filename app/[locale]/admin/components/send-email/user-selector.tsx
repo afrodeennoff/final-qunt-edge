@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
+import { InputV2 } from "@/components/ui/v2"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, X } from "lucide-react"
@@ -62,7 +62,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[240px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+          <InputV2
             placeholder="Search users by email or name..."
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
@@ -84,17 +84,17 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline" size="sm" onClick={selectAll}>
+        <ButtonV2  variant="outline" size="sm" onClick={selectAll}>
           Select All
-        </Button>
-        <Button variant="outline" size="sm" onClick={deselectAll}>
+        </ButtonV2>
+        <ButtonV2  variant="outline" size="sm" onClick={deselectAll}>
           Deselect All
-        </Button>
+        </ButtonV2>
         {selectedUsers.length > 0 && (
-          <Button variant="outline" size="sm" onClick={clearSelection}>
+          <ButtonV2  variant="outline" size="sm" onClick={clearSelection}>
             <X className="h-4 w-4 mr-1" />
             Clear
-          </Button>
+          </ButtonV2>
         )}
       </div>
 
@@ -103,7 +103,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
           {selectedUsers.length} of {filteredUsers.length} filtered users selected
           {languageFilter !== "all" && ` (${filteredLanguageTotal} total ${languageFilter === "fr" ? "FR" : "EN"} users)`}
         </span>
-        {selectedUsers.length > 0 && <Badge variant="secondary">{selectedUsers.length}</Badge>}
+        {selectedUsers.length > 0 && <BadgeV2 variant="secondary">{selectedUsers.length}</Badge>}
       </div>
 
       <ScrollArea className="h-[500px] rounded-md border p-4">
@@ -131,7 +131,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
                     <div className="font-medium truncate">{user.firstName || "User"}</div>
                     <div className="text-sm text-muted-foreground truncate">{user.email}</div>
                   </div>
-                  <Badge variant="outline" className="text-xs">
+                  <BadgeV2 variant="outline" className="text-xs">
                     {user.language}
                   </Badge>
                 </div>

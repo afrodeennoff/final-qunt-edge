@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Card } from "@/components/ui/card"
 import { Frown, Meh, Smile } from "lucide-react"
 import { useI18n } from '@/locales/client'
@@ -117,7 +117,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   className={`h-6 w-6 p-0 hover:text-semantic-error ${getMoodButtonStyle('bad')}`}
@@ -125,7 +125,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
                   disabled={isLoading !== null}
                 >
                   <Frown className={`h-3 w-3 ${isLoading === 'bad' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
               </TooltipTrigger>
               <TooltipContent>
                 {t('mood.bad')}
@@ -136,7 +136,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   className={`h-6 w-6 p-0 hover:text-semantic-warning ${getMoodButtonStyle('okay')}`}
@@ -144,7 +144,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
                   disabled={isLoading !== null}
                 >
                   <Meh className={`h-3 w-3 ${isLoading === 'okay' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
               </TooltipTrigger>
               <TooltipContent>
                 {t('mood.okay')}
@@ -155,7 +155,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   className={`h-6 w-6 p-0 hover:text-foreground ${getMoodButtonStyle('great')}`}
@@ -163,7 +163,7 @@ export function MoodSelector({ onMoodSelect }: MoodSelectorProps) {
                   disabled={isLoading !== null}
                 >
                   <Smile className={`h-3 w-3 ${isLoading === 'great' ? 'animate-pulse' : ''}`} />
-                </Button>
+                </ButtonV2>
               </TooltipTrigger>
               <TooltipContent>
                 {t('mood.great')}

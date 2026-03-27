@@ -76,7 +76,7 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
         {badges && badges.length > 0 && (
           <div className="absolute top-2 right-2 flex flex-wrap gap-1">
             {badges.map((badge, index) => (
-              <Badge key={index} variant={badge.variant || "default"} className="text-xs">
+              <BadgeV2 key={index} variant={badge.variant || "default"} className="text-xs">
                 {badge.label}
               </Badge>
             ))}

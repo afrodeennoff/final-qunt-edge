@@ -1,7 +1,7 @@
 "use client"
 
 import React, { forwardRef, useState, useEffect, useRef, useCallback } from 'react'
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Plus, Loader2 } from 'lucide-react'
@@ -204,7 +204,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
     return (
       <Sheet open={isOpen} onOpenChange={handleOpenChange}>
         <SheetTrigger asChild>
-          <Button
+          <ButtonV2 
             ref={ref}
             variant="ghost"
             disabled={!isCustomizing}
@@ -220,7 +220,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
                 {t('widgets.addWidget')}
               </span>
             )}
-          </Button>
+          </ButtonV2>
         </SheetTrigger>
         <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden">
           <SheetHeader>

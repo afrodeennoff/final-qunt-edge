@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { BadgeV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, X, AlertCircle } from 'lucide-react'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -213,11 +213,11 @@ function FreePlanCard({
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           {isModal ? (
-            <Button onClick={onClose} className={getPlanCtaClassName()}>
+            <ButtonV2  onClick={onClose} className={getPlanCtaClassName()}>
               {t('pricing.keepBasic')}
             </Button>
           ) : (
-            <Button asChild className={getPlanCtaClassName()}>
+            <ButtonV2  asChild className={getPlanCtaClassName()}>
               <Link href={href}>{t('pricing.startBasic')}</Link>
             </Button>
           )}
@@ -352,7 +352,7 @@ function PlusPlanCard({
 
             <div className="grid grid-cols-3 gap-1 rounded-md border border-border/50 bg-card p-1">
               {recurringBillingOptions.map((option) => (
-                <Button
+                <ButtonV2 
                   key={option.key}
                   variant="ghost"
                   size="sm"
@@ -369,7 +369,7 @@ function PlusPlanCard({
             </div>
 
             <div className="border-t border-border pt-2">
-              <Button
+              <ButtonV2 
                 variant="outline"
                 size="sm"
                 className={cn(
@@ -379,7 +379,7 @@ function PlusPlanCard({
                 onClick={() => setBillingPeriod('lifetime')}
               >
                 {t('pricing.lifetimeAccess')}
-                <Badge
+                <BadgeV2
                   variant="secondary"
                   className="border border-semantic-warning-border bg-semantic-warning-bg px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-semantic-warning"
                 >
@@ -451,7 +451,7 @@ function PlusPlanCard({
           )}
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
-          <Button
+          <ButtonV2 
             onClick={handlePrimaryClick}
             disabled={isLoading || current || blocked}
             variant={current || blocked ? 'outline' : 'default'}
@@ -604,14 +604,14 @@ function PricingPlansContent({
             )}
           </div>
           <DialogFooter>
-            <Button
+            <ButtonV2 
               variant="outline"
               onClick={() => setShowLifetimeConfirm(false)}
               disabled={isLoading}
             >
               {t('pricing.lifetimeUpgrade.cancel')}
             </Button>
-            <Button
+            <ButtonV2 
               onClick={handleLifetimeConfirm}
               disabled={isLoading}
             >

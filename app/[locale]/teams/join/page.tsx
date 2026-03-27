@@ -5,8 +5,8 @@ import { useI18n } from "@/locales/client"
 import { useParams } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { ButtonV2 } from "@/components/ui/v2"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
 import {
   Building2,
@@ -114,13 +114,13 @@ export default function TeamJoinPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
+        return <BadgeV2 variant="secondary">{t('teams.management.pending')}</Badge>
       case 'accepted':
-        return <Badge variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</Badge>
+        return <BadgeV2 variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
-        return <Badge variant="destructive">{t('teams.invitations.expired')}</Badge>
+        return <BadgeV2 variant="destructive">{t('teams.invitations.expired')}</Badge>
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <BadgeV2 variant="outline">{status}</Badge>
     }
   }
 
@@ -164,9 +164,9 @@ export default function TeamJoinPage() {
             </CardHeader>
             <CardContent className="text-center">
               <Link href={dashboardRoot}>
-                <Button variant="outline" className="w-full">
+                <ButtonV2  variant="outline" className="w-full">
                   {t('teams.join.goToManage')}
-                </Button>
+                </ButtonV2>
               </Link>
             </CardContent>
           </Card>
@@ -189,12 +189,12 @@ export default function TeamJoinPage() {
             </CardHeader>
             <CardContent className="text-center">
               <Link href={dashboardRoot}>
-                <Button
+                <ButtonV2 
                   variant="outline"
                   className="w-full"
                 >
                   {t('teams.join.goToManage')}
-                </Button>
+                </ButtonV2>
               </Link>
             </CardContent>
           </Card>
@@ -289,7 +289,7 @@ export default function TeamJoinPage() {
                   <p className="text-muted-foreground">
                     {t('teams.join.action.description')}
                   </p>
-                  <Button
+                  <ButtonV2 
                     onClick={handleJoinTeam}
                     disabled={isJoining}
                     size="lg"
@@ -306,7 +306,7 @@ export default function TeamJoinPage() {
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </>
                     )}
-                  </Button>
+                  </ButtonV2>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -322,12 +322,12 @@ export default function TeamJoinPage() {
                     </span>
                   </div>
                   <Link href={dashboardRoot}>
-                    <Button
+                    <ButtonV2 
                       variant="outline"
                       className="w-full"
                     >
                       {t('teams.join.goToManage')}
-                    </Button>
+                    </ButtonV2>
                   </Link>
                 </div>
               )}

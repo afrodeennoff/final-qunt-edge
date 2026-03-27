@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { useI18n } from '@/locales/client'
 
 type Props = {
@@ -34,7 +34,7 @@ export function PostList({ initialPosts }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-        <Input
+        <InputV2
           placeholder={t('community.searchPosts')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}

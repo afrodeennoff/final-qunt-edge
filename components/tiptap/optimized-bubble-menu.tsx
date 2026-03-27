@@ -4,7 +4,7 @@ import { useEditorState } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
 import { Bold, Italic, UnderlineIcon, Strikethrough, Highlighter, Loader2, Sparkles, Table2, Trash2, Plus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -53,7 +53,7 @@ export function OptimizedBubbleMenu({
       editor={editor}
       className="flex items-center flex-wrap gap-1 p-2 bg-background border rounded-lg shadow-lg max-w-[90vw] overflow-visible"
     >
-      <Button
+      <ButtonV2 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -63,7 +63,7 @@ export function OptimizedBubbleMenu({
       >
         <Bold className="h-4 w-4" />
       </Button>
-      <Button
+      <ButtonV2 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -73,7 +73,7 @@ export function OptimizedBubbleMenu({
       >
         <Italic className="h-4 w-4" />
       </Button>
-      <Button
+      <ButtonV2 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -83,7 +83,7 @@ export function OptimizedBubbleMenu({
       >
         <UnderlineIcon className="h-4 w-4" />
       </Button>
-      <Button
+      <ButtonV2 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -93,7 +93,7 @@ export function OptimizedBubbleMenu({
       >
         <Strikethrough className="h-4 w-4" />
       </Button>
-      <Button
+      <ButtonV2 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleHighlight().run()}
@@ -110,7 +110,7 @@ export function OptimizedBubbleMenu({
           <div className="w-px h-6 bg-border mx-1" />
           <Popover open={isTableMenuOpen} onOpenChange={setIsTableMenuOpen}>
             <PopoverTrigger asChild>
-              <Button
+              <ButtonV2 
                 variant="ghost"
                 size="sm"
                 className="h-8 w-8 p-0"
@@ -207,7 +207,7 @@ export function OptimizedBubbleMenu({
       <div className="w-px h-6 bg-border mx-1" />
       <Popover open={isAIOpen} onOpenChange={setIsAIOpen}>
         <PopoverTrigger asChild>
-          <Button
+          <ButtonV2 
             variant="ghost"
             size="sm"
             disabled={status === "streaming"}

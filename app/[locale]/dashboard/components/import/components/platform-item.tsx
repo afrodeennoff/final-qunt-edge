@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { CommandItem } from "@/components/ui/command"
 import { cn } from "@/lib/utils"
 import { AlertTriangle } from "lucide-react"
@@ -68,7 +68,7 @@ export function PlatformItem({
             {t(platform.name as keyof typeof t)}
             {platform.isDisabled && (
               <>
-                <Badge variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105">
+                <BadgeV2 variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105">
                   {t('import.type.badge.maintenance')}
                 </Badge>
                 <AlertTriangle className="h-4 w-4 text-semantic-warning animate-pulse" />
@@ -76,7 +76,7 @@ export function PlatformItem({
             )}
             {platform.isComingSoon && !platform.isDisabled && (
               <>
-                <Badge variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105 bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20">
+                <BadgeV2 variant="secondary" className="ml-2 transition-transform duration-200 hover:scale-105 bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20">
                   {t('import.type.badge.comingSoon')}
                 </Badge>
               </>

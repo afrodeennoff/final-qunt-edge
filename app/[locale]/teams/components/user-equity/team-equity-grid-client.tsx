@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+import { InputV2 } from "@/components/ui/v2"
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Filter, X } from 'lucide-react'
@@ -221,7 +221,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button
+            <ButtonV2 
               variant="outline"
               size="sm"
               onClick={handleExportTrades}
@@ -230,9 +230,9 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
             >
               <Download className="h-4 w-4" />
               {isExporting ? t('teams.equity.exporting') : t('teams.equity.exportTrades')}
-            </Button>
+            </ButtonV2>
             
-            <Button
+            <ButtonV2 
               variant="outline"
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
@@ -243,7 +243,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
               {hasActiveFilters && (
                 <div className="w-2 h-2 bg-semantic-info-bg rounded-full"></div>
               )}
-            </Button>
+            </ButtonV2>
           </div>
         </div>
 
@@ -253,7 +253,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">{t('teams.equity.filters')}</h3>
               {hasActiveFilters && (
-                <Button
+                <ButtonV2 
                   variant="ghost"
                   size="sm"
                   onClick={clearFilters}
@@ -261,7 +261,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
                 >
                   <X className="h-3 w-3" />
                   {t('teams.equity.clear')}
-                </Button>
+                </ButtonV2>
               )}
             </div>
             
@@ -269,7 +269,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
               {/* Minimum Trades */}
               <div className="space-y-2">
                 <Label htmlFor="min-trades" className="text-xs">{t('teams.equity.minimumTrades')}</Label>
-                <Input
+                <InputV2
                   id="min-trades"
                   type="number"
                   min="0"
@@ -283,7 +283,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
               {/* Minimum Traded Days */}
               <div className="space-y-2">
                 <Label htmlFor="min-days" className="text-xs">{t('teams.equity.minimumTradedDays')}</Label>
-                <Input
+                <InputV2
                   id="min-days"
                   type="number"
                   min="0"

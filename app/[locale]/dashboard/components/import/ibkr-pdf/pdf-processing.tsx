@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { useI18n } from "@/locales/client"
-import { Button } from "@/components/ui/button"
+import { ButtonV2 } from "@/components/ui/v2"
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+import { BadgeV2 } from "@/components/ui/v2"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format, isValid } from "date-fns"
@@ -264,7 +264,7 @@ export default function PdfProcessing({
         <DataTableColumnHeader column={column} title={t('trade-table.direction')} />
       ),
       cell: ({ row }) => (
-        <Badge variant={row.original.side === 'long' ? 'default' : 'destructive'}>
+        <BadgeV2 variant={row.original.side === 'long' ? 'default' : 'destructive'}>
           {row.original.side?.toUpperCase()}
         </Badge>
       ),
@@ -312,7 +312,7 @@ export default function PdfProcessing({
         <DataTableColumnHeader column={column} title="P&L" />
       ),
       cell: ({ row }) => (
-        <Badge variant={row.original.pnl >= 0 ? 'default' : 'destructive'}>
+        <BadgeV2 variant={row.original.pnl >= 0 ? 'default' : 'destructive'}>
           ${Number(row.original.pnl).toFixed(2)}
         </Badge>
       ),
@@ -446,7 +446,7 @@ export default function PdfProcessing({
           ${totals.totalCommission.toFixed(2)}
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm">
-          <Badge variant={totals.totalPnl >= 0 ? 'default' : 'destructive'} className="font-semibold">
+          <BadgeV2 variant={totals.totalPnl >= 0 ? 'default' : 'destructive'} className="font-semibold">
             ${totals.totalPnl.toFixed(2)}
           </Badge>
         </TableCell>

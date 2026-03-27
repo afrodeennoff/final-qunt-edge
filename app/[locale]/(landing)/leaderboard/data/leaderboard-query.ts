@@ -24,7 +24,7 @@ export type LeaderboardSort = 'monthly_pnl' | 'winrate' | 'totalTrades'
 
 type LeaderboardSeed = Omit<LeaderboardEntry, 'rank'>
 
-const FALLBACK_LEADERBOARD_SEEDS: LeaderboardSeed[] = [
+export const FALLBACK_LEADERBOARD_SEEDS: LeaderboardSeed[] = [
   {
     userId: 'demo-alpha-trader',
     username: 'AlphaTrader',
@@ -164,6 +164,10 @@ function sortAndRankLeaderboardEntries(
 
 function getFallbackLeaderboardEntries(sort: LeaderboardSort): LeaderboardEntry[] {
   return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
+}
+
+export function getFallbackLeaderboardEntryByUserId(userId: string): LeaderboardEntry | null {
+  return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
 }
 
 function isMissingColumnError(error: unknown): boolean {

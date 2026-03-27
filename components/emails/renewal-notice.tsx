@@ -166,7 +166,7 @@ export default function RenewalNoticeEmail({
                   {t.actionDescription}
                 </Text>
                 
-                <Button
+                <ButtonV2 
                   href={dashboardUrl}
                   className="bg-semantic-info-bg hover:bg-semantic-info-bg text-white px-6 py-3 rounded-lg font-medium text-center block w-fit"
                 >
@@ -187,7 +187,7 @@ export default function RenewalNoticeEmail({
                   {t.contactSupport}
                 </Text>
                 
-                <Button
+                <ButtonV2 
                   href={supportUrl}
                   className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium text-center block w-fit"
                 >

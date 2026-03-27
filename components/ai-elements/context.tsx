@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ButtonV2 } from "@/components/ui/v2";
 import {
   HoverCard,
   HoverCardContent,
@@ -112,7 +112,7 @@ export const ContextTrigger = ({ children, ...props }: ContextTriggerProps) => {
   return (
     <HoverCardTrigger asChild>
       {children ?? (
-        <Button type="button" variant="ghost" {...props}>
+        <ButtonV2  type="button" variant="ghost" {...props}>
           <span className="font-medium text-muted-foreground">
             {renderedPercent}
           </span>
