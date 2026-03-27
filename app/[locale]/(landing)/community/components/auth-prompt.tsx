@@ -30,7 +30,7 @@ export function AuthPrompt({ open, onOpenChange, action = 'perform this action' 
             {t('auth.signInRequired', { action })}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-end space-x-2">
+        <div className="flex justify-end gap-x-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
           </Button>

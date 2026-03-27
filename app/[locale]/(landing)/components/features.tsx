@@ -83,12 +83,12 @@ export default function Features() {
               index === 2 ? 'lg:col-span-4' : 'lg:col-span-2'
             }`}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-border/60 pb-4">
+            <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/60 pb-4">
               <CardTitle className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardTitle>
               {feature.icon}
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col space-y-3 sm:space-y-4">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 <div>
                   <div className="text-xl font-bold text-foreground sm:text-2xl">{feature.stat}</div>
                   <p className="mt-2 text-xs text-muted-foreground sm:text-sm">

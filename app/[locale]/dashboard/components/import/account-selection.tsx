@@ -114,7 +114,7 @@ export default function AccountSelection({
                     }
                   }}
                 />
-                <div className="flex space-x-2">
+                <div className="flex gap-2">
                   <Button
                     variant="default"
                     size="sm"

@@ -20,7 +20,7 @@ const problems = [
 
 export default function ProblemStatement() {
   return (
-    <section id="problem" className="relative border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section id="problem" className="relative border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-7 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>

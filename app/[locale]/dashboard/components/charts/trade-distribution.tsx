@@ -102,7 +102,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
     <ChartSurface>
       <div
         className={cn(
-          'flex flex-col items-stretch space-y-0 border-b border-border/55 shrink-0',
+          'flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0',
           size === 'small' ? 'p-2 h-10 justify-center' : 'p-3 sm:p-3.5 h-12 justify-center'
         )}
       >

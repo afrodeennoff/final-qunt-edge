@@ -122,7 +122,7 @@ const ThinkingMessage = () => (
 const FirstMessageLoading = () => {
   const t = useI18n();
   return (
-    <div className="flex flex-col items-center justify-center py-8 space-y-4">
+    <div className="flex flex-col items-center justify-center py-8 gap-4">
       <DotStream size="60" speed="2.5" color="hsl(var(--primary))" />
       <p className="text-muted-foreground text-sm">
         {t("chat.loading.firstMessage")}
@@ -684,13 +684,13 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
       </CardContent>
       {!isStarted && !isLoadingMessages && storedMessages.length === 0 && (
         <div className="absolute inset-0 bg-background/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md p-4 sm:p-6 space-y-4 sm:space-y-6 text-center">
+          <div className="w-full max-w-md p-4 sm:p-6 gap-4 sm:gap-6 text-center">
             <div className="flex justify-center">
               <div className="p-2 sm:p-3 rounded-full bg-primary/10">
                 <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="gap-2">
               <h3 className="text-xl sm:text-2xl font-semibold tracking-tight">
                 {t("chat.overlay.welcome")}
               </h3>

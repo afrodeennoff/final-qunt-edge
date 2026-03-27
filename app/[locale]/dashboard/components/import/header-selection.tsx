@@ -49,7 +49,7 @@ export default function HeaderSelection({ rawCsvData, setCsvData, setHeaders, se
               <TableRow key={rowIndex}>
                 <TableCell className="w-[50px]">
                   <RadioGroup value={selectedHeaderIndex.toString()} onValueChange={handleHeaderSelection}>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <RadioGroupItem value={rowIndex.toString()} id={`row-${rowIndex}`} />
                     </div>
                   </RadioGroup>

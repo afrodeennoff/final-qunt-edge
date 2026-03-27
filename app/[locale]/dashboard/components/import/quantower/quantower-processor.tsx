@@ -593,7 +593,7 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
                 {unknownSymbols.map((symbol) => (
                   <div key={symbol} className="space-y-2">
                     <h4 className="font-medium">{symbol}</h4>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <label className="text-sm">Tick Size:</label>
                       <Input
                         type="number"
@@ -602,7 +602,7 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
                         className="w-24"
                       />
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <label className="text-sm">Tick Value:</label>
                       <Input
                         type="number"

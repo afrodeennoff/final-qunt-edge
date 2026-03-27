@@ -166,7 +166,7 @@ export default function PdfUpload({
                   key={index}
                   className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
                 >
-                  <div className="flex items-center space-x-2 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <FileText className="w-4 h-4 flex-none text-muted-foreground" />
                     <span className="text-sm truncate">{file.name}</span>
                     <span className="text-xs text-muted-foreground flex-none">

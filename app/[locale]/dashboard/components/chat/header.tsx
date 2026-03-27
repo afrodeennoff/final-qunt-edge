@@ -19,7 +19,7 @@ export function ChatHeader({
     return (
         <CardHeader
             className={cn(
-                "flex flex-row items-center justify-between space-y-0 border-b shrink-0",
+                "flex flex-row items-center justify-between gap-0 border-b shrink-0",
                 size === "small-long" ? "p-2 h-[40px]" : "p-3 sm:p-4 h-[56px]",
             )}
         >

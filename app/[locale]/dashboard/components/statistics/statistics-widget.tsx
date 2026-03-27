@@ -310,7 +310,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
           )}>
             <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{t('statistics.distribution.title')}</h3>
             <div className="flex-1 flex flex-col justify-center gap-1.5">
-              <div className="space-y-1">
+              <div className="gap-1">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground">{t('statistics.distribution.long')}</span>
                   <span className="text-sm font-medium font-terminal metric-positive">{longRate}%</span>
@@ -319,7 +319,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
               </div>
               {size !== 'tiny' ? (
                 <>
-                  <div className="space-y-1">
+                  <div className="gap-1">
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-muted-foreground">{t('statistics.distribution.short')}</span>
                       <span className="text-sm font-medium font-terminal metric-negative">{shortRate}%</span>

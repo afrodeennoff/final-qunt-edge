@@ -166,7 +166,7 @@ export default function NavbarFilters() {
   }
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex gap-2">
       <FilterButton type="account" label="Select account" />
       <FilterButton type="instrument" label="Select instrument" />
       <FilterButton type="propfirm" label="Select propfirm" />

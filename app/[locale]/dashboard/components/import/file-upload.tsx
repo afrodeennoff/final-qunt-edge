@@ -367,7 +367,7 @@ export default function FileUpload({
               )}
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <div className="bg-primary/10 p-2 rounded-md group-hover:bg-primary/20 transition-colors">
                   <FileIcon className="h-5 w-5 text-primary" />
                 </div>
@@ -378,7 +378,7 @@ export default function FileUpload({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <Progress 
                   value={uploadProgress[file.name] || 0} 
                   className="w-24 h-2"

@@ -93,15 +93,15 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
   }
 
   return (
-    <div className="flex flex-col space-y-4 p-6">
-      <div className="flex flex-col space-y-2">
+    <div className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold">{t('etp.title')}</h2>
         <p className="text-sm text-muted-foreground">
           {t('etp.description')}
         </p>
       </div>
 
-      <div className="flex space-x-2">
+      <div className="flex gap-2">
         {isGenerating ? (
           <Skeleton className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background" />
         ) : (

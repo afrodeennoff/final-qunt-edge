@@ -1,3 +1,4 @@
+import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
 import { Award, HelpCircle } from "lucide-react"
 import { WidgetSize } from '../../types/dashboard'
@@ -14,7 +15,7 @@ interface WinningStreakCardProps {
   size?: WidgetSize
 }
 
-export default function WinningStreakCard({ size = 'medium' }: WinningStreakCardProps) {
+function WinningStreakCardInner({ size = 'medium' }: WinningStreakCardProps) {
   const { statistics: { winningStreak } } = useDashboardStats()
   const t = useI18n()
   const isCompact = size === 'tiny' || size === 'small' || size === 'small-long'
@@ -57,3 +58,5 @@ export default function WinningStreakCard({ size = 'medium' }: WinningStreakCard
     </WidgetShell>
   )
 }
+
+export default React.memo(WinningStreakCardInner)

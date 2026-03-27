@@ -117,7 +117,7 @@ export function UserSelector({ users, selectedUsers, onSelectionChange }: UserSe
                 <div
                   key={user.id}
                   className={cn(
-                    "flex items-center space-x-3 p-3 rounded-lg border transition-colors cursor-pointer",
+                    "flex items-center gap-3 p-3 rounded-lg border transition-colors cursor-pointer",
                     isSelected && "bg-primary/5 border-primary"
                   )}
                   onClick={() => toggleUser(user.id)}

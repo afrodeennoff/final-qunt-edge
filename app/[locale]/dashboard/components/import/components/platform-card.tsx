@@ -80,7 +80,7 @@ export function PlatformCard({
                 </div>
             </div>
 
-            <div className="space-y-1 w-full">
+            <div className="w-full">
                 <div className="flex items-center gap-2">
                     <h3 className="font-semibold leading-none tracking-tight">
                         {t(platform.name as any, { count: 1 })}

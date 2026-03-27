@@ -78,7 +78,7 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
 
   return (
     <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
             <CardTitle className="line-clamp-1 text-base">{t('embed.timeInPosition.title')}</CardTitle>

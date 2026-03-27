@@ -94,9 +94,9 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-xl">
       <div className="grid lg:grid-cols-[1fr_380px] h-full divide-x divide-border overflow-hidden">
         {/* Left Side: Grid of options */}
-        <div className="flex flex-col h-full min-h-0 relative">
+        <div className="flex flex-col gap-4 h-full min-h-0 relative">
           {/* Header & Filter */}
-          <div className="p-4 space-y-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
+          <div className="p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input

@@ -48,7 +48,7 @@ function TradingViewCanvas({ symbol, interval }: { symbol: string; interval: str
     const container = containerRef.current;
     if (!container) return;
 
-    container.innerHTML = "";
+    container.replaceChildren();
 
     const widgetTarget = document.createElement("div");
     widgetTarget.className = "tradingview-widget-container__widget h-full w-full";
@@ -79,7 +79,7 @@ function TradingViewCanvas({ symbol, interval }: { symbol: string; interval: str
     container.appendChild(script);
 
     return () => {
-      container.innerHTML = "";
+      container.replaceChildren();
     };
   }, [symbol, interval, timezone]);
 

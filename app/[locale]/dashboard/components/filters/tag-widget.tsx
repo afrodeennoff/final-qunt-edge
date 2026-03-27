@@ -387,7 +387,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
           size === 'small' ? "px-1" : "px-2 sm:px-4"
         )}
       >
-          <div className="flex flex-col h-full space-y-3">
+          <div className="flex flex-col h-full gap-3">
             {/* Search input */}
             <div className="flex items-center gap-2 shrink-0 bg-muted/30 rounded-md px-2">
               <Search className={cn(
@@ -463,7 +463,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="max-w-[300px]">
-                                <div className="space-y-1">
+                                <div className="gap-1">
                                   <p className="font-medium wrap-break-word">{tag.name}</p>
                                   {tag.description && (
                                     <p className="text-sm text-muted-foreground wrap-break-word whitespace-pre-wrap">{tag.description}</p>

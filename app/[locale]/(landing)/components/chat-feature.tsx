@@ -271,7 +271,7 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
           </div>
 
           <div className="flex-1 overflow-hidden relative">
-            <div className="absolute inset-0 flex flex-col justify-end space-y-3 text-xs">
+            <div className="absolute inset-0 flex flex-col justify-end gap-3 text-xs">
               {messages.map((message) => (
                 <div
                   key={message.id}

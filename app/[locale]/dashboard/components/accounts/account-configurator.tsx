@@ -443,9 +443,9 @@ export function AccountConfigurator({
               {/* Consistency moved to dedicated subsection below */}
               <div className="flex flex-col gap-2">
                 <Label>{t('propFirm.configurator.fields.accountType')}</Label>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="isPerformance"
+                  <div className="flex items-center gap-x-2">
+                    <Switch
+                      id="isPerformance"
                     checked={pendingChanges?.isPerformance ?? account.isPerformance ?? false}
                     onCheckedChange={(checked) => handleInputChange('isPerformance', checked)}
                   />
@@ -565,7 +565,7 @@ export function AccountConfigurator({
 
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdownType')}</Label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-x-2">
                     <Switch
                       id="trailingDrawdown"
                       checked={pendingChanges?.trailingDrawdown ?? account.trailingDrawdown ?? false}
@@ -715,7 +715,7 @@ export function AccountConfigurator({
 
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.tradingNewsAllowed')}</Label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-x-2">
                     <Switch
                       id="tradingNewsAllowed"
                       checked={pendingChanges?.tradingNewsAllowed ?? account.tradingNewsAllowed ?? false}
@@ -741,7 +741,7 @@ export function AccountConfigurator({
                     {t('propFirm.consistency.description')}
                   </p>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-x-2">
                   <Switch
                     id="consistencyEnabled"
                     checked={isConsistencyEnabled}
@@ -907,7 +907,7 @@ export function AccountConfigurator({
 
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.renewalNotification')}</Label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-x-2">
                     <Switch
                       id="renewalNotification"
                       checked={pendingChanges?.autoRenewal ?? account.autoRenewal ?? false}

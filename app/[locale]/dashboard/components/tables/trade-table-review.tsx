@@ -173,7 +173,7 @@ function TagsColumnHeader() {
               {/* Tags list */}
               <div className="max-h-60 min-h-[100px]">
                 <ScrollArea className="h-full">
-                  <div className="space-y-1">
+                  <div className="gap-1">
                     {filteredTags.map((tag) => (
                       <div
                         key={tag.id}

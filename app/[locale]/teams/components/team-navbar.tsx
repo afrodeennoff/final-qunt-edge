@@ -66,7 +66,7 @@ function MobileNavContent({
     t: ReturnType<typeof useI18n>
 }) {
     return (
-        <nav className="flex flex-col space-y-4">
+        <nav className="flex flex-col gap-4">
             <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="features">
                     <AccordionTrigger>{t('teams.navbar.features')}</AccordionTrigger>
@@ -147,7 +147,7 @@ export default function TeamNavbar() {
             <div className={`fixed inset-0 bg-background/80  backdrop-blur-xs z-40 transition-opacity duration-300 ${hoveredItem ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} />
             <span className={`h-14 fixed top-0 left-0 right-0 bg-background z-50 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}></span>
             <header className={`max-w-7xl mx-auto fixed top-0 left-0 right-0 px-4 lg:px-6 h-14 flex items-center justify-between z-50  text-foreground transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-                <Link href="/teams" className="flex items-center space-x-2">
+                <Link href="/teams" className="flex items-center gap-2">
                     <Logo className='w-6 h-6 fill-black dark:fill-white' />
                     <span className="font-bold text-xl">Qunt Edge</span>
                     <Badge variant="secondary" className="text-xs">
@@ -219,7 +219,7 @@ export default function TeamNavbar() {
                     </NavigationMenu>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-4">
                     <LanguageSelector />
                     <Button variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
                         <Moon className="h-4 w-4 text-primary" />

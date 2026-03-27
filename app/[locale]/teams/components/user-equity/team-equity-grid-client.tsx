@@ -206,7 +206,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
       <div className="space-y-4 mb-6">
         {/* View Toggle */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Switch
               id="view-mode"
               checked={showDailyView}

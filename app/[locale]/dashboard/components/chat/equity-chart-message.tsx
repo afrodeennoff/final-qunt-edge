@@ -251,7 +251,7 @@ const EquityChartTooltip = React.memo(
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 {t("equity.tooltip.resets")}
               </span>
-              <div className="space-y-1">
+              <div className="gap-1">
                 {resetAccounts.map((account) => (
                   <div key={account} className="flex items-center gap-2">
                     <div
@@ -276,7 +276,7 @@ const EquityChartTooltip = React.memo(
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 {t("equity.tooltip.payouts")}
               </span>
-              <div className="space-y-1">
+              <div className="gap-1">
                 {payoutAccounts.map(({ account, amount, status }) => (
                   <div key={account} className="flex items-center gap-2">
                     <div

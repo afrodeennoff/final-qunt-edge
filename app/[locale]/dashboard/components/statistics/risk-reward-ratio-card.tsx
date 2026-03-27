@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -18,7 +19,7 @@ interface RiskRewardRatioCardProps {
   size?: WidgetSize
 }
 
-export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCardProps) {
+function RiskRewardRatioCardInner({ size = 'tiny' }: RiskRewardRatioCardProps) {
   const { formattedTrades } = useDashboardStats()
   const t = useI18n()
 
@@ -94,7 +95,7 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
         </span>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="gap-1.5">
         <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider">
           <span className="text-muted-foreground">Avg Win</span>
           <span className="text-foreground">${avgWin.toFixed(2)}</span>
@@ -115,7 +116,7 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={5}>
-              <div className="micro-sans text-[10px] font-bold uppercase tracking-tight space-y-1">
+              <div className="micro-sans text-[10px] font-bold uppercase tracking-tight gap-1">
                 <div className="metric-positive">Avg. Win: ${avgWin.toFixed(2)}</div>
                 <div className="metric-negative">Avg. Loss: ${avgLoss.toFixed(2)}</div>
               </div>
@@ -126,3 +127,5 @@ export default function RiskRewardRatioCard({ size = 'tiny' }: RiskRewardRatioCa
     </WidgetShell>
   )
 }
+
+export default React.memo(RiskRewardRatioCardInner)

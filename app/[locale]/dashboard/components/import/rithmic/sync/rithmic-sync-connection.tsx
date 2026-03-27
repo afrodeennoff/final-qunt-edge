@@ -557,7 +557,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                 </Select>
               </div>
 
-              <div className="flex items-center space-x-2 py-2">
+              <div className="flex items-center gap-2 py-2">
                 <Checkbox
                   id="save-credentials"
                   checked={shouldSaveCredentials}
@@ -588,7 +588,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
             <div className="space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <Switch
                       id="sync-all"
                       checked={allAccounts}
@@ -615,7 +615,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
 
                 {!allAccounts && (
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <Input
                         placeholder={t('rithmic.searchAccounts')}
                         value={accountSearch}
@@ -631,7 +631,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                       </Button>
                     </div>
 
-                    <div className="flex items-center space-x-2 p-2 rounded bg-accent/50">
+                    <div className="flex items-center gap-2 p-2 rounded bg-accent/50">
                       <Checkbox
                         id="select-all"
                         checked={selectedAccounts.length === filteredAccounts.length}
@@ -653,7 +653,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
 
                     <div className="space-y-2 max-h-[300px] overflow-y-auto">
                       {filteredAccounts.map((account) => (
-                        <div key={account.account_id} className="flex items-center space-x-2 p-2 rounded hover:bg-accent">
+                        <div key={account.account_id} className="flex items-center gap-2 p-2 rounded hover:bg-accent">
                           <Checkbox
                             id={account.account_id}
                             checked={selectedAccounts.includes(account.account_id)}
@@ -681,7 +681,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
                 )}
               </div>
 
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   onClick={() => {

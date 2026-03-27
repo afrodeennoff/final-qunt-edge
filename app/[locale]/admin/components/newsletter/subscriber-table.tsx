@@ -424,7 +424,7 @@ function SubscriberRow({
           {subscriber.isActive ? "Active" : "Inactive"}
         </span>
       </TableCell>
-      <TableCell className="text-right space-x-2">
+      <TableCell className="text-right gap-x-2">
         <Button
           variant="outline"
           size="sm"

@@ -145,7 +145,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-x-2">
                 <div className="relative flex-1">
                   <Input
                     placeholder="https://"

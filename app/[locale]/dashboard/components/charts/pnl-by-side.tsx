@@ -153,7 +153,7 @@ export default React.memo(function PnLBySideChart({
     <ChartSurface>
       <div
         className={cn(
-          "flex flex-col items-stretch space-y-0 border-b border-border/55 shrink-0",
+          "gap-0 border-b flex flex-col items-stretch border-border/55 shrink-0",
           size === "small" ? "p-2 h-10 justify-center" : "p-3 sm:p-3.5 h-12 justify-center",
         )}
       >

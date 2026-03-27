@@ -1,3 +1,4 @@
+import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
 import { Scale, HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -15,7 +16,7 @@ interface ProfitFactorCardProps {
   size?: WidgetSize
 }
 
-export default function ProfitFactorCard({ size = 'medium' }: ProfitFactorCardProps) {
+function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
   const { statistics: { profitFactor } } = useDashboardStats()
   const t = useI18n()
 
@@ -74,3 +75,5 @@ export default function ProfitFactorCard({ size = 'medium' }: ProfitFactorCardPr
     </WidgetShell>
   )
 }
+
+export default React.memo(ProfitFactorCardInner)

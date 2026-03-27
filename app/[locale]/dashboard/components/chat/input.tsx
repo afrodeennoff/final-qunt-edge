@@ -268,7 +268,7 @@ export function ChatInput({
       {/* URL input */}
       {showUrlInput && (
         <div className="mb-3 p-3 border border-border rounded-lg bg-background/50">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Input
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
@@ -351,7 +351,7 @@ export function ChatInput({
             onSend(e)
           }
         }}
-        className="flex items-center space-x-2"
+        className="flex items-center gap-2"
       >
         <Popover>
           <PopoverTrigger asChild>

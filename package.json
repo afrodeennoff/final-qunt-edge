@@ -90,6 +90,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.23",
     "@tiptap/core": "^3.8.0",
     "@tiptap/extension-bubble-menu": "^3.8.0",
     "@tiptap/extension-collaboration": "^3.8.0",
@@ -200,6 +201,7 @@
     "minimatch@^5.0.0": "5.1.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/d3": "^7.4.3",

@@ -107,7 +107,7 @@ function CommentComponent({
         <Avatar className="h-8 w-8 shrink-0">
           <AvatarFallback>{displayName[0]?.toUpperCase() || 'U'}</AvatarFallback>
         </Avatar>
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 gap-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{displayName}</span>
@@ -279,7 +279,7 @@ export function CommentSection({
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback>{user?.email?.[0].toUpperCase() || ''}</AvatarFallback>
           </Avatar>
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 gap-y-2">
             <Textarea
               placeholder={t('community.comments.writeComment')}
               value={newComment}

@@ -22,12 +22,12 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
   const totalSteps = platform.steps.length
 
   return (
-    <DialogHeader className="flex-none p-6 border-b space-y-4">
+    <DialogHeader className="flex-none p-6 border-b gap-4">
       <DialogTitle>{t((currentStep?.title || 'import.title') as any, { count: 1 })}</DialogTitle>
       <DialogDescription className="text-sm text-muted-foreground">
         {t((currentStep?.description || 'import.description') as any, { count: 1 })}
       </DialogDescription>
-      <div className="space-y-2">
+      <div className="gap-2">
         <div className="w-full bg-secondary h-2 rounded-full">
           <div 
             className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out"

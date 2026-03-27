@@ -138,7 +138,7 @@ const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
                                     ))}
                                 </div>
 
-                                <div className="mt-auto space-y-4 border-t border-border/50 pt-8">
+                                <div className="mt-auto gap-4 border-t border-border/50 pt-8">
                                     {!user ? (
                                         <>
                                             <Button

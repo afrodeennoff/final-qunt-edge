@@ -679,7 +679,7 @@ export default function AtasProcessor({
                   return (
                     <div
                       key={pair}
-                      className="flex items-center space-x-2"
+                      className="flex items-center gap-2"
                     >
                       <label
                         htmlFor={`commission-${pair}`}

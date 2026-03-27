@@ -62,7 +62,7 @@ export const AccountSelectionPopover = React.memo(({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-96 h-80 p-4" align="start">
-        <div className="space-y-3 h-full flex flex-col">
+        <div className="gap-3 h-full flex flex-col">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="text-xs font-medium">
@@ -98,7 +98,7 @@ export const AccountSelectionPopover = React.memo(({
                   </div>
                 ) : (
                   filteredAccounts.map((accountNumber) => (
-                    <div key={accountNumber} className="flex items-center space-x-2 py-1">
+                    <div key={accountNumber} className="flex items-center gap-2 py-1">
                       <Checkbox
                         id={`account-${accountNumber}`}
                         checked={selectedAccounts?.includes(accountNumber) || false}

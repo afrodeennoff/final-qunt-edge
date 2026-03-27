@@ -26,7 +26,7 @@ export default async function NewsletterPage(
           {isUnsubscribed && (
             <Card className="border-border/30 dark:border-border/40 bg-card/80 dark:bg-card/70">
               <CardHeader className="space-y-3 sm:space-y-4">
-                <div className="flex items-center space-x-2.5">
+                <div className="flex items-center gap-x-2.5">
                   <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
                   <CardTitle className="text-lg sm:text-xl">{t("unsubscribed.title")}</CardTitle>
                 </div>

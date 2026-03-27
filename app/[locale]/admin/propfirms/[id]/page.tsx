@@ -401,7 +401,7 @@ function ReviewsSection({
           <div className="space-y-3">
             {firm.reviews.map((review) => (
               <div key={review.id} className="flex items-start gap-3 p-3 rounded-lg border border-border">
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 gap-2">
                   <form action={onUpdateReview} className="space-y-2">
                     <input type="hidden" name="reviewId" value={review.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
@@ -475,7 +475,7 @@ function CouponsSection({
           <div className="space-y-3">
             {firm.coupons.map((coupon) => (
               <div key={coupon.id} className="flex items-start gap-3 p-3 rounded-lg border border-border">
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 gap-2">
                   <form action={onUpdateCoupon} className="space-y-2">
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />

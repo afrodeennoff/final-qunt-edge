@@ -35,7 +35,7 @@ const items = [
 
 export default function Features() {
   return (
-    <section id="features" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section id="features" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] sm:space-y-10 sm:p-10">
         <div className="space-y-3 text-center">
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>

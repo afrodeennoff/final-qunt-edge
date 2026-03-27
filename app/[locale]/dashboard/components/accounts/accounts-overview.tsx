@@ -399,7 +399,7 @@ function PayoutDialog({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto space-y-6 py-6 min-h-0">
+        <div className="flex-1 overflow-y-auto gap-6 py-6 min-h-0">
           {/* Amount Input with Currency Symbol */}
           <div className="space-y-2">
             <Label htmlFor="amount">{t('propFirm.payout.amount')}</Label>
@@ -581,7 +581,7 @@ function PayoutDialog({
                   fixedWeeks={false}
                   className="w-full"
                   classNames={{
-                    months: "flex flex-col space-y-2",
+                    months: "flex flex-col gap-2",
                     month: "space-y-2",
                     caption: "hidden", // Hide default caption since we have custom header
                     nav: "hidden", // Hide default nav since we have custom navigation
@@ -1112,7 +1112,7 @@ function AccountsOverviewComponent({
     >
       <CardHeader
         className={cn(
-          "flex flex-row items-center justify-between space-y-0 border-b shrink-0",
+          "flex flex-row items-center justify-between gap-0 border-b shrink-0",
           size === 'small' ? "p-2 h-10" : "p-3 sm:p-4 h-14"
         )}
       >

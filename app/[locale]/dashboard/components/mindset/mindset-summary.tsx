@@ -123,7 +123,7 @@ export function MindsetSummary({
       </div>
 
       <div className="grid gap-4">
-        <div className="space-y-4">
+        <div className="">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function MindsetSummary({
           <EmotionTrendChart data={emotionHistoryData} />
         </div>
 
-        <div className="space-y-2">
+        <div className="">
           <div className="flex items-center gap-2">
             <p className="text-sm text-muted-foreground">
               {t('mindset.journaling.title')}
@@ -162,7 +162,7 @@ export function MindsetSummary({
             </div>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="">
           <div className="flex justify-between flex-col gap-2">
             <div className="flex items-center gap-2">
               <p className="text-sm text-muted-foreground">

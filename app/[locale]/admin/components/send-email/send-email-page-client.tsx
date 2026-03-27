@@ -183,7 +183,7 @@ function BooleanPropField({
   const t = useI18n()
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-2">
       <input
         type="checkbox"
         id={propKey}
@@ -507,7 +507,7 @@ function PreviewCard({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 space-y-4 flex flex-col">
+      <CardContent className="flex-1 gap-4 flex flex-col">
         {loadingPreview ? (
           <div className="flex h-full items-center justify-center py-12 text-sm text-muted-foreground">
             <Loader2 className="h-6 w-6 animate-spin" />

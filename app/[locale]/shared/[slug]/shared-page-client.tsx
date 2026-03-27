@@ -178,7 +178,7 @@ export function SharedPageClient() {
         <main className="w-full py-6 lg:py-8">
           <Card className="mb-6 w-full">
             <CardHeader className="space-y-3">
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col gap-2">
                 <CardTitle className="text-xl sm:text-2xl">
                   {sharedParams.title || t('shared.title')}
                 </CardTitle>

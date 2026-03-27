@@ -191,7 +191,7 @@ export default function ImportCallbackPageClient() {
         </CardHeader>
         <CardContent className="space-y-4">
           {status === "loading" && (
-            <div className="flex flex-col items-center space-y-2">
+            <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {t("tradovateSync.callback.exchangingCode")}

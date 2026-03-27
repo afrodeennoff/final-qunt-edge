@@ -31,7 +31,7 @@ const journey = [
 
 export default function OnboardingJourney() {
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section className="relative bg-gradient-to-b from-background via-card/10 to-background px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
           <Badge variant="outline" className="border-[hsl(var(--primary)/0.34)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">

@@ -347,7 +347,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
 
   return (
     <Card className="h-full flex flex-col w-full overflow-x-scroll">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
         <CardTitle className="line-clamp-1 text-base">
           Processed Trades NinjaTrader
         </CardTitle>

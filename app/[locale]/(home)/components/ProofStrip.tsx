@@ -27,7 +27,7 @@ const proofItems = [
 
 export default function ProofStrip() {
   return (
-    <section className="relative px-4 pb-6 sm:px-6 sm:pb-8 lg:px-8">
+    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <div className="text-center sm:text-left">

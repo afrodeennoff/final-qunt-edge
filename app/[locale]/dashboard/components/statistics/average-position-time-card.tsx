@@ -1,3 +1,4 @@
+import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
 import { Clock } from "lucide-react"
 import { WidgetSize } from '../../types/dashboard'
@@ -15,7 +16,7 @@ interface AveragePositionTimeCardProps {
   size?: WidgetSize
 }
 
-export default function AveragePositionTimeCard({ size = 'medium' }: AveragePositionTimeCardProps) {
+function AveragePositionTimeCardInner({ size = 'medium' }: AveragePositionTimeCardProps) {
   const { statistics: { averagePositionTime } } = useDashboardStats()
   const t = useI18n()
   const isCompact = size === 'tiny' || size === 'small' || size === 'small-long'
@@ -58,3 +59,5 @@ export default function AveragePositionTimeCard({ size = 'medium' }: AveragePosi
     </WidgetShell>
   )
 }
+
+export default React.memo(AveragePositionTimeCardInner)

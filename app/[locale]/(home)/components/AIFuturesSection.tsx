@@ -72,7 +72,7 @@ function FeatureGrid({ items }: { items: typeof intelligenceFeatures }) {
 
 export default function AIFuturesSection() {
   return (
-    <section className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] text-foreground sm:space-y-10 sm:p-10">
         <div className="space-y-3 text-center">
           <Badge

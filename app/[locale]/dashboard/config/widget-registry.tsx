@@ -461,7 +461,7 @@ function createSmartInsightsPreview() {
   return (
     <Card className="h-[300px] flex flex-col relative overflow-hidden bg-popover/40 border-border/5">
       <div className="absolute top-0 right-0 w-32 h-32 bg-semantic-info-bg/5 rounded-full blur-3xl -z-10" />
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+      <CardHeader className="flex flex-row items-center justify-between gap-0 pb-2 px-4 pt-4">
         <div className="space-y-1">
           <div className="text-sm font-medium flex items-center gap-2">
             <Brain className="h-4 w-4 text-semantic-info" />

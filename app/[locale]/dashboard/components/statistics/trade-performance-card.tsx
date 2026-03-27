@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
 import { TrendingUp, TrendingDown, Minus, HelpCircle } from "lucide-react"
 import { WidgetSize } from '../../types/dashboard'
@@ -16,7 +17,7 @@ interface TradePerformanceCardProps {
   size?: WidgetSize
 }
 
-export default function TradePerformanceCard({ size = 'medium' }: TradePerformanceCardProps) {
+function TradePerformanceCardInner({ size = 'medium' }: TradePerformanceCardProps) {
   const { statistics: { nbWin, nbLoss, nbBe, nbTrades } } = useDashboardStats()
   const t = useI18n()
 
@@ -78,3 +79,5 @@ export default function TradePerformanceCard({ size = 'medium' }: TradePerforman
     </WidgetShell>
   )
 }
+
+export default React.memo(TradePerformanceCardInner)

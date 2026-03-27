@@ -472,7 +472,7 @@ export function RithmicCredentialsManager({
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-48 p-2" align="end">
-                              <div className="flex flex-col space-y-1">
+                              <div className="flex flex-col gap-1">
                                 <Button
                                   variant="ghost"
                                   size="sm"
@@ -572,7 +572,7 @@ export function RithmicCredentialsManager({
               {t("rithmic.deleteCredentialsConfirm")}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex justify-end space-x-2 mt-4">
+          <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}

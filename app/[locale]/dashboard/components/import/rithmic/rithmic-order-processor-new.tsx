@@ -372,7 +372,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
               {tradedTickDetails.map((detail) => (
                 <div key={detail.ticker} className="space-y-2 p-4 border rounded-lg bg-muted/30">
                   <h4 className="font-medium">{detail.ticker}</h4>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <label className="text-sm">Tick Size:</label>
                     <Input
                       type="number"
@@ -381,7 +381,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
                       className="w-24"
                     />
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <label className="text-sm">Tick Value:</label>
                     <Input
                       type="number"

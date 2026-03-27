@@ -868,7 +868,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
     <ChartSurface>
       <div
         className={cn(
-          "flex flex-col items-stretch space-y-0 border-b border-border/55 shrink-0",
+          "gap-0 border-b flex flex-col items-stretch border-border/55 shrink-0",
           size === "small" ? "p-2 h-10 justify-center" : "p-3 sm:p-3.5 h-12 justify-center"
         )}
       >
@@ -899,7 +899,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
             </TooltipProvider>
           </div>
           {!isSharedView && !isTeamView && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Switch
                 id="view-mode"
                 checked={showIndividual}

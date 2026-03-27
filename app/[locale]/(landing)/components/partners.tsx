@@ -8,8 +8,8 @@ export default function Partners() {
     return (
         <section className="py-fluid-xl">
             <div className="container-fluid">
-                <div className="flex flex-col items-center space-y-fluid-sm text-center">
-                    <div className="space-y-fluid-xs">
+                <div className="flex flex-col items-center gap-fluid-sm text-center">
+                    <div className="gap-fluid-xs">
                         <h2 className="text-fluid-3xl md:text-fluid-5xl font-bold tracking-tighter">
                             {t('landing.partners.title')}
                         </h2>

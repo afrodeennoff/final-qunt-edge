@@ -223,10 +223,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
   return (
     <>
       <Card>
-        <CardHeader className="flex-row items-start justify-between space-y-0">
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <Badge variant="secondary" className={typeColors[post.type as PostType]}>
+        <CardHeader className="flex-row items-start justify-between gap-0">
+           <div className="space-y-1">
+             <div className="flex items-center gap-x-2">
+               <Badge variant="secondary" className={typeColors[post.type as PostType]}>
                 {(post.type as string).replace('_', ' ')}
               </Badge>
               <Badge variant="outline" className={statusColors[post.status as PostStatus]}>
@@ -370,10 +370,10 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex justify-between border-t pt-4">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Button
+         <CardFooter className="flex justify-between border-t pt-4">
+           <div className="flex items-center gap-x-4">
+             <div className="flex items-center gap-x-2">
+               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => handleVote(VoteType.UPVOTE)}

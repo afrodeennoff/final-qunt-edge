@@ -261,7 +261,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                             <p className="text-sm italic">{t('import.commission.example')}</p>
                             <div className="mt-4 space-y-2">
                                 {Object.keys(missingCommissions).map(instrument => (
-                                    <div key={instrument} className="flex items-center space-x-2">
+                                    <div key={instrument} className="flex items-center gap-2">
                                         <label htmlFor={`commission-${instrument}`} className="min-w-[200px]">
                                             {instrument} - {t('import.commission.perContract')}
                                         </label>

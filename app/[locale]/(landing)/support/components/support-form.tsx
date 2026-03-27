@@ -142,7 +142,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                             placeholder={t('support.form.additionalInfoPlaceholder')}
                         />
                     </div>
-                    <div className="flex justify-end space-x-2">
+                    <div className="flex justify-end gap-2">
                         <Button type="button" variant="outline" onClick={() => {
                             setIsContactFormOpen(false);
                             sendMessage(
