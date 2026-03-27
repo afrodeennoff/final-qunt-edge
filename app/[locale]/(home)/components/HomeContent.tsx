@@ -3,29 +3,13 @@ import TrustStrip from './TrustStrip'
 import Features from './Features'
 import PricingSection from './PricingSection'
 import FinalCTA from './FinalCTA'
-
 import RollingAdBanner from './RollingAdBanner'
-
 import type { Metadata } from 'next'
-
-import type { Locale } ' 'en' | 'fr'
+import type { Locale } from 'en' | 'fr'
 
 interface HomeContentProps {
   locale: string
   metadata?: Metadata
-}
-
-export default function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> | {
-  const params = await props.params;
-  const descriptions: Record<Locale, string> = {
-    en: 'Centralize and visualize your trading performance across multiple brokers. Track, analyze, and improve your trading journey with powerful analytics.',
-    fr: 'Centralisez et visualisez vos performances de trading à travers différents brokers. Suivez, analysez et améliore your parcours de trading avec des analyses puissantes.',
-  const description = descriptions.en || descriptions.en;
-
-  return {
-    title: 'Qunt Edge',
-    description,
-  };
 }
 
 export default function HomeContent({ locale }: HomeContentProps) {
@@ -44,5 +28,6 @@ export default function HomeContent({ locale }: HomeContentProps) {
         <PricingSection />
         <FinalCTA locale={locale} />
       </main>
+    </div>
   )
 }
