@@ -43,19 +43,19 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-semibold mb-4 text-foreground">
+    <section className="py-20 sm:py-28 lg:py-32 bg-background">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14 lg:mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight">
             Everything you need to{' '}
-            <span className="text-primary">trade smarter</span>
+            <span className="text-gradient-primary">trade smarter</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
             Powerful analytics, AI insights, and team collaboration in one platform.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-reveal">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 stagger-reveal">
           {features.map((feature, index) => {
             const Icon = feature.icon
             const isLarge = index === 0 || index === 3
@@ -64,30 +64,32 @@ export default function Features() {
               <div
                 key={feature.title}
                 className={`
-                  bento-card rounded-xl border border-border bg-card p-6
+                  bento-card rounded-2xl border bg-card/50 p-6 lg:p-7
                   ${isLarge ? 'lg:col-span-2' : ''}
-                  ${feature.highlight ? 'border-primary/30' : ''}
+                  ${feature.highlight
+                    ? 'border-primary/25 shadow-[0_0_32px_-12px_hsl(var(--primary)/0.15)]'
+                    : 'border-border/50'}
                 `}
               >
-                <div className="mb-4">
+                <div className="mb-5">
                   <div className={`
-                    w-12 h-12 rounded-lg flex items-center justify-center border
+                    w-11 h-11 rounded-xl flex items-center justify-center border transition-colors duration-200
                     ${feature.highlight
-                      ? 'bg-primary/10 border-primary/30'
-                      : 'bg-input border-border'}
+                      ? 'bg-primary/10 border-primary/25'
+                      : 'bg-input/60 border-border/50'}
                   `}>
                     <Icon className={`
-                      w-6 h-6
+                      w-5 h-5
                       ${feature.highlight ? 'text-primary' : 'text-muted-foreground'}
                     `} />
                   </div>
                 </div>
 
-                <h3 className="text-lg font-medium text-foreground mb-2">
+                <h3 className="text-[1.05rem] font-semibold text-foreground mb-2 tracking-[-0.01em]">
                   {feature.title}
                 </h3>
 
-                <p className="text-sm text-muted-foreground">
+                <p className="text-[0.9rem] text-muted-foreground/80 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

@@ -9,7 +9,15 @@
       "Bash(oh-my-opencode:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
-      "Bash(opencode:*)"
+      "Bash(opencode:*)",
+      "WebFetch",
+      "Bash(cat:*)",
+      "Bash(CONFIG_FILE=\"$HOME/.claude/.omc-config.json\":*)",
+      "mcp__acp__Write",
+      "mcp__acp__Edit",
+      "mcp__plugin_oh-my-claudecode_t__state_write",
+      "mcp__plugin_oh-my-claudecode_t__state_list_active",
+      "mcp__plugin_oh-my-claudecode_t__state_clear"
     ]
   },
   "enabledPlugins": {
