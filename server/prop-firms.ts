@@ -1,10 +1,28 @@
 'use server'
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 
 const _listPropFirms = async () => {
+  if (!hasConfiguredDatabaseConnection) {
+    return Object.entries(propFirms).map(([key, firm]) => {
+      const profile = getVerifiedPropFirmProfileByName(firm.name)
+      return {
+        id: `fallback-${key}`,
+        slug: profile?.slug ?? key,
+        name: firm.name,
+        category: profile?.category ?? null,
+        platform: profile?.platform ?? null,
+        isActive: true,
+        coupons: [],
+        _count: { reviews: 0, coupons: 0 },
+      }
+    })
+  }
+
   return prisma.propFirm.findMany({
     where: { isActive: true },
     include: {
@@ -22,6 +40,10 @@ export const listPropFirms = unstable_cache(
 )
 
 const _getPropFirmBySlug = async (slug: string) => {
+  if (!hasConfiguredDatabaseConnection) {
+    return null
+  }
+
   return prisma.propFirm.findUnique({
     where: { slug },
     include: {

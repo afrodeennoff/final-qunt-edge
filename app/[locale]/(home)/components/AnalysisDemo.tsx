@@ -50,7 +50,7 @@ export default function AnalysisDemo() {
   const activeLog = isMobile ? logs[0] : logs[logIndex]
 
   return (
-    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+    <section className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div>

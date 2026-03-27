@@ -167,7 +167,7 @@ export async function POST(req: Request) {
     )
 
     // Send email
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
       to: email,
       subject: existingUser?.language === 'fr'

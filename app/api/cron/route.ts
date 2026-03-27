@@ -34,10 +34,17 @@ const logSanitized = (
   event: string,
   context: Record<string, unknown> = {},
 ) => {
-  console[level]({
+  const payload = {
     event,
-    ...context
-  })
+    ...context,
+  }
+
+  if (level === 'warn') {
+    console.warn(payload)
+    return
+  }
+
+  console.error(payload)
 }
 
 // Retry configuration
@@ -58,7 +65,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is missing')
     return NextResponse.json({ error: 'Missing API key' }, { status: 500 })

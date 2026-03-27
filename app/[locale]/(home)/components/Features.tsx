@@ -1,66 +1,96 @@
-import { BarChart3, Brain, CalendarCheck2, Database, LayoutDashboard, ShieldCheck } from 'lucide-react'
+'use client'
 
-const items = [
+import { BarChart3, Brain, Users, Download, FileText, Shield } from 'lucide-react'
+
+const features = [
   {
-    title: 'One Truth Timeline',
-    desc: 'Unify fills, notes, and context into one performance record across brokers and imports.',
     icon: BarChart3,
+    title: 'Advanced Analytics',
+    description: 'Deep dive into your performance with decile analysis, heatmaps, and custom metrics.',
+    highlight: false,
   },
   {
-    title: 'Execution Grade Engine',
-    desc: 'Score every trade against your ruleset so discipline becomes measurable, not assumed.',
-    icon: Database,
-  },
-  {
-    title: 'AI Session Debriefs',
-    desc: 'Get blunt post-session diagnostics with root causes and the next priorities to fix.',
     icon: Brain,
+    title: 'AI Insights',
+    description: 'Pattern recognition and behavioral analysis powered by machine learning.',
+    highlight: true,
   },
   {
-    title: 'Drift Alerts',
-    desc: 'Detect emotional, sizing, and frequency drift before it compounds into drawdown.',
-    icon: LayoutDashboard,
+    icon: Users,
+    title: 'Team Sync',
+    description: 'Share layouts, compare performance, and learn from your peers.',
+    highlight: false,
   },
   {
-    title: 'Correction Loop',
-    desc: 'Convert weak patterns into concrete interventions and track adherence week over week.',
-    icon: CalendarCheck2,
+    icon: Download,
+    title: 'Multi-Broker Import',
+    description: 'Connect Tradovate, Rithmic, IBKR, or import from CSV. Your data, your way.',
+    highlight: false,
   },
   {
-    title: 'Desk-Level Oversight',
-    desc: 'Give managers and mentors a clean, auditable view of process quality by trader.',
-    icon: ShieldCheck,
+    icon: FileText,
+    title: 'Coach-Ready Exports',
+    description: 'Generate PDF briefs and shareable reports for mentorship sessions.',
+    highlight: false,
+  },
+  {
+    icon: Shield,
+    title: 'Enterprise Security',
+    description: 'Bank-grade encryption and SOC2 compliance protect your data.',
+    highlight: false,
   },
 ]
 
 export default function Features() {
   return (
-    <section id="features" className="relative scroll-mt-28 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-      <div className="mx-auto max-w-6xl space-y-8 rounded-[36px] border border-border/70 bg-background/95 p-8 shadow-[0_30px_80px_-48px_hsl(var(--foreground)/0.9)] sm:space-y-10 sm:p-10">
-        <div className="space-y-3 text-center">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
-          <h2 className="text-[clamp(1.95rem,4.9vw,3.4rem)] font-semibold leading-[0.94] tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
-            Built for traders who
-            <span className="block text-foreground">want standards, not excuses</span>
+    <section className="py-24 bg-[#050505]">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-semibold mb-4 text-[#E0E0E0]">
+            Everything you need to{' '}
+            <span className="text-[#2962FF]">trade smarter</span>
           </h2>
+          <p className="text-lg text-[#9E9E9E] max-w-2xl mx-auto">
+            Powerful analytics, AI insights, and team collaboration in one platform.
+          </p>
         </div>
-        <div className="h-px bg-border/50" />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => {
-            const Icon = item.icon
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-reveal">
+          {features.map((feature, index) => {
+            const Icon = feature.icon
+            const isLarge = index === 0 || index === 3
+            
             return (
-              <article
-                key={item.title}
-                className="flex h-full flex-col gap-4 rounded-[28px] border border-border/70 bg-card/80 p-6 shadow-[0_20px_45px_-28px_hsl(var(--foreground)/0.9)] transition duration-200 hover:border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--primary)/0.04)]"
+              <div
+                key={feature.title}
+                className={`
+                  bento-card rounded-xl border border-[#1A1A21] bg-[#0b0b0d] p-6
+                  ${isLarge ? 'lg:col-span-2' : ''}
+                  ${feature.highlight ? 'border-[#2962FF]/30' : ''}
+                `}
               >
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--primary)/0.45)] bg-[hsl(var(--primary)/0.12)] text-foreground">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
+                <div className="mb-4">
+                  <div className={`
+                    w-12 h-12 rounded-lg flex items-center justify-center border
+                    ${feature.highlight 
+                      ? 'bg-[#2962FF]/10 border-[#2962FF]/30' 
+                      : 'bg-[#101014] border-[#1A1A21]'}
+                  `}>
+                    <Icon className={`
+                      w-6 h-6
+                      ${feature.highlight ? 'text-[#2962FF]' : 'text-[#9E9E9E]'}
+                    `} />
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">{item.desc}</p>
-              </article>
+
+                <h3 className="text-lg font-medium text-[#E0E0E0] mb-2">
+                  {feature.title}
+                </h3>
+
+                <p className="text-sm text-[#707070]">
+                  {feature.description}
+                </p>
+              </div>
             )
           })}
         </div>

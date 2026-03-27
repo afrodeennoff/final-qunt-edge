@@ -31,7 +31,7 @@ export function LeaderboardTableSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }, (_, index) => (
-        <div key={index} className="rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5">
+        <div key={index} className="rounded-[1.45rem] border border-[#1A1A21] bg-[#0b0b0d] p-5">
           <SkeletonV2 className="h-5 w-20" />
           <SkeletonV2 className="mt-4 h-7 w-40" />
           <div className="mt-5 grid grid-cols-2 gap-3">
@@ -52,17 +52,17 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
   isLoading = false,
 }: LeaderboardTableProps) {
   return (
-    <section className="space-y-5 rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+    <section className="space-y-5 rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaderboard table</p>
-          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Detailed trader breakdown</h3>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9E9E9E]">Leaderboard table</p>
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#E0E0E0]">Detailed trader breakdown</h3>
         </div>
-        {isLoading ? <span className="text-sm text-muted-foreground">Updating…</span> : null}
+        {isLoading ? <span className="text-sm text-[#9E9E9E]">Updating…</span> : null}
       </div>
 
       {entries.length === 0 ? (
-        <div className="rounded-[1.4rem] border border-dashed border-border bg-background/65 p-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-[1.4rem] border border-dashed border-[#1A1A21] bg-[#101014] p-8 text-center text-sm text-[#9E9E9E]">
           The remaining traders list is empty because all visible entries are already highlighted in the podium above.
         </div>
       ) : (
@@ -82,14 +82,14 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
   return (
     <Link
       href={`/${locale}/trader/${entry.userId}`}
-      className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.5))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+      className="group rounded-[1.45rem] border border-[#1A1A21] bg-[#101014] p-5 transition-all hover:-translate-y-0.5 hover:border-[#2962FF]/50"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Rank #{entry.rank}</p>
-          <h4 className="mt-2 text-xl font-semibold tracking-tight text-foreground">{entry.username}</h4>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9E9E9E]">Rank #{entry.rank}</p>
+          <h4 className="mt-2 text-xl font-semibold tracking-tight text-[#E0E0E0]">{entry.username}</h4>
         </div>
-        <div className={`rounded-full px-3 py-2 text-sm font-semibold ${positive ? 'bg-emerald-500/12 text-emerald-500' : 'bg-rose-500/12 text-rose-500'}`}>
+        <div className={`rounded-full px-3 py-2 text-sm font-semibold ${positive ? 'bg-[#089981]/12 text-[#089981]' : 'bg-[#F23645]/12 text-[#F23645]'}`}>
           {positive ? '+' : ''}
           {formatCurrency(entry.monthlyPnl)}
         </div>
@@ -102,18 +102,18 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
         <Metric icon={Clock3} label="Avg duration" value={formatMinutes(entry.avgDurationMinutes)} />
       </div>
 
-      <div className="mt-5 flex items-center justify-between border-t border-border/60 pt-4">
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+      <div className="mt-5 flex items-center justify-between border-t border-[#1A1A21] pt-4">
+        <div className="flex items-center gap-4 text-sm text-[#9E9E9E]">
           <span>{entry.totalTrades} trades</span>
           <span>{entry.accountCount} accounts</span>
         </div>
-        <div className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+        <div className="inline-flex items-center gap-2 text-sm font-medium text-[#E0E0E0]">
           <Flame className="h-4 w-4" />
           Best streak {entry.longestWinStreak}
         </div>
       </div>
 
-      <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+      <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[#E0E0E0]">
         View trader
         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
       </div>
@@ -131,12 +131,12 @@ function Metric({
   value: string
 }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/55 p-3">
-      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+    <div className="rounded-[1rem] border border-[#1A1A21] bg-[#0b0b0d] p-3">
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#707070]">
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
-      <p className="mt-2 text-sm font-semibold text-foreground">{value}</p>
+      <p className="mt-2 text-sm font-semibold text-[#E0E0E0]">{value}</p>
     </div>
   )
 }

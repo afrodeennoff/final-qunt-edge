@@ -1,10 +1,12 @@
 import Link from 'next/link'
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import { softDeletePropFirm } from '@/server/prop-firms'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Trash2 } from 'lucide-react'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 
 async function handleDelete(formData: FormData) {
   'use server'
@@ -16,18 +18,31 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
   await assertAdminAccess()
   const { locale } = await params
 
-  const firms = await prisma.propFirm.findMany({
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      category: true,
-      platform: true,
-      isActive: true,
-      _count: { select: { reviews: true, coupons: true } },
-    },
-    orderBy: { name: 'asc' },
-  })
+  const firms = hasConfiguredDatabaseConnection
+    ? await prisma.propFirm.findMany({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          category: true,
+          platform: true,
+          isActive: true,
+          _count: { select: { reviews: true, coupons: true } },
+        },
+        orderBy: { name: 'asc' },
+      })
+    : Object.entries(propFirms).map(([key, firm]) => {
+        const profile = getVerifiedPropFirmProfileByName(firm.name)
+        return {
+          id: `fallback-${key}`,
+          name: firm.name,
+          slug: profile?.slug ?? key,
+          category: profile?.category ?? null,
+          platform: profile?.platform ?? null,
+          isActive: true,
+          _count: { reviews: 0, coupons: 0 },
+        }
+      })
 
   const activeCount = firms.filter((firm) => firm.isActive).length
   const inactiveCount = firms.length - activeCount

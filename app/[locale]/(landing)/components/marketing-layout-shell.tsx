@@ -20,7 +20,7 @@ export default function MarketingLayoutShell({
       <div className="pointer-events-none fixed inset-0 hidden marketing-grid opacity-[0.18] sm:block" />
       <Navbar />
       <RollingAdBanner />
-      <div className={cn('relative z-10 pt-20 sm:pt-28 lg:pt-32', contentClassName)}>
+      <div className={cn('relative z-10 pt-16 sm:pt-20 lg:pt-24', contentClassName)}>
         <MotionStagger>
           <MotionStaggerItem>{children}</MotionStaggerItem>
         </MotionStagger>

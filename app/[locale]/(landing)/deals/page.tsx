@@ -23,11 +23,11 @@ export async function generateMetadata({
 
   return {
     title: 'Prop Firm Deals | Qunt Edge',
-    description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research.',
+    description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research without losing the policy context.',
     alternates: { canonical },
     openGraph: {
       title: 'Prop Firm Deals | Qunt Edge',
-      description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research.',
+      description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research without losing the policy context.',
       url: canonical,
       type: 'website',
     },

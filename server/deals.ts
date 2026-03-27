@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import {
@@ -313,6 +313,9 @@ function isPrismaUnavailableError(error: unknown): boolean {
   return (
     maybeError.code === 'ECONNREFUSED' ||
     maybeError.code === 'P1001' ||
+    message.includes('database connection is not configured') ||
+    message.includes('attempted to access prisma.') ||
+    message.includes('prisma missing connection proxy') ||
     message.includes('econnrefused') ||
     message.includes('can\'t reach database server')
   )
@@ -378,6 +381,10 @@ function getFallbackUnifiedFirmBySlug(slug: string): UnifiedFirm | null {
 }
 
 async function loadFirmWithRelations(where: { id?: string; slug?: string }): Promise<FirmRecord | null> {
+  if (!hasConfiguredDatabaseConnection) {
+    return null
+  }
+
   const now = new Date()
 
   try {
@@ -459,6 +466,10 @@ export interface FaqItem {
 }
 
 const _getActiveDeals = async (): Promise<DealItem[]> => {
+  if (!hasConfiguredDatabaseConnection) {
+    return getFallbackDeals()
+  }
+
   const now = new Date()
   try {
     const coupons = await prisma.propFirmCoupon.findMany({
@@ -549,6 +560,10 @@ export const getActiveDeals = unstable_cache(
 )
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
+  if (!hasConfiguredDatabaseConnection) {
+    return getFallbackUnifiedFirms()
+  }
+
   const now = new Date()
   const catalogue = await getPropfirmCatalogueData('allTime')
   const catalogueMap = new Map(
@@ -644,6 +659,10 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
 }
 
 export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
+  if (!hasConfiguredDatabaseConnection) {
+    return getFallbackDealsForFirm(firmId)
+  }
+
   const now = new Date()
   try {
     const firm = await prisma.propFirm.findUnique({
@@ -734,14 +753,10 @@ function getFallbackDealsForFirm(firmId: string): DealItem[] {
 }
 
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [
+  { question: 'What is Qunt Edge Deals?', answer: 'Qunt Edge Deals is a curated deals surface for futures prop firms. It helps you spot active promos quickly, then move into deeper analysis before you commit to a challenge.' },
   { question: 'How are deals verified?', answer: 'Each deal is manually checked against public checkout pages and then stamped with a verification timestamp in our editorial queue.' },
-  { question: 'How often is this page updated?', answer: 'The deal board is reviewed daily and refreshed faster if firms publish urgent promo changes.' },
-  { question: 'Can I filter for futures only?', answer: 'Yes. Use the Market Type filter and select Futures to narrow all cards and comparison rows.' },
-  { question: 'What does drawdown type mean?', answer: 'Drawdown type explains how loss limits are measured. Trailing, static, and end-of-day each impact strategy differently.' },
-  { question: 'Do you include expired offers?', answer: 'Expired deals are automatically excluded from the featured board to keep the page actionable.' },
-  { question: 'Can I trust the ratings?', answer: 'Ratings are based on verified user reviews and reflect real trader experiences with each firm.' },
-  { question: 'Is this financial advice?', answer: 'No. The page is an informational comparison and discount directory. Final decisions remain your responsibility.' },
-  { question: 'Why do some links use affiliate tracking?', answer: 'Some external claim links may include referral parameters. This helps fund maintenance while keeping tools free.' },
-  { question: 'How do I compare payout models?', answer: 'Sort the table by payout frequency and profit split, then filter by drawdown type to match your risk profile.' },
-  { question: 'Can I plug in live API data later?', answer: 'Yes. The page uses typed structures designed to be refreshed from the database without UI rewrites.' },
+  { question: 'Are these offers maintained in real time?', answer: 'Offers are reviewed frequently and refreshed when terms change. Because firms can update campaigns without notice, always confirm the final checkout details before purchase.' },
+  { question: 'Can I trust the ratings?', answer: 'Ratings are based on approved user reviews and reflect real trader experiences with each firm.' },
+  { question: 'How should I choose between deals?', answer: 'Start with your risk model and payout timeline, not just the biggest headline discount. Fees, drawdown mechanics, and reset costs can matter more than the first promo percentage.' },
+  { question: 'Where can I ask a question that is not listed here?', answer: 'You can reach Qunt Edge support from the support page. Include the firm name and the offer you saw so we can help you verify the best current path.' },
 ]

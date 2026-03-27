@@ -4,6 +4,148 @@ export default {
         description: 'Qunt Edge is a trading dashboard for futures traders to store, explore and understand their track-record.',
         cta: 'Get Started',
         updates: 'Latest Product Updates →',
+
+        // New landing page sections (Precision Terminal design)
+        nav: {
+            features: 'Features',
+            pricing: 'Pricing',
+            docs: 'Docs',
+            blog: 'Blog',
+            login: 'Login',
+            startFree: 'Start Free',
+        },
+
+        hero: {
+            badge: 'Live Decision Telemetry',
+            headline: 'Build repeatable edge.',
+            headlineAccent: 'Eliminate emotional drift.',
+            subheadline: 'Qunt Edge isolates execution quality, behavioral drift, and risk discipline in one review surface. Every session gets a precise diagnosis.',
+            ctaPrimary: 'Start Free Audit',
+            ctaSecondary: 'Watch Demo',
+            noCreditCard: 'No credit card required',
+            firstAudit: 'First audit in minutes',
+        },
+
+        trust: {
+            title: 'Your data is safe',
+            soc2: 'SOC2 Certified',
+            encryption: '256-bit Encryption',
+            gdpr: 'GDPR Compliant',
+            trustedBy: 'Trusted by {count} traders',
+            integrations: 'Integrations',
+        },
+
+        // Extended features for new landing page
+        featuresGrid: {
+            headline: 'Everything you need to {highlight}',
+            highlight: 'trade smarter',
+            subheadline: 'Powerful analytics, AI insights, and team collaboration in one platform.',
+            analytics: {
+                title: 'Advanced Analytics',
+                description: 'Deep dive into your performance with decile analysis, heatmaps, and custom metrics.',
+            },
+            aiInsights: {
+                title: 'AI Insights',
+                description: 'Pattern recognition and behavioral analysis powered by machine learning.',
+            },
+            teamSync: {
+                title: 'Team Sync',
+                description: 'Share layouts, compare performance, and learn from your peers.',
+            },
+            multiBroker: {
+                title: 'Multi-Broker Import',
+                description: 'Connect Tradovate, Rithmic, IBKR, or import from CSV. Your data, your way.',
+            },
+            exports: {
+                title: 'Coach-Ready Exports',
+                description: 'Generate PDF briefs and shareable reports for mentorship sessions.',
+            },
+            security: {
+                title: 'Enterprise Security',
+                description: 'Bank-grade encryption and SOC2 compliance protect your data.',
+            },
+        },
+
+        pricingNew: {
+            headline: 'Simple, transparent {highlight}',
+            highlight: 'pricing',
+            subheadline: 'Start free. Scale as you grow.',
+            monthly: 'Monthly',
+            annual: 'Annual',
+            annualDiscount: '-20%',
+            starter: {
+                name: 'Starter',
+                price: '$0',
+                period: '/month',
+                description: 'Perfect for getting started',
+                cta: 'Get Started',
+                features: [
+                    '100 trades/month',
+                    '1 broker connection',
+                    'Basic analytics',
+                    '7-day data retention',
+                ],
+            },
+            pro: {
+                name: 'Pro',
+                price: '$49',
+                period: '/month',
+                description: 'For serious traders',
+                cta: 'Start Free Trial',
+                badge: 'Most Popular',
+                features: [
+                    'Unlimited trades',
+                    'All broker connections',
+                    'AI insights',
+                    'Unlimited data retention',
+                    'Priority support',
+                    'Coach-ready exports',
+                ],
+            },
+            enterprise: {
+                name: 'Enterprise',
+                price: 'Custom',
+                period: '',
+                description: 'For teams and firms',
+                cta: 'Contact Sales',
+                features: [
+                    'Everything in Pro',
+                    'Team management',
+                    'SSO integration',
+                    'Custom SLAs',
+                    'Dedicated support',
+                ],
+            },
+        },
+
+        ctaNew: {
+            headline: 'Ready to {highlight}?',
+            highlight: 'trade smarter',
+            subheadline: 'Join {count} traders who have improved their performance with Qunt Edge. Start your free audit today.',
+            cta: 'Start Free Audit',
+            noCreditCard: 'No credit card required',
+            setupTime: 'Setup in 2 minutes',
+        },
+
+        footerNew: {
+            tagline: 'The trading journal and analytics platform for discretionary traders who take their craft seriously.',
+            product: 'Product',
+            resources: 'Resources',
+            company: 'Company',
+            features: 'Features',
+            pricing: 'Pricing',
+            integrations: 'Integrations',
+            changelog: 'Changelog',
+            documentation: 'Documentation',
+            apiReference: 'API Reference',
+            blog: 'Blog',
+            community: 'Community',
+            about: 'About',
+            careers: 'Careers',
+            contact: 'Contact',
+            legal: 'Legal',
+            copyright: '© 2026 Qunt Edge. All rights reserved.',
+        },
         partners: {
             title: 'Our Partners',
             description: 'We collaborate with industry leaders to provide you with the best trading experience.',

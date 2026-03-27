@@ -1,195 +1,94 @@
-"use client"
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useUserStore } from '@/store/user-store';
-import { useI18n, useCurrentLocale } from "@/locales/client";
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-    Sheet,
-    SheetContent,
-    SheetTrigger,
-    SheetDescription,
-    SheetTitle,
-} from "@/components/ui/sheet";
+import Link from 'next/link'
+import { useState } from 'react'
+import { Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface NavigationProps {
-    onAccessPortal: () => void;
+  locale: string
 }
 
-const Navigation: React.FC<NavigationProps> = ({ onAccessPortal }) => {
-    const [scrolled, setScrolled] = useState(false);
-    const user = useUserStore(state => state.supabaseUser);
-    const t = useI18n();
-    const locale = useCurrentLocale();
-    const [isOpen, setIsOpen] = useState(false);
+export default function Navigation({ locale }: NavigationProps) {
+  const [isOpen, setIsOpen] = useState(false)
 
-    useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  const navLinks = [
+    { href: `/${locale}/features`, label: 'Features' },
+    { href: `/${locale}/pricing`, label: 'Pricing' },
+    { href: `/${locale}/docs`, label: 'Docs' },
+    { href: `/${locale}/blog`, label: 'Blog' },
+  ]
 
-    const links = [
-        { name: t('footer.product.features'), href: `/${locale}/#features` },
-        { name: t('footer.product.pricing'), href: `/${locale}/pricing` },
-        { name: t('landing.navbar.propFirms'), href: `/${locale}/propfirms` },
-        { name: t('landing.navbar.propFirmPerk'), href: `/${locale}/deals` },
-        { name: t('footer.product.teams'), href: `/${locale}/teams` },
-        { name: t('footer.product.support'), href: `/${locale}/support` },
-        { name: t('footer.company.about'), href: `/${locale}/about` },
-        { name: 'FAQ', href: `/${locale}/faq` },
-    ];
-
-    return (
-        <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                scrolled
-                    ? 'bg-background/90 backdrop-blur-2xl border-b border-border py-3'
-                    : 'bg-background/55 backdrop-blur-md border-b border-border/70 py-4'
-            )}
-        >
-            <div className="container-fluid flex items-center justify-between">
-                <Link href={`/${locale}`} className="flex items-center gap-2 group z-50">
-                    <div className="relative w-8 h-8 flex items-center justify-center">
-                        <div className="absolute inset-0 bg-primary blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" className="text-foreground relative z-10 transition-transform duration-500 group-hover:rotate-180">
-                            <path d="M16 2L2 9V23L16 30L30 23V9L16 2Z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
-                            <circle cx="16" cy="16" r="4" fill="currentColor" className="opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        </svg>
-                    </div>
-                    <span className="text-[15px] font-semibold uppercase tracking-[0.16em] text-foreground transition-colors group-hover:text-foreground/80 [font-family:var(--home-copy)]">
-                        Qunt Edge
-                    </span>
-                </Link>
-
-                {/* Desktop Links */}
-                <div className="hidden lg:flex items-center gap-8">
-                    {links.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="group relative py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/80 transition-colors hover:text-foreground [font-family:var(--home-copy)]"
-                        >
-                            {link.name}
-                            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-foreground transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
-                    ))}
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <div className="hidden md:flex items-center gap-4">
-                        {!user ? (
-                            <>
-                                <Button
-                                    variant="ghost"
-                                    onClick={onAccessPortal}
-                                    className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground hover:bg-transparent"
-                                    
-                                >
-                                    {t('landing.navbar.signIn')}
-                                </Button>
-                                <Button
-                                    onClick={onAccessPortal}
-                                    className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90"
-                                >
-                                    {t('landing.cta')}
-                                </Button>
-                            </>
-                        ) : (
-                            <Button asChild className="h-9 rounded-lg bg-primary px-6 text-xs font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90">
-                                <Link href={`/${locale}/dashboard`}>
-                                    {t('landing.navbar.dashboard')}
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
-
-                    {/* Mobile Menu */}
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="lg:hidden text-foreground hover:text-foreground/80"
-                                aria-label="Open navigation menu"
-                            >
-                                <Menu className="w-6 h-6" aria-hidden="true" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="w-[min(88vw,360px)] border-border/50 bg-background/95 p-0 backdrop-blur-xl flex flex-col justify-between">
-                            <div className="flex flex-col h-full pt-16 px-6 pb-8">
-                                <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                                <SheetDescription className="sr-only">
-                                    Primary site navigation and account access actions.
-                                </SheetDescription>
-                                <div className="flex flex-col gap-6 mb-8 flex-1">
-                                    {links.map((link) => (
-                                        <Link
-                                            key={link.name}
-                                            href={link.href}
-                                            onClick={() => setIsOpen(false)}
-                                            className="block text-2xl font-bold tracking-tight text-foreground/85 hover:text-foreground transition-colors"
-                                        >
-                                            {link.name}
-                                        </Link>
-                                    ))}
-                                </div>
-
-                                <div className="mt-auto gap-4 border-t border-border/50 pt-8">
-                                    {!user ? (
-                                        <>
-                                            <Button
-                                                variant="outline"
-                                                onClick={() => {
-                                                    setIsOpen(false);
-                                                    onAccessPortal();
-                                                }}
-                                                className="w-full justify-between h-12 text-xs font-bold uppercase tracking-wider"
-                                            >
-                                                {t('landing.navbar.signIn')}
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    setIsOpen(false);
-                                                    onAccessPortal();
-                                                }}
-                                                className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90"
-                                            >
-                                                {t('landing.cta')}
-                                            </Button>
-                                        </>
-                                    ) : (
-                                        <Button asChild className="h-12 w-full bg-primary text-xs font-bold uppercase tracking-widest text-primary-foreground shadow-[0_14px_28px_-16px_hsl(var(--primary)/0.85)] hover:bg-primary/90">
-                                            <Link
-                                                href={`/${locale}/dashboard`}
-                                                onClick={() => setIsOpen(false)}
-                                            >
-                                                {t('landing.navbar.dashboard')}
-                                            </Link>
-                                        </Button>
-                                    )}
-                                    <div className="pt-4 text-center">
-                                        <p className="text-[10px] font-mono uppercase text-foreground/80">
-                                            Qunt Edge Mobile
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
+  return (
+    <>
+      <nav className="fixed top-0 w-full z-50 border-b border-[#1A1A21] bg-[#050505]/80 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href={`/${locale}`} className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#2962FF] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">Q</span>
             </div>
-        </motion.nav>
-    );
-};
+            <span className="font-semibold text-[#E0E0E0]">Qunt Edge</span>
+          </Link>
 
-export default Navigation;
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-[#9E9E9E] hover:text-[#E0E0E0] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <Button variant="ghost" size="sm">
+              Login
+            </Button>
+            <Button size="sm" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+              Start Free
+            </Button>
+          </div>
+
+          <button
+            className="md:hidden p-2 text-[#E0E0E0]"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </nav>
+
+      <div
+        className={cn(
+          'fixed inset-0 z-40 bg-[#050505]/95 backdrop-blur-xl md:hidden transition-transform duration-300',
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        <div className="flex flex-col h-full pt-20 px-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="py-4 text-lg text-[#E0E0E0] border-b border-[#1A1A21]"
+              onClick={() => setIsOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="flex flex-col gap-4 mt-8">
+            <Button variant="outline" size="lg">
+              Login
+            </Button>
+            <Button size="lg" className="bg-[#2962FF] hover:bg-[#2962FF]/90">
+              Start Free
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}

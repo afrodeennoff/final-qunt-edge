@@ -26,7 +26,7 @@ export async function generateMetadata({
   const description =
     firm.description ??
     firm.shortDesc ??
-    `Review ${firm.name} payout data, challenge details, rules, and current coupons on Qunt Edge.`
+    `Review ${firm.name} user reviews, payout data, challenge details, rules, and current coupons on Qunt Edge.`
 
   return {
     title: `${firm.name} Review | Qunt Edge`,

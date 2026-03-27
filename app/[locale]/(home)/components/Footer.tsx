@@ -1,88 +1,121 @@
+import Link from 'next/link'
+import { Twitter, Github, MessageCircle } from 'lucide-react'
 
-"use client"
+const footerLinks = {
+  product: [
+    { label: 'Features', href: '/features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Integrations', href: '/integrations' },
+    { label: 'Changelog', href: '/changelog' },
+  ],
+  resources: [
+    { label: 'Documentation', href: '/docs' },
+    { label: 'API Reference', href: '/api-docs' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Community', href: '/community' },
+  ],
+  company: [
+    { label: 'About', href: '/about' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Legal', href: '/legal' },
+  ],
+}
 
-import React from 'react';
-import Link from 'next/link';
-import { useCurrentLocale } from '@/locales/client';
+const socialLinks = [
+  { icon: Twitter, label: 'Twitter', href: 'https://twitter.com/quntedge' },
+  { icon: MessageCircle, label: 'Discord', href: 'https://discord.gg/quntedge' },
+  { icon: Github, label: 'GitHub', href: 'https://github.com/quntedge' },
+]
 
-const FOOTER_LINK_CLASS =
-    'text-[hsl(var(--brand-ink))] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0';
+export default function Footer() {
+  return (
+    <footer className="border-t border-[#1A1A21] bg-[#0b0b0d]">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+          <div className="col-span-2">
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-[#2962FF] flex items-center justify-center">
+                <span className="text-white font-bold text-sm">Q</span>
+              </div>
+              <span className="font-semibold text-[#E0E0E0]">Qunt Edge</span>
+            </Link>
+            <p className="text-sm text-[#707070] max-w-xs">
+              The trading journal and analytics platform for discretionary traders who take their craft seriously.
+            </p>
+          </div>
 
-const Footer: React.FC = () => {
-    const locale = useCurrentLocale();
-    return (
-        <footer className="border-t border-border/70 bg-background px-fluid-sm py-fluid-lg">
-            <div className="container-fluid grid grid-cols-1 gap-10 md:grid-cols-[auto_1fr_auto] md:items-start">
-                <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center font-bold text-primary-foreground text-xs">Q</div>
-                    <span className="text-sm font-bold tracking-tighter uppercase mono text-foreground">Qunt Edge</span>
-                </div>
+          <div>
+            <h4 className="font-medium text-[#E0E0E0] mb-4">Product</h4>
+            <ul className="space-y-2">
+              {footerLinks.product.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                <div className="grid max-w-2xl grid-cols-2 gap-8 text-xs font-bold uppercase tracking-[0.12em] text-[hsl(var(--brand-ink))] sm:grid-cols-3">
-                    <div className="flex flex-col gap-2">
-                        <span className="mb-2 text-foreground">Product</span>
-                        <Link href={`/${locale}/#features`} className={FOOTER_LINK_CLASS}>
-                            Features
-                        </Link>
-                        <Link href={`/${locale}/pricing`} className={FOOTER_LINK_CLASS}>
-                            Pricing
-                        </Link>
-                        <Link href={`/${locale}/propfirms`} className={FOOTER_LINK_CLASS}>
-                            Prop Firms Catalogue
-                        </Link>
-                        <Link href={`/${locale}/teams`} className={FOOTER_LINK_CLASS}>
-                            Teams
-                        </Link>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <span className="mb-2 text-foreground">Support</span>
-                        <Link href={`/${locale}/support`} className={FOOTER_LINK_CLASS}>
-                            Support Center
-                        </Link>
-                        <Link href={`/${locale}/community`} className={FOOTER_LINK_CLASS}>
-                            Community
-                        </Link>
-                        <Link href={`/${locale}/updates`} className={FOOTER_LINK_CLASS}>
-                            Roadmap
-                        </Link>
-                        <Link href={`/${locale}/about`} className={FOOTER_LINK_CLASS}>
-                            About
-                        </Link>
-                        <Link href={`/${locale}/faq`} className={FOOTER_LINK_CLASS}>
-                            FAQ
-                        </Link>
-                        <Link href={`/${locale}/privacy`} className={FOOTER_LINK_CLASS}>
-                            Privacy
-                        </Link>
-                        <Link href={`/${locale}/terms`} className={FOOTER_LINK_CLASS}>
-                            Terms
-                        </Link>
-                        <Link href={`/${locale}/disclaimers`} className={FOOTER_LINK_CLASS}>
-                            Disclaimers
-                        </Link>
-                    </div>
-                </div>
-                <div className="text-xs mono text-[hsl(var(--brand-ink))] md:text-right">
-                    © {new Date().getFullYear()} Qunt Edge. All rights reserved. Professional trading analytics.
-                </div>
-            </div>
-            <div className="container-fluid mt-6 h-px bg-border/30" />
-            <div className="container-fluid mt-5 flex flex-wrap items-center gap-2">
-                <Link
-                    href={`/${locale}/support`}
-                    className="rounded-full border border-border/60 px-4 py-2 text-[11px] font-medium text-foreground transition-colors hover:border-border/80 hover:bg-border/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0"
+          <div>
+            <h4 className="font-medium text-[#E0E0E0] mb-4">Resources</h4>
+            <ul className="space-y-2">
+              {footerLinks.resources.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-medium text-[#E0E0E0] mb-4">Company</h4>
+            <ul className="space-y-2">
+              {footerLinks.company.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[#1A1A21]">
+          <p className="text-sm text-[#707070]">
+            © 2026 Qunt Edge. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4 mt-4 md:mt-0">
+            {socialLinks.map((social) => {
+              const Icon = social.icon
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#707070] hover:text-[#E0E0E0] transition-colors"
+                  aria-label={social.label}
                 >
-                    Contact Support
-                </Link>
-                <Link
-                    href={`/${locale}/authentication?next=dashboard`}
-                    className="rounded-full bg-primary px-4 py-2 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0"
-                >
-                    Start Free Audit
-                </Link>
-            </div>
-        </footer>
-    );
-};
-
-export default Footer;
+                  <Icon className="w-5 h-5" />
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}

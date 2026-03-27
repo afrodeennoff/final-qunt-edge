@@ -5,7 +5,6 @@ import { geolocation } from "@vercel/functions"
 import { User } from "@supabase/supabase-js"
 import { buildAppCsp, buildEmbedCsp, createNonce } from "@/lib/security/csp"
 import { assertSecurityEnvConsistency } from "@/lib/env"
-import { isAdmin } from "@/server/authz"
 import { timingSafeEqual } from "node:crypto"
 
 try {
@@ -35,6 +34,21 @@ function isAllowedOrigin(origin: string | null): boolean {
 
 function parseCsvEnv(value?: string): string[] {
   return value?.split(',').map(s => s.trim()).filter(Boolean) ?? []
+}
+
+function isAdmin(userId: string): boolean {
+  const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
+
+  if (userId && allowedUserIds.includes(userId.toLowerCase())) {
+    return true
+  }
+
+  const deprecatedAdminId = process.env.ADMIN_USER_ID
+  if (deprecatedAdminId && userId.toLowerCase() === deprecatedAdminId.toLowerCase()) {
+    return true
+  }
+
+  return false
 }
 
 function handleCronAuth(request: NextRequest): NextResponse | null {

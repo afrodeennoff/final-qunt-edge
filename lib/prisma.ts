@@ -148,6 +148,7 @@ const shouldRejectUnauthorized = (connectionString: string): boolean => {
 // Runtime should prefer pooled DATABASE_URL (Supabase pooler).
 // DIRECT_URL is intended for migrations/admin operations.
 const connectionString = normalizeSupabasePoolerMode(selectRuntimeConnectionString())
+export const hasConfiguredDatabaseConnection = Boolean(connectionString)
 const parsedPoolMax = Number.parseInt(process.env.PG_POOL_MAX ?? '', 10)
 const parsedPoolMin = Number.parseInt(process.env.PG_POOL_MIN ?? '', 10)
 
@@ -213,7 +214,7 @@ if (!connectionString) {
   const activePool = pool
 
   if (isProduction && !isNextBuildPhase) {
-    console.info('[Prisma] Pool initialized', {
+    logger.info('[Prisma] Pool initialized', {
       host: (() => {
         try {
           return new URL(poolConfig.connectionString ?? '').host

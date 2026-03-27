@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
 import { createFirmReview, listFirmReviews, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
-import { CardV2, CardV2Content, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
+import { CardV2, CardV2Content, CardV2Description, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
 import { ReviewsIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase'
-import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight, Filter, Search } from 'lucide-react'
+import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight, Filter } from 'lucide-react'
 
 type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>[number]
 
@@ -413,12 +413,15 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <CardV2 className="rounded-[30px] border-white/10 bg-white/[0.03]">
+      <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-v2-accent" />
-            <CardV2Title className="text-2xl text-white">Reviews & Ratings</CardV2Title>
+            <CardV2Title className="text-2xl text-foreground">User reviews & ratings</CardV2Title>
           </div>
+          <CardV2Description className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Approved trader submissions from Qunt Edge users. Review counts, averages, and moderation states stay visible in one place.
+          </CardV2Description>
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}

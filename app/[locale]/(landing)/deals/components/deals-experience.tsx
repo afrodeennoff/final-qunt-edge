@@ -135,19 +135,19 @@ function getTopDiscountDeal(deals: DealItem[]): DealItem | null {
 
 function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
+    <div className="min-h-screen bg-[#050505]">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-border/60 bg-[linear-gradient(155deg,hsl(var(--card)/0.65),hsl(var(--background)/0.55))] p-8 text-center shadow-[0_28px_90px_-64px_rgba(0,0,0,0.95)]">
-          <BadgePercent className="mx-auto h-10 w-10 text-muted-foreground" />
-          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-foreground">No live deals right now</h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-            We are still tracking firms and pricing, but there are no active coupons in the dataset at the moment.
+        <div className="rounded-[2rem] border border-[#1A1A21] bg-[#0b0b0d] p-8 text-center shadow-[0_28px_90px_-64px_rgba(0,0,0,0.95)]">
+          <BadgePercent className="mx-auto h-10 w-10 text-[#707070]" />
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[#E0E0E0]">No live deals in the current snapshot</h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#707070]">
+            We are still tracking firms and pricing, but no active coupons surfaced in the current dataset.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
+            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-[#2962FF] px-5 py-3 text-sm font-semibold text-white">
               Explore firms
             </Link>
-            <Link href={localePrefix} className="rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground">
+            <Link href={localePrefix} className="rounded-full border border-[#1A1A21] bg-[#050505] px-5 py-3 text-sm font-medium text-[#E0E0E0]">
               Back home
             </Link>
           </div>
@@ -309,8 +309,8 @@ function DealsBoard({
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div className="min-h-screen bg-[#050505]">
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
 
         <section className="grid gap-4 lg:grid-cols-3">
@@ -420,7 +420,7 @@ function DealsContentSections({
         onCopyCode={onCopyCode}
       />
 
-      {faqs.length > 0 ? <DealsFaqSection faqs={faqs} /> : null}
+      {faqs.length > 0 ? <DealsFaqSection faqs={faqs} localePrefix={`/${locale}`} /> : null}
 
       {hadFetchError ? (
         <p className="text-sm text-amber-500">
@@ -445,13 +445,13 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+    <section className="rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Browse all live deals</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">The active board</h2>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">Browse all live deals</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#E0E0E0]">The active board</h2>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[#707070]">
           {browseDeals.length} remaining result{browseDeals.length === 1 ? '' : 's'}
         </p>
       </div>
@@ -469,7 +469,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-[1.4rem] border border-dashed border-border bg-background/70 p-8 text-center text-sm text-muted-foreground">
+        <div className="mt-6 rounded-[1.4rem] border border-dashed border-[#1A1A21] bg-[#0b0b0d] p-8 text-center text-sm text-[#707070]">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -479,16 +479,29 @@ function BrowseDealsSection({
   )
 }
 
-function DealsFaqSection({ faqs }: { faqs: FaqItem[] }) {
+function DealsFaqSection({ faqs, localePrefix }: { faqs: FaqItem[]; localePrefix: string }) {
   return (
-    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">FAQ</p>
-      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">What traders usually ask before they click through</h2>
+    <section className="rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">FAQ</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#E0E0E0]">Questions traders usually ask before checkout</h2>
+          <p className="mt-2 text-sm leading-6 text-[#707070]">
+            These answers cover verification, timing, and risk-fit so you can make the next move with less guesswork.
+          </p>
+        </div>
+        <Link
+          href={`${localePrefix}/deals/faq`}
+          className="inline-flex items-center justify-center rounded-full border border-[#1A1A21] bg-[#0b0b0d] px-4 py-2 text-sm font-medium text-[#E0E0E0] transition-colors hover:bg-[#101014]"
+        >
+          Open full FAQ
+        </Link>
+      </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {faqs.slice(0, 6).map((faq) => (
-          <div key={faq.question} className="rounded-[1.3rem] border border-border/60 bg-background/65 p-4">
-            <h3 className="text-sm font-semibold text-foreground">{faq.question}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{faq.answer}</p>
+          <div key={faq.question} className="rounded-[1.3rem] border border-[#1A1A21] bg-[#0b0b0d] p-4">
+            <h3 className="text-sm font-semibold text-[#E0E0E0]">{faq.question}</h3>
+            <p className="mt-2 text-sm leading-6 text-[#707070]">{faq.answer}</p>
           </div>
         ))}
       </div>
@@ -504,24 +517,24 @@ function DealsHero({
   overview: DealsOverview
 }) {
   return (
-    <section className="grid gap-6 rounded-[2rem] border border-border/60 bg-[linear-gradient(152deg,hsl(var(--card)/0.7),hsl(var(--background)/0.5))] p-6 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+    <section className="grid gap-6 rounded-[2rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-7">
       <div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#1A1A21] bg-[#0b0b0d] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">
+          <Sparkles className="h-3.5 w-3.5 text-[#2962FF]" />
           Verified prop firm discounts
         </div>
-        <h1 className="mt-5 text-[clamp(2.4rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
-          Deals that are worth opening right now.
+        <h1 className="mt-5 text-[clamp(2.4rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-[#E0E0E0]">
+          Open current promos without losing the firm context.
         </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-          Browse active challenge discounts, filter by market and firm, and move from pricing to firm research without leaving the same board.
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[#707070] sm:text-base">
+          Browse active challenge discounts, compare pricing by market and firm, and move straight into the firm record when you want more context.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
+          <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-[#2962FF] px-5 py-3 text-sm font-semibold text-white">
             Compare firms
           </Link>
-          <Link href={`${localePrefix}/deals/compare`} className="rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground">
-            Compare deal economics
+          <Link href={`${localePrefix}/deals/compare`} className="rounded-full border border-[#1A1A21] bg-[#0b0b0d] px-5 py-3 text-sm font-medium text-[#E0E0E0]">
+            Compare pricing
           </Link>
         </div>
       </div>
@@ -575,15 +588,15 @@ function DealsFilterPanel({
 }) {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+      <div className="rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#707070]" />
             <input
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-11 w-full rounded-xl border border-border/70 bg-background/80 pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-foreground/20"
+              className="h-11 w-full rounded-xl border border-[#1A1A21] bg-[#0b0b0d] pl-11 pr-4 text-sm text-[#E0E0E0] outline-none transition-colors placeholder:text-[#707070]/60 focus:border-[#2962FF]/20"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -601,8 +614,8 @@ function DealsFilterPanel({
                 onClick={() => onDiscountChange(option.value)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   selectedDiscount === option.value
-                    ? 'border-foreground/15 bg-foreground text-background'
-                    : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
+                    ? 'border-[#E0E0E0]/15 bg-[#E0E0E0] text-[#050505]'
+                    : 'border-[#1A1A21] bg-[#0b0b0d] text-[#707070] hover:text-[#E0E0E0]'
                 }`}
               >
                 {option.label}
@@ -617,8 +630,8 @@ function DealsFilterPanel({
                 onClick={() => onSortChange(item.key)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   sortKey === item.key
-                    ? 'border-foreground/15 bg-foreground text-background'
-                    : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
+                    ? 'border-[#E0E0E0]/15 bg-[#E0E0E0] text-[#050505]'
+                    : 'border-[#1A1A21] bg-[#0b0b0d] text-[#707070] hover:text-[#E0E0E0]'
                 }`}
               >
                 {item.label}
@@ -628,12 +641,12 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-dashed border-border/60 bg-background/40 px-4 py-3 text-sm text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-[1.2rem] border border-dashed border-[#1A1A21] bg-[#0b0b0d] px-4 py-3 text-sm text-[#707070]">
             <span>The deal board is narrowed right now. Reset to return to the full live tape.</span>
             <button
               type="button"
               onClick={onResetFilters}
-              className="rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-card"
+              className="rounded-full border border-[#1A1A21] bg-[#0b0b0d] px-3 py-1.5 text-xs font-medium text-[#E0E0E0] transition-colors hover:bg-[#101014]"
             >
               Reset filters
             </button>
@@ -641,23 +654,39 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
-      <div className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Editorial radar</p>
+      <div className="rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">Board snapshot</p>
         <div className="mt-4 space-y-3">
-          <RadarRow label="Market coverage" value={`${spotlights.futures.length} futures spotlights`} />
-          <RadarRow label="CFD spotlights" value={`${spotlights.cfd.length} tracked firms`} />
-          <RadarRow label="Source updated" value={lastUpdated ?? spotlights.updatedAt} />
+          <RadarRow label="Futures coverage" value={`${spotlights.futures.length} spotlights`} />
+          <RadarRow label="CFD coverage" value={`${spotlights.cfd.length} spotlights`} />
+          <RadarRow label="Last refreshed" value={lastUpdated ?? spotlights.updatedAt} />
         </div>
-        <div className="mt-5 rounded-[1.2rem] border border-border/60 bg-background/65 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Top payout firms</p>
+        <div className="mt-5 rounded-[1.2rem] border border-[#1A1A21] bg-[#0b0b0d] p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-[#707070]">Top payout firms</p>
           <div className="mt-3 space-y-2">
             {topFirms.map((firm) => (
-              <Link key={firm.id} href={`${localePrefix}/firm/${firm.slug}`} className="flex items-center justify-between rounded-xl border border-border/50 bg-card/70 px-3 py-2 text-sm transition-colors hover:bg-card">
-                <span className="font-medium text-foreground">{firm.name}</span>
-                <span className="text-muted-foreground">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</span>
+              <Link
+                key={firm.id}
+                href={`${localePrefix}/firm/${firm.slug}`}
+                className="flex items-center justify-between rounded-xl border border-[#1A1A21] bg-[#101014] px-3 py-2 text-sm transition-colors hover:bg-[#0b0b0d]"
+              >
+                <span className="font-medium text-[#E0E0E0]">{firm.name}</span>
+                <span className="text-[#707070]">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</span>
               </Link>
             ))}
           </div>
+        </div>
+        <div className="mt-5 flex items-center justify-between gap-4 rounded-[1.2rem] border border-[#1A1A21] bg-[#0b0b0d] px-4 py-4">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.18em] text-[#707070]">Need policy context?</p>
+            <p className="mt-1 text-sm leading-6 text-[#707070]">The FAQ covers verification, timing, and risk-fit questions.</p>
+          </div>
+          <Link
+            href={`${localePrefix}/deals/faq`}
+            className="shrink-0 rounded-full border border-[#1A1A21] bg-[#0b0b0d] px-3 py-2 text-xs font-semibold text-[#E0E0E0] transition-colors hover:bg-[#101014]"
+          >
+            FAQ
+          </Link>
         </div>
       </div>
     </section>
@@ -680,9 +709,9 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-[1.9rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{title}</p>
-      <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+    <section className="rounded-[1.9rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">{title}</p>
+      <p className="mt-2 text-sm text-[#707070]">{description}</p>
       <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         {deals.map((deal) => (
           <DealCard key={deal.id} deal={deal} locale={locale} copiedCode={copiedCode} onCopyCode={onCopyCode} />
@@ -708,20 +737,20 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group rounded-[1.45rem] border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.5))] p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15">
+    <div className="group rounded-[1.45rem] border border-[#1A1A21] bg-[#0b0b0d] p-4 transition-all hover:-translate-y-0.5 hover:border-[#E0E0E0]/15">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="inline-flex items-center rounded-full border border-border/60 bg-card/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="inline-flex items-center rounded-full border border-[#1A1A21] bg-[#101014] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#707070]">
             {deal.category}
           </div>
-          <h3 className="mt-3 text-lg font-semibold text-foreground">{deal.firmName}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h3 className="mt-3 text-lg font-semibold text-[#E0E0E0]">{deal.firmName}</h3>
+          <p className="mt-1 text-sm text-[#707070]">
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-right">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Discount</p>
-          <p className="mt-1 text-xl font-semibold text-foreground">{deal.discountPercent}%</p>
+        <div className="rounded-2xl border border-[#089981]/30 bg-[#089981]/10 px-3 py-2 text-right">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[#707070]">Discount</p>
+          <p className="mt-1 text-xl font-semibold text-[#E0E0E0]">{deal.discountPercent}%</p>
         </div>
       </div>
 
@@ -736,14 +765,14 @@ function DealCard({
         <button
           type="button"
           onClick={() => onCopyCode(deal.couponCode)}
-          className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-[#1A1A21] bg-[#101014] px-4 py-2 text-sm font-medium text-[#E0E0E0]"
         >
           <Copy className="h-4 w-4" />
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
         <Link
           href={`/${locale}/firm/${deal.firmSlug}`}
-          className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-[#1A1A21] bg-[#101014] px-4 py-2 text-sm font-medium text-[#E0E0E0]"
         >
           View firm
         </Link>
@@ -752,7 +781,7 @@ function DealCard({
             href={claimHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-[#2962FF] px-4 py-2 text-sm font-semibold text-white"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
@@ -760,7 +789,7 @@ function DealCard({
         ) : (
           <Link
             href={claimHref}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-[#2962FF] px-4 py-2 text-sm font-semibold text-white"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
@@ -781,30 +810,30 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
-    <div className="rounded-[1.3rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <div className="rounded-[1.3rem] border border-[#1A1A21] bg-[#0b0b0d] p-4">
+      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+      <p className="mt-3 text-2xl font-semibold tracking-tight text-[#E0E0E0]">{value}</p>
     </div>
   )
 }
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1rem] border border-border/60 bg-card/55 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
+    <div className="rounded-[1rem] border border-[#1A1A21] bg-[#101014] p-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[#707070]">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-[#E0E0E0]">{value}</p>
     </div>
   )
 }
 
 function RadarRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-[1rem] border border-border/60 bg-background/60 px-3 py-3">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-foreground">{value}</span>
+    <div className="flex items-center justify-between rounded-[1rem] border border-[#1A1A21] bg-[#0b0b0d] px-3 py-3">
+      <span className="text-sm text-[#707070]">{label}</span>
+      <span className="text-sm font-medium text-[#E0E0E0]">{value}</span>
     </div>
   )
 }
@@ -819,10 +848,10 @@ function InsightCard({
   helper: string
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.6),hsl(var(--background)/0.5))] p-5 shadow-[0_18px_80px_-65px_rgba(0,0,0,0.95)]">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{helper}</p>
+    <div className="rounded-[1.5rem] border border-[#1A1A21] bg-[#0b0b0d] p-5 shadow-[0_18px_80px_-65px_rgba(0,0,0,0.95)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#707070]">{label}</p>
+      <p className="mt-3 text-2xl font-semibold tracking-tight text-[#E0E0E0]">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-[#707070]">{helper}</p>
     </div>
   )
 }
@@ -840,7 +869,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-11 rounded-xl border border-border/70 bg-background/80 px-4 text-sm text-foreground outline-none"
+      className="h-11 rounded-xl border border-[#1A1A21] bg-[#0b0b0d] px-4 text-sm text-[#E0E0E0] outline-none"
     >
       {options.map((option) => (
         <option key={option} value={option}>

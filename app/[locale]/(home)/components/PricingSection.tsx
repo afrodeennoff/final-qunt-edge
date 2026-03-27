@@ -1,282 +1,162 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { useCurrentLocale } from '@/locales/client'
 import { Check } from 'lucide-react'
-import { formatCurrencyAmount } from '@/lib/formatting/currency'
-import { cn } from '@/lib/utils'
-import { buildWhopCheckoutUrl } from '@/lib/whop-checkout'
-import { useCurrency } from '@/hooks/use-currency'
-
-type BillingMode = 'monthly' | 'annual'
+import { Button } from '@/components/ui/button'
 
 const plans = [
   {
     name: 'Starter',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    subtitle: 'For traders building foundational review discipline',
-    features: ['Manual journaling', 'Core trade analytics', 'Weekly process snapshot'],
-    cta: 'Start Free Audit',
-    note: 'No card required',
-    popular: false,
-  },
-  {
-    name: 'Pro AI',
-    monthlyPrice: 29,
-    yearlyPrice: 24,
-    subtitle: 'For serious traders optimizing execution quality',
+    price: '$0',
+    period: '/month',
+    description: 'Perfect for getting started',
     features: [
-      'AI session debriefs',
-      'Behavior drift detection',
-      'Execution quality scoring',
-      'Advanced dashboards',
-      'Priority support',
+      '100 trades/month',
+      '1 broker connection',
+      'Basic analytics',
+      '7-day data retention',
     ],
-    cta: 'Start Pro Trial',
-    note: 'Best for active discretionary traders',
-    popular: true,
+    cta: 'Get Started',
+    variant: 'outline' as const,
   },
   {
-    name: 'Desk',
-    monthlyPrice: 99,
-    yearlyPrice: 84,
-    subtitle: 'For prop teams, mentors, and performance managers',
-    features: ['Team analytics workspace', 'Role-based reporting', 'Coaching intervention feed', 'Shared playbooks'],
-    cta: 'Talk To Sales',
-    note: 'Volume pricing for larger desks',
-    popular: false,
+    name: 'Pro',
+    price: '$49',
+    period: '/month',
+    description: 'For serious traders',
+    features: [
+      'Unlimited trades',
+      'All broker connections',
+      'AI insights',
+      'Unlimited data retention',
+      'Priority support',
+      'Coach-ready exports',
+    ],
+    cta: 'Start Free Trial',
+    badge: 'Most Popular',
+    variant: 'featured' as const,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: '',
+    description: 'For teams and firms',
+    features: [
+      'Everything in Pro',
+      'Team management',
+      'SSO integration',
+      'Custom SLAs',
+      'Dedicated support',
+    ],
+    cta: 'Contact Sales',
+    variant: 'outline' as const,
   },
 ]
 
-function getPlanHref({
-  planName,
-  billingMode,
-  currency,
-  locale,
-}: {
-  planName: string
-  billingMode: BillingMode
-  currency: 'USD' | 'EUR'
-  locale: string
-}): string {
-  if (planName === 'Pro AI') {
-    return buildWhopCheckoutUrl({
-      lookupKey: `plus_${billingMode === 'annual' ? 'yearly' : 'monthly'}_${currency.toLowerCase()}`,
-      locale,
-    })
-  }
-
-  if (planName === 'Desk') {
-    return `/${locale}/support`
-  }
-
-  return `/${locale}/authentication?next=dashboard`
-}
-
-function getPlanPriceText(
-  plan: (typeof plans)[number],
-  billingMode: BillingMode,
-  currency: 'USD' | 'EUR',
-  displayLocale: string,
-): string {
-  const amount = billingMode === 'annual' ? plan.yearlyPrice : plan.monthlyPrice
-  return formatCurrencyAmount(amount, currency, { locale: displayLocale, maximumFractionDigits: amount % 1 === 0 ? 0 : 2 })
-}
-
-function getPlanPeriodText(plan: (typeof plans)[number], periodLabel: string): string {
-  return plan.monthlyPrice === 0 ? '/month' : periodLabel
-}
-
-function getSavingsPerMonth(plan: (typeof plans)[number]): number {
-  return plan.monthlyPrice - plan.yearlyPrice
-}
-
-function getPlanCardClassName(popular: boolean): string {
-  return cn(
-    'marketing-panel flex w-full flex-col rounded-3xl border-[hsl(var(--mk-border)/0.32)] transition-all duration-300 hover:border-[hsl(var(--primary)/0.35)]',
-    popular && 'relative overflow-hidden border-[hsl(var(--primary)/0.45)]'
-  )
-}
-
-function getPlanCtaClassName(): string {
-  return 'h-12 w-full rounded-2xl bg-primary text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90 [font-family:var(--home-copy)]'
-}
-
-function shouldShowSavings(billingMode: BillingMode, monthlyPrice: number): boolean {
-  if (billingMode !== 'annual') return false
-  return monthlyPrice > 0
-}
-
-function PlanPopularBadge({ popular }: { popular: boolean }) {
-  if (!popular) return null
-  return (
-    <div className="absolute right-4 top-4">
-      <Badge variant="default" className="bg-primary text-primary-foreground">
-        Most Popular
-      </Badge>
-    </div>
-  )
-}
-
-function PlanSavingsNote({
-  show,
-  savings,
-  currency,
-  displayLocale,
-}: {
-  show: boolean
-  savings: number
-  currency: 'USD' | 'EUR'
-  displayLocale: string
-}) {
-  if (!show) return null
-  return (
-    <p className="mt-2 text-xs text-foreground [font-family:var(--home-copy)]">
-      Save {formatCurrencyAmount(savings, currency, { locale: displayLocale, maximumFractionDigits: savings % 1 === 0 ? 0 : 2 })}/month with annual billing
-    </p>
-  )
-}
-
-function PlanCard({
-  plan,
-  billingMode,
-  currency,
-  locale,
-  displayLocale,
-  periodLabel,
-}: {
-  plan: (typeof plans)[number]
-  billingMode: BillingMode
-  currency: 'USD' | 'EUR'
-  locale: string
-  displayLocale: string
-  periodLabel: string
-}) {
-  const href = getPlanHref({ planName: plan.name, billingMode, currency, locale })
-  const priceText = getPlanPriceText(plan, billingMode, currency, displayLocale)
-  const periodText = getPlanPeriodText(plan, periodLabel)
-  const savings = getSavingsPerMonth(plan)
-  const showSavings = shouldShowSavings(billingMode, plan.monthlyPrice)
-  return (
-    <div className="flex">
-      <Card className={getPlanCardClassName(plan.popular)}>
-        <PlanPopularBadge popular={plan.popular} />
-
-        <CardHeader>
-          <CardTitle className="text-[1.35rem] font-semibold tracking-[-0.015em] [font-family:var(--home-display)]">
-            {plan.name}
-          </CardTitle>
-          <div className="mt-4 flex items-baseline text-5xl font-semibold tracking-[-0.025em] [font-family:var(--home-display)]">
-            {priceText}
-            <span className="ml-1 text-sm font-medium text-foreground/80 [font-family:var(--home-copy)]">
-              {periodText}
-            </span>
-          </div>
-          <CardDescription className="mt-2 text-sm leading-relaxed [font-family:var(--home-copy)]">
-            {plan.subtitle}
-          </CardDescription>
-          <PlanSavingsNote show={showSavings} savings={savings} currency={currency} displayLocale={displayLocale} />
-        </CardHeader>
-
-        <CardContent className="flex-1">
-          <ul className="space-y-3">
-            {plan.features.map((feature) => (
-              <li
-                key={feature}
-                className="flex items-start gap-3 text-sm text-foreground/80 [font-family:var(--home-copy)]"
-              >
-                <Check className="h-5 w-5 shrink-0 text-foreground" />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-
-        <CardFooter className="flex flex-col gap-2">
-          <Button
-            asChild
-            variant="default"
-            className={getPlanCtaClassName()}
-          >
-            <Link href={href}>{plan.cta}</Link>
-          </Button>
-          <p className="text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">{plan.note}</p>
-        </CardFooter>
-      </Card>
-    </div>
-  )
-}
-
 export default function PricingSection() {
-  const locale = useCurrentLocale()
-  const { currency } = useCurrency()
-  const [billingMode, setBillingMode] = useState<BillingMode>('annual')
-  const displayLocale = currency === 'EUR' ? 'fr-FR' : 'en-US'
-
-  const periodLabel = billingMode === 'annual' ? '/month, billed yearly' : '/month'
+  const [isAnnual, setIsAnnual] = useState(true)
 
   return (
-    <section id="pricing" className="relative scroll-mt-28 border-y border-[hsl(var(--mk-border)/0.42)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <Badge variant="outline" className="mb-4 border-[hsl(var(--primary)/0.32)] bg-[hsl(var(--primary)/0.08)] text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
-            Pricing
-          </Badge>
-          <h2 className="text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
-            Choose your
-            <span className="block text-foreground">performance operating system</span>
+    <section id="pricing" className="py-24 bg-[#0b0b0d]">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-semibold mb-4 text-[#E0E0E0]">
+            Simple, transparent{' '}
+            <span className="text-[#2962FF]">pricing</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.78] text-foreground/85 sm:text-[18px] [font-family:var(--home-copy)]">
-            Start free. Upgrade when you want deeper diagnostics, tighter coaching loops, and desk-grade review workflows.
+          <p className="text-lg text-[#9E9E9E] mb-8">
+            Start free. Scale as you grow.
           </p>
-          <div className="mx-auto mt-6 inline-flex rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.58)] p-1">
+
+          {/* Billing Toggle */}
+          <div className="inline-flex items-center gap-3 p-1 rounded-lg bg-[#101014] border border-[#1A1A21]">
             <button
-              type="button"
-              onClick={() => setBillingMode('monthly')}
-              className={cn(
-                'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'monthly' ? 'bg-[hsl(var(--mk-surface))] text-foreground' : 'text-foreground/80 hover:text-foreground'
-              )}
-              aria-pressed={billingMode === 'monthly'}
+              onClick={() => setIsAnnual(false)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                !isAnnual
+                  ? 'bg-[#2962FF] text-white'
+                  : 'text-[#9E9E9E] hover:text-[#E0E0E0]'
+              }`}
             >
               Monthly
             </button>
             <button
-              type="button"
-              onClick={() => setBillingMode('annual')}
-              className={cn(
-                'rounded-lg px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.13em] transition-colors [font-family:var(--home-copy)]',
-                billingMode === 'annual' ? 'bg-[hsl(var(--mk-surface))] text-foreground' : 'text-foreground/80 hover:text-foreground'
-              )}
-              aria-pressed={billingMode === 'annual'}
+              onClick={() => setIsAnnual(true)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                isAnnual
+                  ? 'bg-[#2962FF] text-white'
+                  : 'text-[#9E9E9E] hover:text-[#E0E0E0]'
+              }`}
             >
-              Annual (Best Value)
+              Annual <span className="text-[#089981]">-20%</span>
             </button>
           </div>
-          <p className="mt-3 text-xs text-foreground/80 [font-family:var(--home-copy)]">7-day free trial on Pro AI. Cancel anytime.</p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => (
-            <PlanCard
+            <div
               key={plan.name}
-              plan={plan}
-              billingMode={billingMode}
-              currency={currency}
-              locale={locale}
-              displayLocale={displayLocale}
-              periodLabel={periodLabel}
-            />
+              className={`
+                relative rounded-xl border p-6
+                ${plan.variant === 'featured'
+                  ? 'border-[#2962FF] bg-[#0b0b0d]'
+                  : 'border-[#1A1A21] bg-[#0b0b0d]'}
+              `}
+            >
+              {/* Badge */}
+              {plan.badge && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-3 py-1 text-xs font-medium bg-[#2962FF] text-white rounded-full">
+                    {plan.badge}
+                  </span>
+                </div>
+              )}
+
+              {/* Plan Name */}
+              <h3 className="text-lg font-medium text-[#E0E0E0] mb-2">
+                {plan.name}
+              </h3>
+
+              {/* Price */}
+              <div className="mb-4">
+                <span className="text-4xl font-bold text-[#E0E0E0]">
+                  {plan.price}
+                </span>
+                <span className="text-[#707070]">{plan.period}</span>
+              </div>
+
+              {/* Description */}
+              <p className="text-sm text-[#707070] mb-6">
+                {plan.description}
+              </p>
+
+              {/* Features */}
+              <ul className="space-y-3 mb-6">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#089981] mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-[#9E9E9E]">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <Button
+                variant={plan.variant === 'featured' ? 'default' : 'outline'}
+                className={`w-full ${
+                  plan.variant === 'featured'
+                    ? 'bg-[#2962FF] hover:bg-[#2962FF]/90'
+                    : 'border-[#1A1A21] text-[#E0E0E0]'
+                }`}
+              >
+                {plan.cta}
+              </Button>
+            </div>
           ))}
         </div>
-        <p className="mt-6 text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">
-          Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
-        </p>
       </div>
     </section>
   )

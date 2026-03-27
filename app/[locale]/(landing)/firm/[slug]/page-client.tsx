@@ -98,9 +98,9 @@ type FirmData = {
 }
 
 const trustChecklist = [
-  'Structured company facts and trading rule context.',
-  'Review and coupon tabs stay connected to the same profile.',
-  'Cleaner hierarchy for scanning payouts, split, and platform details.',
+  'Approved trader reviews stay separate from the firm facts.',
+  'Payout totals and counts come from tracked account records in the database.',
+  'Profile, rules, and ROI tabs stay tied to the same firm record.',
 ]
 
 const radarChartConfig = {
@@ -130,6 +130,16 @@ function withDetailFallback(value?: string | null): string {
   return value ?? 'Unavailable'
 }
 
+function getVisibleReviewCount(firm: FirmData): number {
+  const approvedReviewCount = firm.liveReviewStats?.approvedCount ?? 0
+  if (approvedReviewCount > 0) return approvedReviewCount
+
+  const spotlightReviewCount = firm.spotlight?.reviewCount ?? 0
+  if (spotlightReviewCount > 0) return spotlightReviewCount
+
+  return firm._count?.reviews ?? 0
+}
+
 function buildAdditionalDetails(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
   return [
     { icon: Building2, label: 'Category', value: withDetailFallback(firm.category) },
@@ -156,6 +166,7 @@ function buildOverviewFacts(firm: FirmData): Array<{ icon: FactIcon; label: stri
 
 function buildTrustMetrics(firm: FirmData): Array<{ label: string; value: string; highlight?: boolean }> {
   const metrics: Array<{ label: string; value: string; highlight?: boolean }> = []
+  const reviewCount = getVisibleReviewCount(firm)
 
   if (firm.catalogueStats) {
     metrics.push(
@@ -167,7 +178,7 @@ function buildTrustMetrics(firm: FirmData): Array<{ label: string; value: string
   }
 
   metrics.push(
-    { label: 'Reviews', value: (firm._count?.reviews ?? 0).toLocaleString() },
+    { label: 'User reviews', value: reviewCount.toLocaleString() },
     { label: 'Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
   )
 
@@ -179,7 +190,10 @@ function getResearchRatingValue(firm: FirmData): string {
 }
 
 function getResearchRatingHelper(firm: FirmData): string {
-  return `${firm.spotlight?.reviewCount ?? firm._count?.reviews ?? 0} visible reviews`
+  const reviewCount = getVisibleReviewCount(firm)
+  return reviewCount > 0
+    ? `${reviewCount.toLocaleString()} visible user review${reviewCount === 1 ? '' : 's'}`
+    : 'No visible user reviews yet'
 }
 
 function getResearchPayoutValue(firm: FirmData): string {
@@ -187,7 +201,9 @@ function getResearchPayoutValue(firm: FirmData): string {
 }
 
 function getResearchPayoutHelper(firm: FirmData): string {
-  return formatCompactCurrency(firm.catalogueStats?.paidPayoutAmount ?? 0)
+  return firm.catalogueStats
+    ? `${formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)} paid out`
+    : 'No payout data yet'
 }
 
 function getResearchAccountValue(firm: FirmData): string {
@@ -209,12 +225,12 @@ function getResearchFitHelper(firm: FirmData): string {
 function buildResearchSnapshot(firm: FirmData): Array<{ label: string; value: string; helper: string }> {
   return [
     {
-      label: 'Public rating',
+      label: 'User review score',
       value: getResearchRatingValue(firm),
       helper: getResearchRatingHelper(firm),
     },
     {
-      label: 'Tracked payouts',
+      label: 'Database payouts',
       value: getResearchPayoutValue(firm),
       helper: getResearchPayoutHelper(firm),
     },
@@ -224,7 +240,7 @@ function buildResearchSnapshot(firm: FirmData): Array<{ label: string; value: st
       helper: getResearchAccountHelper(firm),
     },
     {
-      label: 'Best fit',
+      label: 'Trading fit',
       value: getResearchFitValue(firm),
       helper: getResearchFitHelper(firm),
     },
@@ -314,24 +330,24 @@ function buildRules(firm: FirmData): Array<{ title: string; value: string; descr
     {
       title: 'Payout Model',
       value: firm.payoutModel ?? 'N/A',
-      description: `Payouts are processed on a ${firm.payoutModel?.toLowerCase() ?? 'monthly'} basis.`,
+      description: 'Current payout cadence published for this firm.',
     },
     {
       title: 'Profit Split',
       value: firm.profitSplit ?? 'N/A',
-      description: 'You keep this percentage of profits generated on funded accounts.',
+      description: 'Share of funded profits kept by the trader.',
     },
     {
       title: 'Max Allocation',
       value: firm.maxAllocation ?? 'N/A',
-      description: 'Maximum total capital you can manage across all funded accounts.',
+      description: 'Maximum total capital visible in the current profile.',
     },
   ]
 }
 
 function getHeaderReviewLabel(firm: FirmData): string {
-  const spotlightReviewCount = firm.spotlight?.reviewCount ?? firm._count?.reviews ?? 0
-  return `(${spotlightReviewCount.toLocaleString()} ${spotlightReviewCount === 1 ? 'review' : 'reviews'})`
+  const reviewCount = getVisibleReviewCount(firm)
+  return `(${reviewCount.toLocaleString()} user review${reviewCount === 1 ? '' : 's'})`
 }
 
 function getHeaderOptionalItems(firm: FirmData): string[] {
@@ -577,10 +593,10 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
         <CardV2Content className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">Challenge Types</CardV2Title>
+            <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
           </div>
           <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            No challenge data available for this firm yet.
+            No challenge size data available for this firm yet.
           </CardV2Description>
         </CardV2Content>
       </CardV2>
@@ -591,13 +607,13 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
     <div className="space-y-5">
       <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6">
-          <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">Challenge Types</CardV2Title>
-          </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            Detailed breakdown of available account sizes, pricing, and trading rules.
-          </CardV2Description>
+        <div className="flex items-center gap-2">
+          <Target className="h-5 w-5 text-v2-accent" />
+          <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
+        </div>
+        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          Current account sizes, pricing, and trading limits.
+        </CardV2Description>
         </CardV2Content>
       </CardV2>
 
@@ -623,7 +639,7 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
           <CardV2Title className="text-2xl text-foreground">Additional Details</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Key information about the firm including founding details, regulatory status, and supported platforms.
+          Key profile details pulled from the current firm record and verified public sources.
         </CardV2Description>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -656,10 +672,22 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
         <CardV2Content className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
-          <CardV2Title className="mt-4 text-3xl text-foreground">The fast dossier before you dig deeper.</CardV2Title>
+          <CardV2Title className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardV2Title>
           <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
-            A compact read on trust, payout activity, and setup fit so you can decide whether this firm deserves a closer review.
+            Use this snapshot to scan the current profile before opening the tabs below.
           </CardV2Description>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {['User reviews', 'Database payouts', 'Verified profile notes'].map((label) => (
+              <BadgeV2
+                key={label}
+                variant="default"
+                className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]"
+              >
+                {label}
+              </BadgeV2>
+            ))}
+          </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {researchSnapshot.map((item) => (
@@ -676,8 +704,8 @@ function OverviewSection({ firm }: { firm: FirmData }) {
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
         <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Company dashboard</p>
-            <CardV2Title className="mt-4 text-3xl text-foreground">Prop firm profile overview</CardV2Title>
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
+            <CardV2Title className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardV2Title>
             <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
               {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
             </CardV2Description>
@@ -692,7 +720,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
         <CardV2 className="rounded-[30px] border-border/40 bg-card/5">
           <CardV2Content className="p-6 sm:p-8">
-            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust view</p>
+            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
             <CardV2Title className="mt-4 text-3xl text-foreground">What to check before you click out</CardV2Title>
             <div className="mt-6 space-y-3">
               {trustChecklist.map((item) => (
@@ -797,7 +825,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
             <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
           </div>
           <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            No payout data available for this firm yet.
+            No payout data available in the current database snapshot.
           </CardV2Description>
         </CardV2Content>
       </CardV2>
@@ -814,7 +842,7 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
           <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Aggregated payout statistics from verified trader accounts on this platform.
+          Aggregated payout statistics from tracked trader accounts in the database.
         </CardV2Description>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -866,7 +894,7 @@ function ROISection({ firm }: { firm: FirmData }) {
             <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
           </div>
           <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            No account size data available for ROI calculation.
+            No account size data available for ROI comparison.
           </CardV2Description>
         </CardV2Content>
       </CardV2>
@@ -881,8 +909,12 @@ function ROISection({ firm }: { firm: FirmData }) {
           <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Potential return on investment based on account sizes and profit targets.
+          Illustrative fee-to-target comparison based on the current challenge templates.
         </CardV2Description>
+
+        <p className="mt-3 text-xs leading-6 text-muted-foreground">
+          This comparison helps you scan the current setup; it is not a promise of profit.
+        </p>
 
         <div className="mt-6 grid gap-4">
           {accountSizes.map(([key, size]) => {
@@ -941,7 +973,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
             <CardV2Title className="text-2xl text-foreground">Trading Rules</CardV2Title>
           </div>
           <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-            Key trading rules and restrictions you need to follow to maintain your funded account.
+            Key trading rules and restrictions from the current profile and challenge templates.
           </CardV2Description>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -1009,7 +1041,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
           <CardV2Title className="text-2xl text-foreground">Payout Proof</CardV2Title>
         </div>
         <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
-          Verified payout data from traders using this prop firm on our platform.
+          Payout evidence pulled from tracked trader records in the database.
         </CardV2Description>
 
         {stats && stats.paidPayoutCount > 0 ? (
@@ -1049,7 +1081,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
             </div>
             <p className="mt-4 text-base font-medium text-foreground">No payout proof yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Payout data will appear here as traders on our platform receive payouts from this firm.
+              Payout data will appear here as tracked trader records accumulate in the database.
             </p>
           </div>
         )}
@@ -1076,7 +1108,7 @@ function HeaderRatingSummary({
           </div>
         </>
       ) : (
-        <span className="text-sm text-muted-foreground">No verified rating yet</span>
+        <span className="text-sm text-muted-foreground">No approved user rating yet</span>
       )}
       {headerMetaItems.map((item) => (
         <span
@@ -1209,6 +1241,9 @@ function FirmHeader({ firm }: { firm: FirmData }) {
               </h1>
 
               <HeaderRatingSummary spotlightRating={spotlightRating} headerMetaItems={headerMetaItems} />
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
+                Approved trader reviews sit beside database-backed payout totals and verified profile notes, so the tabs below stay grounded in source data.
+              </p>
             </div>
           </div>
 

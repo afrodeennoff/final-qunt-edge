@@ -4,6 +4,148 @@ export default {
         description: 'Qunt Edge est un journal de trading web pour traders futures permettant de stocker, explorer et comprendre leur historique de trading.',
         cta: 'Commencer maintenant',
         updates: 'Dernières mises à jour du produit →',
+
+        // New landing page sections (Precision Terminal design)
+        nav: {
+            features: 'Fonctionnalités',
+            pricing: 'Tarifs',
+            docs: 'Docs',
+            blog: 'Blog',
+            login: 'Connexion',
+            startFree: 'Commencer Gratuitement',
+        },
+
+        hero: {
+            badge: 'Télémétrie des Décisions en Direct',
+            headline: 'Construisez un avantage reproductible.',
+            headlineAccent: 'Éliminez la dérive émotionnelle.',
+            subheadline: 'Qunt Edge isole la qualité d\'exécution, la dérive comportementale et la discipline de risque dans une surface de revue unique. Chaque session reçoit un diagnostic précis.',
+            ctaPrimary: 'Commencer un Audit Gratuit',
+            ctaSecondary: 'Voir la Démo',
+            noCreditCard: 'Pas de carte bancaire requise',
+            firstAudit: 'Premier audit en quelques minutes',
+        },
+
+        trust: {
+            title: 'Vos données sont en sécurité',
+            soc2: 'Certifié SOC2',
+            encryption: 'Chiffrement 256-bit',
+            gdpr: 'Conforme RGPD',
+            trustedBy: 'Approuvé par {count} traders',
+            integrations: 'Intégrations',
+        },
+
+        // Extended features for new landing page
+        featuresGrid: {
+            headline: 'Tout ce dont vous avez besoin pour {highlight}',
+            highlight: 'trader plus intelligemment',
+            subheadline: 'Analyses puissantes, insights IA et collaboration d\'équipe sur une seule plateforme.',
+            analytics: {
+                title: 'Analyses Avancées',
+                description: 'Plongez dans vos performances avec analyse par déciles, heatmaps et métriques personnalisées.',
+            },
+            aiInsights: {
+                title: 'Insights IA',
+                description: 'Reconnaissance de patterns et analyse comportementale alimentée par l\'apprentissage automatique.',
+            },
+            teamSync: {
+                title: 'Sync d\'Équipe',
+                description: 'Partagez vos layouts, comparez vos performances et apprenez de vos pairs.',
+            },
+            multiBroker: {
+                title: 'Import Multi-Broker',
+                description: 'Connectez Tradovate, Rithmic, IBKR, ou importez depuis CSV. Vos données, votre façon.',
+            },
+            exports: {
+                title: 'Exports Prêts pour Coach',
+                description: 'Générez des briefs PDF et des rapports partageables pour vos sessions de mentorat.',
+            },
+            security: {
+                title: 'Sécurité Entreprise',
+                description: 'Chiffrement de niveau bancaire et conformité SOC2 protègent vos données.',
+            },
+        },
+
+        pricingNew: {
+            headline: 'Tarification {highlight} simple et transparente',
+            highlight: 'tarification',
+            subheadline: 'Commencez gratuitement. Évoluez selon vos besoins.',
+            monthly: 'Mensuel',
+            annual: 'Annuel',
+            annualDiscount: '-20%',
+            starter: {
+                name: 'Starter',
+                price: '0€',
+                period: '/mois',
+                description: 'Parfait pour commencer',
+                cta: 'Commencer',
+                features: [
+                    '100 trades/mois',
+                    '1 connexion broker',
+                    'Analyses basiques',
+                    'Rétention 7 jours',
+                ],
+            },
+            pro: {
+                name: 'Pro',
+                price: '49€',
+                period: '/mois',
+                description: 'Pour les traders sérieux',
+                cta: 'Essai Gratuit',
+                badge: 'Plus Populaire',
+                features: [
+                    'Trades illimités',
+                    'Toutes connexions broker',
+                    'Insights IA',
+                    'Rétention illimitée',
+                    'Support prioritaire',
+                    'Exports prêts pour coach',
+                ],
+            },
+            enterprise: {
+                name: 'Entreprise',
+                price: 'Sur mesure',
+                period: '',
+                description: 'Pour équipes et firmes',
+                cta: 'Contactez-nous',
+                features: [
+                    'Tout de Pro',
+                    'Gestion d\'équipe',
+                    'Intégration SSO',
+                    'SLAs personnalisés',
+                    'Support dédié',
+                ],
+            },
+        },
+
+        ctaNew: {
+            headline: 'Prêt à {highlight} ?',
+            highlight: 'trader plus intelligemment',
+            subheadline: 'Rejoignez {count} traders qui ont amélioré leurs performances avec Qunt Edge. Commencez votre audit gratuit aujourd\'hui.',
+            cta: 'Commencer un Audit Gratuit',
+            noCreditCard: 'Pas de carte bancaire requise',
+            setupTime: 'Configuration en 2 minutes',
+        },
+
+        footerNew: {
+            tagline: 'Le journal de trading et la plateforme d\'analyse pour les traders discrétionnaires qui prennent leur métier au sérieux.',
+            product: 'Produit',
+            resources: 'Ressources',
+            company: 'Entreprise',
+            features: 'Fonctionnalités',
+            pricing: 'Tarifs',
+            integrations: 'Intégrations',
+            changelog: 'Journal des modifications',
+            documentation: 'Documentation',
+            apiReference: 'Référence API',
+            blog: 'Blog',
+            community: 'Communauté',
+            about: 'À propos',
+            careers: 'Carrières',
+            contact: 'Contact',
+            legal: 'Légal',
+            copyright: '© 2026 Qunt Edge. Tous droits réservés.',
+        },
         partners: {
             title: 'Nos Partenaires',
             description: 'Nous collaborons avec les leaders du secteur pour vous offrir la meilleure expérience de trading.',

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import {
   createPropFirmCoupon,
@@ -15,6 +15,8 @@ import {
   updatePropFirmCoupon,
 } from '@/server/prop-firms'
 import { Building2, Clock3, Percent, Plus, Tags, Trash2 } from 'lucide-react'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 
 function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
   const text = value?.toString().trim()
@@ -47,6 +49,10 @@ function toDateTimeLocalValue(date: Date | null | undefined) {
 }
 
 async function loadCoupons() {
+  if (!hasConfiguredDatabaseConnection) {
+    return []
+  }
+
   return prisma.propFirmCoupon.findMany({
     include: {
       propFirm: {
@@ -62,6 +68,18 @@ async function loadCoupons() {
 }
 
 async function loadFirms() {
+  if (!hasConfiguredDatabaseConnection) {
+    return Object.entries(propFirms).map(([key, firm]) => {
+      const profile = getVerifiedPropFirmProfileByName(firm.name)
+      return {
+        id: `fallback-${key}`,
+        name: firm.name,
+        slug: profile?.slug ?? key,
+        isActive: true,
+      }
+    })
+  }
+
   return prisma.propFirm.findMany({
     select: {
       id: true,

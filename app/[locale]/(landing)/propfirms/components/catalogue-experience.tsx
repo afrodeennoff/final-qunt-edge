@@ -277,9 +277,9 @@ export function PropFirmCatalogueExperience({
                     <span
                       className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${
                         firm.category === 'Forex'
-                          ? 'border-blue-500/30 bg-blue-500/10 text-blue-500'
+                          ? 'border-primary/30 bg-primary/10 text-primary'
                           : firm.category === 'Futures'
-                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
+                            ? 'border-success/30 bg-success/10 text-success'
                             : 'border-border bg-card text-muted-foreground'
                       }`}
                     >
@@ -365,21 +365,21 @@ function PayoutPill({
   variant: 'paid' | 'pending' | 'refused'
 }) {
   const borderStyles = {
-    paid: 'border-emerald-500/30 bg-[linear-gradient(135deg,rgba(16,185,129,0.14),rgba(16,185,129,0.05))]',
-    pending: 'border-amber-500/30 bg-[linear-gradient(135deg,rgba(245,158,11,0.14),rgba(245,158,11,0.05))]',
-    refused: 'border-rose-500/30 bg-[linear-gradient(135deg,rgba(244,63,94,0.14),rgba(244,63,94,0.05))]',
+    paid: 'border-success/30 bg-[linear-gradient(135deg,hsl(var(--success)/0.14),hsl(var(--success)/0.05))]',
+    pending: 'border-warning/30 bg-[linear-gradient(135deg,hsl(var(--warning)/0.14),hsl(var(--warning)/0.05))]',
+    refused: 'border-destructive/30 bg-[linear-gradient(135deg,hsl(var(--destructive)/0.14),hsl(var(--destructive)/0.05))]',
   }
 
   const labelStyles = {
-    paid: 'text-emerald-300',
-    pending: 'text-amber-300',
-    refused: 'text-rose-300',
+    paid: 'text-success/90',
+    pending: 'text-warning/90',
+    refused: 'text-destructive/90',
   }
 
   const amountStyles = {
-    paid: 'text-emerald-100',
-    pending: 'text-amber-100',
-    refused: 'text-rose-100',
+    paid: 'text-success',
+    pending: 'text-warning',
+    refused: 'text-destructive',
   }
 
   const amountLabel = new Intl.NumberFormat('en-US', {

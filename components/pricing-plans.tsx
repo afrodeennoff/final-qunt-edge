@@ -75,13 +75,13 @@ function getPlanHref({
   locale,
 }: {
   planName: string
-  billingMode: BillingPeriod
+  billingMode: 'monthly' | 'annual'
   currency: 'USD' | 'EUR'
   locale: string
 }): string {
   if (planName === 'Pro AI') {
     return buildWhopCheckoutUrl({
-      lookupKey: `plus_${billingMode === 'yearly' ? 'yearly' : 'monthly'}_${currency.toLowerCase()}`,
+      lookupKey: `plus_${billingMode === 'annual' ? 'yearly' : 'monthly'}_${currency.toLowerCase()}`,
       locale,
     })
   }
