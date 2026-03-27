@@ -67,7 +67,8 @@ model User {
   oauthStates           OAuthState[]           @relation("UserOAuthStates")
   recoveryCodes         RecoveryCode[]         @relation("UserRecoveryCodes")
   propFirmReviews      PropFirmReview[]       @relation("UserReviews")
-  reviewModerations    ReviewModeration[]     @relation("UserReviewModerations")
+  blogPosts            BlogPost[]            @relation("BlogPostAuthor")
+  reviewModerations   ReviewModeration[]   @relation("UserReviewModerations")
 
   @@index([email])
   @@schema("public")
@@ -1005,6 +1006,16 @@ enum VoteType {
   @@schema("public")
 }
 
+enum BlogCategory {
+  TRADING_TIPS
+  MARKET_ANALYSIS
+  PSYCHOLOGY
+  RISK_MANAGEMENT
+  PLATFORM_UPDATES
+
+  @@schema("public")
+}
+
 enum PaymentFrequency {
   MONTHLY
   QUARTERLY
@@ -1493,5 +1504,27 @@ model PropFirmRule {
 
   @@index([propFirmId])
   @@index([isActive])
+  @@schema("public")
+}
+
+model BlogPost {
+  id         String       @id @default(cuid())
+  title      String
+  slug       String       @unique
+  excerpt    String
+  content    String       @db.Text
+  coverImage String?
+  category   BlogCategory
+  authorId   String
+  published  Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User      @relation("BlogPostAuthor", fields: [authorId], references: [id])
+  @@index([authorId])
+  @@index([slug])
+  @@index([published])
+  @@index([category])
   @@schema("public")
 }

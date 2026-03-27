@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls -la /Users/timon/Downloads/qunt-edge/app/[locale]/dashboard/)"
+      "Bash(curl:*)",
+      "Bash(command:*)",
+      "Bash(brew:*)",
+      "Bash(npx:*)",
+      "Bash(npm:*)",
+      "Bash(oh-my-opencode:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(opencode:*)"
     ]
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }

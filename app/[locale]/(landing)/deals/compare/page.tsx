@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { PublicFlowShell } from '../_components/public-flow-shell'
+import { PublicFlowShell } from '../components/public-flow-shell'
 import { getUnifiedFirms } from '@/server/deals'
 import { FirmComparisonGrid } from './components/firm-comparison-grid'
 import { getSiteOrigin } from '@/lib/site-url'

@@ -28,5 +28,20 @@ export default {
     showMore: 'Afficher plus',
     showLess: 'Afficher moins',
     showAll: 'Afficher tous',
+  },
+  blogs: {
+    title: 'Blog de Trading',
+    description: 'Analyses d\'experts, conseils de trading et analyses de marché pour vous aider à devenir un meilleur trader.',
+    searchPlaceholder: 'Rechercher des articles...',
+    noPosts: 'Aucun article trouvé',
+    readMore: 'Lire la suite →',
+    categories: {
+      all: 'Tous',
+      tradingTips: 'Conseils de Trading',
+      marketAnalysis: 'Analyse de Marché',
+      psychology: 'Psychologie',
+      riskManagement: 'Gestion des Risques',
+      platformUpdates: 'Mises à jour de la Plateforme',
+    },
   }
 } as const;

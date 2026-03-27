@@ -5,6 +5,8 @@
   "/[locale]/_updates/[slug]",
   "/[locale]/about",
   "/[locale]/authentication",
+  "/[locale]/blogs",
+  "/[locale]/blogs/[slug]",
   "/[locale]/community",
   "/[locale]/community/post/[id]",
   "/[locale]/dashboard",

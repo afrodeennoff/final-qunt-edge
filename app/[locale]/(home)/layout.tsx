@@ -1,4 +1,3 @@
-import MarketingLayoutShell from "../(landing)/components/marketing-layout-shell";
 import { PublicRootProviders } from "@/components/providers/root-providers";
 
 export default function HomeLayout({
@@ -8,9 +7,7 @@ export default function HomeLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName="w-full">
-        {children}
-      </MarketingLayoutShell>
+      {children}
     </PublicRootProviders>
   );
 }

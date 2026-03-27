@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { PublicFlowShell } from '../_components/public-flow-shell'
+import { PublicFlowShell } from '../components/public-flow-shell'
 
 import { GuideLibrary } from './components/guide-library'
 import { getSiteOrigin } from '@/lib/site-url'

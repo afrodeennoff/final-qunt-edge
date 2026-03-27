@@ -28,5 +28,20 @@ export default {
     showMore: 'Show more',
     showLess: 'Show less',
     showAll: 'Show all',
+  },
+  blogs: {
+    title: 'Trading Blog',
+    description: 'Expert insights, trading tips, and market analysis to help you become a better trader.',
+    searchPlaceholder: 'Search blog posts...',
+    noPosts: 'No blog posts found',
+    readMore: 'Read More →',
+    categories: {
+      all: 'All',
+      tradingTips: 'Trading Tips',
+      marketAnalysis: 'Market Analysis',
+      psychology: 'Psychology',
+      riskManagement: 'Risk Management',
+      platformUpdates: 'Platform Updates',
+    },
   }
 } as const;
