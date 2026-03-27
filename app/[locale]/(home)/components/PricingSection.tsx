@@ -78,9 +78,14 @@ function getPlanHref({
   return `/${locale}/authentication?next=dashboard`
 }
 
-function getPlanPriceText(plan: (typeof plans)[number], billingMode: BillingMode): string {
+function getPlanPriceText(
+  plan: (typeof plans)[number],
+  billingMode: BillingMode,
+  currency: 'USD' | 'EUR',
+  displayLocale: string,
+): string {
   const amount = billingMode === 'annual' ? plan.yearlyPrice : plan.monthlyPrice
-  return formatCurrencyAmount(amount, 'USD', { locale: 'en-US', maximumFractionDigits: amount % 1 === 0 ? 0 : 2 })
+  return formatCurrencyAmount(amount, currency, { locale: displayLocale, maximumFractionDigits: amount % 1 === 0 ? 0 : 2 })
 }
 
 function getPlanPeriodText(plan: (typeof plans)[number], periodLabel: string): string {
@@ -118,11 +123,21 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   )
 }
 
-function PlanSavingsNote({ show, savings }: { show: boolean; savings: number }) {
+function PlanSavingsNote({
+  show,
+  savings,
+  currency,
+  displayLocale,
+}: {
+  show: boolean
+  savings: number
+  currency: 'USD' | 'EUR'
+  displayLocale: string
+}) {
   if (!show) return null
   return (
     <p className="mt-2 text-xs text-foreground [font-family:var(--home-copy)]">
-      Save {formatCurrencyAmount(savings, 'USD', { locale: 'en-US', maximumFractionDigits: savings % 1 === 0 ? 0 : 2 })}/month with annual billing
+      Save {formatCurrencyAmount(savings, currency, { locale: displayLocale, maximumFractionDigits: savings % 1 === 0 ? 0 : 2 })}/month with annual billing
     </p>
   )
 }
@@ -132,16 +147,18 @@ function PlanCard({
   billingMode,
   currency,
   locale,
+  displayLocale,
   periodLabel,
 }: {
   plan: (typeof plans)[number]
   billingMode: BillingMode
-  currency: string
+  currency: 'USD' | 'EUR'
   locale: string
+  displayLocale: string
   periodLabel: string
 }) {
   const href = getPlanHref({ planName: plan.name, billingMode, currency, locale })
-  const priceText = getPlanPriceText(plan, billingMode)
+  const priceText = getPlanPriceText(plan, billingMode, currency, displayLocale)
   const periodText = getPlanPeriodText(plan, periodLabel)
   const savings = getSavingsPerMonth(plan)
   const showSavings = shouldShowSavings(billingMode, plan.monthlyPrice)
@@ -163,7 +180,7 @@ function PlanCard({
           <CardDescription className="mt-2 text-sm leading-relaxed [font-family:var(--home-copy)]">
             {plan.subtitle}
           </CardDescription>
-          <PlanSavingsNote show={showSavings} savings={savings} />
+          <PlanSavingsNote show={showSavings} savings={savings} currency={currency} displayLocale={displayLocale} />
         </CardHeader>
 
         <CardContent className="flex-1">
@@ -246,16 +263,16 @@ export default function PricingSection() {
 
         <div className="grid gap-8 lg:grid-cols-3">
           {plans.map((plan) => (
-              <PlanCard
-                key={plan.name}
-                plan={plan}
-                billingMode={billingMode}
-                currency={currency}
-                locale={locale}
-                displayLocale={displayLocale}
-                periodLabel={periodLabel}
-              />
-            ))}
+            <PlanCard
+              key={plan.name}
+              plan={plan}
+              billingMode={billingMode}
+              currency={currency}
+              locale={locale}
+              displayLocale={displayLocale}
+              periodLabel={periodLabel}
+            />
+          ))}
         </div>
         <p className="mt-6 text-center text-xs text-foreground/80 [font-family:var(--home-copy)]">
           Transparent pricing. No hidden data limits. Upgrade only when your review process needs more depth.
