@@ -28,6 +28,8 @@
     --mk-border: 240 12% 10%;
     --mk-text: 0 0% 88%;
     --mk-text-muted: 0 0% 44%;
+    --mk-lime: 76 86% 59%;
+    --mk-lime-ink: 0 0% 10%;
 
     /* ===== BACKGROUND HIERARCHY (7 levels) ===== */
     --bg-base: 240 8% 1.5%;

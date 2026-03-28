@@ -12,6 +12,11 @@
   - switched spotlight styling to marketing dark tokens (`--mk-*`) for cleaner contrast
   - updated accent treatment to lime-toned (`--chart-3`) controls, copy, CTA, and indicators
   - tightened spacing/scale in the headline and center card composition
+- Completed an exact-match composition pass:
+  - plain chevron controls (no circular chrome), no bottom dot controls
+  - larger rounded center card with dashed vertical divider and stronger black stage
+  - left panel uses mono-styled firm name + larger orb, right panel uses centered promo stack + large lime pill CTA
+  - side previews converted to faded full-card silhouettes behind the active card
 
 ### Verification
 - `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx` passes.

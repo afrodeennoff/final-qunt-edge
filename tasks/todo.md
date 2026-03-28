@@ -14,6 +14,7 @@ Verification:
 - The section uses filtered live deals (sorted by discount) and supports arrow navigation plus dot navigation.
 - CTA behavior remains consistent with existing deal cards (`claimUrl` opens externally when present, otherwise routes to firm page).
 - Follow-up tuning pass (2026-03-29): adjusted spacing, color system usage, and typography to align more closely with the provided visual reference (dark stage + lime accents).
+- Exact-match pass (2026-03-29): removed circular arrow chrome, removed bottom dots, resized center card and CTA, switched firm label to mono style, and replaced side teaser mini-cards with full faded side-card silhouettes to mirror the reference composition.
 
 ## Task: API prerender-noise hardening (2026-03-28)
 
