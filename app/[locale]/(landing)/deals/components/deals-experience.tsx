@@ -7,9 +7,13 @@ import {
   BadgePercent,
   Banknote,
   Building2,
+  ChevronLeft,
+  ChevronRight,
   Copy,
+  Flame,
   Search,
   Sparkles,
+  Star,
   Wallet,
 } from 'lucide-react'
 import type {
@@ -131,6 +135,10 @@ function getTopPayoutFirms(firms: UnifiedFirm[]): UnifiedFirm[] {
 
 function getTopDiscountDeal(deals: DealItem[]): DealItem | null {
   return deals.length > 0 ? deals[0] : null
+}
+
+function getSpotlightDeals(deals: DealItem[]): DealItem[] {
+  return sortDeals(deals, 'discount').slice(0, 8)
 }
 
 function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
@@ -298,6 +306,7 @@ function DealsBoard({
     selectedDiscount !== 'all' ||
     sortKey !== 'discount'
   const topDiscountDeal = getTopDiscountDeal(filteredDeals)
+  const spotlightDeals = useMemo(() => getSpotlightDeals(filteredDeals), [filteredDeals])
   const expiringCount = filteredDeals.filter(isExpiringDeal).length
 
   const resetFilters = () => {
@@ -312,6 +321,15 @@ function DealsBoard({
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
+
+        {spotlightDeals.length > 0 ? (
+          <BiggestDealsCarousel
+            locale={locale}
+            deals={spotlightDeals}
+            copiedCode={copiedCode}
+            onCopyCode={onCopyCode}
+          />
+        ) : null}
 
         <section className="grid gap-4 lg:grid-cols-3">
           <InsightCard
@@ -363,6 +381,172 @@ function DealsBoard({
           hadFetchError={hadFetchError}
         />
       </div>
+    </div>
+  )
+}
+
+function BiggestDealsCarousel({
+  locale,
+  deals,
+  copiedCode,
+  onCopyCode,
+}: {
+  locale: string
+  deals: DealItem[]
+  copiedCode: string | null
+  onCopyCode: (code: string) => void
+}) {
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  if (deals.length === 0) return null
+
+  const normalizedActiveIndex = activeIndex % deals.length
+  const activeDeal = deals[normalizedActiveIndex]
+  const previousDeal = deals[(normalizedActiveIndex - 1 + deals.length) % deals.length]
+  const nextDeal = deals[(normalizedActiveIndex + 1) % deals.length]
+  const claimHref = activeDeal.claimUrl || `/${locale}/firm/${activeDeal.firmSlug}`
+  const isExternalClaim = Boolean(activeDeal.claimUrl)
+
+  const goToPrevious = () => {
+    setActiveIndex((current) => (current - 1 + deals.length) % deals.length)
+  }
+
+  const goToNext = () => {
+    setActiveIndex((current) => (current + 1) % deals.length)
+  }
+
+  return (
+    <section className="relative overflow-hidden rounded-3xl border border-border bg-foreground p-5 text-background shadow-[0_38px_120px_-76px_rgba(0,0,0,0.95)] sm:p-7">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-x-0 top-0 h-28 bg-background/5" />
+        <div className="absolute -left-16 top-10 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-background/10 blur-3xl" />
+      </div>
+
+      <div className="relative flex items-center justify-between gap-3">
+        <h2 className="text-2xl font-semibold tracking-tight text-background sm:text-4xl">
+          Today&apos;s Biggest &amp; Largest Deals!
+        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={goToPrevious}
+            aria-label="Show previous deal spotlight"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-background/20 bg-background/10 text-primary transition-colors hover:bg-background/20"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={goToNext}
+            aria-label="Show next deal spotlight"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-background/20 bg-background/10 text-primary transition-colors hover:bg-background/20"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="relative mt-6">
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden items-center xl:flex">
+          <BackgroundDealTeaser deal={previousDeal} align="left" />
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden items-center xl:flex">
+          <BackgroundDealTeaser deal={nextDeal} align="right" />
+        </div>
+
+        <div className="relative mx-auto max-w-5xl rounded-3xl border border-background/20 bg-background/5 p-5 backdrop-blur-sm sm:p-7">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              <div className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/40 bg-primary/15 text-primary">
+                <Flame className="h-4 w-4" />
+              </div>
+              <div className="relative mt-5 h-28 w-28">
+                <div className="absolute -inset-3 rounded-full bg-primary/30 blur-2xl" />
+                <div className="absolute inset-0 rounded-full border border-background/20 bg-background/15" />
+                <div className="absolute inset-3 rounded-full bg-background/90" />
+              </div>
+              <p className="mt-5 text-2xl font-semibold tracking-tight">{activeDeal.firmName}</p>
+              <p className="mt-1 text-sm text-background/75">
+                {activeDeal.platform} • {activeDeal.category}
+              </p>
+              <div className="mt-3 flex items-center gap-1 text-primary">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Star key={index} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden h-56 w-px bg-background/20 lg:block" />
+
+            <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+              <p className="text-5xl font-semibold tracking-tight sm:text-6xl">{activeDeal.discountPercent}% Off</p>
+              <p className="mt-3 max-w-xl text-base leading-7 text-background/80">
+                Big savings inside: {activeDeal.discountPercent}% off on {activeDeal.firmName} accounts.
+              </p>
+              <button
+                type="button"
+                onClick={() => onCopyCode(activeDeal.couponCode)}
+                className="mt-6 text-base font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+              >
+                {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy Code: ${activeDeal.couponCode}`}
+              </button>
+              {isExternalClaim ? (
+                <a
+                  href={claimHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex min-w-52 items-center justify-center rounded-full bg-primary px-8 py-3 text-lg font-semibold text-primary-foreground transition hover:brightness-110"
+                >
+                  Get Deal
+                </a>
+              ) : (
+                <Link
+                  href={claimHref}
+                  className="mt-6 inline-flex min-w-52 items-center justify-center rounded-full bg-primary px-8 py-3 text-lg font-semibold text-primary-foreground transition hover:brightness-110"
+                >
+                  Get Deal
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative mt-6 flex items-center justify-center gap-2">
+        {deals.map((deal, index) => (
+          <button
+            key={deal.id}
+            type="button"
+            aria-label={`Show ${deal.firmName} spotlight`}
+            onClick={() => setActiveIndex(index)}
+            className={`h-2.5 rounded-full transition-all ${
+              index === normalizedActiveIndex ? 'w-9 bg-primary' : 'w-2.5 bg-background/35 hover:bg-background/50'
+            }`}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function BackgroundDealTeaser({
+  deal,
+  align,
+}: {
+  deal: DealItem
+  align: 'left' | 'right'
+}) {
+  return (
+    <div
+      className={`w-56 rounded-2xl border border-background/10 bg-background/5 p-4 opacity-45 backdrop-blur-sm ${
+        align === 'left' ? 'translate-x-[-30%]' : 'translate-x-[30%]'
+      }`}
+    >
+      <p className="text-[10px] uppercase tracking-[0.18em] text-background/60">Deal preview</p>
+      <p className="mt-3 text-lg font-semibold text-background/80">{deal.firmName}</p>
+      <p className="mt-1 text-3xl font-semibold text-background/70">{deal.discountPercent}% Off</p>
+      <p className="mt-1 text-xs text-background/60">{deal.platform}</p>
     </div>
   )
 }

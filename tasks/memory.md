@@ -1,5 +1,21 @@
 # Session Memory (2026-03-28)
 
+## Current Session: Deals Spotlight UI (2026-03-29)
+
+### Accomplishments
+- Added a new featured spotlight carousel to `app/[locale]/(landing)/deals/components/deals-experience.tsx` that matches the requested visual style (dark stage, prominent center card, side previews, arrow controls, dot navigation).
+- Wired the spotlight section to live filtered deals data via `getSpotlightDeals(filteredDeals)` (sorted by highest discount).
+- Preserved existing conversion behavior:
+  - copy coupon action uses the existing `onCopyCode` flow
+  - CTA opens `claimUrl` externally when present, otherwise routes to `/${locale}/firm/${firmSlug}`
+
+### Verification
+- `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx` passes.
+- `npm run typecheck` passes.
+
+### Blockers
+- None.
+
 ## Current Session: Build Rescue Continuation (Prerender + Admin/Auth Stabilization)
 
 ### Accomplishments

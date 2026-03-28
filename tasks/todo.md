@@ -1,3 +1,19 @@
+## Task: Deals page spotlight carousel (2026-03-29)
+
+- [x] Review the current `deals-experience` layout and identify the insertion point for a high-impact “biggest deals” spotlight section.
+- [x] Implement a carousel-style spotlight block (headline, previous/next controls, featured deal details, coupon copy action, CTA) driven by live deals data.
+- [x] Keep the new section responsive and compatible with existing deals filters/state.
+- [x] Run targeted verification (`eslint`, `typecheck`) for the updated file.
+
+Verification:
+- `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx` passes.
+- `npm run typecheck` passes.
+
+## Review
+- Added a new “Today’s Biggest & Largest Deals!” spotlight carousel section under the deals hero in `deals-experience.tsx`.
+- The section uses filtered live deals (sorted by discount) and supports arrow navigation plus dot navigation.
+- CTA behavior remains consistent with existing deal cards (`claimUrl` opens externally when present, otherwise routes to firm page).
+
 ## Task: API prerender-noise hardening (2026-03-28)
 
 - [x] Reproduce and capture the exact build-time errors for `/api/deals`, `/api/deals/unified`, `/api/email/unsubscribe`, `/api/health`, and `/api/propfirms/stats`.
