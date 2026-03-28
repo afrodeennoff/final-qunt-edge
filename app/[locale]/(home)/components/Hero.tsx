@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { BadgeV2 } from "@/components/ui/v2"
+import { ButtonV2 } from '@/components/ui/v2'
 import DashboardPreview from './DashboardPreview'
 
 export default function Hero({ locale }: { locale: string }) {
@@ -33,7 +31,7 @@ export default function Hero({ locale }: { locale: string }) {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 animate-fade-in-delayed-3">
-          <Button
+          <ButtonV2
             asChild
             size="lg"
             className="bg-primary hover:bg-primary/90 btn-primary-glow rounded-xl px-7 h-12 text-[0.95rem] font-medium w-full sm:w-auto"
@@ -41,8 +39,8 @@ export default function Hero({ locale }: { locale: string }) {
             <Link href={`/${locale}/authentication?next=dashboard`}>
               Start Free Audit
             </Link>
-          </Button>
-          <Button
+          </ButtonV2>
+          <ButtonV2
             asChild
             size="lg"
             variant="outline"
@@ -52,7 +50,7 @@ export default function Hero({ locale }: { locale: string }) {
               Watch Demo
               <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
-          </Button>
+          </ButtonV2>
         </div>
 
         <p className="text-[0.8rem] text-muted-foreground/70 tracking-wide animate-fade-in-delayed-3">
@@ -66,10 +64,10 @@ export default function Hero({ locale }: { locale: string }) {
       
       <div className="absolute bottom-0 left-0 right-0 py-7 bg-gradient-to-t from-background via-background/80 to-transparent">
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground/70">
-          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'NINJA|TRADER'].map((broker) => (
+          {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'NinjaTrader'].map((broker) => (
             <span
               key={broker}
-              className={broker === 'NINJA|TRADER'
+              className={broker === 'NinjaTrader'
                 ? 'text-primary font-medium'
                 : 'hover:text-foreground transition-colors duration-200'}
             >

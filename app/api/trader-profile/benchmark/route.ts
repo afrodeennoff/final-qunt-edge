@@ -14,8 +14,6 @@ const sanitizeErrorMessage = (error: unknown): string => {
   return "Unknown error"
 }
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
 const BENCHMARK_REFRESH_WINDOW_MS = 15 * 60 * 1000
 
 type BenchmarkSnapshotPayload = {

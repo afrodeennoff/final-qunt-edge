@@ -1,10 +1,17 @@
 'use server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { unstable_cache } from 'next/cache'
-import { updateTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+
+const PROP_FIRMS_CACHE_LIFETIME = {
+  stale: 3_600,
+  revalidate: 3_600,
+  expire: 7_200,
+} as const
+
+const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 
 const _listPropFirms = async () => {
   if (!hasConfiguredDatabaseConnection) {
@@ -33,11 +40,12 @@ const _listPropFirms = async () => {
   })
 }
 
-export const listPropFirms = unstable_cache(
-  _listPropFirms,
-  ['prop-firms-list'],
-  { revalidate: 3600, tags: ['prop-firms'] }
-)
+async function listPropFirmsCached() {
+  'use cache'
+  cacheLife(PROP_FIRMS_CACHE_LIFETIME)
+  cacheTag(PROP_FIRMS_CACHE_TAG)
+  return _listPropFirms()
+}
 
 export type PropFirmBannerItem = {
   id: string
@@ -111,11 +119,12 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
   })
 }
 
-export const listPropFirmBannerItems = unstable_cache(
-  _listPropFirmBannerItems,
-  ['prop-firms-banner-items'],
-  { revalidate: 3600, tags: ['prop-firms'] }
-)
+async function listPropFirmBannerItemsCached() {
+  'use cache'
+  cacheLife(PROP_FIRMS_CACHE_LIFETIME)
+  cacheTag(PROP_FIRMS_CACHE_TAG)
+  return _listPropFirmBannerItems()
+}
 
 const _getPropFirmBySlug = async (slug: string) => {
   if (!hasConfiguredDatabaseConnection) {
@@ -132,11 +141,24 @@ const _getPropFirmBySlug = async (slug: string) => {
   })
 }
 
-export const getPropFirmBySlug = unstable_cache(
-  _getPropFirmBySlug,
-  ['prop-firm-by-slug'],
-  { revalidate: 3600, tags: ['prop-firms'] }
-)
+async function getPropFirmBySlugCached(slug: string) {
+  'use cache'
+  cacheLife(PROP_FIRMS_CACHE_LIFETIME)
+  cacheTag(PROP_FIRMS_CACHE_TAG, `prop-firm-${slug}`)
+  return _getPropFirmBySlug(slug)
+}
+
+export async function listPropFirms() {
+  return listPropFirmsCached()
+}
+
+export async function listPropFirmBannerItems() {
+  return listPropFirmBannerItemsCached()
+}
+
+export async function getPropFirmBySlug(slug: string) {
+  return getPropFirmBySlugCached(slug)
+}
 
 export type PropFirmCreateInput = {
   slug: string

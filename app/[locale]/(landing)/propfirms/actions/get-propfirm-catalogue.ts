@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import type { PropfirmCatalogueData, PropfirmCatalogueStats, PropfirmPayoutStats } from './types'
 import type { Timeframe } from './timeframe-utils'
 import { getTimeframeDateRange } from './timeframe-utils'
@@ -101,6 +101,10 @@ export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMo
         }
       ]
     }
+  }
+
+  if (!hasConfiguredDatabaseConnection) {
+    return { stats: [] }
   }
 
   try {

@@ -2,7 +2,7 @@
 
 import { Trade as PrismaTrade, Prisma } from '@/prisma/generated/prisma'
 import { Trade as NormalizedTrade } from '@/lib/data-types'
-import { updateTag, unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { getDatabaseUserId, getUserId } from './auth'
 import { isAfter } from 'date-fns'
 import { prisma } from '@/lib/prisma'
@@ -11,6 +11,12 @@ import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import { invalidateCacheNamespace } from '@/lib/redis-client'
+
+const TRADE_PAGE_CACHE_LIFETIME = {
+  stale: 3_600,
+  revalidate: 3_600,
+  expire: 7_200,
+} as const
 
 const importTradeSchema = z.object({
   accountNumber: z.string().min(1, 'Account number is required'),
@@ -153,7 +159,24 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
   throw new Error('Unable to resolve writable user')
 }
 
-function generateTradeUUID(trade: Partial<PrismaTrade> | any): string {
+type TradeUUIDSource = {
+  userId?: string
+  accountNumber?: string
+  instrument?: string
+  entryDate?: Date | string
+  closeDate?: Date | string | null
+  entryPrice?: { toString: () => string } | string | number
+  closePrice?: { toString: () => string } | string | number
+  quantity?: { toString: () => string } | string | number
+  entryId?: string | null
+  closeId?: string | null
+  timeInPosition?: { toString: () => string } | string | number
+  side?: string | null
+  pnl?: { toString: () => string } | string | number
+  commission?: { toString: () => string } | string | number
+}
+
+function generateTradeUUID(trade: TradeUUIDSource): string {
   // Use multiple unique identifiers plus data fingerprint to minimize collision risk
   // entryId + closeId from broker should be globally unique per account
   const tradeSignature = [
@@ -179,8 +202,19 @@ function generateTradeUUID(trade: Partial<PrismaTrade> | any): string {
   return uuidv5(tradeSignature, TRADE_NAMESPACE)
 }
 
+function getTradeLabel(rawTrade: unknown): string {
+  if (typeof rawTrade === 'object' && rawTrade !== null && 'instrument' in rawTrade) {
+    const instrument = (rawTrade as { instrument?: unknown }).instrument
+    if (typeof instrument === 'string' && instrument.trim()) {
+      return instrument
+    }
+  }
+
+  return 'unknown'
+}
+
 async function saveTradesForResolvedUser(
-  data: any[],
+  data: unknown[],
   userId: string,
   rawUserId: string
 ): Promise<TradeResponse> {
@@ -192,14 +226,14 @@ async function saveTradesForResolvedUser(
 
   try {
     const now = new Date()
-    const userAssignedTrades: any[] = []
+    const userAssignedTrades: Prisma.TradeCreateManyInput[] = []
     const validationErrors: string[] = []
 
     for (const rawTrade of data) {
       const validation = importTradeSchema.safeParse(rawTrade)
 
       if (!validation.success) {
-        validationErrors.push(`Validation failed for trade ${rawTrade.instrument}: ${validation.error.message}`)
+        validationErrors.push(`Validation failed for trade ${getTradeLabel(rawTrade)}: ${validation.error.message}`)
         continue
       }
 
@@ -310,16 +344,17 @@ async function saveTradesForResolvedUser(
 }
 
 export async function saveTradesAction(
-  data: any[],
+  data: unknown[],
   _options?: { userId?: string }
 ): Promise<TradeResponse> {
+  void _options
   const rawUserId = await getUserId()
   const userId = await resolveWritableUserId(rawUserId)
   return saveTradesForResolvedUser(data, userId, rawUserId)
 }
 
 export async function saveTradesForUserAction(
-  data: any[],
+  data: unknown[],
   rawUserId: string
 ): Promise<TradeResponse> {
   const userId = await resolveWritableUserId(rawUserId)
@@ -454,83 +489,95 @@ export async function getTradesAction(
     updateTag(tag)
   }
 
-  const getCachedTrades = unstable_cache(
-    async (uid: string, p: number, ps: number, computeStats: boolean) => {
-      const where: Prisma.TradeWhereInput = { userId: uid }
-
-      const [trades, total] = await Promise.all([
-        prisma.trade.findMany({
-          where,
-          orderBy: { entryDate: 'desc' },
-          skip: (p - 1) * ps,
-          take: ps,
-          select: {
-            id: true,
-            accountNumber: true,
-            instrument: true,
-            side: true,
-            quantity: true,
-            entryPrice: true,
-            closePrice: true,
-            pnl: true,
-            commission: true,
-            entryDate: true,
-            closeDate: true,
-            timeInPosition: true,
-            comment: true,
-            tags: true,
-            groupId: true,
-            userId: true,
-            videoUrl: true,
-            createdAt: true,
-          }
-        }),
-        prisma.trade.count({ where })
-      ])
-
-      const serializedTrades = trades.map(serializeTrade);
-      const totalPages = Math.ceil(total / ps);
-
-      const result: PaginatedTrades & { statistics?: PrecomputedStats } = {
-        trades: serializedTrades,
-        metadata: {
-          total,
-          page: p,
-          totalPages,
-          hasMore: p < totalPages
-        }
-      };
-
-      // Compute stats on server for first page (most common case)
-      if (computeStats && p === 1) {
-        // Fetch all trades for stats calculation (cached separately)
-        const allTrades = await prisma.trade.findMany({
-          where,
-          orderBy: { entryDate: 'desc' },
-          select: {
-            pnl: true,
-            commission: true,
-            timeInPosition: true,
-          }
-        });
-        result.statistics = computeStatsFromTrades(allTrades.map(serializeTrade));
-      }
-
-      return result;
-    },
-    [`trades-${currentUserId}-page-${page}-size-${pageSize}-stats-${includeStats}`],
-    {
-      tags: [tag, `trades-${currentUserId}`],
-      revalidate: 3600
-    }
-  )
-
   try {
-    return await getCachedTrades(currentUserId, page, pageSize, includeStats)
+    return await (forceRefresh
+      ? loadTradesPage(currentUserId, page, pageSize, includeStats)
+      : getTradesPageCached(currentUserId, page, pageSize, includeStats))
   } catch (error) {
     logger.error('getTradesAction failed', { error })
     throw error
   }
+}
+
+async function loadTradesPage(
+  uid: string,
+  page: number,
+  pageSize: number,
+  computeStats: boolean
+): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
+  const where: Prisma.TradeWhereInput = { userId: uid }
+
+  const [trades, total] = await Promise.all([
+    prisma.trade.findMany({
+      where,
+      orderBy: { entryDate: 'desc' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      select: {
+        id: true,
+        accountNumber: true,
+        instrument: true,
+        side: true,
+        quantity: true,
+        entryPrice: true,
+        closePrice: true,
+        pnl: true,
+        commission: true,
+        entryDate: true,
+        closeDate: true,
+        timeInPosition: true,
+        comment: true,
+        tags: true,
+        groupId: true,
+        userId: true,
+        videoUrl: true,
+        createdAt: true,
+      }
+    }),
+    prisma.trade.count({ where })
+  ])
+
+  const serializedTrades = trades.map(serializeTrade)
+  const totalPages = Math.ceil(total / pageSize)
+
+  const result: PaginatedTrades & { statistics?: PrecomputedStats } = {
+    trades: serializedTrades,
+    metadata: {
+      total,
+      page,
+      totalPages,
+      hasMore: page < totalPages
+    }
+  }
+
+  // Compute stats on server for first page (most common case)
+  if (computeStats && page === 1) {
+    // Fetch all trades for stats calculation (cached separately)
+    const allTrades = await prisma.trade.findMany({
+      where,
+      orderBy: { entryDate: 'desc' },
+      select: {
+        pnl: true,
+        commission: true,
+        timeInPosition: true,
+      }
+    })
+    result.statistics = computeStatsFromTrades(allTrades.map(serializeTrade))
+  }
+
+  return result
+}
+
+async function getTradesPageCached(
+  uid: string,
+  page: number,
+  pageSize: number,
+  computeStats: boolean
+): Promise<PaginatedTrades & { statistics?: PrecomputedStats }> {
+  'use cache'
+  cacheLife(TRADE_PAGE_CACHE_LIFETIME)
+  cacheTag(`trades-${uid}`)
+  return loadTradesPage(uid, page, pageSize, computeStats)
 }
 
 export async function getTradeImagesAction(tradeId: string): Promise<{
@@ -566,6 +613,15 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
   const userId = await resolveWritableUserId(await getUserId())
   if (!userId) return 0
 
+  const {
+    entryDateOffset,
+    closeDateOffset,
+    instrumentTrim,
+    instrumentPrefix,
+    instrumentSuffix,
+    ...standardUpdates
+  } = update
+
   try {
     const ownedTrades = await prisma.trade.findMany({
       where: { id: { in: tradesIds }, userId },
@@ -575,32 +631,32 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
       throw new Error('Forbidden')
     }
 
-    if (update.entryDateOffset || update.closeDateOffset || update.instrumentTrim || update.instrumentPrefix || update.instrumentSuffix) {
+    if (entryDateOffset || closeDateOffset || instrumentTrim || instrumentPrefix || instrumentSuffix) {
       const trades = await prisma.trade.findMany({
         where: { id: { in: tradesIds }, userId },
         select: { id: true, entryDate: true, closeDate: true, instrument: true }
       })
 
       const updateOps = trades.map((trade) => {
-        const data: any = {}
+        const data = {} as Prisma.TradeUpdateManyMutationInput
 
-        if (update.entryDateOffset) {
+        if (entryDateOffset) {
           const d = new Date(trade.entryDate)
-          d.setHours(d.getHours() + update.entryDateOffset)
+          d.setHours(d.getHours() + entryDateOffset)
           data.entryDate = formatTimestamp(d.toISOString())
         }
-        if (update.closeDateOffset && trade.closeDate) {
+        if (closeDateOffset && trade.closeDate) {
           const d = new Date(trade.closeDate)
-          d.setHours(d.getHours() + update.closeDateOffset)
+          d.setHours(d.getHours() + closeDateOffset)
           data.closeDate = formatTimestamp(d.toISOString())
         }
 
         let newInst = trade.instrument
-        if (update.instrumentTrim) {
-          newInst = newInst.substring(update.instrumentTrim.fromStart, newInst.length - update.instrumentTrim.fromEnd)
+        if (instrumentTrim) {
+          newInst = newInst.substring(instrumentTrim.fromStart, newInst.length - instrumentTrim.fromEnd)
         }
-        if (update.instrumentPrefix) newInst = update.instrumentPrefix + newInst
-        if (update.instrumentSuffix) newInst = newInst + update.instrumentSuffix
+        if (instrumentPrefix) newInst = instrumentPrefix + newInst
+        if (instrumentSuffix) newInst = newInst + instrumentSuffix
 
         if (newInst !== trade.instrument) data.instrument = newInst
 
@@ -616,19 +672,20 @@ export async function updateTradesAction(tradesIds: string[], update: Partial<No
       }
     }
 
-    const {
-      entryDateOffset, closeDateOffset, instrumentTrim, instrumentPrefix, instrumentSuffix,
-      ...standardUpdates
-    } = update
-
     if (Object.keys(standardUpdates).length > 0) {
-      const data: any = { ...standardUpdates }
+      const data = { ...standardUpdates } as Prisma.TradeUpdateManyMutationInput
       if (standardUpdates.entryPrice !== undefined) data.entryPrice = new Prisma.Decimal(standardUpdates.entryPrice)
-      if (standardUpdates.closePrice !== undefined) data.closePrice = standardUpdates.closePrice !== null ? new Prisma.Decimal(standardUpdates.closePrice) : null
+      if (standardUpdates.closePrice !== undefined && standardUpdates.closePrice !== null) {
+        data.closePrice = new Prisma.Decimal(standardUpdates.closePrice)
+      }
       if (standardUpdates.pnl !== undefined) data.pnl = new Prisma.Decimal(standardUpdates.pnl)
-      if (standardUpdates.commission !== undefined) data.commission = standardUpdates.commission !== null ? new Prisma.Decimal(standardUpdates.commission) : null
+      if (standardUpdates.commission !== undefined && standardUpdates.commission !== null) {
+        data.commission = new Prisma.Decimal(standardUpdates.commission)
+      }
       if (standardUpdates.quantity !== undefined) data.quantity = new Prisma.Decimal(standardUpdates.quantity)
-      if (standardUpdates.timeInPosition !== undefined) data.timeInPosition = standardUpdates.timeInPosition !== null ? new Prisma.Decimal(standardUpdates.timeInPosition) : null
+      if (standardUpdates.timeInPosition !== undefined && standardUpdates.timeInPosition !== null) {
+        data.timeInPosition = new Prisma.Decimal(standardUpdates.timeInPosition)
+      }
 
       const updated = await prisma.trade.updateMany({
         where: { id: { in: tradesIds }, userId },

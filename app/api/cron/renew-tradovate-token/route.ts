@@ -3,8 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 import { requireCronAuth, toErrorResponse } from '@/server/authz';
 
-export const dynamic = 'force-dynamic';
-
 type SynchronizationRecord = {
   id: string
   userId: string

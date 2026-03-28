@@ -11,6 +11,7 @@ import { getAiPolicy } from "@/lib/ai/policy";
 import { apiError } from "@/lib/api-response";
 import { guardAiRequest } from "@/lib/ai/route-guard";
 import { getAiLanguageModelById } from "@/lib/ai/client";
+import { isSupportModelId } from "@/lib/ai/support-models";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import {
   estimateTokenCountFromMessages,
@@ -29,12 +30,6 @@ const requestSchema = z.object({
   model: z.string().optional(),
   webSearch: z.boolean().optional().default(false),
 });
-
-const SUPPORT_MODEL_ALLOWLIST = new Set([
-  "glm-4.7-flash",
-  "gpt-4o-mini",
-  "gpt-4.1-mini",
-]);
 
 export async function POST(req: NextRequest) {
   const policy = getAiPolicy("support");
@@ -63,7 +58,7 @@ export async function POST(req: NextRequest) {
       return apiError("PAYLOAD_TOO_LARGE", `Too many messages. Maximum is ${MAX_SUPPORT_MESSAGES}.`, 413);
     }
 
-    selectedModel = model && SUPPORT_MODEL_ALLOWLIST.has(model) ? model : policy.model;
+    selectedModel = model && isSupportModelId(model) ? model : policy.model;
     const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
     const webSearchFallback = webSearch && !webSearchModel;
     if (!process.env.OPENROUTER_API_KEY) {

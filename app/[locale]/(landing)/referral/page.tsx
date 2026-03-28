@@ -40,8 +40,6 @@ export async function generateMetadata({
   };
 }
 
-export const revalidate = 1800;
-
 export default function ReferralPage() {
   return <ReferralPageClient />;
 }

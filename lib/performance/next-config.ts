@@ -51,6 +51,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
     poweredByHeader: false,
     reactStrictMode: true,
     serverExternalPackages: [],
+    cacheComponents: true,
     // Bundle optimization - tree shake heavy libraries
     experimental: {
       ...(cpus ? { cpus } : {}),

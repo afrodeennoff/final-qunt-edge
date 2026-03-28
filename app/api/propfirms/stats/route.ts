@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 
-export const dynamic = 'force-dynamic'
-
 export async function GET() {
   try {
     const data = await getPropfirmCatalogueData('allTime')

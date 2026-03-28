@@ -1,20 +1,28 @@
-import { setStaticParamsLocale } from "next-international/server";
+import { Suspense } from "react";
 import { I18nProviderClient } from "@/locales/client";
 import ConsentBannerLazy from "@/components/lazy/consent-banner-lazy";
+import LocaleLayoutContent from "./layout-content";
 
-export default async function RootLayout(props: {
+const FALLBACK_LOCALE = "en";
+
+export default function RootLayout(props: {
   params: Promise<{ locale: string }>;
   children: React.ReactNode;
 }) {
-  const params = await props.params;
-  const { locale } = params;
   const { children } = props;
-  setStaticParamsLocale(locale);
 
   return (
-    <I18nProviderClient locale={locale}>
-      <ConsentBannerLazy />
-      {children}
-    </I18nProviderClient>
+    <Suspense
+      fallback={
+        <I18nProviderClient locale={FALLBACK_LOCALE}>
+          <ConsentBannerLazy />
+          {children}
+        </I18nProviderClient>
+      }
+    >
+      <LocaleLayoutContent params={props.params}>
+        {children}
+      </LocaleLayoutContent>
+    </Suspense>
   );
 }

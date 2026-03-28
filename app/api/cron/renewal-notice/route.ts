@@ -20,8 +20,6 @@ const sanitizeErrorMessage = (error: unknown): string => {
   return "Unknown error"
 }
 
-export const dynamic = 'force-dynamic'
-
 // Utility function to get date locale
 const getDateLocale = (language: string) => {
   return language === 'fr' ? fr : enUS

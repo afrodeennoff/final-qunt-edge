@@ -10,6 +10,7 @@ import React, {
   useRef,
 } from "react";
 import {
+  Prisma,
   Trade as PrismaTrade,
   Group as PrismaGroup,
   Account as PrismaAccount,
@@ -519,7 +520,7 @@ export const DataProvider: React.FC<{
           15000,
           "loadSharedData"
         );
-        if (!sharedData.error) {
+        if (!sharedData.error && sharedData.params) {
           const sharedAccounts = syncSharedDataState({
             params: sharedData.params,
             trades: sharedData.trades as Trade[],
@@ -1697,7 +1698,11 @@ export const DataProvider: React.FC<{
       const previousAccounts = [...accounts];
 
       try {
-        const normalizedPayout = normalizePayoutForClient(payout as any);
+        const normalizedPayout = normalizePayoutForClient(payout);
+        const payoutForSave: PrismaPayout = {
+          ...payout,
+          amount: new Prisma.Decimal(payout.amount),
+        };
 
         // Update the account with the new/updated payout immediately
         const updatedAccounts = accounts.map((account: Account) => {
@@ -1744,7 +1749,7 @@ export const DataProvider: React.FC<{
         }
 
         // Perform server action in background
-        await savePayoutAction(payout as any);
+        await savePayoutAction(payoutForSave);
       } catch (error) {
         logger.error({ error }, "Error saving payout, rolling back");
         setAccounts(previousAccounts);
@@ -1861,8 +1866,7 @@ export const DataProvider: React.FC<{
             : trade
         );
         setTrades(updatedTrades);
-        // Cast to any to bypass strict Decimal vs Number mismatch in server action signature
-        const updatedCount = await updateTradesAction(tradeIds, update as any);
+        const updatedCount = await updateTradesAction(tradeIds, update);
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
             `Failed to persist trade updates (updated ${updatedCount}/${tradeIds.length})`,

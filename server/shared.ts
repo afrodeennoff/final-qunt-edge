@@ -2,8 +2,8 @@
 
 import { TickDetails } from '@/prisma/generated/prisma'
 import { Prisma } from '@/prisma/generated/prisma'
-import { normalizeTradesForClient, Trade } from '@/lib/data-types'
-import { unstable_cache, updateTag } from 'next/cache'
+import { normalizeTradesForClient, Trade, type TradeInput } from '@/lib/data-types'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { GroupWithAccounts } from './groups'
 import { createSecureSlug } from '@/lib/security/slug'
@@ -34,6 +34,14 @@ interface DateRange {
   from: string;
   to?: string;
 }
+
+const SHARED_VIEW_CACHE_LIFETIME = {
+  stale: 900,
+  revalidate: 900,
+  expire: 3_600,
+} as const
+
+const SHARED_VIEW_CACHE_TAG = (slug: string) => `shared-view-${slug}` as const
 
 export async function createShared(data: SharedCreateParams): Promise<string> {
   try {
@@ -97,110 +105,8 @@ export async function createShared(data: SharedCreateParams): Promise<string> {
 export async function getShared(slug: string): Promise<{ params: SharedParams, trades: Trade[], groups: GroupWithAccounts[] } | null> {
   if (!slug) return null
 
-  // Define the cached fetcher
-  const getCachedShared = unstable_cache(
-    async (slug: string) => {
-      const shared = await prisma.shared.findFirst({
-        where: {
-          slug,
-          isPublic: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gt: new Date() } },
-          ],
-        },
-      })
-
-      if (!isSharedAccessible(shared)) return null
-      if (!shared) return null
-
-      // Parse the date range
-      const dateRange = shared.dateRange as unknown as DateRange
-      if (!dateRange?.from) {
-        throw new Error('Invalid date range: from date is required')
-      }
-      const fromDate = new Date(dateRange.from)
-      const toDate = dateRange.to ? new Date(dateRange.to) : undefined
-
-      // Parallel fetch of trades, tick details, and groups
-      const [trades, tickDetails, groups] = await Promise.all([
-        prisma.trade.findMany({
-          where: {
-            userId: shared.userId,
-            ...(shared.accountNumbers.length > 0 && {
-              accountNumber: {
-                in: shared.accountNumbers,
-              },
-            }),
-            entryDate: {
-              gte: fromDate.toISOString(),
-              ...(toDate && { lte: toDate.toISOString() })
-            }
-          },
-          orderBy: {
-            entryDate: 'desc',
-          },
-          select: {
-            id: true,
-            accountNumber: true,
-            instrument: true,
-            side: true,
-            quantity: true,
-            entryPrice: true,
-            closePrice: true,
-            pnl: true,
-            commission: true,
-            entryDate: true,
-            closeDate: true,
-            timeInPosition: true,
-            comment: true,
-            tags: true,
-            groupId: true,
-            userId: true,
-            videoUrl: true,
-            createdAt: true,
-          }
-        }),
-        prisma.tickDetails.findMany(),
-        prisma.group.findMany({
-          where: {
-            userId: shared.userId,
-          },
-          include: {
-            accounts: true,
-          },
-        })
-      ])
-
-      return {
-        params: {
-          userId: shared.userId,
-          title: shared.title || undefined,
-          description: shared.description || undefined,
-          isPublic: shared.isPublic,
-          accountNumbers: shared.accountNumbers,
-          dateRange: {
-            from: fromDate,
-            ...(toDate && { to: toDate })
-          },
-          desktop: shared.desktop as unknown[],
-          mobile: shared.mobile as unknown[],
-          expiresAt: shared.expiresAt || undefined,
-          tickDetails,
-        },
-        trades,
-        groups: groups as GroupWithAccounts[],
-      }
-    },
-    [`shared-view-${slug}`],
-    {
-      tags: [`shared-view-${slug}`],
-      revalidate: 300 // Cache for 5 minutes
-    }
-  )
-
   try {
-    const result = await getCachedShared(slug)
+    const result = await getSharedCached(slug)
 
     if (!result) return null
     if (!isSharedAccessible({ isPublic: result.params.isPublic, expiresAt: result.params.expiresAt ?? null })) return null
@@ -213,11 +119,114 @@ export async function getShared(slug: string): Promise<{ params: SharedParams, t
 
     return {
       ...result,
-      trades: normalizeTradesForClient(result.trades as unknown as Trade[])
+      trades: normalizeTradesForClient(result.trades)
     }
   } catch (error) {
     console.error('[getShared] Error:', error)
     return null
+  }
+}
+
+async function getSharedCached(slug: string): Promise<{ params: SharedParams, trades: TradeInput[], groups: GroupWithAccounts[] } | null> {
+  'use cache'
+  cacheLife(SHARED_VIEW_CACHE_LIFETIME)
+  cacheTag(SHARED_VIEW_CACHE_TAG(slug))
+
+  const shared = await prisma.shared.findFirst({
+    where: {
+      slug,
+      isPublic: true,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: new Date() } },
+      ],
+    },
+  })
+
+  if (!isSharedAccessible(shared)) return null
+  if (!shared) return null
+
+  // Parse the date range
+  const dateRange = shared.dateRange as unknown as DateRange
+  if (!dateRange?.from) {
+    throw new Error('Invalid date range: from date is required')
+  }
+  const fromDate = new Date(dateRange.from)
+  const toDate = dateRange.to ? new Date(dateRange.to) : undefined
+
+  // Parallel fetch of trades, tick details, and groups
+  const [trades, tickDetails, groups] = await Promise.all([
+    prisma.trade.findMany({
+      where: {
+        userId: shared.userId,
+        ...(shared.accountNumbers.length > 0 && {
+          accountNumber: {
+            in: shared.accountNumbers,
+          },
+        }),
+        entryDate: {
+          gte: fromDate.toISOString(),
+          ...(toDate && { lte: toDate.toISOString() })
+        }
+      },
+      orderBy: {
+        entryDate: 'desc',
+      },
+      select: {
+        id: true,
+        accountNumber: true,
+        instrument: true,
+        side: true,
+        quantity: true,
+        entryPrice: true,
+        closePrice: true,
+        pnl: true,
+        commission: true,
+        entryDate: true,
+        closeDate: true,
+        entryId: true,
+        closeId: true,
+        timeInPosition: true,
+        comment: true,
+        tags: true,
+        groupId: true,
+        imageBase64: true,
+        imageBase64Second: true,
+        images: true,
+        userId: true,
+        videoUrl: true,
+        createdAt: true,
+      }
+    }),
+    prisma.tickDetails.findMany(),
+    prisma.group.findMany({
+      where: {
+        userId: shared.userId,
+      },
+      include: {
+        accounts: true,
+      },
+    })
+  ])
+
+  return {
+    params: {
+      userId: shared.userId,
+      title: shared.title || undefined,
+      description: shared.description || undefined,
+      isPublic: shared.isPublic,
+      accountNumbers: shared.accountNumbers,
+      dateRange: {
+        from: fromDate,
+        ...(toDate && { to: toDate })
+      },
+      desktop: shared.desktop as unknown[],
+      mobile: shared.mobile as unknown[],
+      expiresAt: shared.expiresAt || undefined,
+      tickDetails,
+    },
+    trades,
+    groups: groups as GroupWithAccounts[],
   }
 }
 

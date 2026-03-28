@@ -38,7 +38,6 @@ vi.mock('next/headers', () => ({
 vi.mock('next/cache', () => ({
   updateTag: updateTagMock,
   revalidatePath: vi.fn(),
-  unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
 }))
 
 vi.mock('@/lib/logger', () => ({

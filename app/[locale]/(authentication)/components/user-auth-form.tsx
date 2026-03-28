@@ -18,7 +18,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { useI18n, useCurrentLocale } from "@/locales/client"
+import { useI18n } from "@/locales/client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import {
@@ -31,6 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BadgeV2 } from "@/components/ui/v2"
 // Link removed; unauthenticated users can't reach settings
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
+import { useCurrentLocale } from "@/locales/client"
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -77,10 +78,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [showOtpInput, setShowOtpInput] = React.useState<boolean>(false)
     const [nextUrl, setNextUrl] = React.useState<string | null>(null)
     const router = useRouter()
+    const locale = useCurrentLocale()
     const { lastAuthPreference, setLastAuthPreference } = useAuthPreferenceStore()
     const [tab, setTab] = React.useState<'magic' | 'password'>(lastAuthPreference)
     const t = useI18n()
-    const locale = useCurrentLocale()
 
     React.useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search)

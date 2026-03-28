@@ -42,7 +42,6 @@ vi.mock("@/lib/logger", () => ({
 vi.mock("next/cache", () => ({
   revalidateTag: vi.fn(),
   updateTag: vi.fn(),
-  unstable_cache: vi.fn((fn: unknown) => fn),
 }))
 
 vi.mock("@/lib/prisma", () => ({

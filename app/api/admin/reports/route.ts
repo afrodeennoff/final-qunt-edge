@@ -40,6 +40,19 @@ function buildDateFilter(
   return dateFilter
 }
 
+function isPrerenderInterruption(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+
+  const digest = 'digest' in error ? String((error as { digest?: unknown }).digest ?? '') : ''
+  const message = 'message' in error ? String((error as { message?: unknown }).message ?? '') : ''
+
+  return (
+    digest === 'HANGING_PROMISE_REJECTION' ||
+    digest === 'NEXT_PRERENDER_INTERRUPTED' ||
+    message.includes('During prerendering, `cookies()` rejects')
+  )
+}
+
 export async function GET(req: NextRequest) {
   const requestId = crypto.randomUUID()
   try {
@@ -96,6 +109,10 @@ export async function GET(req: NextRequest) {
       if (Number.isFinite(status) && status >= 400 && status <= 599) {
         return apiError(code, message, status, { requestId })
       }
+    }
+
+    if (isPrerenderInterruption(error)) {
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
     }
 
     logger.error('[Admin Reports] Failed to generate report', { error })

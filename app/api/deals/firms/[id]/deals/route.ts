@@ -2,9 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { getFirmDeals } from '@/server/deals'
 import { logger } from '@/lib/logger'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 3600 // 1 hour
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

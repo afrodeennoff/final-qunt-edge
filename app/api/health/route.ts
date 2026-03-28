@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { logger, withLogContext } from '@/lib/logger'
 import { requireServiceAuth } from '@/server/authz'
-
-export const dynamic = 'force-dynamic'
 
 const DB_LATENCY_ALERT_MS = Number.parseInt(process.env.DB_LATENCY_ALERT_MS || "250", 10)
 const EXPOSE_HEALTH_DETAILS_PUBLICLY =
@@ -14,7 +12,16 @@ if (process.env.NODE_ENV === 'production' && process.env.HEALTH_DETAILS_PUBLIC =
 }
 
 
-async function checkDatabase(): Promise<{ ok: boolean; latencyMs: number; error?: string }> {
+async function checkDatabase(): Promise<{ ok: boolean; latencyMs: number; error?: string; unconfigured?: boolean }> {
+  if (!hasConfiguredDatabaseConnection) {
+    return {
+      ok: false,
+      latencyMs: 0,
+      error: 'database connection is not configured',
+      unconfigured: true,
+    }
+  }
+
   const start = Date.now()
   try {
     await prisma.$queryRaw`SELECT 1`
@@ -43,13 +50,13 @@ export async function GET(request: Request) {
       const alerts: string[] = []
 
       if (!db.ok) {
-        alerts.push("database-unhealthy")
+        alerts.push(db.unconfigured ? "database-unconfigured" : "database-unhealthy")
       }
       if (db.latencyMs > DB_LATENCY_ALERT_MS) {
         alerts.push(`database-latency-above-threshold:${db.latencyMs}ms`)
       }
 
-      const status = !db.ok ? "down" : alerts.length > 0 ? "degraded" : "ok"
+      const status = !db.ok && !db.unconfigured ? "down" : alerts.length > 0 ? "degraded" : "ok"
       const body: Record<string, unknown> = {
         status,
         timestamp: new Date().toISOString(),
@@ -83,11 +90,20 @@ export async function GET(request: Request) {
       }
 
       if (alerts.length > 0) {
-        logger.warn('[health] threshold warning', {
-          status,
-          alerts,
-          latencyMs: Date.now() - startedAt,
-        })
+        const latencyMs = Date.now() - startedAt
+        if (db.unconfigured) {
+          logger.info('[health] database not configured', {
+            status,
+            alerts,
+            latencyMs,
+          })
+        } else {
+          logger.warn('[health] threshold warning', {
+            status,
+            alerts,
+            latencyMs,
+          })
+        }
       } else {
         logger.info('[health] readiness check', {
           status,

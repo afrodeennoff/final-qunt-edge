@@ -1,7 +1,6 @@
 // CRON JOB RUNNING EVERY WEEK
 
 import { NextResponse } from "next/server";
-export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import type { Trade } from "@/prisma/generated/prisma";
 import { startOfWeek, endOfWeek, subWeeks, format } from "date-fns";

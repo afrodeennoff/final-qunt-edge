@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { connection } from 'next/server'
 import type { ReactNode } from 'react'
 import { BadgeV2, ButtonV2, InputV2 } from "@/components/ui/v2"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -223,6 +224,7 @@ export default async function AdminCouponsPage({
 }: {
   params: Promise<{ locale: string }>
 }) {
+  await connection()
   await assertAdminAccess()
   const { locale } = await params
 

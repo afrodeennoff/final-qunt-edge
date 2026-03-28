@@ -1,22 +1,23 @@
 'use server'
 
 import { getShared } from './shared'
-import { TickDetails, User, Tag, DashboardLayout, FinancialEvent, Mood, Subscription, Account, Group } from '@/prisma/generated/prisma'
+import { Prisma, TickDetails, User, Tag, DashboardLayout, FinancialEvent, Mood, Subscription, Account, Group } from '@/prisma/generated/prisma'
 import { Trade } from '@/lib/data-types'
 import { GroupWithAccounts } from './groups'
 import { getCurrentLocale } from '@/locales/server'
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId, getUserId } from './auth'
-import { revalidateTag, unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { logger } from '@/lib/logger'
-import { cacheQuery } from '@/lib/cache/query-cache'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
 import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
+import type { SharedParams } from './shared'
 
 export type SharedDataResponse = {
   trades: Trade[]
-  params: any
+  params: SharedParams | null
   error?: string
   groups: GroupWithAccounts[]
 }
@@ -47,7 +48,7 @@ export async function loadSharedData(slug: string): Promise<SharedDataResponse> 
       params: sharedData.params,
       groups: sharedData.groups
     }
-  } catch (error) {
+  } catch {
     return {
       trades: [],
       params: null,
@@ -57,20 +58,63 @@ export async function loadSharedData(slug: string): Promise<SharedDataResponse> 
   }
 }
 
+const CACHE_LIFETIMES = {
+  globalTickDetails: {
+    stale: 86_400,
+    revalidate: 86_400,
+    expire: 604_800,
+  },
+  globalFinancialEvents: {
+    stale: 3_600,
+    revalidate: 3_600,
+    expire: 21_600,
+  },
+  coreUserData: {
+    stale: 3_600,
+    revalidate: 3_600,
+    expire: 21_600,
+  },
+  supplementalUserData: {
+    stale: 300,
+    revalidate: 300,
+    expire: 1_800,
+  },
+  dashboardLayout: {
+    stale: 120,
+    revalidate: 120,
+    expire: 600,
+  },
+} as const
 
-export async function getUserData(forceRefresh: boolean = false): Promise<{
+const GLOBAL_TICK_DETAILS_CACHE_TAG = 'global-tick-details'
+const GLOBAL_FINANCIAL_EVENTS_CACHE_TAG = (locale: string) => `global-financial-events-${locale}` as const
+const USER_DATA_CORE_CACHE_TAG = (userId: string) => `user-data-core-${userId}` as const
+const USER_DATA_SUPPLEMENTAL_CACHE_TAG = (userId: string) => `user-data-supplemental-${userId}` as const
+const DASHBOARD_LAYOUT_CACHE_TAG = (userId: string) => `dashboard-layout-${userId}` as const
+
+async function loadGlobalTickDetails() {
+  return withPrismaSchemaMismatchFallback(
+    'user-data-global-tick-details',
+    () => prisma.tickDetails.findMany(),
+    []
+  )
+}
+
+async function loadGlobalFinancialEvents(locale: string) {
+  return withPrismaSchemaMismatchFallback(
+    `user-data-global-financial-events-${locale}`,
+    () => prisma.financialEvent.findMany({ where: { lang: locale } }),
+    []
+  )
+}
+
+async function loadCoreUserData(authUserId: string | null, userId: string): Promise<{
   userData: User | null;
   subscription: Subscription | null;
-  tickDetails: TickDetails[];
-  tags: Tag[];
-  accounts: Account[];
-  groups: Group[];
-  financialEvents: FinancialEvent[];
-  moodHistory: Mood[];
 }> {
-  const authUserId = await getUserId()
-  const userId = await getDatabaseUserId()
-  const locale = await getCurrentLocale()
+  if (!authUserId) {
+    return { userData: null, subscription: null }
+  }
 
   const loadUserData = async (): Promise<User | null> => {
     try {
@@ -120,67 +164,129 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
     }
   }
 
+  const [userData, subscription] = await Promise.all([
+    withPrismaSchemaMismatchFallback(`user-data-core-user-${userId}`, loadUserData, null),
+    withPrismaSchemaMismatchFallback(
+      `user-data-core-subscription-${userId}`,
+      () => prisma.subscription.findUnique({
+        where: { userId: userId }
+      }),
+      null
+    )
+  ])
+
+  return { userData, subscription }
+}
+
+async function loadSupplementalUserData(userId: string): Promise<{
+  accounts: Account[];
+  groups: Group[];
+  tags: Tag[];
+  moodHistory: Mood[];
+}> {
+  const [accounts, groups, tags, moodHistory] = await Promise.all([
+    withPrismaSchemaMismatchFallback(
+      `user-data-supplemental-accounts-${userId}`,
+      () => prisma.account.findMany({
+        where: { userId: userId },
+        include: {
+          payouts: true,
+          group: true
+        }
+      }),
+      []
+    ),
+    withPrismaSchemaMismatchFallback(
+      `user-data-supplemental-groups-${userId}`,
+      () => prisma.group.findMany({
+        where: { userId: userId },
+        include: { accounts: true }
+      }),
+      []
+    ),
+    withPrismaSchemaMismatchFallback(
+      `user-data-supplemental-tags-${userId}`,
+      () => prisma.tag.findMany({
+        where: { userId: userId }
+      }),
+      []
+    ),
+    withPrismaSchemaMismatchFallback(
+      `user-data-supplemental-moods-${userId}`,
+      () => prisma.mood.findMany({
+        where: { userId: userId }
+      }),
+      []
+    )
+  ])
+
+  return { accounts, groups, tags, moodHistory }
+}
+
+async function loadDashboardLayout(userId: string): Promise<DashboardLayout | null> {
+  return prisma.dashboardLayout.findUnique({ where: { userId } })
+}
+
+async function getGlobalTickDetailsCached() {
+  'use cache'
+  cacheLife(CACHE_LIFETIMES.globalTickDetails)
+  cacheTag(GLOBAL_TICK_DETAILS_CACHE_TAG)
+  return loadGlobalTickDetails()
+}
+
+async function getGlobalFinancialEventsCached(locale: string) {
+  'use cache'
+  cacheLife(CACHE_LIFETIMES.globalFinancialEvents)
+  cacheTag(GLOBAL_FINANCIAL_EVENTS_CACHE_TAG(locale))
+  return loadGlobalFinancialEvents(locale)
+}
+
+async function getCoreUserDataCached(authUserId: string | null, userId: string) {
+  'use cache'
+  cacheLife(CACHE_LIFETIMES.coreUserData)
+  cacheTag(CACHE_TAGS.USER_DATA(userId), USER_DATA_CORE_CACHE_TAG(userId))
+  return loadCoreUserData(authUserId, userId)
+}
+
+async function getSupplementalUserDataCached(userId: string) {
+  'use cache'
+  cacheLife(CACHE_LIFETIMES.supplementalUserData)
+  cacheTag(CACHE_TAGS.USER_DATA(userId), USER_DATA_SUPPLEMENTAL_CACHE_TAG(userId))
+  return loadSupplementalUserData(userId)
+}
+
+async function getDashboardLayoutCached(userId: string) {
+  'use cache'
+  cacheLife(CACHE_LIFETIMES.dashboardLayout)
+  cacheTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId), DASHBOARD_LAYOUT_CACHE_TAG(userId))
+  return loadDashboardLayout(userId)
+}
+
+export async function getUserData(forceRefresh: boolean = false): Promise<{
+  userData: User | null;
+  subscription: Subscription | null;
+  tickDetails: TickDetails[];
+  tags: Tag[];
+  accounts: Account[];
+  groups: Group[];
+  financialEvents: FinancialEvent[];
+  moodHistory: Mood[];
+}> {
+  const authUserId = await getUserId()
+  const userId = await getDatabaseUserId()
+  const locale = await getCurrentLocale()
+  const shouldCache = FEATURE_FLAGS.ENABLE_QUERY_CACHING
+
   // If forceRefresh is true, bypass cache and fetch directly
   if (forceRefresh) {
-    const start = performance.now();
+    const start = performance.now()
     logger.info('[getUserData] Force refresh requested', { userId })
-    revalidateTag(`user-data-${userId}`, { expire: 0 })
 
-    // Fetch data in parallel without transaction to avoid timeouts
-    const [userData, subscription, tickDetails, accounts, groups, tags, financialEvents, moodHistory] = await Promise.all([
-      withPrismaSchemaMismatchFallback(`user-data-force-user-${userId}`, loadUserData, null),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-subscription-${userId}`,
-        () => prisma.subscription.findUnique({
-          where: { userId: userId }
-        }),
-        null
-      ),
-      withPrismaSchemaMismatchFallback(
-        'user-data-force-tick-details',
-        () => prisma.tickDetails.findMany(),
-        []
-      ),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-accounts-${userId}`,
-        () => prisma.account.findMany({
-          where: { userId: userId },
-          include: {
-            payouts: true,
-            group: true
-          }
-        }),
-        []
-      ),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-groups-${userId}`,
-        () => prisma.group.findMany({
-          where: { userId: userId },
-          include: { accounts: true }
-        }),
-        []
-      ),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-tags-${userId}`,
-        () => prisma.tag.findMany({
-          where: { userId: userId }
-        }),
-        []
-      ),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-financial-events-${locale}`,
-        () => prisma.financialEvent.findMany({
-          where: { lang: locale }
-        }),
-        []
-      ),
-      withPrismaSchemaMismatchFallback(
-        `user-data-force-moods-${userId}`,
-        () => prisma.mood.findMany({
-          where: { userId: userId }
-        }),
-        []
-      )
+    const [core, tickDetails, financialEvents, supplemental] = await Promise.all([
+      loadCoreUserData(authUserId, userId),
+      loadGlobalTickDetails(),
+      loadGlobalFinancialEvents(locale),
+      loadSupplementalUserData(userId),
     ])
 
     logger.info('[getUserData] Force refresh completed', {
@@ -189,111 +295,35 @@ export async function getUserData(forceRefresh: boolean = false): Promise<{
     })
 
     return {
-      userData,
-      subscription,
+      userData: core.userData,
+      subscription: core.subscription,
       tickDetails,
-      tags,
-      accounts,
-      groups,
+      tags: supplemental.tags,
+      accounts: supplemental.accounts,
+      groups: supplemental.groups,
       financialEvents,
-      moodHistory
+      moodHistory: supplemental.moodHistory,
     }
   }
 
-  // Use cacheQuery wrapper with feature flag support
-  const shouldCache = FEATURE_FLAGS.ENABLE_QUERY_CACHING
+  const coreDataPromise = shouldCache
+    ? getCoreUserDataCached(authUserId, userId)
+    : loadCoreUserData(authUserId, userId)
+  const tickDetailsPromise = shouldCache
+    ? getGlobalTickDetailsCached()
+    : loadGlobalTickDetails()
+  const financialEventsPromise = shouldCache
+    ? getGlobalFinancialEventsCached(locale)
+    : loadGlobalFinancialEvents(locale)
+  const supplementalDataPromise = shouldCache
+    ? getSupplementalUserDataCached(userId)
+    : loadSupplementalUserData(userId)
 
-  // TIER 1: Global Stable Data (Tick details)
-  const getGlobalTickDetails = cacheQuery(
-    async () => prisma.tickDetails.findMany(),
-    ['global-tick-details'],
-    { revalidateIn: shouldCache ? 86400 : 0 }
-  )
-
-  // TIER 2: Global Localized Data (Financial events)
-  const getGlobalFinancialEvents = cacheQuery(
-    async () => prisma.financialEvent.findMany({ where: { lang: locale } }),
-    [`global-financial-events-${locale}`],
-    { revalidateIn: shouldCache ? 3600 : 0 }
-  )
-
-  // TIER 3: User Core Data (Subscription, User profile)
-  const getCachedCoreUserData = cacheQuery(
-    async () => {
-      const [userData, subscription] = await Promise.all([
-        withPrismaSchemaMismatchFallback(`user-data-core-user-${userId}`, loadUserData, null),
-        withPrismaSchemaMismatchFallback(
-          `user-data-core-subscription-${userId}`,
-          () => prisma.subscription.findUnique({
-            where: { userId: userId }
-          }),
-          null
-        )
-      ])
-
-      return { userData, subscription }
-    },
-    [`user-data-core-${userId}`],
-    {
-      revalidateIn: shouldCache ? 3600 : 0,
-      tags: [`user-data-${userId}`, `user-data-core-${userId}`]
-    }
-  )
-
-  // TIER 4: User Supplemental Data (Accounts, Groups, Tags) - Cached because these don't change every second
-  const getCachedSupplementalData = cacheQuery(
-    async () => {
-      const [accounts, groups, tags, moodHistory] = await Promise.all([
-        withPrismaSchemaMismatchFallback(
-          `user-data-supplemental-accounts-${userId}`,
-          () => prisma.account.findMany({
-            where: { userId: userId },
-            include: {
-              payouts: true,
-              group: true
-            }
-          }),
-          []
-        ),
-        withPrismaSchemaMismatchFallback(
-          `user-data-supplemental-groups-${userId}`,
-          () => prisma.group.findMany({
-            where: { userId: userId },
-            include: { accounts: true }
-          }),
-          []
-        ),
-        withPrismaSchemaMismatchFallback(
-          `user-data-supplemental-tags-${userId}`,
-          () => prisma.tag.findMany({
-            where: { userId: userId }
-          }),
-          []
-        ),
-        withPrismaSchemaMismatchFallback(
-          `user-data-supplemental-moods-${userId}`,
-          () => prisma.mood.findMany({
-            where: { userId: userId }
-          }),
-          []
-        )
-      ])
-
-      return { accounts, groups, tags, moodHistory }
-    },
-    [`user-data-supplemental-${userId}`],
-    {
-      revalidateIn: shouldCache ? 300 : 0,
-      tags: [`user-data-${userId}`, `user-data-supplemental-${userId}`]
-    }
-  )
-
-  // Fetch all in parallel
   const [core, tickDetails, financialEvents, supplemental] = await Promise.all([
-    getCachedCoreUserData(),
-    withPrismaSchemaMismatchFallback('user-data-global-tick-details', getGlobalTickDetails, []),
-    withPrismaSchemaMismatchFallback(`user-data-global-financial-events-${locale}`, getGlobalFinancialEvents, []),
-    getCachedSupplementalData()
+    coreDataPromise,
+    tickDetailsPromise,
+    financialEventsPromise,
+    supplementalDataPromise,
   ])
 
   return {
@@ -314,27 +344,18 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
     throw new Error('Forbidden')
   }
 
-  const getCachedDashboardLayout = unstable_cache(
-    async () => prisma.dashboardLayout.findUnique({ where: { userId } }),
-    [`dashboard-layout-${userId}`],
-    {
-      tags: [`dashboard-layout-${userId}`, `dashboard-${userId}`],
-      revalidate: 120,
-    }
-  )
-
   try {
-    const layout = await getCachedDashboardLayout()
+    const layout = await getDashboardLayoutCached(userId)
 
     if (!layout) return null
 
     // Helper to ensure we return a parsed object/array, not a string
-    const parseIfNeeded = (val: any) => {
+    const parseIfNeeded = (val: Prisma.JsonValue): Prisma.JsonValue => {
       if (typeof val === 'string') {
         try {
-          return JSON.parse(val)
-        } catch (e) {
-          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', { error: e, userId })
+          return JSON.parse(val) as Prisma.JsonValue
+        } catch (error) {
+          logger.error('[getDashboardLayout] Failed to parse dashboard JSON', { error, userId })
           return []
         }
       }
@@ -362,7 +383,7 @@ export async function updateIsFirstConnectionAction(isFirstConnection: boolean) 
     where: { auth_user_id: authUserId },
     data: { isFirstConnection }
   })
-  revalidateTag(`user-data-${userId}`, { expire: 0 })
+  updateTag(`user-data-${userId}`)
 }
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {

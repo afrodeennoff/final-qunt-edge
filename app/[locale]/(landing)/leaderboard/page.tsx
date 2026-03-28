@@ -3,8 +3,6 @@ import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-que
 import { LeaderboardContent } from './components/leaderboard-content'
 import { getSiteOrigin } from '@/lib/site-url'
 
-export const dynamic = 'force-dynamic'
-
 const VALID_SORTS: LeaderboardSort[] = ['monthly_pnl', 'winrate', 'totalTrades']
 const SITE_ORIGIN = getSiteOrigin()
 

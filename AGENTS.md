@@ -21,6 +21,13 @@ npm run typecheck    # Run TypeScript
 npm run test         # Run tests
 ```
 
+## Workflow Notes
+
+- **Cache components**: server read helpers should use `use cache` with `cacheLife`/`cacheTag`, and mutations should invalidate with `updateTag`. Avoid reintroducing `unstable_cache` or `revalidateTag` in new code.
+- **Route config with cache components**: when cache components are enabled, do not add route segment exports like `dynamic` or `revalidate` in `app/**/route.ts`; Next.js rejects them at build time.
+- **Support models**: keep the support UI and `/api/ai/support` allowlist in sync via `lib/ai/support-models.ts`.
+- **Build prerequisite**: `npm run build` invokes Prisma migration status against a local PostgreSQL URL (`localhost:5432` by default). If that service is unavailable, record the environment blocker before treating the failure as a code regression.
+
 ## Design System Architecture
 
 ### CSS Token Tiers

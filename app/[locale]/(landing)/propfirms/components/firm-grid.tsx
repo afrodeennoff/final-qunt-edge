@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { ButtonV2 } from "@/components/ui/v2"
 import { FirmCard } from "./firm-card"
 import { cn } from "@/lib/utils"
@@ -20,6 +20,7 @@ interface FirmGridProps {
 
 export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
@@ -38,10 +39,11 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
         } else {
           params.delete("page")
         }
-        router.push(`?${params.toString()}`, { scroll: false })
+        const query = params.toString()
+        router.push(query ? `${pathname}?${query}` : pathname, { scroll: false })
       })
     },
-    [router, searchParams]
+    [pathname, router, searchParams]
   )
 
   if (firms.length === 0) {

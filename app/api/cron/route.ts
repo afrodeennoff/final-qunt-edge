@@ -5,8 +5,6 @@ import { headers } from 'next/headers'
 import { requireServiceAuth, toErrorResponse } from "@/server/authz"
 import { getSiteUrl } from '@/lib/site-url'
 
-export const dynamic = 'force-dynamic'
-
 const MAX_LOG_MESSAGE_LENGTH = 200
 
 const maskId = (value?: string) => value ? `${value.slice(0, 6)}…` : 'unknown'

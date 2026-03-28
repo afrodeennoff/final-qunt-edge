@@ -53,16 +53,7 @@ import { ClipboardCheckIcon } from '@/components/animated-icons/clipboard-check'
 import SupportForm from './components/support-form';
 import { toast } from 'sonner';
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
-const models = [
-  {
-    name: 'GPT 4o',
-    value: 'openai/gpt-4o',
-  },
-  {
-    name: 'Deepseek R1',
-    value: 'deepseek/deepseek-r1',
-  },
-];
+import { SUPPORT_MODEL_OPTIONS, type SupportModelId, isSupportModelId } from '@/lib/ai/support-models';
 
 const ChatBotDemo = () => {
   const t = useI18n();
@@ -91,7 +82,7 @@ const ChatBotDemo = () => {
     return t('support.errors.generic')
   }
   const [input, setInput] = useState('');
-  const [model, setModel] = useState<string>(models[0].value);
+  const [model, setModel] = useState<SupportModelId>(SUPPORT_MODEL_OPTIONS[0].value);
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, setMessages } = useChat(
     {
@@ -368,17 +359,19 @@ const ChatBotDemo = () => {
                 <GlobeIcon size={16} />
                 <span>{t('support.search')}</span>
               </PromptInputButton>
-              <PromptInputModelSelect
-                onValueChange={(value) => {
-                  setModel(value);
-                }}
-                value={model}
-              >
+                <PromptInputModelSelect
+                  onValueChange={(value) => {
+                    if (isSupportModelId(value)) {
+                      setModel(value);
+                    }
+                  }}
+                  value={model}
+                >
                 <PromptInputModelSelectTrigger>
                   <PromptInputModelSelectValue />
                 </PromptInputModelSelectTrigger>
                 <PromptInputModelSelectContent>
-                  {models.map((model) => (
+                  {SUPPORT_MODEL_OPTIONS.map((model) => (
                     <PromptInputModelSelectItem key={model.value} value={model.value}>
                       {model.name}
                     </PromptInputModelSelectItem>

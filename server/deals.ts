@@ -1,5 +1,5 @@
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import {
   PROP_FIRM_MATCH_SOURCE_DATE,
@@ -465,6 +465,15 @@ export interface FaqItem {
   answer: string
 }
 
+const DEALS_CACHE_LIFETIME = {
+  stale: 3_600,
+  revalidate: 3_600,
+  expire: 7_200,
+} as const
+
+const DEALS_CACHE_TAG = 'deals'
+const PROP_FIRMS_CACHE_TAG = 'prop-firms'
+
 const _getActiveDeals = async (): Promise<DealItem[]> => {
   if (!hasConfiguredDatabaseConnection) {
     return getFallbackDeals()
@@ -553,11 +562,12 @@ function getFallbackDeals(): DealItem[] {
   })
 }
 
-export const getActiveDeals = unstable_cache(
-  _getActiveDeals,
-  ['deals-active'],
-  { revalidate: 3600, tags: ['deals'] }
-)
+async function getActiveDealsCached(): Promise<DealItem[]> {
+  'use cache'
+  cacheLife(DEALS_CACHE_LIFETIME)
+  cacheTag(DEALS_CACHE_TAG)
+  return _getActiveDeals()
+}
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   if (!hasConfiguredDatabaseConnection) {
@@ -614,11 +624,20 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   }
 }
 
-export const getUnifiedFirms = unstable_cache(
-  _getUnifiedFirms,
-  ['deals-firms'],
-  { revalidate: 3600, tags: ['deals', 'prop-firms'] }
-)
+async function getUnifiedFirmsCached(): Promise<UnifiedFirm[]> {
+  'use cache'
+  cacheLife(DEALS_CACHE_LIFETIME)
+  cacheTag(DEALS_CACHE_TAG, PROP_FIRMS_CACHE_TAG)
+  return _getUnifiedFirms()
+}
+
+export async function getActiveDeals(): Promise<DealItem[]> {
+  return getActiveDealsCached()
+}
+
+export async function getUnifiedFirms(): Promise<UnifiedFirm[]> {
+  return getUnifiedFirmsCached()
+}
 
 export async function getDealsOverview(): Promise<DealsOverview> {
   const [firms, deals, catalogue] = await Promise.all([

@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { InputV2 } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
@@ -13,6 +13,7 @@ interface FirmFiltersProps {
 
 export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
@@ -31,17 +32,18 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
         }
         // Reset to page 1 when filters change
         params.delete("page")
-        router.push(`?${params.toString()}`, { scroll: false })
+        const query = params.toString()
+        router.push(query ? `${pathname}?${query}` : pathname, { scroll: false })
       })
     },
-    [router, searchParams]
+    [pathname, router, searchParams]
   )
 
   const clearAllFilters = useCallback(() => {
     startTransition(() => {
-      router.push("?", { scroll: false })
+      router.push(pathname, { scroll: false })
     })
-  }, [router])
+  }, [pathname, router])
 
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 

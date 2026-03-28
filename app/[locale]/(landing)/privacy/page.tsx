@@ -2,9 +2,9 @@ import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-pa
 import type { Metadata } from "next";
 import { getSiteOrigin } from "@/lib/site-url";
 
-export const revalidate = 3600;
 const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/privacy";
+const LAST_UPDATED = "2026-03-28";
 
 export async function generateMetadata({
   params,
@@ -124,7 +124,7 @@ export default function PrivacyPolicy() {
         </section>
 
         <p className="border-t border-border/60 pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
-          Last updated: {new Date().toISOString().split('T')[0]}
+          Last updated: {LAST_UPDATED}
         </p>
       </UnifiedSurface>
     </UnifiedPageShell>

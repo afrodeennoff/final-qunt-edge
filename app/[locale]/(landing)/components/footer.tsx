@@ -37,7 +37,7 @@ export default function Footer() {
   const locale = useCurrentLocale()
 
   const socialLinks: SocialLink[] = [
-    { name: 'GitHub', href: 'https://github.com/afrodeennoff/lassttry-edge-', icon: Github },
+    { name: 'GitHub', href: 'https://github.com/afrodeennoff/qunt-edge', icon: Github },
     { name: 'YouTube', href: 'https://www.youtube.com/@TIMON', icon: Youtube },
     { name: 'Discord', href: process.env.NEXT_PUBLIC_DISCORD_INVITATION || '', icon: MessageCircle },
   ].filter((item) => item.href)

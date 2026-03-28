@@ -4,8 +4,6 @@ import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
 
-export const dynamic = 'force-dynamic'
-
 export async function GET(request: Request) {
   try {
     const supabase = createRouteClient(request)

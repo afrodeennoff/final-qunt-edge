@@ -68,7 +68,7 @@ export default function Navbar() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface-muted)/0.85)]">
               <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight [font-family:var(--font-poppins)] sm:inline-flex">Qunt Edge</span>
+            <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex">Qunt Edge</span>
           </Link>
 
           <nav className="mx-auto hidden items-center gap-1 lg:flex">

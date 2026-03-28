@@ -7,9 +7,7 @@ import { Account, Trade as NormalizedTrade, TradeInput } from '@/lib/data-types'
 import { decimalToNumber } from '@/lib/trade-types'
 import { updateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { cacheQuery } from '@/lib/cache/query-cache'
 import { invalidateAllUserCaches } from '@/lib/cache/cache-invalidation'
-import { FEATURE_FLAGS } from '@/lib/feature-flags'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
@@ -801,38 +799,4 @@ export async function calculateAccountMetricsAction(
 
   // Delegate to shared utility so both server and client compute identically
   return computeMetricsForAccounts(accounts, normalizedTrades)
-}
-
-/**
- * Get account metrics with caching
- *
- * This function caches computed metrics to reduce database load.
- * Cache is automatically invalidated when trades/accounts are modified.
- *
- * @param accounts - Array of accounts to compute metrics for
- * @returns Accounts with computed metrics
- */
-export async function getAccountMetrics(accounts: Account[]): Promise<Account[]> {
-  const userId = await getDatabaseUserId()
-  const shouldCache = FEATURE_FLAGS.ENABLE_QUERY_CACHING
-
-  const computeMetrics = async () => {
-    return calculateAccountMetricsAction(accounts)
-  }
-
-  // Use cache only if feature flag is enabled
-  if (shouldCache) {
-    const cachedCompute = cacheQuery(
-      computeMetrics,
-      ['account-metrics', userId],
-      {
-        revalidateIn: 60, // Cache for 1 minute
-        tags: [`account-metrics-${userId}`]
-      }
-    )
-    return cachedCompute()
-  }
-
-  // Bypass cache if feature flag is disabled
-  return computeMetrics()
 }

@@ -18,10 +18,6 @@ interface PageProps {
   }>;
 }
 
-// export const dynamic = "force-static"; // Allow Next.js to auto-optimize
-export const dynamicParams = true; // Allow new posts without rebuilding
-export const revalidate = 3600;
-
 // Generate static paths for all posts in all locales
 export async function generateStaticParams() {
   const locales = getLocaleStaticParams().map((entry) => entry.locale);

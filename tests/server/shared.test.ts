@@ -22,7 +22,6 @@ vi.mock('@/lib/security/slug', () => ({
 
 vi.mock('next/cache', () => ({
   updateTag: updateTagMock,
-  unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
 }))
 
 vi.mock('@/lib/prisma', () => ({

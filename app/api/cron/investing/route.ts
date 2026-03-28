@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { isValid } from 'date-fns'
 import { scrapeWithSandbox } from '@/lib/browser-sandbox'

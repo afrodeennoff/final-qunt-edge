@@ -10,7 +10,6 @@ import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 import { apiError } from "@/lib/api-response"
 import { getSiteUrl } from '@/lib/site-url'
 
-export const dynamic = 'force-dynamic'
 const inviteRateLimit = rateLimit({ limit: 10, window: 60_000, identifier: "team-invite" })
 const inviteSchema = z.object({
   teamId: z.string().min(1),

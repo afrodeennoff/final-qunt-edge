@@ -2,12 +2,25 @@ import { NextResponse } from 'next/server'
 import { getActiveDeals, type DealItem } from '@/server/deals'
 import { logger } from '@/lib/logger'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 3600
+const DEFAULT_LIMIT = 50
+const DEFAULT_OFFSET = 0
+
+function isPrerenderInterruption(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+
+  const digest = 'digest' in error ? String((error as { digest?: unknown }).digest ?? '') : ''
+  return digest === 'HANGING_PROMISE_REJECTION' || digest === 'NEXT_PRERENDER_INTERRUPTED'
+}
+
+function getSearchParams(request: Request): URLSearchParams {
+  const nextUrl = (request as Request & { nextUrl?: URL }).nextUrl
+  if (nextUrl?.searchParams) return nextUrl.searchParams
+  return new URL(request.url).searchParams
+}
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
+    const searchParams = getSearchParams(request)
     
     // Extract query parameters
     const search = searchParams.get('search') || ''
@@ -19,8 +32,8 @@ export async function GET(request: Request) {
     const maxFee = searchParams.get('maxFee') ? parseFloat(searchParams.get('maxFee')!) : null
     const sortBy = searchParams.get('sortBy') || 'discountPercent'
     const sortOrder = (searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc'
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 50
-    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : DEFAULT_LIMIT
+    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : DEFAULT_OFFSET
     
     // Get all active deals
     const allDeals = await getActiveDeals()
@@ -112,6 +125,18 @@ export async function GET(request: Request) {
       }
     })
   } catch (error) {
+    if (isPrerenderInterruption(error)) {
+      return NextResponse.json({
+        deals: [],
+        pagination: {
+          total: 0,
+          limit: DEFAULT_LIMIT,
+          offset: DEFAULT_OFFSET,
+          hasMore: false,
+        },
+      })
+    }
+
     logger.error('[api/deals] Error fetching active deals:', error)
     return NextResponse.json(
       { error: 'Failed to fetch deals' },

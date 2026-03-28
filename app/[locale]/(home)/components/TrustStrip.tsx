@@ -5,7 +5,7 @@ const brokers = [
   'Rithmic',
   'IBKR',
   'CQG',
-  'NINJA|TRADER',
+  'NinjaTrader',
 ]
 
 export default function TrustStrip() {

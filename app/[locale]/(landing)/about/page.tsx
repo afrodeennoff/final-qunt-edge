@@ -6,7 +6,6 @@ import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
 import Link from "next/link"
 import { getSiteOrigin } from "@/lib/site-url"
 
-export const revalidate = 1800
 const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/about";
 

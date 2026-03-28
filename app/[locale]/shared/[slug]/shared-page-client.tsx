@@ -1,6 +1,6 @@
 'use client'
 
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { ButtonV2, CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { format } from "date-fns"
 import { useData } from "@/context/data-provider"
 import { SharedWidgetCanvas } from "./shared-widget-canvas"
@@ -8,8 +8,6 @@ import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { Loader2, ChevronDown } from "lucide-react"
 import { useState } from "react"
-
-type I18nFn = ReturnType<typeof useI18n>
 
 // Create a client component for the accounts selection
 function AccountsSelector({ accounts }: { accounts: string[] }) {

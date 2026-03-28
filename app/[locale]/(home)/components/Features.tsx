@@ -1,5 +1,3 @@
-'use client'
-
 import { BarChart3, Brain, Users, Download, FileText, Shield } from 'lucide-react'
 
 const features = [

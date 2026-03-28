@@ -9,8 +9,6 @@ import { z } from "zod"
 import { parseJson, toValidationErrorResponse } from "@/app/api/_utils/validate"
 import { logger, withLogContext } from "@/lib/logger"
 
-export const dynamic = 'force-dynamic'
-
 const welcomeWebhookSchema = z.object({
   type: z.string(),
   record: z.object({

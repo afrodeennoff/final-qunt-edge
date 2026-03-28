@@ -5,6 +5,7 @@ import { compileMDX } from 'next-mdx-remote/rsc'
 import { cache } from 'react'
 
 const postsDirectory = path.join(process.cwd(), 'content/updates')
+const DEFAULT_MDX_DATE_ISO = '1970-01-01T00:00:00.000Z'
 
 // Cache the MDX compilation results
 export const getPost = cache(async (slug: string, locale: string) => {
@@ -19,10 +20,10 @@ export const getPost = cache(async (slug: string, locale: string) => {
       ...meta,
       title: meta.title || slug,
       description: meta.description || '',
-      date: meta.date || new Date().toISOString(),
+      date: meta.date || DEFAULT_MDX_DATE_ISO,
       status: meta.status || 'upcoming',
       image: meta.image || null,
-      updatedAt: meta.updatedAt || meta.date || new Date().toISOString(),
+      updatedAt: meta.updatedAt || meta.date || DEFAULT_MDX_DATE_ISO,
     }
 
     const { content } = await compileMDX({
@@ -46,24 +47,6 @@ export const getPost = cache(async (slug: string, locale: string) => {
             }],
             [(await import('rehype-img-size')).default, {
               dir: path.join(process.cwd(), 'public')
-            }],
-            [(await import('rehype-pretty-code')).default, {
-              theme: {
-                dark: 'github-dark',
-                light: 'github-light',
-              },
-              keepBackground: true,
-              onVisitLine(node: any) {
-                if (node.children.length === 0) {
-                  node.children = [{ type: 'text', value: ' ' }]
-                }
-              },
-              onVisitHighlightedLine(node: any) {
-                node.properties.className.push('line--highlighted')
-              },
-              onVisitHighlightedWord(node: any) {
-                node.properties.className = ['word--highlighted']
-              },
             }],
           ],
         },

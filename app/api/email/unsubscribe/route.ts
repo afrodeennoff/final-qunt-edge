@@ -1,13 +1,27 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { logger } from "@/lib/logger"
 import { verifyUnsubscribeToken } from "@/lib/unsubscribe-token"
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_REGEX = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/
 
+function isPrerenderInterruption(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+  const digest = "digest" in error ? String((error as { digest?: unknown }).digest ?? "") : ""
+  return digest === "HANGING_PROMISE_REJECTION" || digest === "NEXT_PRERENDER_INTERRUPTED"
+}
+
+function getRequestUrl(request: Request): URL {
+  const nextUrl = (request as Request & { nextUrl?: URL }).nextUrl
+  if (nextUrl) return nextUrl
+  return new URL(request.url)
+}
+
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
+    const requestUrl = getRequestUrl(request)
+    const searchParams = requestUrl.searchParams
     const email = searchParams.get('email')
     const token = searchParams.get('token')
 
@@ -43,11 +57,20 @@ export async function GET(request: Request) {
     })
 
     // Redirect to the newsletter preferences page
-    return NextResponse.redirect(
-      new URL(`/newsletter?status=unsubscribed&email=${encodeURIComponent(email)}`, request.url)
-    )
+    const redirectUrl = new URL('/newsletter', requestUrl.origin)
+    redirectUrl.searchParams.set('status', 'unsubscribed')
+    redirectUrl.searchParams.set('email', email)
+
+    return NextResponse.redirect(redirectUrl)
   } catch (error) {
-    console.error('Unsubscribe error:', error)
+    if (isPrerenderInterruption(error)) {
+      return NextResponse.json(
+        { error: 'Invalid unsubscribe link' },
+        { status: 400 }
+      )
+    }
+
+    logger.error('[api/email/unsubscribe] Unsubscribe failed', { error })
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

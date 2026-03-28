@@ -10,7 +10,7 @@ interface AuthenticationLayoutProps {
 }
 
 export default function AuthenticationLayout({
-  children
+  children,
 }: AuthenticationLayoutProps) {
   const router = useRouter();
   const locale = useCurrentLocale();

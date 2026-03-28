@@ -18,6 +18,12 @@ vi.mock('@/lib/prisma', () => ({
   },
 }))
 
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+  updateTag: vi.fn(),
+}))
+
 vi.mock('@/lib/logger', () => ({
   logger: {
     error: vi.fn(),
@@ -32,10 +38,6 @@ vi.mock('@/server/shared', () => ({
 
 vi.mock('@/locales/server', () => ({
   getCurrentLocale: vi.fn(async () => 'en'),
-}))
-
-vi.mock('@/lib/cache/query-cache', () => ({
-  cacheQuery: (fn: unknown) => fn,
 }))
 
 vi.mock('@/lib/feature-flags', () => ({

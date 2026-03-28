@@ -4,8 +4,6 @@ import { getUnifiedFirmBySlug } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
 import { getSiteOrigin } from '@/lib/site-url'
 
-export const dynamic = 'force-dynamic'
-
 const SITE_ORIGIN = getSiteOrigin()
 
 export async function generateMetadata({

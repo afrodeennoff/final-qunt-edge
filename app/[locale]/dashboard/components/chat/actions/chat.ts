@@ -1,9 +1,9 @@
 'use server'
 import { UIMessage } from "ai"
 import { prisma } from "@/lib/prisma"
-import { addDays, format } from "date-fns"
+import { addDays } from "date-fns"
 import { Mood } from "@/prisma/generated/prisma"
-import { revalidateTag } from "next/cache"
+import { updateTag } from "next/cache"
 import { getUserId } from "@/server/auth"
 
 export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
@@ -33,7 +33,7 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
     if (msg.parts) {
       // If message has parts, only keep text parts
       const textParts = msg.parts
-        .filter((part: any) => part.type === 'text')
+        .filter((part) => part.type === 'text')
       return {
         ...msg,
         parts: textParts
@@ -55,7 +55,7 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
   })
 
   // Expire immediately so next time we load the user data, we get the latest data
-  revalidateTag(`user-data-${userId}`, { expire: 0 })
+  updateTag(`user-data-${userId}`)
 
   if (existingMood) {
     // Update existing mood entry

@@ -7,7 +7,7 @@
  * @module lib/cache/cache-invalidation
  */
 
-import { invalidateCache } from './query-cache'
+import { updateTag } from 'next/cache'
 
 /**
  * Cache tag constants for type safety
@@ -39,7 +39,7 @@ export const CACHE_TAGS = {
  * ```
  */
 export function invalidateUserData(userId: string): void {
-  invalidateCache([CACHE_TAGS.USER_DATA(userId)])
+  updateTag(CACHE_TAGS.USER_DATA(userId))
 }
 
 /**
@@ -56,7 +56,7 @@ export function invalidateUserData(userId: string): void {
  * ```
  */
 export function invalidateAccountMetrics(userId: string): void {
-  invalidateCache([CACHE_TAGS.ACCOUNT_METRICS(userId)])
+  updateTag(CACHE_TAGS.ACCOUNT_METRICS(userId))
 }
 
 /**
@@ -73,7 +73,7 @@ export function invalidateAccountMetrics(userId: string): void {
  * ```
  */
 export function invalidateTrades(userId: string): void {
-  invalidateCache([CACHE_TAGS.TRADES(userId)])
+  updateTag(CACHE_TAGS.TRADES(userId))
 }
 
 /**
@@ -90,7 +90,7 @@ export function invalidateTrades(userId: string): void {
  * ```
  */
 export function invalidateDashboardLayout(userId: string): void {
-  invalidateCache([CACHE_TAGS.DASHBOARD_LAYOUT(userId)])
+  updateTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId))
 }
 
 /**
@@ -108,10 +108,8 @@ export function invalidateDashboardLayout(userId: string): void {
  * ```
  */
 export function invalidateAllUserCaches(userId: string): void {
-  invalidateCache([
-    CACHE_TAGS.USER_DATA(userId),
-    CACHE_TAGS.ACCOUNT_METRICS(userId),
-    CACHE_TAGS.TRADES(userId),
-    CACHE_TAGS.DASHBOARD_LAYOUT(userId),
-  ])
+  updateTag(CACHE_TAGS.USER_DATA(userId))
+  updateTag(CACHE_TAGS.ACCOUNT_METRICS(userId))
+  updateTag(CACHE_TAGS.TRADES(userId))
+  updateTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId))
 }

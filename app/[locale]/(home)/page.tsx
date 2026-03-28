@@ -6,19 +6,16 @@ import { Metadata } from 'next';
 import { getSiteOrigin } from "@/lib/site-url";
 
 const SITE_ORIGIN = getSiteOrigin();
+type Locale = 'en' | 'fr';
 
 export function generateStaticParams() {
     return getStaticParams();
 }
 
-export const revalidate = 180;
-// export const dynamic = "force-static"; // Removed for webapp flexibility
-// export const dynamicParams = false;
-
 export async function generateMetadata({
     params,
 }: {
-    params: Promise<{ locale: string }>;
+    params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
     const { locale } = await params;
     const canonical = `${SITE_ORIGIN}/${locale}`;
@@ -51,7 +48,7 @@ export async function generateMetadata({
 export default async function HomePage({
     params,
 }: {
-    params: Promise<{ locale: string }>;
+    params: Promise<{ locale: Locale }>;
 }) {
     const { locale } = await params;
     setStaticParamsLocale(locale);

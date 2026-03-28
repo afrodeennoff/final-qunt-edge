@@ -83,67 +83,70 @@ export function isAdminUser(user: User): boolean {
 }
 
 export async function assertAdminAccess(
-  requestId = crypto.randomUUID()
+  requestId?: string
 ): Promise<AdminAccessContext> {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const resolvedRequestId = requestId ?? crypto.randomUUID()
 
   if (!user?.id || !user?.email) {
-    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', resolvedRequestId)
   }
 
   if (!isAdminUser(user)) {
-    throw new AuthzError('Forbidden', 403, 'AUTH_FORBIDDEN', requestId)
+    throw new AuthzError('Forbidden', 403, 'AUTH_FORBIDDEN', resolvedRequestId)
   }
 
   return {
     userId: user.id,
     email: user.email,
-    requestId,
+    requestId: resolvedRequestId,
   }
 }
 
 export async function requireUser(
-  requestId = crypto.randomUUID()
+  requestId?: string
 ): Promise<UserAccessContext> {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const resolvedRequestId = requestId ?? crypto.randomUUID()
 
   if (!user?.id) {
-    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', resolvedRequestId)
   }
 
   return {
     userId: user.id,
     email: user.email ?? '',
-    requestId,
+    requestId: resolvedRequestId,
   }
 }
 
 export async function requireAdmin(
-  requestId = crypto.randomUUID()
+  requestId?: string
 ): Promise<AdminAccessContext> {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const resolvedRequestId = requestId ?? crypto.randomUUID()
 
   if (!user?.id || !user?.email) {
-    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
+    throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', resolvedRequestId)
   }
 
   if (!isAdminUser(user)) {
-    throw new AuthzError('Forbidden', 403, 'AUTH_FORBIDDEN', requestId)
+    throw new AuthzError('Forbidden', 403, 'AUTH_FORBIDDEN', resolvedRequestId)
   }
 
   return {
     userId: user.id,
     email: user.email,
-    requestId,
+    requestId: resolvedRequestId,
   }
 }
 

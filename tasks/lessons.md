@@ -17,6 +17,48 @@ Never mark work finished unless all agreed fixes are implemented and verified.
 
 ---
 
+## NEW (2026-03-28): Cache Components mode forbids route segment config (`dynamic`/`revalidate`)
+
+### Mistake
+Reintroducing `export const dynamic` / `export const revalidate` in App Router route handlers after enabling Cache Components.
+
+### Root Cause
+Assumed old route config remained valid, but Next.js 16 with `nextConfig.cacheComponents` rejects those segment config exports at compile time.
+
+### Rule
+When Cache Components are enabled, do not add `dynamic`/`revalidate` segment exports to route files; use request boundaries (`connection`) and cache directives (`use cache`, `cacheLife`, `cacheTag`) instead.
+
+### Example
+```ts
+// BAD in cacheComponents mode:
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600
+
+// GOOD:
+// no segment exports; rely on runtime request context + cache directives inside data layer
+```
+
+---
+
+## NEW (2026-03-28): Build verification needs a reachable local PostgreSQL service
+
+### Mistake
+Treating `npm run build` as a code regression before confirming the local Postgres dependency was available.
+
+### Root Cause
+`scripts/sync-stack.mjs` runs Prisma migration status against `localhost:5432` by default, and no PostgreSQL server was listening in this workspace.
+
+### Rule
+Before attributing a build failure to code, verify every local service the build depends on is reachable; if one is missing, record it as an environment blocker instead of changing unrelated code.
+
+### Example
+```bash
+node -e "const net=require('net');const s=new net.Socket();s.setTimeout(1000);s.on('error',e=>console.log(e.code));s.connect(5432,'127.0.0.1')"
+# Output: ECONNREFUSED
+```
+
+---
+
 ## NEW (2026-03-27): Dead feature flags need cleanup
 
 ### What happened

@@ -12,6 +12,19 @@ function sanitizePeriodDays(value: string | null): number {
   return Math.min(180, Math.max(7, Math.floor(parsed)))
 }
 
+function isPrerenderInterruption(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+
+  const digest = "digest" in error ? String((error as { digest?: unknown }).digest ?? "") : ""
+  const message = "message" in error ? String((error as { message?: unknown }).message ?? "") : ""
+
+  return (
+    digest === "HANGING_PROMISE_REJECTION" ||
+    digest === "NEXT_PRERENDER_INTERRUPTED" ||
+    message.includes("During prerendering, `cookies()` rejects")
+  )
+}
+
 export async function GET(request: NextRequest) {
   const requestId = crypto.randomUUID()
   try {
@@ -71,6 +84,10 @@ export async function GET(request: NextRequest) {
     await setRedisJson("behavior-insights", cacheKey, insights, 60)
     return NextResponse.json(insights)
   } catch (error) {
+    if (isPrerenderInterruption(error)) {
+      return apiError("UNAUTHORIZED", "Unauthorized", 401, { requestId })
+    }
+
     console.error("[Behavior Insights API] Failed to build insights", error)
     return apiError("INTERNAL_ERROR", "Failed to build behavior insights", 500, { requestId })
   }

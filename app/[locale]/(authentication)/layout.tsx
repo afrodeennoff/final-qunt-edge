@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AuthenticationClientLayout from "./client-layout";
+import AuthenticationLayoutShell from "./layout-shell";
 
 export const metadata: Metadata = {
   robots: {
@@ -13,5 +13,5 @@ export default function AuthenticationLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AuthenticationClientLayout>{children}</AuthenticationClientLayout>;
+  return <AuthenticationLayoutShell>{children}</AuthenticationLayoutShell>;
 }

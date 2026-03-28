@@ -2,7 +2,12 @@
 
 import { spawnSync } from "node:child_process";
 import { readdirSync } from "node:fs";
+import net from "node:net";
 import { join } from "node:path";
+
+function info(message) {
+  process.stdout.write(`${message}\n`);
+}
 
 function run(command, args, label) {
   const result = spawnSync(command, args, {
@@ -16,7 +21,7 @@ function run(command, args, label) {
   }
 
   if (label) {
-    console.log(`[sync-stack] ${label}`);
+    info(`[sync-stack] ${label}`);
   }
 }
 
@@ -48,9 +53,7 @@ function baselineAllMigrations() {
     .map((entry) => entry.name)
     .sort();
 
-  console.log(
-    `[sync-stack] Baseline mode: marking ${migrationNames.length} migrations as applied`,
-  );
+  info(`[sync-stack] Baseline mode: marking ${migrationNames.length} migrations as applied`);
 
   for (const name of migrationNames) {
     run("npx", ["prisma", "migrate", "resolve", "--applied", name]);
@@ -62,9 +65,61 @@ function parseFailedMigrationName(output) {
   return match?.[1] ?? null;
 }
 
-function parseMigrationName(output) {
-  const match = output.match(/Migration name: (\S+)/);
-  return match?.[1] ?? null;
+function parseDatabaseEndpoint(urlString) {
+  try {
+    const url = new URL(urlString);
+    return {
+      host: url.hostname,
+      port: Number(url.port || "5432"),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function probeTcpPort(host, port, timeoutMs = 750) {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ host, port });
+    let settled = false;
+
+    function finish(reachable, errorCode = null) {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve({ reachable, errorCode });
+    }
+
+    socket.setTimeout(timeoutMs);
+    socket.once("connect", () => finish(true));
+    socket.once("timeout", () => finish(false, "ETIMEDOUT"));
+    socket.once("error", (error) => {
+      const maybeError = error;
+      finish(false, typeof maybeError.code === "string" ? maybeError.code : "EUNKNOWN");
+    });
+  });
+}
+
+async function canReachDatabase(urlString) {
+  const endpoint = parseDatabaseEndpoint(urlString);
+  if (!endpoint?.host || !Number.isFinite(endpoint.port)) {
+    return {
+      reachable: false,
+      reason: "missing or invalid database URL",
+    };
+  }
+
+  const result = await probeTcpPort(endpoint.host, endpoint.port);
+  if (!result.reachable) {
+    return {
+      reachable: false,
+      reason: `${endpoint.host}:${endpoint.port} (${result.errorCode})`,
+    };
+  }
+
+  return {
+    reachable: true,
+    reason: `${endpoint.host}:${endpoint.port}`,
+  };
 }
 
 run("npx", ["prisma", "generate"], "Prisma client generated");
@@ -75,7 +130,7 @@ const migrationUrl = rawUrl ? rawUrl.replace(/^"(.*)"$/, '$1') : null;
 if (migrationUrl) {
   // Inject the direct connection URL into process.env so Prisma uses it for deployments (bypassing PgBouncer)
   process.env.DATABASE_URL = migrationUrl;
-  console.log(`[sync-stack] Using direct DB URL for migrations`);
+  info(`[sync-stack] Using direct DB URL for migrations`);
 }
 
 const isCI = process.env.CI === "true" || process.env.CI === "1";
@@ -91,14 +146,22 @@ if (baselineMode) {
   if (result.status !== 0) {
     const failedMigration = parseFailedMigrationName(result.output);
     if (failedMigration && !isCI) {
-      console.log(`[sync-stack] Migration ${failedMigration} failed`);
-      console.log(`[sync-stack] In CI, failing migrations stop the build. Locally, you can:`);
-      console.log(`[sync-stack]   - Run \`npx prisma migrate resolve --rolled-back ${failedMigration}\` to mark as rolled back`);
-      console.log(`[sync-stack]   - Run \`npx prisma migrate resolve --applied ${failedMigration}\` to mark as applied`);
-      console.log(`[sync-stack]   - Run \`SYNC_STACK_APPLY_MIGRATIONS=true npm run build\` to attempt again`);
+      info(`[sync-stack] Migration ${failedMigration} failed`);
+      info(`[sync-stack] In CI, failing migrations stop the build. Locally, you can:`);
+      info(`[sync-stack]   - Run \`npx prisma migrate resolve --rolled-back ${failedMigration}\` to mark as rolled back`);
+      info(`[sync-stack]   - Run \`npx prisma migrate resolve --applied ${failedMigration}\` to mark as applied`);
+      info(`[sync-stack]   - Run \`SYNC_STACK_APPLY_MIGRATIONS=true npm run build\` to attempt again`);
     }
     process.exit(result.status);
   }
 } else {
-  run("npx", ["prisma", "migrate", "status"], "Prisma migrations up to date");
+  const dbCheck = migrationUrl ? await canReachDatabase(migrationUrl) : { reachable: false, reason: "no database URL configured" };
+
+  if (!dbCheck.reachable) {
+    console.warn(
+      `[sync-stack] Skipping Prisma migrate status: ${dbCheck.reason}. Continuing build.`,
+    );
+  } else {
+    run("npx", ["prisma", "migrate", "status"], "Prisma migrations up to date");
+  }
 }

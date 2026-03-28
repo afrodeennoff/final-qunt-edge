@@ -5,8 +5,6 @@ import { MemberRole } from "@/prisma/generated/prisma"
 import { ensureTeamMembership, resolveTeamUserId } from "@/server/team-membership"
 import { apiError } from "@/lib/api-response"
 
-export const dynamic = 'force-dynamic'
-
 export async function POST(req: Request) {
   try {
     const supabase = createRouteClient(req)
