@@ -3,13 +3,11 @@ import TrustStrip from './TrustStrip'
 import Features from './Features'
 import PricingSection from './PricingSection'
 import FinalCTA from './FinalCTA'
-import RollingAdBanner from './RollingAdBanner'
-import type { Metadata } from 'next'
-import type { Locale } from 'en' | 'fr'
+
+type Locale = 'en' | 'fr'
 
 interface HomeContentProps {
-  locale: string
-  metadata?: Metadata
+  locale: Locale
 }
 
 export default function HomeContent({ locale }: HomeContentProps) {
@@ -22,7 +20,6 @@ export default function HomeContent({ locale }: HomeContentProps) {
       
       <main className="relative z-10 mx-auto w-full max-w-[1360px]">
         <Hero locale={locale} />
-        <RollingAdBanner />
         <TrustStrip />
         <Features />
         <PricingSection />

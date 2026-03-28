@@ -338,6 +338,9 @@ export default async function PropFirmEditPage({
               />
               <Label htmlFor="isActive" className="font-normal cursor-pointer">Active</Label>
             </div>
+            <p className="text-xs text-muted-foreground">
+              Inactive firms are hidden from public catalogue pages and the rolling prop-firm banner.
+            </p>
 
             <div className="flex justify-end gap-2 pt-2">
               <ButtonV2  variant="outline" asChild>

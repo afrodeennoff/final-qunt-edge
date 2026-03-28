@@ -39,6 +39,84 @@ export const listPropFirms = unstable_cache(
   { revalidate: 3600, tags: ['prop-firms'] }
 )
 
+export type PropFirmBannerItem = {
+  id: string
+  firmName: string
+  firmSlug: string
+  badge: string
+  type: 'deal' | 'firm'
+}
+
+function toBannerBadge(coupon?: { code: string; discountPercent: number | null }): Pick<PropFirmBannerItem, 'badge' | 'type'> {
+  if (!coupon) {
+    return { badge: 'Live', type: 'firm' }
+  }
+
+  if (typeof coupon.discountPercent === 'number' && coupon.discountPercent > 0) {
+    return { badge: `${Math.round(coupon.discountPercent)}% OFF`, type: 'deal' }
+  }
+
+  return { badge: coupon.code.trim() || 'Deal', type: 'deal' }
+}
+
+const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
+  if (!hasConfiguredDatabaseConnection) {
+    return Object.entries(propFirms)
+      .map(([key, firm]) => {
+        const profile = getVerifiedPropFirmProfileByName(firm.name)
+        return {
+          id: `fallback-${key}`,
+          firmName: firm.name,
+          firmSlug: profile?.slug ?? key,
+          badge: 'Live',
+          type: 'firm' as const,
+        }
+      })
+      .sort((a, b) => a.firmName.localeCompare(b.firmName))
+  }
+
+  const now = new Date()
+
+  const firms = await prisma.propFirm.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      coupons: {
+        where: {
+          isActive: true,
+          OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+        },
+        orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
+        take: 1,
+        select: {
+          code: true,
+          discountPercent: true,
+        },
+      },
+    },
+    orderBy: { name: 'asc' },
+  })
+
+  return firms.map((firm) => {
+    const badge = toBannerBadge(firm.coupons[0])
+    return {
+      id: firm.id,
+      firmName: firm.name,
+      firmSlug: firm.slug,
+      badge: badge.badge,
+      type: badge.type,
+    }
+  })
+}
+
+export const listPropFirmBannerItems = unstable_cache(
+  _listPropFirmBannerItems,
+  ['prop-firms-banner-items'],
+  { revalidate: 3600, tags: ['prop-firms'] }
+)
+
 const _getPropFirmBySlug = async (slug: string) => {
   if (!hasConfiguredDatabaseConnection) {
     return null

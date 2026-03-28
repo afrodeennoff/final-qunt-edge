@@ -4,14 +4,10 @@ import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } f
 import { format } from "date-fns"
 import { useData } from "@/context/data-provider"
 import { SharedWidgetCanvas } from "./shared-widget-canvas"
-import { Logo } from "@/components/logo"
-import { ButtonV2 } from "@/components/ui/v2"
-import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { useCurrentLocale, useI18n } from "@/locales/client"
+import { useI18n } from "@/locales/client"
 import { Loader2, ChevronDown } from "lucide-react"
 import { useState } from "react"
-import { LanguageSelector } from "@/components/ui/language-selector"
 
 type I18nFn = ReturnType<typeof useI18n>
 
@@ -98,73 +94,30 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
   )
 }
 
-function TopBanner({ t }: { t: I18nFn }) {
-  const locale = useCurrentLocale()
-  const languages = [
-    { value: 'en', label: 'English' },
-    { value: 'fr', label: 'Français' },
-  ]
-
-  return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto w-full max-w-[1240px] px-4 pt-4 sm:px-6">
-        <div className="flex min-h-[66px] items-center rounded-full border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.62)] px-3 backdrop-blur-xl sm:px-4">
-          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface-muted)/0.85)]">
-              <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
-            </div>
-            <div className="hidden sm:flex sm:flex-col">
-              <h1 className="text-sm font-semibold tracking-tight [font-family:var(--font-poppins)]">Qunt Edge</h1>
-              <p className="text-xs text-[hsl(var(--mk-text-muted))]">{t('shared.tagline')}</p>
-            </div>
-          </Link>
-
-          <div className="ml-auto flex items-center gap-2">
-            <LanguageSelector languages={languages} />
-            <Link href={`/${locale}/authentication`}>
-              <ButtonV2  size="sm" className="h-10 rounded-full bg-primary px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary-foreground hover:bg-primary/90">
-                {t('shared.createAccount')}
-              </ButtonV2>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </header>
-  )
-}
-
 export function SharedPageClient() {
   const t = useI18n()
   const { isLoading, sharedParams } = useData()
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <TopBanner t={t} />
-        <div className="w-full mx-auto flex-1 flex items-center justify-center pt-28 sm:pt-32">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center pt-28 sm:pt-32">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
       </div>
     )
   }
 
   if (!sharedParams) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <TopBanner t={t} />
-        <div className="w-full mx-auto flex-1 flex items-center justify-center p-4 pt-28 sm:pt-32">
-          <CardV2 className="max-w-lg w-full">
-            <CardV2Header>
-              <CardV2Title>{t('shared.notFound')}</CardV2Title>
-              <CardV2Description>
-                {t('shared.notFoundDescription')}
-              </CardV2Description>
-            </CardV2Header>
-          </CardV2>
-        </div>
+      <div className="flex flex-col items-center justify-center pt-28 sm:pt-32">
+        <CardV2 className="max-w-lg w-full">
+          <CardV2Header>
+            <CardV2Title>{t('shared.notFound')}</CardV2Title>
+            <CardV2Description>
+              {t('shared.notFoundDescription')}
+            </CardV2Description>
+          </CardV2Header>
+        </CardV2>
       </div>
     )
   }
@@ -172,56 +125,53 @@ export function SharedPageClient() {
   const dateRange = sharedParams.dateRange as { from: Date; to: Date }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <TopBanner t={t} />
-      <div className="container-fluid flex-1 pt-28 sm:pt-32">
-        <main className="w-full py-6 lg:py-8">
-          <CardV2 className="mb-6 w-full">
-            <CardV2Header className="space-y-3">
-              <div className="flex flex-col gap-2">
-                <CardV2Title className="text-xl sm:text-2xl">
-                  {sharedParams.title || t('shared.title')}
-                </CardV2Title>
-                <CardV2Description className="text-sm sm:text-base">
-                  {sharedParams.description || t('shared.description')}
-                </CardV2Description>
-              </div>
-            </CardV2Header>
-            <CardV2Content className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <CardV2 className="p-4 border-none shadow-none bg-muted/50">
-                  <p className="text-sm font-medium mb-1">{t('shared.sharedOn')}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(sharedParams.createdAt || new Date()), "PPP")}
-                  </p>
-                </CardV2>
-                <CardV2 className="p-4 border-none shadow-none bg-muted/50">
-                  <p className="text-sm font-medium mb-1">
-                    {dateRange.to ? t('shared.period') : t('shared.since')}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {dateRange.to ? (
-                      <>
-                        {format(new Date(dateRange.from), "PPP")}
-                        {" - "}
-                        {format(new Date(dateRange.to), "PPP")}
-                      </>
-                    ) : (
-                      format(new Date(dateRange.from), "PPP")
-                    )}
-                  </p>
-                </CardV2>
-              </div>
-              
+    <div className="container-fluid flex-1 pt-28 sm:pt-32">
+      <main className="w-full py-6 lg:py-8">
+        <CardV2 className="mb-6 w-full">
+          <CardV2Header className="space-y-3">
+            <div className="flex flex-col gap-2">
+              <CardV2Title className="text-xl sm:text-2xl">
+                {sharedParams.title || t('shared.title')}
+              </CardV2Title>
+              <CardV2Description className="text-sm sm:text-base">
+                {sharedParams.description || t('shared.description')}
+              </CardV2Description>
+            </div>
+          </CardV2Header>
+          <CardV2Content className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <CardV2 className="p-4 border-none shadow-none bg-muted/50">
-                <AccountsSelector accounts={sharedParams.accountNumbers} />
+                <p className="text-sm font-medium mb-1">{t('shared.sharedOn')}</p>
+                <p className="text-sm text-muted-foreground">
+                  {format(new Date(sharedParams.createdAt || new Date()), "PPP")}
+                </p>
               </CardV2>
-            </CardV2Content>
-          </CardV2>
+              <CardV2 className="p-4 border-none shadow-none bg-muted/50">
+                <p className="text-sm font-medium mb-1">
+                  {dateRange.to ? t('shared.period') : t('shared.since')}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {dateRange.to ? (
+                    <>
+                      {format(new Date(dateRange.from), "PPP")}
+                      {" - "}
+                      {format(new Date(dateRange.to), "PPP")}
+                    </>
+                  ) : (
+                    format(new Date(dateRange.from), "PPP")
+                  )}
+                </p>
+              </CardV2>
+            </div>
+            
+            <CardV2 className="p-4 border-none shadow-none bg-muted/50">
+              <AccountsSelector accounts={sharedParams.accountNumbers} />
+            </CardV2>
+          </CardV2Content>
+        </CardV2>
 
-          <SharedWidgetCanvas />
-        </main>
-      </div>
+        <SharedWidgetCanvas />
+      </main>
     </div>
   )
-} 
+}

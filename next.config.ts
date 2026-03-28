@@ -26,6 +26,16 @@ const configWithRedirects: NextConfig = {
         destination: '/:locale/deals',
         permanent: true,
       },
+      {
+        source: '/:locale/blog',
+        destination: '/:locale/blogs',
+        permanent: true,
+      },
+      {
+        source: '/:locale/blog/:slug',
+        destination: '/:locale/blogs/:slug',
+        permanent: true,
+      },
     ]
   },
 }

@@ -267,13 +267,14 @@ export default async function AdminCouponsPage({
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
             Admin Coupons
           </p>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">Coupon Codes</h1>
-            <p className="max-w-2xl text-sm text-muted-foreground">
-              Create, edit, retire, and audit coupon codes and discount percentages from one central admin workspace.
-            </p>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-semibold tracking-tight">Coupon Codes</h1>
+              <p className="max-w-2xl text-sm text-muted-foreground">
+                Create, edit, retire, and audit coupon codes and discount percentages from one central admin workspace.
+                Active coupons are also used in the public rolling prop-firm banner.
+              </p>
+            </div>
           </div>
-        </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <ButtonV2  variant="outline" asChild>
