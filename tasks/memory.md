@@ -8,6 +8,10 @@
 - Preserved existing conversion behavior:
   - copy coupon action uses the existing `onCopyCode` flow
   - CTA opens `claimUrl` externally when present, otherwise routes to `/${locale}/firm/${firmSlug}`
+- Completed a follow-up visual tuning pass to match the reference closer:
+  - switched spotlight styling to marketing dark tokens (`--mk-*`) for cleaner contrast
+  - updated accent treatment to lime-toned (`--chart-3`) controls, copy, CTA, and indicators
+  - tightened spacing/scale in the headline and center card composition
 
 ### Verification
 - `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx` passes.

@@ -4,10 +4,8 @@ import Features from './Features'
 import PricingSection from './PricingSection'
 import FinalCTA from './FinalCTA'
 
-type Locale = 'en' | 'fr'
-
 interface HomeContentProps {
-  locale: Locale
+  locale: string
 }
 
 export default function HomeContent({ locale }: HomeContentProps) {

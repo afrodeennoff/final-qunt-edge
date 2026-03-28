@@ -13,6 +13,7 @@ Verification:
 - Added a new “Today’s Biggest & Largest Deals!” spotlight carousel section under the deals hero in `deals-experience.tsx`.
 - The section uses filtered live deals (sorted by discount) and supports arrow navigation plus dot navigation.
 - CTA behavior remains consistent with existing deal cards (`claimUrl` opens externally when present, otherwise routes to firm page).
+- Follow-up tuning pass (2026-03-29): adjusted spacing, color system usage, and typography to align more closely with the provided visual reference (dark stage + lime accents).
 
 ## Task: API prerender-noise hardening (2026-03-28)
 

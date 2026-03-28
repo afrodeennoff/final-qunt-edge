@@ -416,38 +416,39 @@ function BiggestDealsCarousel({
   }
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-border bg-foreground p-5 text-background shadow-[0_38px_120px_-76px_rgba(0,0,0,0.95)] sm:p-7">
+    <section className="relative overflow-hidden rounded-3xl border border-[hsl(var(--mk-border))] bg-[hsl(var(--mk-bg-0))] p-6 text-[hsl(var(--mk-text))] shadow-[0_38px_120px_-76px_rgba(0,0,0,0.95)] sm:p-8">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-0 top-0 h-28 bg-background/5" />
-        <div className="absolute -left-16 top-10 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
-        <div className="absolute -right-20 bottom-0 h-64 w-64 rounded-full bg-background/10 blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-[hsl(var(--mk-bg-2))]" />
+        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-[hsl(var(--mk-border)/0.65)]" />
+        <div className="absolute -left-24 top-8 h-64 w-64 rounded-full bg-[hsl(var(--chart-3)/0.17)] blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[hsl(var(--chart-3)/0.12)] blur-3xl" />
       </div>
 
       <div className="relative flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-background sm:text-4xl">
+        <h2 className="text-[clamp(1.85rem,3.1vw,3rem)] font-semibold leading-tight tracking-tight text-[hsl(var(--mk-text))]">
           Today&apos;s Biggest &amp; Largest Deals!
         </h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={goToPrevious}
             aria-label="Show previous deal spotlight"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-background/20 bg-background/10 text-primary transition-colors hover:bg-background/20"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))] transition-colors hover:bg-[hsl(var(--mk-surface))]"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
           </button>
           <button
             type="button"
             onClick={goToNext}
             aria-label="Show next deal spotlight"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-background/20 bg-background/10 text-primary transition-colors hover:bg-background/20"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))] transition-colors hover:bg-[hsl(var(--mk-surface))]"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5" strokeWidth={2.5} />
           </button>
         </div>
       </div>
 
-      <div className="relative mt-6">
+      <div className="relative mt-7">
         <div className="pointer-events-none absolute inset-y-0 left-0 hidden items-center xl:flex">
           <BackgroundDealTeaser deal={previousDeal} align="left" />
         </div>
@@ -455,39 +456,39 @@ function BiggestDealsCarousel({
           <BackgroundDealTeaser deal={nextDeal} align="right" />
         </div>
 
-        <div className="relative mx-auto max-w-5xl rounded-3xl border border-background/20 bg-background/5 p-5 backdrop-blur-sm sm:p-7">
+        <div className="relative mx-auto max-w-5xl rounded-3xl border border-[hsl(var(--mk-border))] bg-[hsl(var(--mk-bg-1)/0.96)] p-5 backdrop-blur-sm sm:p-8">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <div className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/40 bg-primary/15 text-primary">
+              <div className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[hsl(var(--chart-3)/0.35)] bg-[hsl(var(--chart-3)/0.15)] text-[hsl(var(--chart-3))]">
                 <Flame className="h-4 w-4" />
               </div>
-              <div className="relative mt-5 h-28 w-28">
-                <div className="absolute -inset-3 rounded-full bg-primary/30 blur-2xl" />
-                <div className="absolute inset-0 rounded-full border border-background/20 bg-background/15" />
-                <div className="absolute inset-3 rounded-full bg-background/90" />
+              <div className="relative mt-5 h-32 w-32">
+                <div className="absolute -inset-3 rounded-full bg-[hsl(var(--chart-3)/0.2)] blur-2xl" />
+                <div className="absolute inset-0 rounded-full border border-[hsl(var(--mk-border))] bg-[hsl(var(--mk-surface-muted))]" />
+                <div className="absolute inset-3 rounded-full bg-[hsl(var(--mk-bg-0))]" />
               </div>
-              <p className="mt-5 text-2xl font-semibold tracking-tight">{activeDeal.firmName}</p>
-              <p className="mt-1 text-sm text-background/75">
+              <p className="mt-5 text-2xl font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:text-3xl">{activeDeal.firmName}</p>
+              <p className="mt-1 text-sm text-[hsl(var(--mk-text-muted))]">
                 {activeDeal.platform} • {activeDeal.category}
               </p>
-              <div className="mt-3 flex items-center gap-1 text-primary">
+              <div className="mt-3 flex items-center gap-1 text-[hsl(var(--chart-3))]">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star key={index} className="h-4 w-4 fill-current" />
                 ))}
               </div>
             </div>
 
-            <div className="hidden h-56 w-px bg-background/20 lg:block" />
+            <div className="hidden h-56 w-px bg-[hsl(var(--mk-border)/0.9)] lg:block" />
 
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <p className="text-5xl font-semibold tracking-tight sm:text-6xl">{activeDeal.discountPercent}% Off</p>
-              <p className="mt-3 max-w-xl text-base leading-7 text-background/80">
+              <p className="text-5xl font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:text-7xl">{activeDeal.discountPercent}% Off</p>
+              <p className="mt-3 max-w-xl text-base leading-7 text-[hsl(var(--mk-text-muted))]">
                 Big savings inside: {activeDeal.discountPercent}% off on {activeDeal.firmName} accounts.
               </p>
               <button
                 type="button"
                 onClick={() => onCopyCode(activeDeal.couponCode)}
-                className="mt-6 text-base font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+                className="mt-6 text-base font-semibold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-colors hover:text-[hsl(var(--chart-3)/0.8)]"
               >
                 {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy Code: ${activeDeal.couponCode}`}
               </button>
@@ -496,14 +497,14 @@ function BiggestDealsCarousel({
                   href={claimHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 inline-flex min-w-52 items-center justify-center rounded-full bg-primary px-8 py-3 text-lg font-semibold text-primary-foreground transition hover:brightness-110"
+                  className="mt-6 inline-flex min-w-60 items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 py-3 text-lg font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
                 >
                   Get Deal
                 </a>
               ) : (
                 <Link
                   href={claimHref}
-                  className="mt-6 inline-flex min-w-52 items-center justify-center rounded-full bg-primary px-8 py-3 text-lg font-semibold text-primary-foreground transition hover:brightness-110"
+                  className="mt-6 inline-flex min-w-60 items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 py-3 text-lg font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
                 >
                   Get Deal
                 </Link>
@@ -521,7 +522,7 @@ function BiggestDealsCarousel({
             aria-label={`Show ${deal.firmName} spotlight`}
             onClick={() => setActiveIndex(index)}
             className={`h-2.5 rounded-full transition-all ${
-              index === normalizedActiveIndex ? 'w-9 bg-primary' : 'w-2.5 bg-background/35 hover:bg-background/50'
+              index === normalizedActiveIndex ? 'w-9 bg-[hsl(var(--chart-3))]' : 'w-2.5 bg-[hsl(var(--mk-text-muted))] hover:bg-[hsl(var(--mk-text-muted)/0.7)]'
             }`}
           />
         ))}
@@ -539,14 +540,14 @@ function BackgroundDealTeaser({
 }) {
   return (
     <div
-      className={`w-56 rounded-2xl border border-background/10 bg-background/5 p-4 opacity-45 backdrop-blur-sm ${
+      className={`w-56 rounded-2xl border border-[hsl(var(--mk-border))] bg-[hsl(var(--mk-bg-1)/0.85)] p-4 opacity-45 backdrop-blur-sm ${
         align === 'left' ? 'translate-x-[-30%]' : 'translate-x-[30%]'
       }`}
     >
-      <p className="text-[10px] uppercase tracking-[0.18em] text-background/60">Deal preview</p>
-      <p className="mt-3 text-lg font-semibold text-background/80">{deal.firmName}</p>
-      <p className="mt-1 text-3xl font-semibold text-background/70">{deal.discountPercent}% Off</p>
-      <p className="mt-1 text-xs text-background/60">{deal.platform}</p>
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))]">Deal preview</p>
+      <p className="mt-3 text-lg font-semibold text-[hsl(var(--mk-text))]">{deal.firmName}</p>
+      <p className="mt-1 text-3xl font-semibold text-[hsl(var(--mk-text))]">{deal.discountPercent}% Off</p>
+      <p className="mt-1 text-xs text-[hsl(var(--mk-text-muted))]">{deal.platform}</p>
     </div>
   )
 }

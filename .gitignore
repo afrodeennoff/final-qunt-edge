@@ -63,9 +63,10 @@ datafeeds/
 
 **/market/**
 
-# Lock files (except package-lock.json which IS committed)
-!package-lock.json
+# Lock files (except package-lock.json and bun.lock which ARE committed)
 *.lock
+!package-lock.json
+!bun.lock
 
 # Local development binaries
 .local/
