@@ -2,11 +2,22 @@ import { Metadata } from 'next';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { setStaticParamsLocale } from "next-international/server";
 import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell";
+import { buildBreadcrumbSchema, buildFaqPageSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-    title: 'FAQ | Qunt Edge',
-    description: 'Frequently asked questions about Qunt Edge trading analytics and behavioral intelligence.',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return buildPublicMetadata({
+    locale,
+    path: "/faq",
+    title: "Trading Journal FAQ | Qunt Edge",
+    description:
+      "Frequently asked questions about Qunt Edge trading-journal workflows, broker support, security, and team analytics.",
+  });
+}
 
 export default async function FAQPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
@@ -34,9 +45,18 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
             answer: "Yes, our Teams feature is specifically designed for proprietary trading firms and private funds to manage multiple traders with unified risk and behavioral analytics."
         }
     ];
+    const faqSchema = buildFaqPageSchema(faqs);
+    const organizationSchema = buildOrganizationSchema();
+    const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+      { name: "Home", path: "/" },
+      { name: "FAQ", path: "/faq" },
+    ]);
 
     return (
         <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             <UnifiedSurface className="space-y-4">
                 <header className="mb-6">
                     <h1 className="text-3xl font-semibold text-fg-primary">Frequently Asked Questions</h1>

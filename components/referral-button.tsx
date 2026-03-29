@@ -109,7 +109,7 @@ export default function ReferralButton({ variant = 'sidebar' }: { variant?: 'nav
         <div className={cn(
           "flex items-center gap-2 cursor-pointer transition-colors",
           variant === 'navbar'
-            ? "text-zinc-400 hover:text-foreground p-1 rounded-full"
+            ? "p-1 text-muted-foreground hover:text-foreground rounded-full"
             : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-lg p-2 w-full group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
         )}>
           <div className="relative flex-none">

@@ -6,6 +6,7 @@ import {
   buildPropFirmDealsMetadata,
   PROP_FIRM_DEALS_LAST_UPDATED,
 } from './data/seo'
+import { buildBreadcrumbSchema, buildOrganizationSchema, buildSoftwareApplicationSchema } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -24,6 +25,12 @@ export default async function PropFirmDealsPage({
   const { locale } = await params
 
   const faqSchema = buildPropFirmDealsFaqSchema(faqItems)
+  const organizationSchema = buildOrganizationSchema()
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Home", path: "/" },
+    { name: "Prop Firm Deals", path: "/prop-firm-deals" },
+  ])
+  const softwareSchema = buildSoftwareApplicationSchema(locale, "/prop-firm-deals")
 
   return (
     <>
@@ -33,6 +40,18 @@ export default async function PropFirmDealsPage({
         firms={firms}
         faqs={faqItems}
         lastUpdated={PROP_FIRM_DEALS_LAST_UPDATED}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
       <script
         type="application/ld+json"

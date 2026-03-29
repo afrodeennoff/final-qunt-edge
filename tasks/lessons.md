@@ -4,6 +4,53 @@
 
 ---
 
+## NEW (2026-03-29): Private API auth cannot rely on middleware bearer presence
+
+### Mistake
+Private API protection accepted any `Authorization: Bearer ...` header in proxy logic, and some deals routes had no route-level auth check.
+
+### Root Cause
+Authentication was treated as a transport/header-shape check instead of identity verification. This created a false sense of protection and left route handlers dependent on middleware behavior.
+
+### Rule
+For private APIs, always verify identity cryptographically (Supabase session/JWT or route-specific secure token verification) and enforce route-level auth in the handler itself. Middleware may add defense-in-depth, but route handlers must remain secure if middleware is bypassed.
+
+### Example
+```ts
+// BAD: header presence only
+if (!authHeader?.startsWith('Bearer ')) return 401
+
+// GOOD: verify authenticated user
+const { data: { user } } = token
+  ? await supabase.auth.getUser(token)
+  : await supabase.auth.getUser()
+if (!user?.id) return 401
+```
+
+---
+
+## NEW (2026-03-29): Never synthesize business-facing prop firm data when source systems are unavailable
+
+### Mistake
+Deals/catalogue paths returned fabricated fallback values (payouts, discounts, fees, profile fields) when DB access was unavailable.
+
+### Root Cause
+Fallback behavior prioritized non-empty UI over source-truth integrity, causing confidence-damaging mismatches between displayed values and real data.
+
+### Rule
+If authoritative data sources are unavailable, return explicit empty/unavailable states (`[]`/`null`) instead of invented financial/business metrics.
+
+### Example
+```ts
+// BAD
+if (!hasConfiguredDatabaseConnection) return syntheticDealsFromStaticCopy()
+
+// GOOD
+if (!hasConfiguredDatabaseConnection) return []
+```
+
+---
+
 ## Lesson: Do not claim work is finished when it is partial
 
 ### What happened
@@ -14,6 +61,24 @@ Explicitly state remaining work and ask for confirmation before claiming complet
 
 ### Rule
 Never mark work finished unless all agreed fixes are implemented and verified.
+
+---
+
+## NEW (2026-03-29): Next.js proxy artifact ENOENT is a transient build race, not a middleware migration trigger
+
+### Mistake
+Attempted to switch `proxy.ts` to `middleware.ts` to bypass a `.next/server/proxy.js` ENOENT build failure.
+
+### Root Cause
+The real issue was a transient `.next` artifact race during Next build finalization. Migrating to `middleware.ts` changed runtime constraints and introduced unrelated `node:crypto` bundling errors.
+
+### Rule
+If Next build fails with missing `.next/server/proxy.js` during finalize/trace steps, keep `proxy.ts` and harden/retry the build wrapper for that specific transient artifact race. Do not migrate middleware conventions as a first response.
+
+### Example
+```text
+Error: ENOENT ... rename '.next/server/proxy.js' -> '.next/server/middleware.js'
+```
 
 ---
 

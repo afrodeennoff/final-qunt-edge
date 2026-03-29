@@ -56,6 +56,13 @@ export default function Hero({ locale }: { locale: string }) {
         <p className="text-[0.8rem] text-muted-foreground/70 tracking-wide animate-fade-in-delayed-3">
           No credit card required · First audit in minutes
         </p>
+        <p className="mt-2 text-[0.82rem] text-muted-foreground/80 animate-fade-in-delayed-3">
+          Looking for the best trading journal?{" "}
+          <Link href={`/${locale}/best-trading-journal`} className="font-medium text-foreground underline underline-offset-4">
+            Read the full guide
+          </Link>
+          .
+        </p>
       </div>
       
       <div className="relative z-10 w-full mt-14 pb-10">

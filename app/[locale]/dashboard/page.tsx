@@ -1,5 +1,6 @@
 import { DashboardTabShell } from "./components/dashboard-tab-shell";
 import type { Metadata } from "next";
+import { getCanonicalUrl } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -7,29 +8,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const canonical = getCanonicalUrl(locale, "/dashboard");
 
   return {
     title: "Dashboard | Qunt Edge",
     description: "Access your trading analytics dashboard with real-time performance metrics, behavioral insights, and comprehensive trade analysis.",
-    openGraph: {
-      title: "Dashboard | Qunt Edge",
-      description: "Access your trading analytics dashboard with real-time performance metrics, behavioral insights, and comprehensive trade analysis.",
-      url: `https://quntedge.com/${locale}/dashboard`,
-      siteName: "Qunt Edge",
-      locale: locale,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Dashboard | Qunt Edge",
-      description: "Access your trading analytics dashboard with real-time performance metrics, behavioral insights, and comprehensive trade analysis.",
+    robots: {
+      index: false,
+      follow: false,
     },
     alternates: {
-      canonical: `./${locale}/dashboard`,
-      languages: {
-        'x-default': `./en/dashboard`,
-        'en': `./en/dashboard`,
-      },
+      canonical,
     },
   };
 }

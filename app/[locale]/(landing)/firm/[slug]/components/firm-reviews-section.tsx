@@ -1,13 +1,21 @@
 "use client"
 import React from 'react'
-import { createFirmReview, listFirmReviews, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
+import Link from 'next/link'
+import { createFirmReview, listFirmReviews, getFirmReviewStats, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
 import { CardV2, CardV2Content, CardV2Description, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
 import { ReviewsIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase'
 import { Star, ShieldCheck, AlertCircle, CheckCircle2, XCircle, Flag, ChevronLeft, ChevronRight, Filter } from 'lucide-react'
 
-type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>[number]
+type FirmReviewItem = Awaited<ReturnType<typeof listFirmReviews>>['items'][number]
+type FirmReviewStats = Awaited<ReturnType<typeof getFirmReviewStats>>
+
+const INITIAL_REVIEW_STATS: FirmReviewStats = {
+  average: 0,
+  total: 0,
+  distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+}
 
 function InteractiveStarRating({
   rating,
@@ -49,7 +57,7 @@ function InteractiveStarRating({
               "transition-colors",
               (hoverRating || rating) >= star
                 ? "fill-yellow-400 text-yellow-400"
-                : "fill-transparent text-white/20 stroke-white/30"
+                : "fill-transparent text-muted-foreground/50 stroke-muted-foreground/60"
             )}
           />
         </button>
@@ -73,7 +81,7 @@ function StaticStarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm'
             sizeClasses[size],
             star <= rating
               ? "fill-yellow-400 text-yellow-400"
-              : "fill-transparent text-white/20 stroke-white/30"
+              : "fill-transparent text-muted-foreground/50 stroke-muted-foreground/60"
           )}
         />
       ))}
@@ -94,15 +102,15 @@ function RatingDistributionBar({
   
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-white/50 w-3">{rating}</span>
+      <span className="w-3 text-xs text-muted-foreground">{rating}</span>
       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-      <div className="flex-1 h-2 rounded-full bg-white/[0.06] overflow-hidden">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-card/70">
         <div
           className="h-full rounded-full bg-yellow-400/80 transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs text-white/40 w-8 text-right">{count}</span>
+      <span className="w-8 text-right text-xs text-muted-foreground">{count}</span>
     </div>
   )
 }
@@ -126,7 +134,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all duration-200 hover:bg-white/[0.04] hover:border-white/[0.1]">
+    <div className="group rounded-2xl border border-border/70 bg-card/60 p-5 transition-all duration-200 hover:border-border hover:bg-card/80">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
@@ -137,7 +145,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-medium text-white truncate">
+              <span className="truncate text-sm font-medium text-foreground">
                 {review.userId ? 'Verified Trader' : 'Anonymous Trader'}
               </span>
               {review.isVerified && (
@@ -151,13 +159,13 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
               {canFlag && (
                 <button
                   onClick={() => onFlag(review.id)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/5 rounded"
+                  className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-card/80"
                   title="Report this review"
                 >
-                  <Flag className="h-3.5 w-3.5 text-white/40 hover:text-v2-error" />
+                  <Flag className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-v2-error" />
                 </button>
               )}
-              <span className="text-xs text-white/40">
+              <span className="text-xs text-muted-foreground">
                 {formatRelativeTime(new Date(review.createdAt))}
               </span>
             </div>
@@ -168,13 +176,13 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
           </div>
           
           {review.title && (
-            <h4 className="mt-2 text-sm font-medium text-white/90">
+            <h4 className="mt-2 text-sm font-medium text-foreground">
               {review.title}
             </h4>
           )}
           
           {review.content && (
-            <p className="mt-1.5 text-sm leading-relaxed text-white/60">
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
               {review.content}
             </p>
           )}
@@ -186,7 +194,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+    <div className="rounded-2xl border border-border/70 bg-card/60 p-5">
       <div className="flex items-start gap-4">
         <SkeletonV2 className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -212,6 +220,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   const [reviews, setReviews] = React.useState<FirmReviewItem[]>([])
   const [loading, setLoading] = React.useState(true)
   const [submitting, setSubmitting] = React.useState(false)
+  const [stats, setStats] = React.useState<FirmReviewStats>(INITIAL_REVIEW_STATS)
   
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null)
   const [currentUserId, setCurrentUserId] = React.useState<string | null>(null)
@@ -260,15 +269,19 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   
   const fetchReviews = React.useCallback(async () => {
     try {
+      setLoading(true)
       setError(null)
-      const data = await listFirmReviews(firmId, currentPage, sortBy)
-      setReviews(data ?? [])
-      
-      // Calculate total pages (approximate since we don't have a count endpoint)
-      setTotalPages(Math.max(1, Math.ceil((data?.length ?? 0) / 10)))
+      const [reviewData, reviewStats] = await Promise.all([
+        listFirmReviews(firmId, currentPage, sortBy),
+        getFirmReviewStats(firmId),
+      ])
+
+      setReviews(reviewData.items ?? [])
+      setStats(reviewStats)
+      setTotalPages(reviewData.totalPages ?? 1)
       
       if (currentUserId) {
-        const userReview = data?.find(r => r.userId === currentUserId)
+        const userReview = reviewData.items?.find(r => r.userId === currentUserId)
         setHasUserReviewed(!!userReview)
       }
     } catch (err) {
@@ -283,32 +296,6 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   React.useEffect(() => {
     void fetchReviews()
   }, [fetchReviews])
-  
-  const stats = React.useMemo(() => {
-    if (reviews.length === 0) {
-      return {
-        average: 0,
-        total: 0,
-        distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
-      }
-    }
-    
-    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
-    let sum = 0
-    
-    for (const review of reviews) {
-      sum += review.rating
-      if (review.rating >= 1 && review.rating <= 5) {
-        distribution[review.rating as keyof typeof distribution]++
-      }
-    }
-    
-    return {
-      average: sum / reviews.length,
-      total: reviews.length,
-      distribution
-    }
-  }, [reviews])
   
   const validateForm = React.useCallback(() => {
     let isValid = true
@@ -425,21 +412,21 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-              <div className="text-5xl font-bold tracking-tight text-white">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-border/70 bg-card/60 p-6">
+              <div className="text-5xl font-bold tracking-tight text-foreground">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
               <div className="mt-2">
                 <StaticStarRating rating={Math.round(stats.average)} size="md" />
               </div>
-              <p className="mt-2 text-sm text-white/50">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Based on {stats.total} {stats.total === 1 ? 'review' : 'reviews'}
               </p>
             </div>
             
             {/* Rating Distribution */}
             <div className="space-y-2.5 py-2">
-              <p className="text-xs uppercase tracking-[0.12em] text-white/40 mb-3">Rating Distribution</p>
+              <p className="mb-3 text-xs uppercase tracking-[0.12em] text-muted-foreground">Rating Distribution</p>
               {[5, 4, 3, 2, 1].map((rating) => (
                 <RatingDistributionBar
                   key={rating}
@@ -476,10 +463,10 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <CardV2 className="rounded-2xl border-white/10 bg-white/[0.03]">
+      <CardV2 className="rounded-2xl border-border/70 bg-card/80">
         <CardV2Content className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Write a Review</h3>
+            <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
             {!showForm && isAuthenticated && !hasUserReviewed && (
               <ButtonV2
                 variant="outline"
@@ -493,19 +480,19 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 text-center">
-              <p className="text-sm text-white/60">
-                Please <a href="/en/authentication" className="text-v2-accent hover:underline">sign in</a> to write a review
+            <div className="rounded-2xl border border-border/70 bg-card/60 p-5 text-center">
+              <p className="text-sm text-muted-foreground">
+                Please <Link href="/authentication" className="text-v2-accent hover:underline">sign in</Link> to write a review
               </p>
             </div>
           )}
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+            <div className="rounded-2xl border border-border/70 bg-card/60 p-5">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-v2-success" />
-                <p className="text-sm text-white/70">
+                <p className="text-sm text-muted-foreground">
                   You have already reviewed this firm. Thank you for your feedback!
                 </p>
               </div>
@@ -517,7 +504,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             <form onSubmit={onSubmit} className="space-y-5">
               {/* Rating Selection */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">
                   Your Rating <span className="text-v2-error">*</span>
                 </label>
                 <InteractiveStarRating
@@ -536,7 +523,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               
               {/* Title Input */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">
                   Review Title <span className="text-v2-error">*</span>
                 </label>
                 <InputV2
@@ -554,16 +541,16 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   {titleError ? (
                     <p className="text-xs text-v2-error">{titleError}</p>
                   ) : (
-                    <p className="text-xs text-white/30">Min 3 characters</p>
+                    <p className="text-xs text-muted-foreground">Min 3 characters</p>
                   )}
-                  <span className="text-xs text-white/30">{title.length}/100</span>
+                  <span className="text-xs text-muted-foreground">{title.length}/100</span>
                 </div>
               </div>
               
               {/* Body Textarea */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
-                  Your Review <span className="text-white/40">(optional)</span>
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">
+                  Your Review <span className="text-muted-foreground">(optional)</span>
                 </label>
                 <TextareaV2
                   placeholder="Share details about your experience with this firm..."
@@ -573,7 +560,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   rows={4}
                   maxLength={1000}
                 />
-                <p className="mt-1.5 text-xs text-white/30 text-right">{body.length}/1000</p>
+                <p className="mt-1.5 text-right text-xs text-muted-foreground">{body.length}/1000</p>
               </div>
               
               {/* Form Actions */}
@@ -630,21 +617,21 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Flag Report Dialog */}
       {showFlagDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-card p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-border/70 bg-card p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Report Review</h3>
-              <button onClick={() => setShowFlagDialog(false)} className="p-1 hover:bg-white/5 rounded">
-                <XCircle className="h-5 w-5 text-white/40" />
+              <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
+              <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-card/70">
+                <XCircle className="h-5 w-5 text-muted-foreground" />
               </button>
             </div>
             <form onSubmit={submitFlag} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Reason</label>
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">Reason</label>
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-v2-accent focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -656,7 +643,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Additional Details (optional)</label>
+                <label className="mb-2 block text-sm font-medium text-muted-foreground">Additional Details (optional)</label>
                 <TextareaV2
                   placeholder="Provide more context about your report..."
                   value={flagDescription}
@@ -678,26 +665,26 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <CardV2 className="rounded-2xl border-white/10 bg-white/[0.03]">
+      <CardV2 className="rounded-2xl border-border/70 bg-card/80">
         <CardV2Content className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-            <h3 className="text-lg font-semibold text-white">
+            <h3 className="text-lg font-semibold text-foreground">
               All Reviews
               {stats.total > 0 && (
-                <span className="ml-2 text-sm font-normal text-white/40">({stats.total})</span>
+                <span className="ml-2 text-sm font-normal text-muted-foreground">({stats.total})</span>
               )}
             </h3>
             
             {/* Sort Controls */}
             <div className="flex items-center gap-2">
-              <Filter size={16} className="text-white/40" />
+              <Filter size={16} className="text-muted-foreground" />
               <select
                 value={sortBy}
                 onChange={(e) => {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white focus:border-v2-accent focus:outline-none"
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground focus:border-v2-accent focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -718,11 +705,11 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : reviews.length === 0 ? (
               // Empty state
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.03] border border-white/[0.06] mb-4">
-                  <ReviewsIcon size={28} className="text-white/30" />
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border/70 bg-card/60">
+                  <ReviewsIcon size={28} className="text-muted-foreground" />
                 </div>
-                <p className="text-sm font-medium text-white/60">No reviews yet</p>
-                <p className="mt-1 text-sm text-white/40">
+                <p className="text-sm font-medium text-muted-foreground">No reviews yet</p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Be the first to share your experience with this firm
                 </p>
                 {isAuthenticated && !hasUserReviewed && !showForm && (
@@ -751,7 +738,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-6 pt-4 border-t border-white/5">
+            <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/70 pt-4">
               <ButtonV2
                 variant="ghost"
                 size="sm"
@@ -760,7 +747,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               >
                 <ChevronLeft className="h-4 w-4" />
               </ButtonV2>
-              <span className="text-sm text-white/50">
+              <span className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </span>
               <ButtonV2

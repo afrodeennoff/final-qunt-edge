@@ -2,10 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { PublicFlowShell } from '../components/public-flow-shell'
-import { getSiteOrigin } from '@/lib/site-url'
-
-const SITE_ORIGIN = getSiteOrigin();
-const PAGE_PATH = "/deals/faq";
+import { buildBreadcrumbSchema, buildFaqPageSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -13,31 +10,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
-
-  return {
-    title: 'Qunt Edge Deals FAQ',
-    description: 'Answers to common questions about how Qunt Edge Deals are curated, updated, and used.',
-    alternates: {
-      canonical,
-      languages: {
-        "en-US": `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        "fr-FR": `${SITE_ORIGIN}/fr${PAGE_PATH}`,
-        "x-default": `${SITE_ORIGIN}/en${PAGE_PATH}`,
-      },
-    },
-    openGraph: {
-      title: 'Qunt Edge Deals FAQ',
-      description: 'Answers to common questions about how Qunt Edge Deals are curated, updated, and used.',
-      url: canonical,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: 'Qunt Edge Deals FAQ',
-      description: 'Answers to common questions about how Qunt Edge Deals are curated, updated, and used.',
-    },
-  };
+  return buildPublicMetadata({
+    locale,
+    path: "/deals/faq",
+    title: "Deals FAQ | Qunt Edge",
+    description:
+      "Answers to common questions about how Qunt Edge deals are curated, updated, and validated before checkout.",
+  });
 }
 
 const faqItems = [
@@ -74,24 +53,27 @@ export default async function PropfirmPerkFAQPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer,
-      },
-    })),
-  };
+  const faqSchema = buildFaqPageSchema(faqItems);
+  const organizationSchema = buildOrganizationSchema();
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Home", path: "/" },
+    { name: "Deals", path: "/deals" },
+    { name: "FAQ", path: "/deals/faq" },
+  ]);
 
   return (
     <PublicFlowShell
       title="Deals FAQ"
       subtitle="Answers written for the Qunt Edge deals flow, including how offers are curated and how to validate a setup before purchase."
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

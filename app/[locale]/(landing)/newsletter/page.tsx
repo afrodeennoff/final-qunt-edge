@@ -2,10 +2,20 @@ import { Metadata } from "next"
 import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { CheckCircle2 } from "lucide-react"
 import { getScopedI18n } from "@/locales/server"
+import { buildPublicMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Newsletter Preferences | Delatlytix",
-  description: "Manage your newsletter preferences and subscription settings",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return buildPublicMetadata({
+    locale,
+    path: "/newsletter",
+    title: "Newsletter Preferences | Qunt Edge",
+    description: "Manage newsletter preferences and unsubscribe settings for Qunt Edge updates.",
+  });
 }
 
 export default async function NewsletterPage(

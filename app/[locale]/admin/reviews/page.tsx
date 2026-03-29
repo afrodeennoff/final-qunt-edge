@@ -47,13 +47,13 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
   ]
   
   return (
-    <div className="min-h-screen bg-background text-white p-6">
+    <div className="min-h-screen bg-background p-6 text-foreground">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold">Review Moderation</h1>
-            <p className="text-white/50 mt-1">Manage flagged reviews and user reports</p>
+            <p className="mt-1 text-muted-foreground">Manage flagged reviews and user reports</p>
           </div>
           
           {flaggedCount > 0 && (
@@ -70,10 +70,10 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
             <Link
               key={option.value}
               href={`/${locale}/admin/reviews?status=${option.value}`}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 status === option.value
-                  ? 'bg-v2-accent text-white'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10'
+                  ? 'bg-v2-accent text-v2-accent-foreground'
+                  : 'bg-card/80 text-muted-foreground hover:bg-card'
               }`}
             >
               {option.label}
@@ -84,14 +84,14 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
         {/* Reports List */}
         <div className="space-y-4">
           {items.length === 0 ? (
-            <div className="text-center py-12 text-white/50">
+            <div className="py-12 text-center text-muted-foreground">
               No moderation reports found
             </div>
           ) : (
             items.map((item) => (
               <div
                 key={item.id}
-                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
+                className="rounded-2xl border border-border/70 bg-card/70 p-6"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
@@ -103,13 +103,13 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       >
                         {item.status}
                       </BadgeV2>
-                      <span className="text-sm text-white/50">
+                      <span className="text-sm text-muted-foreground">
                         Reported {new Date(item.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     
                     {/* The flagged review */}
-                    <div className="rounded-xl bg-white/5 p-4 mb-4">
+                    <div className="mb-4 rounded-xl bg-card p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="font-medium">
                           {item.review.propFirm.name}
@@ -119,12 +119,12 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                         </span>
                       </div>
                       {item.review.title && (
-                        <h4 className="text-sm font-medium text-white/90 mb-1">
+                        <h4 className="mb-1 text-sm font-medium text-foreground">
                           {item.review.title}
                         </h4>
                       )}
                       {item.review.content && (
-                        <p className="text-sm text-white/60 line-clamp-2">
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
                           {item.review.content}
                         </p>
                       )}
@@ -132,11 +132,11 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                     
                     {/* The report reason */}
                     <div className="mb-4">
-                      <p className="text-xs uppercase tracking-wider text-white/40 mb-1">
+                      <p className="mb-1 text-xs uppercase tracking-wider text-muted-foreground">
                         Report Reason: {item.reason}
                       </p>
                       {item.description && (
-                        <p className="text-sm text-white/70">
+                        <p className="text-sm text-muted-foreground">
                           {item.description}
                         </p>
                       )}
@@ -160,7 +160,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                             Warning Issued
                           </BadgeV2>
                         )}
-                        <span className="text-white/40">
+                        <span className="text-muted-foreground">
                           {item.reviewedAt && `on ${new Date(item.reviewedAt).toLocaleDateString()}`}
                         </span>
                       </div>
@@ -216,16 +216,16 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           <div className="flex items-center justify-center gap-2 mt-6">
             <Link
               href={`/${locale}/admin/reviews?page=${Math.max(1, currentPage - 1)}&status=${status}`}
-              className={`p-2 rounded-lg ${currentPage === 1 ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'}`}
+              className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-card'}`}
             >
               <ChevronLeft className="h-5 w-5" />
             </Link>
-            <span className="text-sm text-white/50">
+            <span className="text-sm text-muted-foreground">
               Page {currentPage} of {totalPages} ({total} total)
             </span>
             <Link
               href={`/${locale}/admin/reviews?page=${Math.min(totalPages, currentPage + 1)}&status=${status}`}
-              className={`p-2 rounded-lg ${currentPage === totalPages ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10'}`}
+              className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-card'}`}
             >
               <ChevronRight className="h-5 w-5" />
             </Link>

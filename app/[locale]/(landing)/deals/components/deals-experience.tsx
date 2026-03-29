@@ -152,7 +152,7 @@ function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
             We are still tracking firms and pricing, but no active coupons surfaced in the current dataset.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white">
+            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
               Explore firms
             </Link>
             <Link href={localePrefix} className="rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground">
@@ -416,16 +416,13 @@ function BiggestDealsCarousel({
   }
 
   return (
-    <section className="relative overflow-hidden rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 pb-6 pt-7 text-[hsl(var(--mk-text))] sm:px-8 sm:pb-8 sm:pt-8">
+    <section className="relative overflow-hidden rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 pb-8 pt-7 text-[hsl(var(--mk-text))] sm:px-8 sm:pb-10 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-0 top-0 h-24 bg-[hsl(var(--mk-bg-0))]" />
-        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-[hsl(var(--mk-border)/0.65)]" />
-        <div className="absolute -left-24 top-8 h-64 w-64 rounded-full bg-[hsl(var(--mk-lime)/0.15)] blur-3xl" />
-        <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[hsl(var(--mk-lime)/0.12)] blur-3xl" />
+        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-[hsl(var(--mk-border)/0.68)]" />
       </div>
 
       <div className="relative flex items-center justify-between gap-3">
-        <h2 className="text-[clamp(2rem,3.3vw,3.2rem)] font-semibold leading-tight tracking-tight text-[hsl(var(--mk-text))]">
+        <h2 className="text-[clamp(2rem,2.8vw,3.3rem)] font-semibold leading-tight tracking-tight text-[hsl(var(--mk-text))]">
           Today&apos;s Biggest &amp; Largest Deals!
         </h2>
         <div className="flex items-center gap-2">
@@ -433,7 +430,7 @@ function BiggestDealsCarousel({
             type="button"
             onClick={goToPrevious}
             aria-label="Show previous deal spotlight"
-            className="inline-flex h-10 w-10 items-center justify-center text-[hsl(var(--mk-lime))] transition-transform hover:scale-110"
+            className="inline-flex h-11 w-11 items-center justify-center text-[hsl(var(--chart-3))] transition-transform hover:scale-110"
           >
             <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
           </button>
@@ -441,14 +438,14 @@ function BiggestDealsCarousel({
             type="button"
             onClick={goToNext}
             aria-label="Show next deal spotlight"
-            className="inline-flex h-10 w-10 items-center justify-center text-[hsl(var(--mk-lime))] transition-transform hover:scale-110"
+            className="inline-flex h-11 w-11 items-center justify-center text-[hsl(var(--chart-3))] transition-transform hover:scale-110"
           >
             <ChevronRight className="h-5 w-5" strokeWidth={2.5} />
           </button>
         </div>
       </div>
 
-      <div className="relative mt-9">
+      <div className="relative mt-8">
         <div className="pointer-events-none absolute inset-y-0 left-0 hidden items-center xl:flex">
           <BackgroundDealTeaser deal={previousDeal} align="left" />
         </div>
@@ -456,58 +453,57 @@ function BiggestDealsCarousel({
           <BackgroundDealTeaser deal={nextDeal} align="right" />
         </div>
 
-        <div className="relative mx-auto max-w-[980px] rounded-[30px] border border-[hsl(var(--mk-text-muted)/0.55)] bg-[hsl(var(--mk-bg-0)/0.98)] px-6 py-7 backdrop-blur-sm sm:px-8 sm:py-8">
-          <div className="absolute left-7 top-7 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--mk-lime))]">
+        <div className="relative mx-auto w-full max-w-[1020px] rounded-3xl border border-[hsl(var(--mk-text-muted)/0.56)] bg-[hsl(var(--mk-bg-0))] px-6 py-8 sm:px-8 sm:py-9">
+          <div className="absolute left-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))]">
             <Flame className="h-4 w-4" />
           </div>
-          <div className="grid gap-7 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+          <div className="grid gap-7 lg:grid-cols-[0.97fr_auto_1.03fr] lg:items-center">
             <div className="flex flex-col items-center text-center">
-              <div className="relative mt-6 h-36 w-36">
-                <div className="absolute -inset-4 rounded-full bg-[hsl(var(--mk-lime)/0.2)] blur-3xl" />
-                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_28%_24%,#f7fbff_2%,#8eb0d8_22%,#203a66_56%,#0a1020_84%)]" />
-                <div className="absolute inset-0 rounded-full shadow-[inset_-18px_-16px_32px_rgba(0,0,0,0.72)]" />
-                <div className="absolute -left-3 top-2 h-10 w-10 rounded-full bg-white/70 blur-xl" />
+              <div className="relative mt-4 h-36 w-36">
+                <div className="absolute -inset-7 rounded-full bg-[radial-gradient(circle,rgba(190,218,255,0.34)_0%,rgba(20,39,70,0.08)_60%,transparent_100%)] blur-2xl" />
+                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_26%,rgba(244,250,255,0.94)_0%,rgba(183,204,236,0.36)_20%,rgba(26,47,82,0.7)_48%,rgba(6,13,27,1)_76%)]" />
+                <div className="absolute inset-0 rounded-full shadow-[inset_-20px_-20px_36px_rgba(0,0,0,0.82)]" />
+                <div className="absolute -left-2 top-1 h-10 w-10 rounded-full bg-[hsl(var(--mk-text)/0.52)] blur-xl" />
               </div>
-              <p className="mt-8 font-mono text-[1.95rem] font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:text-[2.15rem]">
+              <p className="mt-9 font-mono text-[1.9rem] font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:text-[2.1rem]">
                 {activeDeal.firmName}
               </p>
-              <p className="mt-1 text-sm text-[hsl(var(--mk-text-muted))]">
-                {activeDeal.platform} • {activeDeal.category}
-              </p>
-              <div className="mt-3 flex items-center gap-1.5 text-[hsl(var(--mk-lime))]">
+              <div className="mt-3 flex items-center gap-1.5 text-[hsl(var(--chart-3))]">
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <Star key={index} className="h-5 w-5 fill-current" />
+                  <Star key={index} className="h-6 w-6 fill-current" />
                 ))}
               </div>
             </div>
 
-            <div className="hidden h-[330px] w-px border-l border-dashed border-[hsl(var(--mk-border)/0.85)] lg:block" />
+            <div className="hidden h-[340px] w-px border-l border-dashed border-[hsl(var(--mk-border)/0.9)] lg:block" />
 
             <div className="flex flex-col items-center text-center">
-              <p className="text-5xl font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:text-7xl">{activeDeal.discountPercent}% Off</p>
-              <p className="mt-3 max-w-[370px] text-[1.02rem] leading-8 text-[hsl(var(--mk-text))]">
+              <p className="whitespace-nowrap text-[clamp(3rem,4vw,4.9rem)] font-semibold tracking-tight text-[hsl(var(--mk-text))]">
+                {activeDeal.discountPercent}% Off
+              </p>
+              <p className="mt-3 max-w-[400px] text-[1.02rem] leading-8 text-[hsl(var(--mk-text))] sm:text-[1.05rem]">
                 Big savings inside: {activeDeal.discountPercent}% off on {activeDeal.firmName} accounts.
               </p>
               <button
                 type="button"
                 onClick={() => onCopyCode(activeDeal.couponCode)}
-                className="mt-7 text-[1.05rem] font-semibold text-[hsl(var(--mk-lime))] underline underline-offset-4 transition-colors hover:text-[hsl(var(--mk-lime)/0.8)]"
+                className="mt-7 text-[1.35rem] font-semibold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-colors hover:text-[hsl(var(--chart-3)/0.82)]"
               >
-                {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy_Code:_${activeDeal.couponCode}`}
+                {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy_Code:_ ${activeDeal.couponCode}`}
               </button>
               {isExternalClaim ? (
                 <a
                   href={claimHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-8 inline-flex h-16 w-full max-w-[380px] items-center justify-center rounded-full bg-[hsl(var(--mk-lime))] px-8 text-[1.8rem] font-semibold text-[hsl(var(--mk-lime-ink))] transition hover:brightness-110"
+                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
                 >
                   Get Deal
                 </a>
               ) : (
                 <Link
                   href={claimHref}
-                  className="mt-8 inline-flex h-16 w-full max-w-[380px] items-center justify-center rounded-full bg-[hsl(var(--mk-lime))] px-8 text-[1.8rem] font-semibold text-[hsl(var(--mk-lime-ink))] transition hover:brightness-110"
+                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
                 >
                   Get Deal
                 </Link>
@@ -529,21 +525,19 @@ function BackgroundDealTeaser({
 }) {
   return (
     <div
-      className={`w-[370px] rounded-3xl border border-[hsl(var(--mk-border))] bg-[hsl(var(--mk-bg-1)/0.5)] p-5 opacity-35 backdrop-blur-sm ${
-        align === 'left' ? 'translate-x-[-34%]' : 'translate-x-[34%]'
+      className={`w-[390px] rounded-3xl border border-[hsl(var(--mk-border)/0.85)] bg-[hsl(var(--mk-bg-0))] px-6 py-7 opacity-15 ${
+        align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
       <div className="grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--mk-text-muted))]">Deal preview</p>
-          <p className="mt-4 font-mono text-xl font-semibold text-[hsl(var(--mk-text))]">{deal.firmName}</p>
-          <p className="mt-1 text-xs text-[hsl(var(--mk-text-muted))]">{deal.platform}</p>
+          <p className="text-5xl font-semibold text-[hsl(var(--mk-text-muted)/0.8)]">{deal.discountPercent}% Off</p>
+          <p className="mt-3 text-xl text-[hsl(var(--mk-text-muted)/0.75)]">{deal.firmName}</p>
         </div>
-        <div className="hidden h-24 w-px border-l border-dashed border-[hsl(var(--mk-border)/0.7)] lg:block" />
+        <div className="hidden h-24 w-px border-l border-dashed border-[hsl(var(--mk-border)/0.8)] lg:block" />
         <div>
-          <p className="text-4xl font-semibold text-[hsl(var(--mk-text))]">{deal.discountPercent}% Off</p>
-          <p className="mt-2 text-xs text-[hsl(var(--mk-text-muted))]">Copy_Code:_{deal.couponCode}</p>
-          <div className="mt-3 h-10 w-full rounded-full bg-[hsl(var(--mk-lime)/0.45)]" />
+          <p className="text-sm text-[hsl(var(--mk-text-muted)/0.78)]">Copy_Code:_ {deal.couponCode}</p>
+          <div className="mt-4 h-14 w-full rounded-full bg-[hsl(var(--chart-3)/0.5)]" />
         </div>
       </div>
     </div>
@@ -713,11 +707,14 @@ function DealsHero({
           Browse active challenge discounts, compare pricing by market and firm, and move straight into the firm record when you want more context.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white">
+          <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
             Compare firms
           </Link>
           <Link href={`${localePrefix}/deals/compare`} className="rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-foreground">
             Compare pricing
+          </Link>
+          <Link href={`${localePrefix}/best-trading-journal`} className="rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-foreground">
+            Best trading journal guide
           </Link>
         </div>
       </div>
@@ -964,7 +961,7 @@ function DealCard({
             href={claimHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
@@ -972,7 +969,7 @@ function DealCard({
         ) : (
           <Link
             href={claimHref}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />

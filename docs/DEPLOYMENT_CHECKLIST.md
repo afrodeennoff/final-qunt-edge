@@ -1,6 +1,6 @@
 # QuntEdge — Production Deployment Checklist
 
-**Last Updated:** 2026-02-22  
+**Last Updated:** 2026-03-29  
 **Platform:** Vercel (primary) / Docker + VPS (alternative)
 
 ---
@@ -37,10 +37,10 @@
 
 ### 4. Build & Test ✅
 
-- [ ] `npm run typecheck` passes
-- [ ] `npm run lint` passes  
+- [ ] `bun run typecheck` passes
+- [ ] `bun run lint` passes  
 - [ ] `npm test` passes
-- [ ] `npm run build` succeeds
+- [ ] `bun run build` succeeds
 - [ ] Coverage ≥ 80% line coverage (`npm run test:coverage`)
 - [ ] `npm audit --audit-level=high` — no high-severity vulnerabilities
 
@@ -66,14 +66,41 @@
 
 ```bash
 # 1. Ensure all env vars are set in Vercel Dashboard
-# 2. Push to main branch
+# 2. Ensure Bun is configured in Vercel (from vercel.json):
+#    installCommand: bun install --frozen-lockfile
+#    buildCommand: bun run build
+
+# 3. Push to main branch
 git push origin main
 
-# 3. Vercel auto-deploys on push to main
-# 4. Verify deployment at https://qunt-edge.vercel.app
+# 4. Vercel auto-deploys on push to main
+# 5. Verify deployment at https://qunt-edge.vercel.app
 
-# 5. Run smoke test
+# 6. Run smoke test
 npm run test:smoke
+```
+
+### VPS (Bun + PM2)
+
+```bash
+# 1. Install Bun + PM2 once
+curl -fsSL https://bun.sh/install | bash
+npm i -g pm2
+
+# 2. Pull latest code
+cd /var/www/qunt-edge
+git pull origin main
+
+# 3. One-command deploy (recommended)
+APP_DIR=/var/www/qunt-edge BRANCH=main ./scripts/vps-deploy-bun.sh
+
+# 4. Verify health (deploy script already fails if health check never passes)
+curl -f http://127.0.0.1:3000/api/health
+pm2 logs qunt-edge
+
+# Optional npm fallback
+npm ci
+npm run build
 ```
 
 ### Docker / VPS (Alternative)

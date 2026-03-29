@@ -4,11 +4,26 @@ import CompletedTimeline from '../components/completed-timeline'
 import { getAllPosts } from '@/lib/posts'
 import { getLatestVideoFromPlaylist } from '@/app/[locale]/admin/actions/youtube'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import type { Metadata } from 'next'
+import { buildPublicMetadata } from '@/lib/seo'
 
 interface PageProps {
   params: Promise<{
     locale: string
   }>
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  return buildPublicMetadata({
+    locale,
+    path: "/updates",
+    title: "Product Updates & Release Notes | Qunt Edge",
+    description:
+      "Track completed Qunt Edge releases, platform improvements, and workflow updates for trading analytics.",
+  });
 }
 
 export default async function UpdatesPage(props: PageProps) {

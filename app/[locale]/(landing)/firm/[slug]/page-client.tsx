@@ -95,6 +95,9 @@ type FirmData = {
     profitSharing: number
     evaluation: boolean
   }>
+  coupons?: Array<{
+    id: string
+  }>
 }
 
 const trustChecklist = [
@@ -108,37 +111,17 @@ type FirmSourceNotes = {
   rules: string[]
 }
 
-function getFirmSourceMeta(firm: FirmData) {
-  if (firm.slug.toLowerCase() === 'topstep') {
-    const foundedYear = 2012
-    const currentYear = new Date().getFullYear()
+type FirmSourceMeta = {
+  founded?: string
+  countryCode?: string
+  yearsInOperation?: number
+}
 
-    return {
-      founded: String(foundedYear),
-      countryCode: 'US',
-      yearsInOperation: Math.max(0, currentYear - foundedYear),
-    }
-  }
-
+function getFirmSourceMeta(): FirmSourceMeta {
   return {}
 }
 
-function getFirmSourceNotes(firm: FirmData): FirmSourceNotes {
-  if (firm.slug.toLowerCase() === 'topstep') {
-    return {
-      overview: [
-        'Topstep separates the Trading Combine, Express Funded Account, and Live Funded Account so the current snapshot can show each stage clearly.',
-        'The current Topstep help center documents both Standard and No Activation Fee paths for funding.',
-        'Topstep allows up to five active Express Funded Accounts, which matters when you are comparing allocation and payout capacity.',
-      ],
-      rules: [
-        'Trading Combine and Express Funded Accounts are simulated; Live Funded Accounts trade the live market.',
-        'Trading Combine and Express Funded Accounts use end-of-day maximum loss calculations, while Live Funded Accounts enforce max loss intraday.',
-        'Topstep payout policy unlocks daily payouts after 30 total winning trading days in a Live Funded Account.',
-      ],
-    }
-  }
-
+function getFirmSourceNotes(): FirmSourceNotes {
   return { overview: [], rules: [] }
 }
 
@@ -170,17 +153,15 @@ function withDetailFallback(value?: string | null): string {
 }
 
 function getVisibleReviewCount(firm: FirmData): number {
-  const approvedReviewCount = firm.liveReviewStats?.approvedCount ?? 0
-  if (approvedReviewCount > 0) return approvedReviewCount
+  return firm.liveReviewStats?.approvedCount ?? 0
+}
 
-  const spotlightReviewCount = firm.spotlight?.reviewCount ?? 0
-  if (spotlightReviewCount > 0) return spotlightReviewCount
-
-  return firm._count?.reviews ?? 0
+function getVisibleCouponCount(firm: FirmData): number {
+  return firm.coupons?.length ?? 0
 }
 
 function buildAdditionalDetails(firm: FirmData): Array<{ icon: FactIcon; label: string; value: string }> {
-  const sourceMeta = getFirmSourceMeta(firm)
+  const sourceMeta = getFirmSourceMeta()
 
   return [
     { icon: Building2, label: 'Category', value: withDetailFallback(firm.category) },
@@ -220,7 +201,7 @@ function buildTrustMetrics(firm: FirmData): Array<{ label: string; value: string
 
   metrics.push(
     { label: 'User reviews', value: reviewCount.toLocaleString() },
-    { label: 'Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
+    { label: 'Coupons', value: getVisibleCouponCount(firm).toLocaleString() },
   )
 
   return metrics
@@ -392,7 +373,7 @@ function getHeaderReviewLabel(firm: FirmData): string {
 }
 
 function getHeaderOptionalItems(firm: FirmData): string[] {
-  const sourceMeta = getFirmSourceMeta(firm)
+  const sourceMeta = getFirmSourceMeta()
   const yearsInOperation = firm.spotlight?.yearsInOperation ?? sourceMeta.yearsInOperation
   const countryCode = firm.spotlight?.countryCode ?? sourceMeta.countryCode
   const founded = firm.spotlight?.founded ?? sourceMeta.founded
@@ -413,7 +394,7 @@ function buildHeaderMetrics(firm: FirmData): Array<{ label: string; value: strin
     { label: 'Profit Split', value: firm.profitSplit ?? 'Not listed' },
     { label: 'Max Allocation', value: firm.spotlight?.maxAllocation ?? firm.maxAllocation ?? 'Not listed' },
     { label: 'Drawdown Type', value: firm.drawdownType ?? 'Not listed' },
-    { label: 'Active Coupons', value: (firm._count?.coupons ?? 0).toLocaleString() },
+    { label: 'Active Coupons', value: getVisibleCouponCount(firm).toLocaleString() },
   ]
 }
 
@@ -712,7 +693,7 @@ function OverviewSection({ firm }: { firm: FirmData }) {
   const overviewFacts = buildOverviewFacts(firm)
   const trustMetrics = buildTrustMetrics(firm)
   const researchSnapshot = buildResearchSnapshot(firm)
-  const sourceNotes = getFirmSourceNotes(firm).overview
+  const sourceNotes = getFirmSourceNotes().overview
 
   return (
     <div className="space-y-5">
@@ -1024,7 +1005,7 @@ function ROISection({ firm }: { firm: FirmData }) {
 function RulesSection({ firm }: { firm: FirmData }) {
   const accountSizes = getAccountSizeEntries(firm.accountSizes)
   const rules = buildRules(firm)
-  const sourceNotes = getFirmSourceNotes(firm).rules
+  const sourceNotes = getFirmSourceNotes().rules
 
   return (
     <div className="space-y-5">
@@ -1282,7 +1263,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-border/40 bg-card/10 overflow-hidden shadow-lg shadow-black/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border/40 bg-card/10 shadow-lg shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1341,6 +1322,8 @@ function FirmHeader({ firm }: { firm: FirmData }) {
 
 export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; localePrefix: string }) {
   const [activeTab, setActiveTab] = React.useState('overview')
+  const visibleReviewCount = getVisibleReviewCount(firm)
+  const visibleCouponCount = getVisibleCouponCount(firm)
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(88,129,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
@@ -1356,8 +1339,8 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
               ['roi', 'ROI'],
               ['payouts', 'Payouts'],
               ['proof', 'Payout Proof'],
-              ['reviews', `Reviews (${firm._count?.reviews ?? 0})`],
-              ['coupons', `Coupons (${firm._count?.coupons ?? 0})`],
+              ['reviews', `Reviews (${visibleReviewCount})`],
+              ['coupons', `Coupons (${visibleCouponCount})`],
             ].map(([value, label]) => (
               <TabsTrigger
                 key={value}

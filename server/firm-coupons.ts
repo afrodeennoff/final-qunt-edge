@@ -6,8 +6,21 @@ export async function listFirmCoupons(propfirmId: string) {
     return []
   }
 
+  const now = new Date()
+
   return prisma.propFirmCoupon.findMany({
-    where: { propFirmId: propfirmId, isActive: true },
-    orderBy: { createdAt: 'desc' },
+    where: {
+      propFirmId: propfirmId,
+      isActive: true,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gte: now } },
+      ],
+    },
+    orderBy: [
+      { challengeFee: 'asc' },
+      { discountPercent: 'desc' },
+      { createdAt: 'desc' },
+    ],
   })
 }

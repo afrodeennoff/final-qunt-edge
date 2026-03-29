@@ -176,6 +176,9 @@ export function PropFirmCatalogueExperience({
               <Link href={`/${locale}`} className="rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground">
                 Back to home
               </Link>
+              <Link href={`/${locale}/best-trading-journal`} className="rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground">
+                Best trading journal
+              </Link>
             </div>
           </div>
 

@@ -369,7 +369,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-geist), var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
   }
 
   :focus-visible {
@@ -568,11 +568,11 @@
 
   .font-terminal,
   .data-mono {
-    font-family: var(--font-ibm-mono), ui-monospace, monospace;
+    font-family: var(--font-mono), ui-monospace, monospace;
   }
 
   .micro-sans {
-    font-family: var(--font-geist), var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     letter-spacing: 0.01em;
   }
 
@@ -653,7 +653,7 @@
   }
 
   .status-dot-live {
-    background: #FFFFFF;
+    background: var(--foreground);
   }
 
   .status-dot-synced {
@@ -948,16 +948,6 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 @layer utilities {
 
   /* Code block styles */
@@ -985,7 +975,7 @@
     top: 0;
     width: 2px;
     height: 100%;
-    background: #60a5fa;
+    background: var(--primary);
   }
 
   pre [data-highlighted-chars] {
@@ -1005,7 +995,7 @@
     width: 1rem;
     margin-right: 1rem;
     text-align: right;
-    color: gray;
+    color: var(--muted-foreground);
   }
 
   .prose pre {
@@ -1220,8 +1210,8 @@
 /* Landing Page Styles */
 @layer utilities {
   .landing-selection ::selection {
-    background-color: #FFFFFF;
-    color: black;
+    background-color: var(--foreground);
+    color: var(--background);
   }
 
   .noise {
@@ -1248,16 +1238,16 @@
   }
 
   .landing-scrollbar::-webkit-scrollbar-track {
-    background: #050505;
+    background: var(--background);
   }
 
   .landing-scrollbar::-webkit-scrollbar-thumb {
-    background: #222;
+    background: color-mix(in oklab, var(--foreground) 12%, var(--background));
     border-radius: 4px;
   }
 
   .landing-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #333;
+    background: color-mix(in oklab, var(--foreground) 20%, var(--background));
   }
 
   .text-shadow-glow {

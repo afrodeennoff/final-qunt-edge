@@ -143,7 +143,6 @@ export function UnifiedSidebar({
   const { isMobile, setOpenMobile } = useSidebar()
   const { isLoading } = useNavigationLoading()
   const { isQueryParamOnly } = useNavigationHelper()
-  const debugCache = process.env.NEXT_PUBLIC_CACHE_DEBUG === "true"
   const pathname = usePathname()
   const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
     const withLocalePath = (p: string) => {
@@ -239,7 +238,7 @@ export function UnifiedSidebar({
               <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 transition-all duration-300 hover:bg-sidebar-accent/40 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/80 text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/20 relative">
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent" />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-sidebar-primary-foreground/20 to-transparent" />
                   <Logo className="size-5 fill-current relative z-10" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none px-1.5 overflow-hidden relative z-10">
@@ -305,16 +304,6 @@ export function UnifiedSidebar({
                             onClick={() => {
                               setPendingHref(href)
                               scheduleNavigationFallback(href)
-                              if (debugCache) {
-                                console.info("[CacheDebug] sidebar navigation click", {
-                                  from: pathname,
-                                  to: href,
-                                  isQueryParamOnly: isQueryParamOnly(href),
-                                  hasServiceWorkerController: typeof navigator !== "undefined"
-                                    ? Boolean(navigator.serviceWorker?.controller)
-                                    : false,
-                                })
-                              }
                               if (isMobile && !isQueryParamOnly(href)) {
                                 setOpenMobile(false)
                               }

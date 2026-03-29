@@ -1,5 +1,127 @@
 # Session Memory (2026-03-28)
 
+## Current Session: Production rescue hardening sweep (2026-03-29)
+
+### Accomplishments
+- Removed fabricated catalogue dev payloads from `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts`; the action now only returns DB-backed stats or empty results.
+- Removed synthetic fallback business payloads from `server/deals.ts`:
+  - no fallback `UnifiedFirm` generation from config/profile defaults when DB is unavailable
+  - no fallback deal generation from spotlight promo text
+  - DB-unavailable/error paths now return empty data (`[]`/`null`) instead of invented stats/coupons/fees.
+- Hardened API auth:
+  - Added shared route-level auth guard `app/api/deals/_auth.ts` (Supabase session or verified bearer token).
+  - Enforced route-level auth in:
+    - `app/api/deals/route.ts`
+    - `app/api/deals/unified/route.ts`
+    - `app/api/deals/firms/[id]/route.ts`
+    - `app/api/deals/firms/[id]/deals/route.ts`
+  - Replaced proxy private API presence-only bearer check with actual Supabase auth validation in `proxy.ts`, while preserving explicit bypass for custom token routes (`/api/mt5/*`, `/api/thor/*`, `/api/etp/*`) that validate in-route.
+  - Fixed proxy public/private API classification inconsistency by classifying via `isPublicApiRoute` and restricting public cache headers to `PUBLIC_READ_API_PATHS`.
+- Fixed firm reviews correctness:
+  - `server/firm-reviews.ts` now returns paginated review payloads with real `total`/`totalPages`.
+  - `highest`/`lowest` sorting now uses rating-first ordering with createdAt tie-break.
+  - `firm-reviews-section.tsx` now consumes paginated payload + `getFirmReviewStats` for accurate totals/distribution and pagination UI.
+- Fixed firm detail consistency in `app/[locale]/(landing)/firm/[slug]/page-client.tsx`:
+  - removed Topstep-only hardcoded source enrichment
+  - aligned visible review counts to approved-review stats
+  - aligned coupon counts/tab labels/trust metrics to active coupon collections.
+- Updated `server/firm-coupons.ts` to exclude expired coupons (`expiresAt >= now OR null`) and sort by challenge fee + discount.
+- Updated deals spotlight section in `app/[locale]/(landing)/deals/components/deals-experience.tsx` to remove `w-screen` overflow pattern and keep it container-safe.
+- Updated deals API tests for the new route-level auth guard:
+  - `tests/api/deals-active.test.ts`
+  - `tests/api/deals-unified.test.ts`.
+
+### Verification
+- `npx vitest run tests/api/deals-active.test.ts tests/api/deals-unified.test.ts` passes (8/8).
+- Targeted `eslint` on all touched rescue files passes with warnings only (no errors).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+- `eslint --print-config` confirms `react` and `react-hooks` plugin/rule loading is valid (no startup mismatch).
+
+### Blockers
+- Build-time environment warnings remain unchanged:
+  - `RESEND_API_KEY` missing
+  - local DB not configured (health route reports degraded `database-unconfigured`)
+  - local native/tooling warnings (`--localstorage-file`, duplicate native symbol warning from local deps).
+
+## Current Session: Full App Router SEO + Crawlability + Deployment Hardening (2026-03-29)
+
+### Accomplishments
+- Added a shared SEO foundation in `lib/seo.ts`:
+  - locale canonical/hreflang helpers
+  - reusable public metadata builder
+  - JSON-LD builders for `Organization`, `SoftwareApplication`, `FAQPage`, and `BreadcrumbList`
+- Implemented crawl/discovery surfaces:
+  - `app/robots.ts` tightened private-route disallow rules while preserving public crawl access
+  - `app/sitemap.ts` expanded public route coverage and included `/best-trading-journal`
+  - `app/llms.txt/route.ts` added as root machine-readable discovery text route
+- Added new intent page: `app/[locale]/(landing)/best-trading-journal/page.tsx` with:
+  - intent-targeted hero/copy
+  - spreadsheet/manual comparison
+  - feature evidence section (existing capabilities only)
+  - trust section backed by internal deal overview data
+  - FAQ + CTA flow to onboarding/deals/propfirms
+  - full JSON-LD block set
+- Added internal links to the new intent route from:
+  - `app/[locale]/(home)/components/Hero.tsx`
+  - `app/[locale]/(landing)/deals/components/deals-experience.tsx`
+  - `app/[locale]/(landing)/propfirms/components/catalogue-experience.tsx`
+- Standardized metadata/canonical/hreflang and schema across key public pages (`home`, `deals`, `deals/faq`, `faq`, `propfirms`, `prop-firm-deals`, `blogs`, `updates`, `newsletter`) and fixed stale domain/brand drift in updates/blog surfaces.
+- Hardened deployment configuration:
+  - `vercel.json` install command now uses `bun install --frozen-lockfile`
+  - `package.json` now uses `npm run vps:deploy` as one-command VPS deploy entry and keeps `vps:deploy:npm` fallback
+  - `scripts/vps-deploy-bun.sh` now performs deterministic PM2 restart/start logic plus fail-fast retrying health checks
+  - `docs/DEPLOYMENT_CHECKLIST.md` updated for Bun-first + fallback workflows
+  - `ecosystem.config.cjs` confirmed valid PM2 config
+- Build reliability hardening:
+  - `scripts/robust-next-build.mjs` now retries when `.next/server/proxy.js` artifact ENOENT races occur.
+
+### Verification
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end after hardening.
+- `npx eslint` on SEO/deploy touched files passes with warnings only (no errors).
+- Runtime validation from `next start`:
+  - `/robots.txt`, `/sitemap.xml`, `/llms.txt` serve expected content
+  - `/en/best-trading-journal` and `/fr/best-trading-journal` return `200`
+  - canonical/hreflang entries are emitted for locale variants
+  - JSON-LD scripts parse successfully and include required schema types
+- shadcn MCP audit checklist executed (`get_audit_checklist`).
+
+### Blockers
+- Bun runtime is not installed in this local machine (`bun: command not found`), so direct local execution of Bun commands could not be empirically run here despite Bun-first config being wired for Vercel/VPS.
+
+## Current Session: Runtime UI token drift cleanup (2026-03-29)
+
+### Accomplishments
+- Completed a runtime UI scan and removed hardcoded `white/black/gray/zinc` styling from the highest-impact app surfaces.
+- Refactored the largest hotspots:
+  - `app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx`
+  - `app/[locale]/admin/reviews/page.tsx`
+  - `app/[locale]/(landing)/deals/components/deals-experience.tsx`
+- Standardized additional shared/runtime components to semantic/v2 tokens:
+  - `components/ui/button.tsx`
+  - `components/ui/card.tsx`
+  - `components/ui/micro-interactions.tsx`
+  - `components/ui/unified-sidebar.tsx`
+  - `components/tiptap-editor.tsx`
+  - `components/referral-button.tsx`
+  - `components/onboarding-modal.tsx`
+  - `components/animation/spring-button.tsx`
+  - `app/[locale]/(landing)/trader/[slug]/privacy-toggle.tsx`
+  - `app/[locale]/(home)/components/Navigation.tsx`
+  - `app/[locale]/(home)/components/Footer.tsx`
+  - `app/[locale]/(landing)/firm/[slug]/page-client.tsx`
+- Removed one lint error by deleting a `console.info` debug block from sidebar navigation click handling.
+
+### Verification
+- Runtime drift scan now reports only email templates:
+  - `rg -n --glob '*.{ts,tsx}' "(text|bg|border)-(white|black|gray|neutral|zinc)(/|\\b)|white/|black/|white\\[|black\\[|gray-" app components`
+- Targeted lint check across all touched files passes with warnings only (no errors).
+- `npm run -s typecheck` passes.
+
+### Blockers
+- Remaining hardcoded color class usage is isolated to `components/emails/**`; left unchanged in this pass due likely email-client styling constraints.
+
 ## Current Session: Deals Spotlight UI (2026-03-29)
 
 ### Accomplishments
@@ -17,10 +139,16 @@
   - larger rounded center card with dashed vertical divider and stronger black stage
   - left panel uses mono-styled firm name + larger orb, right panel uses centered promo stack + large lime pill CTA
   - side previews converted to faded full-card silhouettes behind the active card
+- Completed a final screenshot-alignment refinement pass:
+  - made the spotlight stage full-viewport width (`w-screen`) to match the reference framing
+  - fixed accent fallback by replacing custom lime token usage with the existing working `--chart-3` token
+  - adjusted typography scales so large discounts (e.g. `101% Off`) stay on one line
+  - softened and pushed side teaser cards further out to reduce visual clutter and keep center-card focus
 
 ### Verification
 - `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx` passes.
 - `npm run typecheck` passes.
+- Browser verification screenshot captured via Playwright: `/tmp/deals-spotlight-now-3.png`.
 
 ### Blockers
 - None.
@@ -112,6 +240,33 @@
 
 ### Blockers
 - None
+
+---
+
+## Current Session: Theme/Styling Drift Cleanup (2026-03-29)
+
+### Accomplishments
+- Replaced remaining hardcoded newsletter colors in `newsletter-audio-splitter.tsx` (`bg-white/5`, `border-white/10`, `text-white/60`) with semantic tokens.
+- Cleaned stale font token references in `app/globals.css`:
+  - `--font-geist`/`--font-inter` → `--font-sans`
+  - `--font-ibm-mono` → `--font-mono`
+- Replaced several literal hex values in `app/globals.css` with semantic variables for status dots, code highlight marker, line-number text, landing selection, and landing scrollbar colors.
+- Removed a duplicate late-file `@layer base` block in `app/globals.css` (`*` + `body`) to keep base styles single-sourced.
+- Simplified `context/theme-provider.tsx` to a fixed dark theme provider (removed dead localStorage/theme-toggle state machinery while preserving current dark-only behavior).
+- Adjusted `app/layout.tsx` theme bootstrap script to keep dark class enforcement but remove localStorage writes; errors now log to console instead of failing silently.
+
+### Verification
+- `npx eslint app/layout.tsx context/theme-provider.tsx` passes.
+- `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` reports pre-existing `atas-processor.tsx` issues (`no-explicit-any`, complexity, and react-hooks warnings/errors).
+- `npx eslint app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx app/[locale]/teams/join/page.tsx app/[locale]/(landing)/newsletter/page.tsx app/[locale]/(landing)/disclaimers/page.tsx app/[locale]/(home)/loading.tsx app/[locale]/(landing)/community/post/[id]/loading.tsx` reports pre-existing team-file lint debt (`no-explicit-any`, complexity, unused vars/imports, exhaustive-deps warning).
+
+### Codebase State
+- Theme remains dark-only at runtime.
+- Semantic token migration advanced in admin newsletter and global utility styling.
+- `tasks/todo.md` updated: Admin newsletter + ATAS task closed; Worker H color-token task closed with no remaining utility matches in target set; Tailwind semantic foundation review item marked complete.
+
+### Blockers
+- Existing lint debt in `atas-processor.tsx` and team pages prevents clean `eslint` on those target bundles.
 
 ---
 

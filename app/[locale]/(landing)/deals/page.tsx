@@ -7,9 +7,7 @@ import {
   getUnifiedFirms,
 } from '@/server/deals'
 import { DealsExperience } from './components/deals-experience'
-import { getSiteOrigin } from '@/lib/site-url'
-
-const SITE_ORIGIN = getSiteOrigin()
+import { buildBreadcrumbSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -17,19 +15,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const canonical = `${SITE_ORIGIN}/${locale}/deals`
-
-  return {
-    title: 'Prop Firm Deals | Qunt Edge',
-    description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research without losing the policy context.',
-    alternates: { canonical },
-    openGraph: {
-      title: 'Prop Firm Deals | Qunt Edge',
-      description: 'Browse verified prop-firm discounts, compare challenge pricing, and move from deal discovery into deeper firm research without losing the policy context.',
-      url: canonical,
-      type: 'website',
-    },
-  }
+  return buildPublicMetadata({
+    locale,
+    path: "/deals",
+    title: "Prop Firm Deals & Challenge Discounts | Qunt Edge",
+    description:
+      "Browse verified prop-firm discounts, compare challenge costs, and move from deal discovery to full firm research without losing risk context.",
+  });
 }
 
 export default async function DealsPage({
@@ -38,6 +30,11 @@ export default async function DealsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  const organizationSchema = buildOrganizationSchema()
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Home", path: "/" },
+    { name: "Deals", path: "/deals" },
+  ])
   let deals: Awaited<ReturnType<typeof getActiveDeals>> = []
   let firms: Awaited<ReturnType<typeof getUnifiedFirms>> = []
   let overview: Awaited<ReturnType<typeof getDealsOverview>> = {
@@ -78,15 +75,19 @@ export default async function DealsPage({
   }
 
   return (
-    <DealsExperience
-      locale={locale}
-      deals={deals}
-      firms={firms}
-      overview={overview}
-      spotlights={spotlights}
-      faqs={faqs}
-      hadFetchError={hadFetchError}
-      lastUpdated={hadFetchError ? null : new Date().toISOString().split('T')[0]}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <DealsExperience
+        locale={locale}
+        deals={deals}
+        firms={firms}
+        overview={overview}
+        spotlights={spotlights}
+        faqs={faqs}
+        hadFetchError={hadFetchError}
+        lastUpdated={hadFetchError ? null : new Date().toISOString().split('T')[0]}
+      />
+    </>
   )
 }

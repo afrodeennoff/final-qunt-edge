@@ -50,6 +50,7 @@ function isTransientNextBuildFsRace(output) {
     output,
   ) || /\/\.next\/static\/.*_buildManifest\.js(\.tmp\.[^'"\s]+)?/.test(output)
     || /\/\.next\/server\/[^'"\s]+\.nft\.json/.test(output)
+    || /\/\.next\/server\/proxy\.js/.test(output)
     || /\/\.next\/types\//.test(output)
     || hasUnexpectedJson;
 }
@@ -61,7 +62,7 @@ const nextBin = getBin("next");
 const args = ["build", "--webpack"];
 
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-  let result = await run(nodeBin, ["scripts/ensure-next-type-stubs.mjs"]);
+  const result = await run(nodeBin, ["scripts/ensure-next-type-stubs.mjs"]);
   if (result.code !== 0) process.exit(result.code);
 
   const { code, output } = await run(nextBin, args);

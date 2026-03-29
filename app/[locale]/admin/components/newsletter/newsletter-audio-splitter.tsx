@@ -275,8 +275,8 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
 
       {/* Transcription Component - Removed */}
       {segments.length > 0 && (
-        <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-          <p className="text-sm text-white/60">
+        <div className="mt-6 p-4 bg-card/40 rounded-lg border border-border/60">
+          <p className="text-sm text-muted-foreground">
             Transcription feature has been removed. Segments are ready for manual processing.
           </p>
         </div>

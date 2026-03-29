@@ -3,9 +3,13 @@ import { setStaticParamsLocale } from "next-international/server";
 import { getStaticParams } from "@/locales/server";
 import HomeContent from "./components/HomeContent";
 import { Metadata } from 'next';
-import { getSiteOrigin } from "@/lib/site-url";
+import {
+  buildBreadcrumbSchema,
+  buildOrganizationSchema,
+  buildPublicMetadata,
+  buildSoftwareApplicationSchema,
+} from "@/lib/seo";
 
-const SITE_ORIGIN = getSiteOrigin();
 type Locale = 'en' | 'fr';
 
 export function generateStaticParams() {
@@ -18,31 +22,13 @@ export async function generateMetadata({
     params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
     const { locale } = await params;
-    const canonical = `${SITE_ORIGIN}/${locale}`;
-
-    return {
-        title: 'Qunt Edge | Trade Like A Pro, Review Like A Desk',
-        description: 'Qunt Edge helps serious discretionary traders audit decision quality, catch behavior drift, and sharpen execution with AI-backed performance reviews.',
-        alternates: {
-            canonical,
-            languages: {
-                'en-US': `${SITE_ORIGIN}/en`,
-                'fr-FR': `${SITE_ORIGIN}/fr`,
-                'x-default': `${SITE_ORIGIN}/en`,
-            },
-        },
-        openGraph: {
-            title: 'Qunt Edge | Trade Like A Pro, Review Like A Desk',
-            description: 'Qunt Edge helps serious discretionary traders audit decision quality, catch behavior drift, and sharpen execution with AI-backed performance reviews.',
-            url: canonical,
-            type: 'website',
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: 'Qunt Edge | Trade Like A Pro, Review Like A Desk',
-            description: 'Qunt Edge helps serious discretionary traders audit decision quality, catch behavior drift, and sharpen execution with AI-backed performance reviews.',
-        },
-    };
+    return buildPublicMetadata({
+      locale,
+      path: "/",
+      title: "Best Trading Journal for Discretionary Traders | Qunt Edge",
+      description:
+        "Qunt Edge helps serious traders audit execution quality, track behavioral drift, and improve consistency with structured post-session review workflows.",
+    });
 }
 
 export default async function HomePage({
@@ -53,29 +39,17 @@ export default async function HomePage({
     const { locale } = await params;
     setStaticParamsLocale(locale);
 
-    const softwareSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: 'Qunt Edge',
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Web',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.8',
-        ratingCount: '200',
-      },
-      description: 'AI-backed trading journal and execution review platform for discretionary traders and teams.',
-      url: `${SITE_ORIGIN}/${locale}`,
-    };
+    const softwareSchema = buildSoftwareApplicationSchema(locale, "/");
+    const organizationSchema = buildOrganizationSchema();
+    const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+      { name: "Home", path: "/" },
+    ]);
 
     return (
       <>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
         <HomeContent locale={locale} />
       </>
     );

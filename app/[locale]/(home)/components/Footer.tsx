@@ -36,7 +36,7 @@ export default function Footer() {
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5 group">
               <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_16px_-4px_hsl(var(--primary)/0.5)] transition-shadow duration-300 group-hover:shadow-[0_0_24px_-4px_hsl(var(--primary)/0.65)]">
-                <span className="text-white font-bold text-sm">Q</span>
+                <span className="text-primary-foreground font-bold text-sm">Q</span>
               </div>
               <span className="font-semibold text-foreground tracking-tight">Qunt Edge</span>
             </Link>

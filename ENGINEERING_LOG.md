@@ -3173,3 +3173,80 @@ When documenting feature updates, **YOU MUST** follow this conversational struct
 Generating route types...
 ✓ Types generated successfully
 [typecheck] Ensured cache-life.d.ts stubs passes.
+
+### 2026-03-29: App Router SEO + Crawlability + Deployment Hardening
+- **What changed:** Implemented a full SEO/crawlability refresh and deployment hardening pass across public landing surfaces and runtime build reliability.
+- **What I want:** Public pages should expose consistent canonical/hreflang/schema coverage, crawler discovery endpoints should be complete, and deploy/build pathways should be deterministic on Vercel/VPS.
+- **What I don't want:** stale metadata/domain drift, missing crawler surfaces, or brittle Bun/VPS deployment behavior.
+- **How we fixed that:**
+  - Added shared SEO utilities for canonical/hreflang/JSON-LD in `lib/seo.ts`.
+  - Added/updated crawl surfaces: `app/robots.ts`, `app/sitemap.ts`, `app/llms.txt/route.ts`.
+  - Added new intent page `app/[locale]/(landing)/best-trading-journal/page.tsx` and linked it from home/deals/propfirms.
+  - Standardized metadata/schema on key public pages (home/deals/faq/propfirms/blogs/updates/newsletter).
+  - Hardened deploy stack:
+    - Bun-first Vercel install (`vercel.json`)
+    - PM2 config (`ecosystem.config.cjs`)
+    - VPS deploy script hardening (`scripts/vps-deploy-bun.sh`)
+    - robust Next build retries for proxy artifact race (`scripts/robust-next-build.mjs`)
+    - deployment doc refresh (`docs/DEPLOYMENT_CHECKLIST.md`).
+- **Key Files:** `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `app/llms.txt/route.ts`, `app/[locale]/(landing)/best-trading-journal/page.tsx`, `vercel.json`, `ecosystem.config.cjs`, `scripts/vps-deploy-bun.sh`, `scripts/robust-next-build.mjs`, `docs/DEPLOYMENT_CHECKLIST.md`.
+- **Verification:** `npm run -s typecheck`, `npm run build`, runtime endpoint checks (`/robots.txt`, `/sitemap.xml`, `/llms.txt`, `/en|fr/best-trading-journal`), targeted JSON-LD checks.
+
+### 2026-03-29: Production Rescue Hardening (Data Truth + API Auth + Reviews Consistency)
+- **What changed:** Removed fabricated fallback business data, hardened private API auth, and fixed review/coupon/count consistency issues on firm/deals surfaces.
+- **What I want:** Trust-critical pages and APIs should only show source-backed values, private APIs should require verified identity, and UI counts should match the data users can actually see.
+- **What I don't want:** synthetic payout/deal values during DB outage, presence-only bearer bypasses, broken review pagination/sort, or tab counts that disagree with rendered content.
+- **How we fixed that:**
+  - Removed fabricated data paths:
+    - removed dev mock payload from `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts`
+    - removed synthetic fallback firm/deal generation in `server/deals.ts` (DB-unavailable now returns empty/null).
+  - Hardened auth:
+    - added route-level guard `app/api/deals/_auth.ts`
+    - enforced it on `/api/deals`, `/api/deals/unified`, and deals firm detail routes
+    - replaced proxy private-API header-shape check with Supabase user validation in `proxy.ts`
+    - unified proxy public API classification + kept public cache on explicit read allowlist only.
+  - Fixed reviews and counts:
+    - `server/firm-reviews.ts` now supports true pagination totals and proper rating-based sort for `highest`/`lowest`
+    - `firm-reviews-section.tsx` now uses paginated review payload + `getFirmReviewStats` for accurate totals/distribution
+    - `firm/[slug]/page-client.tsx` now uses visible approved-review counts and active coupon counts consistently; removed Topstep-only hardcoded enrichment.
+  - Excluded expired coupons in `server/firm-coupons.ts`.
+  - Removed spotlight overflow pattern (`w-screen`) in `deals-experience.tsx`.
+  - Updated deals API tests for route-level auth expectations.
+- **Key Files:** `server/deals.ts`, `proxy.ts`, `app/api/deals/_auth.ts`, `app/api/deals/route.ts`, `app/api/deals/unified/route.ts`, `app/api/deals/firms/[id]/route.ts`, `app/api/deals/firms/[id]/deals/route.ts`, `server/firm-reviews.ts`, `server/firm-coupons.ts`, `app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx`, `app/[locale]/(landing)/firm/[slug]/page-client.tsx`, `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `tests/api/deals-active.test.ts`, `tests/api/deals-unified.test.ts`.
+- **Verification:** `npx vitest run tests/api/deals-active.test.ts tests/api/deals-unified.test.ts`, targeted `npx eslint` (warnings only), `npm run -s typecheck`, `npm run build`.
+
+### 2026-03-29: Runtime UI Token Drift Cleanup
+- **What changed:** Removed high-impact hardcoded `white/black/gray/zinc` utility usage in runtime UI and standardized touched surfaces to semantic/v2 token classes.
+- **What I want:** Runtime app surfaces should follow the tokenized design contract consistently and remain maintainable.
+- **What I don't want:** visual drift from literal color utilities or fragmented token usage across shared primitives.
+- **How we fixed that:**
+  - Tokenized high-traffic runtime surfaces in firm reviews/admin/deals.
+  - Tokenized shared primitives and interaction components (buttons/cards/sidebar/micro-interactions/editor/modals).
+  - Removed one lingering lint issue in sidebar navigation click handling by dropping debug output.
+  - Left `components/emails/**` out of scope due to email-client style constraints.
+- **Key Files:** `app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx`, `app/[locale]/admin/reviews/page.tsx`, `app/[locale]/(landing)/deals/components/deals-experience.tsx`, `components/ui/button.tsx`, `components/ui/card.tsx`, `components/ui/micro-interactions.tsx`, `components/ui/unified-sidebar.tsx`, `components/tiptap-editor.tsx`, `components/referral-button.tsx`, `components/onboarding-modal.tsx`, `components/animation/spring-button.tsx`, `app/[locale]/(landing)/trader/[slug]/privacy-toggle.tsx`, `app/[locale]/(home)/components/Navigation.tsx`, `app/[locale]/(home)/components/Footer.tsx`, `app/[locale]/(landing)/firm/[slug]/page-client.tsx`.
+- **Verification:** residual grep scan for hardcoded runtime color utilities now only reports `components/emails/**`; targeted `npx eslint` (warnings only), `npm run -s typecheck`, `npm run build`.
+
+### 2026-03-29: Deals Spotlight Carousel Refresh
+- **What changed:** Reworked the deals spotlight into a stronger carousel-style featured section and tuned composition to match the target reference.
+- **What I want:** A high-impact hero-adjacent spotlight that emphasizes top discounts and drives CTA engagement without layout regressions.
+- **What I don't want:** weak visual hierarchy, overflow bugs, or CTA behavior divergence from the existing deals grid.
+- **How we fixed that:**
+  - Added featured deal carousel logic driven by filtered live deals and discount ranking.
+  - Preserved conversion behavior (`claimUrl` external open, fallback to firm route; coupon copy path unchanged).
+  - Tuned typography/layout/accent styling and side-card silhouettes to align with reference visuals.
+  - Reverted the unstable viewport-width overflow pattern to keep the section container-safe.
+- **Key Files:** `app/[locale]/(landing)/deals/components/deals-experience.tsx`.
+- **Verification:** `npx eslint app/[locale]/(landing)/deals/components/deals-experience.tsx`, `npm run -s typecheck`, `npm run build`.
+
+### 2026-03-29: API Prerender-Noise Hardening + Build Rescue Continuation
+- **What changed:** Hardened route handlers and server helpers to reduce false-positive build-time errors and stabilize prerender paths.
+- **What I want:** Build logs should surface actionable failures only, while expected prerender interruptions and unconfigured-local-env states remain controlled.
+- **What I don't want:** noisy stack traces from known prerender interruption behavior, URL parsing pitfalls, or DB-unconfigured proxy noise being treated as code regressions.
+- **How we fixed that:**
+  - Added interruption-aware handling in public API paths (`/api/deals`, `/api/deals/unified`, `/api/email/unsubscribe`).
+  - Removed brittle `request.url` assumptions where build/export paths can invoke handlers differently.
+  - Added DB-unconfigured short-circuiting for prop-firm catalogue/health behavior to return explicit degraded/empty states.
+  - Fixed admin prerender request-context issues via lazy request-id generation and request-boundary handling.
+- **Key Files:** `app/api/deals/route.ts`, `app/api/deals/unified/route.ts`, `app/api/email/unsubscribe/route.ts`, `app/api/health/route.ts`, `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts`, `server/authz.ts`, `app/[locale]/admin/coupons/page.tsx`, `app/api/admin/reports/route.ts`, `app/api/behavior/insights/route.ts`, `lib/mdx.ts`.
+- **Verification:** targeted `npx eslint` on touched APIs/helpers (warnings only), `npx vitest run tests/api/deals-active.test.ts tests/api/deals-unified.test.ts tests/api/unsubscribe-route.test.ts`, `npm run -s typecheck`, `npm run build`.

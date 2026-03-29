@@ -27,6 +27,10 @@ npm run test         # Run tests
 - **Route config with cache components**: when cache components are enabled, do not add route segment exports like `dynamic` or `revalidate` in `app/**/route.ts`; Next.js rejects them at build time.
 - **Support models**: keep the support UI and `/api/ai/support` allowlist in sync via `lib/ai/support-models.ts`.
 - **Build prerequisite**: `npm run build` invokes Prisma migration status against a local PostgreSQL URL (`localhost:5432` by default). If that service is unavailable, record the environment blocker before treating the failure as a code regression.
+- **Proxy build race**: keep request interception in `proxy.ts`. If build fails with `.next/server/proxy.js` ENOENT during finalize/trace, treat it as a transient artifact race and use `scripts/robust-next-build.mjs` retries instead of migrating file conventions.
+- **Deals data truthfulness**: in deals/catalogue server paths, do not synthesize fallback financial/profile metrics when DB is unavailable; return explicit empty/unavailable data instead.
+- **Deals API auth**: all `/api/deals/**` handlers must enforce route-level auth (session/JWT verification in handler), not only middleware checks.
+- **Proxy API classification**: classify public APIs via `isPublicApiRoute`; keep public cache headers limited to explicit read-safe paths in `PUBLIC_READ_API_PATHS`.
 
 ## Design System Architecture
 

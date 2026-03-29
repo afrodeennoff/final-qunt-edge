@@ -9,6 +9,8 @@ import { getUiVariant } from "@/lib/ui-v2";
 import { getSiteOrigin } from "@/lib/site-url";
 
 const siteOrigin = getSiteOrigin();
+const ROOT_DESCRIPTION =
+  "Qunt Edge is a trading journal and analytics platform for discretionary traders, with structured post-session review, performance breakdowns, and team workflows.";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -37,12 +39,13 @@ const siteMetadata: Metadata = {
     template: "%s | Qunt Edge",
   },
   description:
-    "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+    ROOT_DESCRIPTION,
   keywords: [
+    "trading journal",
+    "best trading journal",
     "trading analytics",
-    "real-time trades",
-    "trading dashboard",
-    "portfolio insight",
+    "prop firm journal",
+    "trading performance review",
     "Qunt Edge",
   ],
   alternates: {
@@ -55,7 +58,7 @@ const siteMetadata: Metadata = {
   openGraph: {
     title: "Qunt Edge",
     description:
-      "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+      ROOT_DESCRIPTION,
     url: siteOrigin,
     siteName: "Qunt Edge",
     type: "website",
@@ -73,7 +76,7 @@ const siteMetadata: Metadata = {
     card: "summary_large_image",
     title: "Qunt Edge",
     description:
-      "Qunt Edge is a premium trading analytics platform that delivers real-time trades, AI signals, and collaborative dashboards for modern traders.",
+      ROOT_DESCRIPTION,
     images: [`${siteOrigin}/twitter-image.png`],
   },
   icons: {
@@ -174,11 +177,10 @@ export default async function RootLayout({
             (function() {
               try {
                 var root = document.documentElement;
-                root.classList.remove('light', 'dark');
+                root.classList.remove('light');
                 root.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
               } catch (e) {
-                // Fail silently to avoid blocking render
+                console.error('Theme bootstrap failed', e);
               }
             })();
           `,

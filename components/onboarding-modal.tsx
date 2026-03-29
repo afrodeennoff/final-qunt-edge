@@ -120,7 +120,7 @@ export default function OnboardingModal({ onDismiss }: OnboardingModalProps) {
                   </DialogDescription>
                 </DialogHeader>
 
-                <div className="aspect-video w-full rounded-lg overflow-hidden bg-black mt-6">
+                <div className="mt-6 aspect-video w-full overflow-hidden rounded-lg bg-background">
                   <iframe
                     className="w-full h-full"
                     src={`https://www.youtube.com/embed/${videoIds[locale as keyof typeof videoIds]}`}

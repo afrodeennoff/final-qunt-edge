@@ -2,17 +2,31 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const {
   getUnifiedFirms,
+  createRouteClientMock,
 } = vi.hoisted(() => ({
   getUnifiedFirms: vi.fn(),
+  createRouteClientMock: vi.fn(),
 }))
 
 vi.mock("@/server/deals", () => ({
   getUnifiedFirms,
 }))
 
+vi.mock("@/lib/supabase/route-client", () => ({
+  createRouteClient: createRouteClientMock,
+}))
+
 describe("/api/deals/unified", () => {
   beforeEach(() => {
     vi.resetAllMocks()
+    createRouteClientMock.mockReturnValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: { id: "user-1" } },
+          error: null,
+        }),
+      },
+    })
   })
 
   it("should return unified firms with default sorting", async () => {
@@ -179,5 +193,26 @@ describe("/api/deals/unified", () => {
 
     expect(response.status).toBe(500)
     expect(data.error).toBe("Failed to fetch firms")
+  })
+
+  it("should return 401 when unauthenticated", async () => {
+    createRouteClientMock.mockReturnValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: null },
+          error: new Error("Unauthorized"),
+        }),
+      },
+    })
+
+    const request = new Request("http://localhost/api/deals/unified")
+    const { GET } = await import("@/app/api/deals/unified/route")
+
+    const response = await GET(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(401)
+    expect(data.error.code).toBe("UNAUTHORIZED")
+    expect(getUnifiedFirms).not.toHaveBeenCalled()
   })
 })

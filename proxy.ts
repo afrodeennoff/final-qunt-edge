@@ -36,6 +36,31 @@ function parseCsvEnv(value?: string): string[] {
   return value?.split(',').map(s => s.trim()).filter(Boolean) ?? []
 }
 
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(message)), timeoutMs)
+  )
+  return Promise.race([promise, timeoutPromise])
+}
+
+function getErrorMessage(value: unknown): string {
+  if (value instanceof Error) return value.message
+  if (typeof value === 'object' && value !== null && 'message' in value) {
+    const message = (value as { message?: unknown }).message
+    if (typeof message === 'string') return message
+  }
+  return ''
+}
+
+function isSupabaseJsonParseError(error: unknown): boolean {
+  const primary = getErrorMessage(error).toLowerCase()
+  const originalError = typeof error === 'object' && error !== null && 'originalError' in error
+    ? getErrorMessage((error as { originalError?: unknown }).originalError).toLowerCase()
+    : ''
+  const combined = `${primary} ${originalError}`
+  return combined.includes('unexpected token') || combined.includes('is not valid json')
+}
+
 function isAdmin(userId: string): boolean {
   const allowedUserIds = parseCsvEnv(process.env.ALLOWED_ADMIN_USER_ID)
 
@@ -101,11 +126,7 @@ async function handleAdminAuth(request: NextRequest): Promise<{ error: NextRespo
 
   let user: User | null = null
   try {
-    const authPromise = supabase.auth.getUser()
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Auth timeout")), 5000)
-    )
-    const result = (await Promise.race([authPromise, timeoutPromise])) as any
+    const result = await withTimeout(supabase.auth.getUser(), 5000, "Auth timeout")
     user = result.data?.user ?? null
   } catch {
     return { error: NextResponse.json({ error: "Unauthorized: No valid session" }, { status: 401 }) }
@@ -166,6 +187,11 @@ const PUBLIC_API_PATH_PREFIXES = [
 ]
 const PRIVATE_API_PATH_PREFIXES = [
   "/api/",
+]
+const CUSTOM_TOKEN_API_PATH_PREFIXES = [
+  '/api/mt5/',
+  '/api/thor/',
+  '/api/etp/',
 ]
 
 type RouteClass =
@@ -236,6 +262,10 @@ function isPrivateApiRoute(pathname: string): boolean {
   return PRIVATE_API_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 }
 
+function isCustomTokenApiRoute(pathname: string): boolean {
+  return CUSTOM_TOKEN_API_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+}
+
 function classifyRoute(pathname: string): RouteClass {
   const normalizedPathname = normalizePathWithoutLocale(pathname)
   const isStaticAsset =
@@ -251,7 +281,7 @@ function classifyRoute(pathname: string): RouteClass {
 
   if (isStaticAsset) return "static-asset"
   if (pathMatchesPrefix(normalizedPathname, "/embed")) return "embed"
-  if (isPublicReadApiRoute(pathname)) return "public-api"
+  if (isPublicApiRoute(pathname)) return "public-api"
   if (isPrivateApiRoute(pathname)) return "private-api"
   if (isPrivateDocumentRoute(pathname)) return "private-document"
   if (isPublicDocumentRoute(pathname)) return "public-document"
@@ -315,20 +345,12 @@ async function updateSession(request: NextRequest) {
 
   try {
     // Add timeout to prevent hanging requests
-    const authPromise = supabase.auth.getUser()
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Auth timeout")), 5000))
-
-    const result = (await Promise.race([authPromise, timeoutPromise])) as any
+    const result = await withTimeout(supabase.auth.getUser(), 5000, "Auth timeout")
     user = result.data?.user || null
     error = result.error
-  } catch (authError: any) {
+  } catch (authError: unknown) {
     // Handle JSON parsing errors from Supabase API (when API returns HTML instead of JSON)
-    if (
-      authError?.message?.includes('Unexpected token') ||
-      authError?.message?.includes('is not valid JSON') ||
-      authError?.originalError?.message?.includes('Unexpected token') ||
-      authError?.originalError?.message?.includes('is not valid JSON')
-    ) {
+    if (isSupabaseJsonParseError(authError)) {
       console.error("[Proxy] Supabase API returned non-JSON response:", authError)
       // Don't throw - gracefully handle auth failures by treating as unauthenticated
       user = null
@@ -345,6 +367,50 @@ async function updateSession(request: NextRequest) {
   // Downstream code must derive identity from Supabase session server-side.
 
   return { response, user, error }
+}
+
+async function handlePrivateApiAuth(request: NextRequest): Promise<NextResponse | null> {
+  const pathname = request.nextUrl.pathname
+  if (isCustomTokenApiRoute(pathname)) {
+    return null
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll: () => request.cookies.getAll().map((c) => ({ name: c.name, value: c.value })),
+      setAll: () => {},
+    },
+  })
+
+  const authHeader = request.headers.get("authorization")
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : null
+
+  try {
+    const authPromise = token ? supabase.auth.getUser(token) : supabase.auth.getUser()
+    const result = await withTimeout(authPromise, 5000, "Auth timeout")
+    const user = result.data?.user ?? null
+
+    if (!user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized", code: "AUTH_REQUIRED" },
+        { status: 401 }
+      )
+    }
+
+    return null
+  } catch {
+    return NextResponse.json(
+      { error: "Unauthorized", code: "AUTH_REQUIRED" },
+      { status: 401 }
+    )
+  }
 }
 
 function setCspHeader(response: NextResponse, csp: string, reportOnly: boolean) {
@@ -413,13 +479,8 @@ export default async function middleware(req: NextRequest) {
         if ("error" in adminResult) return adminResult.error
         adminRouteUser = adminResult.user
       } else {
-        const authHeader = req.headers.get("authorization")
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-          return NextResponse.json(
-            { error: "Unauthorized", code: "AUTH_REQUIRED" },
-            { status: 401 }
-          )
-        }
+        const authError = await handlePrivateApiAuth(req)
+        if (authError) return authError
       }
     }
 
@@ -430,7 +491,7 @@ export default async function middleware(req: NextRequest) {
       apiResponse.headers.set("x-user-email", adminRouteUser.email || "")
     }
     applySecurityHeaders(apiResponse)
-    if (req.method === "GET" && routeClass === "public-api") {
+    if (req.method === "GET" && isPublicReadApiRoute(pathname)) {
       apiResponse.headers.set(
         "Cache-Control",
         "public, max-age=60, s-maxage=300, stale-while-revalidate=600"
@@ -521,7 +582,7 @@ export default async function middleware(req: NextRequest) {
         expires: cookie.expires,
         httpOnly: cookie.httpOnly,
         secure: cookie.secure,
-        sameSite: cookie.sameSite as any,
+        sameSite: cookie.sameSite,
       })
     })
   } else if (!hasAuthCookie && (isDashboardRoute || isAdminRoute)) {
@@ -643,7 +704,7 @@ export default async function middleware(req: NextRequest) {
       if (geo.countryRegion) {
         response.headers.set("x-user-region", encodeURIComponent(geo.countryRegion))
       }
-    } catch (geoError) {
+    } catch {
       // Fallback to Vercel headers
       const country = req.headers.get("x-vercel-ip-country")
       const city = req.headers.get("x-vercel-ip-city")

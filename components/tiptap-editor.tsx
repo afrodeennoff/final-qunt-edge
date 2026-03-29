@@ -407,7 +407,7 @@ export function TiptapEditor({
           "[&_h2.is-empty::before]:text-muted-foreground [&_h2.is-empty::before]:float-left [&_h2.is-empty::before]:h-0 [&_h2.is-empty::before]:pointer-events-none [&_h2.is-empty::before]:content-[attr(data-placeholder)]",
           "[&_h3.is-empty::before]:text-muted-foreground [&_h3.is-empty::before]:float-left [&_h3.is-empty::before]:h-0 [&_h3.is-empty::before]:pointer-events-none [&_h3.is-empty::before]:content-[attr(data-placeholder)]",
           // Selection styles
-          "[&_::selection]:bg-primary [&_::selection]:text-white",
+          "[&_::selection]:bg-primary [&_::selection]:text-primary-foreground",
           // Responsive adjustments
           "sm:[&_h1]:text-3xl sm:[&_h2]:text-2xl sm:[&_h3]:text-lg",
           className,

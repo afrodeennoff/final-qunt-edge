@@ -14,9 +14,9 @@ const buttonVariants = cva(
         solid: "bg-v2-accent text-v2-accent-foreground shadow-sm hover:bg-v2-accent-hover hover:scale-[1.01] hover:shadow-md hover:shadow-v2-accent/20 active:scale-[0.98]",
         outline: "border border-v2-border bg-v2-bg-base text-v2-text-primary hover:bg-v2-bg-hover hover:scale-[1.01] active:scale-[0.98]",
         ghost: "text-v2-text-secondary hover:text-v2-text-primary hover:bg-v2-bg-hover",
-        destructive: "bg-v2-error text-white hover:bg-v2-error/90 shadow-sm hover:scale-[1.01] hover:shadow-md hover:shadow-v2-error/20 active:scale-[0.98]",
+        destructive: "bg-v2-error text-v2-accent-foreground hover:bg-v2-error/90 shadow-sm hover:scale-[1.01] hover:shadow-md hover:shadow-v2-error/20 active:scale-[0.98]",
         link: "text-v2-accent underline-offset-4 hover:underline",
-        "gradient-primary": "bg-gradient-to-r from-v2-accent via-v2-accent/90 to-v2-accent-hover text-white shadow-sm hover:shadow-lg hover:shadow-v2-accent/30 hover:scale-[1.01] active:scale-[0.98]",
+        "gradient-primary": "bg-gradient-to-r from-v2-accent via-v2-accent/90 to-v2-accent-hover text-v2-accent-foreground shadow-sm hover:shadow-lg hover:shadow-v2-accent/30 hover:scale-[1.01] active:scale-[0.98]",
         "gradient-secondary": "bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover border border-v2-border text-v2-text-primary shadow-sm hover:shadow-md hover:scale-[1.01] active:scale-[0.98]",
         shimmer: "bg-v2-accent text-v2-accent-foreground shadow-sm",
         // Legacy variants for backward compatibility (mapped to new variants)
@@ -72,7 +72,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <>
         {isShimmer && isLoading && (
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-v2-accent-foreground/20 to-transparent" />
           </div>
         )}
         {leftIcon && !isLoading && <span className="shrink-0">{leftIcon}</span>}

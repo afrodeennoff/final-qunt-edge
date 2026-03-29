@@ -1,16 +1,22 @@
 import { MetadataRoute } from 'next'
 import { getSiteOrigin } from '@/lib/site-url'
+import { INDEXABLE_LOCALES } from '@/lib/seo'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getSiteOrigin()
   const lastModified = new Date()
-  const locales = ['en', 'fr']
   const routeDefs: Array<{ path: string; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }> = [
     { path: '', changeFrequency: 'weekly', priority: 1 },
+    { path: '/best-trading-journal', changeFrequency: 'weekly', priority: 0.95 },
     { path: '/about', changeFrequency: 'monthly', priority: 0.8 },
+    { path: '/teams', changeFrequency: 'weekly', priority: 0.75 },
     { path: '/pricing', changeFrequency: 'weekly', priority: 0.9 },
     { path: '/support', changeFrequency: 'monthly', priority: 0.7 },
+    { path: '/deals', changeFrequency: 'daily', priority: 0.9 },
     { path: '/community', changeFrequency: 'weekly', priority: 0.7 },
+    { path: '/blogs', changeFrequency: 'weekly', priority: 0.7 },
+    { path: '/docs', changeFrequency: 'monthly', priority: 0.65 },
+    { path: '/leaderboard', changeFrequency: 'daily', priority: 0.85 },
     { path: '/faq', changeFrequency: 'monthly', priority: 0.7 },
     { path: '/updates', changeFrequency: 'weekly', priority: 0.8 },
     { path: '/privacy', changeFrequency: 'monthly', priority: 0.5 },
@@ -25,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/deals/faq', changeFrequency: 'weekly', priority: 0.7 },
   ]
 
-  return locales.flatMap((locale) =>
+  return INDEXABLE_LOCALES.flatMap((locale) =>
     routeDefs.map((route) => ({
       url: `${baseUrl}/${locale}${route.path}`,
       lastModified,

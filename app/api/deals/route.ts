@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getActiveDeals, type DealItem } from '@/server/deals'
 import { logger } from '@/lib/logger'
+import { requireDealsApiAuth } from './_auth'
 
 const DEFAULT_LIMIT = 50
 const DEFAULT_OFFSET = 0
@@ -20,6 +21,11 @@ function getSearchParams(request: Request): URLSearchParams {
 
 export async function GET(request: Request) {
   try {
+    const access = await requireDealsApiAuth(request)
+    if (!access.ok) {
+      return access.response
+    }
+
     const searchParams = getSearchParams(request)
     
     // Extract query parameters

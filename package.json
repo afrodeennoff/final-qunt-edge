@@ -4,17 +4,26 @@
   "private": true,
   "type": "module",
   "license": "CC-BY-NC-4.0",
+  "packageManager": "bun@1.3.11",
   "engines": {
-    "node": ">=20.10.0"
+    "node": "20.x",
+    "bun": ">=1.3.11"
   },
   "scripts": {
     "dev": "next dev",
+    "dev:bun": "bun run dev",
+    "dev:npm": "npm run dev",
     "clean:build-artifacts": "node scripts/clean-build-artifacts.mjs",
     "self-heal": "node scripts/self-heal.mjs",
     "prebuild": "node scripts/clean-build-artifacts.mjs && tsx scripts/generate-routes.ts",
     "db:sync": "node scripts/sync-stack.mjs",
     "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
+    "build:bun": "bun run build",
+    "build:npm": "npm run build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
+    "start:bun": "bun run start",
+    "vps:deploy": "bash ./scripts/vps-deploy-bun.sh",
+    "vps:deploy:npm": "npm ci && npm run build",
     "start:standalone": "HOSTNAME=0.0.0.0 node .next/standalone/server.js",
     "lint": "eslint",
     "typecheck": "node scripts/clean-build-artifacts.mjs && node scripts/robust-typecheck.mjs",

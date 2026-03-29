@@ -1,3 +1,105 @@
+## Task: Production rescue hardening sweep (2026-03-29)
+
+- [x] Remove fabricated/fallback business data from propfirm catalogue + deals data paths when DB is unavailable.
+- [x] Harden API auth: fix proxy private-api auth weakness and add route-level auth checks for `/api/deals` + `/api/deals/unified`.
+- [x] Fix firm review correctness: sorting behavior, pagination totals, and approved-review count consistency between server/client.
+- [x] Fix firm detail consistency issues (topstep-only enrichment removal and tab/count alignment with visible data).
+- [x] Exclude expired coupons in firm coupon queries.
+- [x] Fix deals spotlight layout overflow caused by viewport-width section pattern.
+- [x] Resolve eslint config plugin/rule mismatch risk and verify lint startup remains clean.
+- [x] Run verification (`vitest` targeted, `eslint` targeted, `typecheck`, `build`) and record review outcomes.
+
+Verification:
+- `npx vitest run tests/api/deals-active.test.ts tests/api/deals-unified.test.ts` passes (8/8).
+- `npx eslint proxy.ts app/api/deals/_auth.ts app/api/deals/route.ts app/api/deals/unified/route.ts "app/api/deals/firms/[id]/route.ts" "app/api/deals/firms/[id]/deals/route.ts" server/deals.ts server/firm-reviews.ts server/firm-coupons.ts "app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts" "app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx" "app/[locale]/(landing)/firm/[slug]/page-client.tsx" "app/[locale]/(landing)/deals/components/deals-experience.tsx" tests/api/deals-active.test.ts tests/api/deals-unified.test.ts` passes with warnings only (no errors).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+- `npx eslint --print-config app/layout.tsx` confirms `react` + `react-hooks` plugins and configured rules are loading (no plugin/rule startup mismatch).
+
+## Review
+- Removed fabricated development payloads from `getPropfirmCatalogueData` and removed synthetic fallback firm/deal generation in `server/deals.ts`; DB-unavailable paths now return truthful empty datasets.
+- Hardened API auth:
+  - `proxy.ts` private API path now validates Supabase user sessions/tokens instead of accepting any bearer string.
+  - Public/private API route classification is now consistent (`classifyRoute` uses `isPublicApiRoute`), while public cache headers remain restricted to the explicit read allowlist (`PUBLIC_READ_API_PATHS`).
+  - Added route-level auth guard (`app/api/deals/_auth.ts`) and enforced it on `/api/deals`, `/api/deals/unified`, and firm deals detail endpoints.
+- Fixed review correctness:
+  - `server/firm-reviews.ts` now sorts correctly for `highest`/`lowest` by rating and returns `{ items, total, page, totalPages }`.
+  - `firm-reviews-section.tsx` now fetches paginated review data plus full stats (`getFirmReviewStats`) so totals/distribution and pagination are accurate.
+- Fixed firm detail consistency:
+  - Removed hardcoded Topstep-only enrichment.
+  - Standardized visible review count to approved-review stats and coupon counts to active coupon collections, including tab labels and trust metrics.
+- `server/firm-coupons.ts` now excludes expired coupons and aligns ordering with active coupon relevance.
+- Replaced the deals spotlight `w-screen` viewport-width pattern with container-safe layout to prevent horizontal overflow.
+
+## Task: Full App Router SEO + Crawlability + Deployment Hardening (2026-03-29)
+
+- [x] Complete architecture reconnaissance across `app/**`, shared layout/theme files, SEO surfaces (`robots.ts`, `sitemap.ts`), locale wiring, and deployment config (`package.json`, `vercel.json`, PM2/VPS scripts).
+- [x] Standardize crawl/index controls: tighten `robots` private blocks and expand sitemap coverage for all ranking/public routes (including new intent page).
+- [x] Add machine-readable discovery surface via root `llms.txt` route/file with factual, canonical page index and policy/contact links.
+- [x] Implement new intent route `/{locale}/best-trading-journal` with intent-matched copy, structured sections, and internally-linked CTA flow.
+- [x] Standardize JSON-LD helpers and apply consistent `SoftwareApplication` + `FAQPage` + `Organization` + `BreadcrumbList` schema on key ranking/public pages.
+- [x] Unify canonical/hreflang handling on key public pages and remove hardcoded/stale domain/brand drift.
+- [x] Harden Bun-first deployment path: scripts, Vercel commands, PM2/VPS deploy script, and deployment docs (while preserving npm fallback).
+- [x] Run verification: `typecheck`, `build`, route/metadata checks, `robots` + `sitemap` sanity, intent route response, and shadcn audit checklist.
+- [x] Add `## Review` summary with final outcomes and any explicit environment blockers.
+
+Verification:
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+- `curl` checks confirm `/robots.txt`, `/sitemap.xml`, `/llms.txt` render and include expected SEO/crawl directives.
+- `/en/best-trading-journal` and `/fr/best-trading-journal` return `200`.
+- Extracted metadata confirms locale canonical + hreflang alternates on the new intent page.
+- JSON-LD script blocks on the intent page parse successfully and include `Organization`, `SoftwareApplication`, `FAQPage`, and `BreadcrumbList`.
+- shadcn MCP audit checklist executed via `get_audit_checklist`.
+
+## Review
+- Added shared SEO utilities (`lib/seo.ts`) for canonical URL generation, hreflang alternates, public metadata, and standardized JSON-LD builders.
+- Implemented crawl/index controls in `app/robots.ts` and expanded sitemap coverage in `app/sitemap.ts`, including the new `/best-trading-journal` route.
+- Added machine-readable discovery endpoint at `app/llms.txt/route.ts` with canonical public URLs and policy/contact references.
+- Added SEO intent page at `app/[locale]/(landing)/best-trading-journal/page.tsx` and linked it from home/deals/propfirms high-authority surfaces.
+- Standardized metadata/schema and removed stale brand/domain drift in key public pages (`home`, `deals`, `deals/faq`, `faq`, `propfirms`, `prop-firm-deals`, `blogs`, `updates`, `newsletter`, `dashboard` private noindex metadata).
+- Hardened deployment path:
+  - Vercel Bun install is now lockfile-strict in `vercel.json` (`bun install --frozen-lockfile`).
+  - Added PM2 app config (`ecosystem.config.cjs`).
+  - Hardened `scripts/vps-deploy-bun.sh` with deterministic restart flow and fail-fast health-check retries.
+  - `package.json` now exposes one-command VPS deploy (`npm run vps:deploy`) and keeps npm fallback (`npm run vps:deploy:npm`).
+  - Deployment checklist updated for Bun-first flow and fallback.
+- Build reliability fix: extended `scripts/robust-next-build.mjs` transient retry detection to include `.next/server/proxy.js` ENOENT artifact races observed in this workspace.
+- Environment blocker: Bun binary is not installed in this local machine (`bun: command not found`), so direct `bun run build` execution could not be empirically validated here, though Bun-first commands/config are wired for Vercel/VPS.
+
+## Task: Runtime UI token drift cleanup (2026-03-29)
+
+- [x] Complete a runtime UI drift scan (`app/**`, `components/**`) to identify highest-impact hardcoded color utility hotspots.
+- [x] Replace hardcoded `white/black/gray/zinc` class usage in prioritized runtime surfaces with semantic/v2 tokens while preserving behavior.
+- [x] Clean remaining non-email hardcoded color classes in shared UI primitives and navigation/layout surfaces.
+- [x] Run targeted verification (`eslint`, `typecheck`, residual grep scan) and record remaining intentional scope.
+
+Verification:
+- `rg -n --glob '*.{ts,tsx}' "(text|bg|border)-(white|black|gray|neutral|zinc)(/|\\b)|white/|black/|white\\[|black\\[|gray-" app components` now returns only email template files under `components/emails/**`.
+- `npx eslint app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx app/[locale]/admin/reviews/page.tsx app/[locale]/(landing)/deals/components/deals-experience.tsx components/ui/button.tsx components/ui/card.tsx components/tiptap-editor.tsx components/referral-button.tsx components/onboarding-modal.tsx components/animation/spring-button.tsx app/[locale]/(landing)/trader/[slug]/privacy-toggle.tsx app/[locale]/(home)/components/Navigation.tsx app/[locale]/(home)/components/Footer.tsx components/ui/micro-interactions.tsx components/ui/unified-sidebar.tsx app/[locale]/(landing)/firm/[slug]/page-client.tsx` passes with warnings only (no errors).
+- `npm run -s typecheck` passes.
+
+## Review
+- Tokenized the biggest runtime hotspots:
+  - `app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx`
+  - `app/[locale]/admin/reviews/page.tsx`
+  - `app/[locale]/(landing)/deals/components/deals-experience.tsx`
+- Aligned shared/component-level color drift in:
+  - `components/ui/button.tsx`
+  - `components/ui/card.tsx`
+  - `components/ui/micro-interactions.tsx`
+  - `components/ui/unified-sidebar.tsx`
+  - `components/tiptap-editor.tsx`
+  - `components/referral-button.tsx`
+  - `components/onboarding-modal.tsx`
+  - `components/animation/spring-button.tsx`
+  - `app/[locale]/(landing)/trader/[slug]/privacy-toggle.tsx`
+  - `app/[locale]/(home)/components/Navigation.tsx`
+  - `app/[locale]/(home)/components/Footer.tsx`
+  - `app/[locale]/(landing)/firm/[slug]/page-client.tsx`
+- Removed one lint error in `components/ui/unified-sidebar.tsx` by dropping a `console.info` debug block in click handling.
+- Remaining hardcoded color classes are now isolated to email templates (`components/emails/**`), which are often rendered with email-client-specific styling constraints.
+
 ## Task: Deals page spotlight carousel (2026-03-29)
 
 - [x] Review the current `deals-experience` layout and identify the insertion point for a high-impact “biggest deals” spotlight section.
@@ -15,6 +117,7 @@ Verification:
 - CTA behavior remains consistent with existing deal cards (`claimUrl` opens externally when present, otherwise routes to firm page).
 - Follow-up tuning pass (2026-03-29): adjusted spacing, color system usage, and typography to align more closely with the provided visual reference (dark stage + lime accents).
 - Exact-match pass (2026-03-29): removed circular arrow chrome, removed bottom dots, resized center card and CTA, switched firm label to mono style, and replaced side teaser mini-cards with full faded side-card silhouettes to mirror the reference composition.
+- Exact-match refinement pass (2026-03-29): expanded the spotlight section to a full-width stage, fixed accent fallback by using the existing lime token (`--chart-3`), tuned type scales to prevent `101% Off` wrap, and rebalanced side teaser opacity/offset for closer parity with the screenshot.
 
 ## Task: API prerender-noise hardening (2026-03-28)
 
@@ -179,7 +282,7 @@ Verification: `npx eslint app/[locale]/dashboard/components/data-debug.tsx` (sti
 
 ## Task: Tailwind v4 semantic tokens foundation (2026-03-14)
 
-- [ ] Review `app/globals.css` to capture the current root/dark token definitions and base styles.
+- [x] Review `app/globals.css` to capture the current root/dark token definitions and base styles.
 - [ ] Implement the Tailwind v4 semantic token foundation: `:root`, `.dark`, `@theme` inline mappings (colors/fonts/radius/shadow/sidebar/chart), and base defaults with `*` and `body` selectors.
 - [ ] Preserve any existing project-specific tokens needed for current classes and keep the file structured and maintainable.
 - [ ] Run `npm run lint -- app/globals.css` (or the equivalent style check) and note any issues.
@@ -187,12 +290,12 @@ Verification: `npx eslint app/[locale]/dashboard/components/data-debug.tsx` (sti
 
 ## Task: Admin newsletter + ATAS semantic colors (2026-03-15)
 
-- [ ] Review `app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx`, `app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx`, and `app/[locale]/dashboard/components/import/atas/atas-processor.tsx` to catalog hardcoded `gray`, `white`, and `black` utility classes.
-- [ ] Replace the hardcoded color utilities with the appropriate semantic tokens (e.g., `bg-card`, `text-foreground`, `border-border`, `text-muted-foreground`, `bg-background`) without changing the existing behavior.
-- [ ] Run `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` and capture warnings/errors output.
-- [ ] Record the touched files and ESLint results in this checklist after completion.
+- [x] Review `app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx`, `app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx`, and `app/[locale]/dashboard/components/import/atas/atas-processor.tsx` to catalog hardcoded `gray`, `white`, and `black` utility classes.
+- [x] Replace the hardcoded color utilities with the appropriate semantic tokens (e.g., `bg-card`, `text-foreground`, `border-border`, `text-muted-foreground`, `bg-background`) without changing the existing behavior.
+- [x] Run `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` and capture warnings/errors output.
+- [x] Record the touched files and ESLint results in this checklist after completion.
 
-Verification: `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` (document warnings/errors per instructions).
+Verification: `npx eslint app/[locale]/admin/components/newsletter/newsletter-audio-player.tsx app/[locale]/admin/components/newsletter/newsletter-audio-splitter.tsx app/[locale]/dashboard/components/import/atas/atas-processor.tsx` (touched file: `newsletter-audio-splitter.tsx`; `atas-processor.tsx` still reports pre-existing issues: `@typescript-eslint/no-explicit-any` errors on 43/319/321/736, complexity warnings, `react-hooks/*` warnings, and unused vars; no new splitter errors).
 
 ## Task: Landing semantic token migration (2026-03-15)
 
@@ -212,11 +315,11 @@ Verification: `npx eslint app/[locale]/dashboard/components/import/components/pl
 
 ## Task: Worker H legacy color token replacement (2026-03-15)
 
-- [ ] Review `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx`, `app/[locale]/teams/join/page.tsx`, `app/[locale]/(landing)/newsletter/page.tsx`, `app/[locale]/(landing)/disclaimers/page.tsx`, `app/[locale]/(home)/loading.tsx`, and `app/[locale]/(landing)/community/post/[id]/loading.tsx` to catalog the remaining hardcoded color utilities (e.g., `text-white`, `bg-black`, `bg-neutral-900`, `border-zinc-700`).
-- [ ] Replace those legacy classes with the appropriate semantic tokens (`text-foreground`, `text-muted-foreground`, `bg-card`, `bg-background`, `border-border`, etc.) without altering layout or spacing.
-- [ ] Run `npx eslint` across the touched files after the replacement to verify there are no new lint errors.
-- [ ] Summarize the changed files plus the ESLint output for this task in the checklist.
-Verification: `npx eslint app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx app/[locale]/teams/join/page.tsx app/[locale]/(landing)/newsletter/page.tsx app/[locale]/(landing)/disclaimers/page.tsx app/[locale]/(home)/loading.tsx app/[locale]/(landing)/community/post/[id]/loading.tsx` (document warnings/errors if any).
+- [x] Review `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx`, `app/[locale]/teams/join/page.tsx`, `app/[locale]/(landing)/newsletter/page.tsx`, `app/[locale]/(landing)/disclaimers/page.tsx`, `app/[locale]/(home)/loading.tsx`, and `app/[locale]/(landing)/community/post/[id]/loading.tsx` to catalog the remaining hardcoded color utilities (e.g., `text-white`, `bg-black`, `bg-neutral-900`, `border-zinc-700`).
+- [x] Replace those legacy classes with the appropriate semantic tokens (`text-foreground`, `text-muted-foreground`, `bg-card`, `bg-background`, `border-border`, etc.) without altering layout or spacing.
+- [x] Run `npx eslint` across the touched files after the replacement to verify there are no new lint errors.
+- [x] Summarize the changed files plus the ESLint output for this task in the checklist.
+Verification: `npx eslint app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx app/[locale]/teams/join/page.tsx app/[locale]/(landing)/newsletter/page.tsx app/[locale]/(landing)/disclaimers/page.tsx app/[locale]/(home)/loading.tsx app/[locale]/(landing)/community/post/[id]/loading.tsx` (no remaining `white/black/neutral/zinc/gray` utility matches in this file set; pre-existing lint findings remain in team files: `no-explicit-any` errors at `team-equity-grid-client.tsx:23,345`, complexity warnings, unused imports/vars, and `react-hooks/exhaustive-deps` warning in `teams/join/page.tsx`).
 
 
 ## Task: Harden community/public data (2026-03-14)

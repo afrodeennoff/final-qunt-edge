@@ -25,6 +25,31 @@ export interface ReviewWithUser {
   updatedAt: Date
 }
 
+export interface ListFirmReviewsResult {
+  items: ReviewWithUser[]
+  total: number
+  page: number
+  totalPages: number
+}
+
+const REVIEWS_PAGE_SIZE = 10
+
+function getReviewOrderBy(sort: ReviewSortOption) {
+  if (sort === 'oldest') {
+    return [{ createdAt: 'asc' as const }]
+  }
+
+  if (sort === 'highest') {
+    return [{ rating: 'desc' as const }, { createdAt: 'desc' as const }]
+  }
+
+  if (sort === 'lowest') {
+    return [{ rating: 'asc' as const }, { createdAt: 'desc' as const }]
+  }
+
+  return [{ createdAt: 'desc' as const }]
+}
+
 export async function createFirmReview(data: { propfirmId: string; rating: number; title?: string; body?: string }) {
   const userId = await getDatabaseUserId()
   
@@ -53,28 +78,34 @@ export async function createFirmReview(data: { propfirmId: string; rating: numbe
   })
 }
 
-export async function listFirmReviews(propfirmId: string, page = 1, sort: ReviewSortOption = 'newest') {
-  const take = 10
-  const skip = (page - 1) * take
-  
-  const orderBy: Record<string, string> = {
-    newest: 'desc',
-    oldest: 'asc',
-    highest: 'desc',
-    lowest: 'asc',
+export async function listFirmReviews(
+  propfirmId: string,
+  page = 1,
+  sort: ReviewSortOption = 'newest'
+): Promise<ListFirmReviewsResult> {
+  const normalizedPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
+  const skip = (normalizedPage - 1) * REVIEWS_PAGE_SIZE
+  const where = {
+    propFirmId: propfirmId,
+    status: 'approved' as const,
   }
-  
-  return prisma.propFirmReview.findMany({
-    where: { 
-      propFirmId: propfirmId,
-      status: 'approved',
-    },
-    orderBy: { 
-      createdAt: orderBy[sort] as 'desc' | 'asc',
-    },
-    skip,
-    take,
-  }) as Promise<ReviewWithUser[]>
+
+  const [items, total] = await Promise.all([
+    prisma.propFirmReview.findMany({
+      where,
+      orderBy: getReviewOrderBy(sort),
+      skip,
+      take: REVIEWS_PAGE_SIZE,
+    }),
+    prisma.propFirmReview.count({ where }),
+  ])
+
+  return {
+    items: items as ReviewWithUser[],
+    total,
+    page: normalizedPage,
+    totalPages: Math.max(1, Math.ceil(total / REVIEWS_PAGE_SIZE)),
+  }
 }
 
 export async function getFirmReviewStats(propfirmId: string) {

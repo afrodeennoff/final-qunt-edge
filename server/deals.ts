@@ -295,13 +295,6 @@ function findSpotlight(firmName: string): PropFirmMatchSpotlight | null {
   return PROP_FIRM_MATCH_SPOTLIGHTS.find((entry) => normalizeFirmName(entry.name) === normalizedFirmName) ?? null
 }
 
-function slugifyFirmName(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
 function isPrismaUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
 
@@ -323,61 +316,6 @@ function isPrismaUnavailableError(error: unknown): boolean {
 
 function logDealsFallback(source: string, error: unknown) {
   console.warn(`[Deals] Falling back in ${source}`, error)
-}
-
-function buildFallbackUnifiedFirmFromConfig(key: string, firm: (typeof propFirms)[keyof typeof propFirms]): UnifiedFirm {
-  const profile = getVerifiedPropFirmProfileByName(firm.name)
-  return {
-    id: `fallback-${key}`,
-    slug: profile?.slug ?? slugifyFirmName(firm.name),
-    name: firm.name,
-    description: profile?.shortDesc,
-    shortDesc: profile?.shortDesc,
-    referralUrl: profile?.referralUrl,
-    logoUrl: undefined,
-    category: profile?.category ?? 'Futures',
-    platform: profile?.platform ?? 'Tradovate',
-    payoutModel: profile?.payoutModel ?? 'Monthly',
-    drawdownType: profile?.drawdownType ?? 'Static',
-    profitSplit: profile?.profitSplit ?? '80/20',
-    maxAllocation: profile?.maxAllocation ?? '$100K',
-    challengeCount: 0,
-    spotlight: findSpotlight(firm.name),
-    catalogueStats: buildCatalogueStats(),
-    accountSizes: getAccountSizesFromConfig(firm.name),
-    coupons: [],
-    _count: {
-      reviews: 0,
-      coupons: 0,
-    },
-    liveReviewStats: {
-      averageRating: null,
-      approvedCount: 0,
-    },
-  }
-}
-
-function getFallbackUnifiedFirms(): UnifiedFirm[] {
-  return Object.entries(propFirms)
-    .map(([key, firm]) => buildFallbackUnifiedFirmFromConfig(key, firm))
-    .sort((a, b) => a.name.localeCompare(b.name))
-}
-
-function getFallbackUnifiedFirmBySlug(slug: string): UnifiedFirm | null {
-  const normalizedSlug = normalizeFirmName(slug)
-
-  for (const [key, firm] of Object.entries(propFirms)) {
-    const fallbackFirm = buildFallbackUnifiedFirmFromConfig(key, firm)
-    if (
-      normalizeFirmName(fallbackFirm.slug) === normalizedSlug ||
-      normalizeFirmName(firm.name) === normalizedSlug ||
-      normalizeFirmName(key) === normalizedSlug
-    ) {
-      return fallbackFirm
-    }
-  }
-
-  return null
 }
 
 async function loadFirmWithRelations(where: { id?: string; slug?: string }): Promise<FirmRecord | null> {
@@ -423,9 +361,7 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
 
 async function getUnifiedFirm(where: { id?: string; slug?: string }): Promise<UnifiedFirm | null> {
   const firm = await loadFirmWithRelations(where)
-  if (!firm) {
-    return where.slug ? getFallbackUnifiedFirmBySlug(where.slug) : null
-  }
+  if (!firm) return null
 
   const catalogue = await getPropfirmCatalogueData('allTime')
   return buildUnifiedFirm(
@@ -476,7 +412,7 @@ const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 
 const _getActiveDeals = async (): Promise<DealItem[]> => {
   if (!hasConfiguredDatabaseConnection) {
-    return getFallbackDeals()
+    return []
   }
 
   const now = new Date()
@@ -506,9 +442,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       orderBy: { discountPercent: 'desc' },
     })
 
-    if (coupons.length === 0) {
-      return getFallbackDeals()
-    }
+    if (coupons.length === 0) return []
 
     return coupons.map((coupon) => ({
       id: coupon.id,
@@ -532,34 +466,8 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     }
 
     logDealsFallback('getActiveDeals', error)
-    return getFallbackDeals()
+    return []
   }
-}
-
-function getFallbackDeals(): DealItem[] {
-  return PROP_FIRM_MATCH_SPOTLIGHTS.map((spotlight) => {
-    const match = spotlight.promoText.match(/(\d+)%?\s*off/i)
-    const discountPercent = match ? parseInt(match[1], 10) : 0
-    const category: MarketType = spotlight.category === 'Futures' ? 'Futures' : 'Forex'
-    const platform: TradingPlatform = spotlight.category === 'Futures' ? 'Tradovate' : 'MetaTrader 5'
-    const challengeFee = Math.round(250 * (1 - discountPercent / 100))
-    return {
-      id: `fallback-${spotlight.slug}`,
-      firmId: `fallback-${spotlight.slug}`,
-      firmSlug: spotlight.slug,
-      firmName: spotlight.name,
-      logoUrl: undefined,
-      category,
-      platform,
-      payoutModel: 'Monthly' as PayoutModel,
-      drawdownType: 'Static' as DrawdownType,
-      discountPercent,
-      couponCode: spotlight.promoCode ?? 'PROMO',
-      challengeFee: Math.max(challengeFee, 0),
-      expiryDate: 'No expiry',
-      claimUrl: spotlight.sourceUrl,
-    }
-  })
 }
 
 async function getActiveDealsCached(): Promise<DealItem[]> {
@@ -571,7 +479,7 @@ async function getActiveDealsCached(): Promise<DealItem[]> {
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   if (!hasConfiguredDatabaseConnection) {
-    return getFallbackUnifiedFirms()
+    return []
   }
 
   const now = new Date()
@@ -620,7 +528,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     }
 
     logDealsFallback('getUnifiedFirms', error)
-    return getFallbackUnifiedFirms()
+    return []
   }
 }
 
@@ -679,7 +587,7 @@ export const getUnifiedFirmBySlug = async (slug: string): Promise<UnifiedFirm | 
 
 export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
   if (!hasConfiguredDatabaseConnection) {
-    return getFallbackDealsForFirm(firmId)
+    return []
   }
 
   const now = new Date()
@@ -687,7 +595,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
     const firm = await prisma.propFirm.findUnique({
       where: { id: firmId, isActive: true },
     })
-    if (!firm) return getFallbackDealsForFirm(firmId)
+    if (!firm) return []
 
     const coupons = await prisma.propFirmCoupon.findMany({
       where: {
@@ -715,9 +623,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       orderBy: { discountPercent: 'desc' },
     })
 
-    if (coupons.length === 0) {
-      return getFallbackDealsForFirm(firmId)
-    }
+    if (coupons.length === 0) return []
 
     return coupons.map((coupon) => ({
       id: coupon.id,
@@ -741,34 +647,8 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
     }
 
     logDealsFallback('getFirmDeals', error)
-    return getFallbackDealsForFirm(firmId)
+    return []
   }
-}
-
-function getFallbackDealsForFirm(firmId: string): DealItem[] {
-  const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find((s) => s.slug === firmId || `fallback-${slugifyFirmName(s.name)}` === firmId)
-  if (!spotlight) return []
-  const match = spotlight.promoText.match(/(\d+)%?\s*off/i)
-  const discountPercent = match ? parseInt(match[1], 10) : 0
-  const category: MarketType = spotlight.category === 'Futures' ? 'Futures' : 'Forex'
-  const platform: TradingPlatform = spotlight.category === 'Futures' ? 'Tradovate' : 'MetaTrader 5'
-  const challengeFee = Math.round(250 * (1 - discountPercent / 100))
-  return [{
-    id: `fallback-${spotlight.slug}`,
-    firmId: `fallback-${spotlight.slug}`,
-    firmSlug: spotlight.slug,
-    firmName: spotlight.name,
-    logoUrl: undefined,
-    category,
-    platform,
-    payoutModel: 'Monthly' as PayoutModel,
-    drawdownType: 'Static' as DrawdownType,
-    discountPercent,
-    couponCode: spotlight.promoCode ?? 'PROMO',
-    challengeFee: Math.max(challengeFee, 0),
-    expiryDate: 'No expiry',
-    claimUrl: spotlight.sourceUrl,
-  }]
 }
 
 export const getDefaultFaqs = async (): Promise<FaqItem[]> => [

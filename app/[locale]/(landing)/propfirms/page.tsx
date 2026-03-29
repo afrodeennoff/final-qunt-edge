@@ -8,6 +8,7 @@ import { PropFirmCatalogueExperience } from './components/catalogue-experience'
 import { getUnifiedFirms } from '@/server/deals'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import { buildBreadcrumbSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
 
 function buildEmptyStats(name: string): PropfirmCatalogueStats {
   return {
@@ -75,29 +76,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  setStaticParamsLocale(locale)
   const t = await getI18n()
-
-  return {
+  return buildPublicMetadata({
+    locale,
+    path: "/propfirms",
     title: `${t('landing.propfirms.title')} | Qunt Edge`,
     description: t('landing.propfirms.description'),
-    alternates: {
-      canonical: `https://quntedge.com/${locale}/propfirms`,
-    },
-    openGraph: {
-      title: `${t('landing.propfirms.title')} | Qunt Edge`,
-      description: t('landing.propfirms.description'),
-      url: `https://quntedge.com/${locale}/propfirms`,
-      siteName: 'Qunt Edge',
-      locale,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${t('landing.propfirms.title')} | Qunt Edge`,
-      description: t('landing.propfirms.description'),
-    },
-  }
+  });
 }
 
 export default async function PropFirmsPage({
@@ -136,13 +121,22 @@ export default async function PropFirmsPage({
     hasInstantFunding: boolean
     stats: PropfirmCatalogueStats
   }> = Object.entries(propFirms).map(([key, firm]) => buildCatalogueFirm(key, firm, slugMap, unifiedFirmMap, statsMap))
+  const organizationSchema = buildOrganizationSchema()
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Home", path: "/" },
+    { name: "Prop Firms", path: "/propfirms" },
+  ])
 
   return (
-    <PropFirmCatalogueExperience
-      locale={locale}
-      title={t('landing.propfirms.title')}
-      description={t('landing.propfirms.description')}
-      firms={firms}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <PropFirmCatalogueExperience
+        locale={locale}
+        title={t('landing.propfirms.title')}
+        description={t('landing.propfirms.description')}
+        firms={firms}
+      />
+    </>
   )
 }

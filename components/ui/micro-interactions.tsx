@@ -20,7 +20,7 @@ export const HoverLift = React.forwardRef<HTMLDivElement, HoverLiftProps>(
         ref={ref}
         className={cn(
           "transition-all duration-200 ease-out",
-          "hover:shadow-lg hover:shadow-black/20",
+          "hover:shadow-lg hover:shadow-foreground/20",
           `hover:${liftAmount}`,
           className
         )}
@@ -71,7 +71,7 @@ export const Shimmer = React.forwardRef<HTMLDivElement, ShimmerProps>(
         ref={ref}
         className={cn(
           "animate-shimmer bg-gradient-to-r",
-          "from-transparent via-white/5 to-transparent",
+          "from-transparent via-primary-foreground/10 to-transparent",
           "bg-[length:200%_100%]",
           className
         )}

@@ -55,54 +55,6 @@ function formatSizeBreakdown(
 }
 
 export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMonth'): Promise<PropfirmCatalogueData> {
-  if (process.env.NODE_ENV === 'development') {
-    return {
-      stats: [
-        {
-          propfirmName: 'Apex',
-          accountsCount: 12,
-          sizedAccountsCount: 12,
-          totalAccountValue: 850000,
-          sizeBreakdown: '6x50k + 4x100k + 2x75k',
-          sizeDistribution: [
-            { label: '50k', count: 6, totalValue: 300000 },
-            { label: '100k', count: 4, totalValue: 400000 },
-            { label: '75k', count: 2, totalValue: 150000 },
-          ],
-          payouts: {
-            propfirmName: 'Apex',
-            pendingAmount: 2500,
-            pendingCount: 2,
-            refusedAmount: 0,
-            refusedCount: 0,
-            paidAmount: 15400,
-            paidCount: 8
-          }
-        },
-        {
-          propfirmName: 'Topstep',
-          accountsCount: 5,
-          sizedAccountsCount: 5,
-          totalAccountValue: 250000,
-          sizeBreakdown: '3x50k + 2x25k',
-          sizeDistribution: [
-            { label: '50k', count: 3, totalValue: 150000 },
-            { label: '25k', count: 2, totalValue: 50000 },
-          ],
-          payouts: {
-            propfirmName: 'Topstep',
-            pendingAmount: 0,
-            pendingCount: 0,
-            refusedAmount: 0,
-            refusedCount: 0,
-            paidAmount: 8200,
-            paidCount: 4
-          }
-        }
-      ]
-    }
-  }
-
   if (!hasConfiguredDatabaseConnection) {
     return { stats: [] }
   }

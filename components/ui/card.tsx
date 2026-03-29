@@ -74,7 +74,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
         {isLoading && (
           <div className="absolute inset-0 overflow-hidden rounded-xl z-20">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-v2-accent-foreground/10 to-transparent" />
           </div>
         )}
         {status && (
@@ -84,7 +84,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 "status-dot size-2 rounded-full",
                 status === "live" && "bg-emerald-500 animate-pulse shadow-lg shadow-emerald-500/50",
                 status === "synced" && "bg-blue-500 shadow-lg shadow-blue-500/50",
-                status === "idle" && "bg-gray-500",
+                status === "idle" && "bg-v2-text-muted",
                 status === "error" && "bg-red-500 shadow-lg shadow-red-500/50"
               )}
             />
@@ -142,7 +142,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
           "status-dot",
           tone === "live" && "bg-emerald-500 animate-pulse",
           tone === "synced" && "bg-blue-500",
-          tone === "idle" && "bg-gray-500",
+          tone === "idle" && "bg-v2-text-muted",
           tone === "error" && "bg-red-500",
           className
         )}
