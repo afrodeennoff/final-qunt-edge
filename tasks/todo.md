@@ -9,6 +9,9 @@ Verification:
 - `npx eslint server/prop-firms.ts` passes (warnings only, no errors).
 - `npm run -s typecheck` passes.
 - `npm run build` passes end-to-end.
+- Commit: `460d55c` (`fix: prevent prerender crash when prop firm table is missing`).
+- Push: `origin/v2` updated successfully.
+- `/init` command unavailable in this shell (`zsh: no such file or directory: /init`).
 
 ## Review
 - Root cause: shared marketing layout includes `RollingAdBanner`, which calls `listPropFirmBannerItems()`; that code path previously executed `prisma.propFirm.findMany()` without a schema/unavailable guard, so `P2021` during prerender aborted build (`/fr`).

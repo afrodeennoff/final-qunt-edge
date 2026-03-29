@@ -20,6 +20,7 @@
 - `npx eslint server/prop-firms.ts` passes (warning-only baseline).
 - `npm run -s typecheck` passes.
 - `npm run build` passes end-to-end.
+- Commit/publish: `460d55c` pushed to `origin/v2`.
 
 ### Blockers
 - `/init` command remains unavailable in this shell (`zsh: no such file or directory: /init`), so mandatory sync step cannot be executed here.
