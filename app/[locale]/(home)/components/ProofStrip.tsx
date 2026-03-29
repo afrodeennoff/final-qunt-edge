@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { Card, CardContent } from '@/components/ui/card'
+import { CardV2, CardV2Content } from '@/components/ui/v2'
 import { Lock, ShieldCheck, FileDown, Workflow } from 'lucide-react'
 
 const proofItems = [
@@ -69,8 +69,6 @@ export default function ProofStrip() {
               })}
             </div>
           </CardContent>
-        </Card>
-      </div>
-    </section>
+    </CardV2>
   )
 }

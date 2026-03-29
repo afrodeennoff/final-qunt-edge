@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getUnifiedFirmBySlug } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
 import { getLocaleAlternates } from '@/lib/seo'
+import { buildOrganizationSchema } from '@/lib/seo'
+import { getSiteOrigin } from '@/lib/site-url'
 
 export async function generateMetadata({
   params,
@@ -42,5 +44,40 @@ export default async function FirmDetailPage({ params }: { params: Promise<{ slu
   const { slug, locale } = await params
   const firm = await getUnifiedFirmBySlug(slug)
   if (!firm) notFound()
-  return <FirmDetailClient firm={firm} localePrefix={`/${locale}`} />
+  const siteOrigin = getSiteOrigin()
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                ...buildOrganizationSchema(),
+              },
+              {
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Prop Firms',
+                    item: `${siteOrigin}/propfirms`,
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: firm.name,
+                    item: `${siteOrigin}/firm/${firm.slug}`,
+                  },
+                ],
+              },
+            ],
+          }),
+        }}
+      />
+      <FirmDetailClient firm={firm} localePrefix={`/${locale}`} />
+    </>
+  )
 }

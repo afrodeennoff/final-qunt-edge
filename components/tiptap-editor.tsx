@@ -598,7 +598,7 @@ export function TiptapEditor({
       )}
 
       {isFullscreen && (
-        <DialogContent className="w-screen h-screen max-w-none p-0 sm:rounded-none z-9999">
+        <DialogContent className="w-[95vw] h-[95vh] max-w-none p-0 sm:rounded-none z-9999">
           <div className="flex flex-col h-full bg-background">
             <ResponsiveMenuBar
               editor={editor}

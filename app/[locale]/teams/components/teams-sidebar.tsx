@@ -65,7 +65,7 @@ export function TeamsSidebar() {
       group: "Resources"
     },
     {
-      href: `${localePrefix}/prop-firm-deals`,
+      href: `${localePrefix}/deals`,
       icon: <Globe className="size-4.5" />,
       label: "Deals",
       group: "Resources"

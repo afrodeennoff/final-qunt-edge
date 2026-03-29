@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { Card, CardContent } from '@/components/ui/card'
+import { CardV2, CardV2Content } from '@/components/ui/v2'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Star, Quote } from 'lucide-react'
 
@@ -148,10 +148,6 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
+    </CardV2>
   )
 }

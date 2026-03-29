@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardV2, CardV2Content, CardV2Header, CardV2Title, CardV2Description } from '@/components/ui/v2'
 import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2 } from 'lucide-react'
 
 const proofStats = [
@@ -74,36 +74,16 @@ export default function WhyChooseUs() {
               <div
                 key={reason.title}
               >
-                <Card variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)]">
-                  <CardHeader>
+                CardV2 variant="glass" className="h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)]">
+                  CardV2Header>
                     <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <CardTitle className="text-xl tracking-[-0.01em] [font-family:var(--home-display)]">{reason.title}</CardTitle>
-                    <CardDescription className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">
+                    CardV2Title className="text-xl tracking-[-0.01em] [font-family:var(--home-display)]">{reason.title}</CardV2Title>
+                    CardV2Description className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">
                       {reason.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          {socialProof.map((item, idx) => (
-            <div
-              key={item}
-              className="flex items-center gap-3 rounded-xl border border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface)/0.7)] px-4 py-3 text-sm"
-            >
-              {idx === 0 && <Sparkles className="h-4 w-4 text-foreground" />}
-              {idx === 1 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
-              {idx === 2 && <CheckCircle2 className="h-4 w-4 text-foreground" />}
-              <span className="text-foreground/80 [font-family:var(--home-copy)]">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+                    </CardV2Description>
+                  </CardV2Header>
+    </CardV2>
   )
 }

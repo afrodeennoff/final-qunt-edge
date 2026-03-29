@@ -61,7 +61,7 @@ function buildDefaultItems(withLocale: LocalePathBuilder): UnifiedSidebarItem[] 
         { label: 'Behavior', href: withLocale('/dashboard/brain'), icon: <Brain className="size-4" />, group: 'Insights' },
         { label: 'Team', href: withLocale('/teams/dashboard'), icon: <Building2 className="size-4" />, group: 'Social' },
         { label: 'Prop Firms', href: withLocale('/propfirms'), icon: <Globe className="size-4" />, group: 'Social' },
-        { label: 'Deals', href: withLocale('/prop-firm-deals'), icon: <Globe className="size-4" />, group: 'Social' },
+        { label: 'Deals', href: withLocale('/deals'), icon: <Globe className="size-4" />, group: 'Social' },
     ]
 }
 

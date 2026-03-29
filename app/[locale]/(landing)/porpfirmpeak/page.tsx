@@ -1,5 +1,5 @@
 import { permanentRedirect } from 'next/navigation'
 
-export default function PropFirmDealsPage() {
+export default function PorpfirmpeakPage() {
   permanentRedirect('/deals')
 }

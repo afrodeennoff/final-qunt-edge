@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { BadgeV2 } from "@/components/ui/v2"
-import { Card, CardContent } from '@/components/ui/card'
+import { CardV2, CardV2Content } from '@/components/ui/v2'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ArrowRight, Trophy, Flame, Users } from 'lucide-react'
 
@@ -148,11 +148,6 @@ export default function LeaderboardPreview({ locale, entries }: LeaderboardPrevi
                     <p className="text-[10px] text-foreground/80 [font-family:var(--home-copy)]">{entry.winRate}% WR</p>
                   </div>
                 </CardContent>
-              </Card>
-            )
-          })}
-        </div>
-      </div>
-    </section>
+    </CardV2>
   )
 }
