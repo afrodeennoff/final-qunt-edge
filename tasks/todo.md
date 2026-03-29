@@ -21,6 +21,7 @@ Verification:
   - `getPropFirmBySlug` (null fallback).
 - Follow-up hardening (same date): Vercel logs showed connection timeout failures after `P2021` fallback. Updated the unavailable matcher to include timeout signatures (`timeout exceeded when trying to connect` / `timed out when trying to connect`) and added `withPrismaSchemaMismatchFallback` cooldown protection for banner/slug reads to reduce repeated failing queries during prerender.
 - Result: missing-table/schema-mismatch environments now degrade safely instead of failing prerender/export.
+- Follow-up publish: commit `2c1f321` pushed to `origin/v2`.
 
 ## Task: Thread closeout (commit + push + log sync) (2026-03-29)
 

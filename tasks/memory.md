@@ -13,6 +13,7 @@
 - Follow-up hardening from second Vercel run:
   - expanded unavailable detection to include connection timeout signatures
   - added schema-mismatch cooldown fallback (`withPrismaSchemaMismatchFallback`) for banner/slug read paths to avoid repeated failing DB calls during prerender.
+  - published follow-up fix commit `2c1f321` to `origin/v2`.
 - Updated living docs and workflow notes for this failure mode in:
   - `tasks/todo.md`
   - `tasks/lessons.md`
