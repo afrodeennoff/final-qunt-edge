@@ -1,3 +1,19 @@
+## Task: Fix console.error violations in landing pages — COMPLETED (already fixed) (2026-03-30)
+
+- [x] Verify all 6 target files use `console.warn` instead of `console.error`
+- [x] Confirm no `console.error` violations exist in landing pages
+- [x] Run lint check on all 6 files to confirm clean status
+
+Verification:
+- All 6 files already use `console.warn` (deals/page.tsx lines 76, 81; support/page-client.tsx line 93; support-form.tsx lines 37, 83; _updates/[slug]/page.tsx lines 97, 104, 126; firm-reviews-section.tsx lines 288, 357, 393; error.tsx line 14)
+- `npx eslint` on all 6 files shows only complexity warnings (0 errors)
+- No `console.error` patterns found via grep
+
+Review:
+- All `console.error` → `console.warn` replacements were already applied
+- ESLint rules are satisfied with `no-console` at ERROR level
+- No code changes needed
+
 ## Task: Vercel build rescue — home component TSX corruption + `Card` symbol failure (2026-03-29)
 
 - [x] Reproduce the failure from deployment context (`c2d1856`) and confirm the first blocking TypeScript error.

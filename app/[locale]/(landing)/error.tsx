@@ -11,7 +11,7 @@ export default function LandingError({
   reset?: () => void
 }) {
   useEffect(() => {
-    console.error(error)
+    console.warn(error)
   }, [error])
 
   return (
@@ -30,4 +30,3 @@ export default function LandingError({
     </div>
   )
 }
-

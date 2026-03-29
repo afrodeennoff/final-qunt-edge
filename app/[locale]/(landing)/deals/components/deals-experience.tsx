@@ -54,6 +54,13 @@ const sortOptions: ReadonlyArray<{ key: SortKey; label: string }> = [
   { key: 'price-high', label: 'Highest price' },
 ]
 
+const dealsQuickLinkItems: ReadonlyArray<{ href: string; label: string }> = [
+  { href: '/deals/compare', label: 'Compare' },
+  { href: '/deals/guides', label: 'Guides' },
+  { href: '/deals/calculator', label: 'Calculator' },
+  { href: '/deals/faq', label: 'FAQ' },
+]
+
 function formatPrice(value: number): string {
   if (value <= 0) return 'Free'
   return `$${value.toLocaleString()}`
@@ -706,11 +713,29 @@ function DealsHero({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard label="Live deals" value={overview.totalLiveDeals.toString()} icon={BadgePercent} />
-        <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toString()} icon={Building2} />
-        <StatCard label="Account value" value={formatCompactCurrency(overview.totalAccountValue)} icon={Wallet} />
-        <StatCard label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+      <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-3">
+          <StatCard label="Live deals" value={overview.totalLiveDeals.toString()} icon={BadgePercent} />
+          <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toString()} icon={Building2} />
+          <StatCard label="Account value" value={formatCompactCurrency(overview.totalAccountValue)} icon={Wallet} />
+          <StatCard label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+        </div>
+        <div className="rounded-2xl border border-border bg-background/40 p-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            Explore deals tools
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {dealsQuickLinkItems.map((item) => (
+              <Link
+                key={item.href}
+                href={`${localePrefix}${item.href}`}
+                className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-input"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

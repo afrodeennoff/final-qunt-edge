@@ -285,7 +285,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
         setHasUserReviewed(!!userReview)
       }
     } catch (err) {
-      console.error('Failed to fetch reviews:', err)
+      console.warn('Failed to fetch reviews:', err)
       setError('Failed to load reviews. Please try again.')
     } finally {
       setLoading(false)
@@ -354,7 +354,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       setTimeout(() => setSubmitSuccess(false), 5000)
     } catch (err: unknown) {
-      console.error('Failed to submit review:', err)
+      console.warn('Failed to submit review:', err)
       
       const errorMessage = err instanceof Error ? err.message : String(err)
       if (errorMessage.includes('Unique constraint') || errorMessage.includes('unique constraint') || errorMessage.includes('already reviewed')) {
@@ -390,7 +390,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       setShowFlagDialog(false)
       setTimeout(() => setFlagSuccess(false), 5000)
     } catch (err) {
-      console.error('Failed to flag review:', err)
+      console.warn('Failed to flag review:', err)
       setError(err instanceof Error ? err.message : 'Failed to report review')
     } finally {
       setFlagSubmitting(false)

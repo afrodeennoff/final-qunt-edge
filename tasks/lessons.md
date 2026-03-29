@@ -346,6 +346,27 @@ grep -rn 'via-border-primary\|via-primary-foreground' .../components/ --include=
 
 ---
 
+## NEW (2026-03-30): Task descriptions may be outdated if work already completed
+
+### Mistake
+Task description stated that 6 files contained 12 `console.error` violations, but verification showed all violations were already fixed.
+
+### Root Cause
+Task tracking was created based on an earlier code state that has since been corrected. The fix was already applied but not reflected in the task description.
+
+### Rule
+Before executing a task, always verify the current state of the files mentioned in the task description using grep/search. Do not assume task descriptions are always up-to-date.
+
+### Example
+```bash
+# Always verify before starting:
+grep -rn "console\.error" "app/[locale]/(landing)/deals/page.tsx" "app/[locale]/(landing)/support/page-client.tsx"
+
+# If no matches found, mark task as already complete and update tracking files
+```
+
+---
+
 ## NEW (2026-03-28): UltraWork verification — run EXACT verification commands before claiming done
 
 ### What happened

@@ -33,8 +33,8 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
         const fetchUser = async () => {
             if (supabase) {
                 const { data, error } = await supabase.auth.getUser()
-                if (error) {
-                    console.error('Error getting user:', error)
+        if (error) {
+                    console.warn('Error getting user:', error)
                     return
                 }
                 setName(data.user.user_metadata.full_name || '')
@@ -80,7 +80,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                 throw new Error(result.error)
             }
         } catch (error) {
-            console.error('Error sending email:', error)
+            console.warn('Error sending email:', error)
             toast.error(t('support.emailError'), {
                 description: t('error'),
                 duration: 5000,

@@ -1,61 +1,123 @@
-# AI Agent Configuration
+# PROJECT KNOWLEDGE BASE
 
-This project uses AI agents for development assistance. For technical context and engineering decisions, see:
+**Generated:** 2026-03-30
+**Commit:** 6b191e8
+**Branch:** v2
 
-- **[ENGINEERING_LOG.md](./ENGINEERING_LOG.md)** — Comprehensive engineering changelog with architectural decisions, bug fixes, and feature implementations
+## OVERVIEW
 
-## Quick Reference
+Qunt Edge — open-source trading analytics platform for professional futures/prop-firm traders. Multi-surface Next.js 15 app with public marketing, authenticated dashboard, teams, admin, AI assistant, broker integrations, and payment lifecycle.
 
-- **Stack**: Next.js 15, React 19, TypeScript, Prisma, Supabase, Tailwind CSS
-- **AI Integration**: OpenAI SDK with OpenRouter fallback for cost optimization
-- **Database**: PostgreSQL via Supabase
-- **Auth**: Supabase Auth (Discord, Google OAuth)
+## STRUCTURE
 
-## Development Commands
-
-```bash
-npm run dev          # Start development server
-npm run build        # Production build
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript
-npm run test         # Run tests
+```
+qunt-edge/
+├── app/                    # Next.js App Router (77 pages, 57 API routes, 12 layouts)
+│   ├── [locale]/           # i18n dynamic segment (en, fr)
+│   │   ├── (home)/         # Home page
+│   │   ├── (landing)/      # Marketing pages (propfirms, deals, blogs, community, etc.)
+│   │   ├── (authentication)/ # Sign-in/sign-up
+│   │   ├── dashboard/      # Authenticated trading dashboard (widgets, charts, imports)
+│   │   ├── admin/          # Admin panel (blogs, propfirms, coupons, newsletter)
+│   │   ├── teams/          # Team collaboration
+│   │   ├── shared/[slug]/  # Public shared dashboard views
+│   │   └── embed/          # Embeddable chart frame
+│   └── api/                # HTTP API (ai, deals, cron, mt5, tradovate, whop)
+├── components/
+│   ├── ui/                 # 61 shadcn/ui components (Radix + CVA)
+│   ├── ui/v2/              # V2 design system (CardV2, ButtonV2, BadgeV2)
+│   ├── ai-elements/        # 20 AI chat/response components
+│   ├── emails/             # 10 React-email templates
+│   └── animation/          # Framer Motion abstractions
+├── server/                 # 32 server-side business logic modules
+├── lib/                    # 63 shared utilities (see lib/AGENTS.md)
+├── store/                  # 27 Zustand stores
+├── context/                # 10 React context providers
+├── prisma/                 # Schema (50+ models) + 99 migrations
+├── scripts/                # 28 build/dev/analysis scripts
+├── locales/                # next-international (en, fr)
+├── proxy.ts                # Middleware (route classification, auth, CSP, i18n)
+└── docs/                   # 61 documentation files
 ```
 
-## Workflow Notes
+## WHERE TO LOOK
 
-- **Cache components**: server read helpers should use `use cache` with `cacheLife`/`cacheTag`, and mutations should invalidate with `updateTag`. Avoid reintroducing `unstable_cache` or `revalidateTag` in new code.
-- **Route config with cache components**: when cache components are enabled, do not add route segment exports like `dynamic` or `revalidate` in `app/**/route.ts`; Next.js rejects them at build time.
-- **Support models**: keep the support UI and `/api/ai/support` allowlist in sync via `lib/ai/support-models.ts`.
-- **Build prerequisite**: `npm run build` invokes Prisma migration status against a local PostgreSQL URL (`localhost:5432` by default). If that service is unavailable, record the environment blocker before treating the failure as a code regression.
-- **Proxy build race**: keep request interception in `proxy.ts`. If build fails with `.next/server/proxy.js` ENOENT during finalize/trace, treat it as a transient artifact race and use `scripts/robust-next-build.mjs` retries instead of migrating file conventions.
-- **Deals data truthfulness**: in deals/catalogue server paths, do not synthesize fallback financial/profile metrics when DB is unavailable; return explicit empty/unavailable data instead.
-- **Deals API auth**: all `/api/deals/**` handlers must enforce route-level auth (session/JWT verification in handler), not only middleware checks.
-- **Proxy API classification**: classify public APIs via `isPublicApiRoute`; keep public cache headers limited to explicit read-safe paths in `PUBLIC_READ_API_PATHS`.
-- **Proxy public API allowlist**: keep intentionally unauthenticated endpoints explicitly listed in `PUBLIC_API_PATH_PREFIXES` (currently includes `/api/og`, `/api/email/unsubscribe`, `/api/csp-report`) and match via `pathMatchesPrefix` to avoid trailing-slash auth regressions.
-- **Public metadata consistency**: indexable public pages should use `buildPublicMetadata` or `getLocaleAlternates` to keep canonical + hreflang output consistent across locales.
-- **Marketing prerender safety**: server read helpers used by shared marketing layout surfaces (for example `server/prop-firms.ts` used by rolling banner/layout shell) must fail-soft on Prisma schema/connection mismatch and connection timeout errors, and should use schema-mismatch cooldown fallbacks where possible to avoid repeated failing DB attempts during static generation.
-- **Mobile table fallback requirement**: any route-level table with fixed min width (`min-w-[...]`) must include an explicit mobile/tablet fallback view (card/stack/list). Never hide the only data representation behind `lg+` visibility.
-- **Card migration safety**: when migrating between `Card` and `CardV2`, preserve JSX delimiters/closing structure and run full `npm run -s typecheck` immediately after migration to catch malformed TSX before build.
+| Task | Location | Notes |
+|------|----------|-------|
+| Add/modify a page | `app/[locale]/(landing)/*/page.tsx` | Public pages use (landing) layout |
+| Add dashboard feature | `app/[locale]/dashboard/components/` | See dashboard/AGENTS.md |
+| Add API endpoint | `app/api/*/route.ts` | Auth via `proxy.ts` classification |
+| Add server action | `app/[locale]/*/actions/` or `server/*.ts` | Mutations invalidate cache tags |
+| Add UI component | `components/ui/` | Use V2 imports for new work |
+| Add Zustand store | `store/*.ts` | 27 stores, most with persist middleware |
+| Add chart | `app/[locale]/dashboard/components/charts/` | Recharts + ChartSurface wrapper |
+| Add AI tool | `app/api/ai/chat/tools/` | 17 tools, intent-scoped |
+| Add email template | `components/emails/` | React-email + Tailwind |
+| Add server read helper | `server/*.ts` | Use `use cache` with cacheLife/cacheTag |
+| Fix import/broker sync | `server/imports/`, `context/*sync-context.tsx` | Tradovate, Rithmic, MT5 |
+| Fix auth issue | `server/auth.ts`, `proxy.ts`, `server/authz.ts` | Supabase Auth |
+| Fix payment issue | `server/webhook-service.ts`, `server/billing.ts` | Whop webhooks |
+| SEO/metadata | `lib/seo.ts`, `app/sitemap.ts`, `app/robots.ts` | buildPublicMetadata + JSON-LD |
+| Middleware/routing | `proxy.ts` | Route classification, CSP, auth boundary |
 
-## Design System Architecture
+## CONVENTIONS
 
-### CSS Token Tiers
+- **i18n**: `useI18n()` hook from `@/locales/client`. Locale files in `locales/{en,fr}/*.ts`.
+- **Path aliases**: `@/*` → `./`, `@lib/*` → `./lib/*`
+- **Prettier**: No semicolons, single quotes, trailing commas, 100 char width
+- **ESLint**: `no-explicit-any` = ERROR, `no-console` = ERROR (warn/error only), complexity ≤ 10
+- **TypeScript**: Strict mode, bundler resolution, ES2017 target
+- **Dark-only theme**: No light mode exists. All surfaces are dark.
+- **State management**: Zustand with persist middleware. `useTradingDomainStore` is source of truth for trades.
+- **Data flow**: Server Components → cached functions (`use cache`) → Prisma. Mutations → server actions → `updateTag()`.
 
-| Tier | Tokens | Usage | Example |
-|---|---|---|---|
-| **Semantic** | `--primary`, `--secondary`, `--foreground`, `--border`, `--card`, etc. | Dashboard, admin, business surfaces | `bg-primary`, `text-foreground` |
-| **Marketing** | `--mk-bg-0`, `--mk-bg-1`, `--mk-surface`, `--mk-border`, `--mk-text`, etc. | Landing/home/marketing pages | `bg-[hsl(var(--mk-surface)/0.7)]` |
-| **Chart** | `--chart-win`, `--chart-6`, `--chart-tooltip`, etc. | Data visualization only | `bg-[hsl(var(--chart-win))]` |
+## ANTI-PATTERNS (THIS PROJECT)
 
-### Component Versions
+- **No `as any`** — ESLint error. Use proper types. 35+ instances exist as tech debt.
+- **No `@ts-ignore`/`@ts-expect-error`** — ESLint error. Tests only exception (3 instances).
+- **No `console.log`** — ERROR level. Use `console.warn` or `console.error`.
+- **No hardcoded hex colors** — Use semantic tokens (`--primary`, `--mk-*`).
+- **No arbitrary border-radius** — Use Tailwind scale (`rounded-xl`, `rounded-2xl`).
+- **No `unstable_cache`/`revalidateTag`** — Use `use cache` + `cacheLife`/`cacheTag` + `updateTag`.
+- **No route segment exports** — No `dynamic`/`revalidate` in `app/**/route.ts` with cache components.
+- **No synthesized fallback data** — Deals API returns explicit empty/unavailable, not fake metrics.
+- **No module-scope Supabase admin client** — Initialize inside each action with env validation.
+- **No setState in effects** — Prefer callback-driven resets over effect-driven.
+- **No stacked/double frames** — Don't wrap Card components inside bordered panels in dashboard.
+- **No Trading Score duplication** — Always use `lib/score-calculator.ts` → `deriveScoreMetricsFromTrades()`.
 
-- **V2 components** (`CardV2`, `ButtonV2`, `BadgeV2`, `InputV2`, `TextareaV2`): Primary UI components in `components/ui/v2/`. Use these for all new work.
-- **V1 components** (`Card`, `Button`, `Badge`): Legacy. Existing code may use these.
+## COMMANDS
 
-### Styling Rules
+```bash
+npm run dev                    # Start dev server
+npm run build                  # Production build (robust-next-build.mjs with retries)
+npm run lint                   # ESLint (warning budget: 1546 max)
+npm run typecheck              # TypeScript strict check
+npm run test                   # Vitest unit tests
+npm run test:coverage          # Tests with V8 coverage
+npm run test:payment           # Payment integration tests (opt-in)
+npm run db:sync                # Prisma generate + migrate status
+npm run self-heal              # Auto-fix common issues
+npm run check:route-budgets    # Bundle size validation
+npm run check:route-security   # Route security analysis
+npm run analyze:bundle         # Bundle analysis
+```
 
-1. **No hardcoded hex colors** in TSX/TS files — use semantic tokens or CSS variable functions
-2. **No arbitrary border-radius** (`rounded-[Npx]`, `rounded-[Nrem]`) — use Tailwind scale: `rounded-2xl` (16px), `rounded-xl` (12px), `rounded-3xl` (24px), `rounded-sm` (6px), `rounded-lg` (8px)
-3. **Use semantic tokens** for application surfaces: `bg-primary`, `bg-card`, `text-foreground`, `border-border/60`, `text-muted-foreground`
-4. **Use `--mk-*` tokens** for marketing/landing surfaces (these have no semantic aliases — do NOT replace with primary/secondary tokens)
-5. **Use opacity modifiers** on semantic tokens: `bg-primary/10` not `bg-[hsl(var(--primary)/0.08)]`
+## NOTES
+
+- **Build requires DB**: `npm run build` checks Prisma migration status against `localhost:5432`. If unavailable, record env blocker, don't treat as code regression.
+- **Proxy build race**: `.next/server/proxy.js` ENOENT = transient race. Use `scripts/robust-next-build.mjs` retries.
+- **i18n library**: `next-international` (NOT next-intl). Locales: en, fr.
+- **Middleware**: `proxy.ts` (NOT middleware.ts). Handles route classification, auth, CSP, CORS, i18n redirect.
+- **V2 components**: Re-exports of V1 (`CardV2 = Card`). Use V2 imports for new work: `import { CardV2 as Card } from '@/components/ui/v2'`.
+- **Widget system**: 35+ widget types in `app/[locale]/dashboard/config/widget-registry.tsx`. `WidgetSize = 'tiny' | 'small' | 'small-long' | 'medium' | 'large' | 'extra-large'`.
+- **Chart library**: Recharts with `ChartSurface`/`ChartContainer`/`ChartTooltip` wrappers.
+- **Deploy**: Vercel with cron jobs. `vercel.json` defines 4 cron schedules.
+- **Payments**: Whop (not Stripe). Webhook at `/api/whop/webhook`. Plan configs in `lib/plan-configs.ts`.
+- **Deep docs**: See `public/AGENTS.md` for full operating instructions, safety-critical areas, commit history.
+
+## Subdirectory AGENTS.md
+
+- [lib/AGENTS.md](./lib/AGENTS.md) — Utility modules, dependency graph, key exports
+- [server/AGENTS.md](./server/AGENTS.md) — Server business logic, cache patterns, action inventory
+- [app/[locale]/dashboard/AGENTS.md](./app/%5Blocale%5D/dashboard/AGENTS.md) — Dashboard architecture, widget system, data flow

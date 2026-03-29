@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { getUnifiedFirmBySlug } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
 import { getLocaleAlternates } from '@/lib/seo'
 import { buildOrganizationSchema } from '@/lib/seo'
 import { getSiteOrigin } from '@/lib/site-url'
+import {
+  getVerifiedPropFirmProfileByName,
+  getVerifiedPropFirmProfileBySlug,
+} from '@/lib/prop-firms/verified-profiles'
 
 export async function generateMetadata({
   params,
@@ -12,11 +16,20 @@ export async function generateMetadata({
   params: Promise<{ slug: string; locale: string }>
 }): Promise<Metadata> {
   const { slug, locale } = await params
-  const firm = await getUnifiedFirmBySlug(slug)
+  const requestedSlug = slug.trim()
+  const matchedProfile =
+    getVerifiedPropFirmProfileByName(requestedSlug) ??
+    getVerifiedPropFirmProfileBySlug(requestedSlug)
+  const firm =
+    (await getUnifiedFirmBySlug(requestedSlug)) ??
+    (await getUnifiedFirmBySlug(matchedProfile?.slug ?? requestedSlug))
 
   if (!firm) {
     return {
-      title: 'Firm Not Found | Qunt Edge',
+      title: 'Prop Firms | Qunt Edge',
+      description:
+        'Review futures prop firms, challenge rules, payout data, and active promos on Qunt Edge.',
+      alternates: getLocaleAlternates(locale, '/propfirms'),
     }
   }
 
@@ -42,8 +55,27 @@ export async function generateMetadata({
 
 export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params
-  const firm = await getUnifiedFirmBySlug(slug)
-  if (!firm) notFound()
+  const requestedSlug = slug.trim()
+  const directFirm = await getUnifiedFirmBySlug(requestedSlug)
+
+  if (directFirm) {
+    if (directFirm.slug !== requestedSlug) {
+      redirect(`/${locale}/firm/${directFirm.slug}`)
+    }
+  } else {
+    const matchedProfile =
+      getVerifiedPropFirmProfileByName(requestedSlug) ??
+      getVerifiedPropFirmProfileBySlug(requestedSlug)
+    if (matchedProfile && matchedProfile.slug !== requestedSlug) {
+      const canonicalFirm = await getUnifiedFirmBySlug(matchedProfile.slug)
+      if (canonicalFirm) {
+        redirect(`/${locale}/firm/${canonicalFirm.slug}`)
+      }
+    }
+    redirect(`/${locale}/propfirms`)
+  }
+
+  const firm = directFirm
   const siteOrigin = getSiteOrigin()
   return (
     <>
@@ -63,13 +95,13 @@ export default async function FirmDetailPage({ params }: { params: Promise<{ slu
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Prop Firms',
-                    item: `${siteOrigin}/propfirms`,
+                    item: `${siteOrigin}/${locale}/propfirms`,
                   },
                   {
                     '@type': 'ListItem',
                     position: 2,
                     name: firm.name,
-                    item: `${siteOrigin}/firm/${firm.slug}`,
+                    item: `${siteOrigin}/${locale}/firm/${firm.slug}`,
                   },
                 ],
               },

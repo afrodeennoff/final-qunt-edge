@@ -165,6 +165,7 @@ const PUBLIC_DOCUMENT_PATH_PREFIXES = [
   "/support",
   "/community",
   "/propfirms",
+  "/firm",
   "/referral",
   "/newsletter",
   "/disclaimers",

@@ -2,6 +2,22 @@ import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } f
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { getI18n } from "@/locales/server"
+import { buildPublicMetadata } from "@/lib/seo"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  return buildPublicMetadata({
+    locale,
+    path: "/maintenance",
+    title: "Under Maintenance | Qunt Edge",
+    description:
+      "Qunt Edge is currently undergoing scheduled maintenance. We'll be back shortly.",
+  })
+}
 
 export default async function MaintenancePage() {
   const t = await getI18n()

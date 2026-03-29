@@ -90,7 +90,7 @@ const ChatBotDemo = () => {
         api: '/api/ai/support',
       }) ,
       onError: (error) => {
-        console.error('Chat error:', error);
+        console.warn('Chat error:', error);
         // Add error message to chat
         setMessages(prev => [...prev, {
           id: `error-${Date.now()}`,

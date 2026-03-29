@@ -1,4 +1,21 @@
-# Session Memory (2026-03-28)
+# Session Memory (2026-03-30)
+
+## Current Session: console.error → console.warn migration verification (2026-03-30)
+
+### Accomplishments
+- Verified all 6 landing pages already use `console.warn` instead of `console.error`
+- Confirmed no `console.error` violations exist in public-facing landing pages
+- Ran comprehensive lint check on all target files (deals/page.tsx, support/page-client.tsx, support-form.tsx, _updates/[slug]/page.tsx, firm-reviews-section.tsx, error.tsx)
+
+### Verification
+- All files already using `console.warn` (2 occurrences in deals/page.tsx, 1 in support/page-client.tsx, 2 in support-form.tsx, 3 in _updates/[slug]/page.tsx, 3 in firm-reviews-section.tsx, 1 in error.tsx)
+- `npx eslint` on all 6 files shows only complexity warnings (0 errors)
+- No `console.error` patterns found via grep
+
+### Blockers
+- None — work already completed
+
+## Current Session: Vercel build rescue — home TSX corruption + `Card` symbol failure (2026-03-29)
 
 ## Current Session: Vercel build rescue — home TSX corruption + `Card` symbol failure (2026-03-29)
 
