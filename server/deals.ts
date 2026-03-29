@@ -8,7 +8,7 @@ import {
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
-import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import { getVerifiedPropFirmProfileByName, getVerifiedPropFirmProfileBySlug } from '@/lib/prop-firms/verified-profiles'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
@@ -410,9 +410,67 @@ const DEALS_CACHE_LIFETIME = {
 const DEALS_CACHE_TAG = 'deals'
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 
+function mapSpotlightCategoryToMarket(category: PropFirmMatchSpotlight['category']): MarketType {
+  return category === 'CFD' ? 'Forex' : 'Futures'
+}
+
+function parseDiscountPercentFromPromoText(promoText: string): number | null {
+  const match = promoText.match(/(\d{1,3}(?:\.\d+)?)\s*%/i)
+  if (!match) return null
+
+  const parsed = Number(match[1])
+  if (!Number.isFinite(parsed) || parsed <= 0) return null
+  return Math.min(100, Math.round(parsed))
+}
+
+function estimateChallengeFeeFromConfig(firmName: string): number {
+  const accountSizes = getAccountSizesFromConfig(firmName)
+  const prices = Object.values(accountSizes)
+    .flatMap((size) => [size.priceWithPromo, size.price])
+    .filter((value) => Number.isFinite(value) && value > 0)
+
+  if (prices.length === 0) return 0
+  return Math.round(Math.min(...prices))
+}
+
+function getWebSourcedDealsFallback(): DealItem[] {
+  const deals: DealItem[] = []
+
+  PROP_FIRM_MATCH_SPOTLIGHTS.forEach((spotlight, index) => {
+    const discountPercent = parseDiscountPercentFromPromoText(spotlight.promoText)
+    if (discountPercent === null) return
+
+    const profile =
+      getVerifiedPropFirmProfileBySlug(spotlight.slug) ??
+      getVerifiedPropFirmProfileByName(spotlight.name)
+
+    const firmSlug = profile?.slug ?? spotlight.slug
+    const couponCode = spotlight.promoCode?.trim() || 'MATCH'
+    const firmName = profile?.name ?? spotlight.name
+
+    deals.push({
+      id: `web-${firmSlug}-${index + 1}`,
+      firmId: `web-${firmSlug}`,
+      firmSlug,
+      firmName,
+      category: profile?.category ?? mapSpotlightCategoryToMarket(spotlight.category),
+      platform: profile?.platform ?? 'Tradovate',
+      payoutModel: profile?.payoutModel ?? 'Monthly',
+      drawdownType: profile?.drawdownType ?? 'Static',
+      discountPercent,
+      couponCode,
+      challengeFee: estimateChallengeFeeFromConfig(firmName),
+      expiryDate: 'No expiry',
+      claimUrl: profile?.referralUrl ?? spotlight.sourceUrl,
+    })
+  })
+
+  return deals
+}
+
 const _getActiveDeals = async (): Promise<DealItem[]> => {
   if (!hasConfiguredDatabaseConnection) {
-    return []
+    return getWebSourcedDealsFallback()
   }
 
   const now = new Date()
@@ -442,7 +500,9 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       orderBy: { discountPercent: 'desc' },
     })
 
-    if (coupons.length === 0) return []
+    if (coupons.length === 0) {
+      return getWebSourcedDealsFallback()
+    }
 
     return coupons.map((coupon) => ({
       id: coupon.id,
@@ -466,7 +526,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     }
 
     logDealsFallback('getActiveDeals', error)
-    return []
+    return getWebSourcedDealsFallback()
   }
 }
 

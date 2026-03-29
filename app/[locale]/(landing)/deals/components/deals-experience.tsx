@@ -59,6 +59,21 @@ function formatPrice(value: number): string {
   return `$${value.toLocaleString()}`
 }
 
+function normalizeFirmSlug(slug: string | null | undefined): string | null {
+  const normalized = slug?.trim()
+  return normalized && normalized.length > 0 ? normalized : null
+}
+
+function getFirmHref(locale: string, slug: string | null | undefined): string {
+  const normalizedSlug = normalizeFirmSlug(slug)
+  return normalizedSlug ? `/${locale}/firm/${normalizedSlug}` : `/${locale}/propfirms`
+}
+
+function getFirmHrefFromPrefix(localePrefix: string, slug: string | null | undefined): string {
+  const normalizedSlug = normalizeFirmSlug(slug)
+  return normalizedSlug ? `${localePrefix}/firm/${normalizedSlug}` : `${localePrefix}/propfirms`
+}
+
 function getDaysLeft(expiryDate: string): number | null {
   if (expiryDate === 'No expiry') return null
   const diff = new Date(expiryDate).getTime() - Date.now()
@@ -376,7 +391,7 @@ function BiggestDealsCarousel({
   const activeDeal = deals[normalizedActiveIndex]
   const previousDeal = deals[(normalizedActiveIndex - 1 + deals.length) % deals.length]
   const nextDeal = deals[(normalizedActiveIndex + 1) % deals.length]
-  const claimHref = activeDeal.claimUrl || `/${locale}/firm/${activeDeal.firmSlug}`
+  const claimHref = activeDeal.claimUrl || getFirmHref(locale, activeDeal.firmSlug)
   const isExternalClaim = Boolean(activeDeal.claimUrl)
 
   const goToPrevious = () => {
@@ -819,7 +834,7 @@ function DealsFilterPanel({
             {topFirms.map((firm) => (
               <Link
                 key={firm.id}
-                href={`${localePrefix}/firm/${firm.slug}`}
+                href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
                 className="flex items-center justify-between rounded-xl border border-border bg-input px-3 py-2 text-sm transition-colors hover:bg-card"
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
@@ -885,7 +900,8 @@ function DealCard({
   onCopyCode: (code: string) => void
 }) {
   const daysLeft = getDaysLeft(deal.expiryDate)
-  const claimHref = deal.claimUrl || `/${locale}/firm/${deal.firmSlug}`
+  const firmHref = getFirmHref(locale, deal.firmSlug)
+  const claimHref = deal.claimUrl || firmHref
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
@@ -923,7 +939,7 @@ function DealCard({
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
         <Link
-          href={`/${locale}/firm/${deal.firmSlug}`}
+          href={firmHref}
           className="inline-flex items-center gap-2 rounded-full border border-border bg-input px-4 py-2 text-sm font-medium text-foreground"
         >
           View firm
