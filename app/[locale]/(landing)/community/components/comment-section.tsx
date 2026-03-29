@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import { TextareaV2 } from "@/components/ui/v2"
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { formatDistanceToNow } from 'date-fns'

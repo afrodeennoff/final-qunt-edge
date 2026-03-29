@@ -141,30 +141,6 @@ function getSpotlightDeals(deals: DealItem[]): DealItem[] {
   return sortDeals(deals, 'discount').slice(0, 8)
 }
 
-function EmptyDealsState({ localePrefix }: { localePrefix: string }) {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-[0_28px_90px_-64px_rgba(0,0,0,0.95)]">
-          <BadgePercent className="mx-auto h-10 w-10 text-muted-foreground" />
-          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-foreground">No live deals in the current snapshot</h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-            We are still tracking firms and pricing, but no active coupons surfaced in the current dataset.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
-              Explore firms
-            </Link>
-            <Link href={localePrefix} className="rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground">
-              Back home
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export function DealsExperience({
   locale,
   deals,
@@ -209,10 +185,6 @@ export function DealsExperience({
     await navigator.clipboard.writeText(code)
     setCopiedCode(code)
     setTimeout(() => setCopiedCode(null), 1500)
-  }
-
-  if (deals.length === 0 && !hadFetchError) {
-    return <EmptyDealsState localePrefix={localePrefix} />
   }
 
   return (

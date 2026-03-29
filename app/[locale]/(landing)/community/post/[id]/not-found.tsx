@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import { useI18n } from '@/locales/client'
 export default function NotFound() {
   const t = useI18n()

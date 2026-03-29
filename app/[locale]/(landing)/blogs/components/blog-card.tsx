@@ -7,7 +7,7 @@ import { BadgeV2 } from '@/components/ui/v2'
 import { useCurrentLocale } from '@/locales/client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Card, CardContent } from '@/components/ui/card'
+import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 
 type BlogPost = {
   id: string

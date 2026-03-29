@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 
 interface FinalCTAProps {
   locale: string

@@ -4,18 +4,18 @@ import { PostStatus, PostType, Vote, VoteType } from '@/prisma/generated/prisma'
 import { formatDistanceToNow } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import { ArrowBigDown, ArrowBigUp, MessageSquare, ImageIcon, Pencil, ExternalLink, Copy, Check, MoreHorizontal, Settings2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import { BadgeV2 } from "@/components/ui/v2"
 import { useI18n, useCurrentLocale } from '@/locales/client'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { ExtendedPost } from '../types'
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card'
+  CardV2 as Card,
+  CardV2Content as CardContent,
+  CardV2Footer as CardFooter,
+  CardV2Header as CardHeader,
+} from '@/components/ui/v2'
 import {
   DropdownMenu,
   DropdownMenuContent,

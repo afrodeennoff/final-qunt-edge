@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { PostType } from '@/prisma/generated/prisma'
 import { createPost } from '@/app/[locale]/(landing)/actions/community'
-import { Button } from '@/components/ui/button'
+import { ButtonV2 as Button } from '@/components/ui/v2'
 import { useI18n } from '@/locales/client'
 import { useRouter } from 'next/navigation'
 import {

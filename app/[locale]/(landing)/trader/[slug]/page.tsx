@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import React from 'react'
+import type { Metadata } from 'next'
 import { CardV2 } from '@/components/ui/v2'
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
 import { Zap, Lock } from 'lucide-react'
+import { buildPublicMetadata, buildBreadcrumbSchema, getCanonicalUrl } from '@/lib/seo'
 
 type TraderSnapshot = {
   username: string
@@ -74,6 +76,20 @@ async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   }
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+}): Promise<Metadata> {
+  const { locale, slug } = await params
+  return buildPublicMetadata({
+    locale,
+    path: `/trader/${slug}`,
+    title: `${slug} — Trader Profile | Qunt Edge`,
+    description: `View ${slug}'s trading performance, statistics, and public profile on Qunt Edge.`,
+  })
+}
+
 export default async function TraderProfilePage({
   params,
 }: {
@@ -81,6 +97,18 @@ export default async function TraderProfilePage({
 }) {
   const { locale, slug } = await params
   const snapshot = await getTraderSnapshot(slug)
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: snapshot?.username ?? slug,
+    url: getCanonicalUrl(locale, `/trader/${slug}`),
+  }
+
+  const breadcrumbSchema = buildBreadcrumbSchema(locale, [
+    { name: "Leaderboard", path: "/leaderboard" },
+    { name: slug, path: `/trader/${slug}` },
+  ])
 
   if (!snapshot) {
     return (
@@ -121,6 +149,10 @@ export default async function TraderProfilePage({
 
   return (
     <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
+      />
       <div className="relative mx-auto grid w-full max-w-[1600px] gap-3 sm:gap-4 xl:grid-cols-[1.35fr_1fr]">
         <section className="space-y-3 sm:space-y-4">
           <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
