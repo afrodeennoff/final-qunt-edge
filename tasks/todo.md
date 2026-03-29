@@ -1,3 +1,21 @@
+## Task: Recover `/firm/*` routing + add deals hero quick links (2026-03-30)
+
+- [x] Trace `/[locale]/firm/[slug]` resolution path and remove hard failure path for unresolved slugs.
+- [x] Implement strict redirect mapping in firm detail route (direct slug, verified alias mapping, canonical redirect, unresolved fallback).
+- [x] Ensure `/firm` is classified as a public document route in `proxy.ts`.
+- [x] Add `/deals/compare`, `/deals/guides`, `/deals/calculator`, `/deals/faq` links into deals hero right panel area.
+- [x] Run verification (`eslint` targeted + `typecheck`) and record outcomes.
+
+Verification:
+- `npx eslint 'app/[locale]/(landing)/deals/components/deals-experience.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' proxy.ts` passes (warnings only in `proxy.ts`, no errors).
+- `npm run -s typecheck` passes.
+- Local smoke checks confirmed `/en/firm/*` requests are handled without route crash and unresolved/no-data cases degrade via redirect to `/${locale}/propfirms`.
+
+## Review
+- Firm route now has deterministic redirect behavior instead of hard `notFound()` failures on unresolved slugs.
+- Canonical slug redirect now happens only when the canonical firm exists in DB, preventing alias redirect loops into non-existent canonical paths.
+- Deals hero now surfaces direct entry points to compare/guides/calculator/faq in the previously empty right-side area.
+
 ## Task: Fix console.error violations in landing pages — COMPLETED (already fixed) (2026-03-30)
 
 - [x] Verify all 6 target files use `console.warn` instead of `console.error`

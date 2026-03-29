@@ -41,7 +41,7 @@ function getSupportMailConfig() {
 
 export async function sendSupportEmail({ messages, summary, contactInfo }: SupportEmailData) {
   if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is missing');
+    console.warn('RESEND_API_KEY is missing');
     return { success: false, error: 'Email service not configured' };
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -58,13 +58,13 @@ export async function sendSupportEmail({ messages, summary, contactInfo }: Suppo
     });
 
     if (error) {
-      console.error('Error sending email:', error);
+      console.warn('Error sending email:', error);
       return { success: false, error: 'Failed to send support request' };
     }
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.warn('Error sending email:', error);
     return { success: false, error: 'An unexpected error occurred' };
   }
 }
@@ -78,7 +78,7 @@ interface SubscriptionErrorEmailData {
 
 export async function sendSubscriptionErrorEmail({ contactInfo }: SubscriptionErrorEmailData) {
   if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is missing');
+    console.warn('RESEND_API_KEY is missing');
     return { success: false, error: 'Email service not configured' };
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -93,13 +93,13 @@ export async function sendSubscriptionErrorEmail({ contactInfo }: SubscriptionEr
     });
 
     if (error) {
-      console.error('Error sending email:', error);
+      console.warn('Error sending email:', error);
       return { success: false, error: 'Failed to send support request' };
     }
 
     return { success: true, data };
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.warn('Error sending email:', error);
     return { success: false, error: 'An unexpected error occurred' };
   }
 }

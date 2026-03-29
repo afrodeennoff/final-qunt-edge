@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { getUnifiedFirmBySlug } from '@/server/deals'
+import { getUnifiedFirmBySlug, getUnifiedFirms } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
 import { getLocaleAlternates } from '@/lib/seo'
 import { buildOrganizationSchema } from '@/lib/seo'
@@ -9,6 +9,47 @@ import {
   getVerifiedPropFirmProfileByName,
   getVerifiedPropFirmProfileBySlug,
 } from '@/lib/prop-firms/verified-profiles'
+import { normalizeFirmName } from '@/lib/prop-firms/normalize'
+
+async function resolveFirmBySlugInput(requestedSlugRaw: string) {
+  const requestedSlug = requestedSlugRaw.trim()
+  const directFirm = await getUnifiedFirmBySlug(requestedSlug)
+  if (directFirm) {
+    return {
+      firm: directFirm,
+      requestedSlug,
+    }
+  }
+
+  const matchedProfile =
+    getVerifiedPropFirmProfileByName(requestedSlug) ??
+    getVerifiedPropFirmProfileBySlug(requestedSlug)
+
+  if (!matchedProfile) {
+    return {
+      firm: null,
+      requestedSlug,
+    }
+  }
+
+  const canonicalSlugFirm = await getUnifiedFirmBySlug(matchedProfile.slug)
+  if (canonicalSlugFirm) {
+    return {
+      firm: canonicalSlugFirm,
+      requestedSlug,
+    }
+  }
+
+  const normalizedProfileName = normalizeFirmName(matchedProfile.name)
+  const unifiedFirms = await getUnifiedFirms()
+  const canonicalNameFirm =
+    unifiedFirms.find((firm) => normalizeFirmName(firm.name) === normalizedProfileName) ?? null
+
+  return {
+    firm: canonicalNameFirm,
+    requestedSlug,
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -16,13 +57,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string; locale: string }>
 }): Promise<Metadata> {
   const { slug, locale } = await params
-  const requestedSlug = slug.trim()
-  const matchedProfile =
-    getVerifiedPropFirmProfileByName(requestedSlug) ??
-    getVerifiedPropFirmProfileBySlug(requestedSlug)
-  const firm =
-    (await getUnifiedFirmBySlug(requestedSlug)) ??
-    (await getUnifiedFirmBySlug(matchedProfile?.slug ?? requestedSlug))
+  const { firm } = await resolveFirmBySlugInput(slug)
 
   if (!firm) {
     return {
@@ -55,27 +90,14 @@ export async function generateMetadata({
 
 export default async function FirmDetailPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params
-  const requestedSlug = slug.trim()
-  const directFirm = await getUnifiedFirmBySlug(requestedSlug)
-
-  if (directFirm) {
-    if (directFirm.slug !== requestedSlug) {
-      redirect(`/${locale}/firm/${directFirm.slug}`)
-    }
-  } else {
-    const matchedProfile =
-      getVerifiedPropFirmProfileByName(requestedSlug) ??
-      getVerifiedPropFirmProfileBySlug(requestedSlug)
-    if (matchedProfile && matchedProfile.slug !== requestedSlug) {
-      const canonicalFirm = await getUnifiedFirmBySlug(matchedProfile.slug)
-      if (canonicalFirm) {
-        redirect(`/${locale}/firm/${canonicalFirm.slug}`)
-      }
-    }
+  const { firm, requestedSlug } = await resolveFirmBySlugInput(slug)
+  if (!firm) {
     redirect(`/${locale}/propfirms`)
   }
+  if (firm.slug !== requestedSlug) {
+    redirect(`/${locale}/firm/${firm.slug}`)
+  }
 
-  const firm = directFirm
   const siteOrigin = getSiteOrigin()
   return (
     <>

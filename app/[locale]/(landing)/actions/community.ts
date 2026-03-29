@@ -145,7 +145,7 @@ export async function getPosts() {
 
     return postsWithCommentCount
   } catch (error) {
-    console.error('Failed to fetch posts:', error)
+    console.warn('Failed to fetch posts:', error)
     throw new Error('Failed to fetch posts')
   }
 }
@@ -193,7 +193,7 @@ export async function createPost(formData: {
           // Convert back to base64
           return `data:image/webp;base64,${processedBuffer.toString('base64')}`
         } catch (error) {
-          console.error('Failed to process screenshot:', error)
+          console.warn('Failed to process screenshot:', error)
           return null
         }
       })
@@ -211,7 +211,7 @@ export async function createPost(formData: {
     revalidatePath('/community', 'page')
     return { post }
   } catch (error) {
-    console.error('Failed to create post:', error)
+    console.warn('Failed to create post:', error)
     throw new Error('Failed to create post')
   }
 }
@@ -234,7 +234,7 @@ export async function updatePostStatus(id: string, status: PostStatus) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to update post status:', error)
+    console.warn('Failed to update post status:', error)
     throw new Error('Failed to update post status')
   }
 }
@@ -260,7 +260,7 @@ export async function deletePost(id: string) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to delete post:', error)
+    console.warn('Failed to delete post:', error)
     throw new Error('Failed to delete post')
   }
 }
@@ -318,7 +318,7 @@ export async function votePost(postId: string, voteType: VoteType) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to vote:', error)
+    console.warn('Failed to vote:', error)
     throw new Error('Failed to vote on post')
   }
 }
@@ -358,7 +358,7 @@ export async function getPost(id: string) {
     if (error instanceof Error && error.message === POST_NOT_FOUND_SENTINEL) {
       throw error
     }
-    console.error('Failed to fetch post:', error)
+    console.warn('Failed to fetch post:', error)
     throw new Error('Failed to fetch post')
   }
 }
@@ -416,7 +416,7 @@ export async function getComments(postId: string) {
 
     return comments.map(sanitizeComment)
   } catch (error) {
-    console.error('Failed to fetch comments:', error)
+    console.warn('Failed to fetch comments:', error)
     throw new Error('Failed to fetch comments')
   }
 }
@@ -445,7 +445,7 @@ async function sendCommentNotificationEmail({
   const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications`
   const dateLocale = language === 'fr' ? fr : enUS
   if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is missing');
+    console.warn('RESEND_API_KEY is missing');
     return;
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -467,7 +467,7 @@ async function sendCommentNotificationEmail({
       replyTo: 'hugo.demenez@qunt-edge.vercel.app'
     })
   } catch (error) {
-    console.error('Failed to send comment notification email:', error)
+    console.warn('Failed to send comment notification email:', error)
   }
 }
 
@@ -525,7 +525,7 @@ export async function addComment(postId: string, content: string, parentId: stri
           language: post.user.language ?? 'en'
         })
       } catch (emailError) {
-        console.error('Failed to send email notification:', emailError)
+        console.warn('Failed to send email notification:', emailError)
         // Don't throw the error to prevent comment creation from failing
       }
     }
@@ -537,7 +537,7 @@ export async function addComment(postId: string, content: string, parentId: stri
       replies: [],
     }
   } catch (error) {
-    console.error('Failed to add comment:', error)
+    console.warn('Failed to add comment:', error)
     throw new Error('Failed to add comment')
   }
 }
@@ -564,7 +564,7 @@ export async function editComment(commentId: string, content: string) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to edit comment:', error)
+    console.warn('Failed to edit comment:', error)
     throw new Error('Failed to edit comment')
   }
 }
@@ -590,7 +590,7 @@ export async function deleteComment(commentId: string) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to delete comment:', error)
+    console.warn('Failed to delete comment:', error)
     throw new Error('Failed to delete comment')
   }
 }
@@ -622,7 +622,7 @@ export async function editPost(id: string, content: string) {
     revalidatePath('/community')
     return { success: true }
   } catch (error) {
-    console.error('Failed to edit post:', error)
+    console.warn('Failed to edit post:', error)
     throw new Error('Failed to edit post')
   }
 } 

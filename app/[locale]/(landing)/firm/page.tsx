@@ -1,5 +1,5 @@
-import { permanentRedirect } from 'next/navigation'
 import { buildPublicMetadata } from '@/lib/seo'
+import PropFirmsPage from '../propfirms/page'
 
 export async function generateMetadata({
   params,
@@ -16,6 +16,8 @@ export async function generateMetadata({
   })
 }
 
-export default function FirmIndexPage() {
-  permanentRedirect('/propfirms')
+export default async function FirmIndexPage(props: {
+  params: Promise<{ locale: string }>
+}) {
+  return <PropFirmsPage params={props.params} />
 }

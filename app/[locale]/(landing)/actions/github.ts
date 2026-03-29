@@ -40,7 +40,7 @@ export async function getGithubStats() {
       stats,
     }
   } catch (error) {
-    console.error('Error fetching GitHub stats:', error)
+    console.warn('Error fetching GitHub stats:', error)
     return null
   }
 }
@@ -56,7 +56,7 @@ export async function fetchGithubStars() {
       stargazers_count: data.stargazers_count,
     }
   } catch (error) {
-    console.error('Error fetching GitHub stars:', error)
+    console.warn('Error fetching GitHub stars:', error)
     return { stargazers_count: 0 }
   }
 }

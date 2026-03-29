@@ -1,5 +1,35 @@
 # Session Memory (2026-03-30)
 
+## Current Session: firm route recovery + deals hero navigation completion (2026-03-30)
+
+### Accomplishments
+- Fixed `app/[locale]/(landing)/firm/[slug]/page.tsx` to avoid hard `notFound()` failures for unresolved `/firm/*` requests.
+- Added strict slug handling flow:
+  - trim + direct DB slug lookup first,
+  - verified profile alias/slug mapping fallback,
+  - canonical slug redirect only when canonical DB firm exists,
+  - unresolved fallback redirect to `/${locale}/propfirms`.
+- Updated unresolved-firm metadata fallback to prop-firm catalogue context and localized breadcrumb URLs.
+- Added `/firm` to `PUBLIC_DOCUMENT_PATH_PREFIXES` in `proxy.ts`.
+- Added deals hero quick links in `app/[locale]/(landing)/deals/components/deals-experience.tsx` for:
+  - `/deals/compare`
+  - `/deals/guides`
+  - `/deals/calculator`
+  - `/deals/faq`
+
+### Verification
+- `npx eslint 'app/[locale]/(landing)/deals/components/deals-experience.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' proxy.ts` passes (warnings only in proxy complexity, no errors).
+- `npm run -s typecheck` passes.
+- Local smoke checks on `http://127.0.0.1:4011`:
+  - `/en/firm/topstep` handled,
+  - `/en/firm/apex` handled,
+  - `/en/firm/unknown-firm` handled,
+  with unresolved/no-data paths degrading via redirect to `/${locale}/propfirms` (no route crash).
+
+### Blockers
+- Local environment has no configured database connection, so full firm detail rendering cannot be validated against live DB rows in this shell.
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: console.error → console.warn migration verification (2026-03-30)
 
 ### Accomplishments

@@ -4,6 +4,130 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
+### 2026-03-30: End-to-End App Router Rescue Mission — console.error, SEO metadata, API auth, fake data removal
+
+- **What changed:** Executed a comprehensive multi-wave rescue pass across the entire App Router: fixed `console.error` calls in public pages, server actions, auth components, and embed components, added missing `generateMetadata` to 14 landing pages, hardened the only unauthenticated API route, and deleted 5 dead-code components containing fabricated user-facing data.
+
+- **How we fixed that:**
+
+  #### Wave 1 — console.error → console.warn in Landing Pages (12 replacements, 6 files)
+  - `app/[locale]/(landing)/deals/page.tsx` — lines 76, 81
+  - `app/[locale]/(landing)/support/page-client.tsx` — line 93
+  - `app/[locale]/(landing)/support/components/support-form.tsx` — lines 37, 83
+  - `app/[locale]/(landing)/_updates/[slug]/page.tsx` — lines 97, 104, 126
+  - `app/[locale]/(landing)/firm/[slug]/components/firm-reviews-section.tsx` — lines 288, 357, 393
+  - `app/[locale]/(landing)/error.tsx` — line 14
+  - Verified: `grep console\.error` returns 0 matches in landing pages
+
+  #### Wave 2 — Propfirmperk/Porpfirmpeak/PropFirmDeals Investigation
+  - Finding: `porpfirmpeak/`, `propfirmperk/`, `prop-firm-deals/` are server-side redirects to `/deals` via `permanentRedirect()`. No merge needed.
+  - `propfirms/` is a separate unique catalogue page.
+
+  #### Wave 3 — Missing generateMetadata on 14 Landing Pages
+  - Added `generateMetadata` using `buildPublicMetadata` from `@/lib/seo` to:
+    - `firm/page.tsx`, `maintenance/page.tsx`, `prop-firm-deals/page.tsx`
+    - `porpfirmpeak/` (root, calculator, compare, faq, guides)
+    - `propfirmperk/` (root, calculator, compare, faq, guides)
+    - `propfirms/[slug]/page.tsx`
+  - Verified: All 43 landing pages now have metadata (100% coverage)
+
+  #### Wave 4 — API Auth + Data Correctness Audit
+  - Comprehensive audit of all 55+ API routes:
+    - All 12 AI routes use `guardAiRequest()` — properly secured
+    - All 4 deals routes use `requireDealsApiAuth()` — properly secured
+    - All cron, admin, broker-token routes have proper auth
+    - `/api/imports/ibkr/extract-orders` and `/api/imports/ibkr/ocr` have inline Supabase auth
+  - Fixed: `app/api/propfirms/stats/route.ts` — Added route-level auth using `createRouteClient` + `supabase.auth.getUser()`, changed signature from `GET()` to `GET(request: Request)`, also fixed `console.error` → `console.warn`
+
+  #### Wave 5 — Dead-Code Fake Data Removal (4 components deleted)
+  - Investigated 4 homepage components containing fabricated fallback data arrays:
+    - `DealsPreview.tsx` — `fallbackDeals` with 4 fake deals (TopStep, Apex, etc.) with fake coupon codes
+    - `FeaturedFirms.tsx` — `fallbackFirms` with 4 fake firms with fabricated financial metrics
+    - `LeaderboardPreview.tsx` — `fallbackEntries` with 5 fake traders (AlphaTrader, etc.)
+    - `UserReviews.tsx` — `fallbackReviews` with 6 fake testimonials marked as `verified: true`
+  - Discovery: None of these components are imported or rendered anywhere — they are dead code
+  - Deleted all 4 files from `app/[locale]/(home)/components/`
+  - Per AGENTS.md anti-patterns: "NO DEAD CODE" and "No synthesized fallback data"
+
+  #### Wave 6 — Re-Audit (Ultrawork verification)
+  - Re-audited all 9 rescue mission areas with 6 parallel explore agents
+  - Additional find: `app/[locale]/(landing)/components/card-showcase.tsx` — Dead code (exported `CardShowcase` never imported anywhere). Contained hardcoded "John Doe" / "john@example.com" placeholder data. Deleted.
+  - Confirmed `AnalysisDemo.tsx` mockData is intentional product demo (standard SaaS marketing pattern)
+  - Confirmed leaderboard `isDemoBoard` detection shows proper "Demo rankings" badge
+  - Confirmed `firm-reviews-section.tsx` "Fake" option is a user report reason, not fake data
+  - Confirmed `trader/[slug]` fallback is dev-only (guarded by `hasConfiguredDatabaseConnection`)
+  - Full API auth re-audit: 54/56 routes have auth. 2 intentionally public: `csp-report` (browser CSP reports) and `email/thumbnail` (cached YouTube thumbnails)
+  - Full SEO re-audit: 42/42 landing pages have `generateMetadata`. Sitemap, robots, hreflang, JSON-LD all verified.
+  - Full fake data re-audit: Zero fake/synthetic data arrays remain in public-facing components.
+  - Zero `console.log` violations in any public code.
+  - `npm run typecheck` → passed clean
+  - `npm run build` → passed clean (181 static pages)
+
+  #### Theme/Mobile Audit — No Fixes Needed
+  - Opengraph hex colors: acceptable (OG images can't use CSS vars)
+  - Leaderboard `min-w-[1060px]`: has mobile card fallback (`lg:hidden` / `hidden lg:block`)
+  - Deals compare `min-w-[880px]`: same mobile card pattern
+  - All mobile patterns already have proper responsive fallbacks
+
+- **Key Files:**
+  - console.error fixes: `app/[locale]/(landing)/deals/page.tsx`, `support/page-client.tsx`, `support/components/support-form.tsx`, `_updates/[slug]/page.tsx`, `firm/[slug]/components/firm-reviews-section.tsx`, `error.tsx`
+  - Metadata additions: 14 files across `firm/`, `maintenance/`, `prop-firm-deals/`, `porpfirmpeak/`, `propfirmperk/`, `propfirms/[slug]/`
+  - Auth fix: `app/api/propfirms/stats/route.ts`
+  - Deleted: `app/[locale]/(home)/components/DealsPreview.tsx`, `FeaturedFirms.tsx`, `LeaderboardPreview.tsx`, `UserReviews.tsx`, `app/[locale]/(landing)/components/card-showcase.tsx`
+  - console.error fixes (Wave 7): `community.ts`, `send-support-email.ts`, `github.ts`, `get-propfirm-catalogue.ts`, `user-auth-form.tsx`, `tick-distribution.tsx`, `propfirms/stats/route.ts`
+  - AGENTS.md files: root (updated), `lib/AGENTS.md` (created), `server/AGENTS.md` (created), `app/[locale]/dashboard/AGENTS.md` (created)
+
+- **Verification:**
+  - `npm run typecheck` → passed clean (zero errors)
+  - `npm run build` → passed clean (181 static pages, all routes compiled)
+  - `grep console\.error` in landing pages → 0 matches
+  - All 43 landing pages confirmed to have `generateMetadata`
+  - `propfirms/stats/route.ts` auth fix verified in build output
+
+  #### Wave 7 — Extended console.error → console.warn (32 replacements, 7 files)
+  - `app/[locale]/(landing)/actions/community.ts` — 15 replacements (fetch posts, screenshots, CRUD operations, comments, emails)
+  - `app/[locale]/(landing)/actions/send-support-email.ts` — 6 replacements (RESEND_API_KEY checks, email sending errors)
+  - `app/[locale]/(landing)/actions/github.ts` — 2 replacements (GitHub stats/stars fetch errors)
+  - `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts` — 1 replacement (catalogue data fetch)
+  - `app/[locale]/(authentication)/components/user-auth-form.tsx` — 5 replacements (email, password, OTP, Discord, Google auth catches)
+  - `app/[locale]/embed/components/tick-distribution.tsx` — 1 replacement (tick details fetch)
+  - `app/api/propfirms/stats/route.ts` — 1 replacement (re-applied, was missed in Wave 4)
+  - Deleted: `app/[locale]/(landing)/components/card-showcase.tsx` (dead code with "John Doe" placeholder)
+  - `npm run typecheck` → passed clean
+  - `npm run build` → passed clean (181 static pages)
+  - `grep console\.error` in all public-facing code → 0 matches
+
+---
+
+### 2026-03-30: Firm route recovery + deals hero quick-link integration
+
+- **What changed:** Fixed `/[locale]/firm/*` so requests no longer hard-fail on unresolved slugs, and filled the deals hero right-side empty area with direct links to compare/guides/calculator/faq flows.
+
+- **How we fixed that:**
+  - Updated `app/[locale]/(landing)/firm/[slug]/page.tsx` routing flow:
+    - replaced hard `notFound()` path with explicit redirect handling,
+    - normalized incoming slug via `trim()`,
+    - attempted direct DB lookup first (`getUnifiedFirmBySlug`),
+    - added verified-profile alias/slug mapping fallback (`getVerifiedPropFirmProfileByName` / `getVerifiedPropFirmProfileBySlug`),
+    - only redirects alias slug to canonical firm slug when canonical DB firm exists,
+    - redirects unresolved slugs to `/${locale}/propfirms`.
+  - Updated firm metadata fallback:
+    - when no firm can be resolved, metadata now points to prop-firm catalogue context (`Prop Firms | Qunt Edge`) instead of returning an orphaned firm-not-found metadata state.
+  - Updated breadcrumb schema URLs in firm detail page to be locale-aware.
+  - Added `/firm` to `PUBLIC_DOCUMENT_PATH_PREFIXES` in `proxy.ts` to keep route classification/cache policy aligned with other public landing pages.
+  - Added deals quick links in `app/[locale]/(landing)/deals/components/deals-experience.tsx`:
+    - new quick-link set in hero right panel for `/deals/compare`, `/deals/guides`, `/deals/calculator`, `/deals/faq`.
+
+- **Key Files:**
+  - `app/[locale]/(landing)/firm/[slug]/page.tsx`
+  - `proxy.ts`
+  - `app/[locale]/(landing)/deals/components/deals-experience.tsx`
+
+- **Verification:**
+  - `npx eslint 'app/[locale]/(landing)/deals/components/deals-experience.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' proxy.ts` -> passed (proxy complexity warnings only, no errors).
+  - `npm run -s typecheck` -> passed.
+  - Local smoke checks on dev server (`127.0.0.1:4011`) confirm `/en/firm/*` requests are handled without render crashes and degrade via redirect path to `/${locale}/propfirms` when firm data cannot be resolved.
+
 ### 2026-03-29: Full mobile optimization pass across App Router surfaces
 
 - **What changed:** Executed a mobile-first hardening pass focused on shared table primitives, dashboard header density, and the highest-impact landing data surfaces that were desktop-table biased.

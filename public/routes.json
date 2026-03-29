@@ -28,6 +28,7 @@
   "/[locale]/docs",
   "/[locale]/embed",
   "/[locale]/faq",
+  "/[locale]/firm",
   "/[locale]/firm/[slug]",
   "/[locale]/leaderboard",
   "/[locale]/maintenance",

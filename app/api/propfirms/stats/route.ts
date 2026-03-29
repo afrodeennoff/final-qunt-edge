@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { createRouteClient } from '@/lib/supabase/route-client'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const supabase = createRouteClient(request)
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
+
     const data = await getPropfirmCatalogueData('allTime')
 
     let totalPaid = 0
@@ -30,7 +37,7 @@ export async function GET() {
       totalFirms,
     })
   } catch (error) {
-    console.error('Error fetching propfirm stats:', error)
+    console.warn('Error fetching propfirm stats:', error)
     return NextResponse.json({ error: 'Failed to fetch propfirm statistics' }, { status: 500 })
   }
 }

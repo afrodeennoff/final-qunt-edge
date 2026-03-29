@@ -223,7 +223,7 @@ export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMo
 
     return { stats }
   } catch (error) {
-    console.error('Error fetching propfirm catalogue data:', error)
+    console.warn('Error fetching propfirm catalogue data:', error)
     // Return empty stats on error
     return { stats: [] }
   }

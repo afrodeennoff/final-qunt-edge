@@ -26,6 +26,32 @@ CardV2 variant="glass">...</CardV2>
 
 ---
 
+## NEW (2026-03-30): Alias slug redirects must only target resolvable canonical firm records
+
+### Mistake
+`/[locale]/firm/[slug]` redirected alias slugs (for example `apex`) to canonical slugs even when the canonical DB firm row was unavailable, which produced broken firm paths and repeated not-found behavior.
+
+### Root Cause
+Redirect logic used verified-profile alias mapping without validating that the mapped canonical slug could be resolved by live firm data.
+
+### Rule
+For firm detail routing, perform alias-to-canonical redirect only after successful canonical firm lookup; if canonical lookup fails, redirect to `/${locale}/propfirms` instead of chaining to an unresolved firm slug.
+
+### Example
+```ts
+// BAD
+if (matchedProfile) redirect(`/${locale}/firm/${matchedProfile.slug}`)
+
+// GOOD
+if (matchedProfile) {
+  const canonicalFirm = await getUnifiedFirmBySlug(matchedProfile.slug)
+  if (canonicalFirm) redirect(`/${locale}/firm/${canonicalFirm.slug}`)
+}
+redirect(`/${locale}/propfirms`)
+```
+
+---
+
 ## NEW (2026-03-29): Wide comparison tables must never be the only rendered path below desktop breakpoints
 
 ### Mistake

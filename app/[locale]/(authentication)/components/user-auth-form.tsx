@@ -166,7 +166,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             setShowOtpInput(true)
             setCountdown(15)
         } catch (error) {
-            console.error(error)
+            console.warn(error)
             setAuthMethod(null)
         } finally {
             setIsLoading(false)
@@ -291,7 +291,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
             setLastAuthPreference('password')
         } catch (error) {
-            console.error(error)
+            console.warn(error)
             const parsedError = parseAuthError(error)
 
             // Set form field error if applicable
@@ -329,7 +329,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             })
             router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
         } catch (error) {
-            console.error(error)
+            console.warn(error)
             toast.error("Error", {
                 description: error instanceof Error ? error.message : "Failed to verify code",
             })
@@ -360,7 +360,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
             await signInWithDiscord(next, locale)
         } catch (error) {
-            console.error(error)
+            console.warn(error)
             setAuthMethod(null)
             setIsLoading(false)
         }
@@ -388,7 +388,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
             await signInWithGoogle(next, locale)
         } catch (error) {
-            console.error(error)
+            console.warn(error)
             setAuthMethod(null)
             setIsLoading(false)
         }

@@ -109,6 +109,7 @@ npm run analyze:bundle         # Bundle analysis
 - **Proxy build race**: `.next/server/proxy.js` ENOENT = transient race. Use `scripts/robust-next-build.mjs` retries.
 - **i18n library**: `next-international` (NOT next-intl). Locales: en, fr.
 - **Middleware**: `proxy.ts` (NOT middleware.ts). Handles route classification, auth, CSP, CORS, i18n redirect.
+- **Firm detail routing**: In `app/[locale]/(landing)/firm/[slug]/page.tsx`, alias slug redirects must only target canonical slugs that resolve in DB; otherwise redirect to `/${locale}/propfirms`.
 - **V2 components**: Re-exports of V1 (`CardV2 = Card`). Use V2 imports for new work: `import { CardV2 as Card } from '@/components/ui/v2'`.
 - **Widget system**: 35+ widget types in `app/[locale]/dashboard/config/widget-registry.tsx`. `WidgetSize = 'tiny' | 'small' | 'small-long' | 'medium' | 'large' | 'extra-large'`.
 - **Chart library**: Recharts with `ChartSurface`/`ChartContainer`/`ChartTooltip` wrappers.
