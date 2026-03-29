@@ -2,6 +2,8 @@
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 
 const PROP_FIRMS_CACHE_LIFETIME = {
@@ -37,9 +39,25 @@ function logPropFirmFallback(source: string, error: unknown) {
   console.warn(`[PropFirms] Falling back in ${source}`, error)
 }
 
+function buildFallbackPropFirmRows() {
+  return Object.entries(propFirms).map(([key, firm]) => {
+    const profile = getVerifiedPropFirmProfileByName(firm.name)
+    return {
+      id: `fallback-${key}`,
+      slug: profile?.slug ?? key,
+      name: firm.name,
+      category: profile?.category ?? null,
+      platform: profile?.platform ?? null,
+      isActive: true,
+      coupons: [],
+      _count: { reviews: 0, coupons: 0 },
+    }
+  })
+}
+
 const _listPropFirms = async () => {
   if (!hasConfiguredDatabaseConnection) {
-    return []
+    return buildFallbackPropFirmRows()
   }
 
   try {
@@ -57,7 +75,7 @@ const _listPropFirms = async () => {
     }
 
     logPropFirmFallback('listPropFirms', error)
-    return []
+    return buildFallbackPropFirmRows()
   }
 }
 
@@ -89,8 +107,21 @@ function toBannerBadge(coupon?: { code: string; discountPercent: number | null }
 }
 
 const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
+  const fallbackItems = Object.entries(propFirms)
+    .map(([key, firm]) => {
+      const profile = getVerifiedPropFirmProfileByName(firm.name)
+      return {
+        id: `fallback-${key}`,
+        firmName: firm.name,
+        firmSlug: profile?.slug ?? key,
+        badge: 'Live',
+        type: 'firm' as const,
+      }
+    })
+    .sort((a, b) => a.firmName.localeCompare(b.firmName))
+
   if (!hasConfiguredDatabaseConnection) {
-    return []
+    return fallbackItems
   }
 
   try {
@@ -132,7 +163,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
           }
         })
       },
-      []
+      fallbackItems
     )
   } catch (error) {
     if (!isPropFirmDataUnavailableError(error)) {
@@ -140,7 +171,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
     }
 
     logPropFirmFallback('listPropFirmBannerItems', error)
-    return []
+    return fallbackItems
   }
 }
 

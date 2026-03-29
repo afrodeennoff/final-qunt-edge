@@ -1,6 +1,8 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import {
   createPropFirm,
   updatePropFirm,
@@ -89,6 +91,32 @@ function parseOptionalNumber(value: FormDataEntryValue | null): number | undefin
   return Number.isFinite(parsed) ? parsed : undefined
 }
 
+function buildFallbackFirm(id: string): PropFirmData | null {
+  const fallbackKey = id.startsWith('fallback-') ? id.slice('fallback-'.length) : id
+  const firm = propFirms[fallbackKey]
+  if (!firm) return null
+  const profile = getVerifiedPropFirmProfileByName(firm.name)
+
+  return {
+    id,
+    slug: profile?.slug ?? fallbackKey,
+    name: firm.name,
+    category: profile?.category ?? 'Futures',
+    description: profile?.shortDesc ?? null,
+    shortDesc: profile?.shortDesc ?? null,
+    platform: profile?.platform ?? null,
+    payoutModel: profile?.payoutModel ?? null,
+    drawdownType: profile?.drawdownType ?? null,
+    profitSplit: profile?.profitSplit ?? null,
+    maxAllocation: profile?.maxAllocation ?? null,
+    referralUrl: profile?.referralUrl ?? null,
+    logoUrl: null,
+    isActive: true,
+    reviews: [],
+    coupons: [],
+  }
+}
+
 // This page intentionally co-locates the related server actions for one admin workflow.
 // eslint-disable-next-line complexity
 export default async function PropFirmEditPage({
@@ -100,19 +128,17 @@ export default async function PropFirmEditPage({
   const { locale, id } = await params
   const isNew = id === 'new'
 
-  if (!hasConfiguredDatabaseConnection) {
-    notFound()
-  }
-
   let firm: PropFirmData | null = null
   if (!isNew) {
-    firm = await prisma.propFirm.findUnique({
-      where: { id },
-      include: {
-        reviews: { orderBy: { createdAt: 'desc' } },
-        coupons: { orderBy: { createdAt: 'desc' } },
-      },
-    })
+    firm = hasConfiguredDatabaseConnection
+      ? await prisma.propFirm.findUnique({
+          where: { id },
+          include: {
+            reviews: { orderBy: { createdAt: 'desc' } },
+            coupons: { orderBy: { createdAt: 'desc' } },
+          },
+        })
+      : buildFallbackFirm(id)
     if (!firm) {
       notFound()
     }

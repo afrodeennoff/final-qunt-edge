@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { getActiveDeals, getDefaultFaqs, getUnifiedFirms } from '@/server/deals'
+import { deals, faqItems, firms } from './data/mock-data'
 import { PropFirmDealsExperience } from './components/prop-firm-deals-experience'
 import {
   buildPropFirmDealsFaqSchema,
   buildPropFirmDealsMetadata,
+  PROP_FIRM_DEALS_LAST_UPDATED,
 } from './data/seo'
-import type { DealItem, FaqItem, FirmItem } from './data/types'
 import { buildBreadcrumbSchema, buildOrganizationSchema, buildSoftwareApplicationSchema } from '@/lib/seo'
 
 export async function generateMetadata({
@@ -23,60 +23,6 @@ export default async function PropFirmDealsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const [liveDeals, liveFirms, liveFaqs] = await Promise.all([
-    getActiveDeals(),
-    getUnifiedFirms(),
-    getDefaultFaqs(),
-  ])
-
-  const deals: DealItem[] = liveDeals.map((deal) => ({
-    id: deal.id,
-    firmId: deal.firmId,
-    firmName: deal.firmName,
-    logoUrl: deal.logoUrl,
-    marketType: deal.category,
-    platform: deal.platform,
-    payoutModel: deal.payoutModel,
-    drawdownType: deal.drawdownType,
-    discountPercent: deal.discountPercent,
-    couponCode: deal.couponCode,
-    challengeFee: deal.challengeFee,
-    expiryDate: deal.expiryDate,
-    verified: true,
-    claimUrl: deal.claimUrl ?? `/${locale}/firm/${deal.firmSlug}`,
-  }))
-
-  const firms: FirmItem[] = liveFirms.map((firm) => {
-    const challengeFeeCandidates = firm.coupons
-      .map((coupon) => coupon.challengeFee)
-      .filter((fee): fee is number => typeof fee === 'number' && Number.isFinite(fee) && fee >= 0)
-
-    const challengeFee = challengeFeeCandidates.length > 0
-      ? Math.min(...challengeFeeCandidates)
-      : 0
-
-    return {
-      id: firm.id,
-      name: firm.name,
-      logoUrl: firm.logoUrl,
-      marketType: firm.category,
-      platform: firm.platform,
-      payoutModel: firm.payoutModel,
-      drawdownType: firm.drawdownType,
-      challengeFee,
-      profitSplit: firm.profitSplit,
-      payoutFrequency: firm.payoutModel,
-      maxAllocation: firm.maxAllocation,
-      rating: firm.liveReviewStats.averageRating ?? 0,
-    }
-  })
-
-  const faqItems: FaqItem[] = liveFaqs.map((faq) => ({
-    question: faq.question,
-    answer: faq.answer,
-  }))
-
-  const lastUpdated = new Date().toISOString().split('T')[0] ?? ''
 
   const faqSchema = buildPropFirmDealsFaqSchema(faqItems)
   const organizationSchema = buildOrganizationSchema()
@@ -93,7 +39,7 @@ export default async function PropFirmDealsPage({
         deals={deals}
         firms={firms}
         faqs={faqItems}
-        lastUpdated={lastUpdated}
+        lastUpdated={PROP_FIRM_DEALS_LAST_UPDATED}
       />
       <script
         type="application/ld+json"

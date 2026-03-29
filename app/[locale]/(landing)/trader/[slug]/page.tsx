@@ -3,6 +3,7 @@ import React from 'react'
 import { CardV2 } from '@/components/ui/v2'
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
 import { Zap, Lock } from 'lucide-react'
 
 type TraderSnapshot = {
@@ -13,6 +14,7 @@ type TraderSnapshot = {
   returnPct?: number
   topInstrument?: string | null
   avgDurationMinutes?: number
+  demo: boolean
 }
 
 function formatSigned(value: number, digits = 2): string {
@@ -43,76 +45,32 @@ function formatValue(value: number, digits = 2): string {
 
 async function getTraderSnapshot(slug: string): Promise<TraderSnapshot | null> {
   if (!hasConfiguredDatabaseConnection) {
-    return null
+    const fallbackEntry = await getFallbackLeaderboardEntryByUserId(slug)
+    if (!fallbackEntry) return null
+
+    return {
+      username: fallbackEntry.username,
+      totalPnl: fallbackEntry.monthlyPnl,
+      totalTrades: fallbackEntry.totalTrades,
+      winRate: fallbackEntry.winRate,
+      returnPct: fallbackEntry.returnPct,
+      topInstrument: fallbackEntry.topInstrument,
+      avgDurationMinutes: fallbackEntry.avgDurationMinutes,
+      demo: true,
+    }
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: slug },
-    select: {
-      id: true,
-      email: true,
-      showOnLeaderboard: true,
-    },
+  const traderStats = await prisma.trade.aggregate({
+    where: { userId: slug },
+    _sum: { pnl: true },
+    _count: { id: true },
   })
-
-  if (!user?.showOnLeaderboard) {
-    return null
-  }
-
-  const [trades, accountAggregate] = await Promise.all([
-    prisma.trade.findMany({
-      where: { userId: slug },
-      select: {
-        pnl: true,
-        instrument: true,
-        timeInPosition: true,
-      },
-    }),
-    prisma.account.aggregate({
-      where: { userId: slug },
-      _sum: { startingBalance: true },
-    }),
-  ])
-
-  const pnlValues = trades.map((trade) => Number(trade.pnl ?? 0))
-  const totalPnl = pnlValues.reduce((sum, value) => sum + value, 0)
-  const winTrades = pnlValues.filter((value) => value > 0)
-  const lossTrades = pnlValues.filter((value) => value < 0)
-  const decisiveTrades = winTrades.length + lossTrades.length
-  const totalTrades = trades.length
-
-  const winRate = decisiveTrades > 0
-    ? (winTrades.length / decisiveTrades) * 100
-    : 0
-
-  const totalBalance = Number(accountAggregate._sum.startingBalance ?? 0)
-  const returnPct = totalBalance > 0
-    ? (totalPnl / totalBalance) * 100
-    : 0
-
-  const topInstrumentMap = new Map<string, number>()
-  trades.forEach((trade) => {
-    if (!trade.instrument) return
-    topInstrumentMap.set(trade.instrument, (topInstrumentMap.get(trade.instrument) ?? 0) + 1)
-  })
-
-  const topInstrument = Array.from(topInstrumentMap.entries())
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? null
-
-  const avgDurationMinutes = trades.length > 0
-    ? trades.reduce((sum, trade) => sum + Number(trade.timeInPosition ?? 0), 0) / trades.length
-    : 0
-
-  const username = user.email?.split('@')[0]?.trim() || slug
 
   return {
-    username,
-    totalPnl,
-    totalTrades,
-    winRate,
-    returnPct,
-    topInstrument,
-    avgDurationMinutes,
+    username: slug,
+    totalPnl: Number(traderStats._sum.pnl ?? 0),
+    totalTrades: traderStats._count.id,
+    demo: false,
   }
 }
 
@@ -180,6 +138,11 @@ export default async function TraderProfilePage({
                     <Zap className="h-3 w-3" />
                     Trader Profile
                   </span>
+                  {snapshot.demo ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                      Demo profile preview
+                    </span>
+                  ) : null}
                   <span className="inline-flex items-center rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
                     Total Trades {snapshot.totalTrades}
                   </span>
@@ -201,7 +164,7 @@ export default async function TraderProfilePage({
               <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
                 <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Type</p>
                 <p className="mt-1 text-lg font-semibold text-fg-primary">
-                  Live
+                  {snapshot.demo ? 'Demo' : 'Live'}
                 </p>
               </div>
             </div>
@@ -223,13 +186,13 @@ export default async function TraderProfilePage({
             </CardV2>
           </div>
 
-          {snapshot.winRate !== undefined ? (
+          {snapshot.demo && snapshot.winRate !== undefined ? (
             <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <div className="mb-2.5 flex items-center justify-between">
-                <p className="text-sm font-semibold text-fg-primary">Leaderboard Stats</p>
+                <p className="text-sm font-semibold text-fg-primary">Demo Leaderboard Stats</p>
                 <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
                   <Lock className="h-3 w-3" />
-                  Public Data
+                  Preview Data
                 </span>
               </div>
 
@@ -295,7 +258,7 @@ export default async function TraderProfilePage({
             </div>
           </CardV2>
 
-          {snapshot.winRate !== undefined && (
+          {snapshot.demo && snapshot.winRate !== undefined && (
             <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
               <p className="mt-1 text-4xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
@@ -324,17 +287,19 @@ export default async function TraderProfilePage({
           </CardV2>
 
           <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Status</p>
-                <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
-                  <Lock className="h-3 w-3" />
-                  Live
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-fg-muted">
-                Live trading profile with verified performance data.
-              </p>
-            </CardV2>
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Status</p>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                <Lock className="h-3 w-3" />
+                {snapshot.demo ? 'Demo' : 'Live'}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-fg-muted">
+              {snapshot.demo
+                ? 'This is a demo profile with preview data from the leaderboard.'
+                : 'Live trading profile with verified performance data.'}
+            </p>
+          </CardV2>
         </aside>
       </div>
     </div>

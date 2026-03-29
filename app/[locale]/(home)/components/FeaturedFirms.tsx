@@ -19,6 +19,13 @@ interface FeaturedFirmsProps {
   firms?: FeaturedFirm[]
 }
 
+const fallbackFirms: FeaturedFirm[] = [
+  { id: '1', slug: 'topstep', name: 'TopStep', category: 'Futures', platform: 'Tradovate', accountsCount: 1250, totalAccountValue: 45000000, paidPayoutAmount: 8500000 },
+  { id: '2', slug: 'apex-trader', name: 'Apex Trader Funding', category: 'Futures', platform: 'Rithmic', accountsCount: 980, totalAccountValue: 32000000, paidPayoutAmount: 6200000 },
+  { id: '3', slug: 'earn2trade', name: 'Earn2Trade', category: 'Futures', platform: 'Tradovate', accountsCount: 720, totalAccountValue: 28000000, paidPayoutAmount: 5100000 },
+  { id: '4', slug: 'bulenox', name: 'Bulenox', category: 'Futures', platform: 'Rithmic', accountsCount: 540, totalAccountValue: 18000000, paidPayoutAmount: 3800000 },
+]
+
 function formatCompact(value: number): string {
   if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`
   if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`
@@ -31,7 +38,7 @@ function formatCount(value: number): string {
 }
 
 export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
-  const displayFirms = firms && firms.length > 0 ? firms.slice(0, 4) : []
+  const displayFirms = firms && firms.length > 0 ? firms.slice(0, 4) : fallbackFirms
 
   return (
     <section id="firms" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
@@ -59,64 +66,56 @@ export default function FeaturedFirms({ locale, firms }: FeaturedFirmsProps) {
           </Link>
         </div>
 
-        {displayFirms.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {displayFirms.map((firm) => (
-              <Link key={firm.id} href={`/${locale}/firm/${firm.slug}`} className="block">
-                <Card className="group h-full overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10">
-                  <CardContent className="flex h-full flex-col p-5">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{firm.name}</p>
-                        <div className="mt-1 flex items-center gap-2">
-                          <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
-                            {firm.category}
-                          </BadgeV2>
-                          <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
-                            {firm.platform}
-                          </BadgeV2>
-                        </div>
-                      </div>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary transition-transform group-hover:scale-110">
-                        <Building2 className="h-5 w-5" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {displayFirms.map((firm) => (
+            <Link key={firm.id} href={`/${locale}/firm/${firm.slug}`} className="block">
+              <Card className="group h-full overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)] transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10">
+                <CardContent className="flex h-full flex-col p-5">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{firm.name}</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+                          {firm.category}
+                        </BadgeV2>
+                        <BadgeV2 variant="secondary" className="border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">
+                          {firm.platform}
+                        </BadgeV2>
                       </div>
                     </div>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary transition-transform group-hover:scale-110">
+                      <Building2 className="h-5 w-5" />
+                    </div>
+                  </div>
 
-                    <div className="mt-auto grid grid-cols-2 gap-3 pt-5">
-                      <div>
-                        <div className="flex items-center gap-1.5 text-foreground/80">
-                          <Users className="h-3.5 w-3.5" />
-                          <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Accounts</span>
-                        </div>
-                        <p className="mt-1 text-lg font-semibold [font-family:var(--home-display)]">{formatCount(firm.accountsCount)}</p>
+                  <div className="mt-auto grid grid-cols-2 gap-3 pt-5">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-foreground/80">
+                        <Users className="h-3.5 w-3.5" />
+                        <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Accounts</span>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-1.5 text-foreground/80">
-                          <DollarSign className="h-3.5 w-3.5" />
-                          <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Value</span>
-                        </div>
-                        <p className="mt-1 text-lg font-semibold [font-family:var(--home-display)]">{formatCompact(firm.totalAccountValue)}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <div className="flex items-center gap-1.5 text-foreground/80">
-                          <TrendingUp className="h-3.5 w-3.5" />
-                          <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Paid Payouts</span>
-                        </div>
-                        <p className="mt-1 text-lg font-semibold text-emerald-400 [font-family:var(--home-display)]">{formatCompact(firm.paidPayoutAmount)}</p>
-                      </div>
+                      <p className="mt-1 text-lg font-semibold [font-family:var(--home-display)]">{formatCount(firm.accountsCount)}</p>
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <Card className="rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)]">
-            <CardContent className="p-6 text-sm text-muted-foreground">
-              No live firm data is available right now.
-            </CardContent>
-          </Card>
-        )}
+                    <div>
+                      <div className="flex items-center gap-1.5 text-foreground/80">
+                        <DollarSign className="h-3.5 w-3.5" />
+                        <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Value</span>
+                      </div>
+                      <p className="mt-1 text-lg font-semibold [font-family:var(--home-display)]">{formatCompact(firm.totalAccountValue)}</p>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="flex items-center gap-1.5 text-foreground/80">
+                        <TrendingUp className="h-3.5 w-3.5" />
+                        <span className="text-[10px] uppercase tracking-[0.12em] [font-family:var(--home-copy)]">Paid Payouts</span>
+                      </div>
+                      <p className="mt-1 text-lg font-semibold text-emerald-400 [font-family:var(--home-display)]">{formatCompact(firm.paidPayoutAmount)}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   )

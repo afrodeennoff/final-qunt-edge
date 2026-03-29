@@ -13,6 +13,8 @@ import {
   updatePropFirmCoupon,
 } from '@/server/prop-firms'
 import { Building2, Clock3, Percent, Plus, Tags, Trash2 } from 'lucide-react'
+import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 
 function requireText(value: FormDataEntryValue | null, fallback = ''): string {
   return value?.toString().trim() || fallback
@@ -46,7 +48,15 @@ async function loadCoupons() {
 
 async function loadFirms() {
   if (!hasConfiguredDatabaseConnection) {
-    return []
+    return Object.entries(propFirms).map(([key, firm]) => {
+      const profile = getVerifiedPropFirmProfileByName(firm.name)
+      return {
+        id: `fallback-${key}`,
+        name: firm.name,
+        slug: profile?.slug ?? key,
+        isActive: true,
+      }
+    })
   }
 
   return prisma.propFirm.findMany({

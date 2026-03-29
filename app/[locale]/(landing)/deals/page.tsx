@@ -52,7 +52,7 @@ export default async function DealsPage({
     totalPaidPayoutAmount: 0,
     totalPaidPayoutCount: 0,
   }
-  const spotlights = await getDealsSpotlights()
+  const spotlights = getDealsSpotlights()
   let faqs: Awaited<ReturnType<typeof getDefaultFaqs>> = []
   let hadFetchError = false
 
