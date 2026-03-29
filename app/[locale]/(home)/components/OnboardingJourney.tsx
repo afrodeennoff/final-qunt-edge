@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from '@/components/ui/v2'
+import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Plug, FileDown, ScanSearch, TrendingUp } from 'lucide-react'
 
 const journey = [
@@ -58,6 +58,11 @@ export default function OnboardingJourney() {
                 <CardContent>
                   <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{item.description}</p>
                 </CardContent>
-    </CardV2>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
+    </section>
   )
 }

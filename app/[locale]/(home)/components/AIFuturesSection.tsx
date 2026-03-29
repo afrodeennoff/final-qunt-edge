@@ -1,6 +1,6 @@
 "use client"
 import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from '@/components/ui/v2'
+import { CardV2 as Card, CardV2Content as CardContent, CardV2Description as CardDescription, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
 

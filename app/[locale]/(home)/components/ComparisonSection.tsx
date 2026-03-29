@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from '@/components/ui/v2'
+import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Check, X } from 'lucide-react'
 
 const comparisonRows = [
@@ -44,11 +44,11 @@ export default function ComparisonSection() {
           </h2>
         </div>
 
-        CardV2 variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
-          CardV2Header className="border-b border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
-            CardV2Title className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardV2Title>
-          </CardV2Header>
-          CardV2Content className="p-0">
+        <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
+          <CardHeader className="border-b border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
+            <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
             <div className="grid gap-3 p-4 md:hidden">
               {comparisonRows.map((row) => (
                 <article key={row.item} className="rounded-xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface)/0.6)] p-4">
@@ -100,7 +100,9 @@ export default function ComparisonSection() {
                 </tbody>
               </table>
             </div>
-          </CardV2Content>
-    </CardV2>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
   )
 }

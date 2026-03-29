@@ -35,6 +35,7 @@ npm run test         # Run tests
 - **Public metadata consistency**: indexable public pages should use `buildPublicMetadata` or `getLocaleAlternates` to keep canonical + hreflang output consistent across locales.
 - **Marketing prerender safety**: server read helpers used by shared marketing layout surfaces (for example `server/prop-firms.ts` used by rolling banner/layout shell) must fail-soft on Prisma schema/connection mismatch and connection timeout errors, and should use schema-mismatch cooldown fallbacks where possible to avoid repeated failing DB attempts during static generation.
 - **Mobile table fallback requirement**: any route-level table with fixed min width (`min-w-[...]`) must include an explicit mobile/tablet fallback view (card/stack/list). Never hide the only data representation behind `lg+` visibility.
+- **Card migration safety**: when migrating between `Card` and `CardV2`, preserve JSX delimiters/closing structure and run full `npm run -s typecheck` immediately after migration to catch malformed TSX before build.
 
 ## Design System Architecture
 

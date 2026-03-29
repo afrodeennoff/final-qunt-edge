@@ -4,6 +4,28 @@
 
 ---
 
+## NEW (2026-03-29): Card migration edits must preserve TSX delimiters and full closing structure
+
+### Mistake
+Home page component edits replaced `Card` imports with `CardV2` symbols but left malformed JSX (`CardV2 ...>` without opening `<`) and truncated closing blocks, causing widespread TypeScript parse failures after the first reported error.
+
+### Root Cause
+A bulk text migration changed identifiers without syntax-aware codemods or a full-project typecheck pass before shipping.
+
+### Rule
+For any JSX component migration (especially `Card`/`CardV2`), perform syntax-safe edits only and always run full `npm run -s typecheck` immediately after the migration; do not stop at the first surfaced error.
+
+### Example
+```tsx
+// BAD
+CardV2 variant="glass">...</CardV2>
+
+// GOOD
+<CardV2 variant="glass">...</CardV2>
+```
+
+---
+
 ## NEW (2026-03-29): Wide comparison tables must never be the only rendered path below desktop breakpoints
 
 ### Mistake

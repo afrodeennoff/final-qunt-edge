@@ -1,5 +1,29 @@
 # Session Memory (2026-03-28)
 
+## Current Session: Vercel build rescue — home TSX corruption + `Card` symbol failure (2026-03-29)
+
+### Accomplishments
+- Reproduced the deployment-failing state on commit `c2d1856` and confirmed the initially reported TypeScript blocker in `app/[locale]/(home)/components/AIFuturesSection.tsx` (`Cannot find name 'Card'`).
+- Traced full error chain after the first fix and identified broader corruption in home TSX files: partial `CardV2` migrations stripped opening JSX delimiters (`<`) and left truncated closing structures.
+- Restored the affected home components to the last known-good TSX structure:
+  - `app/[locale]/(home)/components/AIFuturesSection.tsx`
+  - `app/[locale]/(home)/components/ComparisonSection.tsx`
+  - `app/[locale]/(home)/components/DealsPreview.tsx`
+  - `app/[locale]/(home)/components/FAQSection.tsx`
+  - `app/[locale]/(home)/components/FeaturedFirms.tsx`
+  - `app/[locale]/(home)/components/LeaderboardPreview.tsx`
+  - `app/[locale]/(home)/components/OnboardingJourney.tsx`
+  - `app/[locale]/(home)/components/ProofStrip.tsx`
+  - `app/[locale]/(home)/components/UserReviews.tsx`
+  - `app/[locale]/(home)/components/WhyChooseUs.tsx`
+
+### Verification
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end on the patched workspace.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`), so mandatory sync cannot be executed here.
+
 ## Current Session: Full mobile optimization pass across App Router surfaces (2026-03-29)
 
 ### Accomplishments

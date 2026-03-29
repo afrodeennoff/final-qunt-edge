@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content } from '@/components/ui/v2'
+import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { ArrowRight, Percent, Clock, Zap } from 'lucide-react'
 
 interface DealPreview {
@@ -95,6 +95,10 @@ export default function DealsPreview({ locale, deals }: DealsPreviewProps) {
                   <span>{formatExpiry(deal.expiryDate)}</span>
                 </div>
               </CardContent>
-    </CardV2>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }

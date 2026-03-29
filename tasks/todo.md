@@ -1,3 +1,32 @@
+## Task: Vercel build rescue — home component TSX corruption + `Card` symbol failure (2026-03-29)
+
+- [x] Reproduce the failure from deployment context (`c2d1856`) and confirm the first blocking TypeScript error.
+- [x] Fix the immediate `AIFuturesSection` `Card` symbol failure.
+- [x] Trace subsequent TypeScript failures to root cause and identify malformed/truncated TSX in sibling home components.
+- [x] Restore the affected home components to the last known-good TSX structure while preserving current behavior and routes.
+- [x] Run verification gates (`npm run -s typecheck`, `npm run build`) and record outputs.
+
+Verification:
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end on `c2d1856` after the patch.
+- Build warnings remain non-blocking and environment-specific (`RESEND_API_KEY` missing, DB-unconfigured degraded health info, local native warning noise).
+- `/init` command remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Review
+- Root cause was not a single missing import: `c2d1856` contained partial card migration edits across home components where JSX tags lost opening `<` delimiters and files were left with truncated closing structure.
+- Restored these files to known-good TSX structure:
+  - `app/[locale]/(home)/components/AIFuturesSection.tsx`
+  - `app/[locale]/(home)/components/ComparisonSection.tsx`
+  - `app/[locale]/(home)/components/DealsPreview.tsx`
+  - `app/[locale]/(home)/components/FAQSection.tsx`
+  - `app/[locale]/(home)/components/FeaturedFirms.tsx`
+  - `app/[locale]/(home)/components/LeaderboardPreview.tsx`
+  - `app/[locale]/(home)/components/OnboardingJourney.tsx`
+  - `app/[locale]/(home)/components/ProofStrip.tsx`
+  - `app/[locale]/(home)/components/UserReviews.tsx`
+  - `app/[locale]/(home)/components/WhyChooseUs.tsx`
+- Outcome: both typecheck and full production build now succeed.
+
 ## Task: Full mobile optimization pass across App Router surfaces (2026-03-29)
 
 - [x] Complete audit-first scan of shared shells/components and route-level mobile breakpoints across `app/**`.

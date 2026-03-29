@@ -7,7 +7,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts'
 import type { PropfirmCatalogueStats } from '../actions/types'
 import { StatsSummaryRow } from './stats-summary-row'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 
 interface PropFirmCatalogueExperienceProps {

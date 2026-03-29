@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content } from '@/components/ui/v2'
+import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -52,7 +52,7 @@ const faqs: FAQItem[] = [
 
 function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
-    CardV2 className="overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)]">
+    <Card className="overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)]">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.3)]"
@@ -73,12 +73,12 @@ function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boole
         )}
       >
         <div className="overflow-hidden">
-          CardV2Content className="border-t border-[hsl(var(--mk-border)/0.28)] p-5 pt-4">
+          <CardContent className="border-t border-[hsl(var(--mk-border)/0.28)] p-5 pt-4">
             <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{item.answer}</p>
-          </CardV2Content>
+          </CardContent>
         </div>
       </div>
-    </CardV2>
+    </Card>
   )
 }
 
