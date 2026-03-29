@@ -2,13 +2,9 @@ import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { cacheLife, cacheTag } from 'next/cache'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import {
-  PROP_FIRM_MATCH_SOURCE_DATE,
-  PROP_FIRM_MATCH_SPOTLIGHTS,
   type PropFirmMatchSpotlight,
 } from '@/lib/propfirmmatch/source'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
-import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
@@ -228,10 +224,9 @@ function buildUnifiedFirm(
   catalogueEntry?: Parameters<typeof buildCatalogueStats>[0],
   spotlight: PropFirmMatchSpotlight | null = null
 ): UnifiedFirm {
-  const profile = getVerifiedPropFirmProfileByName(firm.name)
-  const description = withMeaningfulText(firm.description) ?? profile?.shortDesc
-  const shortDesc = withMeaningfulText(firm.shortDesc) ?? profile?.shortDesc
-  const referralUrl = withMeaningfulText(firm.referralUrl) ?? profile?.referralUrl
+  const description = withMeaningfulText(firm.description) ?? undefined
+  const shortDesc = withMeaningfulText(firm.shortDesc) ?? undefined
+  const referralUrl = withMeaningfulText(firm.referralUrl) ?? undefined
   const logoUrl = firm.logoUrl ?? undefined
 
   const approvedReviews = firm.reviews.filter((review) => review.status.toLowerCase() === 'approved')
@@ -246,20 +241,20 @@ function buildUnifiedFirm(
     id: firm.id,
     slug: firm.slug,
     name: firm.name,
-    description,
-    shortDesc,
-    referralUrl,
+    ...(description ? { description } : {}),
+    ...(shortDesc ? { shortDesc } : {}),
+    ...(referralUrl ? { referralUrl } : {}),
     logoUrl,
-    category: mapFirmCategory(withMeaningfulText(firm.category) ?? profile?.category ?? 'Futures'),
-    platform: mapFirmPlatform(withMeaningfulText(firm.platform) ?? profile?.platform ?? 'Tradovate'),
-    payoutModel: mapFirmPayoutModel(withMeaningfulText(firm.payoutModel) ?? profile?.payoutModel ?? 'Monthly'),
-    drawdownType: mapFirmDrawdownType(withMeaningfulText(firm.drawdownType) ?? profile?.drawdownType ?? 'Static'),
-    profitSplit: withTextFallback(withMeaningfulText(firm.profitSplit), profile?.profitSplit ?? '80/20'),
-    maxAllocation: withTextFallback(withMeaningfulText(firm.maxAllocation), profile?.maxAllocation ?? '$100K'),
+    category: mapFirmCategory(withMeaningfulText(firm.category) ?? 'Futures'),
+    platform: mapFirmPlatform(withMeaningfulText(firm.platform) ?? 'Tradovate'),
+    payoutModel: mapFirmPayoutModel(withMeaningfulText(firm.payoutModel) ?? 'Monthly'),
+    drawdownType: mapFirmDrawdownType(withMeaningfulText(firm.drawdownType) ?? 'Static'),
+    profitSplit: withTextFallback(withMeaningfulText(firm.profitSplit), 'Not listed'),
+    maxAllocation: withTextFallback(withMeaningfulText(firm.maxAllocation), 'Not listed'),
     challengeCount: firm.reviews.length,
     spotlight,
     catalogueStats: buildCatalogueStats(catalogueEntry),
-    accountSizes: getAccountSizesFromConfig(firm.name),
+    accountSizes: {},
     coupons: firm.coupons.map(mapFirmCoupon),
     _count: {
       reviews: firm._count.reviews,
@@ -288,11 +283,6 @@ function findCatalogueEntry(
 ) {
   const normalizedFirmName = normalizeFirmName(firmName)
   return catalogueEntries.find((entry) => normalizeFirmName(entry.propfirmName) === normalizedFirmName)
-}
-
-function findSpotlight(firmName: string): PropFirmMatchSpotlight | null {
-  const normalizedFirmName = normalizeFirmName(firmName)
-  return PROP_FIRM_MATCH_SPOTLIGHTS.find((entry) => normalizeFirmName(entry.name) === normalizedFirmName) ?? null
 }
 
 function isPrismaUnavailableError(error: unknown): boolean {
@@ -367,33 +357,8 @@ async function getUnifiedFirm(where: { id?: string; slug?: string }): Promise<Un
   return buildUnifiedFirm(
     firm,
     findCatalogueEntry(firm.name, catalogue.stats),
-    findSpotlight(firm.name)
+    null
   )
-}
-
-function getAccountSizesFromConfig(firmName: string): Record<string, AccountSizeData> {
-  const normalized = normalizeFirmName(firmName)
-  for (const [, firm] of Object.entries(propFirms)) {
-    if (normalizeFirmName(firm.name) === normalized) {
-      const result: Record<string, AccountSizeData> = {}
-      for (const [key, size] of Object.entries(firm.accountSizes)) {
-        result[key] = {
-          name: size.name,
-          balance: size.balance,
-          price: size.price,
-          priceWithPromo: size.priceWithPromo,
-          target: size.target,
-          dailyLoss: size.dailyLoss ?? null,
-          drawdown: size.drawdown,
-          trailing: size.trailing,
-          profitSharing: size.profitSharing,
-          evaluation: size.evaluation,
-        }
-      }
-      return result
-    }
-  }
-  return {}
 }
 
 export interface FaqItem {
@@ -487,9 +452,6 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   const catalogueMap = new Map(
     catalogue.stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
   )
-  const spotlightMap = new Map(
-    PROP_FIRM_MATCH_SPOTLIGHTS.map((entry) => [normalizeFirmName(entry.name), entry])
-  )
 
   try {
     const firms = await prisma.propFirm.findMany({
@@ -519,7 +481,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       return buildUnifiedFirm(
         firm,
         catalogueMap.get(normalizedName),
-        spotlightMap.get(normalizedName) ?? null
+        null
       )
     })
   } catch (error) {
@@ -569,11 +531,43 @@ export async function getDealsOverview(): Promise<DealsOverview> {
   }
 }
 
-export function getDealsSpotlights(): DealsSpotlightCollection {
+export async function getDealsSpotlights(): Promise<DealsSpotlightCollection> {
+  const firms = await getUnifiedFirms()
+  const buildCategorySpotlights = (category: 'Futures' | 'CFD') => {
+    const candidates = firms
+      .filter((firm) => (category === 'Futures' ? firm.category === 'Futures' : firm.category !== 'Futures'))
+      .map((firm): PropFirmMatchSpotlight => {
+        const topCoupon = [...firm.coupons]
+          .sort((a, b) => (b.discountPercent ?? 0) - (a.discountPercent ?? 0))[0]
+
+        const hasDiscount = typeof topCoupon?.discountPercent === 'number' && topCoupon.discountPercent > 0
+        const promoText = hasDiscount
+          ? `${Math.round(topCoupon.discountPercent)}% off${topCoupon?.code ? ` with ${topCoupon.code}` : ''}`
+          : topCoupon?.code
+            ? `Use code ${topCoupon.code}`
+            : 'Live offers'
+
+        return {
+          slug: firm.slug,
+          name: firm.name,
+          category,
+          rating: firm.liveReviewStats.averageRating ?? 0,
+          reviewCount: firm.liveReviewStats.approvedCount,
+          promoText,
+          promoCode: topCoupon?.code,
+          maxAllocation: firm.maxAllocation,
+          sourceUrl: firm.referralUrl ?? `/firm/${firm.slug}`,
+        }
+      })
+      .sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount)
+
+    return candidates.slice(0, 4)
+  }
+
   return {
-    updatedAt: PROP_FIRM_MATCH_SOURCE_DATE,
-    futures: PROP_FIRM_MATCH_SPOTLIGHTS.filter((item) => item.category === 'Futures'),
-    cfd: PROP_FIRM_MATCH_SPOTLIGHTS.filter((item) => item.category === 'CFD'),
+    updatedAt: new Date().toISOString().split('T')[0] ?? '',
+    futures: buildCategorySpotlights('Futures'),
+    cfd: buildCategorySpotlights('CFD'),
   }
 }
 

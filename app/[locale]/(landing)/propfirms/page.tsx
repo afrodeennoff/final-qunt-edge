@@ -1,13 +1,11 @@
 import { Metadata } from 'next'
 import { setStaticParamsLocale } from 'next-international/server'
 import { getI18n } from '@/locales/server'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getPropfirmCatalogueData } from './actions/get-propfirm-catalogue'
 import type { PropfirmCatalogueStats } from './actions/types'
 import { PropFirmCatalogueExperience } from './components/catalogue-experience'
 import { getUnifiedFirms } from '@/server/deals'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
-import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { buildBreadcrumbSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
 
 function buildEmptyStats(name: string): PropfirmCatalogueStats {
@@ -27,46 +25,6 @@ function buildEmptyStats(name: string): PropfirmCatalogueStats {
       paidAmount: 0,
       paidCount: 0,
     },
-  }
-}
-
-function getUnifiedFirmDisplayData(
-  normalizedName: string,
-  unifiedFirmMap: Map<string, Awaited<ReturnType<typeof getUnifiedFirms>>[number]>
-) {
-  const unifiedFirm = unifiedFirmMap.get(normalizedName)
-  const profile = unifiedFirm ? undefined : getVerifiedPropFirmProfileByName(normalizedName)
-
-  return {
-    platform: unifiedFirm?.platform ?? profile?.platform ?? 'Unknown',
-    payoutModel: unifiedFirm?.payoutModel ?? profile?.payoutModel ?? 'Unknown',
-    drawdownType: unifiedFirm?.drawdownType ?? profile?.drawdownType ?? 'Unknown',
-    category: unifiedFirm?.category ?? profile?.category ?? 'Unknown',
-    fallbackSlug: profile?.slug,
-  }
-}
-
-function buildCatalogueFirm(
-  key: string,
-  firm: (typeof propFirms)[keyof typeof propFirms],
-  slugMap: Map<string, string>,
-  unifiedFirmMap: Map<string, Awaited<ReturnType<typeof getUnifiedFirms>>[number]>,
-  statsMap: Map<string, PropfirmCatalogueStats>
-) {
-  const normalizedName = normalizeFirmName(firm.name)
-  const displayData = getUnifiedFirmDisplayData(normalizedName, unifiedFirmMap)
-
-  return {
-    key,
-    slug: slugMap.get(normalizedName) ?? displayData.fallbackSlug ?? key,
-    name: firm.name,
-    accountTemplatesCount: Object.keys(firm.accountSizes).length,
-    platform: displayData.platform,
-    payoutModel: displayData.payoutModel,
-    drawdownType: displayData.drawdownType,
-    category: displayData.category,
-    hasInstantFunding: Object.values(firm.accountSizes).some((size) => !size.evaluation),
-    stats: statsMap.get(normalizedName) ?? buildEmptyStats(firm.name),
   }
 }
 
@@ -102,12 +60,6 @@ export default async function PropFirmsPage({
   const statsMap = new Map(
     stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
   )
-  const slugMap = new Map(
-    unifiedFirms.map((firm) => [normalizeFirmName(firm.name), firm.slug])
-  )
-  const unifiedFirmMap = new Map(
-    unifiedFirms.map((firm) => [normalizeFirmName(firm.name), firm])
-  )
 
   const firms: Array<{
     key: string
@@ -120,7 +72,25 @@ export default async function PropFirmsPage({
     category: string
     hasInstantFunding: boolean
     stats: PropfirmCatalogueStats
-  }> = Object.entries(propFirms).map(([key, firm]) => buildCatalogueFirm(key, firm, slugMap, unifiedFirmMap, statsMap))
+  }> = unifiedFirms
+    .map((firm) => {
+      const normalizedName = normalizeFirmName(firm.name)
+      const accountTemplates = Object.values(firm.accountSizes)
+
+      return {
+        key: firm.id,
+        slug: firm.slug,
+        name: firm.name,
+        accountTemplatesCount: accountTemplates.length,
+        platform: firm.platform,
+        payoutModel: firm.payoutModel,
+        drawdownType: firm.drawdownType,
+        category: firm.category,
+        hasInstantFunding: accountTemplates.some((size) => !size.evaluation),
+        stats: statsMap.get(normalizedName) ?? buildEmptyStats(firm.name),
+      }
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
   const organizationSchema = buildOrganizationSchema()
   const breadcrumbSchema = buildBreadcrumbSchema(locale, [
     { name: "Home", path: "/" },

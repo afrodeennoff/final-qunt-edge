@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
-import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
@@ -20,7 +20,9 @@ export async function GET() {
       }
     }
 
-    const totalFirms = Object.keys(propFirms).length
+    const totalFirms = hasConfiguredDatabaseConnection
+      ? await prisma.propFirm.count({ where: { isActive: true } })
+      : 0
 
     return NextResponse.json({
       totalPaid,

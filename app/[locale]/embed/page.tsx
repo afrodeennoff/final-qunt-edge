@@ -24,53 +24,42 @@ import { I18nProviderClient } from '@/locales/client'
 
 // Removed ThemeProvider import - using simple theme implementation
 
-// Mock trade data enriched with typical fields
 const instruments = ['ES', 'NQ', 'CL', 'GC'] as const
-const sides = ['long', 'short'] as const
-const now = Date.now()
-const dayMs = 24 * 60 * 60 * 1000
-const mockTrades = Array.from({ length: 60 }, (_, i) => {
-  const entry = new Date(now - Math.floor(Math.random() * 30) * dayMs - Math.floor(Math.random() * 24) * 3600 * 1000)
-  const qty = Math.ceil(Math.random() * 3)
-  const pnl = Math.round(((Math.random() - 0.4) * 500) * 100) / 100
-  const timeInPosition = Math.floor(Math.random() * 3600)
-  return {
-    pnl,
-    timeInPosition,
-    entryDate: entry.toISOString(),
-    side: sides[Math.floor(Math.random() * sides.length)],
-    quantity: qty,
-    commission: Math.round(qty * (1 + Math.random() * 3) * 100) / 100,
-    instrument: instruments[Math.floor(Math.random() * instruments.length)],
-  }
-})
 
-// Function to generate random trade data
-function generateRandomTrade() {
-  const qty = Math.ceil(Math.random() * 3)
-  const pnl = (Math.random() - 0.4) * 500
-  const timeInPosition = Math.random() * 3600
-  const entry = new Date(Date.now() - Math.floor(Math.random() * 20) * dayMs)
-  return {
-    pnl: Math.round(pnl * 100) / 100,
-    timeInPosition: Math.round(timeInPosition),
-    entryDate: entry.toISOString(),
-    side: sides[Math.floor(Math.random() * sides.length)],
-    quantity: qty,
-    commission: Math.round(qty * (1 + Math.random() * 3) * 100) / 100,
-    instrument: instruments[Math.floor(Math.random() * instruments.length)],
-  }
+type EmbedTrade = {
+  pnl: number
+  timeInPosition: number
+  quantity: number
+  commission: number
+  entryDate: string | Date
+  side?: 'long' | 'short' | string
+  instrument?: string
 }
 
-// Function to generate multiple random trades
-function generateRandomTrades(count: number = 1) {
-    return Array.from({ length: count }, generateRandomTrade)
+function isEmbedTrade(value: unknown): value is EmbedTrade {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const trade = value as Record<string, unknown>
+  return (
+    typeof trade.pnl === 'number' &&
+    Number.isFinite(trade.pnl) &&
+    typeof trade.timeInPosition === 'number' &&
+    Number.isFinite(trade.timeInPosition) &&
+    typeof trade.quantity === 'number' &&
+    Number.isFinite(trade.quantity) &&
+    typeof trade.commission === 'number' &&
+    Number.isFinite(trade.commission) &&
+    (typeof trade.entryDate === 'string' || trade.entryDate instanceof Date)
+  )
 }
+
 export default function EmbedPage() {
     const searchParams = useSearchParams()
     const preset = searchParams.get('preset') || undefined
     const lang = searchParams.get('lang') || 'en'
-    const [trades, setTrades] = React.useState<any[]>(mockTrades)
+    const [trades, setTrades] = React.useState<EmbedTrade[]>([])
 
     // Dark-only theme with optional presets/overrides.
     React.useEffect(() => {
@@ -97,20 +86,21 @@ export default function EmbedPage() {
                 const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
 
                 if (data.type === 'ADD_TRADES') {
-                    const { count = 1, trades: newTrades } = data
+                    const { trades: newTrades } = data
 
                     if (newTrades && Array.isArray(newTrades)) {
-                        // Add provided trades
-                        setTrades(prev => [...prev, ...newTrades])
+                        const validTrades = newTrades.filter(isEmbedTrade)
+                        if (validTrades.length === 0) {
+                          toast.error('No valid trades provided', { description: 'ADD_TRADES requires trades with pnl and timeInPosition.' })
+                          return
+                        }
+                        setTrades(prev => [...prev, ...validTrades])
                     } else {
-                        toast.error('No trades provided', { description: `Generating ${count} random trades` })
-                        // Generate random trades
-                        const randomTrades = generateRandomTrades(count)
-                        setTrades(prev => [...prev, ...randomTrades])
+                        toast.error('No trades provided', { description: 'ADD_TRADES requires a trades array.' })
                     }
                 } else if (data.type === 'RESET_TRADES') {
-                    // Reset to original mock data
-                    setTrades(mockTrades)
+                    // Reset to empty live dataset
+                    setTrades([])
                 } else if (data.type === 'CLEAR_TRADES') {
                     // Clear all trades
                     setTrades([])

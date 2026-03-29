@@ -20,85 +20,7 @@ export type LeaderboardEntry = {
 
 export type LeaderboardSort = 'monthly_pnl' | 'winrate' | 'totalTrades'
 
-type LeaderboardSeed = Omit<LeaderboardEntry, 'rank'>
-
-export const FALLBACK_LEADERBOARD_SEEDS: LeaderboardSeed[] = [
-  {
-    userId: 'demo-alpha-trader',
-    username: 'AlphaTrader',
-    monthlyPnl: 24500,
-    totalTrades: 83,
-    winRate: 72.4,
-    returnPct: 18.2,
-    topInstrument: 'NQ',
-    avgWin: 418,
-    avgLoss: 215,
-    avgDurationMinutes: 38,
-    longestWinStreak: 8,
-    longestLossStreak: 2,
-    accountCount: 3,
-  },
-  {
-    userId: 'demo-futures-king',
-    username: 'FuturesKing',
-    monthlyPnl: 19800,
-    totalTrades: 71,
-    winRate: 69.1,
-    returnPct: 14.7,
-    topInstrument: 'ES',
-    avgWin: 372,
-    avgLoss: 198,
-    avgDurationMinutes: 41,
-    longestWinStreak: 7,
-    longestLossStreak: 2,
-    accountCount: 2,
-  },
-  {
-    userId: 'demo-edge-seeker',
-    username: 'EdgeSeeker',
-    monthlyPnl: 16750,
-    totalTrades: 66,
-    winRate: 65.8,
-    returnPct: 13.1,
-    topInstrument: 'CL',
-    avgWin: 325,
-    avgLoss: 176,
-    avgDurationMinutes: 45,
-    longestWinStreak: 6,
-    longestLossStreak: 3,
-    accountCount: 4,
-  },
-  {
-    userId: 'demo-risk-master',
-    username: 'RiskMaster',
-    monthlyPnl: 13250,
-    totalTrades: 58,
-    winRate: 70.3,
-    returnPct: 11.4,
-    topInstrument: 'GC',
-    avgWin: 298,
-    avgLoss: 161,
-    avgDurationMinutes: 33,
-    longestWinStreak: 7,
-    longestLossStreak: 1,
-    accountCount: 2,
-  },
-  {
-    userId: 'demo-trade-pro',
-    username: 'TradePro',
-    monthlyPnl: 10120,
-    totalTrades: 49,
-    winRate: 63.5,
-    returnPct: 9.8,
-    topInstrument: 'YM',
-    avgWin: 255,
-    avgLoss: 140,
-    avgDurationMinutes: 51,
-    longestWinStreak: 5,
-    longestLossStreak: 3,
-    accountCount: 1,
-  },
-]
+type LeaderboardComputedEntry = Omit<LeaderboardEntry, 'rank'>
 
 function toUsername(email: string | null | undefined, fallbackId: string): string {
   const base = email?.split('@')[0]?.trim()
@@ -132,7 +54,7 @@ function computeLongestStreak(values: number[], mode: 'win' | 'loss'): number {
 }
 
 function sortAndRankLeaderboardEntries(
-  entries: Array<LeaderboardSeed>,
+  entries: Array<LeaderboardComputedEntry>,
   sort: LeaderboardSort,
 ): LeaderboardEntry[] {
   const next = [...entries]
@@ -158,14 +80,6 @@ function sortAndRankLeaderboardEntries(
     ...entry,
     rank: index + 1,
   }))
-}
-
-function getFallbackLeaderboardEntries(sort: LeaderboardSort): LeaderboardEntry[] {
-  return sortAndRankLeaderboardEntries(FALLBACK_LEADERBOARD_SEEDS, sort)
-}
-
-export async function getFallbackLeaderboardEntryByUserId(userId: string): Promise<LeaderboardEntry | null> {
-  return getFallbackLeaderboardEntries('monthly_pnl').find((entry) => entry.userId === userId) ?? null
 }
 
 function isMissingColumnError(error: unknown): boolean {
@@ -199,8 +113,8 @@ export async function getLeaderboardData(
   sort: LeaderboardSort = 'monthly_pnl'
 ): Promise<LeaderboardEntry[]> {
   if (!hasConfiguredDatabaseConnection) {
-    console.warn('[Leaderboard] Database connection is missing; returning demo leaderboard entries.')
-    return getFallbackLeaderboardEntries(sort)
+    console.warn('[Leaderboard] Database connection is missing; returning empty leaderboard data.')
+    return []
   }
 
   let eligibleUsers: Array<{ id: string; email: string | null }> = []
@@ -212,8 +126,8 @@ export async function getLeaderboardData(
     })
   } catch (error) {
     if (isLeaderboardUnavailableError(error)) {
-      console.warn('[Leaderboard] Leaderboard query unavailable; returning demo leaderboard entries.')
-      return getFallbackLeaderboardEntries(sort)
+      console.warn('[Leaderboard] Leaderboard user query unavailable; returning empty leaderboard data.')
+      return []
     }
 
     throw error
@@ -320,8 +234,8 @@ export async function getLeaderboardData(
       throw error
     }
 
-    console.warn('[Leaderboard] Query unavailable; returning demo leaderboard entries.')
-    return getFallbackLeaderboardEntries(sort)
+    console.warn('[Leaderboard] Leaderboard aggregate query unavailable; returning empty leaderboard data.')
+    return []
   }
   const userMap = Object.fromEntries(
     eligibleUsers.map((user) => [user.id, toUsername(user.email, user.id)])

@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
-import { LeaderboardIcon, DealsIcon } from "@/components/icons/svg-icons"
+import { LeaderboardIcon } from "@/components/icons/svg-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -293,10 +293,6 @@ export function UnifiedSidebar({
                             : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
                         )}
                       >
-                        <div className={cn(
-                          "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
-                          itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
-                        )} />
                         {href ? (
                           <Link
                             href={href}
@@ -308,33 +304,46 @@ export function UnifiedSidebar({
                                 setOpenMobile(false)
                               }
                             }}
-                            className="flex items-center w-full relative z-10"
+                            className="relative z-10 flex w-full items-center"
                             aria-busy={isPendingItem}
                           >
+                            <span
+                              className={cn(
+                                "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
+                                itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
+                              )}
+                              aria-hidden="true"
+                            />
                             {isPendingItem || (isLoading && itemIsActive) ? (
-                              <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
+                              <Loader2 className="relative z-10 h-4 w-4 shrink-0 animate-spin text-sidebar-primary" />
                             ) : (
                               <span className={cn(
-                                "shrink-0 transition-all duration-200",
+                                "relative z-10 shrink-0 transition-all duration-200",
                                 itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
                               )}>{item.icon}</span>
                             )}
                             <span className={cn(
-                              "ml-3 truncate transition-all duration-200",
+                              "relative z-10 ml-3 truncate transition-all duration-200",
                               itemIsActive ? "font-semibold" : ""
                             )}>{label}</span>
                           </Link>
                         ) : (
-                          <div className="flex items-center w-full relative z-10">
-                            <span className={cn(
-                              "shrink-0 transition-all duration-200",
-                              itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
-                            )}>{item.icon}</span>
-                            <span className={cn(
-                              "ml-3 truncate transition-all duration-200",
-                              itemIsActive ? "font-semibold" : ""
-                            )}>{label}</span>
-                          </div>
+                          <>
+                            <div className={cn(
+                              "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
+                              itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
+                            )} />
+                            <div className="relative z-10 flex w-full items-center">
+                              <span className={cn(
+                                "shrink-0 transition-all duration-200",
+                                itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                              )}>{item.icon}</span>
+                              <span className={cn(
+                                "ml-3 truncate transition-all duration-200",
+                                itemIsActive ? "font-semibold" : ""
+                              )}>{label}</span>
+                            </div>
+                          </>
                         )}
                       </SidebarMenuButton>
                       {item.badge && (
