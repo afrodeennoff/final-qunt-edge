@@ -1,3 +1,24 @@
+## Task: Thread closeout (commit + push + log sync) (2026-03-29)
+
+- [x] Reconcile thread logs so `ENGINEERING_LOG.md` covers all completed workstreams from this thread (SEO/deploy, rescue/auth/data truth, runtime token cleanup, spotlight/prerender hardening).
+- [x] Run final full verification before publishing (`npm run -s typecheck`, `npm run build`).
+- [x] Stage all thread changes, create a consolidated commit, and push branch `v2` to `origin`.
+- [x] Attempt mandatory `/init` sync command and record blocker if unavailable in this shell.
+
+Verification:
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+- Commit: `b703d65` (`feat: finalize SEO, auth hardening, and UI consistency sweep`).
+- Push: `origin/v2` created and updated successfully.
+- `/init` command is unavailable in this environment (`zsh: no such file or directory: /init`).
+
+## Review
+- Thread logs are synchronized across:
+  - `ENGINEERING_LOG.md` (now includes the missing thread workstreams).
+  - `tasks/todo.md` (full checklist + closeout section).
+  - `tasks/memory.md` (session state + publish status).
+- Publish state is clean and reproducible from branch `v2` at commit `b703d65`.
+
 ## Task: Production rescue hardening sweep (2026-03-29)
 
 - [x] Remove fabricated/fallback business data from propfirm catalogue + deals data paths when DB is unavailable.
