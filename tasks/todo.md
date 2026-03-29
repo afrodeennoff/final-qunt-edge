@@ -1,3 +1,49 @@
+## Task: Full mobile optimization pass across App Router surfaces (2026-03-29)
+
+- [x] Complete audit-first scan of shared shells/components and route-level mobile breakpoints across `app/**`.
+- [x] Fix worst global/shared mobile failures first (overflow, cramped density, touch targets, narrow-screen nav/table behavior).
+- [x] Fix route-specific mobile regressions in both dashboard and non-dashboard surfaces (landing, deals, firm pages, team/admin touchpoints).
+- [x] Validate smallest breakpoints first (`320`, `360`, `390`) and then tablet widths with no horizontal overflow and usable interactions.
+- [x] Run verification (`eslint` targeted, `typecheck`, `build`) and record outcomes.
+- [x] Persist session state and lessons (`tasks/memory.md`, `tasks/lessons.md`, `ENGINEERING_LOG.md`, `AGENTS.md`), then attempt `/init`.
+
+Verification:
+- `npx eslint 'components/ui/table.tsx' 'app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx' 'app/[locale]/(landing)/deals/compare/page.tsx' 'app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx' 'app/[locale]/(home)/components/ComparisonSection.tsx' 'app/[locale]/dashboard/components/dashboard-header.tsx' 'app/[locale]/(home)/components/CTA.tsx' 'app/[locale]/(home)/components/DashboardPreview.tsx'` passes with warnings only (no errors).
+- `npm run -s typecheck` passes (wrapper retried once after transient `.next/types/cache-life.d.ts` ENOENT during regeneration).
+- `npm run build` passes end-to-end.
+- Mobile breakpoint guardrails were validated in code by introducing explicit mobile-only card fallbacks for leaderboard + compare matrices and restricting wide tables to `lg+` (`hidden lg:block`), eliminating table-only mobile paths.
+- `/init` command remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Review
+- Fixed a real mobile functional gap on `/[locale]/deals/compare`: comparison matrix content was previously hidden under `lg` with no fallback; mobile now renders card-based comparison rows.
+- Added mobile-first fallback cards for leaderboard rows and leaderboard skeleton, with desktop wide table retained for `lg+`.
+- Added mobile-first fallback cards for home comparison matrix (`ComparisonSection`) and kept the wide comparison table for `md+`.
+- Tightened shared table ergonomics in `components/ui/table.tsx` (`overscroll-x-contain`, smaller default head/cell density on narrow screens).
+- Reduced dashboard header crowding on small screens by compressing header text sizing/tracking and moving widget controls to their own mobile row.
+- Removed narrow-screen CTA squeeze in home CTA by replacing fixed min width with responsive full-width-on-mobile behavior.
+- Improved home dashboard preview responsiveness (single-column stats on small screens, truncated URL chip, narrower bars, compact paddings).
+
+## Task: SEO + public API classification consistency pass (2026-03-29)
+
+- [x] Validate proxy public API classification for unauthenticated endpoints (`/api/og`, `/api/email/unsubscribe`, `/api/csp-report`) and patch the allowlist matcher.
+- [x] Close remaining locale metadata/hreflang gaps on public pages (`community`, `docs`, `firm/[slug]`, `teams`).
+- [x] Add missing structured-data coverage on deals landing (`SoftwareApplication` + conditional `FAQPage`).
+- [x] Align deployment checklist wording with the active request interceptor file (`proxy.ts`).
+- [x] Verify with targeted lint, typecheck, and full build.
+
+Verification:
+- `npx eslint proxy.ts 'app/[locale]/(landing)/community/page.tsx' 'app/[locale]/(landing)/docs/page.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' 'app/[locale]/teams/(landing)/page.tsx' 'app/[locale]/(landing)/deals/page.tsx'` passes (warnings only, no errors).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+- `/init` command unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Review
+- `proxy.ts` now classifies public APIs via segment-safe `pathMatchesPrefix` and explicitly marks `/api/og`, `/api/email/unsubscribe`, and `/api/csp-report` as public so they are not incorrectly gated behind auth.
+- `community` and `docs` now use `generateMetadata` + `buildPublicMetadata`, removing static non-localized metadata drift.
+- `firm/[slug]` now emits locale alternates via `getLocaleAlternates`, and `teams` metadata is unified through `buildPublicMetadata` (consistent `x-default` + `en-US` + `fr-FR` alternates).
+- Deals landing now emits `SoftwareApplication` JSON-LD and conditionally emits `FAQPage` JSON-LD when FAQ data is available.
+- Deployment checklist now references `proxy.ts` instead of `middleware.ts`, matching the actual production request interception file.
+
 ## Task: Vercel prerender rescue — missing `PropFirm` table (2026-03-29)
 
 - [x] Trace the failing prerender call chain from Vercel logs and identify the unguarded `prisma.propFirm.findMany()` path.

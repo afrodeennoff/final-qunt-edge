@@ -37,6 +37,40 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
         </p>
       </div>
 
+      <div className="mt-5 grid gap-3 lg:hidden">
+        {firms.map((firm) => (
+          <article key={firm.id} className="rounded-2xl border border-border/70 bg-background/50 p-4">
+            <h3 className="text-base font-semibold text-foreground">{firm.name}</h3>
+            <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Typical Entry</dt>
+                <dd className="mt-1 font-medium text-foreground">{formatChallengeFee(getLowestChallengeFee(firm))}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Drawdown</dt>
+                <dd className="mt-1 font-medium text-foreground">{firm.drawdownType}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Payout Tempo</dt>
+                <dd className="mt-1 font-medium text-foreground">{firm.payoutModel}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Tracked Accounts</dt>
+                <dd className="mt-1 font-medium text-foreground">
+                  {firm.catalogueStats?.accountsCount?.toLocaleString() ?? '0'}
+                </dd>
+              </div>
+              <div className="col-span-2">
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Paid Payouts</dt>
+                <dd className="mt-1 font-medium text-foreground">
+                  ${(firm.catalogueStats?.paidPayoutAmount ?? 0).toLocaleString()}
+                </dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+
       <div className="mt-5 hidden overflow-x-auto lg:block">
         <table className="w-full min-w-[880px] border-collapse text-left text-sm">
           <thead>

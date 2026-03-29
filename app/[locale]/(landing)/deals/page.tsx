@@ -7,7 +7,13 @@ import {
   getUnifiedFirms,
 } from '@/server/deals'
 import { DealsExperience } from './components/deals-experience'
-import { buildBreadcrumbSchema, buildOrganizationSchema, buildPublicMetadata } from '@/lib/seo'
+import {
+  buildBreadcrumbSchema,
+  buildFaqPageSchema,
+  buildOrganizationSchema,
+  buildPublicMetadata,
+  buildSoftwareApplicationSchema,
+} from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -35,6 +41,7 @@ export default async function DealsPage({
     { name: "Home", path: "/" },
     { name: "Deals", path: "/deals" },
   ])
+  const softwareSchema = buildSoftwareApplicationSchema(locale, "/deals")
   let deals: Awaited<ReturnType<typeof getActiveDeals>> = []
   let firms: Awaited<ReturnType<typeof getUnifiedFirms>> = []
   let overview: Awaited<ReturnType<typeof getDealsOverview>> = {
@@ -74,10 +81,18 @@ export default async function DealsPage({
     console.error('DealsPage: Unexpected error:', error)
   }
 
+  const faqSchema = faqs.length > 0
+    ? buildFaqPageSchema(faqs.map((faq) => ({ question: faq.question, answer: faq.answer })))
+    : null
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      {faqSchema ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      ) : null}
       <DealsExperience
         locale={locale}
         deals={deals}

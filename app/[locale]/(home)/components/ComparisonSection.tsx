@@ -49,7 +49,25 @@ export default function ComparisonSection() {
             <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="grid gap-3 p-4 md:hidden">
+              {comparisonRows.map((row) => (
+                <article key={row.item} className="rounded-xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface)/0.6)] p-4">
+                  <h3 className="text-sm font-semibold text-foreground [font-family:var(--home-display)]">{row.item}</h3>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-start gap-2 text-sm text-foreground">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-foreground" />
+                      <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-sm text-foreground/80">
+                      <X className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span className="[font-family:var(--home-copy)]">{row.others}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[680px] text-left">
                 <thead>
                   <tr className="border-b border-[hsl(var(--mk-border)/0.28)]">

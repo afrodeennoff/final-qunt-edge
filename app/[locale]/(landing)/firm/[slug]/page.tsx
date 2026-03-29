@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getUnifiedFirmBySlug } from '@/server/deals'
 import { FirmDetailClient } from './page-client'
-import { getSiteOrigin } from '@/lib/site-url'
-
-const SITE_ORIGIN = getSiteOrigin()
+import { getLocaleAlternates } from '@/lib/seo'
 
 export async function generateMetadata({
   params,
@@ -20,7 +18,8 @@ export async function generateMetadata({
     }
   }
 
-  const canonical = `${SITE_ORIGIN}/${locale}/firm/${firm.slug}`
+  const alternates = getLocaleAlternates(locale, `/firm/${firm.slug}`)
+  const canonical = alternates.canonical
   const description =
     firm.description ??
     firm.shortDesc ??
@@ -29,7 +28,7 @@ export async function generateMetadata({
   return {
     title: `${firm.name} Review | Qunt Edge`,
     description,
-    alternates: { canonical },
+    alternates,
     openGraph: {
       title: `${firm.name} Review | Qunt Edge`,
       description,

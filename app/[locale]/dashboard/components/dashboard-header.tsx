@@ -106,10 +106,10 @@ export function DashboardHeader() {
             data-dashboard-header="true"
         >
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground) / 0.12),transparent_25%,transparent_75%,hsl(var(--foreground) / 0.12))]" />
-            <div className={cn("relative flex items-center justify-between gap-3 px-3 sm:px-6", isMobile ? "h-14" : "h-full")}>
-                <div className="flex items-center gap-3 relative z-10 pointer-events-auto">
-                    <SidebarTrigger className="h-11 w-11 md:h-7 md:w-7 text-v2-text-muted hover:text-v2-text-primary transition-colors" />
-                    <div className="flex min-w-0 items-start gap-3">
+            <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6", isMobile ? "h-14" : "h-full")}>
+                <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2 sm:gap-3 pointer-events-auto">
+                    <SidebarTrigger className="h-10 w-10 md:h-7 md:w-7 text-v2-text-muted hover:text-v2-text-primary transition-colors" />
+                    <div className="flex min-w-0 items-center gap-3">
                         <div className="mt-0.5 hidden h-7 w-px bg-v2-border/30 sm:block" />
                         <div className="min-w-0">
                             <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export function DashboardHeader() {
                                         {sectionLabel}
                                     </span>
                                 )}
-                                <h1 className="truncate whitespace-nowrap text-[11px] sm:text-sm font-bold uppercase tracking-[0.16em] text-v2-text-primary">
+                                <h1 className="truncate text-[10px] font-bold tracking-[0.12em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.16em]">
                                     {title}
                                 </h1>
                             </div>
@@ -133,9 +133,9 @@ export function DashboardHeader() {
                 </div>
 
                 <div className={cn(
-                    "flex min-w-0 items-center gap-2",
+                    "flex shrink-0 items-center gap-1.5 sm:gap-2",
                     isMobile
-                        ? "rounded-none border-0 bg-transparent p-0 shadow-none"
+                        ? "rounded-lg border border-v2-border/30 bg-v2-bg-surface/45 p-0.5 shadow-none"
                         : cn(
                             "rounded-2xl border p-1 shadow-sm transition-all duration-200",
                             "border-v2-border/40 bg-v2-bg-surface/30 backdrop-blur-sm",
@@ -178,9 +178,15 @@ export function DashboardHeader() {
                         )}
                     </div>
 
-                    {isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
+                    {!isMobile && isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
                 </div>
             </div>
+
+            {isMobile && isDashboardRoot && isWidgetsTab ? (
+                <div className="relative px-3 pb-2 pt-1">
+                    <DashboardHeaderWidgetControls isMobile={isMobile} />
+                </div>
+            ) : null}
 
             {
                 isMobile ? (

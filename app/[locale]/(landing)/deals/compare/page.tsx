@@ -58,7 +58,7 @@ export default async function PropfirmPerkComparePage() {
               Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             <article className="rounded-xl border border-border bg-background/60 p-3">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
               <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>

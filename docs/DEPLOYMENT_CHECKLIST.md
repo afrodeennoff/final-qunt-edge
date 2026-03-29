@@ -46,7 +46,7 @@
 
 ### 5. Security Headers ✅
 
-- [ ] `middleware.ts` deployed (CSP, CORS, HSTS, X-Frame-Options)
+- [ ] `proxy.ts` deployed (CSP, CORS, HSTS, X-Frame-Options)
 - [ ] `next.config.ts` security headers confirmed (no-cache for API routes)
 - [ ] `poweredByHeader: false` in Next.js config
 - [ ] CORS allowlist updated with production domain

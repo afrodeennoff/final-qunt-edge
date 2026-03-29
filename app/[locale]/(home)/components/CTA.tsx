@@ -19,7 +19,7 @@ export default function CTA() {
         <div className="mt-8 flex flex-col items-center gap-3">
           <Link
             href={`/${locale}/authentication?next=dashboard`}
-            className="inline-flex h-12 min-w-[230px] items-center justify-center rounded-2xl bg-primary px-9 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-all duration-300 hover:bg-primary/90 [font-family:var(--home-copy)]"
+            className="inline-flex h-12 w-full max-w-[260px] items-center justify-center rounded-2xl bg-primary px-6 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground transition-all duration-300 hover:bg-primary/90 sm:w-auto sm:min-w-[230px] sm:px-9 [font-family:var(--home-copy)]"
           >
             Start Free Audit
           </Link>

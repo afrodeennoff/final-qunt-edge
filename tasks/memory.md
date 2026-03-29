@@ -1,5 +1,66 @@
 # Session Memory (2026-03-28)
 
+## Current Session: Full mobile optimization pass across App Router surfaces (2026-03-29)
+
+### Accomplishments
+- Completed an audit-first mobile overflow scan across `app/**` and `components/**`, then prioritized shared primitives and high-traffic route surfaces.
+- Hardened shared table behavior in `components/ui/table.tsx` for narrow screens:
+  - added `overscroll-x-contain` to the table container,
+  - reduced default table head/cell density on small breakpoints (`h-10` / `px-3` / `text-xs` on mobile; desktop density preserved at `sm+`).
+- Fixed a mobile functional gap in deals compare:
+  - `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx` now renders card-based comparison content on mobile/tablet (`lg:hidden`) and keeps wide table only on `lg+`.
+  - `app/[locale]/(landing)/deals/compare/page.tsx` stats strip now uses `grid-cols-2 sm:grid-cols-3` to avoid tiny three-column compression at 320 widths.
+- Added mobile-first leaderboard rendering in `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`:
+  - new mobile skeleton cards (`lg:hidden`),
+  - new mobile leaderboard entry cards with key metrics and profile CTA (`lg:hidden`),
+  - existing wide table retained for `lg+`.
+- Added mobile-first comparison rendering in `app/[locale]/(home)/components/ComparisonSection.tsx`:
+  - card-based row presentation on mobile (`md:hidden`),
+  - existing wide comparison table retained for `md+`.
+- Reduced dashboard header crowding on mobile in `app/[locale]/dashboard/components/dashboard-header.tsx`:
+  - tightened spacing and text tracking on narrow widths,
+  - reduced sidebar trigger footprint on mobile,
+  - moved widget controls into a dedicated mobile row to prevent top-row squeeze.
+- Fixed home CTA button squeeze in `app/[locale]/(home)/components/CTA.tsx` by replacing fixed-width behavior with responsive full-width mobile sizing.
+- Improved home dashboard preview responsiveness in `app/[locale]/(home)/components/DashboardPreview.tsx`:
+  - single-column stat cards on mobile,
+  - compact paddings,
+  - URL chip truncation/hiding on small widths,
+  - narrower chart bars and tighter trade-row spacing.
+
+### Verification
+- `npx eslint 'components/ui/table.tsx' 'app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx' 'app/[locale]/(landing)/deals/compare/page.tsx' 'app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx' 'app/[locale]/(home)/components/ComparisonSection.tsx' 'app/[locale]/dashboard/components/dashboard-header.tsx' 'app/[locale]/(home)/components/CTA.tsx' 'app/[locale]/(home)/components/DashboardPreview.tsx'` passes with warnings only (no errors).
+- `npm run -s typecheck` passes (transient `.next/types/cache-life.d.ts` ENOENT occurred during route-types generation; wrapper retry succeeded).
+- `npm run build` passes end-to-end.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`), so mandatory sync cannot be executed here.
+
+## Current Session: SEO + public API classification consistency pass (2026-03-29)
+
+### Accomplishments
+- Fixed public API route classification in `proxy.ts`:
+  - moved `/api/og` to an exact segment-safe public path entry (no trailing-slash mismatch),
+  - explicitly marked `/api/email/unsubscribe` and `/api/csp-report` as public API routes.
+- Switched public API matching to `pathMatchesPrefix` to eliminate exact-vs-prefix drift in route classification.
+- Standardized metadata/hreflang behavior on remaining public pages:
+  - `app/[locale]/(landing)/community/page.tsx` now uses `generateMetadata` + `buildPublicMetadata`.
+  - `app/[locale]/(landing)/docs/page.tsx` now uses locale-aware metadata helpers and refreshed docs copy.
+  - `app/[locale]/(landing)/firm/[slug]/page.tsx` now emits locale alternates via `getLocaleAlternates`.
+  - `app/[locale]/teams/(landing)/page.tsx` now uses shared `buildPublicMetadata`.
+- Completed structured-data parity on deals landing:
+  - added `SoftwareApplication` schema,
+  - added conditional `FAQPage` schema from live FAQ data.
+- Updated deployment docs to reference `proxy.ts` (not `middleware.ts`) for security-header interception.
+
+### Verification
+- `npx eslint proxy.ts 'app/[locale]/(landing)/community/page.tsx' 'app/[locale]/(landing)/docs/page.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' 'app/[locale]/teams/(landing)/page.tsx' 'app/[locale]/(landing)/deals/page.tsx'` passes (warnings only).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`), so mandatory sync cannot be executed here.
+
 ## Current Session: Vercel prerender rescue (`PropFirm` table missing) (2026-03-29)
 
 ### Accomplishments

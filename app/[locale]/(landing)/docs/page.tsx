@@ -1,11 +1,21 @@
 import { Metadata } from 'next';
 import { setStaticParamsLocale } from "next-international/server";
 import Link from "next/link";
+import { buildPublicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-    title: 'Documentation | Qunt Edge',
-    description: 'Comprehensive guides and API references for the Qunt Edge clinical intelligence layer.',
-};
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    return buildPublicMetadata({
+      locale,
+      path: "/docs",
+      title: "Documentation | Qunt Edge",
+      description: "Guides and references for Qunt Edge trading journal, analytics workflows, and integrations.",
+    });
+}
 
 export default async function DocsPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
@@ -15,7 +25,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
         <div className="w-full py-20 px-4 sm:px-6 sm:py-24 lg:px-8">
             <header className="mb-12">
                 <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">Documentation</h1>
-                <p className="text-xl text-muted-foreground">Everything you need to master the clinical intelligence layer.</p>
+                <p className="text-xl text-muted-foreground">Everything you need to master Qunt Edge workflows.</p>
             </header>
 
             <div className="grid gap-8 md:grid-cols-2">

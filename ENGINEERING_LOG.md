@@ -4,6 +4,83 @@ This file tracks significant architectural changes, engineering insights, and cr
 
 ---
 
+### 2026-03-29: Full mobile optimization pass across App Router surfaces
+
+- **What changed:** Executed a mobile-first hardening pass focused on shared table primitives, dashboard header density, and the highest-impact landing data surfaces that were desktop-table biased.
+
+- **How we fixed that:**
+  - Hardened shared table defaults in `components/ui/table.tsx`:
+    - added `overscroll-x-contain` to table wrappers,
+    - reduced default table head/cell density on narrow screens while preserving desktop sizing at `sm+`.
+  - Fixed a real mobile compare-path gap:
+    - `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx` now renders card-based comparison content for `lg` and below, with the wide table preserved for desktop (`lg+`).
+    - `app/[locale]/(landing)/deals/compare/page.tsx` top stats now use `grid-cols-2 sm:grid-cols-3` to avoid compressed 3-up cards on 320px widths.
+  - Added leaderboard mobile fallback rendering:
+    - `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx` now includes mobile skeleton cards + mobile entry cards (`lg:hidden`) and keeps the existing wide table for desktop (`lg:block`).
+  - Added home comparison mobile fallback:
+    - `app/[locale]/(home)/components/ComparisonSection.tsx` now renders stacked comparison cards on mobile (`md:hidden`) and keeps the wide matrix table for larger screens.
+  - Reduced dashboard header crowding on mobile in `app/[locale]/dashboard/components/dashboard-header.tsx`:
+    - tightened small-screen spacing and title typography,
+    - reduced sidebar trigger footprint,
+    - moved widget controls into a dedicated mobile row to avoid top-row overflow pressure.
+  - Fixed CTA/button squeeze and preview density on home:
+    - `app/[locale]/(home)/components/CTA.tsx` now uses full-width responsive CTA behavior on small screens.
+    - `app/[locale]/(home)/components/DashboardPreview.tsx` now uses mobile-safe stat stacking, tighter paddings, and compact chart/trade row density.
+
+- **Key Files:**
+  - `components/ui/table.tsx`
+  - `app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx`
+  - `app/[locale]/(landing)/deals/compare/page.tsx`
+  - `app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx`
+  - `app/[locale]/(home)/components/ComparisonSection.tsx`
+  - `app/[locale]/dashboard/components/dashboard-header.tsx`
+  - `app/[locale]/(home)/components/CTA.tsx`
+  - `app/[locale]/(home)/components/DashboardPreview.tsx`
+  - `tasks/todo.md`
+  - `tasks/memory.md`
+  - `tasks/lessons.md`
+  - `AGENTS.md`
+
+- **Verification:**
+  - `npx eslint 'components/ui/table.tsx' 'app/[locale]/(landing)/deals/compare/components/firm-comparison-grid.tsx' 'app/[locale]/(landing)/deals/compare/page.tsx' 'app/[locale]/(landing)/leaderboard/components/leaderboard-table.tsx' 'app/[locale]/(home)/components/ComparisonSection.tsx' 'app/[locale]/dashboard/components/dashboard-header.tsx' 'app/[locale]/(home)/components/CTA.tsx' 'app/[locale]/(home)/components/DashboardPreview.tsx'` -> passed (warnings only).
+  - `npm run -s typecheck` -> passed (auto-retry handled transient `.next/types/cache-life.d.ts` ENOENT during regeneration).
+  - `npm run build` -> passed end-to-end.
+
+### 2026-03-29: SEO metadata consistency + proxy public API classification hardening
+
+- **What changed:** Applied a focused hardening pass to remove remaining metadata/hreflang drift and fix public API route misclassification edge cases in `proxy.ts`.
+
+- **How we fixed that:**
+  - Updated proxy public API classification to use segment-safe matching via `pathMatchesPrefix`.
+  - Added explicit public API allowlist entries for:
+    - `/api/og`
+    - `/api/email/unsubscribe`
+    - `/api/csp-report`
+  - Migrated remaining static metadata holdouts to shared SEO helpers:
+    - `app/[locale]/(landing)/community/page.tsx` now uses `generateMetadata` + `buildPublicMetadata`.
+    - `app/[locale]/(landing)/docs/page.tsx` now uses `generateMetadata` + `buildPublicMetadata`.
+    - `app/[locale]/(landing)/firm/[slug]/page.tsx` now uses `getLocaleAlternates` for canonical + hreflang.
+    - `app/[locale]/teams/(landing)/page.tsx` now uses `buildPublicMetadata`.
+  - Expanded deals page JSON-LD coverage:
+    - added `SoftwareApplication` schema.
+    - added conditional `FAQPage` schema from live FAQ data.
+  - Corrected deployment docs to reference `proxy.ts` (active interceptor) instead of `middleware.ts`.
+
+- **Key Files:**
+  - `proxy.ts`
+  - `app/[locale]/(landing)/community/page.tsx`
+  - `app/[locale]/(landing)/docs/page.tsx`
+  - `app/[locale]/(landing)/firm/[slug]/page.tsx`
+  - `app/[locale]/teams/(landing)/page.tsx`
+  - `app/[locale]/(landing)/deals/page.tsx`
+  - `docs/DEPLOYMENT_CHECKLIST.md`
+  - `AGENTS.md`
+
+- **Verification:**
+  - `npx eslint proxy.ts 'app/[locale]/(landing)/community/page.tsx' 'app/[locale]/(landing)/docs/page.tsx' 'app/[locale]/(landing)/firm/[slug]/page.tsx' 'app/[locale]/teams/(landing)/page.tsx' 'app/[locale]/(landing)/deals/page.tsx'` -> passed (warnings only).
+  - `npm run -s typecheck` -> passed.
+  - `npm run build` -> passed end-to-end.
+
 ### 2026-03-27: shadcn/ui v2 Migration — TypeScript Error Resolution + Tailwind Build Fix
 
 - **What changed:** Completed the shadcn v1→v2 component migration by resolving all resulting TypeScript errors and fixing the Tailwind v4 build failure.

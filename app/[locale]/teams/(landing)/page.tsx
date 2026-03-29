@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import TeamsPageClient from "./page-client";
-import { getSiteOrigin } from "@/lib/site-url";
+import { buildPublicMetadata } from "@/lib/seo";
 
-const SITE_ORIGIN = getSiteOrigin();
 const PAGE_PATH = "/teams";
 
 export async function generateMetadata({
@@ -11,32 +10,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
-
-  return {
+  return buildPublicMetadata({
+    locale,
+    path: PAGE_PATH,
     title: "Teams | Qunt Edge",
     description: "Manage trading teams with unified analytics, risk monitoring, and performance tracking. Perfect for prop firms and funds.",
-    openGraph: {
-      title: "Teams | Qunt Edge",
-      description: "Manage trading teams with unified analytics, risk monitoring, and performance tracking. Perfect for prop firms and funds.",
-      url: canonical,
-      siteName: "Qunt Edge",
-      locale: locale,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Teams | Qunt Edge",
-      description: "Manage trading teams with unified analytics, risk monitoring, and performance tracking. Perfect for prop firms and funds.",
-    },
-    alternates: {
-      canonical,
-      languages: {
-        'x-default': `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        'en': `${SITE_ORIGIN}/en${PAGE_PATH}`,
-      },
-    },
-  };
+  });
 }
 
 export default function TeamsPage() {

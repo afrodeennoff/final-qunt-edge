@@ -31,7 +31,10 @@ npm run test         # Run tests
 - **Deals data truthfulness**: in deals/catalogue server paths, do not synthesize fallback financial/profile metrics when DB is unavailable; return explicit empty/unavailable data instead.
 - **Deals API auth**: all `/api/deals/**` handlers must enforce route-level auth (session/JWT verification in handler), not only middleware checks.
 - **Proxy API classification**: classify public APIs via `isPublicApiRoute`; keep public cache headers limited to explicit read-safe paths in `PUBLIC_READ_API_PATHS`.
+- **Proxy public API allowlist**: keep intentionally unauthenticated endpoints explicitly listed in `PUBLIC_API_PATH_PREFIXES` (currently includes `/api/og`, `/api/email/unsubscribe`, `/api/csp-report`) and match via `pathMatchesPrefix` to avoid trailing-slash auth regressions.
+- **Public metadata consistency**: indexable public pages should use `buildPublicMetadata` or `getLocaleAlternates` to keep canonical + hreflang output consistent across locales.
 - **Marketing prerender safety**: server read helpers used by shared marketing layout surfaces (for example `server/prop-firms.ts` used by rolling banner/layout shell) must fail-soft on Prisma schema/connection mismatch and connection timeout errors, and should use schema-mismatch cooldown fallbacks where possible to avoid repeated failing DB attempts during static generation.
+- **Mobile table fallback requirement**: any route-level table with fixed min width (`min-w-[...]`) must include an explicit mobile/tablet fallback view (card/stack/list). Never hide the only data representation behind `lg+` visibility.
 
 ## Design System Architecture
 

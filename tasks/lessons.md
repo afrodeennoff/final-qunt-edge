@@ -4,6 +4,57 @@
 
 ---
 
+## NEW (2026-03-29): Wide comparison tables must never be the only rendered path below desktop breakpoints
+
+### Mistake
+Deals compare and leaderboard relied on wide table layouts while hiding table sections at smaller breakpoints, leaving cramped horizontal scroll or no comparison content for mobile users.
+
+### Root Cause
+Desktop-first table implementations were added without mandatory mobile/tablet fallback components, and breakpoint visibility (`hidden lg:block`) was not paired with an alternate render path.
+
+### Rule
+Any table requiring fixed minimum width (`min-w-[...]`) must provide an explicit card/stack fallback for sub-desktop breakpoints; never gate the only data view behind `lg+` visibility.
+
+### Example
+```tsx
+// BAD
+<div className="hidden lg:block">
+  <table className="min-w-[880px]">...</table>
+</div>
+
+// GOOD
+<div className="grid gap-3 lg:hidden">{/* mobile cards */}</div>
+<div className="hidden lg:block">
+  <table className="min-w-[880px]">...</table>
+</div>
+```
+
+---
+
+## NEW (2026-03-29): Public API allowlists must use segment-safe matching and explicit unauthenticated route entries
+
+### Mistake
+Proxy public API matching relied on mixed exact/trailing-slash checks (`/api/og/`), so `/api/og` could be misclassified as private and routed into auth checks. Public token/report endpoints (`/api/email/unsubscribe`, `/api/csp-report`) were also missing from the allowlist.
+
+### Root Cause
+Route classification mixed exact-string and prefix-only logic, and the public API list was not treated as a strict source of truth for all intentionally unauthenticated API endpoints.
+
+### Rule
+For proxy route classification, define all public API endpoints in `PUBLIC_API_PATH_PREFIXES` and evaluate them with segment-safe matching (`pathMatchesPrefix`) so exact and nested paths cannot diverge by trailing slash.
+
+### Example
+```ts
+// BAD
+const PUBLIC_API_PATH_PREFIXES = ["/api/og/"]
+pathname === route || pathname.startsWith(route)
+
+// GOOD
+const PUBLIC_API_PATH_PREFIXES = ["/api/og", "/api/email/unsubscribe", "/api/csp-report"]
+PUBLIC_API_PATH_PREFIXES.some((prefix) => pathMatchesPrefix(pathname, prefix))
+```
+
+---
+
 ## NEW (2026-03-29): Shared layout DB reads must be fail-soft during prerender/export
 
 ### Mistake

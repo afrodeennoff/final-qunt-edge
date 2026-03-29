@@ -179,7 +179,9 @@ const PUBLIC_READ_API_PATHS = new Set<string>([
 ])
 const PUBLIC_API_PATH_PREFIXES = [
   "/api/health",
-  "/api/og/",
+  "/api/og",
+  "/api/email/unsubscribe",
+  "/api/csp-report",
   "/api/auth/callback",
   "/api/whop/webhook",
   "/api/tradovate/auth",
@@ -249,13 +251,7 @@ function isPublicReadApiRoute(pathname: string): boolean {
 }
 
 function isPublicApiRoute(pathname: string): boolean {
-  return PUBLIC_API_PATH_PREFIXES.some((route) => {
-    if (route.endsWith('/')) {
-      return pathname.startsWith(route)
-    }
-
-    return pathname === route
-  })
+  return PUBLIC_API_PATH_PREFIXES.some((prefix) => pathMatchesPrefix(pathname, prefix))
 }
 
 function isPrivateApiRoute(pathname: string): boolean {

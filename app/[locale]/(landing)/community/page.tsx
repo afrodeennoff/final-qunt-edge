@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getPosts } from '@/app/[locale]/(landing)/actions/community'
 import { PostList } from './components/post-list'
 import { CreatePost } from './components/create-post'
@@ -5,10 +6,20 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { getI18n } from '@/locales/server'
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
+import { buildPublicMetadata } from '@/lib/seo'
 
-export const metadata = {
-  title: 'Community | Qunt Edge',
-  description: 'Join the Qunt Edge community of traders.',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  return buildPublicMetadata({
+    locale,
+    path: "/community",
+    title: "Community | Qunt Edge",
+    description: "Join the Qunt Edge community of traders.",
+  })
 }
 
 export default async function CommunityPage() {
