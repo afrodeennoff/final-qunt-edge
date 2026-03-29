@@ -31,6 +31,29 @@ try {
 
 ---
 
+## NEW (2026-03-29): Prisma unavailable guards must include timeout-based connection failures
+
+### Mistake
+Prisma guards handled schema mismatch and basic connection errors (`P1001`, `ECONNREFUSED`) but missed timeout-only failures (`timeout exceeded when trying to connect`), which still crashed prerender.
+
+### Root Cause
+Guard logic relied too heavily on error codes; some Prisma connection failures surface only via message text without expected error codes.
+
+### Rule
+When implementing fail-soft Prisma read paths for build/prerender surfaces, include timeout message signatures in unavailable-error detection and verify with real build logs.
+
+### Example
+```ts
+return (
+  code === 'P1001' ||
+  code === 'ECONNREFUSED' ||
+  message.includes('timeout exceeded when trying to connect') ||
+  message.includes('timed out when trying to connect')
+)
+```
+
+---
+
 ## NEW (2026-03-29): Private API auth cannot rely on middleware bearer presence
 
 ### Mistake

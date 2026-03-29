@@ -10,6 +10,9 @@
   - `listPropFirms` now returns safe fallback rows on unavailable schema/db errors
   - `listPropFirmBannerItems` now returns safe fallback banner items on unavailable schema/db errors
   - `getPropFirmBySlug` now returns `null` on unavailable schema/db errors
+- Follow-up hardening from second Vercel run:
+  - expanded unavailable detection to include connection timeout signatures
+  - added schema-mismatch cooldown fallback (`withPrismaSchemaMismatchFallback`) for banner/slug read paths to avoid repeated failing DB calls during prerender.
 - Updated living docs and workflow notes for this failure mode in:
   - `tasks/todo.md`
   - `tasks/lessons.md`

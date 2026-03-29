@@ -4,7 +4,7 @@ import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
-import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 
 const PROP_FIRMS_CACHE_LIFETIME = {
   stale: 3_600,
@@ -29,7 +29,9 @@ function isPropFirmDataUnavailableError(error: unknown): boolean {
     message.includes('attempted to access prisma.') ||
     message.includes('prisma missing connection proxy') ||
     message.includes('econnrefused') ||
-    message.includes('can\'t reach database server')
+    message.includes('can\'t reach database server') ||
+    message.includes('timeout exceeded when trying to connect') ||
+    message.includes('timed out when trying to connect')
   )
 }
 
@@ -123,40 +125,46 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
   }
 
   try {
-    const now = new Date()
+    return await withPrismaSchemaMismatchFallback(
+      'prop-firms-banner-items',
+      async () => {
+        const now = new Date()
 
-    const firms = await prisma.propFirm.findMany({
-      where: { isActive: true },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        coupons: {
-          where: {
-            isActive: true,
-            OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
-          },
-          orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
-          take: 1,
+        const firms = await prisma.propFirm.findMany({
+          where: { isActive: true },
           select: {
-            code: true,
-            discountPercent: true,
+            id: true,
+            name: true,
+            slug: true,
+            coupons: {
+              where: {
+                isActive: true,
+                OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+              },
+              orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
+              take: 1,
+              select: {
+                code: true,
+                discountPercent: true,
+              },
+            },
           },
-        },
-      },
-      orderBy: { name: 'asc' },
-    })
+          orderBy: { name: 'asc' },
+        })
 
-    return firms.map((firm) => {
-      const badge = toBannerBadge(firm.coupons[0])
-      return {
-        id: firm.id,
-        firmName: firm.name,
-        firmSlug: firm.slug,
-        badge: badge.badge,
-        type: badge.type,
-      }
-    })
+        return firms.map((firm) => {
+          const badge = toBannerBadge(firm.coupons[0])
+          return {
+            id: firm.id,
+            firmName: firm.name,
+            firmSlug: firm.slug,
+            badge: badge.badge,
+            type: badge.type,
+          }
+        })
+      },
+      fallbackItems
+    )
   } catch (error) {
     if (!isPropFirmDataUnavailableError(error)) {
       throw error
@@ -180,14 +188,19 @@ const _getPropFirmBySlug = async (slug: string) => {
   }
 
   try {
-    return await prisma.propFirm.findUnique({
-      where: { slug },
-      include: {
-        coupons: { where: { isActive: true } },
-        reviews: { orderBy: { createdAt: 'desc' }, take: 20 },
-        _count: { select: { reviews: true, coupons: true } },
-      },
-    })
+    return await withPrismaSchemaMismatchFallback(
+      `prop-firms-by-slug-${slug}`,
+      async () =>
+        prisma.propFirm.findUnique({
+          where: { slug },
+          include: {
+            coupons: { where: { isActive: true } },
+            reviews: { orderBy: { createdAt: 'desc' }, take: 20 },
+            _count: { select: { reviews: true, coupons: true } },
+          },
+        }),
+      null
+    )
   } catch (error) {
     if (!isPropFirmDataUnavailableError(error)) {
       throw error

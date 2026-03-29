@@ -3264,3 +3264,15 @@ Generating route types...
     - `getPropFirmBySlug` now returns `null` on schema/connection mismatch.
 - **Key Files:** `server/prop-firms.ts`, `AGENTS.md`, `tasks/todo.md`, `tasks/memory.md`, `tasks/lessons.md`.
 - **Verification:** `npx eslint server/prop-firms.ts` (warnings only), `npm run -s typecheck`, `npm run build`.
+
+### 2026-03-29: Vercel Build Rescue Follow-Up — Connection Timeout Guarding
+- **What changed:** Extended the same `server/prop-firms.ts` guardrail to catch timeout-only Prisma connection failures and reduce repeated failing attempts during prerender.
+- **What I want:** Builds should continue with deterministic fallback output even when upstream DB connectivity degrades from schema mismatch into connection timeouts.
+- **What I don't want:** intermittent `timeout exceeded when trying to connect` errors escaping fallback logic and terminating static export.
+- **How we fixed that:**
+  - Added timeout message signatures to unavailable detection:
+    - `timeout exceeded when trying to connect`
+    - `timed out when trying to connect`
+  - Added `withPrismaSchemaMismatchFallback` cooldown wrappers for banner/slug reads so repeated schema-mismatch requests are short-circuited to fallback values during static generation.
+- **Key Files:** `server/prop-firms.ts`, `AGENTS.md`, `tasks/todo.md`, `tasks/memory.md`, `tasks/lessons.md`.
+- **Verification:** `npx eslint server/prop-firms.ts` (warnings only), `npm run -s typecheck`, `npm run build`.
