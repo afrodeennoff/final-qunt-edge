@@ -1,3 +1,5 @@
+'use client'
+
 import { TrendingUp, TrendingDown } from 'lucide-react'
 
 export default function DashboardPreview() {
@@ -7,79 +9,77 @@ export default function DashboardPreview() {
     { label: 'Profit Factor', value: '2.34', change: '+0.12', positive: true },
   ]
 
-  // Sample bar chart data
   const bars = [65, 72, 68, 85, 78, 92, 88, 95, 82, 100, 94, 98]
 
   return (
-    <div className="relative mx-auto mt-12 max-w-5xl px-2 sm:px-4">
-      {/* Browser Chrome */}
-      <div className="overflow-hidden rounded-t-xl border border-border border-b-0 bg-card shadow-2xl shadow-primary/10">
-        {/* Window Controls */}
-        <div className="flex items-center gap-2 border-b border-border bg-input px-3 py-3 sm:px-4">
+    <div className="relative mx-auto max-w-5xl px-2 sm:px-4">
+      <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 backdrop-blur-sm">
+        <div className="flex items-center gap-2 border-b border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-1))] px-3 py-3 sm:px-4">
           <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-destructive" />
-            <div className="w-3 h-3 rounded-full bg-warning" />
-            <div className="w-3 h-3 rounded-full bg-success" />
+            <div className="w-3 h-3 rounded-full bg-destructive/80" />
+            <div className="w-3 h-3 rounded-full bg-warning/80" />
+            <div className="w-3 h-3 rounded-full bg-success/80" />
           </div>
           <div className="flex min-w-0 flex-1 justify-center">
-            <div className="hidden max-w-[220px] truncate rounded bg-card px-3 py-1 font-mono text-xs text-muted-foreground sm:block">
+            <div className="hidden max-w-[220px] truncate rounded bg-[hsl(var(--mk-surface)/0.7)] px-3 py-1 font-mono text-[0.7rem] text-muted-foreground/60 sm:block">
               app.quntedge.com/dashboard
             </div>
           </div>
-          <div className="h-5 w-10 rounded bg-card/70 sm:w-16" />
+          <div className="h-5 w-10 rounded bg-[hsl(var(--mk-surface)/0.5)] sm:w-16" />
         </div>
 
-        {/* Dashboard Content */}
-        <div className="space-y-4 p-3 sm:p-6">
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+        <div className="space-y-3 p-3 sm:p-5">
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-lg border border-border bg-input p-3 sm:p-4"
+                className="rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4"
               >
-                <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
-                <p className="text-xl font-semibold text-foreground sm:text-2xl">{stat.value}</p>
+                <p className="text-[0.68rem] text-muted-foreground/50 uppercase tracking-wider mb-1">
+                  {stat.label}
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground tabular-nums font-mono">
+                  {stat.value}
+                </p>
                 <div className="flex items-center gap-1 mt-1">
                   {stat.positive ? (
                     <TrendingUp className="w-3 h-3 text-success" />
                   ) : (
                     <TrendingDown className="w-3 h-3 text-destructive" />
                   )}
-                  <span className="text-xs text-success">{stat.change}</span>
+                  <span className="text-[0.72rem] font-medium text-success tabular-nums">
+                    {stat.change}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Chart Area */}
-          <div className="relative h-44 overflow-hidden rounded-lg border border-border bg-input sm:h-48">
-            {/* Grid lines */}
+          <div className="relative h-40 overflow-hidden rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
             <div className="absolute inset-0 grid grid-cols-12">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="border-r border-border/50" />
+                <div key={i} className="border-r border-[hsl(var(--mk-border)/0.15)]" />
               ))}
             </div>
 
-            {/* Bars */}
             <div className="absolute inset-0 flex items-end justify-around px-2 pb-3 sm:px-4 sm:pb-4">
               {bars.map((height, i) => (
                 <div
                   key={i}
-                  className="w-4 rounded-t-sm bg-gradient-to-t from-primary to-primary/50 sm:w-6"
+                  className="w-3.5 rounded-t bg-gradient-to-t from-primary/80 to-primary/30 sm:w-5"
                   style={{ height: `${height}%` }}
                 />
               ))}
             </div>
 
-            {/* Scanner Line Animation */}
-            <div className="absolute inset-y-0 w-0.5 bg-primary animate-scan shadow-[0_0_10px_var(--primary)]" />
+            <div className="absolute inset-y-0 w-px bg-primary/60 animate-scan shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
           </div>
 
-          {/* Recent Trades */}
-          <div className="rounded-lg border border-border bg-input p-3 sm:p-4">
-            <p className="text-xs text-muted-foreground mb-3">Recent Trades</p>
-            <div className="space-y-2">
+          <div className="rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4">
+            <p className="text-[0.68rem] text-muted-foreground/50 uppercase tracking-wider mb-3">
+              Recent Trades
+            </p>
+            <div className="space-y-2.5">
               {[
                 { symbol: 'ES', side: 'Long', pnl: '+$420', time: '10:32' },
                 { symbol: 'NQ', side: 'Short', pnl: '-$180', time: '10:45' },
@@ -90,20 +90,22 @@ export default function DashboardPreview() {
                   className="flex items-center justify-between text-sm"
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-mono text-foreground">{trade.symbol}</span>
-                    <span className="text-muted-foreground text-xs sm:text-sm">{trade.side}</span>
+                    <span className="font-mono font-medium text-foreground text-[0.85rem]">
+                      {trade.symbol}
+                    </span>
+                    <span className="text-muted-foreground/50 text-xs">{trade.side}</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span
                       className={
                         trade.pnl.startsWith('+')
-                          ? 'text-success'
-                          : 'text-destructive'
+                          ? 'text-success font-medium tabular-nums'
+                          : 'text-destructive font-medium tabular-nums'
                       }
                     >
                       {trade.pnl}
                     </span>
-                    <span className="text-muted-foreground text-xs">{trade.time}</span>
+                    <span className="text-muted-foreground/40 text-xs tabular-nums">{trade.time}</span>
                   </div>
                 </div>
               ))}

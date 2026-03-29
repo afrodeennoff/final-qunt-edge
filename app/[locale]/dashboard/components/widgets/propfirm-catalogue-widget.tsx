@@ -9,6 +9,20 @@ import { Building2, Users, DollarSign } from "lucide-react"
 import { getPropfirmCatalogueData } from "@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue"
 import type { PropfirmCatalogueStats } from "@/app/[locale]/(landing)/propfirms/actions/types"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+
+function fallbackSlugifyFirmName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function getFirmSlugFromName(name: string): string {
+  const mapped = getVerifiedPropFirmProfileByName(name)?.slug
+  return mapped ?? fallbackSlugifyFirmName(name)
+}
 
 export default function PropfirmCatalogueWidget() {
     const t = useI18n()
@@ -26,7 +40,7 @@ export default function PropfirmCatalogueWidget() {
                 const { stats: fetchedStats } = await getPropfirmCatalogueData('allTime')
                 setStats(fetchedStats)
             } catch (error) {
-                console.error("Failed to fetch propfirm catalogue:", error)
+                console.warn("Failed to fetch propfirm catalogue:", error)
             } finally {
                 setIsLoading(false)
             }
@@ -46,7 +60,7 @@ export default function PropfirmCatalogueWidget() {
 {sortedStats.map((stat) => (
                          <Link
                              key={stat.propfirmName}
-                             href={`/${locale}/firm/${stat.propfirmName.toLowerCase().replace(/\s+/g, '-')}`}
+                             href={`/${locale}/firm/${getFirmSlugFromName(stat.propfirmName)}`}
                              className="block"
                          >
                             <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors cursor-pointer">
