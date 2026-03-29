@@ -43,14 +43,14 @@ const Block = ({
     <HoverCardPrimitives.Root open={open} onOpenChange={setOpen} openDelay={0} closeDelay={0}>
       <HoverCardPrimitives.Trigger onClick={() => setOpen(true)} asChild>
         <div
-          className="size-full overflow-hidden px-[0.5px] transition first:rounded-l-[4px] first:pl-0 last:rounded-r-[4px] last:pr-0 sm:px-px cursor-pointer"
+          className="size-full overflow-hidden px-[0.5px] transition first:rounded-l-sm first:pl-0 last:rounded-r-sm last:pr-0 sm:px-px cursor-pointer"
           onMouseEnter={() => onHover(index)}
           onMouseLeave={() => onHover(null)}
           onClick={() => onClick(index)}
         >
           <div
             className={cn(
-              "size-full rounded-[1px] transition-all duration-300",
+              "size-full rounded-sm transition-all duration-300",
               blockColor,
               hoverEffect ? "hover:opacity-80" : "",
               shouldAnimate && "animate-pulse",
