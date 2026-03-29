@@ -3250,3 +3250,17 @@ Generating route types...
   - Fixed admin prerender request-context issues via lazy request-id generation and request-boundary handling.
 - **Key Files:** `app/api/deals/route.ts`, `app/api/deals/unified/route.ts`, `app/api/email/unsubscribe/route.ts`, `app/api/health/route.ts`, `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts`, `server/authz.ts`, `app/[locale]/admin/coupons/page.tsx`, `app/api/admin/reports/route.ts`, `app/api/behavior/insights/route.ts`, `lib/mdx.ts`.
 - **Verification:** targeted `npx eslint` on touched APIs/helpers (warnings only), `npx vitest run tests/api/deals-active.test.ts tests/api/deals-unified.test.ts tests/api/unsubscribe-route.test.ts`, `npm run -s typecheck`, `npm run build`.
+
+### 2026-03-29: Vercel Build Rescue — `PropFirm` Missing-Table Prerender Failure
+- **What changed:** Hardened `server/prop-firms.ts` read helpers to gracefully degrade when Prisma schema/data access is unavailable during prerender (including `P2021` missing-table errors).
+- **What I want:** Shared marketing-layout data reads must not crash static prerender/export when database schema is out-of-sync or temporarily unavailable.
+- **What I don't want:** public route builds failing because a shared banner/helper query throws on a missing table.
+- **How we fixed that:**
+  - Traced Vercel failure path: `/[locale]` prerender -> marketing layout shell -> `RollingAdBanner` -> `listPropFirmBannerItems()` -> unguarded `prisma.propFirm.findMany()`.
+  - Added unavailable-error classification and structured fallback logging in `server/prop-firms.ts`.
+  - Wrapped read paths with fail-soft behavior:
+    - `listPropFirms` now returns fallback rows on schema/connection mismatch
+    - `listPropFirmBannerItems` now returns fallback banner items on schema/connection mismatch
+    - `getPropFirmBySlug` now returns `null` on schema/connection mismatch.
+- **Key Files:** `server/prop-firms.ts`, `AGENTS.md`, `tasks/todo.md`, `tasks/memory.md`, `tasks/lessons.md`.
+- **Verification:** `npx eslint server/prop-firms.ts` (warnings only), `npm run -s typecheck`, `npm run build`.

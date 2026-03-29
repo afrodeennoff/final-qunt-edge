@@ -1,5 +1,29 @@
 # Session Memory (2026-03-28)
 
+## Current Session: Vercel prerender rescue (`PropFirm` table missing) (2026-03-29)
+
+### Accomplishments
+- Reproduced root cause from Vercel logs: prerender for `/fr` failed via shared marketing layout banner path (`RollingAdBanner -> listPropFirmBannerItems -> prisma.propFirm.findMany`) when database schema lacked `public.PropFirm` (`P2021`).
+- Hardened `server/prop-firms.ts` read helpers with fail-soft behavior for schema/connection mismatch:
+  - added unavailable-error classifier (`isPropFirmDataUnavailableError`)
+  - added structured fallback logging (`logPropFirmFallback`)
+  - `listPropFirms` now returns safe fallback rows on unavailable schema/db errors
+  - `listPropFirmBannerItems` now returns safe fallback banner items on unavailable schema/db errors
+  - `getPropFirmBySlug` now returns `null` on unavailable schema/db errors
+- Updated living docs and workflow notes for this failure mode in:
+  - `tasks/todo.md`
+  - `tasks/lessons.md`
+  - `ENGINEERING_LOG.md`
+  - `AGENTS.md`
+
+### Verification
+- `npx eslint server/prop-firms.ts` passes (warning-only baseline).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+
+### Blockers
+- `/init` command remains unavailable in this shell (`zsh: no such file or directory: /init`), so mandatory sync step cannot be executed here.
+
 ## Current Session: Thread closeout + publish (2026-03-29)
 
 ### Accomplishments

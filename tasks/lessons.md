@@ -1,6 +1,33 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-03-28
+**Last Updated:** 2026-03-29
+
+---
+
+## NEW (2026-03-29): Shared layout DB reads must be fail-soft during prerender/export
+
+### Mistake
+A shared marketing layout read path (`RollingAdBanner -> server/prop-firms`) executed `prisma.propFirm.findMany()` without guarding schema mismatch/unavailable DB errors, causing Vercel prerender to fail on `/fr` with `P2021` (`public.PropFirm` missing).
+
+### Root Cause
+The helper assumed that `hasConfiguredDatabaseConnection` was sufficient for safety and did not treat runtime schema drift (`P2021`/missing table) as an expected degraded-mode condition for public prerender paths.
+
+### Rule
+Any server read helper used by shared layouts/public prerender surfaces must catch Prisma schema/connection availability failures and return deterministic fallback/null values instead of throwing.
+
+### Example
+```ts
+// BAD
+const firms = await prisma.propFirm.findMany(...)
+
+// GOOD
+try {
+  return await prisma.propFirm.findMany(...)
+} catch (error) {
+  if (!isUnavailablePrismaError(error)) throw error
+  return fallbackRows
+}
+```
 
 ---
 

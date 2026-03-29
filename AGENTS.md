@@ -31,6 +31,7 @@ npm run test         # Run tests
 - **Deals data truthfulness**: in deals/catalogue server paths, do not synthesize fallback financial/profile metrics when DB is unavailable; return explicit empty/unavailable data instead.
 - **Deals API auth**: all `/api/deals/**` handlers must enforce route-level auth (session/JWT verification in handler), not only middleware checks.
 - **Proxy API classification**: classify public APIs via `isPublicApiRoute`; keep public cache headers limited to explicit read-safe paths in `PUBLIC_READ_API_PATHS`.
+- **Marketing prerender safety**: server read helpers used by shared marketing layout surfaces (for example `server/prop-firms.ts` used by rolling banner/layout shell) must fail-soft on Prisma schema/connection mismatch and return safe fallback/null instead of throwing during prerender.
 
 ## Design System Architecture
 

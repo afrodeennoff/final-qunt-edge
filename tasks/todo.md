@@ -1,3 +1,23 @@
+## Task: Vercel prerender rescue — missing `PropFirm` table (2026-03-29)
+
+- [x] Trace the failing prerender call chain from Vercel logs and identify the unguarded `prisma.propFirm.findMany()` path.
+- [x] Patch `server/prop-firms.ts` read helpers to fail-soft on Prisma schema/connection mismatch (`P2021`/schema drift/unavailable DB) instead of crashing build.
+- [x] Verify with targeted lint, typecheck, and full build.
+- [x] Update project logs (`tasks/memory.md`, `tasks/lessons.md`, `ENGINEERING_LOG.md`, `AGENTS.md`) with root cause and new guardrail.
+
+Verification:
+- `npx eslint server/prop-firms.ts` passes (warnings only, no errors).
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end.
+
+## Review
+- Root cause: shared marketing layout includes `RollingAdBanner`, which calls `listPropFirmBannerItems()`; that code path previously executed `prisma.propFirm.findMany()` without a schema/unavailable guard, so `P2021` during prerender aborted build (`/fr`).
+- Fix: added centralized unavailable-error detection + guarded fallbacks in:
+  - `listPropFirms` (fallback list),
+  - `listPropFirmBannerItems` (fallback banner items),
+  - `getPropFirmBySlug` (null fallback).
+- Result: missing-table/schema-mismatch environments now degrade safely instead of failing prerender/export.
+
 ## Task: Thread closeout (commit + push + log sync) (2026-03-29)
 
 - [x] Reconcile thread logs so `ENGINEERING_LOG.md` covers all completed workstreams from this thread (SEO/deploy, rescue/auth/data truth, runtime token cleanup, spotlight/prerender hardening).
