@@ -4,7 +4,12 @@ import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { assertAdminAccess } from '@/server/authz'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
-import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
+import {
+  isPrismaOperationCoolingDown,
+  isPrismaSchemaMismatchError,
+  markPrismaOperationSchemaMismatch,
+  withPrismaSchemaMismatchFallback,
+} from '@/lib/prisma-guard'
 
 const PROP_FIRMS_CACHE_LIFETIME = {
   stale: 3_600,
@@ -13,6 +18,7 @@ const PROP_FIRMS_CACHE_LIFETIME = {
 } as const
 
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
+const PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY = 'prop-firms-banner-items'
 
 function isPropFirmDataUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
@@ -124,9 +130,13 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
     return fallbackItems
   }
 
+  if (isPrismaOperationCoolingDown(PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY)) {
+    return fallbackItems
+  }
+
   try {
     return await withPrismaSchemaMismatchFallback(
-      'prop-firms-banner-items',
+      PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY,
       async () => {
         const now = new Date()
 
@@ -170,6 +180,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
       throw error
     }
 
+    markPrismaOperationSchemaMismatch(PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY)
     logPropFirmFallback('listPropFirmBannerItems', error)
     return fallbackItems
   }

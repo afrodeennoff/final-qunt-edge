@@ -9,7 +9,11 @@ import {
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 import { getVerifiedPropFirmProfileByName, getVerifiedPropFirmProfileBySlug } from '@/lib/prop-firms/verified-profiles'
-import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import {
+  isPrismaOperationCoolingDown,
+  isPrismaSchemaMismatchError,
+  markPrismaOperationSchemaMismatch,
+} from '@/lib/prisma-guard'
 
 export type MarketType = 'Futures' | 'Forex' | 'Crypto'
 export type TradingPlatform = 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade'
@@ -310,7 +314,9 @@ function isPrismaUnavailableError(error: unknown): boolean {
     message.includes('attempted to access prisma.') ||
     message.includes('prisma missing connection proxy') ||
     message.includes('econnrefused') ||
-    message.includes('can\'t reach database server')
+    message.includes("can't reach database server") ||
+    message.includes('timeout exceeded when trying to connect') ||
+    message.includes('timed out when trying to connect')
   )
 }
 
@@ -409,6 +415,7 @@ const DEALS_CACHE_LIFETIME = {
 
 const DEALS_CACHE_TAG = 'deals'
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
+const DEALS_UNIFIED_FIRMS_COOLDOWN_KEY = 'deals-unified-firms'
 
 function mapSpotlightCategoryToMarket(category: PropFirmMatchSpotlight['category']): MarketType {
   return category === 'CFD' ? 'Forex' : 'Futures'
@@ -542,6 +549,10 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
     return []
   }
 
+  if (isPrismaOperationCoolingDown(DEALS_UNIFIED_FIRMS_COOLDOWN_KEY)) {
+    return []
+  }
+
   const now = new Date()
   const catalogue = await getPropfirmCatalogueData('allTime')
   const catalogueMap = new Map(
@@ -587,6 +598,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       throw error
     }
 
+    markPrismaOperationSchemaMismatch(DEALS_UNIFIED_FIRMS_COOLDOWN_KEY)
     logDealsFallback('getUnifiedFirms', error)
     return []
   }

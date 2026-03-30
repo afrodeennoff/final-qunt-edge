@@ -1,6 +1,15 @@
 type AsyncOperation<T> = () => Promise<T>
 
-const schemaMismatchCooldowns = new Map<string, number>()
+const globalForPrismaGuard = globalThis as unknown as {
+  prismaGuardCooldowns: Map<string, number> | undefined
+}
+
+const schemaMismatchCooldowns =
+  globalForPrismaGuard.prismaGuardCooldowns ?? new Map<string, number>()
+
+if (!globalForPrismaGuard.prismaGuardCooldowns) {
+  globalForPrismaGuard.prismaGuardCooldowns = schemaMismatchCooldowns
+}
 
 const DEFAULT_COOLDOWN_MS = 5 * 60 * 1000
 
@@ -11,6 +20,7 @@ export function isPrismaSchemaMismatchError(error: unknown): boolean {
   const message = (maybeError.message ?? '').toLowerCase()
 
   return (
+    maybeError.code === 'P2021' ||
     maybeError.code === 'P2022' ||
     message.includes('does not exist in the current database') ||
     message.includes('column') && message.includes('does not exist')

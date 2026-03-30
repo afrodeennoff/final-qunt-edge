@@ -168,16 +168,17 @@ if (!connectionString) {
   const defaultPoolMax = isProduction ? (isNextBuildPhase ? 1 : 20) : 5
   const defaultPoolMin = isProduction ? 5 : 2
 
+  const maxPoolCap = isNextBuildPhase ? 1 : MAX_POOL_LIMIT
   const poolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
-    ? Math.min(parsedPoolMax, MAX_POOL_LIMIT)
+    ? Math.min(parsedPoolMax, maxPoolCap)
     : defaultPoolMax
 
   const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin > 0 && parsedPoolMin <= poolMax
     ? parsedPoolMin
-    : defaultPoolMin
+    : Math.min(defaultPoolMin, poolMax)
 
-  if (Number.isFinite(parsedPoolMax) && parsedPoolMax > MAX_POOL_LIMIT) {
-    console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${MAX_POOL_LIMIT}; using ${MAX_POOL_LIMIT}.`)
+  if (Number.isFinite(parsedPoolMax) && parsedPoolMax > maxPoolCap) {
+    console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${maxPoolCap}; using ${maxPoolCap}.`)
   }
 
   // Production-grade timeout settings
@@ -247,7 +248,7 @@ if (!connectionString) {
       const utilization = ((activeConnections / poolMax) * 100).toFixed(0)
 
       // Use logger.warn for production logging
-      if (isProduction) {
+      if (isProduction && !isNextBuildPhase) {
         logger.warn('[DB Pool] High connection usage', {
           active: activeConnections,
           max: poolMax,
