@@ -63,7 +63,7 @@ function AnimatedCounter({
     : Math.round(display).toLocaleString()
 
   return (
-    <span>
+    <span className="font-mono tabular-nums tracking-wider glow-number text-[oklch(0.95_0_0)]">
       {item.prefix}
       {formatted}
       {item.suffix}
@@ -79,22 +79,27 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="border-y border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.3)] py-16"
+      className="relative w-full overflow-hidden bg-[oklch(0.07_0_0/0.6)] backdrop-blur-md border-y border-[oklch(0.14_0_0/0.3)] py-6"
     >
       <div className="mx-auto grid max-w-[1360px] grid-cols-2 gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:gap-0 lg:px-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className="text-center">
-            <p className="text-3xl font-bold tabular-nums text-foreground sm:text-4xl [font-family:var(--home-display)]">
-              <AnimatedCounter
-                item={stat}
-                isInView={isInView}
-                prefersReduced={!!prefersReducedMotion}
-              />
-            </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.14em] text-muted-foreground/60 [font-family:var(--home-copy)]">
-              {stat.label}
-            </p>
-          </div>
+        {stats.map((stat, index) => (
+          <>
+            <div key={stat.label} className="text-center">
+              <p className="text-3xl font-bold tabular-nums text-foreground sm:text-4xl [font-family:var(--home-display)]">
+                <AnimatedCounter
+                  item={stat}
+                  isInView={isInView}
+                  prefersReduced={!!prefersReducedMotion}
+                />
+              </p>
+              <p className="mt-2 text-xs uppercase tracking-[0.14em] text-muted-foreground/60 [font-family:var(--home-copy)]">
+                {stat.label}
+              </p>
+            </div>
+            {index < stats.length - 1 && (
+              <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-transparent via-[oklch(0.55_0.22_264/0.3)] to-transparent" />
+            )}
+          </>
         ))}
       </div>
     </section>
