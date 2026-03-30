@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { User } from '@supabase/supabase-js'
 import { authSecurityConfig } from '@/lib/security/auth-config'
 import { checkAuthGuard, recordAuthFailure, recordAuthSuccess } from '@/lib/security/auth-attempts'
+import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 const PASSWORD_MIN_LENGTH = 8
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
@@ -60,6 +61,17 @@ function handleAuthError(error: unknown): never {
 }
 
 const GENERIC_AUTH_ERROR = 'Invalid credentials or verification required'
+const USER_SYNC_SELECT = {
+  id: true,
+  email: true,
+  language: true,
+} as const
+
+type UserSyncRecord = {
+  id: string
+  email: string
+  language?: string | null
+}
 
 function getExternalAuthErrorMessage(errorMessage: string): string {
   if (!authSecurityConfig.errorObfuscationEnabled) return errorMessage
@@ -476,10 +488,31 @@ export async function ensureUserInDatabase(
   };
 
   try {
+    const findUserByAuthIdCompat = async (authUserId: string): Promise<UserSyncRecord | null> => {
+      try {
+        return await prisma.user.findUnique({
+          where: { auth_user_id: authUserId },
+          select: USER_SYNC_SELECT,
+        })
+      } catch (error) {
+        if (!isPrismaSchemaMismatchError(error)) {
+          throw error
+        }
+
+        console.warn(
+          '[ensureUserInDatabase] WARNING: auth_user_id lookup hit schema mismatch; falling back to id lookup',
+          { authUserId }
+        )
+
+        return await prisma.user.findUnique({
+          where: { id: authUserId },
+          select: USER_SYNC_SELECT,
+        })
+      }
+    }
+
     // First try to find user by auth_user_id
-    const existingUserByAuthId = await prisma.user.findUnique({
-      where: { auth_user_id: user.id },
-    });
+    const existingUserByAuthId = await findUserByAuthIdCompat(user.id)
 
     // If user exists by auth_user_id, update fields if needed
     if (existingUserByAuthId) {
@@ -490,12 +523,15 @@ export async function ensureUserInDatabase(
         try {
           const updatedUser = await prisma.user.update({
             where: {
-              auth_user_id: user.id // Always use auth_user_id as the unique identifier
+              id: existingUserByAuthId.id
             },
             data: {
-              email: shouldUpdateEmail ? (user.email || existingUserByAuthId.email) : existingUserByAuthId.email,
-              language: shouldUpdateLanguage ? (locale as string) : existingUserByAuthId.language
+              ...(shouldUpdateEmail
+                ? { email: user.email || existingUserByAuthId.email }
+                : {}),
+              ...(shouldUpdateLanguage ? { language: locale as string } : {}),
             },
+            select: USER_SYNC_SELECT,
           });
         await ensureDashboardLayoutBackfill(user.id);
         return updatedUser;
@@ -514,9 +550,14 @@ export async function ensureUserInDatabase(
     if (user.email) {
       const existingUserByEmail = await prisma.user.findUnique({
         where: { email: user.email },
+        select: { id: true },
       });
 
-      if (existingUserByEmail && existingUserByEmail.auth_user_id !== user.id) {
+      const isDifferentUser =
+        !!existingUserByEmail &&
+        existingUserByEmail.id !== user.id
+
+      if (isDifferentUser) {
         await signOutSilently();
         throw new Error('Account conflict: Email already associated with different authentication method');
       }
@@ -531,6 +572,7 @@ export async function ensureUserInDatabase(
           id: user.id,
           language: locale || 'en'
         },
+        select: USER_SYNC_SELECT,
       });
 
       // Create default dashboard layout for new user unless explicitly skipped
@@ -728,7 +770,13 @@ export async function updateUserLanguage(locale: string): Promise<{ updated: boo
     return { updated: false }
   }
 
-  const existing = await prisma.user.findUnique({ where: { auth_user_id: user.id } })
+  const existing = await prisma.user.findUnique({
+    where: { auth_user_id: user.id },
+    select: {
+      id: true,
+      language: true,
+    },
+  })
   if (!existing) {
     return { updated: false }
   }

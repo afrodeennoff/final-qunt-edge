@@ -4,6 +4,31 @@
 
 ---
 
+## NEW (2026-03-31): Never use full-row Prisma user reads in auth sync paths
+
+### Mistake
+`ensureUserInDatabase` used `prisma.user.findUnique/update/create` without explicit `select`, so Prisma attempted to read all `User` columns. In drifted DBs, missing optional/new columns triggered `P2022` and broke auth callback.
+
+### Root Cause
+Auth sync assumed schema parity and relied on Prisma’s default full-row materialization instead of selecting only required fields.
+
+### Rule
+In auth-critical `User` sync/read paths, always use explicit minimal `select` projections (`id`, `email`, `language` or smaller). Add compatibility fallback for `auth_user_id` lookups when schema mismatch is detected.
+
+### Example
+```ts
+// BAD
+await prisma.user.findUnique({ where: { auth_user_id: user.id } })
+
+// GOOD
+await prisma.user.findUnique({
+  where: { auth_user_id: user.id },
+  select: { id: true, email: true, language: true },
+})
+```
+
+---
+
 ## NEW (2026-03-30): motion.tr does NOT exist in framer-motion v11 — use motion('tr') factory
 
 ### Mistake
