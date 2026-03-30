@@ -1,5 +1,6 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { ButtonV2 } from "@/components/ui/v2"
 import { useI18n } from "@/locales/client"
 import { EmotionSelector } from "./emotion-selector"
@@ -7,7 +8,12 @@ import { EmotionGauge } from "./emotion-gauge"
 import { DayTagSelector } from "./day-tag-selector"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { Trade } from "@/lib/data-types"
-import { TiptapEditor } from "@/components/tiptap-editor"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const TiptapEditor = dynamic(
+  () => import("@/components/tiptap-editor").then((m) => ({ default: m.TiptapEditor })),
+  { ssr: false, loading: () => <Skeleton className="h-[400px] w-full" /> }
+)
 
 interface JournalingProps {
   content: string

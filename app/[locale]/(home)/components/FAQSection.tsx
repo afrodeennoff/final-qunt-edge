@@ -54,33 +54,38 @@ const faqs: FAQItem[] = [
 
 function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
-    <Card className="overflow-hidden rounded-2xl border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.7)]">
-      <button
-        onClick={onToggle}
-        className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.3)]"
-        aria-expanded={isOpen}
-      >
-        <span className="pr-4 text-sm font-semibold [font-family:var(--home-display)]">{item.question}</span>
-        <ChevronDown
+    <div className="relative group">
+      {/* Left accent bar — visible when expanded */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-[oklch(0.55_0.22_264)] opacity-0 group-data-[state=open]:opacity-100 transition-opacity duration-200" />
+      <Card className="overflow-hidden rounded-xl border-[oklch(0.14_0_0/0.5)] bg-[oklch(0.07_0_0)]">
+        <button
+          onClick={onToggle}
+          className="flex flex-1 w-full items-center justify-between gap-4 p-4 text-left rounded-xl transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.8)]"
+          aria-expanded={isOpen}
+          data-state={isOpen ? 'open' : 'closed'}
+        >
+          <span className="pr-4 text-sm font-semibold [font-family:var(--home-display)]">{item.question}</span>
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 shrink-0 text-[oklch(0.55_0.22_264)] transition-transform duration-200',
+              isOpen && 'rotate-180'
+            )}
+          />
+        </button>
+        <div
           className={cn(
-            'h-5 w-5 shrink-0 text-foreground/80 transition-transform duration-200',
-            isOpen && 'rotate-180'
+            'grid transition-all duration-200',
+            isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
           )}
-        />
-      </button>
-      <div
-        className={cn(
-          'grid transition-all duration-200',
-          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        )}
-      >
-        <div className="overflow-hidden">
-          <CardContent className="border-t border-[hsl(var(--mk-border)/0.28)] p-5 pt-4">
-            <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{item.answer}</p>
-          </CardContent>
+        >
+          <div className="overflow-hidden">
+            <CardContent className="border-t border-[oklch(0.14_0_0/0.4)] p-4 pt-3">
+              <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{item.answer}</p>
+            </CardContent>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   )
 }
 

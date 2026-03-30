@@ -56,6 +56,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
     experimental: {
       ...(cpus ? { cpus } : {}),
       // Optimize package imports for better tree shaking
+      // Each package below gets optimized module resolution + dead code elimination
       optimizePackageImports: [
         'recharts',
         '@tanstack/react-table',
@@ -65,6 +66,19 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'lucide-react',
         'framer-motion',
         'decimal.js',
+        // Form state — used in auth, admin, community pages
+        'react-hook-form',
+        // UI primitives — Dialog, Dropdown, Select, Popover used in 10+ components
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-select',
+        '@radix-ui/react-popover',
+        '@radix-ui/react-tooltip',
+        // Drag-and-drop — dashboard widget canvas, accounts table
+        '@dnd-kit/core',
+        // CVA + tailwind-merge — used by every component with variants
+        'class-variance-authority',
+        'tailwind-merge',
       ],
     },
     turbopack: {
@@ -85,7 +99,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
       maximumRedirects: 0,
       deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
       imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-      qualities: [50, 65, 75, 85],
+      qualities: [50, 65, 75, 85, 90],
     },
     // Reduce logging in production
     logging: {

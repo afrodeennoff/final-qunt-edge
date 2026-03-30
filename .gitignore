@@ -99,3 +99,4 @@ playwright-report/
 blob-report/
 playwright-report/
 playwright/.cache/
+.env*.local

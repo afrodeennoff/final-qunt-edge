@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { ButtonV2 } from "@/components/ui/v2";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,11 @@ import { useUserStore } from "../../../../../store/user-store";
 import { useMoodStore } from "@/store/mood-store";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { TiptapEditor } from "@/components/tiptap-editor";
+
+const TiptapEditor = dynamic(
+  () => import("@/components/tiptap-editor").then((m) => ({ default: m.TiptapEditor })),
+  { ssr: false, loading: () => <Skeleton className="h-[400px] w-full" /> }
+)
 
 interface DailyCommentProps {
   dayData: CalendarEntry | undefined;
