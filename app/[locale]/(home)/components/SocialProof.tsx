@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Lock, Server, ShieldCheck, LifeBuoy, MessageSquareQuote } from 'lucide-react'
+import { Lock, Server, ShieldCheck, LifeBuoy } from 'lucide-react'
 import { BadgeV2 } from '@/components/ui/v2'
 import { MOTION_EASE } from './_constants'
 
@@ -56,7 +56,7 @@ export default function SocialProof() {
               <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">
                 {stat.label}
               </p>
-              <p className="mt-2 text-3xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">
+              <p className="mt-2 text-3xl font-bold font-mono tabular-nums glow-number text-[oklch(0.55_0.22_264)]">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm text-foreground/80 [font-family:var(--home-copy)]">{stat.note}</p>
@@ -75,10 +75,14 @@ export default function SocialProof() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08, ease: MOTION_EASE }}
               >
-                <MessageSquareQuote className="h-5 w-5 text-foreground" />
-                <p className="mt-3 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
+                <div className="relative">
+                  <span className="absolute -top-4 -left-2 text-6xl font-serif text-[oklch(0.55_0.22_264/0.2)] leading-none select-none" aria-hidden="true">
+                    "
+                  </span>
+                  <p className="relative mt-3 text-sm leading-relaxed italic text-[oklch(0.95_0_0)] [font-family:var(--home-copy)]">
+                    {t.quote}
+                  </p>
+                </div>
                 <p className="mt-3 text-[11px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">
                   — {t.role}
                 </p>
