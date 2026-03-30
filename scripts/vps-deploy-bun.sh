@@ -26,7 +26,7 @@ git checkout "$BRANCH"
 git pull --ff-only origin "$BRANCH"
 
 echo "Installing dependencies with bun..."
-bun install --frozen-lockfile
+bun ci
 
 echo "Building app..."
 bun run build

@@ -1,5 +1,56 @@
 # Session Memory (2026-03-30)
 
+## Current Session: Bun package-manager optimization sweep (2026-03-30 night)
+
+### Accomplishments
+- Completed a web-researched Bun optimization pass using official Bun + Next.js docs.
+- Replaced `bun install --frozen-lockfile` with `bun ci` in:
+  - `vercel.json` install command
+  - `Dockerfile.bun` deps stage
+  - `scripts/vps-deploy-bun.sh`
+- Added explicit Bun pack script:
+  - `package.json` → `"pack:bun": "bun pm pack"`
+- Migrated GitHub workflow install/execute paths to Bun-first:
+  - `.github/workflows/ci.yml` now sets up Bun (`oven-sh/setup-bun@v2`), installs via `bun ci`, and runs validation/perf/test commands via `bun run` / `bunx`.
+  - `.github/workflows/widget-policy-compliance.yml` now sets up Bun in all relevant jobs, installs via `bun ci`, and runs policy/test scripts via `bun run`.
+
+### Verification
+- `node -e` JSON parse check for `package.json` and `vercel.json` passed.
+- `ruby -e "require 'yaml'; YAML.load_file(...)"` parse check for both workflow files passed.
+- `bash -n scripts/vps-deploy-bun.sh` passed.
+- Grep check confirms touched workflow files no longer use `npm ci`/`npm run` for primary execution paths.
+
+### Blockers
+- Bun runtime is not installed in this shell (`bun --version` -> command not found), so direct execution of Bun commands was not possible locally.
+
+## Current Session: Home redesign completion + auth fix + React error #130 (2026-03-30 evening)
+
+### Accomplishments
+- **Home redesign Waves 0-4**: All 4 waves completed, all 11 components written/rewritten, 8 orphan files deleted, TypeScript zero errors
+- **Auth graceful degradation**: Extended Supabase env check to all 5 auth methods (signInWithPassword, signInWithEmail, verifyOtp, signInWithDiscord, signInWithGoogle, signUpWithPasswordAction). Magic link, OAuth, OTP now return graceful errors instead of HTTP 500.
+- **React error #130 fix**: `ComparisonSection.tsx` used `<motion.tr>` which is undefined in framer-motion v11. Fixed by using `const MotionTr = motion('tr')` factory pattern + added `'use client'` directive. Playwright confirmed zero errors after fix.
+- **Dead import cleanup**: Removed 7 unused static imports from `HomeContent.tsx` (only lazy dynamic versions were used). 0 ESLint errors.
+- **Commits**: 8 new commits on v2 branch (6 home redesign + 1 auth extension + 1 motion.tr fix + 1 dead import cleanup)
+
+### Key Files Modified
+- `app/[locale]/(home)/components/ComparisonSection.tsx` — motion.tr → MotionTr + 'use client'
+- `app/[locale]/(home)/components/HomeContent.tsx` — removed 7 dead static imports (59→52 lines)
+- `app/[locale]/(home)/components/analysis-demo-chart.tsx` — verified exists
+- `server/auth.ts` — 5 functions now check Supabase env vars before createClient()
+- `app/[locale]/(authentication)/components/user-auth-form.tsx` — 4 handlers now show toast on error
+- `proxy.ts` — logged-in user redirect adds ?already=signed-in param
+
+### Verified Working
+- Home page loads with zero React errors (Playwright)
+- Auth form submits gracefully without HTTP 500 (Playwright)
+- Prop firm data renders on home page
+- `npm run -s typecheck` passes
+- `npx eslint HomeContent.tsx` — 0 errors
+- `npx eslint "app/[locale]/(home)/components/"*.tsx` — 0 errors, 4 pre-existing warnings (not our changes)
+- **Local env blocker**: Dev server returns HTTP 500 on home pages because `.env.local` is missing Supabase credentials (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`). This is a local dev-only issue — the deployed app on Vercel has these env vars configured. Not a code issue.
+
+---
+
 ## Current Session: Final task closeout — all pending items resolved (2026-03-30)
 
 ### Accomplishments

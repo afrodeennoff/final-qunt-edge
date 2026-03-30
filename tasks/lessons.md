@@ -1,6 +1,31 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-03-30
+**Last Updated:** 2026-03-30 evening
+
+---
+
+## NEW (2026-03-30): motion.tr does NOT exist in framer-motion v11 — use motion('tr') factory
+
+### Mistake
+`ComparisonSection.tsx` used `<motion.tr>` assuming it works like `motion.div`. In framer-motion v11, `motion.tr` is literally `undefined`. This caused React error #130 ("Element type is invalid: expected a string or class/function but got: undefined") pointing at ComparisonSection.
+
+### Root Cause
+framer-motion v11 only has predefined variants for standard HTML elements. `<tr>` (table row) is not in the supported list. Only `motion.div`, `motion.span`, `motion.button`, etc. exist directly.
+
+### Fix
+```tsx
+// WRONG
+import { motion } from 'framer-motion'
+<motion.tr ...>
+
+// CORRECT
+const MotionTr = motion('tr')
+<MotionTr ...>
+```
+Also need `'use client'` if calling `motion()` at module scope (since framer-motion is client-only).
+
+### Rule
+When animating table rows, use `motion('tr', {...})` factory. Same applies for any HTML element that doesn't have a direct `motion.*` variant.
 
 ---
 

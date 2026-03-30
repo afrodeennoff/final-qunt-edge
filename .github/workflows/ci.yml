@@ -15,6 +15,7 @@ concurrency:
 
 env:
   NODE_VERSION: 20
+  BUN_VERSION: 1.3.11
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
   PERF_BASE_URL: http://127.0.0.1:3000
   LIGHTHOUSE_DESKTOP_MIN: 0.9
@@ -52,10 +53,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Wait for Postgres
         run: |
@@ -67,19 +72,19 @@ jobs:
           exit 1
 
       - name: Lint
-        run: npm run lint
+        run: bun run lint
 
       - name: Warning Budget Check
-        run: npm run check:warning-budget
+        run: bun run check:warning-budget
 
       - name: Clean Build Artifacts
-        run: npm run clean:build-artifacts
+        run: bun run clean:build-artifacts
 
       - name: Typecheck
-        run: npm run typecheck
+        run: bun run typecheck
 
       - name: Prisma Schema Validate
-        run: npx prisma validate
+        run: bunx prisma validate
 
       - name: Migration Directory Check
         run: |
@@ -87,7 +92,7 @@ jobs:
           test -n "$(ls -A prisma/migrations)"
 
       - name: Unit Tests with Coverage
-        run: npm run test:coverage
+        run: bun run test:coverage
 
       - name: Enforce Coverage Threshold (≥80%)
         run: |
@@ -109,17 +114,17 @@ jobs:
           path: coverage/
 
       - name: Build
-        run: npm run build
+        run: bun run build
 
       - name: Route Budget Check
-        run: npm run check:route-budgets
+        run: bun run check:route-budgets
 
       - name: Bundle Analysis
-        run: npm run analyze:bundle
+        run: bun run analyze:bundle
 
       - name: Start production server
         run: |
-          npm run start > /tmp/qunt-start.log 2>&1 &
+          bun run start > /tmp/qunt-start.log 2>&1 &
           echo $! > /tmp/qunt-start.pid
           for i in {1..40}; do
             if curl -sSf $PERF_BASE_URL/en >/dev/null; then
@@ -133,18 +138,18 @@ jobs:
           exit 1
 
       - name: Header Cache Policy Check
-        run: npm run perf:headers
+        run: bun run perf:headers
 
       - name: Baseline Performance Snapshot
-        run: npm run perf:baseline
+        run: bun run perf:baseline
 
       - name: Dashboard Runtime Gate
         env:
           PERF_DASHBOARD_AUTH_COOKIE: ${{ secrets.PERF_DASHBOARD_AUTH_COOKIE }}
-        run: npm run perf:dashboard-runtime
+        run: bun run perf:dashboard-runtime
 
       - name: Lighthouse Performance Gate
-        run: npm run perf:lighthouse
+        run: bun run perf:lighthouse
 
       - name: Stop production server
         if: always()
@@ -223,10 +228,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install Dependencies
-        run: npm ci
+        run: bun ci
 
       - name: Validate Payment Test Secrets
         run: |
@@ -240,7 +249,7 @@ jobs:
           fi
 
       - name: Sync Prisma Schema
-        run: npx prisma db push
+        run: bunx prisma db push
 
       - name: Payment Integration Tests
-        run: npm run test:payment
+        run: bun run test:payment

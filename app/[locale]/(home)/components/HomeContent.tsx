@@ -1,21 +1,17 @@
-import dynamic from 'next/dynamic'
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import ProblemStatement from './ProblemStatement'
 import FeaturesBento from './FeaturesBento'
+import HowItWorks from './HowItWorks'
+import AnalysisDemo from './AnalysisDemo'
+import AudienceSegmentation from './AudienceSegmentation'
+import AIFeatures from './AIFeatures'
+import SocialProof from './SocialProof'
+import ComparisonSection from './ComparisonSection'
+import PricingSection from './PricingSection'
+import FAQSection from './FAQSection'
 import FinalCTA from './FinalCTA'
 import RollingAdBanner from './RollingAdBanner'
-
-const SectionSkeleton = () => <div className="min-h-24 w-full" />
-
-const LazyHowItWorks = dynamic(() => import('./HowItWorks'), { loading: SectionSkeleton })
-const LazyAnalysisDemo = dynamic(() => import('./AnalysisDemo'), { loading: SectionSkeleton })
-const LazyAudienceSegmentation = dynamic(() => import('./AudienceSegmentation'), { loading: SectionSkeleton })
-const LazyAIFeatures = dynamic(() => import('./AIFeatures'), { loading: SectionSkeleton })
-const LazySocialProof = dynamic(() => import('./SocialProof'), { loading: SectionSkeleton })
-const LazyComparisonSection = dynamic(() => import('./ComparisonSection'), { loading: SectionSkeleton })
-const LazyPricingSection = dynamic(() => import('./PricingSection'), { loading: SectionSkeleton })
-const LazyFAQSection = dynamic(() => import('./FAQSection'), { loading: SectionSkeleton })
 
 interface HomeContentProps {
   locale: string
@@ -34,17 +30,17 @@ export default function HomeContent({ locale }: HomeContentProps) {
 
         <ProblemStatement />
         <FeaturesBento />
-        <LazyHowItWorks />
-        <LazyAnalysisDemo />
-        <LazyAudienceSegmentation />
-        <LazyAIFeatures />
-        <LazySocialProof />
-        <LazyComparisonSection />
+        <HowItWorks />
+        <AnalysisDemo />
+        <AudienceSegmentation />
+        <AIFeatures />
+        <SocialProof />
+        <ComparisonSection />
 
         <RollingAdBanner />
 
-        <LazyPricingSection />
-        <LazyFAQSection />
+        <PricingSection />
+        <FAQSection />
         <FinalCTA locale={locale} />
       </main>
     </div>

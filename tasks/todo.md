@@ -1,3 +1,24 @@
+## Task: Web-researched Bun package-manager optimization sweep (2026-03-30)
+
+- [x] Confirm current Bun best-practice guidance from official Bun/Next docs (`bun ci`, `bun pm pack`, Next 16 defaults).
+- [x] Apply Bun install optimization in deployment surfaces (`vercel.json`, `Dockerfile.bun`, `scripts/vps-deploy-bun.sh`).
+- [x] Add explicit Bun pack workflow entrypoint in `package.json`.
+- [x] Migrate CI/workflow dependency install and script execution paths to Bun-first where low-risk.
+- [x] Run verification checks for modified configs/scripts and capture outcomes.
+
+Verification:
+- `node -e "JSON.parse(...)"` confirms `package.json` and `vercel.json` are valid JSON.
+- `ruby -e "require 'yaml'; YAML.load_file(...)"` parses both modified workflow YAML files successfully.
+- `bash -n scripts/vps-deploy-bun.sh` passes shell syntax check.
+- `rg -n "npm ci|npm run"` across touched Bun/CI files confirms workflow install/run paths are now Bun-first (remaining `npm run` only in intentional npm fallback scripts in `package.json`).
+- Environment limitation: Bun is not installed in this shell (`bun --version` -> `command not found`), so Bun commands could not be executed locally.
+
+## Review
+- Adopted Bun CI/install best practices from official docs by replacing `bun install --frozen-lockfile` with `bun ci` in Vercel config, Docker Bun build stage, and VPS deploy script.
+- Added `pack:bun` (`bun pm pack`) to make package packing explicit and reproducible from scripts.
+- Updated both GitHub workflows to install Bun (`oven-sh/setup-bun@v2`), run dependency installation via `bun ci`, and execute project scripts with `bun run`/`bunx` in the primary validation and policy pipelines.
+- Kept npm fallback paths in `package.json` unchanged to preserve explicit compatibility routes.
+
 ## Task: Recover `/firm/*` routing + add deals hero quick links (2026-03-30)
 
 - [x] Trace `/[locale]/firm/[slug]` resolution path and remove hard failure path for unresolved slugs.

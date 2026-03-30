@@ -5,7 +5,7 @@ import { BadgeV2 } from "@/components/ui/v2"
 import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Check, X } from 'lucide-react'
 
-const MotionTr = motion('tr')
+const MotionTr = motion.create('tr')
 
 const comparisonRows = [
   {
