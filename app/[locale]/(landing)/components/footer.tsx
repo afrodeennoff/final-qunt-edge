@@ -43,7 +43,7 @@ export default function Footer() {
   ].filter((item) => item.href)
 
   return (
-    <footer aria-labelledby="footer-heading" className="relative mt-6 px-4 pb-8 sm:px-6 sm:pb-10">
+    <footer aria-labelledby="footer-heading" className="relative mt-6 px-4 pb-8 sm:px-6 sm:pb-10 border-t border-[oklch(0.14_0_0/0.3)] bg-[oklch(0.07_0_0/0.6)] backdrop-blur-md">
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
       <motion.div
@@ -94,7 +94,7 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-colors hover:border-primary/70 hover:text-primary"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-[oklch(0.65_0.01_275)] transition-all duration-200 hover:border-[oklch(0.55_0.22_264)/70] hover:text-[oklch(0.55_0.22_264)] hover:drop-shadow-[0_0_8px_oklch(0.55_0.22_264/0.5)]"
                 >
                   <item.icon className="h-4 w-4" />
                 </motion.a>

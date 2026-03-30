@@ -50,7 +50,7 @@ export default function Navbar() {
         <motion.div
           className={cn(
             'flex h-[56px] items-center rounded-full px-2.5 sm:h-[62px] sm:px-3.5',
-            'bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-md sm:backdrop-blur-xl shadow-none'
+            'bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-xl shadow-none'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
@@ -69,9 +69,9 @@ export default function Navbar() {
                   key={link.href}
                   href={`/${locale}${link.href}`}
                   className={cn(
-                    'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
+                    'relative rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-primary/15 text-[hsl(var(--mk-text))]'
+                      ? 'bg-primary/15 text-[hsl(var(--mk-text))] after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:w-4/5 after:rounded-full after:bg-[oklch(0.55_0.22_264)] after:shadow-[0_0_8px_oklch(0.55_0.22_264/0.5)]'
                       : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >
@@ -82,7 +82,7 @@ export default function Navbar() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <ButtonV2  asChild className="hidden h-10 rounded-full bg-primary px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.8)] hover:bg-primary/90 md:inline-flex">
+            <ButtonV2  asChild variant="gradient-primary" size="sm" className="hidden rounded-full px-5 text-[10px] font-semibold uppercase tracking-[0.14em] md:inline-flex">
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </ButtonV2>
 
