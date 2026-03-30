@@ -21,11 +21,13 @@ const problems = [
   },
 ]
 
+const ease = [0.25, 0.46, 0.45, 0.94]
+
 export default function ProblemStatement() {
   return (
     <section
       id="problem"
-      className="border-y border-[hsl(var(--mk-border)/0.25)] py-20 sm:py-28 lg:py-36"
+      className="py-20 sm:py-28 lg:py-32"
     >
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
@@ -33,7 +35,7 @@ export default function ProblemStatement() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease }}
           >
             <p className="text-[0.68rem] uppercase tracking-[0.2em] text-muted-foreground/60 [font-family:var(--home-copy)]">
               The Gap
@@ -47,17 +49,23 @@ export default function ProblemStatement() {
               raw trade history into a repeatable performance system.
             </p>
 
-            <div className="mt-6 rounded-2xl border border-primary/25 bg-primary/[0.06] p-4">
+            <motion.div
+              className="mt-6 rounded-2xl border border-primary/30 bg-primary/10 p-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3, ease }}
+            >
               <p className="text-[0.68rem] uppercase tracking-[0.18em] text-foreground [font-family:var(--home-copy)]">
                 Mindset Upgrade
               </p>
               <p className="mt-1 text-[0.88rem] text-foreground/80 [font-family:var(--home-copy)]">
                 Promote process to first-class data. Let profit follow your standards.
               </p>
-            </div>
+            </motion.div>
           </motion.div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+          <div className="flex flex-col gap-3">
             {problems.map((item, i) => {
               const Icon = item.icon
               return (
@@ -66,7 +74,7 @@ export default function ProblemStatement() {
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease }}
                   className="rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface)/0.6)] p-5 hover:border-[hsl(var(--mk-border)/0.4)] transition-colors duration-200"
                 >
                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-destructive/20 bg-destructive/[0.06] text-destructive/80">

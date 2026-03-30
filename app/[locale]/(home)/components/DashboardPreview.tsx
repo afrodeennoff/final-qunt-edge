@@ -1,5 +1,3 @@
-'use client'
-
 import { TrendingUp, TrendingDown } from 'lucide-react'
 
 export default function DashboardPreview() {
@@ -13,16 +11,23 @@ export default function DashboardPreview() {
 
   return (
     <div className="relative mx-auto max-w-5xl px-2 sm:px-4">
-      <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 backdrop-blur-sm">
-        <div className="flex items-center gap-2 border-b border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-1))] px-3 py-3 sm:px-4">
+      <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 shadow-[0_0_60px_-15px_hsl(var(--primary)/0.2)] backdrop-blur-sm">
+        <div className="flex items-center gap-2 rounded-t-xl border-b border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-1))] px-3 py-3 sm:px-4">
           <div className="flex gap-1.5">
             <div className="w-3 h-3 rounded-full bg-destructive/80" />
             <div className="w-3 h-3 rounded-full bg-warning/80" />
             <div className="w-3 h-3 rounded-full bg-success/80" />
           </div>
-          <div className="flex min-w-0 flex-1 justify-center">
+          <div className="flex min-w-0 flex-1 items-center justify-center gap-2">
             <div className="hidden max-w-[220px] truncate rounded bg-[hsl(var(--mk-surface)/0.7)] px-3 py-1 font-mono text-[0.7rem] text-muted-foreground/60 sm:block">
               app.quntedge.com/dashboard
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+              </span>
+              <span className="text-[0.65rem] font-medium text-green-500">Live</span>
             </div>
           </div>
           <div className="h-5 w-10 rounded bg-[hsl(var(--mk-surface)/0.5)] sm:w-16" />
@@ -35,19 +40,19 @@ export default function DashboardPreview() {
                 key={stat.label}
                 className="rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4"
               >
-                <p className="text-[0.68rem] text-muted-foreground/50 uppercase tracking-wider mb-1">
+                <p className="mb-1 text-[0.68rem] uppercase tracking-wider text-muted-foreground/50">
                   {stat.label}
                 </p>
-                <p className="text-xl sm:text-2xl font-bold text-foreground tabular-nums font-mono">
+                <p className="font-mono text-xl font-bold tabular-nums text-foreground sm:text-2xl">
                   {stat.value}
                 </p>
-                <div className="flex items-center gap-1 mt-1">
+                <div className="mt-1 flex items-center gap-1">
                   {stat.positive ? (
-                    <TrendingUp className="w-3 h-3 text-success" />
+                    <TrendingUp className="h-3 w-3 text-success" />
                   ) : (
-                    <TrendingDown className="w-3 h-3 text-destructive" />
+                    <TrendingDown className="h-3 w-3 text-destructive" />
                   )}
-                  <span className="text-[0.72rem] font-medium text-success tabular-nums">
+                  <span className="text-[0.72rem] font-medium tabular-nums text-success">
                     {stat.change}
                   </span>
                 </div>
@@ -55,7 +60,7 @@ export default function DashboardPreview() {
             ))}
           </div>
 
-          <div className="relative h-40 overflow-hidden rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
+          <div className="relative h-40 overflow-hidden rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
             <div className="absolute inset-0 grid grid-cols-12">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="border-r border-[hsl(var(--mk-border)/0.15)]" />
@@ -72,11 +77,27 @@ export default function DashboardPreview() {
               ))}
             </div>
 
-            <div className="absolute inset-y-0 w-px bg-primary/60 animate-scan shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
+            <div className="absolute inset-y-0 w-px animate-scan bg-primary/60 shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
+
+            <div className="absolute right-2 top-2 sm:right-4 sm:top-3">
+              <span className="rounded-full border border-success/30 bg-success/10 px-2.5 py-1 text-[0.65rem] font-medium text-success sm:px-3 sm:text-xs">
+                +$12,847 P&L
+              </span>
+            </div>
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:left-[45%] sm:top-[45%]">
+              <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[0.65rem] font-medium text-primary sm:px-3 sm:text-xs">
+                78% Win Rate
+              </span>
+            </div>
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4">
+              <span className="rounded-full border border-warning/30 bg-warning/10 px-2.5 py-1 text-[0.65rem] font-medium text-warning sm:px-3 sm:text-xs">
+                2.34 Profit Factor
+              </span>
+            </div>
           </div>
 
-          <div className="rounded-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4">
-            <p className="text-[0.68rem] text-muted-foreground/50 uppercase tracking-wider mb-3">
+          <div className="rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4">
+            <p className="mb-3 text-[0.68rem] uppercase tracking-wider text-muted-foreground/50">
               Recent Trades
             </p>
             <div className="space-y-2.5">
@@ -90,22 +111,22 @@ export default function DashboardPreview() {
                   className="flex items-center justify-between text-sm"
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-mono font-medium text-foreground text-[0.85rem]">
+                    <span className="font-mono text-[0.85rem] font-medium text-foreground">
                       {trade.symbol}
                     </span>
-                    <span className="text-muted-foreground/50 text-xs">{trade.side}</span>
+                    <span className="text-xs text-muted-foreground/50">{trade.side}</span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span
                       className={
                         trade.pnl.startsWith('+')
-                          ? 'text-success font-medium tabular-nums'
-                          : 'text-destructive font-medium tabular-nums'
+                          ? 'font-medium tabular-nums text-success'
+                          : 'font-medium tabular-nums text-destructive'
                       }
                     >
                       {trade.pnl}
                     </span>
-                    <span className="text-muted-foreground/40 text-xs tabular-nums">{trade.time}</span>
+                    <span className="text-xs tabular-nums text-muted-foreground/40">{trade.time}</span>
                   </div>
                 </div>
               ))}
