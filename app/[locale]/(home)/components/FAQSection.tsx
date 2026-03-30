@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { BadgeV2 } from "@/components/ui/v2"
 import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { ChevronDown, HelpCircle } from 'lucide-react'
@@ -88,7 +89,13 @@ export default function FAQSection(_props: FAQSectionProps) {
   return (
     <section id="faq" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-8 text-center">
+        <motion.div
+          className="mb-8 text-center"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <HelpCircle className="mr-1.5 h-3 w-3" />
             FAQ
@@ -97,16 +104,23 @@ export default function FAQSection(_props: FAQSectionProps) {
             Common
             <span className="block text-foreground">questions answered</span>
           </h2>
-        </div>
+        </motion.div>
 
         <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <FAQAccordion
+            <motion.div
               key={index}
-              item={faq}
-              isOpen={openIndex === index}
-              onToggle={() => setOpenIndex(openIndex === index ? null : index)}
-            />
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <FAQAccordion
+                item={faq}
+                isOpen={openIndex === index}
+                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+              />
+            </motion.div>
           ))}
         </div>
       </div>

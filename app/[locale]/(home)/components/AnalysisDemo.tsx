@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 
@@ -51,7 +52,12 @@ export default function AnalysisDemo() {
 
   return (
     <section className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-      <div className="mx-auto max-w-6xl">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/80 [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
@@ -120,7 +126,7 @@ export default function AnalysisDemo() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { BadgeV2 } from "@/components/ui/v2"
 import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Check, X } from 'lucide-react'
@@ -77,9 +78,13 @@ export default function ComparisonSection() {
                   </tr>
                 </thead>
                 <tbody>
-                  {comparisonRows.map((row) => (
-                    <tr
+                  {comparisonRows.map((row, i) => (
+                    <motion.tr
                       key={row.item}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
                       className="border-b border-[hsl(var(--mk-border)/0.24)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
@@ -95,7 +100,7 @@ export default function ComparisonSection() {
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
