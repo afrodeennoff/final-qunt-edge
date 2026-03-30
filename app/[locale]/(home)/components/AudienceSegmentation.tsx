@@ -42,7 +42,7 @@ export default function AudienceSegmentation() {
           >
             Who Is This For?
           </BadgeV2>
-          <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
+          <h2 className="mt-3 text-gradient-primary text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Built for serious traders,
             <span className="block text-foreground">not casual hobbyists</span>
           </h2>
@@ -56,7 +56,7 @@ export default function AudienceSegmentation() {
           {audiences.map((audience) => (
             <motion.div
               key={audience.title}
-              className="rounded-2xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface)/0.6)] p-6 lg:p-8"
+              className="glass-accent-border relative rounded-2xl bg-[oklch(0.07_0_0/0.8)] backdrop-blur-md p-6 lg:p-8"
               initial={prefersReducedMotion ? false : { opacity: 0, x: audience.slideFrom }}
               whileInView={
                 prefersReducedMotion ? undefined : { opacity: 1, x: 0 }
@@ -64,6 +64,7 @@ export default function AudienceSegmentation() {
               viewport={{ once: true, margin: '-8% 0px -4% 0px' }}
               transition={{ duration: 0.55, ease: MOTION_EASE }}
             >
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[oklch(0.55_0.22_264)] via-[oklch(0.45_0.18_290)] to-transparent rounded-l-2xl" />
               <h3 className="text-xl font-semibold [font-family:var(--home-display)]">
                 {audience.title}
               </h3>
