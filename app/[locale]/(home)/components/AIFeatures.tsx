@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { GlassCard } from '@/components/ui/glass-card'
 import { BadgeV2 } from '@/components/ui/v2'
 import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
 import { MOTION_EASE } from './_constants'
@@ -54,7 +55,7 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 0.5,
-      delay: i * 0.06,
+      delay: i * 0.08,
       ease: MOTION_EASE,
     },
   }),
@@ -70,17 +71,26 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.6)] p-5 lg:p-6"
     >
-      <div className="mb-4 h-10 w-10 rounded-lg border border-primary/50 bg-primary/15 flex items-center justify-center text-foreground">
-        <Icon className="h-5 w-5" />
-      </div>
-      <h3 className="text-base font-semibold tracking-[-0.01em] text-foreground mb-2 [font-family:var(--home-display)]">
-        {feature.title}
-      </h3>
-      <p className="text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">
-        {feature.description}
-      </p>
+      <GlassCard
+        variant="strong"
+        hover={true}
+        size="md"
+        className="relative overflow-hidden"
+      >
+        <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12">
+          <div className="absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_264/0.15)] blur-sm" />
+          <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-[oklch(0.55_0.22_264/0.4)] bg-[oklch(0.55_0.22_264/0.1)]">
+            <Icon className="w-5 h-5 text-[oklch(0.55_0.22_264)]" />
+          </div>
+        </div>
+        <h3 className="text-base font-semibold tracking-[-0.01em] text-gradient-primary mb-2 [font-family:var(--home-display)]">
+          {feature.title}
+        </h3>
+        <p className="text-sm leading-relaxed text-muted-foreground [font-family:var(--home-copy)]">
+          {feature.description}
+        </p>
+      </GlassCard>
     </motion.div>
   )
 }
