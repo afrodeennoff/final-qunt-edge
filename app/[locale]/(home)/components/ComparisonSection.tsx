@@ -1,7 +1,11 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { BadgeV2 } from "@/components/ui/v2"
 import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Check, X } from 'lucide-react'
+
+const MotionTr = motion('tr')
 
 const comparisonRows = [
   {
@@ -79,7 +83,7 @@ export default function ComparisonSection() {
                 </thead>
                 <tbody>
                   {comparisonRows.map((row, i) => (
-                    <motion.tr
+                    <MotionTr
                       key={row.item}
                       initial={{ opacity: 0, y: 12 }}
                       whileInView={{ opacity: 1, y: 0 }}
@@ -100,7 +104,7 @@ export default function ComparisonSection() {
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>
                       </td>
-                    </motion.tr>
+                    </MotionTr>
                   ))}
                 </tbody>
               </table>
