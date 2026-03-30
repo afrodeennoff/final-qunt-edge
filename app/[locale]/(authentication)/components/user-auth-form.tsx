@@ -83,6 +83,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [tab, setTab] = React.useState<'magic' | 'password'>(lastAuthPreference)
     const t = useI18n()
 
+    const [alreadySignedIn, setAlreadySignedIn] = React.useState(false)
+
     React.useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search)
         const subscription = urlParams.get('subscription')
@@ -96,13 +98,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         setLookupKey(lookup_key)
         setPlan(plan_param)
         setNextUrl(next)
+        setAlreadySignedIn(urlParams.get('already') === 'signed-in')
 
-        // Get promo code from URL
         if (promo_code) {
             setPromoCode(promo_code)
         }
 
-        // Get referral code from URL or localStorage
         if (referral) {
             setReferralCode(referral)
         } else {
@@ -286,15 +287,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         setAuthMethod('email')
         try {
             const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
-            await signInWithPasswordAction(values.email, values.password || '', next, locale)
+            const result = await signInWithPasswordAction(values.email, values.password || '', next, locale)
+
+            if (!result.success) {
+                const parsedError = parseAuthError(new Error(result.error || 'Authentication failed'))
+                toast.error(t('error'), { description: parsedError.message })
+                setAuthMethod(null)
+                setIsLoading(false)
+                return
+            }
+
             toast.success(t('success'), { description: t('auth.signIn') })
             router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
             setLastAuthPreference('password')
         } catch (error) {
-            console.warn(error)
             const parsedError = parseAuthError(error)
 
-            // Set form field error if applicable
             if (parsedError.field === 'password') {
                 form.setError('password', {
                     type: 'manual',
@@ -307,7 +315,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 })
             }
 
-            // Show toast with user-friendly message
             toast.error(t('error'), {
                 description: parsedError.message,
             })
@@ -443,6 +450,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
     return (
         <div className={cn("grid gap-5", className)} {...props}>
+            {alreadySignedIn && (
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-success/30 bg-success/10 px-4 py-3">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success/15">
+                            <svg className="h-4 w-4 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-success">You&apos;re already signed in</p>
+                            <p className="text-xs text-muted-foreground">Redirecting you to your dashboard...</p>
+                        </div>
+                    </div>
+                    <ButtonV2
+                        size="sm"
+                        className="shrink-0 bg-success/20 text-success hover:bg-success/30 border-success/30"
+                        onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
+                    >
+                        Go to Dashboard
+                    </ButtonV2>
+                </div>
+            )}
             <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
                 <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/60 bg-card/50 p-1">
                     <TabsTrigger

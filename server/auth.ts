@@ -236,6 +236,18 @@ export async function signInWithPasswordAction(
   locale?: string
 ) {
   const requestIp = await getRequestIp()
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
+    if (process.env.NODE_ENV !== 'production') {
+      return { success: false, error: message }
+    }
+    throw new Error(message)
+  }
+
   try {
     const guard = await checkAuthGuard({
       email,
@@ -273,7 +285,7 @@ export async function signInWithPasswordAction(
       userId: authUser?.id ?? null,
     })
     return { success: true, next }
-  } catch (error: any) {
+  } catch (error: unknown) {
     await recordAuthFailure({
       email,
       ip: requestIp,
