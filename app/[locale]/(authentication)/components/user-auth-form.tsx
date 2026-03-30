@@ -162,12 +162,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         setAuthMethod('email')
         try {
             const next = getRedirectNextUrl(isSubscription, plan, nextUrl, lookupKey, referralCode, promoCode, locale)
-            await signInWithEmail(values.email, next, locale)
+            const result = await signInWithEmail(values.email, next, locale)
+
+            if (!result || !('success' in result) || !result.success) {
+                const errorMsg = 'error' in (result || {}) ? (result as { error?: string }).error : null
+                toast.error(t('error'), { description: errorMsg || t('auth.errors.signInFailed') })
+                setAuthMethod(null)
+                setIsLoading(false)
+                return
+            }
+
             setIsEmailSent(true)
             setShowOtpInput(true)
             setCountdown(15)
         } catch (error) {
-            console.warn(error)
+            const parsedError = parseAuthError(error)
+            toast.error(t('error'), { description: parsedError.message })
             setAuthMethod(null)
         } finally {
             setIsLoading(false)
@@ -330,13 +340,20 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         setIsLoading(true)
         try {
             const email = form.getValues('email')
-            await verifyOtp(email, values.otp)
+            const result = await verifyOtp(email, values.otp)
+
+            if (!result || !('success' in result) || !result.success) {
+                const errorMsg = 'error' in (result || {}) ? (result as { error?: string }).error : null
+                toast.error("Error", { description: errorMsg || "Failed to verify code" })
+                setIsLoading(false)
+                return
+            }
+
             toast.success("Successfully verified. Redirecting...", {
                 description: "Successfully verified. Redirecting...",
             })
             router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
         } catch (error) {
-            console.warn(error)
             toast.error("Error", {
                 description: error instanceof Error ? error.message : "Failed to verify code",
             })
@@ -367,7 +384,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
             await signInWithDiscord(next, locale)
         } catch (error) {
-            console.warn(error)
+            const parsedError = parseAuthError(error)
+            toast.error(t('error'), { description: parsedError.message })
             setAuthMethod(null)
             setIsLoading(false)
         }
@@ -395,7 +413,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
             await signInWithGoogle(next, locale)
         } catch (error) {
-            console.warn(error)
+            const parsedError = parseAuthError(error)
+            toast.error(t('error'), { description: parsedError.message })
             setAuthMethod(null)
             setIsLoading(false)
         }

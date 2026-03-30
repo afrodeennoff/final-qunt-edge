@@ -135,6 +135,12 @@ export async function createClient() {
 }
 
 export async function signInWithDiscord(next: string | null = null, locale?: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
+  }
+
   const supabase = await createClient()
   const websiteURL = await getWebsiteURL()
   const callbackParams = new URLSearchParams()
@@ -152,6 +158,12 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
 }
 
 export async function signInWithGoogle(next: string | null = null, locale?: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
+  }
+
   const supabase = await createClient()
   const websiteURL = await getWebsiteURL()
   const callbackParams = new URLSearchParams()
@@ -184,6 +196,18 @@ async function signOutSilently() {
 
 export async function signInWithEmail(email: string, next: string | null = null, locale?: string) {
   const requestIp = await getRequestIp()
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
+    if (process.env.NODE_ENV !== 'production') {
+      return { success: false, error: message }
+    }
+    throw new Error(message)
+  }
+
   try {
     const guard = await checkAuthGuard({
       email,
@@ -213,7 +237,8 @@ export async function signInWithEmail(email: string, next: string | null = null,
       ip: requestIp,
       actionType: 'magic_link_request',
     })
-  } catch (error: any) {
+    return { success: true }
+  } catch (error: unknown) {
     await recordAuthFailure({
       email,
       ip: requestIp,
@@ -309,6 +334,16 @@ export async function signUpWithPasswordAction(
   const passwordError = validatePasswordStrength(password)
   if (passwordError) {
     throw new Error(passwordError)
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
+    if (process.env.NODE_ENV !== 'production') {
+      return { success: false, error: message }
+    }
+    throw new Error(message)
   }
 
   try {
@@ -551,6 +586,18 @@ export async function ensureUserInDatabase(
 
 export async function verifyOtp(email: string, token: string, type: 'email' | 'signup' = 'email') {
   const requestIp = await getRequestIp()
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
+    if (process.env.NODE_ENV !== 'production') {
+      return { success: false, error: message }
+    }
+    throw new Error(message)
+  }
+
   try {
     const guard = await checkAuthGuard({
       email,
@@ -584,8 +631,8 @@ export async function verifyOtp(email: string, token: string, type: 'email' | 's
       userId: data.user?.id ?? null,
     })
 
-    return data
-  } catch (error: any) {
+    return { success: true, data }
+  } catch (error: unknown) {
     await recordAuthFailure({
       email,
       ip: requestIp,
