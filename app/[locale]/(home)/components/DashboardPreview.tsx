@@ -10,7 +10,7 @@ export default function DashboardPreview() {
   const bars = [65, 72, 68, 85, 78, 92, 88, 95, 82, 100, 94, 98]
 
   return (
-    <div className="relative mx-auto max-w-5xl px-2 sm:px-4">
+    <div className="relative mx-auto max-w-5xl px-2 sm:px-4 scan-line-overlay">
       <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 shadow-[0_0_60px_-15px_hsl(var(--primary)/0.2)] backdrop-blur-sm">
         <div className="flex items-center gap-2 rounded-t-xl border-b border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-1))] px-3 py-3 sm:px-4">
           <div className="flex gap-1.5">
@@ -60,7 +60,9 @@ export default function DashboardPreview() {
             ))}
           </div>
 
-          <div className="relative h-40 overflow-hidden rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-lg blur-xl bg-[oklch(0.55_0.22_264/0.1)] animate-glow-pulse" />
+            <div className="relative h-40 overflow-hidden rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
             <div className="absolute inset-0 grid grid-cols-12">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="border-r border-[hsl(var(--mk-border)/0.15)]" />
@@ -94,7 +96,8 @@ export default function DashboardPreview() {
                 2.34 Profit Factor
               </span>
             </div>
-          </div>
+            </div>
+            </div>
 
           <div className="rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] p-3 sm:p-4">
             <p className="mb-3 text-[0.68rem] uppercase tracking-wider text-muted-foreground/50">
