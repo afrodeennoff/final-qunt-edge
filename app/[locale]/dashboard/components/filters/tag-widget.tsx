@@ -28,6 +28,7 @@ import {
 import { HexColorPicker } from 'react-colorful'
 import { cn } from '@/lib/utils'
 import { createTagAction, updateTagAction, deleteTagAction, syncTradeTagsToTagTableAction } from '@/server/tags'
+import { deleteTagFromAllTrades } from '@/server/trades'
 import { toast } from "sonner"
 import { Tag } from '@/prisma/generated/prisma'
 import { Trade } from '@/lib/data-types'
@@ -229,14 +230,15 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
       setTags(tags.filter(tag => tag.id !== tagToDelete.id))
 
       // Remove the tag from all trades 
-      contextTrades.forEach((trade: Trade) => {
-        if (trade.tags.includes(tagToDelete.name)) {
-          trade.tags = trade.tags.filter(tag => tag !== tagToDelete.name)
-          updateTrades([trade.id], {
-            tags: trade.tags
-          })
-        }
-      })
+      await deleteTagFromAllTrades(tagToDelete.name)
+
+      const currentTrades = useTradesStore.getState().trades
+      const updatedTrades = currentTrades.map((trade: Trade) =>
+        trade.tags.includes(tagToDelete.name)
+          ? { ...trade, tags: trade.tags.filter((t: string) => t !== tagToDelete.name) }
+          : trade
+      )
+      useTradesStore.getState().setTrades(updatedTrades)
 
       // Also remove from tag filter if it's selected
       if (tagFilter.tags.includes(tagToDelete.name)) {

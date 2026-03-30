@@ -27,6 +27,7 @@ import ExportButton from '@/components/export-button'
 import { useI18n } from "@/locales/client"
 import { useUserStore } from '@/store/user-store'
 import { useTradesStore } from '@/store/trades-store'
+import { clearTradesCache } from '@/lib/indexeddb/trades-cache'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
@@ -93,6 +94,7 @@ export function DataManagementCard() {
       // Optimistically drop trades and accounts locally
       const remainingTrades = trades.filter(trade => !accountsToDelete.includes(trade.accountNumber))
       setTradesStore(remainingTrades)
+      await clearTradesCache(user.id)
       if (accounts && setAccounts) {
         setAccounts(accounts.filter((acc) => !accountsToDelete.includes(acc.number)))
       }

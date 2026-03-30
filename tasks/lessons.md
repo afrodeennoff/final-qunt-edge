@@ -1,10 +1,34 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-03-29
+**Last Updated:** 2026-03-30
 
 ---
 
-## NEW (2026-03-29): Card migration edits must preserve TSX delimiters and full closing structure
+## NEW (2026-03-30): Verify gap analysis claims against actual code before planning implementation
+
+### Mistake
+Gap analysis claimed 4 server delete functions were missing ownership validation (`deleteLayoutVersion`, `deleteMindset`, `deleteRithmicSynchronizations`, `deleteTradovateSynchronizations`), requiring security hardening implementation.
+
+### Root Cause
+The gap analysis used incorrect function names and didn't verify current code state before reporting vulnerabilities. In reality: `deleteLayoutVersion()` doesn't exist, `deleteMindset()` already has `userId` in `findFirst`, `removeRithmicSynchronization()` already has `userId` in `deleteMany`, `removeTradovateToken()` already has `userId` in `deleteMany`.
+
+### Rule
+Before claiming a security gap exists, always:
+1. Verify the function exists with the claimed name
+2. Read the actual implementation
+3. Confirm the ownership check is truly missing
+4. A query-level `userId` filter in `where`/`findFirst`/`deleteMany` IS a valid ownership check
+
+### Example
+```typescript
+// REPORTED MISSING: deleteLayoutVersion() — FUNCTION DOES NOT EXIST
+// REPORTED MISSING: deleteRithmicSynchronizations() — WRONG NAME (actual: removeRithmicSynchronization)
+// REPORTED MISSING: deleteMindset() — ALREADY HAS userId in findFirst where clause
+```
+
+---
+
+## NEW (2026-03-30): Pre-existing task descriptions may describe already-completed work
 
 ### Mistake
 Home page component edits replaced `Card` imports with `CardV2` symbols but left malformed JSX (`CardV2 ...>` without opening `<`) and truncated closing blocks, causing widespread TypeScript parse failures after the first reported error.

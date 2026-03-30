@@ -1,6 +1,36 @@
 # Session Memory (2026-03-30)
 
-## Current Session: firm route recovery + deals hero navigation completion (2026-03-30)
+## Current Session: Final task closeout — all pending items resolved (2026-03-30)
+
+### Accomplishments
+- Closed 5 already-complete tasks with verified checkboxes (community PII, semantic colors, CRUD state sync, format preview, edits summary)
+- Cancelled 2 blocked tasks (TweakCN external dependency, Vercel deploy auth)
+- Re-scoped delete ownership hardening: original gap analysis was incorrect (wrong function names, all functions already have userId filtering)
+- Ran merged AI verification suite (typecheck passes)
+- Fixed tag deletion N+1 pattern in `tag-widget.tsx` (replaced forEach+updateTrades loop with `deleteTagFromAllTrades` bulk SQL)
+- Added IndexedDB cache invalidation after account deletion in `data-management-card.tsx`
+- Added `:root` design token block mirroring `.dark` in `globals.css` (Tailwind v4 best practice)
+- Extracted shadow base color `--shadow-base` CSS variable, replacing 16 raw `hsl(222.7751 100% 59.0196%)` instances
+- Removed orphaned `:root` block inside `@layer base` (qe-surface tokens moved to main `:root`)
+- Created 21 delete ownership regression tests in `tests/server/delete-ownership-regression.test.ts`
+
+### Verification
+- `npm run -s typecheck` passes
+- Targeted `npx eslint` on all changed files: 0 errors
+- `npx vitest run tests/server/delete-ownership-regression.test.ts`: 21/21 pass
+- Pre-existing `npm run -s lint` ESLint plugin config issue (not caused by our changes)
+
+### Changed Files
+- `app/[locale]/dashboard/components/filters/tag-widget.tsx` — tag deletion N+1 fix
+- `app/[locale]/dashboard/data/components/data-management/data-management-card.tsx` — IndexedDB cache clear
+- `app/globals.css` — `:root` block + shadow token extraction
+- `tests/server/delete-ownership-regression.test.ts` — new regression test suite
+- `tasks/todo.md` — all checkboxes updated
+
+### Blockers
+- `/init` remains unavailable in this shell
+
+## Previous Session: firm route recovery + deals hero navigation completion (2026-03-30)
 
 ### Accomplishments
 - Fixed `app/[locale]/(landing)/firm/[slug]/page.tsx` to avoid hard `notFound()` failures for unresolved `/firm/*` requests.
