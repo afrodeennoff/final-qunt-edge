@@ -2259,6 +2259,30 @@
   }
 }
 
+/* Electric Obsidian — Keyframe Animations */
+@keyframes animate-mesh-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -15px) scale(1.02); }
+  66% { transform: translate(-15px, 10px) scale(0.98); }
+}
+
+@keyframes animate-glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes animate-orb-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes animate-scan-line {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
 /* Animation Classes */
 .animate-in-fade {
   animation: animate-in-fade 0.5s ease-out forwards;
@@ -2518,4 +2542,62 @@
   .transition-shadow-spring {
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== ELECTRIC OBSIDIAN UTILITIES ===== */
+
+.mono-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.glow-number {
+  text-shadow: 0 0 20px oklch(0.55 0.22 264 / 0.4);
+}
+
+.terminal-accent {
+  font-family: var(--font-mono);
+  color: oklch(0.55 0.22 264);
+}
+
+.glass-accent-border {
+  position: relative;
+}
+
+.glass-accent-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, oklch(0.55 0.22 264), oklch(0.45 0.18 290));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.scan-line-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-line-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    oklch(0.55 0.22 264 / 0.03) 50%,
+    transparent 100%
+  );
+  height: 4px;
+  width: 100%;
+  animation: animate-scan-line 4s linear infinite;
+  border-radius: inherit;
+  z-index: 10;
 }
