@@ -60,15 +60,15 @@ export default function ComparisonSection() {
           <CardContent className="p-0">
             <div className="grid gap-3 p-4 md:hidden">
               {comparisonRows.map((row) => (
-                <article key={row.item} className="rounded-xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface)/0.6)] p-4">
+                <article key={row.item} className="rounded-xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface)/0.6)] p-4 transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.5)] hover:border-l-2 hover:border-l-[oklch(0.55_0.22_264)]">
                   <h3 className="text-sm font-semibold text-foreground [font-family:var(--home-display)]">{row.item}</h3>
                   <div className="mt-3 space-y-2">
                     <div className="flex items-start gap-2 text-sm text-foreground">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-foreground" />
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.55_0.15_166)] drop-shadow-[0_0_8px_oklch(0.55_0.15_166/0.5)]" />
                       <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
                     </div>
                     <div className="flex items-start gap-2 text-sm text-foreground/80">
-                      <X className="mt-0.5 h-4 w-4 shrink-0" />
+                      <X className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.6_0.2_15)]" />
                       <span className="[font-family:var(--home-copy)]">{row.others}</span>
                     </div>
                   </div>
@@ -81,7 +81,7 @@ export default function ComparisonSection() {
                 <thead>
                   <tr className="border-b border-[hsl(var(--mk-border)/0.28)]">
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Capability</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Qunt Edge</th>
+                    <th className="px-4 py-3 bg-[oklch(0.55_0.22_264/0.05)] text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Qunt Edge</th>
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Most Alternatives</th>
                   </tr>
                 </thead>
@@ -93,18 +93,18 @@ export default function ComparisonSection() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.08, ease: MOTION_EASE }}
-                      className="border-b border-[hsl(var(--mk-border)/0.24)]"
+                      className="border-b border-[hsl(var(--mk-border)/0.24)] transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.5)] hover:border-l-2 hover:border-l-[oklch(0.55_0.22_264)]"
                     >
                       <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4 bg-[oklch(0.55_0.22_264/0.05)]">
                         <div className="flex items-center gap-2 text-sm text-foreground">
-                          <Check className="h-4 w-4 text-foreground" />
-                          <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
+                          <Check className="h-4 w-4 text-[oklch(0.55_0.15_166)] drop-shadow-[0_0_8px_oklch(0.55_0.15_166/0.5)]" />
+                          <span className="text-[oklch(0.55_0.22_264)] [font-family:var(--home-copy)]">{row.qunt}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 text-sm text-foreground/80">
-                          <X className="h-4 w-4" />
+                          <X className="h-4 w-4 text-[oklch(0.6_0.2_15)]" />
                           <span className="[font-family:var(--home-copy)]">{row.others}</span>
                         </div>
                       </td>

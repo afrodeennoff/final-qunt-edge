@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { ButtonV2 } from '@/components/ui/v2'
+import { MagneticButton } from '@/components/animation/interactive'
 
 type BillingCycle = 'monthly' | 'annual'
 
@@ -153,11 +154,14 @@ export default function PricingSection() {
                 relative rounded-2xl border p-7 lg:p-8 backdrop-blur-sm transition-all duration-300
                 ${
                   plan.variant === 'featured'
-                    ? 'border-primary/30 bg-card/80 shadow-[0_0_48px_-16px_hsl(var(--primary)/0.2)]'
+                    ? 'glass-accent-border border-primary/30 bg-card/80 shadow-[0_0_48px_-16px_hsl(var(--primary)/0.2)]'
                     : 'bg-card/60 border-border/40 hover:border-border/70 hover:bg-card/70'
                 }
               `}
             >
+              {plan.variant === 'featured' && (
+                <div className="absolute -inset-1 rounded-3xl bg-[oklch(0.55_0.22_264/0.1)] blur-xl -z-10" />
+              )}
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -174,7 +178,7 @@ export default function PricingSection() {
 
               {/* Price */}
               <div className="mb-4">
-                <span className="text-5xl lg:text-[3.25rem] font-bold text-foreground tracking-[-0.02em] [font-family:var(--home-display)]">
+                <span className="text-5xl lg:text-[3.25rem] font-bold font-mono tabular-nums tracking-tight text-gradient-primary">
                   {plan.pricing[billingCycle]}
                 </span>
                 <span className="text-muted-foreground/70 text-[0.9rem]">{plan.period[billingCycle]}</span>
@@ -204,17 +208,23 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              {/* CTA */}
-              <ButtonV2
-                variant={plan.variant === 'featured' ? 'default' : 'outline'}
-                className={`w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
-                  plan.variant === 'featured'
-                    ? 'bg-primary hover:bg-primary/90 btn-primary-glow'
-                    : 'border-border/50 text-foreground hover:border-border hover:bg-card'
-                }`}
-              >
-                {plan.cta}
-              </ButtonV2>
+              {plan.variant === 'featured' ? (
+                <MagneticButton strength={6}>
+                  <ButtonV2
+                    variant="gradient-primary"
+                    className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 shadow-glow-primary"
+                  >
+                    {plan.cta}
+                  </ButtonV2>
+                </MagneticButton>
+              ) : (
+                <ButtonV2
+                  variant="outline"
+                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border-[oklch(0.55_0.22_264/0.3)] hover:border-[oklch(0.55_0.22_264)]"
+                >
+                  {plan.cta}
+                </ButtonV2>
+              )}
             </motion.div>
           ))}
         </div>
