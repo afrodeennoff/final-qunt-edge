@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Lock, Server, ShieldCheck, LifeBuoy, MessageSquareQuote } from 'lucide-react'
 import { BadgeV2 } from '@/components/ui/v2'
+import { MOTION_EASE } from './_constants'
 
 const proofStats = [
   { label: 'Time To First Diagnostic', value: '< 7 min', note: 'from first sync to actionable process signal' },
@@ -23,7 +24,7 @@ const trustPillars = [
   { title: 'Support You Can Reach', body: 'Product support, in-app guidance, and direct escalation paths for active traders and teams.', icon: LifeBuoy },
 ]
 
-const MOTION_EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94]
+
 
 export default function SocialProof() {
   return (

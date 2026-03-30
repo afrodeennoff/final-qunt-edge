@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
+import { MOTION_EASE } from './_constants'
 
 const mockData = [
   { time: '09:30', price: 4312, ema: 4308, volume: 32 },
@@ -56,7 +57,7 @@ export default function AnalysisDemo() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.6, ease: MOTION_EASE }}
         className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div>

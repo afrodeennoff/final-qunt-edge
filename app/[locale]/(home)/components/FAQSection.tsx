@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { BadgeV2 } from "@/components/ui/v2"
+import { MOTION_EASE } from './_constants'
 import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -113,7 +114,7 @@ export default function FAQSection(_props: FAQSectionProps) {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.4, delay: index * 0.08, ease: MOTION_EASE }}
             >
               <FAQAccordion
                 item={faq}

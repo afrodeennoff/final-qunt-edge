@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { BadgeV2 } from '@/components/ui/v2'
 import { Brain, Bot, Radar, ShieldAlert, Sparkles } from 'lucide-react'
+import { MOTION_EASE } from './_constants'
 import type { LucideIcon } from 'lucide-react'
 
 const features = [
@@ -54,7 +55,7 @@ const cardVariants = {
     transition: {
       duration: 0.5,
       delay: i * 0.06,
-      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
+      ease: MOTION_EASE,
     },
   }),
 }
