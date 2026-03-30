@@ -673,9 +673,7 @@ export default async function middleware(req: NextRequest) {
         redirectPath = `/${locale}${redirectPath}`
       }
 
-      const redirectUrl = new URL(`/${locale}/authentication`, req.url)
-      redirectUrl.searchParams.set("next", redirectPath)
-      redirectUrl.searchParams.set("already", "signed-in")
+      const redirectUrl = new URL(redirectPath, req.url)
       return redirectWithPrivateNoStore(redirectUrl)
     }
   }

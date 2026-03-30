@@ -7,6 +7,7 @@ import { createClient, getUserId, getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import { defaultLayouts } from '@/lib/default-layouts'
 import { logger } from '@/lib/logger'
+import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 async function assertLayoutOwnership(layoutId: string): Promise<DashboardLayout> {
   const userId = await getDatabaseUserId()
@@ -90,10 +91,12 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     return { success: false, error: 'Invalid layout structure' }
   }
 
+  let resolvedEmail = ''
+
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    const resolvedEmail = user?.email || ''
+    resolvedEmail = user?.email || ''
 
     if (!resolvedEmail) {
       logger.error('[saveDashboardLayout] Missing user email for ensureUserInDatabase', { userId })
@@ -101,7 +104,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
     }
 
     await prisma.user.upsert({
-      where: { auth_user_id: userId },
+      where: { id: userId },
       create: {
         id: userId,
         auth_user_id: userId,
@@ -112,14 +115,31 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
       },
     })
   } catch (error) {
+    if (
+      isPrismaSchemaMismatchError(error)
+    ) {
+      await prisma.$executeRaw`
+        INSERT INTO "public"."User" ("id", "email")
+        VALUES (${userId}, ${resolvedEmail})
+        ON CONFLICT ("id")
+        DO UPDATE SET "email" = EXCLUDED."email"
+      `
+    } else {
+      logger.error('[saveDashboardLayout] Failed to ensure user record', { error, userId })
+      return { success: false, error: 'Failed to ensure user record' }
+    }
+  }
+
+  let verifiedUser: { id: string } | null = null
+  try {
+    verifiedUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    })
+  } catch (error) {
     logger.error('[saveDashboardLayout] Failed to ensure user record', { error, userId })
     return { success: false, error: 'Failed to ensure user record' }
   }
-
-  const verifiedUser = await prisma.user.findUnique({
-    where: { auth_user_id: userId },
-    select: { id: true },
-  })
 
   if (!verifiedUser) {
     logger.error('[saveDashboardLayout] Missing user record for layout save', { userId })

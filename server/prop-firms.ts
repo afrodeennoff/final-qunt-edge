@@ -7,6 +7,8 @@ import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-prof
 import {
   isPrismaOperationCoolingDown,
   isPrismaSchemaMismatchError,
+  isPrismaTableAvailable,
+  markPrismaTableUnavailable,
   markPrismaOperationSchemaMismatch,
   withPrismaSchemaMismatchFallback,
 } from '@/lib/prisma-guard'
@@ -19,6 +21,7 @@ const PROP_FIRMS_CACHE_LIFETIME = {
 
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 const PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY = 'prop-firms-banner-items'
+const PROP_FIRM_TABLE_NAME = 'PropFirm'
 
 function isPropFirmDataUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
@@ -66,6 +69,10 @@ const _listPropFirms = async () => {
     return buildFallbackPropFirmRows()
   }
 
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
+    return buildFallbackPropFirmRows()
+  }
+
   try {
     return await prisma.propFirm.findMany({
       where: { isActive: true },
@@ -80,6 +87,7 @@ const _listPropFirms = async () => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     logPropFirmFallback('listPropFirms', error)
     return buildFallbackPropFirmRows()
   }
@@ -127,6 +135,10 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
     .sort((a, b) => a.firmName.localeCompare(b.firmName))
 
   if (!hasConfiguredDatabaseConnection) {
+    return fallbackItems
+  }
+
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
     return fallbackItems
   }
 
@@ -180,6 +192,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     markPrismaOperationSchemaMismatch(PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY)
     logPropFirmFallback('listPropFirmBannerItems', error)
     return fallbackItems
@@ -195,6 +208,10 @@ async function listPropFirmBannerItemsCached() {
 
 const _getPropFirmBySlug = async (slug: string) => {
   if (!hasConfiguredDatabaseConnection) {
+    return null
+  }
+
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
     return null
   }
 
@@ -217,6 +234,7 @@ const _getPropFirmBySlug = async (slug: string) => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     logPropFirmFallback('getPropFirmBySlug', error)
     return null
   }

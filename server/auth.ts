@@ -6,7 +6,11 @@ import { prisma } from '@/lib/prisma'
 import { User } from '@supabase/supabase-js'
 import { authSecurityConfig } from '@/lib/security/auth-config'
 import { checkAuthGuard, recordAuthFailure, recordAuthSuccess } from '@/lib/security/auth-attempts'
-import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import {
+  isPrismaColumnAvailable,
+  isPrismaSchemaMismatchError,
+  markPrismaColumnUnavailable,
+} from '@/lib/prisma-guard'
 
 const PASSWORD_MIN_LENGTH = 8
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
@@ -67,10 +71,85 @@ const USER_SYNC_SELECT = {
   language: true,
 } as const
 
+const USER_TABLE_NAME = 'User'
+const AUTH_USER_ID_COLUMN = 'auth_user_id'
+const LANGUAGE_COLUMN = 'language'
+
 type UserSyncRecord = {
   id: string
   email: string
   language?: string | null
+}
+
+async function findUserByIdCompat(userId: string): Promise<UserSyncRecord | null> {
+  try {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+      select: USER_SYNC_SELECT,
+    })
+  } catch (error) {
+    if (!isPrismaSchemaMismatchError(error)) {
+      throw error
+    }
+
+    const legacyUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+      },
+    })
+
+    if (!legacyUser) {
+      return null
+    }
+
+    return {
+      ...legacyUser,
+      language: null,
+    }
+  }
+}
+
+async function findUserByAuthIdCompat(authUserId: string): Promise<UserSyncRecord | null> {
+  const hasAuthUserIdColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+  if (!hasAuthUserIdColumn) {
+    return findUserByIdCompat(authUserId)
+  }
+
+  try {
+    return await prisma.user.findUnique({
+      where: { auth_user_id: authUserId },
+      select: USER_SYNC_SELECT,
+    })
+  } catch (error) {
+    if (!isPrismaSchemaMismatchError(error)) {
+      throw error
+    }
+
+    markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+    console.warn(
+      '[ensureUserInDatabase] WARNING: auth_user_id lookup hit schema mismatch; falling back to id lookup',
+      { authUserId }
+    )
+
+    return findUserByIdCompat(authUserId)
+  }
+}
+
+async function upsertUserByIdAndEmailCompat(userId: string, email: string): Promise<UserSyncRecord> {
+  await prisma.$executeRaw`
+    INSERT INTO "public"."User" ("id", "email")
+    VALUES (${userId}, ${email})
+    ON CONFLICT ("id")
+    DO UPDATE SET "email" = EXCLUDED."email"
+  `
+
+  const userRecord = await findUserByIdCompat(userId)
+  if (!userRecord) {
+    throw new Error('Failed to load user record after compatibility upsert')
+  }
+  return userRecord
 }
 
 function getExternalAuthErrorMessage(errorMessage: string): string {
@@ -488,38 +567,17 @@ export async function ensureUserInDatabase(
   };
 
   try {
-    const findUserByAuthIdCompat = async (authUserId: string): Promise<UserSyncRecord | null> => {
-      try {
-        return await prisma.user.findUnique({
-          where: { auth_user_id: authUserId },
-          select: USER_SYNC_SELECT,
-        })
-      } catch (error) {
-        if (!isPrismaSchemaMismatchError(error)) {
-          throw error
-        }
-
-        console.warn(
-          '[ensureUserInDatabase] WARNING: auth_user_id lookup hit schema mismatch; falling back to id lookup',
-          { authUserId }
-        )
-
-        return await prisma.user.findUnique({
-          where: { id: authUserId },
-          select: USER_SYNC_SELECT,
-        })
-      }
-    }
-
     // First try to find user by auth_user_id
     const existingUserByAuthId = await findUserByAuthIdCompat(user.id)
 
     // If user exists by auth_user_id, update fields if needed
     if (existingUserByAuthId) {
       const shouldUpdateEmail = existingUserByAuthId.email !== user.email;
-      const shouldUpdateLanguage = !!locale && locale !== existingUserByAuthId.language;
+      const shouldUpdateLanguage = !!locale && locale !== existingUserByAuthId.language
+      const canUpdateLanguage =
+        shouldUpdateLanguage && (await isPrismaColumnAvailable(USER_TABLE_NAME, LANGUAGE_COLUMN))
 
-      if (shouldUpdateEmail || shouldUpdateLanguage) {
+      if (shouldUpdateEmail || canUpdateLanguage) {
         try {
           const updatedUser = await prisma.user.update({
             where: {
@@ -529,13 +587,16 @@ export async function ensureUserInDatabase(
               ...(shouldUpdateEmail
                 ? { email: user.email || existingUserByAuthId.email }
                 : {}),
-              ...(shouldUpdateLanguage ? { language: locale as string } : {}),
+              ...(canUpdateLanguage ? { language: locale as string } : {}),
             },
             select: USER_SYNC_SELECT,
           });
         await ensureDashboardLayoutBackfill(user.id);
         return updatedUser;
       } catch (updateError) {
+        if (isPrismaSchemaMismatchError(updateError) && canUpdateLanguage) {
+          markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+        }
         console.error('[ensureUserInDatabase] ERROR: Failed to update user record:', updateError);
         throw new Error('Failed to update user');
       }
@@ -565,12 +626,14 @@ export async function ensureUserInDatabase(
 
     // Create new user if no existing user found
     try {
+      const hasLanguageColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+
       const newUser = await prisma.user.create({
         data: {
           auth_user_id: user.id,
           email: user.email || '', // Provide a default empty string if email is null
           id: user.id,
-          language: locale || 'en'
+          ...(hasLanguageColumn ? { language: locale || 'en' } : {}),
         },
         select: USER_SYNC_SELECT,
       });
@@ -582,6 +645,11 @@ export async function ensureUserInDatabase(
 
       return newUser;
     } catch (createError) {
+      if (isPrismaSchemaMismatchError(createError)) {
+        markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+        markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+        return upsertUserByIdAndEmailCompat(user.id, user.email || '')
+      }
       if (createError instanceof Error &&
         createError.message.includes('Unique constraint failed')) {
         await signOutSilently();
@@ -726,11 +794,21 @@ export async function getDatabaseUserId(): Promise<string> {
   })
   if (byId?.id) return byId.id
 
-  const byAuthId = await prisma.user.findUnique({
-    where: { auth_user_id: rawUserId },
-    select: { id: true },
-  })
-  if (byAuthId?.id) return byAuthId.id
+  const hasAuthUserIdColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+  if (hasAuthUserIdColumn) {
+    try {
+      const byAuthId = await prisma.user.findUnique({
+        where: { auth_user_id: rawUserId },
+        select: { id: true },
+      })
+      if (byAuthId?.id) return byAuthId.id
+    } catch (error) {
+      if (!isPrismaSchemaMismatchError(error)) {
+        throw error
+      }
+      markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+    }
+  }
 
   let resolvedEmail = user.email?.trim().toLowerCase() || ""
 
@@ -738,16 +816,30 @@ export async function getDatabaseUserId(): Promise<string> {
     resolvedEmail = `${rawUserId}@users.qunt-edge.local`
   }
 
-  const created = await prisma.user.upsert({
-    where: { id: rawUserId },
-    create: {
-      id: rawUserId,
-      auth_user_id: rawUserId,
-      email: resolvedEmail,
-    },
-    update: {},
-    select: { id: true },
-  })
+  const created = await (async () => {
+    try {
+      return await prisma.user.upsert({
+        where: { id: rawUserId },
+        create: {
+          id: rawUserId,
+          email: resolvedEmail,
+          auth_user_id: rawUserId,
+        },
+        update: {
+          email: resolvedEmail,
+        },
+        select: { id: true },
+      })
+    } catch (error) {
+      if (!isPrismaSchemaMismatchError(error)) {
+        throw error
+      }
+
+      markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+      await upsertUserByIdAndEmailCompat(rawUserId, resolvedEmail)
+      return { id: rawUserId }
+    }
+  })()
 
   return created.id
 }
@@ -770,13 +862,22 @@ export async function updateUserLanguage(locale: string): Promise<{ updated: boo
     return { updated: false }
   }
 
-  const existing = await prisma.user.findUnique({
-    where: { auth_user_id: user.id },
-    select: {
-      id: true,
-      language: true,
-    },
-  })
+  let existing: { id: string; language: string | null } | null = null
+  try {
+    existing = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        language: true,
+      },
+    })
+  } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+      return { updated: false }
+    }
+    throw error
+  }
   if (!existing) {
     return { updated: false }
   }
@@ -785,10 +886,18 @@ export async function updateUserLanguage(locale: string): Promise<{ updated: boo
     return { updated: false }
   }
 
-  await prisma.user.update({
-    where: { auth_user_id: user.id },
-    data: { language: locale },
-  })
+  try {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { language: locale },
+    })
+  } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+      return { updated: false }
+    }
+    throw error
+  }
   return { updated: true }
 }
 

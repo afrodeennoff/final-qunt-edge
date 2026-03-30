@@ -12,6 +12,8 @@ import { getVerifiedPropFirmProfileByName, getVerifiedPropFirmProfileBySlug } fr
 import {
   isPrismaOperationCoolingDown,
   isPrismaSchemaMismatchError,
+  isPrismaTableAvailable,
+  markPrismaTableUnavailable,
   markPrismaOperationSchemaMismatch,
 } from '@/lib/prisma-guard'
 
@@ -329,6 +331,10 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
     return null
   }
 
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
+    return null
+  }
+
   const now = new Date()
 
   try {
@@ -360,6 +366,7 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     logDealsFallback('loadFirmWithRelations', error)
     return null
   }
@@ -416,6 +423,7 @@ const DEALS_CACHE_LIFETIME = {
 const DEALS_CACHE_TAG = 'deals'
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 const DEALS_UNIFIED_FIRMS_COOLDOWN_KEY = 'deals-unified-firms'
+const PROP_FIRM_TABLE_NAME = 'PropFirm'
 
 function mapSpotlightCategoryToMarket(category: PropFirmMatchSpotlight['category']): MarketType {
   return category === 'CFD' ? 'Forex' : 'Futures'
@@ -480,6 +488,10 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     return getWebSourcedDealsFallback()
   }
 
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
+    return getWebSourcedDealsFallback()
+  }
+
   const now = new Date()
   try {
     const coupons = await prisma.propFirmCoupon.findMany({
@@ -532,6 +544,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     logDealsFallback('getActiveDeals', error)
     return getWebSourcedDealsFallback()
   }
@@ -546,6 +559,10 @@ async function getActiveDealsCached(): Promise<DealItem[]> {
 
 const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   if (!hasConfiguredDatabaseConnection) {
+    return []
+  }
+
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
     return []
   }
 
@@ -598,6 +615,7 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     markPrismaOperationSchemaMismatch(DEALS_UNIFIED_FIRMS_COOLDOWN_KEY)
     logDealsFallback('getUnifiedFirms', error)
     return []
@@ -662,6 +680,10 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
     return []
   }
 
+  if (!(await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME))) {
+    return []
+  }
+
   const now = new Date()
   try {
     const firm = await prisma.propFirm.findUnique({
@@ -718,6 +740,7 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       throw error
     }
 
+    markPrismaTableUnavailable(PROP_FIRM_TABLE_NAME)
     logDealsFallback('getFirmDeals', error)
     return []
   }

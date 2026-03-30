@@ -277,27 +277,19 @@ export function UnifiedSidebar({
                       {itemIsActive && (
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-gradient-to-b from-sidebar-primary via-sidebar-primary to-sidebar-primary rounded-r-full animate-slide-indicator shadow-[0_0_8px_oklch(0.55_0.22_264/_0.5)]" />
                       )}
-                      <SidebarMenuButton
-                        asChild={!!href}
-                        isActive={itemIsActive}
-                        tooltip={label}
-                        disabled={isItemDisabled}
-                        onClick={!href ? () => {
-                          item.action?.()
-                          if (isMobile) setOpenMobile(false)
-                        } : undefined}
-                        className={cn(
-                          "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
-                          itemIsActive
-                            ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
-                            : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
-                        )}
-                      >
-                        <div className={cn(
-                          "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
-                          itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
-                        )} />
-                        {href ? (
+                      {href ? (
+                        <SidebarMenuButton
+                          asChild
+                          isActive={itemIsActive}
+                          tooltip={label}
+                          disabled={isItemDisabled}
+                          className={cn(
+                            "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
+                            itemIsActive
+                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
+                              : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
+                          )}
+                        >
                           <Link
                             href={href}
                             prefetch={false}
@@ -311,6 +303,10 @@ export function UnifiedSidebar({
                             className="flex items-center w-full relative z-10"
                             aria-busy={isPendingItem}
                           >
+                            <div className={cn(
+                              "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
+                              itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
+                            )} />
                             {isPendingItem || (isLoading && itemIsActive) ? (
                               <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
                             ) : (
@@ -324,7 +320,27 @@ export function UnifiedSidebar({
                               itemIsActive ? "font-semibold" : ""
                             )}>{label}</span>
                           </Link>
-                        ) : (
+                        </SidebarMenuButton>
+                      ) : (
+                        <SidebarMenuButton
+                          isActive={itemIsActive}
+                          tooltip={label}
+                          disabled={isItemDisabled}
+                          onClick={() => {
+                            item.action?.()
+                            if (isMobile) setOpenMobile(false)
+                          }}
+                          className={cn(
+                            "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
+                            itemIsActive
+                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
+                              : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
+                          )}
+                        >
+                          <div className={cn(
+                            "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
+                            itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
+                          )} />
                           <div className="flex items-center w-full relative z-10">
                             <span className={cn(
                               "shrink-0 transition-all duration-200",
@@ -335,8 +351,8 @@ export function UnifiedSidebar({
                               itemIsActive ? "font-semibold" : ""
                             )}>{label}</span>
                           </div>
-                        )}
-                      </SidebarMenuButton>
+                        </SidebarMenuButton>
+                      )}
                       {item.badge && (
                         <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
                           {item.badge}

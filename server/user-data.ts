@@ -131,11 +131,10 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
       })
 
       const legacyUser = await prisma.user.findUnique({
-        where: { auth_user_id: authUserId },
+        where: { id: authUserId },
         select: {
           id: true,
           email: true,
-          auth_user_id: true,
           isFirstConnection: true,
           isBeta: true,
           language: true,
@@ -156,6 +155,7 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
 
       return {
         ...legacyUser,
+        auth_user_id: authUserId,
         dashboardTheme: 'blue',
         showOnLeaderboard: false,
         mt5TokenHash: null,
@@ -374,25 +374,24 @@ export async function getDashboardLayout(userId: string): Promise<DashboardLayou
 }
 
 export async function updateIsFirstConnectionAction(isFirstConnection: boolean) {
-  const authUserId = await getUserId()
   const userId = await getDatabaseUserId()
-  if (!authUserId || !userId) {
+  if (!userId) {
     return 0
   }
   await prisma.user.update({
-    where: { auth_user_id: authUserId },
+    where: { id: userId },
     data: { isFirstConnection }
   })
   updateTag(`user-data-${userId}`)
 }
 
 export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
-  const authUserId = await getUserId()
-  if (!authUserId) return null
+  const userId = await getDatabaseUserId()
+  if (!userId) return null
 
   try {
     const user = await prisma.user.findUnique({
-      where: { auth_user_id: authUserId },
+      where: { id: userId },
       select: { dashboardTheme: true }
     })
     if (user?.dashboardTheme && VALID_DASHBOARD_THEMES.includes(user.dashboardTheme as DashboardTheme)) {
@@ -400,28 +399,28 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
     }
     return null
   } catch (error) {
-    logger.error('[getUserDashboardTheme] Error fetching user theme', { error, authUserId })
+    logger.error('[getUserDashboardTheme] Error fetching user theme', { error, userId })
     return null
   }
 }
 
 export async function setUserDashboardTheme(theme: string): Promise<DashboardTheme> {
-  const authUserId = await getUserId()
-  if (!authUserId) throw new Error('Unauthorized')
+  const userId = await getDatabaseUserId()
+  if (!userId) throw new Error('Unauthorized')
   if (!VALID_DASHBOARD_THEMES.includes(theme as DashboardTheme)) {
     throw new Error(`Invalid theme: ${theme}`)
   }
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { auth_user_id: authUserId },
+      where: { id: userId },
       data: { dashboardTheme: theme },
       select: { dashboardTheme: true }
     })
-    logger.info('[setUserDashboardTheme] Theme updated', { authUserId, theme })
+    logger.info('[setUserDashboardTheme] Theme updated', { userId, theme })
     return updatedUser.dashboardTheme as DashboardTheme
   } catch (error) {
-    logger.error('[setUserDashboardTheme] Error updating user theme', { error, authUserId, theme })
+    logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme })
     throw new Error('Failed to update theme')
   }
 }
