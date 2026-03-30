@@ -101,8 +101,12 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
             <stop offset="5%" stopColor="hsl(var(--foreground))" stopOpacity={0.24} />
             <stop offset="95%" stopColor="hsl(var(--foreground))" stopOpacity={0} />
           </linearGradient>
+          <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="oklch(0.55 0.22 264)" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="oklch(0.55 0.22 264)" stopOpacity={0} />
+          </linearGradient>
         </defs>
-        <CartesianGrid stroke="hsl(var(--mk-border)/0.42)" strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.55 0.22 264 / 0.1)" vertical={false} />
         <XAxis dataKey="time" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
         <YAxis yAxisId="price" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
         <YAxis yAxisId="volume" hide />
@@ -111,7 +115,7 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
           content={<AnalysisChartTooltip />}
         />
         <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.34} barSize={8} />
-        <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#chartArea)" tooltipType="none" />
+        <Area yAxisId="price" dataKey="price" stroke="none" fill="url(#equityGradient)" tooltipType="none" />
         <Line yAxisId="price" dataKey="price" dot={false} stroke="hsl(var(--foreground))" strokeWidth={2} />
         <Line yAxisId="price" dataKey="ema" dot={false} stroke="hsl(var(--foreground)/0.62)" strokeDasharray="6 4" strokeWidth={1.5} />
       </ComposedChart>

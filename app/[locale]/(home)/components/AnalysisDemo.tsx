@@ -101,16 +101,25 @@ export default function AnalysisDemo() {
                   </div>
                 </div>
               ) : (
-                <div className="h-[300px] overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] p-3">
+                <div className="glass-accent-border h-[300px] overflow-hidden rounded-2xl bg-[oklch(0.07_0_0/0.8)] backdrop-blur-md p-3">
                   <AnalysisDemoChart data={mockData} />
                 </div>
               )}
             </div>
 
             <div className="bg-[hsl(var(--mk-surface-muted)/0.42)] p-5 sm:p-6">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Journal Signals</p>
+              <div className="flex items-center gap-3">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Journal Signals</p>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex items-center justify-center w-2 h-2">
+                    <div className="absolute w-2 h-2 rounded-full bg-[oklch(0.55_0.22_264)] animate-glow-pulse" />
+                    <div className="relative w-1.5 h-1.5 rounded-full bg-[oklch(0.55_0.22_264)]" />
+                  </div>
+                  <span className="text-sm font-mono text-[oklch(0.55_0.22_264)]">LIVE</span>
+                </div>
+              </div>
               <div className={cn("mt-4 space-y-3", isMobile ? "min-h-0" : "min-h-[220px]")}>
-                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">
+                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm font-mono leading-relaxed text-[oklch(0.65_0.01_275)] [font-family:var(--home-copy)]">
                   {activeLog}
                 </div>
               </div>
