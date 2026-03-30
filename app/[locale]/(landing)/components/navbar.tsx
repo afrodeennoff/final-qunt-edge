@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu } from 'lucide-react'
@@ -30,14 +30,6 @@ export default function Navbar() {
   const locale = useCurrentLocale()
   const isMobile = useIsMobile()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
-    onScroll()
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
 
@@ -57,15 +49,14 @@ export default function Navbar() {
       >
         <motion.div
           className={cn(
-            'flex h-[56px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
-            'border-[hsl(var(--foreground)/0.55)] bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-md sm:backdrop-blur-xl',
-            scrolled ? 'shadow-[0_20px_34px_-26px_hsl(var(--foreground)/0.82)] sm:shadow-[0_28px_48px_-32px_hsl(var(--foreground)/0.86)]' : 'shadow-[0_8px_24px_-20px_hsl(var(--foreground)/0.7)]'
+            'flex h-[56px] items-center rounded-full px-2.5 sm:h-[62px] sm:px-3.5',
+            'bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-md sm:backdrop-blur-xl shadow-none'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface-muted)/0.85)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--mk-surface-muted)/0.85)]">
               <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex">Qunt Edge</span>
@@ -80,7 +71,7 @@ export default function Navbar() {
                   className={cn(
                     'rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-primary/15 text-[hsl(var(--mk-text))] shadow-[inset_0_0_0_1px_hsl(var(--mk-border)/0.45)]'
+                      ? 'bg-primary/15 text-[hsl(var(--mk-text))]'
                       : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >

@@ -72,7 +72,7 @@ export default function SocialProof() {
                 initial={{ opacity: 0, x: -24 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1, ease: MOTION_EASE }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: MOTION_EASE }}
               >
                 <MessageSquareQuote className="h-5 w-5 text-foreground" />
                 <p className="mt-3 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">

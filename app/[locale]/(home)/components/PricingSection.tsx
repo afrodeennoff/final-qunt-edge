@@ -102,9 +102,9 @@ export default function PricingSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const }}
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight [font-family:var(--home-display)]">
+          <h2 className="text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight [font-family:var(--home-display)]">
             Simple, transparent{' '}
-            <span className="text-gradient-primary">pricing</span>
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">pricing</span>
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground/80 mb-8 leading-relaxed [font-family:var(--home-copy)]">
             Start free. Scale as you grow.

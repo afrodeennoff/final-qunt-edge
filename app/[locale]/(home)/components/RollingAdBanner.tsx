@@ -22,7 +22,7 @@ export default async function RollingAdBanner() {
   const repeatedItems = [...items, ...items, ...items]
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm">
+    <div className="relative overflow-hidden rounded-xl bg-card/80 backdrop-blur-sm">
       <div style={edgeFadeMask}>
         <div className="flex animate-scroll whitespace-nowrap py-2.5">
           {repeatedItems.map((item, idx) => (

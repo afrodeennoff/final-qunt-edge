@@ -25,7 +25,7 @@ export default function HomeLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell contentClassName="w-full">
+      <MarketingLayoutShell className="home-borderless-shell" contentClassName="w-full">
         {children}
       </MarketingLayoutShell>
     </PublicRootProviders>

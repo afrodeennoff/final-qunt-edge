@@ -87,7 +87,7 @@ export default function FAQSection(_props: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="relative px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+    <section id="faq" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-3xl">
         <motion.div
           className="mb-8 text-center"
@@ -96,11 +96,11 @@ export default function FAQSection(_props: FAQSectionProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <HelpCircle className="mr-1.5 h-3 w-3" />
             FAQ
           </BadgeV2>
-          <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
+          <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
             Common
             <span className="block text-foreground">questions answered</span>
           </h2>
@@ -113,7 +113,7 @@ export default function FAQSection(_props: FAQSectionProps) {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.4, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <FAQAccordion
                 item={faq}

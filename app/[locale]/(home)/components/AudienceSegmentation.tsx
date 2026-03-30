@@ -4,7 +4,7 @@ import { BadgeV2 } from '@/components/ui/v2'
 import { ArrowRight, Check } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
 
-const MOTION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const MOTION_EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94]
 
 const audiences = [
   {

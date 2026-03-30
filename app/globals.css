@@ -1342,6 +1342,22 @@
     color: hsl(var(--mk-text));
   }
 
+  .home-borderless :is(*, *::before, *::after) {
+    border-color: transparent !important;
+  }
+
+  .home-borderless-shell :is(*, *::before, *::after) {
+    border-color: transparent !important;
+    border-style: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    outline-color: transparent !important;
+    --tw-ring-color: transparent !important;
+    --tw-ring-offset-color: transparent !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+  }
+
   .marketing-grid {
     background-image: none;
     mask-image: none;

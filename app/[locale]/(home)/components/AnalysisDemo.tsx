@@ -51,7 +51,7 @@ export default function AnalysisDemo() {
   const activeLog = isMobile ? logs[0] : logs[logIndex]
 
   return (
-    <section className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+    <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -60,15 +60,15 @@ export default function AnalysisDemo() {
         className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/80 [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
-            <h2 className="mt-2 text-[clamp(2rem,4.8vw,3.35rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
+            <h2 className="mt-2 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
               Real-time review for
               <span className="block text-foreground">process over outcome</span>
             </h2>
           </div>
-          <p className="max-w-md text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
-            Old journal context stays intact while the interface mirrors a modern SaaS presentation style.
-          </p>
+            <p className="max-w-md text-[15px] leading-[1.75] text-muted-foreground/80 [font-family:var(--home-copy)]">
+              Your journal entries are analyzed in real time, with AI surfacing patterns in execution quality and behavioral drift.
+            </p>
         </div>
 
         <div className="marketing-panel overflow-hidden rounded-2xl">

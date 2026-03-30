@@ -79,7 +79,7 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="border-y border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-surface)/0.3)] py-10"
+      className="border-y border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.3)] py-16"
     >
       <div className="mx-auto grid max-w-[1360px] grid-cols-2 gap-8 px-4 sm:px-6 lg:grid-cols-4 lg:gap-0 lg:px-8">
         {stats.map((stat) => (
