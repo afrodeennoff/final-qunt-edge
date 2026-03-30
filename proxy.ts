@@ -664,8 +664,23 @@ export default async function middleware(req: NextRequest) {
 
       let redirectPath = "/dashboard"
       if (nextParam) {
-        // Assume nextParam is full path
-        redirectPath = nextParam
+        const trimmedNext = nextParam.trim()
+        const isExternalNext =
+          trimmedNext.startsWith("http://") ||
+          trimmedNext.startsWith("https://") ||
+          trimmedNext.startsWith("//") ||
+          trimmedNext.startsWith("\\\\")
+
+        if (!isExternalNext && trimmedNext) {
+          const nextPath = trimmedNext.startsWith("/") ? trimmedNext : `/${trimmedNext}`
+          const nextPathname = nextPath.split("?")[0]?.split("#")[0] ?? nextPath
+          const normalizedNextPath = normalizePathWithoutLocale(nextPathname)
+
+          // Prevent self-redirect loops back to authentication.
+          if (!pathMatchesPrefix(normalizedNextPath, "/authentication")) {
+            redirectPath = nextPath
+          }
+        }
       }
 
       // Ensure redirect path has locale if missing and starts with /
@@ -674,6 +689,12 @@ export default async function middleware(req: NextRequest) {
       }
 
       const redirectUrl = new URL(redirectPath, req.url)
+      const normalizedRedirectPath = normalizePathWithoutLocale(redirectUrl.pathname)
+      if (pathMatchesPrefix(normalizedRedirectPath, "/authentication")) {
+        redirectUrl.pathname = `/${locale}/dashboard`
+        redirectUrl.search = ""
+      }
+
       return redirectWithPrivateNoStore(redirectUrl)
     }
   }
