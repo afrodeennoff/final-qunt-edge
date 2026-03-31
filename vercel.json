@@ -1,6 +1,6 @@
 {
-  "installCommand": "bun ci",
-  "buildCommand": "bun run build",
+  "installCommand": "bun install || npm install --no-audit --no-fund",
+  "buildCommand": "bun run build || npm run build",
   "crons": [
     {
       "path": "/api/cron/investing?lang=fr&db=true",
