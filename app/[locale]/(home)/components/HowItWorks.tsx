@@ -44,24 +44,25 @@ export default function HowItWorks() {
             transition={{ duration: 0.8, ease, delay: 0.15 }}
           />
           {steps.map((step, i) => (
-            <InteractiveWrapper hover="scale">
+            <InteractiveWrapper key={step.name} hover="scale">
               <motion.article
-                key={step.name}
-                className="marketing-panel relative rounded-2xl p-5 text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                className="marketing-panel relative rounded-2xl p-5"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               >
-                <div className="relative z-10 mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border-2 border-[oklch(0.55_0.22_264)] bg-[oklch(0.07_0_0)] shadow-[0_0_20px_oklch(0.55_0.22_264/0.3)]">
-                  <span className="text-sm font-bold font-mono text-[oklch(0.55_0.22_264)]">
-                    0{i + 1}
-                  </span>
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[oklch(0.55_0.22_264)] bg-[oklch(0.07_0_0)] shadow-[0_0_20px_oklch(0.55_0.22_264/0.3)]">
+                    <span className="text-sm font-bold font-mono text-[oklch(0.55_0.22_264)]">
+                      0{i + 1}
+                    </span>
+                  </div>
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
+                    {step.name}
+                  </h3>
                 </div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.14em] [font-family:var(--home-copy)]">
-                  {step.name}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">
+                <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">
                   {step.text}
                 </p>
               </motion.article>
@@ -77,15 +78,14 @@ export default function HowItWorks() {
               mask: 'linear-gradient(180deg, black 0%, black 80%, transparent 100%)',
               WebkitMask: 'linear-gradient(180deg, black 0%, black 80%, transparent 100%)',
             }}
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease, delay: 0.15 }}
           />
           {steps.map((step, i) => (
-            <InteractiveWrapper hover="scale">
+            <InteractiveWrapper key={`mobile-${step.name}`} hover="scale">
               <motion.article
-                key={step.name}
                 className="marketing-panel relative rounded-2xl p-5"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}

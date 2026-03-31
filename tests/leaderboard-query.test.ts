@@ -17,6 +17,7 @@ const { prismaMock } = vi.hoisted(() => ({
 
 vi.mock('@/lib/prisma', () => ({
   prisma: prismaMock,
+  hasConfiguredDatabaseConnection: true,
 }))
 
 import { getLeaderboardData } from '@/app/[locale]/(landing)/leaderboard/data/leaderboard-query'

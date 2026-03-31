@@ -40,12 +40,9 @@ describe('ThemeProvider', () => {
     container?.remove()
     container = null
     root = null
-    localStorage.clear()
   })
 
-  it('enforces dark theme even when localStorage has a legacy value', async () => {
-    localStorage.setItem('theme', 'light')
-
+  it('always provides dark theme (fixed dark-only provider)', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
@@ -60,21 +57,37 @@ describe('ThemeProvider', () => {
 
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
-    const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
 
     expect(theme?.textContent).toBe('dark')
     expect(effectiveTheme?.textContent).toBe('dark')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
+  })
+
+  it('remains dark after toggleTheme (no-op in fixed dark mode)', async () => {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+    root = createRoot(container)
+
+    await act(async () => {
+      root!.render(
+        <ThemeProvider>
+          <ThemeProbe />
+        </ThemeProvider>,
+      )
+    })
+
+    const theme = container.querySelector('[data-testid="theme"]')
+    const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
+
+    expect(theme?.textContent).toBe('dark')
 
     await act(async () => {
       toggleTheme.click()
     })
 
     expect(theme?.textContent).toBe('dark')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
   })
 
-  it('defaults to dark theme', async () => {
+  it('remains dark after setTheme (no-op in fixed dark mode)', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
@@ -88,33 +101,12 @@ describe('ThemeProvider', () => {
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
-
-    expect(theme?.textContent).toBe('dark')
-    expect(effectiveTheme?.textContent).toBe('dark')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
-  })
-
-  it('persists theme to localStorage', async () => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-    root = createRoot(container)
-
-    await act(async () => {
-      root!.render(
-        <ThemeProvider>
-          <ThemeProbe />
-        </ThemeProvider>,
-      )
-    })
-
     const setDark = container.querySelector('[data-testid="setDark"]') as HTMLButtonElement
 
     await act(async () => {
       setDark.click()
     })
 
-    expect(localStorage.getItem('theme')).toBe('dark')
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(theme?.textContent).toBe('dark')
   })
 })

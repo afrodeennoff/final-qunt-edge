@@ -1,11 +1,17 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
+    plugins: {
+      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
+    },
     rules: {
       // Transitional hardening: keep signal while reducing legacy churn.
       "@typescript-eslint/no-explicit-any": "error",
@@ -21,15 +27,8 @@ const eslintConfig = defineConfig([
       "complexity": ["warn", 10],
       "prefer-const": "warn",
       "react/no-unescaped-entities": "warn",
-      "react-hooks/error-boundaries": "warn",
-      "react-hooks/immutability": "warn",
-      "react-hooks/preserve-manual-memoization": "warn",
-      "react-hooks/purity": "warn",
-      "react-hooks/refs": "warn",
       "react-hooks/rules-of-hooks": "warn",
       "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/static-components": "warn",
-      "react-hooks/use-memo": "warn",
       "no-console": ["error", { "allow": ["warn", "error"] }],
     },
   },

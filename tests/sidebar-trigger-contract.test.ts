@@ -9,7 +9,7 @@ describe("Dashboard sidebar trigger contract", () => {
       "utf8"
     )
 
-    expect(source).toMatch(/<SidebarTrigger className=\"[^\"]*h-11[^\"]*w-11[^\"]*md:h-7[^\"]*md:w-7[^\"]*\"/)
+    expect(source).toMatch(/<SidebarTrigger className=\"[^\"]*h-10[^\"]*w-10[^\"]*md:h-7[^\"]*md:w-7[^\"]*\"/)
   })
 
   it("does not render an extra trigger in unified sidebar header", () => {

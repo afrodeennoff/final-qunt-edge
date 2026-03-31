@@ -433,8 +433,17 @@ export class OfflineQueueManager {
   }
 
   private getStorage(): Storage | null {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage
+    try {
+      if (
+        typeof localStorage !== 'undefined' &&
+        localStorage !== null &&
+        typeof localStorage.getItem === 'function' &&
+        typeof localStorage.setItem === 'function'
+      ) {
+        return localStorage
+      }
+    } catch {
+      // localStorage access can throw in restricted environments
     }
     return null
   }

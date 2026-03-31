@@ -40,7 +40,7 @@ const localStorageShim: Storage = {
   },
 }
 
-if (typeof (globalThis as { localStorage?: unknown }).localStorage === 'undefined') {
+if (typeof (globalThis as { localStorage?: unknown }).localStorage === 'undefined' || typeof (globalThis as { localStorage?: Storage }).localStorage?.getItem !== 'function') {
   Object.defineProperty(globalThis, 'localStorage', {
     value: localStorageShim,
     writable: true,
