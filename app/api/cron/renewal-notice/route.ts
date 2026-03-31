@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse, connection } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
@@ -27,6 +27,7 @@ const getDateLocale = (language: string) => {
 
 // Daily cron job handler - runs every day at 9 AM UTC
 export async function GET(req: Request) {
+  await connection()
   if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is missing')
     return NextResponse.json({ error: 'Missing API key' }, { status: 500 })

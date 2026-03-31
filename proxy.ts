@@ -172,6 +172,9 @@ const PUBLIC_DOCUMENT_PATH_PREFIXES = [
 ]
 const PRIVATE_DOCUMENT_PATH_PREFIXES = [
   "/dashboard",
+  "/teams/dashboard",
+  "/teams/manage",
+  "/teams/join",
   "/authentication",
   "/admin",
 ]
@@ -419,13 +422,17 @@ function setCspHeader(response: NextResponse, csp: string, reportOnly: boolean) 
   )
 }
 
-export default async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname
   const normalizedPathname = normalizePathWithoutLocale(pathname)
   const origin = req.headers.get('origin')
   const locale = getLocale(pathname)
   const routeClass = classifyRoute(pathname)
   const isDashboardRoute = pathMatchesPrefix(normalizedPathname, "/dashboard")
+  const isTeamsProtectedRoute =
+    pathMatchesPrefix(normalizedPathname, "/teams/dashboard") ||
+    pathMatchesPrefix(normalizedPathname, "/teams/manage") ||
+    pathMatchesPrefix(normalizedPathname, "/teams/join")
   const isAdminRoute = pathMatchesPrefix(normalizedPathname, "/admin")
   const isAuthRoute = pathMatchesPrefix(normalizedPathname, "/authentication")
   const isEmbedRoute = routeClass === "embed"
@@ -554,7 +561,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Check for protected routes
-  const needsSessionCheck = isDashboardRoute || isAdminRoute || isAuthRoute
+  const needsSessionCheck = isDashboardRoute || isTeamsProtectedRoute || isAdminRoute || isAuthRoute
   const hasAuthCookie = hasSupabaseAuthCookie(req)
   const shouldRunSessionCheck = needsSessionCheck && hasAuthCookie
 
@@ -582,7 +589,7 @@ export default async function middleware(req: NextRequest) {
         sameSite: cookie.sameSite,
       })
     })
-  } else if (!hasAuthCookie && (isDashboardRoute || isAdminRoute)) {
+  } else if (!hasAuthCookie && (isDashboardRoute || isTeamsProtectedRoute || isAdminRoute)) {
     // Fast path: protected route with no auth cookie -> redirect to auth
     // Use locale-aware path
     const authUrl = new URL(`/${locale}/authentication`, req.url)
@@ -641,7 +648,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   // Authentication checks with better error handling
-  if (isDashboardRoute) {
+  if (isDashboardRoute || isTeamsProtectedRoute) {
     if (!user || error) {
       const nextPath = pathname + req.nextUrl.search
       const authUrl = new URL(`/${locale}/authentication`, req.url)

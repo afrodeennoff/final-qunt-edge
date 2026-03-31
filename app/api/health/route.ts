@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, connection } from 'next/server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { logger, withLogContext } from '@/lib/logger'
 import { requireServiceAuth } from '@/server/authz'
@@ -36,6 +36,7 @@ async function checkDatabase(): Promise<{ ok: boolean; latencyMs: number; error?
 }
 
 export async function GET(request: Request) {
+  await connection()
   const requestId = crypto.randomUUID()
   return withLogContext(
     {

@@ -45,10 +45,12 @@ function isTransientNextBuildFsRace(output) {
   // - .next/build-manifest.json
   // - .next/server/pages-manifest.json
   // - _buildManifest.js.tmp.* / _buildManifest.js
+  // - _ssgManifest.js.tmp.* / _ssgManifest.js
   // Retry only specific build-artifact misses observed in this workspace.
   return /\/\.next\/(server\/)?(pages-manifest\.json|build-manifest\.json)/.test(
     output,
   ) || /\/\.next\/static\/.*_buildManifest\.js(\.tmp\.[^'"\s]+)?/.test(output)
+    || /\/\.next\/static\/.*_ssgManifest\.js(\.tmp\.[^'"\s]+)?/.test(output)
     || /\/\.next\/server\/[^'"\s]+\.nft\.json/.test(output)
     || /\/\.next\/server\/proxy\.js/.test(output)
     || /\/\.next\/types\//.test(output)

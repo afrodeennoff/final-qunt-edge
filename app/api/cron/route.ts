@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextResponse, connection } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { Resend } from 'resend'
 import { headers } from 'next/headers'
@@ -64,6 +64,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
 }
 
 export async function GET() {
+  await connection()
   if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is missing')
     return NextResponse.json({ error: 'Missing API key' }, { status: 500 })

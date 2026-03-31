@@ -46,12 +46,13 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
   const cpus = parseBuildCpus(process.env.NEXT_BUILD_CPUS, warnings);
   const imageHosts = getImageHosts(process.env.NEXT_PUBLIC_CDN_URL, process.env.NEXT_PUBLIC_SUPABASE_URL, warnings);
   const projectRoot = path.resolve(process.cwd());
+  const cacheComponentsDisabled = process.env.NEXT_CACHE_COMPONENTS === 'false'
 
   const config: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
     serverExternalPackages: ['pdf2json', 'canvas', 'sharp'],
-    cacheComponents: true,
+    cacheComponents: !cacheComponentsDisabled,
     // Bundle optimization - tree shake heavy libraries
     experimental: {
       ...(cpus ? { cpus } : {}),
