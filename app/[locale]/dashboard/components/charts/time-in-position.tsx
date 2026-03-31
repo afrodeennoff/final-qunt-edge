@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
+import { safeArrayMax } from '@/lib/array-utils';
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardStats } from "@/context/data-provider";
 import { Trade } from "@/lib/data-types";
@@ -125,7 +126,7 @@ export default React.memo(function TimeInPositionChart({
       .sort((a, b) => a.hour - b.hour);
   }, [trades]);
 
-  const maxTradeCount = Math.max(...chartData.map((data) => data.tradeCount));
+  const maxTradeCount = safeArrayMax(chartData.map((data) => data.tradeCount));
   const hasData = chartData.some((data) => data.tradeCount > 0);
 
   const getColor = (count: number) => {

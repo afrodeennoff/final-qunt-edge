@@ -9,6 +9,7 @@ import {
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
 import { getVerifiedPropFirmProfileByName, getVerifiedPropFirmProfileBySlug } from '@/lib/prop-firms/verified-profiles'
+import { safeArrayMin } from '@/lib/array-utils'
 import {
   isPrismaOperationCoolingDown,
   isPrismaSchemaMismatchError,
@@ -445,7 +446,7 @@ function estimateChallengeFeeFromConfig(firmName: string): number {
     .filter((value) => Number.isFinite(value) && value > 0)
 
   if (prices.length === 0) return 0
-  return Math.round(Math.min(...prices))
+  return Math.round(safeArrayMin(prices))
 }
 
 function getWebSourcedDealsFallback(): DealItem[] {

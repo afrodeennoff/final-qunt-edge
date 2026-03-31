@@ -4,6 +4,7 @@ import { Prisma } from '@/prisma/generated/prisma'
 import type { Account, Trade } from '@/lib/data-types'
 import Decimal from 'decimal.js'
 import { toValidDate } from '@/lib/date-utils'
+import { safeArrayMax } from '@/lib/array-utils'
 
 export type AccountMetrics = {
   // Balance and progress
@@ -143,7 +144,7 @@ export function computeAccountMetrics(
 
   const hasProfitableData = totalProfit.gt(0)
   const isConfigured = (account.profitTarget ?? 0) > 0 || (account.drawdownThreshold ?? 0) > 0
-  const highestProfitDay = Object.values(dailyPnL).length > 0 ? Math.max(...Object.values(dailyPnL)) : 0
+  const highestProfitDay = Object.values(dailyPnL).length > 0 ? safeArrayMax(Object.values(dailyPnL)) : 0
 
   let maxAllowedDailyProfit: number | null = null
   let isConsistent = false

@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
+import { safeArrayMin } from '@/lib/array-utils'
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { addDays, startOfDay, endOfDay, format } from "date-fns"
 import { createShared } from "@/server/shared"
@@ -138,7 +139,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
 
       const timestamps = trades.map(trade => new Date(trade.entryDate).getTime())
       return {
-        from: startOfDay(new Date(Math.min(...timestamps))),
+        from: timestamps.length > 0 ? startOfDay(new Date(safeArrayMin(timestamps))) : startOfDay(new Date()),
         to: undefined
       }
     }, [trades])

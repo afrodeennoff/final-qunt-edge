@@ -1,6 +1,7 @@
 'use client'
 
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area } from 'recharts'
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils'
 
 interface EquityCurveData {
   date: string
@@ -183,8 +184,8 @@ function getSmartDateTicks(dailyData: DailyEquityData[]) {
 // Helper to generate "nice" ticks for the X axis (trade numbers)
 function getSmartTicks(equityCurve: EquityCurveData[]) {
   if (!equityCurve.length) return []
-  const minTrade = Math.min(...equityCurve.map(d => d.tradeNumber))
-  const maxTrade = Math.max(...equityCurve.map(d => d.tradeNumber))
+  const minTrade = safeArrayMin(equityCurve.map(d => d.tradeNumber))
+  const maxTrade = safeArrayMax(equityCurve.map(d => d.tradeNumber))
   const range = maxTrade - minTrade
 
   // Decide step based on range

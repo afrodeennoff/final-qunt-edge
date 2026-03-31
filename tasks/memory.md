@@ -1,4 +1,18 @@
-# Session Memory (2026-03-30)
+# Session Memory (2026-03-31)
+
+## Current Session: `.env.example` runtime env sync (2026-03-31)
+
+### Accomplishments
+- Compared runtime env references in `app/`, `server/`, `lib/`, `components/`, `context/`, `store/`, and `scripts/` against `.env.example`.
+- Added missing placeholders and aliases for UI v2, health details, onboarding/tutorial URLs, broker/import endpoints, `NEXT_PUBLIC_VERCEL_URL`, service-worker/cache/Sentry flags, Supabase legacy aliases, and `TOKEN_CRYPTO_KEY_VERSION`.
+- Updated `tasks/todo.md` with a dedicated sync task and review note.
+
+### Verification
+- Targeted presence check for all added env keys passed.
+- `.env.example` now contains the runtime keys referenced by the updated code paths.
+
+### Blockers
+- `/init` is unavailable in this shell (`zsh: no such file or directory: /init`)
 
 ## Current Session: Bun package-manager optimization sweep (2026-03-30 night)
 

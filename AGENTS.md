@@ -117,6 +117,7 @@ npm run analyze:bundle         # Bundle analysis
 - **Deploy**: Vercel with cron jobs. `vercel.json` defines 4 cron schedules.
 - **Payments**: Whop (not Stripe). Webhook at `/api/whop/webhook`. Plan configs in `lib/plan-configs.ts`.
 - **Deep docs**: See `public/AGENTS.md` for full operating instructions, safety-critical areas, commit history.
+- **Env example sync**: `.env.example` must include every runtime env key referenced in `app/`, `server/`, `lib/`, `components/`, `context/`, `store/`, and `scripts/`, plus the live Vercel project keys. When adding a new `process.env.*` reference, update `.env.example` in the same change.
 
 ## Subdirectory AGENTS.md
 

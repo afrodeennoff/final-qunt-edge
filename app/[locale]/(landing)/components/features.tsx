@@ -1,15 +1,32 @@
 "use client"
 
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { ReactNode, useEffect, useRef, useState, lazy, Suspense } from "react"
 import { BarChart3, Calendar, Database, Brain } from "lucide-react"
 import { CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import Image from "next/image"
 import { ImportFeature } from "./import-feature"
 import { useI18n } from "@/locales/client"
-import TradingChatAssistant from "./chat-feature"
+import { Skeleton } from "@/components/ui/skeleton"
 import { CalendarFeaturePreview } from "./calendar-preview"
 import { cn } from "@/lib/utils"
 import { PnlPerContractPreview } from "./pnl-per-contract-preview"
+
+const TradingChatAssistant = lazy(() => import("./chat-feature").then(m => ({ default: m.default })))
+
+function ChatLoadingFallback() {
+  return (
+    <div className="h-full w-full flex items-center justify-center bg-card/50">
+      <div className="space-y-3 w-full max-w-[280px]">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="pt-2 space-y-2">
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-5/6" />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 type FeatureCard = {
   id: string
@@ -105,7 +122,11 @@ export default function Features() {
       icon: <Brain className="h-5 w-5 text-primary" />,
       description: t("landing.features.ai-journaling.description"),
       stat: t("landing.features.ai-journaling.stat"),
-      image: <TradingChatAssistant />
+      image: (
+        <Suspense fallback={<ChatLoadingFallback />}>
+          <TradingChatAssistant />
+        </Suspense>
+      )
     },
     {
       id: "performance-visualization",

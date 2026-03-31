@@ -641,7 +641,7 @@ import { Separator } from "@/components/ui/separator"
 export function UserSettings() {
   const [notifications, setNotifications] = useState(true)
   const [email, setEmail] = useState("user@example.com")
-  const [theme, setTheme] = useState("dark")
+  const [theme, setTheme] = useState("blue")
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -691,9 +691,11 @@ export function UserSettings() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
+                    <SelectItem value="blue">Blue</SelectItem>
+                    <SelectItem value="violet">Violet</SelectItem>
+                    <SelectItem value="emerald">Emerald</SelectItem>
+                    <SelectItem value="amber">Amber</SelectItem>
+                    <SelectItem value="rose">Rose</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -229,9 +229,9 @@ export function UnifiedSidebar({
   const initials = useMemo(() => getUserInitials(user), [user])
 
   return (
-    <Sidebar collapsible="icon" className="pointer-events-auto border-r border-sidebar-border/40 text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient">
-      <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-xl" />
-      <SidebarHeader className="h-16 border-b border-sidebar-border/30 px-2 py-0 relative bg-gradient-to-b from-sidebar-accent/20 to-transparent">
+    <Sidebar collapsible="icon" className="pointer-events-auto border-r-0 text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient">
+      <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-xl z-0" />
+      <SidebarHeader className="h-16 border-b border-sidebar-border/30 px-2 py-0 relative z-10 bg-gradient-to-b from-sidebar-accent/20 to-transparent">
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex items-center gap-2">
@@ -254,7 +254,7 @@ export function UnifiedSidebar({
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="px-1.5 scrollbar-thin scrollbar-thumb-sidebar-border/40 scrollbar-track-transparent hover:scrollbar-thumb-sidebar-border/60 scrollbar-w-[3px]">
+      <SidebarContent className="relative z-10 px-1.5 scrollbar-thin scrollbar-thumb-sidebar-border/40 scrollbar-track-transparent hover:scrollbar-thumb-sidebar-border/60 scrollbar-w-[3px] overflow-y-auto">
         {groupedItems.order.map((groupName, groupIndex) => (
           <SidebarGroup key={groupName} className="px-2 py-2.5">
             <SidebarGroupLabel className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-sidebar-foreground/40 pl-1" id={`sidebar-group-${groupIndex}`}>
@@ -372,7 +372,7 @@ export function UnifiedSidebar({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/30 p-2 relative bg-gradient-to-t from-sidebar-accent/15 to-transparent">
+      <SidebarFooter className="relative z-20 border-t border-sidebar-border/30 p-2 bg-gradient-to-t from-sidebar-accent/15 to-transparent">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

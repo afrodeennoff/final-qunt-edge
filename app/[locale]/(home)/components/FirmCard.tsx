@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Banknote, BriefcaseBusiness, Shield, Wallet } from 'lucide-react'
 import type { UnifiedFirm } from '@/server/deals'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
+import { safeArrayMin } from '@/lib/array-utils'
 
 interface FirmCardProps {
   firm: UnifiedFirm
@@ -16,7 +17,7 @@ function getLowestPriceLabel(firm: UnifiedFirm): string {
     .filter((price) => Number.isFinite(price) && price > 0)
 
   if (prices.length === 0) return 'No live pricing'
-  return `From $${Math.min(...prices)}`
+  return `From $${safeArrayMin(prices)}`
 }
 
 export default function FirmCard({ firm, locale }: FirmCardProps) {

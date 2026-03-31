@@ -13,6 +13,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { Info } from "lucide-react";
 import {
   Popover,
@@ -137,11 +138,11 @@ export default function PnLBySideChartEmbed({
   }, [trades, showAverage]);
 
   const maxPnL = React.useMemo(
-    () => Math.max(...chartData.map((d) => d.pnl)),
+    () => safeArrayMax(chartData.map((d) => d.pnl)),
     [chartData],
   );
   const minPnL = React.useMemo(
-    () => Math.min(...chartData.map((d) => d.pnl)),
+    () => safeArrayMin(chartData.map((d) => d.pnl)),
     [chartData],
   );
   const absMax = React.useMemo(

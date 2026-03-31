@@ -83,6 +83,19 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'react-grid-layout',
         'react-zoom-pan-pinch',
         'react-resizable',
+        // Supabase — client libraries for auth and database
+        '@supabase/supabase-js',
+        '@supabase/ssr',
+        // Data export/import — Excel, PDF, CSV generation and parsing
+        'exceljs',
+        'jspdf',
+        'papaparse',
+        // DOM manipulation — screenshot capture for exports
+        'html2canvas',
+        // State management — Zustand stores
+        'zustand',
+        // Visualization — D3 charts and data visualization
+        'd3',
       ],
     },
     turbopack: {

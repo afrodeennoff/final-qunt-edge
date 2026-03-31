@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart"
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { useI18n, useCurrentLocale } from '@/locales/client'
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils'
 
 interface ChartsProps {
   dayData: CalendarEntry | undefined;
@@ -111,14 +112,14 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
 
     // Calculate common domain
     const distributionValues = Object.values(accountPnL);
-    const distributionMin = Math.min(...distributionValues);
-    const distributionMax = Math.max(...distributionValues);
+    const distributionMin = safeArrayMin(distributionValues);
+    const distributionMax = safeArrayMax(distributionValues);
 
-    const equityMin = Math.min(
-      ...equityChartData.map(d => Math.min(d.pnl, d.balance))
+    const equityMin = safeArrayMin(
+      equityChartData.map(d => Math.min(d.pnl, d.balance))
     );
-    const equityMax = Math.max(
-      ...equityChartData.map(d => Math.max(d.pnl, d.balance))
+    const equityMax = safeArrayMax(
+      equityChartData.map(d => Math.max(d.pnl, d.balance))
     );
 
     const overallMin = Math.min(distributionMin, equityMin);

@@ -34,10 +34,13 @@ import {
   RefreshCw,
   Settings,
   Building2,
+  Palette,
 } from 'lucide-react'
 import { SubscriptionBadge } from '@/components/subscription-badge'
 import { signOut } from '@/server/auth'
 import { cn } from '@/lib/utils'
+import { useTheme } from '@/context/theme-provider'
+import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 
 type Locale = 'en' | 'fr'
 type MenuVariant = 'navbar' | 'sidebar'
@@ -95,6 +98,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
   const setTimezone = useUserStore(state => state.setTimezone)
   const resetUser = useUserStore(state => state.resetUser)
   const clearTradovate = useTradovateSyncStore((state) => state.clearAll)
+  const { theme, setTheme } = useTheme()
 
   const variantClass = variantClasses[variant]
   const userMetadata = user?.user_metadata
@@ -266,6 +270,36 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
                         aria-label={tz.replace('_', ' ')}
                       >
                         {tz.replace('_', ' ')}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </ScrollArea>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger
+              aria-label={t('dashboard.theme')}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <Palette className="mr-2 h-4 w-4" />
+              <span>{t('dashboard.theme')}</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <ScrollArea className="h-[128px]">
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={(val) => setTheme(val as DashboardTheme)}
+                    aria-label="Theme selection"
+                  >
+                    {VALID_DASHBOARD_THEMES.map((t_name) => (
+                      <DropdownMenuRadioItem
+                        key={t_name}
+                        value={t_name}
+                        className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background capitalize"
+                      >
+                        {t_name}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>

@@ -3,6 +3,7 @@ import { getUserId } from "@/server/auth";
 import { normalizeTrades, type AnalyticsTrade, tradeNetPnl } from "@/lib/ai/trade-normalization";
 import { tool } from "ai";
 import { z } from 'zod/v3';
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 
 interface InstrumentMetrics {
   instrument: string;
@@ -90,8 +91,8 @@ function calculateInstrumentMetrics(instrument: string, trades: AnalyticsTrade[]
   
   const profitFactor = averageLoss > 0 ? averageWin / averageLoss : 0;
   
-  const largestWin = wins.length > 0 ? Math.max(...wins.map(t => t.pnl)) : 0;
-  const largestLoss = losses.length > 0 ? Math.min(...losses.map(t => t.pnl)) : 0;
+  const largestWin = wins.length > 0 ? safeArrayMax(wins.map(t => t.pnl)) : 0;
+  const largestLoss = losses.length > 0 ? safeArrayMin(losses.map(t => t.pnl)) : 0;
   
   const averageTradeSize = instrumentTrades.reduce((sum, t) => sum + t.quantity, 0) / totalTrades;
   const totalVolume = instrumentTrades.reduce((sum, t) => sum + t.quantity, 0);

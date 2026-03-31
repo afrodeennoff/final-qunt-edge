@@ -98,8 +98,8 @@ export function DashboardHeader() {
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 overflow-hidden border-b backdrop-blur-xl transition-all duration-300",
-                "border-v2-border/40 bg-v2-bg-base/95",
+                "sticky top-0 z-50 overflow-hidden border-b border-transparent backdrop-blur-xl transition-all duration-300",
+                "bg-v2-bg-base/95",
                 "supports-[backdrop-filter]:bg-v2-bg-base/85 supports-[backdrop-filter]:backdrop-blur-xl",
                 isMobile ? "pt-safe" : "h-14"
             )}

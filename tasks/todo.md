@@ -1,3 +1,14 @@
+## Task: Sync `.env.example` with current runtime envs (2026-03-31)
+
+- [x] Inventory runtime env references against `.env.example`
+- [x] Add missing runtime placeholders and legacy aliases
+- [x] Verify the updated example matches the code paths that consume env vars
+
+## Review
+- `.env.example` now includes the runtime envs consumed directly by code paths that were missing before: UI v2 toggle, health details toggle, onboarding video IDs, broker/import tutorial URLs, Rithmic API host, Sentry/cache/service-worker flags, `NEXT_PUBLIC_VERCEL_URL`, Supabase legacy aliases, and `TOKEN_CRYPTO_KEY_VERSION`.
+- The header now states that the template was synced against the live `final-qunt-edge` Vercel project.
+- No application code changed; this was an example-file sync only.
+
 ## Task: Dashboard Fix + Design Refinement — "fix the dashboard/* issue please" (2026-03-31)
 
 - [x] Fix production-readiness issues (ESLint config, Vitest config, 6 test suites, auto-save service, HowItWorks.tsx)

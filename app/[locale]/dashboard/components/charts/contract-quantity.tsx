@@ -22,6 +22,7 @@ import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useDashboardStats } from "@/context/data-provider";
 import { Trade } from "@/lib/data-types";
+import { safeArrayMax } from '@/lib/array-utils';
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { formatInTimeZone } from "date-fns-tz";
@@ -78,7 +79,7 @@ export default React.memo(function ContractQuantityChart({
       .sort((a, b) => a.hour - b.hour);
   }, [trades]);
 
-  const maxTradeCount = Math.max(...chartData.map((data) => data.tradeCount));
+  const maxTradeCount = safeArrayMax(chartData.map((data) => data.tradeCount));
   const hasData = chartData.some((data) => data.tradeCount > 0);
 
    const getColor = (count: number) => {

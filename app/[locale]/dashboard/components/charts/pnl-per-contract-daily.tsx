@@ -13,6 +13,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { CardV2Title } from "@/components/ui/v2";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { useDashboardIsLoading, useDashboardStats } from "@/context/data-provider";
 import { cn } from "@/lib/utils";
@@ -146,8 +147,8 @@ export default React.memo(function PnLPerContractDailyChart({
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [trades, config.selectedInstrument, timezone]);
 
-  const maxPnL = Math.max(...chartData.map((d) => d.averagePnl));
-  const minPnL = Math.min(...chartData.map((d) => d.averagePnl));
+  const maxPnL = safeArrayMax(chartData.map((d) => d.averagePnl));
+  const minPnL = safeArrayMin(chartData.map((d) => d.averagePnl));
   const renderTooltip = React.useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload as ChartDatum | undefined;

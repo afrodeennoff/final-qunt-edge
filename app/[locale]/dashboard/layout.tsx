@@ -9,6 +9,8 @@ import { DashboardScrollReset } from "./components/dashboard-scroll-reset";
 import { ErrorBoundary } from "@/components/error-boundary";
 import dynamic from "next/dynamic";
 import { isAdminUser } from "@/server/authz";
+import { getUserDashboardTheme } from "@/server/user-data";
+import { serializeThemeVars } from "@/lib/constants/dashboard-themes";
 
 const DashboardSidebar = dynamic(
   () => import("@/components/sidebar/dashboard-sidebar").then((m) => m.DashboardSidebar),
@@ -54,9 +56,19 @@ export default async function DashboardLayout({
   }
 
   const isAdmin = isAdminUser(user);
+  const userTheme = await getUserDashboardTheme() ?? undefined;
+  const themeScript = serializeThemeVars(userTheme ?? 'blue');
 
   return (
-    <SidebarRootProviders withAuthTimeout>
+    <>
+      <script
+        id="init-dashboard-theme"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'blue'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
+        }}
+      />
+      <SidebarRootProviders withAuthTimeout initialTheme={userTheme}>
       <DashboardProviders>
         <DashboardClientOverlays />
         <DashboardProvider>
@@ -89,5 +101,6 @@ export default async function DashboardLayout({
         </DashboardProvider>
       </DashboardProviders>
     </SidebarRootProviders>
+    </>
   );
 }

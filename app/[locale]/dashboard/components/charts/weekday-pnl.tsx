@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider";
 import { cn } from "@/lib/utils";
@@ -94,8 +95,8 @@ export default React.memo(function WeekdayPNLChart({
     }));
   }, [calendarData]);
 
-  const maxPnL = Math.max(...weekdayData.map((d) => d.pnl));
-  const minPnL = Math.min(...weekdayData.map((d) => d.pnl));
+  const maxPnL = safeArrayMax(weekdayData.map((d) => d.pnl));
+  const minPnL = safeArrayMin(weekdayData.map((d) => d.pnl));
   const hasData = weekdayData.some((d) => d.tradeCount > 0);
 
   const getColor = (value: number) => {

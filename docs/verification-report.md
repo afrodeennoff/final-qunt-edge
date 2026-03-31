@@ -16,7 +16,7 @@ All TypeScript and ESLint verification gates pass. The build is blocked by a mis
 - **Status:** PASSED (0 errors after fixes)
 - **Fixes Applied:**
   1. Added `useMemo` import to `user-menu.tsx`
-  2. Added `DASHBOARD_THEMES` export to `theme-provider.tsx`
+  2. Added `VALID_DASHBOARD_THEMES` to `lib/constants/dashboard-themes.ts` (blue, violet, emerald, amber, rose)
   3. Added `scope` prop to `ThemeProvider` component
   4. Fixed leaderboard query return statement
   5. Added `Search` icon import to firm-reviews-section
@@ -56,7 +56,7 @@ All TypeScript and ESLint verification gates pass. The build is blocked by a mis
    - ✅ Review/coupon CRUD operations
 
 4. **Theme API** (`app/api/user/theme/route.ts`)
-   - ✅ Uses `DASHBOARD_THEMES` constant
+   - ✅ Uses `VALID_DASHBOARD_THEMES` constant
    - ✅ Proper GET/PUT endpoints
 
 ---
@@ -94,7 +94,7 @@ All TypeScript and ESLint verification gates pass. The build is blocked by a mis
 | Issue | File | Fix |
 |-------|------|-----|
 | Missing `useMemo` import | `user-menu.tsx` | Added import from react |
-| Missing `DASHBOARD_THEMES` export | `theme-provider.tsx` | Added const export |
+ | Missing `VALID_DASHBOARD_THEMES` export | `theme-provider.tsx` | Added const export |
 | Missing `scope` prop | `theme-provider.tsx` | Added prop with type |
 | Missing return statement | `leaderboard-query.ts` | Added `return entries` |
 | Missing `FilterIcon` import | `firm-reviews-section.tsx` | Replaced with `Search` from lucide |

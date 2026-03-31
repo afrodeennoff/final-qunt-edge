@@ -8,6 +8,7 @@ import { Trade } from "@/lib/data-types"
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { safeArrayMax } from '@/lib/array-utils'
 import {
   Accordion,
   AccordionContent,
@@ -128,7 +129,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
           });
           
           // Find the maximum number of weeks in any month based on the new assignment
-          const maxWeeks = Math.max(...Array.from({ length: 12 }, (_, i) => 
+          const maxWeeks = safeArrayMax(Array.from({ length: 12 }, (_, i) =>
             weeksToDisplay.filter(ws => {
               const wy = getYear(ws);
               if (wy === year) return getMonth(ws) === i;

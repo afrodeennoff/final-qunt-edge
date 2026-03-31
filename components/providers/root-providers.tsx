@@ -1,6 +1,7 @@
 "use client"
 
 import { ThemeProvider } from "@/context/theme-provider";
+import type { DashboardTheme } from "@/lib/constants/dashboard-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect } from "react";
@@ -35,9 +36,11 @@ function shouldRecoverFromChunkError(reason: unknown): boolean {
 export function RootProviders({
     children,
     themeScope = "fixed-blue",
+    initialTheme,
 }: {
     children: React.ReactNode
     themeScope?: "dashboard" | "fixed-blue"
+    initialTheme?: DashboardTheme
 }) {
     useEffect(() => {
         if (process.env.NODE_ENV !== "production") {
@@ -159,7 +162,7 @@ export function RootProviders({
 
     return (
         <TooltipProvider>
-            <ThemeProvider scope={themeScope}>
+            <ThemeProvider scope={themeScope} initialTheme={initialTheme}>
                 {children}
             </ThemeProvider>
         </TooltipProvider>
@@ -174,15 +177,23 @@ export function PublicRootProviders({
     const enablePublicMotion = process.env.NEXT_PUBLIC_ENABLE_PUBLIC_MOTION === "true";
 
     if (!enablePublicMotion) {
-        return <RootProviders themeScope="fixed-blue">{children}</RootProviders>;
+        return (
+            <RootProviders themeScope="fixed-blue">
+                <SidebarProvider defaultOpen={true}>
+                    {children}
+                </SidebarProvider>
+            </RootProviders>
+        );
     }
 
     return (
         <RootProviders themeScope="fixed-blue">
-            <SmoothScrollProvider>
-                <GlobalMotionEffects />
-                {children}
-            </SmoothScrollProvider>
+            <SidebarProvider defaultOpen={true}>
+                <SmoothScrollProvider>
+                    <GlobalMotionEffects />
+                    {children}
+                </SmoothScrollProvider>
+            </SidebarProvider>
         </RootProviders>
     );
 }
@@ -191,13 +202,15 @@ export function SidebarRootProviders({
     children,
     defaultOpen = true,
     withAuthTimeout = false,
+    initialTheme,
 }: {
     children: React.ReactNode
     defaultOpen?: boolean
     withAuthTimeout?: boolean
+    initialTheme?: DashboardTheme
 }) {
     return (
-        <RootProviders themeScope="dashboard">
+        <RootProviders themeScope="dashboard" initialTheme={initialTheme}>
             <SidebarProvider defaultOpen={defaultOpen}>
                 {withAuthTimeout ? <AuthTimeout /> : null}
                 {children}

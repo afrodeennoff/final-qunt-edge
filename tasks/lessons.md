@@ -4,6 +4,28 @@
 
 ---
 
+## NEW (2026-03-31): Env example sync must include runtime code references, not just deployed envs
+
+### Mistake
+I initially compared `.env.example` only against the live Vercel env list and almost missed runtime env refs consumed directly by code (`NEXT_PUBLIC_UI_V2_ENABLED`, `HEALTH_DETAILS_PUBLIC`, onboarding/tutorial URLs, broker API host, and similar keys).
+
+### Root Cause
+I treated the deployment env inventory as the source of truth instead of intersecting it with actual `process.env` usage in runtime code.
+
+### Rule
+When updating `.env.example`, always compare the file against both the live Vercel project envs and runtime `process.env` usage in app/server/lib code. If code reads a key, the example must show it, even if it is not currently set in Vercel.
+
+### Example
+```bash
+# BAD: only diffing against Vercel envs
+vercel env list
+
+# GOOD: diff Vercel envs + runtime env refs
+rg -o 'process\\.env\\.[A-Z0-9_]+' app server lib components context store scripts --glob '!**/*.md'
+```
+
+---
+
 ## NEW (2026-03-31): Never use full-row Prisma user reads in auth sync paths
 
 ### Mistake

@@ -275,7 +275,7 @@ asyncio.run(status())
 - **Prisma ORM** for database operations
 - **Supabase** for authentication and real-time features
 
-<!-- TODO: Add GIF showing dark/light theme switching and mobile responsive design -->
+<!-- TODO: Add GIF showing accent theme switching (blue/violet/emerald/amber/rose) and mobile responsive design -->
 
 ---
 

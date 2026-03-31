@@ -9,6 +9,7 @@ import { useDashboardActions } from "@/context/data-provider"
 import { toast } from "sonner"
 import { useScopedI18n } from "@/locales/client"
 import { getAllRithmicData } from "@/lib/rithmic-storage"
+import { safeArrayMax } from '@/lib/array-utils'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -77,10 +78,12 @@ export function GlobalSyncButton() {
                 return
             }
             const rithmicData = getAllRithmicData()
-            const latestRithmicSync = Math.max(...Object.values(rithmicData).map(d => new Date(d.lastSyncTime).getTime()), 0)
+            const rithmicTimestamps = Object.values(rithmicData).map(d => new Date(d.lastSyncTime).getTime())
+            const latestRithmicSync = rithmicTimestamps.length > 0 ? safeArrayMax(rithmicTimestamps) : 0
 
             const tradovateSyncs = tradovate.accounts
-            const latestTradovateSync = Math.max(...tradovateSyncs.map(a => new Date(a.lastSyncedAt).getTime()), 0)
+            const tradovateTimestamps = tradovateSyncs.map(a => new Date(a.lastSyncedAt).getTime())
+            const latestTradovateSync = tradovateTimestamps.length > 0 ? safeArrayMax(tradovateTimestamps) : 0
 
             const lastSync = Math.max(latestRithmicSync, latestTradovateSync)
             if (lastSync === 0) {

@@ -6,6 +6,7 @@ import type { Trade } from "@/prisma/generated/prisma";
 import { startOfWeek, endOfWeek, subWeeks, format } from "date-fns";
 import { requireServiceAuth, toErrorResponse } from "@/server/authz";
 import { logger, withLogContext } from "@/lib/logger";
+import { safeArrayMax } from '@/lib/array-utils';
 
 // PURPOSE:
 // - Compute MAE and MFE for all trades of the week
@@ -482,8 +483,8 @@ export async function GET(request: Request) {
           summary: {
             averageMAE: allProcessedTrades.reduce((sum, t) => sum + t.mae, 0) / allProcessedTrades.length,
             averageMFE: allProcessedTrades.reduce((sum, t) => sum + t.mfe, 0) / allProcessedTrades.length,
-            maxMAE: Math.max(...allProcessedTrades.map(t => t.mae)),
-            maxMFE: Math.max(...allProcessedTrades.map(t => t.mfe)),
+            maxMAE: safeArrayMax(allProcessedTrades.map(t => t.mae)),
+            maxMFE: safeArrayMax(allProcessedTrades.map(t => t.mfe)),
             averageRiskReward: allProcessedTrades
               .filter(t => t.mae > 0)
               .reduce((sum, t) => sum + (t.mfe / t.mae), 0) / allProcessedTrades.filter(t => t.mae > 0).length || 0

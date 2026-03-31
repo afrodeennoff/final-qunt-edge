@@ -3,6 +3,7 @@
 import { useI18n } from "@/locales/client"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils'
 
 interface EmotionDataPoint {
   date: Date
@@ -38,8 +39,8 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
     )
   }
 
-  const maxValue = Math.max(...data.map((d) => d.value), 100)
-  const minValue = Math.min(...data.map((d) => d.value), 0)
+  const maxValue = data.length > 0 ? Math.max(safeArrayMax(data.map((d) => d.value)), 100) : 100
+  const minValue = data.length > 0 ? Math.min(safeArrayMin(data.map((d) => d.value)), 0) : 0
   const range = maxValue - minValue || 1
 
   const chartHeight = 120

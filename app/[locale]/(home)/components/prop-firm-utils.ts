@@ -1,6 +1,7 @@
 'use client'
 
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils'
 
 export type ConfigFirm = (typeof propFirms)[string]
 export type ConfigFirmEntry = [string, ConfigFirm]
@@ -72,13 +73,13 @@ export function summarizeFirm(slug: string, firm: ConfigFirm): FirmSummary {
     name: firm.name,
     challengeType: getChallengeType(firm),
     drawdownType: getDrawdownType(firm),
-    payoutSpeed: payoutDays.length > 0 ? Math.min(...payoutDays) : 0,
-    maxAllocation: Math.max(...sizes.map((size) => size.balance)),
-    priceFrom: Math.min(...priceValues),
-    priceTo: Math.max(...priceValues),
+    payoutSpeed: payoutDays.length > 0 ? safeArrayMin(payoutDays) : 0,
+    maxAllocation: safeArrayMax(sizes.map((size) => size.balance)),
+    priceFrom: safeArrayMin(priceValues),
+    priceTo: safeArrayMax(priceValues),
     accountCount: sizes.length,
-    profitSplit: Math.max(...sizes.map((size) => size.profitSharing)),
-    maxFundedAccounts: Math.max(...sizes.map((size) => size.maxFundedAccounts)),
+    profitSplit: safeArrayMax(sizes.map((size) => size.profitSharing)),
+    maxFundedAccounts: safeArrayMax(sizes.map((size) => size.maxFundedAccounts)),
   }
 }
 

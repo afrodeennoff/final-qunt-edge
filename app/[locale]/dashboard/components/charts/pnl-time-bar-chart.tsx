@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider";
 import { Trade } from "@/lib/data-types";
@@ -88,9 +89,9 @@ export default React.memo(function TimeOfDayTradeChart({
       .sort((a, b) => a.hour - b.hour);
   }, [trades, timezone]);
 
-  const maxTradeCount = Math.max(...chartData.map((data) => data.tradeCount));
-  const maxPnL = Math.max(...chartData.map((data) => data.avgPnl));
-  const minPnL = Math.min(...chartData.map((data) => data.avgPnl));
+  const maxTradeCount = safeArrayMax(chartData.map((data) => data.tradeCount));
+  const maxPnL = safeArrayMax(chartData.map((data) => data.avgPnl));
+  const minPnL = safeArrayMin(chartData.map((data) => data.avgPnl));
   const hasData = chartData.some((data) => data.tradeCount > 0);
 
   const getColor = (count: number) => {

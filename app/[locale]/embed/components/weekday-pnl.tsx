@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { Info } from "lucide-react";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import {
   Popover,
   PopoverContent,
@@ -63,11 +64,11 @@ export default function WeekdayPnLChartEmbed({
   }, [trades]);
 
   const maxPnL = React.useMemo(
-    () => Math.max(...weekdayData.map((d) => d.pnl), 0),
+    () => safeArrayMax(weekdayData.map((d) => d.pnl)),
     [weekdayData],
   );
   const minPnL = React.useMemo(
-    () => Math.min(...weekdayData.map((d) => d.pnl), 0),
+    () => safeArrayMin(weekdayData.map((d) => d.pnl)),
     [weekdayData],
   );
   const getColor = (value: number) => {

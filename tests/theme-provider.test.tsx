@@ -20,8 +20,8 @@ function ThemeProbe() {
       <button data-testid="toggleTheme" onClick={toggleTheme} type="button">
         toggle
       </button>
-      <button data-testid="setDark" onClick={() => setTheme('dark')} type="button">
-        dark
+      <button data-testid="setViolet" onClick={() => setTheme('violet')} type="button">
+        violet
       </button>
     </div>
   )
@@ -42,7 +42,7 @@ describe('ThemeProvider', () => {
     root = null
   })
 
-  it('always provides dark theme (fixed dark-only provider)', async () => {
+  it('defaults to blue theme', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
@@ -58,55 +58,41 @@ describe('ThemeProvider', () => {
     const theme = container.querySelector('[data-testid="theme"]')
     const effectiveTheme = container.querySelector('[data-testid="effectiveTheme"]')
 
-    expect(theme?.textContent).toBe('dark')
-    expect(effectiveTheme?.textContent).toBe('dark')
+    expect(theme?.textContent).toBe('blue')
+    expect(effectiveTheme?.textContent).toBe('blue')
   })
 
-  it('remains dark after toggleTheme (no-op in fixed dark mode)', async () => {
+  it('uses initialTheme when provided', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
 
     await act(async () => {
       root!.render(
-        <ThemeProvider>
+        <ThemeProvider initialTheme="emerald">
           <ThemeProbe />
         </ThemeProvider>,
       )
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    const toggleTheme = container.querySelector('[data-testid="toggleTheme"]') as HTMLButtonElement
-
-    expect(theme?.textContent).toBe('dark')
-
-    await act(async () => {
-      toggleTheme.click()
-    })
-
-    expect(theme?.textContent).toBe('dark')
+    expect(theme?.textContent).toBe('emerald')
   })
 
-  it('remains dark after setTheme (no-op in fixed dark mode)', async () => {
+  it('rejects invalid initialTheme', async () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
 
     await act(async () => {
       root!.render(
-        <ThemeProvider>
+        <ThemeProvider initialTheme="dark">
           <ThemeProbe />
         </ThemeProvider>,
       )
     })
 
     const theme = container.querySelector('[data-testid="theme"]')
-    const setDark = container.querySelector('[data-testid="setDark"]') as HTMLButtonElement
-
-    await act(async () => {
-      setDark.click()
-    })
-
-    expect(theme?.textContent).toBe('dark')
+    expect(theme?.textContent).toBe('blue')
   })
 })

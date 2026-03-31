@@ -13,6 +13,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { CardV2Title } from "@/components/ui/v2";
+import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { useDashboardStats } from "@/context/data-provider";
 import { cn } from "@/lib/utils";
@@ -104,8 +105,8 @@ export default React.memo(function PnLPerContractChart({
       .sort((a, b) => b.averagePnl - a.averagePnl); // Sort by average PnL descending
   }, [trades]);
 
-  const maxPnL = Math.max(...chartData.map((d) => d.averagePnl));
-  const minPnL = Math.min(...chartData.map((d) => d.averagePnl));
+  const maxPnL = safeArrayMax(chartData.map((d) => d.averagePnl));
+  const minPnL = safeArrayMin(chartData.map((d) => d.averagePnl));
   const hasData = chartData.some((d) => d.tradeCount > 0);
   const renderTooltip = React.useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {

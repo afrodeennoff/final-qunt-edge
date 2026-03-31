@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { Info } from "lucide-react";
+import { safeArrayMax } from '@/lib/array-utils';
 import {
   Popover,
   PopoverContent,
@@ -136,7 +137,7 @@ export default function TickDistributionChartEmbed({
 
   // Color logic similar to weekday chart
   const maxCount = React.useMemo(
-    () => Math.max(...chartData.map((d) => d.count), 0),
+    () => safeArrayMax(chartData.map((d) => d.count)),
     [chartData],
   );
   const getColor = (value: number) => {
