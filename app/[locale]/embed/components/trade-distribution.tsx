@@ -21,6 +21,61 @@ import {
 } from "@/components/ui/popover";
 import { useI18n } from "@/locales/client";
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  t: any;
+}
+
+function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const item = payload[0];
+    const data = item?.payload || {};
+    return (
+      <div
+        className="rounded-lg border bg-background p-2 shadow-xs"
+        style={{
+          background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+          borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+          borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+        }}
+      >
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.tradeDistribution.tooltip.type")}
+            </span>
+            <span className="font-bold text-muted-foreground">
+              {data.name || item?.name}
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.tradeDistribution.tooltip.percentage")}
+            </span>
+            <span className="font-bold">{`${Number(item?.value ?? data.value ?? 0).toFixed(1)}%`}</span>
+          </div>
+          {typeof data.count === "number" && (
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-[0.70rem] uppercase text-muted-foreground">
+                {t("embed.calendar.charts.trades")}
+              </span>
+              <span className="font-bold text-muted-foreground">
+                {data.count}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderLegendText(value: string) {
+  return <span className="text-xs text-muted-foreground">{value}</span>;
+}
+
 export default function TradeDistributionChartEmbed({
   trades,
 }: {
@@ -58,55 +113,6 @@ export default function TradeDistributionChartEmbed({
       },
     ];
   }, [trades]);
-
-  const renderLegendText = (value: string) => (
-    <span className="text-xs text-muted-foreground">{value}</span>
-  );
-
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const item = payload[0];
-      const data = item?.payload || {};
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.tradeDistribution.tooltip.type")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.name || item?.name}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.tradeDistribution.tooltip.percentage")}
-              </span>
-              <span className="font-bold">{`${Number(item?.value ?? data.value ?? 0).toFixed(1)}%`}</span>
-            </div>
-            {typeof data.count === "number" && (
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-[0.70rem] uppercase text-muted-foreground">
-                  {t("embed.calendar.charts.trades")}
-                </span>
-                <span className="font-bold text-muted-foreground">
-                  {data.count}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
@@ -197,7 +203,7 @@ export default function TradeDistributionChartEmbed({
                 wrapperStyle={{ paddingTop: 16 }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={<CustomTooltip t={t} />}
                 wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}
               />
             </PieChart>

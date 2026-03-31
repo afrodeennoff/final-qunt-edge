@@ -6,6 +6,30 @@ import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/u
 import { Info } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: number | string;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    return (
+      <div className="bg-background p-2 border rounded shadow-xs" style={{
+        background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
+        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
+      }}>
+          <p className="font-semibold">{`${Number(label ?? 0)}:00 - ${(Number(label ?? 0) + 1) % 24}:00`}</p>
+        <p className="font-bold">Total Contracts: {data.totalQuantity}</p>
+        <p>Trades: {data.tradeCount}</p>
+      </div>
+    )
+  }
+  return null
+}
+
 export default function ContractQuantityChartEmbed({ trades }: { trades: { quantity: number, entryDate?: string | Date }[] }) {
   const chartData = React.useMemo(() => {
     const byHour: Record<number, { totalQuantity: number; count: number }> = {}
@@ -27,24 +51,6 @@ export default function ContractQuantityChartEmbed({ trades }: { trades: { quant
 
   const maxTradeCount = React.useMemo(() => Math.max(1, ...chartData.map(d => d.tradeCount)), [chartData])
   const getColor = (count: number) => `hsl(var(--chart-1) / ${Math.max(0.2, count / maxTradeCount)})`
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="bg-background p-2 border rounded shadow-xs" style={{
-          background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-          borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
-          borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
-        }}>
-          <p className="font-semibold">{`${label}:00 - ${(label + 1) % 24}:00`}</p>
-          <p className="font-bold">Total Contracts: {data.totalQuantity}</p>
-          <p>Trades: {data.tradeCount}</p>
-        </div>
-      )
-    }
-    return null
-  }
 
   return (
     <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">

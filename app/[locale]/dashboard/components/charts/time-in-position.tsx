@@ -48,6 +48,51 @@ const formatTime = (minutes: number) => {
   return `${mins}m`;
 };
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: number | string;
+  t: any;
+}
+
+function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+        <div className="flex flex-col mb-2">
+          <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+            {t("timeInPosition.tooltip.time")}
+          </span>
+            <span className="font-semibold text-v2-text-primary text-sm">
+              {`${Number(label ?? 0)}:00 - ${(Number(label ?? 0) + 1) % 24}:00`}
+            </span>
+        </div>
+        <div className="flex flex-col mb-2">
+          <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+            {t("timeInPosition.tooltip.averageDuration")}
+          </span>
+          <span className={cn("font-bold text-sm", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
+            {formatTime(data.avgTimeInPosition)}
+          </span>
+        </div>
+        <div className="flex flex-col pt-2 border-t border-v2-border/40">
+          <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+            {t("timeInPosition.tooltip.trades")}
+          </span>
+          <span className={cn("font-bold text-sm", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
+            {data.tradeCount}{" "}
+            {data.tradeCount !== 1
+              ? t("timeInPosition.tooltip.trades_plural")
+              : t("timeInPosition.tooltip.trade")}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 export default React.memo(function TimeInPositionChart({
   size = "medium",
 }: TimeInPositionChartProps) {
@@ -86,44 +131,6 @@ export default React.memo(function TimeInPositionChart({
   const getColor = (count: number) => {
     const intensity = Math.max(0.2, count / maxTradeCount);
     return `hsl(var(--chart-8) / ${intensity})`;
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
-          <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
-              {t("timeInPosition.tooltip.time")}
-            </span>
-            <span className="font-semibold text-v2-text-primary text-sm">
-              {`${label}:00 - ${(label + 1) % 24}:00`}
-            </span>
-          </div>
-          <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
-              {t("timeInPosition.tooltip.averageDuration")}
-            </span>
-            <span className={cn("font-bold text-sm", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
-              {formatTime(data.avgTimeInPosition)}
-            </span>
-          </div>
-          <div className="flex flex-col pt-2 border-t border-v2-border/40">
-            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
-              {t("timeInPosition.tooltip.trades")}
-            </span>
-            <span className={cn("font-bold text-sm", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
-              {data.tradeCount}{" "}
-              {data.tradeCount !== 1
-                ? t("timeInPosition.tooltip.trades_plural")
-                : t("timeInPosition.tooltip.trade")}
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
   };
 
   return (
@@ -213,7 +220,7 @@ export default React.memo(function TimeInPositionChart({
                   tickFormatter={formatTime}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<CustomTooltip t={t} />}
                   cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar

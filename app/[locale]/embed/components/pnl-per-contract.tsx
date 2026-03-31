@@ -26,6 +26,45 @@ function formatCurrency(value: number) {
   return `${value < 0 ? '-' : ''}$${abs.toFixed(0)}`
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  t: any;
+}
+
+function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    return (
+      <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
+        background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
+        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
+      }}>
+        <div className="grid gap-2">
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.averagePnl')}</span>
+            <span className="font-bold">{formatCurrency(data.averagePnl)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.totalPnl')}</span>
+            <span className="font-bold text-muted-foreground">{formatCurrency(data.totalPnl)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.trades')}</span>
+            <span className="font-bold text-muted-foreground">{data.tradeCount}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.totalContracts')}</span>
+            <span className="font-bold text-muted-foreground">{data.totalContracts}</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
 export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike[] }) {
   const t = useI18n()
   const chartData = React.useMemo(() => {
@@ -60,7 +99,6 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
   const absMax = React.useMemo(() => Math.max(Math.abs(maxPnL), Math.abs(minPnL)), [maxPnL, minPnL])
 
   const getColor = (value: number) => {
-    // Handle NaN and invalid numbers
     if (!isFinite(value) || isNaN(value)) {
       return `hsl(var(--chart-win) / 0.2)`
     }
@@ -68,39 +106,6 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
     const ratio = absMax === 0 ? 0.2 : Math.max(0.2, Math.abs(value / absMax))
     const base = value >= 0 ? '--chart-win' : '--chart-loss'
     return `hsl(var(${base}) / ${ratio})`
-  }
-
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
-          background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-          borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
-          borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
-        }}>
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.averagePnl')}</span>
-              <span className="font-bold">{formatCurrency(data.averagePnl)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.totalPnl')}</span>
-              <span className="font-bold text-muted-foreground">{formatCurrency(data.totalPnl)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.trades')}</span>
-              <span className="font-bold text-muted-foreground">{data.tradeCount}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.pnlPerContract.tooltip.totalContracts')}</span>
-              <span className="font-bold text-muted-foreground">{data.totalContracts}</span>
-            </div>
-          </div>
-        </div>
-      )
-    }
-    return null
   }
 
   return (
@@ -145,7 +150,7 @@ export default function PnLPerContractChartEmbed({ trades }: { trades: TradeLike
                 domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
               />
               <ReferenceLine y={0} stroke="hsl(var(--border))" />
-              <Tooltip content={<CustomTooltip />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
+              <Tooltip content={<CustomTooltip t={t} />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
               <Bar dataKey="averagePnl" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-all duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={getColor(entry.averagePnl)} />

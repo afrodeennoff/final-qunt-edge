@@ -377,7 +377,7 @@ model Payout {
   accountNumber String
 
   amount Decimal @db.Decimal(18, 2)
-  status String  @default("PENDING")
+  status PayoutStatus @default(PENDING)
 
   date      DateTime
   createdAt DateTime @default(now())
@@ -1042,6 +1042,15 @@ enum MemberRole {
   @@schema("public")
 }
 
+enum PayoutStatus {
+  PENDING
+  PAID
+  REFUSED
+  CANCELLED
+
+  @@schema("public")
+}
+
 // ============================================================================
 // PAYMENT & BILLING SYSTEM
 // ============================================================================
@@ -1526,5 +1535,33 @@ model BlogPost {
   @@index([slug])
   @@index([published])
   @@index([category])
+  @@schema("public")
+}
+
+// ============================================================================
+// CHALLENGES (Prop Firm Challenge Catalogue)
+// ============================================================================
+
+model Challenge {
+  id            String   @id
+  propFirmId    String
+  name          String
+  phase         Int      @default(1)
+  accountSize   Decimal  @db.Decimal(18, 2)
+  targetProfit  Decimal  @db.Decimal(18, 2)
+  maxDailyLoss  Decimal  @db.Decimal(18, 2)
+  maxTotalLoss  Decimal  @db.Decimal(18, 2)
+  minTradingDays Int?
+  maxTradingDays Int?
+  profitSplit   Int      @default(80)
+  payoutPolicy  String?
+  price         Decimal  @db.Decimal(18, 2)
+  priceWithPromo Decimal?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime
+  updatedAt     DateTime
+
+  @@index([propFirmId])
+  @@index([propFirmId, accountSize])
   @@schema("public")
 }

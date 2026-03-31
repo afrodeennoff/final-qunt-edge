@@ -92,7 +92,7 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
       maxDrawdown: maxDD,
       maxProfit: maxRU
     }
-  }, [dayData?.trades])
+  }, [dayData])
 
   if (!dayData?.trades?.length) {
     return null

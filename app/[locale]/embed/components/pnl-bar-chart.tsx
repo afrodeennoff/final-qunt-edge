@@ -36,6 +36,72 @@ function formatCurrency(value: number) {
   return `${value < 0 ? "-" : ""}$${abs.toFixed(0)}`;
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  t: any;
+}
+
+function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div
+        className="rounded-lg border bg-background p-2 shadow-xs"
+        style={{
+          background: "hsl(var(--embed-tooltip-bg, var(--background)))",
+          borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
+          borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
+        }}
+      >
+        <div className="grid gap-2">
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.pnl.tooltip.date")}
+            </span>
+            <span className="font-bold text-muted-foreground">
+              {data.date}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.pnl.tooltip.pnl")}
+            </span>
+            <span
+              className="font-bold"
+              style={{
+                color:
+                  data.pnl >= 0
+                    ? "hsl(var(--chart-win))"
+                    : "hsl(var(--chart-loss))",
+              }}
+            >
+              {formatCurrency(data.pnl)}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.pnl.tooltip.longTrades")}
+            </span>
+            <span className="font-bold text-muted-foreground">
+              {data.longNumber}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              {t("embed.pnl.tooltip.shortTrades")}
+            </span>
+            <span className="font-bold text-muted-foreground">
+              {data.shortNumber}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 export default function DailyPnLChartEmbed({
   trades,
 }: {
@@ -81,66 +147,6 @@ export default function DailyPnLChartEmbed({
     () => Math.min(0, ...chartData.map((d) => d.pnl)),
     [chartData],
   );
-
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div
-          className="rounded-lg border bg-background p-2 shadow-xs"
-          style={{
-            background: "hsl(var(--embed-tooltip-bg, var(--background)))",
-            borderColor: "hsl(var(--embed-tooltip-border, var(--border)))",
-            borderRadius: "var(--embed-tooltip-radius, 0.5rem)",
-          }}
-        >
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnl.tooltip.date")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.date}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnl.tooltip.pnl")}
-              </span>
-              <span
-                className="font-bold"
-                style={{
-                  color:
-                    data.pnl >= 0
-                      ? "hsl(var(--chart-win))"
-                      : "hsl(var(--chart-loss))",
-                }}
-              >
-                {formatCurrency(data.pnl)}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnl.tooltip.longTrades")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.longNumber}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
-                {t("embed.pnl.tooltip.shortTrades")}
-              </span>
-              <span className="font-bold text-muted-foreground">
-                {data.shortNumber}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
@@ -191,7 +197,7 @@ export default function DailyPnLChartEmbed({
                 domain={[Math.min(minPnL * 1.1, 0), Math.max(maxPnL * 1.1, 0)]}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={<CustomTooltip t={t} />}
                 wrapperStyle={{ fontSize: "12px", zIndex: 1000 }}
               />
               <Bar

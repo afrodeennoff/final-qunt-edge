@@ -19,6 +19,42 @@ function formatTime(minutes: number) {
   return `${mins}m`
 }
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: number | string;
+  t: any;
+}
+
+function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    return (
+      <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
+        background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
+        borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
+        borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
+      }}>
+        <div className="grid gap-2">
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.time')}</span>
+            <span className="font-bold text-muted-foreground">{`${Number(label ?? 0)}:00 - ${(Number(label ?? 0) + 1) % 24}:00`}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.averageDuration')}</span>
+            <span className="font-bold">{formatTime(data.avgTimeInPosition)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.trades')}</span>
+            <span className="font-bold text-muted-foreground">{data.tradeCount}</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  return null
+}
+
 export default function TimeInPositionByHourChart({ trades }: { trades: TradeLike[] }) {
   const t = useI18n()
   
@@ -46,35 +82,6 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
 
   const maxTradeCount = React.useMemo(() => Math.max(1, ...chartData.map(d => d.tradeCount)), [chartData])
   const getColor = (count: number) => `hsl(var(--chart-2) / ${Math.max(0.2, count / maxTradeCount)})`
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="rounded-lg border bg-background p-2 shadow-xs" style={{
-          background: 'hsl(var(--embed-tooltip-bg, var(--background)))',
-          borderColor: 'hsl(var(--embed-tooltip-border, var(--border)))',
-          borderRadius: 'var(--embed-tooltip-radius, 0.5rem)'
-        }}>
-          <div className="grid gap-2">
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.time')}</span>
-              <span className="font-bold text-muted-foreground">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.averageDuration')}</span>
-              <span className="font-bold">{formatTime(data.avgTimeInPosition)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">{t('embed.timeInPosition.tooltip.trades')}</span>
-              <span className="font-bold text-muted-foreground">{data.tradeCount}</span>
-            </div>
-          </div>
-        </div>
-      )
-    }
-    return null
-  }
 
   return (
     <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
@@ -116,7 +123,7 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
                 tick={{ fontSize: 11, fill: 'currentColor' }}
                 tickFormatter={formatTime}
               />
-              <Tooltip content={<CustomTooltip />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
+              <Tooltip content={<CustomTooltip t={t} />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
               <Bar dataKey="avgTimeInPosition" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-all duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={getColor(entry.tradeCount)} />

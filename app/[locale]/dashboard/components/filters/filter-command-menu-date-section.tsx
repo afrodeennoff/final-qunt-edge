@@ -31,6 +31,71 @@ interface DateInputsState {
   day: string
 }
 
+interface DateInputsProps {
+  inputs: DateInputsState
+  onChange: (field: keyof DateInputsState, value: string) => void
+  prefix?: string
+  yearOptions: number[]
+  monthOptions: { value: string; label: string }[]
+  t: ReturnType<typeof useI18n>
+}
+
+function DateInputs({ 
+  inputs, 
+  onChange,
+  prefix = "",
+  yearOptions,
+  monthOptions,
+  t
+}: DateInputsProps) {
+  return (
+    <div className="space-y-3 border-b pb-3 mb-3">
+      <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">
+            {t('filters.commandMenu.dateRange.year')}
+          </Label>
+          <Select
+            value={inputs.year || undefined}
+            onValueChange={(value) => onChange('year', value)}
+          >
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue placeholder={t('filters.commandMenu.dateRange.placeholderYear')} />
+            </SelectTrigger>
+            <SelectContent className="max-h-[200px]">
+              {yearOptions.map((year) => (
+                <SelectItem key={year} value={year.toString()}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-xs text-muted-foreground">
+            {t('filters.commandMenu.dateRange.month')}
+          </Label>
+          <Select
+            value={inputs.month || undefined}
+            onValueChange={(value) => onChange('month', value)}
+          >
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue placeholder={t('filters.commandMenu.dateRange.placeholderMonth')} />
+            </SelectTrigger>
+            <SelectContent>
+              {monthOptions.map((month) => (
+                <SelectItem key={month.value} value={month.value}>
+                  {month.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
   const { dateRange, setDateRange, weekdayFilter, setWeekdayFilter } = useDashboardFilters()
   const [fromCalendarOpen, setFromCalendarOpen] = useState(false)
@@ -271,64 +336,6 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
     }
   })
 
-  // Date Inputs Component
-  const DateInputs = ({ 
-    inputs, 
-    onChange,
-    prefix = ""
-  }: { 
-    inputs: DateInputsState
-    onChange: (field: keyof DateInputsState, value: string) => void
-    prefix?: string
-  }) => {
-    return (
-      <div className="space-y-3 border-b pb-3 mb-3">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">
-              {t('filters.commandMenu.dateRange.year')}
-            </Label>
-            <Select
-              value={inputs.year || undefined}
-              onValueChange={(value) => onChange('year', value)}
-            >
-              <SelectTrigger className="h-8 text-sm">
-                <SelectValue placeholder={t('filters.commandMenu.dateRange.placeholderYear')} />
-              </SelectTrigger>
-              <SelectContent className="max-h-[200px]">
-                {yearOptions.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">
-              {t('filters.commandMenu.dateRange.month')}
-            </Label>
-            <Select
-              value={inputs.month || undefined}
-              onValueChange={(value) => onChange('month', value)}
-            >
-              <SelectTrigger className="h-8 text-sm">
-                <SelectValue placeholder={t('filters.commandMenu.dateRange.placeholderMonth')} />
-              </SelectTrigger>
-              <SelectContent>
-                {monthOptions.map((month) => (
-                  <SelectItem key={month.value} value={month.value}>
-                    {month.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   const quickSelectors = [
     { label: t('filters.thisWeek'), getRange: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
     { label: t('filters.thisMonth'), getRange: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
@@ -445,7 +452,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <div className="p-4">
-              <DateInputs inputs={fromInputs} onChange={handleFromInputChange} prefix="from-" />
+              <DateInputs inputs={fromInputs} onChange={handleFromInputChange} prefix="from-" yearOptions={yearOptions} monthOptions={monthOptions} t={t} />
               <Calendar
                 initialFocus
                 mode="single"
@@ -502,7 +509,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <div className="p-4">
-              <DateInputs inputs={toInputs} onChange={handleToInputChange} prefix="to-" />
+              <DateInputs inputs={toInputs} onChange={handleToInputChange} prefix="to-" yearOptions={yearOptions} monthOptions={monthOptions} t={t} />
               <Calendar
                 initialFocus
                 mode="single"
@@ -559,7 +566,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
             <div className="p-4">
-              <DateInputs inputs={uniqueDayInputs} onChange={handleUniqueDayInputChange} prefix="unique-" />
+              <DateInputs inputs={uniqueDayInputs} onChange={handleUniqueDayInputChange} prefix="unique-" yearOptions={yearOptions} monthOptions={monthOptions} t={t} />
               <Calendar
                 initialFocus
                 mode="single"

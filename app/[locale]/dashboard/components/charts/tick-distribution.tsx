@@ -37,14 +37,6 @@ interface ChartDataPoint {
   count: number;
 }
 
-interface TooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    payload: ChartDataPoint;
-  }>;
-  label?: string;
-}
-
 const chartConfig = {
   count: {
     label: "Count",
@@ -58,6 +50,35 @@ const formatCount = (value: number) => {
   }
   return value.toString();
 };
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: ChartDataPoint;
+  }>;
+  t: any;
+}
+
+function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+        <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
+          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+          <span className="font-bold text-v2-text-primary text-sm uppercase">{data.ticks}</span>
+        </div>
+        <div className="flex justify-between items-center pt-1.5">
+          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+          <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+            {data.count}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
 
 export default React.memo(function TickDistributionChart({
   size = "medium",
@@ -113,27 +134,6 @@ export default React.memo(function TickDistributionChart({
     } else {
       setTickFilter({ value: clickedTicks });
     }
-  };
-
-  const CustomTooltip = ({ active, payload }: TooltipProps) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
-          <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
-            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
-            <span className="font-bold text-v2-text-primary text-sm uppercase">{data.ticks}</span>
-          </div>
-          <div className="flex justify-between items-center pt-1.5">
-            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
-            <span className="font-bold text-v2-text-primary text-sm tabular-nums">
-              {data.count}
-            </span>
-          </div>
-        </div>
-      );
-    }
-    return null;
   };
 
   return (
@@ -248,7 +248,7 @@ export default React.memo(function TickDistributionChart({
                   }}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<CustomTooltip t={t} />}
                   cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
                 />
                 <Bar
