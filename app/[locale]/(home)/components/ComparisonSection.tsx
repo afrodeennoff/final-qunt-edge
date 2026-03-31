@@ -2,45 +2,76 @@
 
 import { motion } from 'framer-motion'
 import { BadgeV2 } from "@/components/ui/v2"
+import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { MOTION_EASE } from './_constants'
-import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
-import { Check, X } from 'lucide-react'
+import { Activity, Zap, Brain, Link2 } from 'lucide-react'
 
-const MotionTr = motion.create('tr')
+const differentiators = [
+  {
+    icon: Activity,
+    title: 'Behavior Drift Detection',
+    description: 'In-session alerts catch process slippage before it becomes habit, with intervention guidance ready.',
+    iconColor: 'text-[oklch(0.55_0.22_264)]',
+    glowBg: 'bg-[oklch(0.55_0.22_264/0.2)]',
+    iconBorder: 'border-[oklch(0.55_0.22_264/0.35)]',
+    iconBg: 'bg-[oklch(0.55_0.22_264/0.1)]',
+  },
+  {
+    icon: Zap,
+    title: 'Instant Diagnostics',
+    description: 'Guided first-audit flow delivers actionable session signals in under seven minutes from first sync.',
+    iconColor: 'text-[oklch(0.55_0.15_166)]',
+    glowBg: 'bg-[oklch(0.55_0.15_166/0.2)]',
+    iconBorder: 'border-[oklch(0.55_0.15_166/0.35)]',
+    iconBg: 'bg-[oklch(0.55_0.15_166/0.1)]',
+  },
+  {
+    icon: Brain,
+    title: 'Prioritized AI Playbook',
+    description: 'Ranked coaching output converts raw observations into a concrete plan for your next session.',
+    iconColor: 'text-[oklch(0.6_0.18_290)]',
+    glowBg: 'bg-[oklch(0.6_0.18_290/0.2)]',
+    iconBorder: 'border-[oklch(0.6_0.18_290/0.35)]',
+    iconBg: 'bg-[oklch(0.6_0.18_290/0.1)]',
+  },
+  {
+    icon: Link2,
+    title: 'Unified Timeline',
+    description: 'Journal entries, fills, and context events live in one stream &mdash; no manual stitching required.',
+    iconColor: 'text-[oklch(0.65_0.2_45)]',
+    glowBg: 'bg-[oklch(0.65_0.2_45/0.2)]',
+    iconBorder: 'border-[oklch(0.65_0.2_45/0.35)]',
+    iconBg: 'bg-[oklch(0.65_0.2_45/0.1)]',
+  },
+] as const
 
-const comparisonRows = [
-  {
-    item: 'Behavior drift detection',
-    qunt: 'In-session alerts with intervention guidance',
-    others: 'Mostly post-session summaries',
-  },
-  {
-    item: 'Time to first useful insight',
-    qunt: 'Guided first-audit flow with immediate session diagnostics',
-    others: 'Delayed value after manual setup and report configuration',
-  },
-  {
-    item: 'AI coaching output',
-    qunt: 'Prioritized playbook for the next session',
-    others: 'Generic observations with no ranking',
-  },
-  {
-    item: 'Journal + execution sync',
-    qunt: 'Single timeline with note-to-trade context',
-    others: 'Fragmented tools and manual stitching',
-  },
-  {
-    item: 'Manager visibility',
-    qunt: 'Desk-level process consistency analytics',
-    others: 'Mostly account-level performance totals',
-  },
-]
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      delay: i * 0.1,
+      ease: MOTION_EASE,
+    },
+  }),
+}
 
 export default function ComparisonSection() {
   return (
-    <section className="relative border-y border-border/30 bg-card/20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 text-center sm:mb-12">
+    <section className="relative border-y border-border/30 bg-card/20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-mesh-animated opacity-25" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,hsl(var(--primary)/0.08),transparent_70%)]" />
+
+      <div className="relative mx-auto max-w-6xl">
+        <motion.div
+          className="mb-12 text-center sm:mb-16"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: MOTION_EASE }}
+        >
           <BadgeV2 variant="outline" className="border-primary/35 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
           </BadgeV2>
@@ -51,70 +82,43 @@ export default function ComparisonSection() {
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground/80 leading-[1.75] [font-family:var(--home-copy)]">
             See how Qunt Edge compares to traditional journaling tools and basic spreadsheet tracking.
           </p>
+        </motion.div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {differentiators.map((item, i) => {
+            const Icon = item.icon
+            return (
+              <motion.div
+                key={item.title}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                <Card variant="glass" className="group h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)] transition-colors duration-200 hover:border-[hsl(var(--mk-border)/0.5)]">
+                  <CardContent className="flex flex-col gap-4 p-5">
+                    <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl">
+                      <div className={`absolute inset-0 rounded-xl blur-sm ${item.glowBg}`} />
+                      <div className={`relative inline-flex items-center justify-center rounded-xl h-10 w-10 border ${item.iconBorder} ${item.iconBg}`}>
+                        <Icon className={`h-5 w-5 ${item.iconColor}`} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-2xl font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground/80 [font-family:var(--home-copy)]">
+                        {item.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
         </div>
-
-        <Card variant="glass" className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.35)] shadow-lg shadow-[hsl(var(--foreground)/0.16)]">
-          <CardHeader className="border-b border-[hsl(var(--mk-border)/0.28)] bg-[hsl(var(--mk-surface-muted)/0.5)]">
-            <CardTitle className="text-lg tracking-[-0.01em] sm:text-xl [font-family:var(--home-display)]">Head-to-head comparison</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="grid gap-3 p-4 md:hidden">
-              {comparisonRows.map((row) => (
-                <article key={row.item} className="rounded-xl border border-[hsl(var(--mk-border)/0.24)] bg-[hsl(var(--mk-surface)/0.6)] p-4 transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.5)] hover:border-l-2 hover:border-l-[oklch(0.55_0.22_264)]">
-                  <h3 className="text-sm font-semibold text-foreground [font-family:var(--home-display)]">{row.item}</h3>
-                  <div className="mt-3 space-y-2">
-                    <div className="flex items-start gap-2 text-sm text-foreground">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.55_0.15_166)] drop-shadow-[0_0_8px_oklch(0.55_0.15_166/0.5)]" />
-                      <span className="[font-family:var(--home-copy)]">{row.qunt}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-sm text-foreground/80">
-                      <X className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.6_0.2_15)]" />
-                      <span className="[font-family:var(--home-copy)]">{row.others}</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="hidden overflow-x-auto md:block">
-              <table className="w-full min-w-[680px] text-left">
-                <thead>
-                  <tr className="border-b border-[hsl(var(--mk-border)/0.28)]">
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Capability</th>
-                    <th className="px-4 py-3 bg-[oklch(0.55_0.22_264/0.05)] text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Qunt Edge</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/80 [font-family:var(--home-copy)]">Most Alternatives</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparisonRows.map((row, i) => (
-                    <MotionTr
-                      key={row.item}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: i * 0.08, ease: MOTION_EASE }}
-                      className="border-b border-[hsl(var(--mk-border)/0.24)] transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.5)] hover:border-l-2 hover:border-l-[oklch(0.55_0.22_264)]"
-                    >
-                      <td className="px-4 py-4 text-sm font-medium [font-family:var(--home-display)]">{row.item}</td>
-                      <td className="px-4 py-4 bg-[oklch(0.55_0.22_264/0.05)]">
-                        <div className="flex items-center gap-2 text-sm text-foreground">
-                          <Check className="h-4 w-4 text-[oklch(0.55_0.15_166)] drop-shadow-[0_0_8px_oklch(0.55_0.15_166/0.5)]" />
-                          <span className="text-[oklch(0.55_0.22_264)] [font-family:var(--home-copy)]">{row.qunt}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-2 text-sm text-foreground/80">
-                          <X className="h-4 w-4 text-[oklch(0.6_0.2_15)]" />
-                          <span className="[font-family:var(--home-copy)]">{row.others}</span>
-                        </div>
-                      </td>
-                    </MotionTr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </section>
   )

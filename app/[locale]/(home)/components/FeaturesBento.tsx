@@ -1,139 +1,250 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { BarChart3, Brain, Users, Download, FileText, Shield } from 'lucide-react'
+import {
+  BarChart3,
+  Brain,
+  Users,
+  Download,
+  FileText,
+  Shield,
+  ArrowRight,
+} from 'lucide-react'
 import { GlassCard } from '@/components/ui/glass-card'
+import { BadgeV2 } from '@/components/ui/v2'
+import {
+  MotionSection,
+  MotionStagger,
+  MotionStaggerItem,
+} from '@/components/animation/enhanced-motion'
+import {
+  MOTION_EASE,
+  STAGGER_CARD,
+  BORDER_SECTION,
+  TYPO_MINOR,
+  TYPO_EYEBROW,
+} from './_constants'
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const problems = [
+  {
+    badge: 'Data Fragmentation',
+    icon: BarChart3,
+    title: 'Where are your trades, really?',
+    description:
+      'Scattered across brokers, spreadsheets, and memory — never analysis.',
+    solution: 'Advanced Analytics',
+  },
+  {
+    badge: 'Repeating Mistakes',
+    icon: Brain,
+    title: 'Why the same errors, again?',
+    description:
+      'No structured review means no improvement loop. Patterns stay invisible.',
+    solution: 'AI Insights',
+  },
+  {
+    badge: 'Team Isolation',
+    icon: Users,
+    title: 'Can your coach see what you see?',
+    description:
+      'Siloed data makes performance gaps invisible until they cost you.',
+    solution: 'Team Sync',
+  },
+] as const
+
+type Problem = (typeof problems)[number]
 
 const features = [
   {
     icon: BarChart3,
     title: 'Advanced Analytics',
     description:
-      'Deep dive into your performance with decile analysis, heatmaps, and custom metrics.',
+      'Decile analysis, heatmaps, and custom metrics that expose what PnL hides.',
     colSpan: 'lg:col-span-2',
-    highlight: false,
+    accent: 'blue' as const,
   },
   {
     icon: Brain,
     title: 'AI Insights',
     description:
-      'Pattern recognition and behavioral analysis powered by machine learning.',
+      'Pattern recognition, behavioral analysis, and explainable AI that turns raw trades into a coaching system.',
     colSpan: 'lg:col-span-2',
-    highlight: true,
+    accent: 'purple' as const,
   },
   {
     icon: Users,
     title: 'Team Sync',
-    description: 'Share layouts, compare performance, and learn from your peers.',
-    colSpan: 'lg:col-span-1',
-    highlight: false,
-  },
-  {
-    icon: Download,
-    title: 'Multi-Broker Import',
     description:
-      'Connect Tradovate, Rithmic, IBKR, or import from CSV. Your data, your way.',
-    colSpan: 'lg:col-span-3',
-    highlight: false,
+      'Share layouts, compare performance, and accelerate improvement together.',
+    colSpan: 'lg:col-span-1',
+    accent: 'blue' as const,
   },
   {
     icon: FileText,
     title: 'Coach-Ready Exports',
     description:
-      'Generate PDF briefs and shareable reports for mentorship sessions.',
+      'PDF briefs and shareable reports for structured mentorship sessions.',
+    colSpan: 'lg:col-span-1',
+    accent: 'blue' as const,
+  },
+  {
+    icon: Download,
+    title: 'Multi-Broker Import',
+    description:
+      'Connect Tradovate, Rithmic, IBKR, or import CSV. Your data, your way.',
     colSpan: 'lg:col-span-2',
-    highlight: false,
+    accent: 'blue' as const,
   },
   {
     icon: Shield,
     title: 'Enterprise Security',
     description:
-      'Bank-grade encryption and SOC2 compliance protect your data.',
-    colSpan: 'lg:col-span-2',
-    highlight: false,
+      'Bank-grade encryption and SOC2 compliance protect every trade you upload.',
+    colSpan: 'lg:col-span-4',
+    accent: 'blue' as const,
   },
 ] as const
 
 type Feature = (typeof features)[number]
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      delay: i * 0.08,
-      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
-    },
-  }),
-}
+// ── Sub-components ────────────────────────────────────────────────────────────
 
-function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
-  const Icon = feature.icon
-
+function ProblemCard({ problem }: { problem: Problem }) {
+  const Icon = problem.icon
   return (
-    <motion.div
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className={feature.colSpan}
+    <GlassCard
+      variant="subtle"
+      hover
+      size="sm"
+      className="relative overflow-hidden h-full"
     >
-      <GlassCard
-        variant="strong"
-        hover={true}
-        size="md"
-        className="relative overflow-hidden h-full"
-      >
-        <div className="mb-4">
-          <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12">
-            <div className="absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_264/0.15)] blur-sm" />
-            <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-[oklch(0.55_0.22_264/0.4)] bg-[oklch(0.55_0.22_264/0.1)]">
-              <Icon className="w-5 h-5 text-[oklch(0.55_0.22_264)]" />
-            </div>
-          </div>
-        </div>
-        <h3 className="text-lg font-semibold text-gradient-primary">
-          {feature.title}
-        </h3>
-        <p className="text-[0.88rem] text-muted-foreground/70 leading-relaxed [font-family:var(--home-copy)]">
-          {feature.description}
-        </p>
-      </GlassCard>
-    </motion.div>
+      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-destructive/20 bg-destructive/[0.06]">
+        <Icon className="h-4 w-4 text-destructive/80" />
+      </div>
+      <BadgeV2 variant="error" size="sm" className="mb-3">
+        {problem.badge}
+      </BadgeV2>
+      <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
+        {problem.title}
+      </h3>
+      <p className="mt-2 text-[0.82rem] leading-relaxed text-muted-foreground/70 [font-family:var(--home-copy)]">
+        {problem.description}
+      </p>
+      <div className="mt-3 flex items-center gap-1.5 text-[0.78rem] font-medium text-primary">
+        <ArrowRight className="w-3 h-3" />
+        <span>{problem.solution}</span>
+      </div>
+    </GlassCard>
   )
 }
 
+function FeatureCard({ feature }: { feature: Feature }) {
+  const Icon = feature.icon
+  const hue = feature.accent === 'purple' ? '290' : '264'
+  const isPurple = feature.accent === 'purple'
+
+  return (
+    <GlassCard
+      variant="strong"
+      hover
+      size="md"
+      className={`relative overflow-hidden h-full${isPurple ? ' bg-gradient-to-br from-[oklch(0.55_0.22_290/0.08)] to-transparent' : ''}`}
+    >
+      <div className="mb-4 inline-flex items-center justify-center rounded-xl w-12 h-12">
+        <div
+          className={`absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_${hue}/0.15)] blur-sm`}
+        />
+        <div
+          className={`relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-[oklch(0.55_0.22_${hue}/0.4)] bg-[oklch(0.55_0.22_${hue}/0.1)]`}
+        >
+          <Icon className={`w-5 h-5 text-[oklch(0.55_0.22_${hue})]`} />
+        </div>
+      </div>
+
+      {isPurple && (
+        <BadgeV2
+          variant="outline"
+          size="sm"
+          className="mb-2 border-[oklch(0.55_0.22_290/0.4)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
+        >
+          AI-Powered
+        </BadgeV2>
+      )}
+
+      <h3 className="text-lg font-semibold text-gradient-primary [font-family:var(--home-display)]">
+        {feature.title}
+      </h3>
+      <p className="mt-1.5 text-[0.88rem] text-muted-foreground/70 leading-relaxed [font-family:var(--home-copy)]">
+        {feature.description}
+      </p>
+    </GlassCard>
+  )
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 export default function FeaturesBento() {
   return (
-    <section id="features" className="py-20 sm:py-28 lg:py-32">
+    <div id="features">
+    <MotionSection className={BORDER_SECTION}>
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-14 lg:mb-20"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
         >
-          <h2 className="text-[clamp(1.8rem,3.8vw,2.75rem)] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight [font-family:var(--home-display)]">
+          <p
+            className={`${TYPO_EYEBROW} text-muted-foreground/60 mb-3 [font-family:var(--home-copy)]`}
+          >
+            The Solution
+          </p>
+          <h2
+            className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
+          >
             Everything you need to{' '}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               trade smarter
             </span>
           </h2>
-          <p className="text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-            Powerful analytics, AI insights, and team collaboration in one platform.
+          <p className="mt-4 text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            Problems mapped to solutions. Analytics, AI, and team collaboration
+            in one platform.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-4">
-          {features.map((feature, index) => (
-            <FeatureCard key={feature.title} feature={feature} index={index} />
+        <MotionStagger
+          className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 mb-16"
+          delay={STAGGER_CARD}
+        >
+          {problems.map((problem) => (
+            <MotionStaggerItem key={problem.title}>
+              <ProblemCard problem={problem} />
+            </MotionStaggerItem>
           ))}
+        </MotionStagger>
+
+        <div className="mb-8">
+          <BadgeV2 variant="accent" size="sm">
+            Features
+          </BadgeV2>
         </div>
+
+        <MotionStagger
+          className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-4"
+          delay={STAGGER_CARD}
+        >
+          {features.map((feature) => (
+            <MotionStaggerItem key={feature.title} className={feature.colSpan}>
+              <FeatureCard feature={feature} />
+            </MotionStaggerItem>
+          ))}
+        </MotionStagger>
       </div>
-    </section>
+    </MotionSection>
+    </div>
   )
 }
