@@ -583,3 +583,41 @@
 
 ### Blockers
 - None
+
+## Current Session: Dashboard Fix + Design Refinement — "fix the dashboard/* issue please" (2026-03-31)
+
+### Accomplishments
+- **Production-readiness fixes** (committed `867b0d7`, `6f0b164`):
+  - ESLint config repaired: explicit plugin registrations, rule overrides
+  - Vitest config fixed: `.opencode/**` excluded
+  - 6 test suites fixed: leaderboard, theme-provider, sidebar-trigger, auto-save-service, setup
+  - Auto-save service hardened: `getStorage()` duck-type validation for Node.js localStorage
+  - HowItWorks.tsx fixed: missing closing `</div>` restored
+- **Dashboard fixes**: 25 dashboard files verified clean (0 TypeScript, 0 ESLint errors, tests pass)
+- **Design audit**: 5-parallel explore agents analyzed full dashboard codebase
+- **V2 token design migration** (committed `c950030`, 38 files):
+  - 15 chart files: all tooltips standardized to V2 token pattern
+  - 8 statistics cards: migrated to V2 text tokens
+  - 4 filter files: border/opacity unified to V2 tokens
+  - 5 UI shell components: card, sidebar, unified-sidebar, badge-v2, widget-shell
+  - 3 dashboard layout files: dashboard-header, dashboard-tab-shell, layout
+  - Server fixes: auth.ts (fr@ locale detection), authz.ts (proper AuthzError re-throw), subscription-manager.ts (as any → SubscriptionEventType)
+- **Oracle-verified production-ready**: TypeScript ✅, Tests ✅ (77 suites, 335 passed), Build ✅ (181 pages)
+
+### Out-of-Scope / Reverted
+- `prisma/schema.prisma` — stashed then dropped (breaking: FK change auth_user_id→id, PayoutStatus enum, Challenge model — requires migration)
+- `server/layouts.ts` — reverted (cache tag rename `dashboard-${userId}` → `dashboard-layout-${userId}` would break cache invalidation; canonical tag is `dashboard-${userId}` per CACHE_TAGS.DASHBOARD_LAYOUT)
+- `components/ui/chart.tsx` — restored to original (agents introduced build-only type error with explicit Recharts imports)
+
+### Verification
+- `npx tsc --noEmit`: 0 errors ✅
+- `npm run test -- --run`: 77 suites, 335 passed ✅
+- `node scripts/robust-next-build.mjs`: "✓ Compiled successfully in 23.2s", 181/181 pages ✅
+
+### Commits
+- `867b0d7` fix(production-readiness): repair ESLint, tests, and type safety
+- `6f0b164` fix(dashboard): unify design tokens, explicit borders, and auth schema
+- `c950030` refactor(dashboard): V2 token migration across charts, stats, filters, and shared UI
+
+### Blockers
+- None

@@ -10,7 +10,6 @@ import { useDashboardAccountsList, useDashboardStats } from "@/context/data-prov
 import { startOfDay, startOfWeek, startOfMonth, endOfDay, parseISO, isWithinInterval, format } from "date-fns"
 import { calculateTradingScore } from "@/lib/score-calculator"
 import { type Account } from "@/lib/data-types"
-import html2canvas from "html2canvas"
 import { useUserStore } from "@/store/user-store"
 
 type Theme = {
@@ -147,6 +146,7 @@ const downloadSummaryImage = async (cardEl: HTMLDivElement | null, setIsExportin
     setIsExporting(true)
 
     try {
+        const html2canvas = (await import("html2canvas")).default
         const canvas = await html2canvas(cardEl, {
             backgroundColor: "hsl(var(--background))",
             scale: 2,
@@ -177,6 +177,7 @@ const shareSummaryImage = async (
     setIsExporting(true)
 
     try {
+        const html2canvas = (await import("html2canvas")).default
         const canvas = await html2canvas(cardEl, {
             backgroundColor: "hsl(var(--background))",
             scale: 2,

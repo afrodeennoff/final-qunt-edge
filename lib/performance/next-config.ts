@@ -50,7 +50,7 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
   const config: NextConfig = {
     poweredByHeader: false,
     reactStrictMode: true,
-    serverExternalPackages: [],
+    serverExternalPackages: ['pdf2json', 'canvas', 'sharp'],
     cacheComponents: true,
     // Bundle optimization - tree shake heavy libraries
     experimental: {
@@ -79,6 +79,10 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         // CVA + tailwind-merge — used by every component with variants
         'class-variance-authority',
         'tailwind-merge',
+        // Dashboard grid & zoom — used in widget canvas and chart viewers
+        'react-grid-layout',
+        'react-zoom-pan-pinch',
+        'react-resizable',
       ],
     },
     turbopack: {

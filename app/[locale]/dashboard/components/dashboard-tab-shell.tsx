@@ -10,16 +10,43 @@ type DashboardTab = "widgets" | "table" | "accounts" | "chart";
 
 const TradeTableReview = dynamic(
   () => import("./tables/trade-table-review").then((m) => m.TradeTableReview),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    ),
+  },
 );
 
 const AccountsOverview = dynamic(
   () => import("./accounts/accounts-overview").then((m) => m.AccountsOverview),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    ),
+  },
 );
 
-const WidgetCanvas = dynamic(() => import("./widget-canvas"));
+const WidgetCanvas = dynamic(() => import("./widget-canvas"), {
+  loading: () => (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    </div>
+  ),
+});
 
 const ChartTheFuturePanel = dynamic(
   () => import("./chart-the-future-panel").then((m) => m.ChartTheFuturePanel),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    ),
+  },
 );
 
 export function DashboardTabShell({

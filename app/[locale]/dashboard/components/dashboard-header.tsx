@@ -15,24 +15,24 @@ import Link from 'next/link';
 
 const FilterCommandMenu = dynamic(
     () => import('./filters/filter-command-menu').then((m) => m.FilterCommandMenu),
-    { ssr: false }
+    { ssr: false, loading: () => null }
 )
-const ImportButton = dynamic(() => import('./import/import-button'), { ssr: false })
+const ImportButton = dynamic(() => import('./import/import-button'), { ssr: false, loading: () => null })
 const DailySummaryModal = dynamic(
     () => import('./daily-summary-modal').then((m) => m.DailySummaryModal),
-    { ssr: false }
+    { ssr: false, loading: () => null }
 )
 const GlobalSyncButton = dynamic(
     () => import('./global-sync-button').then((m) => m.GlobalSyncButton),
-    { ssr: false }
+    { ssr: false, loading: () => null }
 )
 const ActiveFilterTags = dynamic(
     () => import('./filters/active-filter-tags').then((m) => m.ActiveFilterTags),
-    { ssr: false }
+    { ssr: false, loading: () => null }
 )
 const DashboardHeaderWidgetControls = dynamic(
     () => import('./dashboard-header-widget-controls').then((m) => m.DashboardHeaderWidgetControls),
-    { ssr: false }
+    { ssr: false, loading: () => null }
 )
 
 export function DashboardHeader() {

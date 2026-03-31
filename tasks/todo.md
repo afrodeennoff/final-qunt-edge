@@ -1,3 +1,39 @@
+## Task: Dashboard Fix + Design Refinement — "fix the dashboard/* issue please" (2026-03-31)
+
+- [x] Fix production-readiness issues (ESLint config, Vitest config, 6 test suites, auto-save service, HowItWorks.tsx)
+- [x] Verify 25 dashboard files for TypeScript/ESLint errors
+- [x] Audit dashboard design system via 5-parallel explore agents
+- [x] Complete V2 token migration for 15 chart files (tooltip pattern standardization)
+- [x] Complete V2 token migration for 8 statistics cards
+- [x] Complete V2 token migration for 4 filter files
+- [x] Complete V2 token migration for 5 UI shell components (card, sidebar, unified-sidebar, badge-v2, widget-shell)
+- [x] Complete V2 token migration for 3 dashboard layout files
+- [x] Fix server/auth.ts (French locale detection for fr@ prefix)
+- [x] Fix server/authz.ts (proper AuthzError re-throw)
+- [x] Fix server/subscription-manager.ts (remove as any casts)
+- [x] Oracle-verified: revert risky layouts.ts cache tag change
+- [x] Oracle-verified: stash + drop breaking prisma/schema.prisma changes
+- [x] Oracle-verified: restore chart.tsx to original (agent introduced build-only type error)
+- [x] Run full verification suite (TypeScript, tests, build)
+- [x] Oracle final verification: `<promise>VERIFIED</promise>`
+
+Verification:
+- `npx tsc --noEmit`: 0 errors ✅
+- `npm run test -- --run`: 77 suites, 335 passed, 1 skipped ✅
+- `node scripts/robust-next-build.mjs`: "✓ Compiled successfully in 23.2s", 181/181 pages ✅
+- Oracle: `<promise>VERIFIED</promise>` ✅
+
+## Review
+- Production-readiness fixes committed in `867b0d7` + `6f0b164`
+- Dashboard design refinement committed in `c950030` (38 files)
+- Breaking changes correctly excluded: Prisma schema (stashed + dropped), layouts.ts cache tag (reverted), chart.tsx (restored)
+- 4 agents used in parallel for design audit and refinement
+- Oracle consulted twice: once for triage guidance, once for final verification
+- Key Oracle findings:
+  - Cache tag `dashboard-${userId}` is canonical (defined in CACHE_TAGS.DASHBOARD_LAYOUT); `dashboard-layout-${userId}` is a phantom tag
+  - Agents introduced 3 categories of problems: build-only type errors (chart.tsx), breaking schema changes (prisma), cache-breaking changes (layouts.ts)
+  - Minor cosmetic: subscription-manager.ts line 169 has extra 2-space indent (cosmetic only, non-blocking)
+
 ## Task: Web-researched Bun package-manager optimization sweep (2026-03-30)
 
 - [x] Confirm current Bun best-practice guidance from official Bun/Next docs (`bun ci`, `bun pm pack`, Next 16 defaults).
