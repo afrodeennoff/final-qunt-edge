@@ -372,7 +372,7 @@ export function UnifiedSidebar({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/30 p-2 relative bg-gradient-to-t from-sidebar-accent/10 to-transparent">
+      <SidebarFooter className="border-t border-sidebar-border/30 p-2 relative bg-gradient-to-t from-sidebar-accent/15 to-transparent">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

@@ -45,13 +45,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm transition-all duration-300",
+          "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm shadow-v2-accent/5 transition-all duration-200",
           variant === "default" && "border-v2-border bg-v2-bg-surface",
           variant === "glass" && "border-v2-border/30 bg-v2-bg-surface/20 backdrop-blur-xl shadow-lg",
           variant === "elevated" && "border-v2-border bg-v2-bg-surface shadow-xl shadow-v2-accent/10",
           variant === "outlined" && "border-2 border-v2-border bg-transparent shadow-none",
           variant === "flat" && "border-0 bg-transparent shadow-none",
-          variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg",
+          variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg shadow-v2-accent/8",
           {
             "text-sm": size === "sm",
             "text-base": size === "md",
@@ -70,7 +70,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         {variant === "gradient-border" && (
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-v2-accent via-v2-accent-hover to-v2-accent opacity-20 blur-sm -z-10" />
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-v2-accent via-v2-accent-hover to-v2-accent opacity-25 blur-sm -z-10" />
         )}
         {isLoading && (
           <div className="absolute inset-0 overflow-hidden rounded-xl z-20">

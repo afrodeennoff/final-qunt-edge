@@ -38,29 +38,29 @@ function CommissionsTooltip({
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-        <div className="flex flex-col mb-2 border-b border-border/55 pb-1">
-          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+        <div className="flex flex-col mb-2 border-b border-v2-border/40 pb-1">
+          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
             {t("commissions.tooltip.type")}
           </span>
-          <span className="font-black text-foreground text-[11px] uppercase tracking-widest">
+          <span className="font-bold text-v2-text-primary text-sm uppercase">
             {data.name}
           </span>
         </div>
         <div className="flex flex-col mb-2">
-          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
             {t("commissions.tooltip.amount")}
           </span>
           <span className={cn(
-            "font-black text-sm",
+            "font-bold text-sm tabular-nums",
             data.raw >= 0 ? "metric-positive" : "metric-negative"
           )}>{formatCurrency(data.raw)}</span>
         </div>
-        <div className="flex flex-col pt-2 border-t border-border/55">
-          <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+        <div className="flex flex-col pt-2 border-t border-v2-border/40">
+          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
             {t("commissions.tooltip.percentage")}
           </span>
-          <span className="font-black text-muted-foreground text-[11px]">
+          <span className="font-bold text-v2-text-primary text-sm tabular-nums">
             {data.value.toFixed(2)}%</span>
         </div>
       </div>

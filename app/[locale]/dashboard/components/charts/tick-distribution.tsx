@@ -119,14 +119,14 @@ export default React.memo(function TickDistributionChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[140px]">
-          <div className="flex justify-between items-center mb-2 border-b border-border/55 pb-1">
-            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
-            <span className="font-black text-foreground text-[11px] uppercase tracking-widest">{data.ticks}</span>
+        <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+          <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
+            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+            <span className="font-bold text-v2-text-primary text-sm uppercase">{data.ticks}</span>
           </div>
           <div className="flex justify-between items-center pt-1.5">
-            <span className="text-muted-foreground text-[9px] font-black uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
-            <span className="font-black text-foreground text-[11px] tabular-nums">
+            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+            <span className="font-bold text-v2-text-primary text-sm tabular-nums">
               {data.count}
             </span>
           </div>

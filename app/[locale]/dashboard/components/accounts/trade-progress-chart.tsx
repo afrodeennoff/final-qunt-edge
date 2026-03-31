@@ -240,21 +240,21 @@ export function TradeProgressChart({
                   if (active && payload && payload.length) {
                     const data = payload[0].payload as ChartDataPoint;
                     return (
-                      <div className="bg-popover/90 backdrop-blur-xl p-3 border border-border/10 rounded-lg shadow-2xl text-[10px] space-y-2 min-w-[140px]">
-                        <div className="flex items-center justify-between border-b border-border/5 pb-1">
-                          <span className="font-black text-foreground">TRADE #{data.tradeIndex}</span>
-                          <span className="text-foreground/60">{data.date}</span>
+                      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl text-[10px] space-y-2 min-w-[140px]">
+                        <div className="flex items-center justify-between border-b border-v2-border/40 pb-1">
+                          <span className="font-bold text-v2-text-primary">TRADE #{data.tradeIndex}</span>
+                          <span className="text-v2-text-secondary">{data.date}</span>
                         </div>
                         <div className="space-y-1">
                           <div className="flex justify-between items-center">
-                            <span className="text-foreground/60 uppercase font-bold tracking-wider">Balance</span>
-                            <span className="text-foreground font-black">${data.balance.toLocaleString()}</span>
+                            <span className="text-v2-text-secondary uppercase font-semibold tracking-wider">Balance</span>
+                            <span className="text-v2-text-primary font-bold">${data.balance.toLocaleString()}</span>
                           </div>
                           {!data.isPayout && !data.isReset && (
                             <div className="flex justify-between items-center">
-                              <span className="text-foreground/60 uppercase font-bold tracking-wider">Net P/L</span>
+                              <span className="text-v2-text-secondary uppercase font-semibold tracking-wider">Net P/L</span>
                               <span className={cn(
-                                "font-black",
+                                "font-bold",
                                 data.pnl >= 0 ? "metric-positive" : "metric-negative"
                               )}>
                                 {data.pnl >= 0 ? '+' : ''}{data.pnl.toLocaleString()}
@@ -262,28 +262,28 @@ export function TradeProgressChart({
                             </div>
                           )}
                         </div>
-                        <div className="space-y-1 pt-1 border-t border-border/5">
+                        <div className="space-y-1 pt-1 border-t border-v2-border/40">
                           <div className="flex justify-between items-center">
-                            <span className="text-foreground/65 uppercase font-bold tracking-wider">Drawdown</span>
-                            <span className="text-muted-foreground font-medium">${data.drawdownLevel.toLocaleString()}</span>
+                            <span className="text-v2-text-secondary uppercase font-semibold tracking-wider">Drawdown</span>
+                            <span className="text-v2-text-secondary font-medium tabular-nums">${data.drawdownLevel.toLocaleString()}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-foreground/65 uppercase font-bold tracking-wider">ATH</span>
-                            <span className="text-muted-foreground font-medium">${data.highestBalance.toLocaleString()}</span>
+                            <span className="text-v2-text-secondary uppercase font-semibold tracking-wider">ATH</span>
+                            <span className="text-v2-text-secondary font-medium tabular-nums">${data.highestBalance.toLocaleString()}</span>
                           </div>
                         </div>
                         {data.isReset && (
-                          <div className="mt-1 pt-1 border-t border-border/10 metric-negative font-black uppercase text-center tracking-widest">
+                          <div className="mt-1 pt-1 border-t border-v2-border/40 metric-negative font-bold uppercase text-center tracking-wider">
                             {t('propFirm.chart.accountReset')}
                           </div>
                         )}
                         {data.isPayout && data.payoutStatus && (
-                          <div className="mt-1 pt-1 border-t border-border/10">
+                          <div className="mt-1 pt-1 border-t border-v2-border/40">
                             <div className="flex justify-between items-center">
-                              <span className="text-foreground font-black uppercase tracking-wider">Payout</span>
-                              <span className="text-foreground font-black">${data.payoutAmount.toLocaleString()}</span>
+                              <span className="text-v2-text-primary font-bold uppercase tracking-wider">Payout</span>
+                              <span className="text-v2-text-primary font-bold tabular-nums">${data.payoutAmount.toLocaleString()}</span>
                             </div>
-                            <div className="text-[8px] text-foreground/60 uppercase text-right tracking-widest">
+                            <div className="text-[10px] text-v2-text-secondary uppercase text-right tracking-wider">
                               {data.payoutStatus}
                             </div>
                           </div>

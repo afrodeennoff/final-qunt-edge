@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { logger } from '@/lib/logger'
 import { paymentService } from './payment-service'
 import { whop } from '@/lib/whop'
+import type { SubscriptionEventType } from '@/prisma/generated/prisma'
 
 export interface SubscriptionDetails {
   userId: string
@@ -165,12 +166,12 @@ export class SubscriptionManager {
         data: updateData,
       })
 
-      for (const log of eventLogs) {
+        for (const log of eventLogs) {
         await this.recordSubscriptionEvent({
           userId: data.userId,
           email: subscription.email,
           subscriptionId: subscription.id,
-          eventType: log.eventType as any,
+          eventType: log.eventType as SubscriptionEventType,
           eventData: { ...log.eventData, ...data.metadata },
         })
       }
@@ -436,7 +437,7 @@ export class SubscriptionManager {
             await prisma.subscription.update({
               where: { id: subscription.id },
               data: {
-                status: 'PENDING' as any,
+                status: 'PENDING',
               },
             })
 
@@ -538,7 +539,7 @@ export class SubscriptionManager {
           userId: data.userId,
           email: data.email,
           subscriptionId: data.subscriptionId,
-          eventType: data.eventType as any,
+          eventType: data.eventType as SubscriptionEventType,
           eventData: data.eventData,
         },
       })

@@ -63,7 +63,7 @@ export default async function DashboardLayout({
             <DashboardSidebar isAdmin={isAdmin} />
             <SidebarInset className="flex-1 min-h-0 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(41,98,255,0.06),transparent_50%),radial-gradient(ellipse_60%_40%_at_80%_100%,rgba(41,98,255,0.04),transparent_50%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(var(--v2-accent)/0.06),transparent_50%),radial-gradient(ellipse_60%_40%_at_80%_100%,oklch(var(--v2-accent)/0.04),transparent_50%)]" />
                 <div className="absolute inset-0 opacity-[0.03]">
                   <div className="absolute inset-0 bg-[linear-gradient(oklch(0.97_0_0/0.03)_1px,transparent_1px),linear-gradient(90deg,oklch(0.97_0_0/0.03)_1px,transparent_1px)] bg-[length:48px_48px]" />
                 </div>

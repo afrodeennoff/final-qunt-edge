@@ -168,7 +168,7 @@ export function DashboardHeader() {
                                     "group flex h-8 items-center gap-2 rounded-lg border bg-v2-bg-surface px-4",
                                     "text-[9px] font-bold uppercase tracking-[0.2em] text-v2-text-primary",
                                     "border-v2-border/60 transition-all duration-200",
-                                    "hover:bg-v2-accent/10 hover:border-v2-accent/50 hover:shadow-md",
+                                    "hover:bg-v2-accent/10 hover:border-v2-accent/50 hover:shadow-[var(--v2-glow-ambient)]",
                                     "active:scale-95"
                                 )}>
                                     <Sparkles className="h-3 w-3 animate-pulse text-v2-accent" />

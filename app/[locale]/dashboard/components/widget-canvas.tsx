@@ -112,7 +112,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
         data-widget-shell="true"
         className={cn(
           "h-full min-h-0 w-full",
-          uiV2Enabled && "rounded-xl border border-border/60 bg-card/90 backdrop-blur-sm",
+          uiV2Enabled && "rounded-xl border border-v2-border/60 bg-v2-bg-surface/95 backdrop-blur-sm",
           isCustomizing && "blur-[2px]"
         )}
       >
@@ -543,7 +543,7 @@ export default function WidgetCanvas() {
   if (!layouts) {
     return (
       <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-        <div className="animate-pulse rounded-2xl border border-border/12 bg-popover/60 p-6" aria-hidden="true">
+        <div className="animate-pulse rounded-2xl border border-v2-border/60 bg-v2-bg-surface/60 p-6" aria-hidden="true">
           <div className="h-4 w-48 rounded bg-card/10" />
           <div className="mt-3 h-3 w-96 max-w-full rounded bg-card/10" />
           <div className="mt-6 flex gap-2">
@@ -559,11 +559,11 @@ export default function WidgetCanvas() {
   if (currentLayout.length === 0) {
     return (
       <div className="relative mt-0 w-full min-h-0" role="status">
-        <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-border/12 bg-card/90 p-6 text-foreground shadow-2xl" role="alert">
+        <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-v2-border/60 bg-v2-bg-surface/90 p-6 text-v2-text-primary shadow-2xl" role="alert">
           <div className="text-sm font-semibold tracking-tight">
             {(t as any)("widgets.emptyLayoutTitle") ?? "No widgets on your dashboard."}
           </div>
-          <div className="mt-2 text-sm text-foreground/60 leading-relaxed">
+          <div className="mt-2 text-sm text-v2-text-secondary leading-relaxed">
             {(t as any)("widgets.emptyLayoutDescription") ?? "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -643,10 +643,10 @@ export default function WidgetCanvas() {
                       currentType={widget.type}
                     >
                       <div className={cn(
-                        "h-full w-full rounded-xl transition-all duration-500 group/widget overflow-hidden relative precision-panel border border-border/12",
+                        "h-full w-full rounded-xl transition-all duration-500 group/widget overflow-hidden relative precision-panel border border-v2-border/60",
                         isCustomizing
-                          ? "border-[hsl(var(--precision-cobalt)/0.7)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[0_18px_34px_-24px_hsl(var(--background)/0.95)]"
-                          : "bg-popover/95 hover:border-border/20"
+                          ? "border-[hsl(var(--precision-cobalt)/0.7)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
+                          : "bg-v2-bg-surface/95 hover:border-v2-border/80"
                       )}>
                         {showDataDebug && !isCustomizing && (
                           <DebugDataBadge />

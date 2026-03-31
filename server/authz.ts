@@ -183,7 +183,8 @@ export function requireServiceAuth(
         throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
       }
       return { service: serviceName, requestId }
-    } catch {
+    } catch (error) {
+      if (error instanceof AuthzError) throw error
       throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
     }
   }
@@ -242,7 +243,8 @@ export function requireCronAuth(
     if (!isValid) {
       throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof AuthzError) throw error
     throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
   }
 

@@ -125,45 +125,45 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
     if (active && payload && payload.length) {
       const data = payload[0].payload
       return (
-        <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
+        <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t('timeRangePerformance.tooltip.timeRange')}
             </span>
             <span className={cn(
-              "font-bold text-foreground text-xs",
-              timeRange.range === data.range ? "text-foreground" : ""
+              "font-semibold text-v2-text-primary text-sm",
+              timeRange.range === data.range ? "text-v2-text-primary" : ""
             )}>
               {getTimeRangeLabel(label)}
             </span>
           </div>
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t('timeRangePerformance.tooltip.avgPnl')}
             </span>
             <span className={cn(
-              "font-black text-sm",
+              "font-bold text-sm tabular-nums",
               data.avgPnl >= 0 ? "metric-positive" : "metric-negative"
             )}>
               {data.avgPnl.toFixed(2)}
             </span>
           </div>
-          <div className="flex flex-col pt-2 border-t border-border/55">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+          <div className="flex flex-col pt-2 border-t border-v2-border/40">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t('timeRangePerformance.tooltip.winRate')}
             </span>
             <span className={cn(
-              "font-bold text-foreground text-xs",
+              "font-bold text-sm",
               data.winRate >= 50 ? "metric-positive" : "metric-negative"
             )}>
               {data.winRate.toFixed(1)}%
             </span>
           </div>
           <div className="flex flex-col pt-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               Trades
             </span>
-            <span className="font-bold text-foreground text-xs">
+            <span className="font-semibold text-v2-text-primary text-sm">
               {data.trades}
             </span>
           </div>

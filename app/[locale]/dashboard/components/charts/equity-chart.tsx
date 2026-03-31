@@ -261,20 +261,20 @@ const OptimizedTooltip = React.memo(
         <div className="rounded-lg border bg-background p-2 shadow-xs">
           <div className="grid gap-2">
             <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
+              <span className="text-[0.70rem] uppercase text-v2-text-secondary">
                 {t("equity.tooltip.date")}
               </span>
-              <span className="font-bold text-muted-foreground">
+              <span className="font-bold text-v2-text-primary">
                 {format(new Date(data.date), "MMM d, yyyy", {
                   locale: dateLocale,
                 })}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[0.70rem] uppercase text-muted-foreground">
+              <span className="text-[0.70rem] uppercase text-v2-text-secondary">
                 {t("equity.tooltip.totalEquity")}
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-v2-text-primary">
                 {formatCurrency(data.equity || 0)}
               </span>
             </div>
@@ -310,24 +310,24 @@ const OptimizedTooltip = React.memo(
     });
 
     return (
-      <div className="bg-card/96 backdrop-blur-xl p-3 border border-border/55 rounded-lg shadow-2xl min-w-[160px]">
+      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
         <div className="grid gap-2">
-          <div className="flex justify-between items-center border-b border-border/55 pb-1">
-            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+          <div className="flex justify-between items-center border-b border-v2-border/40 pb-1">
+            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
               {t("equity.tooltip.date")}
             </span>
-            <span className="font-black text-muted-foreground text-[10px] uppercase tracking-widest">
+            <span className="font-semibold text-v2-text-primary text-sm uppercase">
               {format(new Date(data.date), "MMM d, yyyy", {
                 locale: dateLocale,
               })}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+            <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
               {t("equity.tooltip.totalEquity")}
             </span>
             <span className={cn(
-              "font-black text-sm tabular-nums",
+              "font-bold text-sm tabular-nums",
               (data.equity || 0) >= 0 ? "metric-positive" : "metric-negative"
             )}>
               {formatCurrency(data.equity || 0)}
@@ -335,8 +335,8 @@ const OptimizedTooltip = React.memo(
           </div>
 
           {resetAccounts.length > 0 && (
-            <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+            <div className="flex flex-col gap-1.5 pt-1.5 border-t border-v2-border/40">
+              <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
                 {t("equity.tooltip.resets")}
               </span>
               <div className="space-y-1">
@@ -350,7 +350,7 @@ const OptimizedTooltip = React.memo(
                           generateAccountColor(account),
                       }}
                     />
-                    <span className="text-[10px] font-black metric-negative uppercase tracking-widest leading-none">
+                    <span className="text-sm font-bold metric-negative uppercase tracking-wider leading-none">
                       {account}
                     </span>
                   </div>
@@ -360,8 +360,8 @@ const OptimizedTooltip = React.memo(
           )}
 
           {payoutAccounts.length > 0 && (
-            <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/55">
-              <span className="text-[8px] uppercase text-muted-foreground font-black tracking-widest">
+            <div className="flex flex-col gap-1.5 pt-1.5 border-t border-v2-border/40">
+              <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
                 {t("equity.tooltip.payouts")}
               </span>
               <div className="space-y-1">
@@ -376,12 +376,12 @@ const OptimizedTooltip = React.memo(
                             generateAccountColor(account),
                         }}
                       />
-                      <span className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none">
+                      <span className="text-sm font-bold text-v2-text-primary uppercase tracking-wider leading-none">
                         {account}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-foreground tabular-nums">
+                      <span className="text-sm font-bold text-v2-text-primary tabular-nums">
                         {formatCurrency(amount)}
                       </span>
                       <span

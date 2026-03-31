@@ -92,28 +92,28 @@ export default React.memo(function TimeInPositionChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-card/95 backdrop-blur-md p-3 border border-border/55 rounded-lg shadow-xl">
+        <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t("timeInPosition.tooltip.time")}
             </span>
-            <span className="font-bold text-foreground text-xs">
+            <span className="font-semibold text-v2-text-primary text-sm">
               {`${label}:00 - ${(label + 1) % 24}:00`}
             </span>
           </div>
           <div className="flex flex-col mb-2">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t("timeInPosition.tooltip.averageDuration")}
             </span>
-            <span className={cn("font-bold text-xs", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
+            <span className={cn("font-bold text-sm", data.avgTimeInPosition > 0 ? "metric-positive" : "metric-negative")}>
               {formatTime(data.avgTimeInPosition)}
             </span>
           </div>
-          <div className="flex flex-col pt-2 border-t border-border/55">
-            <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
+          <div className="flex flex-col pt-2 border-t border-v2-border/40">
+            <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
               {t("timeInPosition.tooltip.trades")}
             </span>
-            <span className={cn("font-bold text-xs", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
+            <span className={cn("font-bold text-sm", data.tradeCount > 0 ? "metric-positive" : "metric-negative")}>
               {data.tradeCount}{" "}
               {data.tradeCount !== 1
                 ? t("timeInPosition.tooltip.trades_plural")

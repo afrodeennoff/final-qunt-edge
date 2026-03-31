@@ -726,7 +726,7 @@ export async function verifyOtp(email: string, token: string, type: 'email' | 's
     })
 
     if (data.user && data.session) {
-      const locale = email.includes('.fr') ? 'fr' : 'en';
+      const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en';
       await ensureUserInDatabase(data.user, locale)
     }
 

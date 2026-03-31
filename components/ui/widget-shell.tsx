@@ -88,15 +88,15 @@ export function WidgetShell({
       data-widget-shell="v2"
       className={cn(
         "relative overflow-hidden rounded-xl border",
-        "border-[hsl(var(--border))_/_0.65]",
-        "bg-[hsl(var(--card))_/_0.95]",
-        "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.05)]",
+        "border-v2-border/60",
+        "bg-v2-bg-surface/95",
+        "shadow-[inset_0_1px_0_oklch(var(--v2-text-primary)/0.05)]",
         "transition-all duration-[180ms] ease-out",
-        "hover:border-[hsl(var(--border))_/_0.70]",
-        "hover:bg-[hsl(var(--card))_/_0.99]",
+        "hover:border-v2-border/70",
+        "hover:bg-v2-bg-surface/99",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         "h-full shadow-none",
-        variant === "hoverable" && "hover:shadow-md",
+        variant === "hoverable" && "hover:shadow-[var(--v2-glow-ambient)]",
         className
       )}
     >
