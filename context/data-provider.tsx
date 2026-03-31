@@ -70,6 +70,7 @@ import { useMoodStore } from "@/store/mood-store";
 import { useSubscriptionStore } from "@/store/subscription-store";
 import { getSubscriptionData } from "@/server/billing";
 import { defaultLayouts } from "@/lib/default-layouts";
+import { MOBILE_BREAKPOINT } from "@/lib/config/breakpoints";
 import { removeAccountFromGroups } from "@/context/data-provider-utils";
 
 import {
@@ -235,13 +236,13 @@ const DashboardActionsContext = createContext<DashboardActions | undefined>(
 function useIsMobileDetection() {
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.matchMedia("(max-width: 768px)").matches;
+    return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
   });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const mobileQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
     const checkMobile = (e: MediaQueryListEvent | MediaQueryList) =>
       setIsMobile(e.matches);
 
@@ -302,6 +303,7 @@ export const DataProvider: React.FC<{
   const locale = useCurrentLocale();
   const isLoading = useUserStore((state) => state.isLoading);
   const setIsLoading = useUserStore((state) => state.setIsLoading);
+  const setStoreIsMobile = useUserStore((state) => state.setIsMobile);
 
   // Subscription store
   const setSubscriptionData = useSubscriptionStore(
@@ -321,6 +323,10 @@ export const DataProvider: React.FC<{
   useEffect(() => {
     dashboardLayoutRef.current = dashboardLayout;
   }, [dashboardLayout]);
+
+  useEffect(() => {
+    setStoreIsMobile(isMobile);
+  }, [isMobile, setStoreIsMobile]);
 
   const buildSharedAccountNumbers = useCallback(
     (sharedData: NonNullable<typeof initialSharedData>) =>
@@ -597,9 +603,12 @@ export const DataProvider: React.FC<{
       // Parallel: layout fetch + cache reads
       let hasLocalSnapshot = false;
       if (userId && !isSharedView) {
+        const shouldHydrateLayout =
+          !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId;
+
         const [dashboardLayoutResult, cachedTradesResult, cachedUserDataResult] = await Promise.allSettled([
           // Only fetch layout if not already loaded for this user
-          (!dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId)
+          shouldHydrateLayout
             ? withTimeout(getDashboardLayout(userId), 15000, "getDashboardLayout")
             : Promise.resolve(undefined),
           withTimeout(getTradesCache(userId), 2000, "getTradesCache"),
@@ -617,6 +626,19 @@ export const DataProvider: React.FC<{
             // If no layout exists in database, use default layout
             setDashboardLayout(defaultLayouts);
           }
+        } else if (dashboardLayoutResult.status === "rejected" && shouldHydrateLayout) {
+          logger.warn(
+            { error: dashboardLayoutResult.reason, userId },
+            "Dashboard layout fetch failed; falling back to defaults"
+          );
+          setDashboardLayout({
+            id: userId,
+            userId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            desktop: defaultLayouts.desktop,
+            mobile: defaultLayouts.mobile,
+          });
         }
 
         // Handle cache results

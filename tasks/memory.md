@@ -1,5 +1,33 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Dashboard/Teams sidebar reliability + widget shell rescue (2026-04-01)
+
+### Accomplishments
+- Fixed desktop/mobile sidebar mode detection in `hooks/use-mobile.tsx`:
+  - switched from `window.innerWidth` snapshots to `MediaQueryList.matches` as source of truth.
+  - prevents false mobile classification that hid sidebar behind the trigger on desktop.
+- Removed dashboard sidebar lazy-loading fallback in `app/[locale]/dashboard/layout.tsx`:
+  - replaced dynamic import placeholder rail with direct `DashboardSidebar` import.
+  - avoids persistent “thin left rail / no sidebar navigation” states when sidebar chunk loading stalls.
+- Hardened dashboard layout bootstrap in `context/data-provider.tsx`:
+  - when `getDashboardLayout` rejects, provider now logs the failure and seeds a default per-user layout instead of leaving `dashboardLayout` null.
+  - prevents `widget-canvas` from sticking in loading state on layout-fetch failures.
+- Unified mobile-mode source for dashboard layout logic:
+  - `dashboard-context.tsx` now uses `useDashboardIsMobile()` (provider state) instead of `useUserStore().isMobile`.
+  - `widget-canvas.tsx` now uses `useDataIsMobile()` for active layout mode selection.
+  - `DataProvider` now uses `MOBILE_BREAKPOINT` for media-query parity and syncs store `isMobile` from provider state.
+- Removed `any`-based translation fallbacks in widget empty-layout UI using typed `translate` adapter.
+- Re-checked production logs for dashboard/team paths and confirmed sampled runtime status health (200/303 only in queried windows, no 4xx/5xx in those samples).
+
+### Verification
+- `./node_modules/.bin/eslint hooks/use-mobile.tsx app/[locale]/dashboard/layout.tsx` passes.
+- `./node_modules/.bin/eslint context/data-provider.tsx app/[locale]/dashboard/dashboard-context.tsx app/[locale]/dashboard/components/widget-canvas.tsx app/[locale]/dashboard/layout.tsx hooks/use-mobile.tsx` passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+- Vercel runtime logs queried for dashboard/teams paths show successful responses in sampled windows.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: `.env.example` runtime env sync (2026-03-31)
 
 ### Accomplishments

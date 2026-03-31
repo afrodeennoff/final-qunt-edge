@@ -1,6 +1,80 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-03-30 evening
+**Last Updated:** 2026-04-01
+
+---
+
+## NEW (2026-04-01): Dashboard layout fetch failures must fail-soft to defaults
+
+### Mistake
+`DataProvider` only handled successful/empty `getDashboardLayout` responses. If the layout fetch rejected (timeout/network/server error), `dashboardLayout` could remain `null`, leaving `WidgetCanvas` in perpetual loading.
+
+### Root Cause
+Error-path handling was incomplete for a required bootstrap dependency. The UI shell depended on layout presence but had no deterministic fallback for rejected fetches.
+
+### Rule
+Any required dashboard bootstrap fetch (`getDashboardLayout`) must explicitly handle rejected promises and seed a safe default layout immediately.
+
+### Example
+```ts
+// BAD
+if (dashboardLayoutResult.status === "fulfilled") {
+  // ...
+}
+
+// GOOD
+if (dashboardLayoutResult.status === "fulfilled") {
+  // ...
+} else if (dashboardLayoutResult.status === "rejected") {
+  setDashboardLayout(defaultLayoutForUser)
+}
+```
+
+---
+
+## NEW (2026-04-01): Do not lazy-load core dashboard sidebar shell with placeholder rails
+
+### Mistake
+Dashboard shell used a dynamic sidebar import with a narrow loading placeholder (`w-14/lg:w-[72px]`). In failure/slow-chunk paths, users saw only the header trigger and no actual navigation rail.
+
+### Root Cause
+A core navigation surface was treated as optional/lazy UI and given a fallback skeleton that visually resembles a collapsed rail, masking the real failure mode.
+
+### Rule
+For authenticated dashboard shells, mount the primary sidebar directly (static import) so navigation is always rendered as part of the initial shell contract.
+
+### Example
+```tsx
+// BAD
+const DashboardSidebar = dynamic(() => import('@/components/sidebar/dashboard-sidebar'), {
+  loading: () => <div className="hidden md:block w-14 lg:w-[72px]" />,
+})
+
+// GOOD
+import { DashboardSidebar } from '@/components/sidebar/dashboard-sidebar'
+```
+
+---
+
+## NEW (2026-04-01): Mobile/desktop mode must use media-query truth, not innerWidth snapshots
+
+### Mistake
+`useIsMobile` relied on `window.innerWidth` snapshots, which can be transiently wrong in some browser lifecycle moments and classify desktop as mobile.
+
+### Root Cause
+Viewport mode source-of-truth drift: JS width snapshots were used instead of the already-constructed media query match state.
+
+### Rule
+When using `matchMedia`, initialize and update responsive state from `mql.matches` / `event.matches` to keep behavior aligned with CSS breakpoints.
+
+### Example
+```tsx
+// BAD
+setIsMobile(window.innerWidth < MOBILE_BREAKPOINT + 1)
+
+// GOOD
+setIsMobile(mql.matches)
+```
 
 ---
 

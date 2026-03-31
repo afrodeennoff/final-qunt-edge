@@ -112,6 +112,9 @@ npm run analyze:bundle         # Bundle analysis
 - **Firm detail routing**: In `app/[locale]/(landing)/firm/[slug]/page.tsx`, alias slug redirects must only target canonical slugs that resolve in DB; otherwise redirect to `/${locale}/propfirms`.
 - **V2 components**: Re-exports of V1 (`CardV2 = Card`). Use V2 imports for new work: `import { CardV2 as Card } from '@/components/ui/v2'`.
 - **Auth sync Prisma reads**: In `ensureUserInDatabase` and similar auth-critical user flows, never use implicit full-row Prisma reads. Always use explicit minimal `select` and add schema-mismatch fallback for `auth_user_id` lookups.
+- **Dashboard sidebar shell**: Keep `DashboardSidebar` in `app/[locale]/dashboard/layout.tsx` as a direct import (not dynamic with placeholder rails). Navigation is part of the core shell contract.
+- **Mobile mode detection**: `hooks/use-mobile.tsx` should derive state from `matchMedia(...).matches` / `MediaQueryListEvent.matches`, not `window.innerWidth` snapshots.
+- **Dashboard layout bootstrap**: In `context/data-provider.tsx`, if `getDashboardLayout` fails, immediately seed default dashboard layout for the active user (do not leave layout null).
 - **Widget system**: 35+ widget types in `app/[locale]/dashboard/config/widget-registry.tsx`. `WidgetSize = 'tiny' | 'small' | 'small-long' | 'medium' | 'large' | 'extra-large'`.
 - **Chart library**: Recharts with `ChartSurface`/`ChartContainer`/`ChartTooltip` wrappers.
 - **Deploy**: Vercel with cron jobs. `vercel.json` defines 4 cron schedules.

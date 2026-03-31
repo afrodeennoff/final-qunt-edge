@@ -323,7 +323,7 @@ function DebugDataBadge() {
 }
 
 export default function WidgetCanvas() {
-  const isMobile = useUserStore((state) => state.isMobile)
+  const isMobile = useDataIsMobile()
   const layouts = useUserStore((state) => state.dashboardLayout)
   const setLayouts = useUserStore((state) => state.setDashboardLayout)
   const user = useUserStore(state => state.user)
@@ -334,6 +334,7 @@ export default function WidgetCanvas() {
     setIsCustomizing,
   } = useDashboard()
   const t = useI18n()
+  const translate = t as unknown as (key: string) => string
   const shouldReduceMotion = useReducedMotion()
   const showDataDebug = searchParams.get("debugData") === "1"
   const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
@@ -561,24 +562,24 @@ export default function WidgetCanvas() {
       <div className="relative mt-0 w-full min-h-0" role="status">
         <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-v2-border/60 bg-v2-bg-surface/90 p-6 text-v2-text-primary shadow-2xl" role="alert">
           <div className="text-sm font-semibold tracking-tight">
-            {(t as any)("widgets.emptyLayoutTitle") ?? "No widgets on your dashboard."}
+            {translate("widgets.emptyLayoutTitle") || "No widgets on your dashboard."}
           </div>
           <div className="mt-2 text-sm text-v2-text-secondary leading-relaxed">
-            {(t as any)("widgets.emptyLayoutDescription") ?? "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
+            {translate("widgets.emptyLayoutDescription") || "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
           </div>
           <div className="mt-5 flex flex-wrap gap-2">
             <ButtonV2 
               onClick={restoreDefaultLayout}
               className="bg-card text-foreground hover:bg-card/90 font-semibold"
             >
-              {(t as any)("widgets.restoreDefaults") ?? "Restore default layout"}
+              {translate("widgets.restoreDefaults") || "Restore default layout"}
             </ButtonV2>
             <ButtonV2 
               variant="outline"
               onClick={() => setIsCustomizing(true)}
               className="border-border/15 bg-transparent text-foreground hover:bg-card/5 hover:text-foreground"
             >
-              {(t as any)("widgets.edit") ?? "Edit"}
+              {translate("widgets.edit") || "Edit"}
             </ButtonV2>
           </div>
         </div>

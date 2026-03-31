@@ -1,3 +1,41 @@
+## Task: Sidebar + Teams Dashboard reliability fix (2026-04-01)
+
+- [x] Remove dashboard sidebar lazy fallback path so `/dashboard` mounts the real sidebar component directly.
+- [x] Fix viewport detection in `useIsMobile` to rely on `matchMedia.matches` (avoid false mobile mode on desktop).
+- [x] Verify touched scope with targeted lint + full typecheck.
+- [x] Re-check production logs for dashboard/team route status health.
+
+Verification:
+- `./node_modules/.bin/eslint hooks/use-mobile.tsx app/[locale]/dashboard/layout.tsx` passes.
+- `npm run -s typecheck` passes.
+- Vercel production runtime logs for dashboard/team queries show successful responses only (200/303), with no 4xx/5xx entries in the sampled windows.
+
+## Review
+- Root cause addressed at UI shell level:
+  - `hooks/use-mobile.tsx` now uses media-query truth (`mql.matches`) instead of `window.innerWidth` snapshots that can misclassify desktop as mobile.
+  - `app/[locale]/dashboard/layout.tsx` now imports `DashboardSidebar` directly instead of lazy-loading with a narrow placeholder fallback, removing the “sidebar missing / thin left rail” failure mode.
+- Teams dashboard/sidebar uses the same sidebar primitives and benefits from the viewport detection correction.
+
+## Task: Dashboard widget/layout fail-soft + mobile mode unification (2026-04-01)
+
+- [x] Add explicit fallback layout hydration when `getDashboardLayout` fails, so widgets never stay in indefinite loading due to `dashboardLayout === null`.
+- [x] Align `DataProvider` mobile detection breakpoint with shared `MOBILE_BREAKPOINT`.
+- [x] Switch dashboard layout-mode consumers (`dashboard-context`, `widget-canvas`) to live provider mobile state instead of persisted `useUserStore().isMobile`.
+- [x] Remove `any` usage introduced by widget empty-layout translation fallback and keep lint clean for touched scope.
+- [x] Verify touched scope with eslint + typecheck.
+
+Verification:
+- `./node_modules/.bin/eslint context/data-provider.tsx app/[locale]/dashboard/dashboard-context.tsx app/[locale]/dashboard/components/widget-canvas.tsx app/[locale]/dashboard/layout.tsx hooks/use-mobile.tsx` passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+
+## Review
+- Root-cause fix for widget shell stall:
+  - `context/data-provider.tsx` now handles rejected `getDashboardLayout` calls by logging and seeding a deterministic default layout for the active user.
+  - This prevents `WidgetCanvas` from remaining in its `!layouts` loading state when layout fetch fails.
+- Mobile mode consistency fix:
+  - `DataProvider` now uses `MOBILE_BREAKPOINT` for its media query (same breakpoint contract as `use-mobile`).
+  - `DashboardProvider` and `WidgetCanvas` now read mobile state from provider hooks (`useDashboardIsMobile` / `useDataIsMobile`) instead of persisted `user-store` flags that can drift.
+
 ## Task: Sync `.env.example` with current runtime envs (2026-03-31)
 
 - [x] Inventory runtime env references against `.env.example`

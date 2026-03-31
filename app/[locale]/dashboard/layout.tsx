@@ -7,17 +7,11 @@ import { DashboardProviders } from "@/components/providers/dashboard-providers";
 import { SidebarRootProviders } from "@/components/providers/root-providers";
 import { DashboardScrollReset } from "./components/dashboard-scroll-reset";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { DashboardSidebar } from "@/components/sidebar/dashboard-sidebar";
 import dynamic from "next/dynamic";
 import { isAdminUser } from "@/server/authz";
 import { getUserDashboardTheme } from "@/server/user-data";
 import { serializeThemeVars } from "@/lib/constants/dashboard-themes";
-
-const DashboardSidebar = dynamic(
-  () => import("@/components/sidebar/dashboard-sidebar").then((m) => m.DashboardSidebar),
-  {
-    loading: () => <div className="hidden md:block w-14 lg:w-[72px]" />,
-  }
-);
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
