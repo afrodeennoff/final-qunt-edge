@@ -157,7 +157,7 @@ function AssistantPanel() {
           <div
             key={message.id}
             className={cn(
-              "rounded-lg border px-3 py-2 text-xs leading-relaxed",
+              "rounded-lg border-border px-3 py-2 text-xs leading-relaxed",
               message.role === "user"
                 ? "border-primary/20 bg-primary/10 text-foreground"
                 : "border-border bg-muted/40 text-muted-foreground",

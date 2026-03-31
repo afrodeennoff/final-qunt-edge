@@ -149,7 +149,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                   return (
                     <div
                       key={weekIndex}
-                      className="flex flex-col items-center justify-center border rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
+                      className="flex flex-col items-center justify-center border-border rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
                     />
                   )
                 }
@@ -161,7 +161,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                     <PopoverTrigger asChild>
                       <div
                         className={cn(
-                          "flex flex-col items-center justify-center border rounded p-1 min-h-12 flex-1 cursor-pointer",
+                          "flex flex-col items-center justify-center border-border rounded p-1 min-h-12 flex-1 cursor-pointer",
                           "transition-all duration-200 hover:scale-[1.02] hover:shadow-xs",
                           pnl > 0 
                             ? "bg-secondary/30 dark:bg-secondary/22 text-foreground dark:text-foreground border-border/65 dark:border-border/55" 

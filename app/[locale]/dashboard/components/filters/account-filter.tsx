@@ -147,7 +147,7 @@ export function AccountFilter({ showAccountNumbers, className }: AccountFilterPr
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium">{t('filters.accounts')}</Label>
-      <Command className="rounded-lg border" shouldFilter={false}>
+      <Command className="rounded-lg border-border border" shouldFilter={false}>
         <div className="border-b">
           <CommandInput 
             placeholder={t('filters.search')} 

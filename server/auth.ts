@@ -139,8 +139,8 @@ async function findUserByAuthIdCompat(authUserId: string): Promise<UserSyncRecor
 
 async function upsertUserByIdAndEmailCompat(userId: string, email: string): Promise<UserSyncRecord> {
   await prisma.$executeRaw`
-    INSERT INTO "public"."User" ("id", "email")
-    VALUES (${userId}, ${email})
+    INSERT INTO "public"."User" ("id", "email", "auth_user_id")
+    VALUES (${userId}, ${email}, ${userId})
     ON CONFLICT ("id")
     DO UPDATE SET "email" = EXCLUDED."email"
   `

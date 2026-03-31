@@ -211,7 +211,7 @@ function SortRuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-2 rounded-md border bg-background px-2 py-1.5 text-sm",
+        "flex items-center gap-2 rounded-md border-border bg-background px-2 py-1.5 text-sm",
         isDragging && "opacity-70 shadow-sm"
       )}
     >
@@ -470,7 +470,7 @@ function PayoutDialog({
             </div>
 
             {/* Selected Date Display */}
-            <div className="p-3 bg-muted/30 rounded-md border">
+            <div className="p-3 bg-muted/30 rounded-md border-border">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{t('propFirm.payout.selectedDate')}</p>
@@ -483,7 +483,7 @@ function PayoutDialog({
             </div>
 
             {/* Inline Calendar with Custom Header */}
-            <div className="border rounded-md bg-background max-h-[400px] flex flex-col">
+            <div className="border-border rounded-md bg-background max-h-[400px] flex flex-col">
               {/* Custom Month/Year Header */}
               <div className="p-3 border-b bg-muted/20 shrink-0">
                 <div className="flex items-center justify-between">

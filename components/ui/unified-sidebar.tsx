@@ -252,7 +252,6 @@ export function UnifiedSidebar({
             </div>
           </SidebarMenuItem>
         </SidebarMenu>
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sidebar-border/50 to-transparent" />
       </SidebarHeader>
 
       <SidebarContent className="px-1.5 scrollbar-thin scrollbar-thumb-sidebar-border/40 scrollbar-track-transparent hover:scrollbar-thumb-sidebar-border/60 scrollbar-w-[3px]">
@@ -286,7 +285,7 @@ export function UnifiedSidebar({
                           className={cn(
                             "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
                             itemIsActive
-                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
+                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/30 shadow-[0_0_20px_oklch(var(--sidebar-ring)/0.1)]"
                               : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
                           )}
                         >
@@ -333,7 +332,7 @@ export function UnifiedSidebar({
                           className={cn(
                             "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
                             itemIsActive
-                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold shadow-[inset_0_0_0_1px_oklch(0.55_0.22_264/_0.3),0_0_20px_oklch(0.55_0.22_264/_0.1)]"
+                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/30 shadow-[0_0_20px_oklch(var(--sidebar-ring)/0.1)]"
                               : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
                           )}
                         >
@@ -374,7 +373,6 @@ export function UnifiedSidebar({
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border/30 p-2 relative bg-gradient-to-t from-sidebar-accent/10 to-transparent">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sidebar-border/40 to-transparent" />
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

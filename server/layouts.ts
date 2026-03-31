@@ -119,8 +119,8 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
       isPrismaSchemaMismatchError(error)
     ) {
       await prisma.$executeRaw`
-        INSERT INTO "public"."User" ("id", "email")
-        VALUES (${userId}, ${resolvedEmail})
+        INSERT INTO "public"."User" ("id", "email", "auth_user_id")
+        VALUES (${userId}, ${resolvedEmail}, ${userId})
         ON CONFLICT ("id")
         DO UPDATE SET "email" = EXCLUDED."email"
       `

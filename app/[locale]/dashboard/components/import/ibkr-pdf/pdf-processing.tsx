@@ -375,7 +375,7 @@ export default function PdfProcessing({
           </TooltipTrigger>
           <TooltipContent side="right" className="p-0">
             <div className="max-w-md">
-              <div className="p-2 border-b bg-muted">
+              <div className="p-2 border-b border-border bg-muted">
                 <p className="font-medium text-sm">Trade Orders</p>
               </div>
               <div className="p-2">

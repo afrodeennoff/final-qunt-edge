@@ -159,7 +159,7 @@ export default function PdfUpload({
               {t('import.upload.selectedFiles')}
             </h3>
           </div>
-          <ScrollArea className="h-[calc(100%-2rem)] rounded-md border">
+          <ScrollArea className="h-[calc(100%-2rem)] rounded-md border-border">
             <div className="p-2 space-y-1">
               {files.map((file, index) => (
                 <div

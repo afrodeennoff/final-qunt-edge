@@ -453,7 +453,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                 onMonthChange={setFromCalendarMonth}
                 selected={dateRange?.from}
                 onSelect={handleFromSelect}
-                className="rounded-md border"
+                className="rounded-md border-border border"
                 locale={dateLocale}
               />
             </div>
@@ -510,7 +510,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                 onMonthChange={setToCalendarMonth}
                 selected={dateRange?.to}
                 onSelect={handleToSelect}
-                className="rounded-md border"
+                className="rounded-md border-border border"
                 locale={dateLocale}
               />
             </div>
@@ -567,7 +567,7 @@ export function DateRangeSection({ searchValue }: DateRangeSectionProps) {
                 onMonthChange={setUniqueDayCalendarMonth}
                 selected={dateRange?.from && dateRange?.to && dateRange.from.getTime() === dateRange.to.getTime() ? dateRange.from : undefined}
                 onSelect={handleUniqueDaySelect}
-                className="rounded-md border"
+                className="rounded-md border-border border"
                 locale={dateLocale}
               />
             </div>

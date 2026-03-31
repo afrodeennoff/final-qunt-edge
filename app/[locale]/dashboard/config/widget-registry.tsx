@@ -175,7 +175,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-2">
-          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-muted rounded-md border">
+          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-muted rounded-md border-border">
             {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
               <div key={i} className={cn(
                 "h-4 bg-muted-foreground/20 rounded",
@@ -222,7 +222,7 @@ function createPropfirmPreview() {
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-3">
           {[...Array(2)].map((_, index) => (
-            <div key={index} className="flex flex-col gap-2 p-3 bg-muted rounded-md border">
+            <div key={index} className="flex flex-col gap-2 p-3 bg-muted rounded-md border-border">
               <div className="flex justify-between items-center">
                 <div className="h-4 w-24 bg-muted-foreground/20 rounded" />
                 <div className="h-4 w-16 bg-muted-foreground/20 rounded" />
@@ -303,7 +303,7 @@ function createMindsetPreview() {
 
           <div className="flex flex-col gap-2">
             <div className="h-4 w-24 bg-muted-foreground/20 rounded" />
-            <div className="h-16 w-full bg-muted rounded border" />
+            <div className="h-16 w-full bg-muted rounded border-border" />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -445,7 +445,7 @@ function CreateChatPreview() {
         {/* Input area */}
         <div className="border-t p-3">
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-9 bg-muted rounded-md border flex items-center px-3">
+            <div className="flex-1 h-9 bg-muted rounded-md border-border flex items-center px-3">
               <div className="h-3 w-24 bg-muted-foreground/20 rounded" />
             </div>
             <ButtonV2  size="sm" className="h-9 px-3">

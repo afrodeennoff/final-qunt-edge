@@ -116,7 +116,7 @@ function TeamSettingsCard({
             <Label className="text-base font-medium">Current Teams</Label>
             <div className="mt-2 space-y-2">
               {userTeams.ownedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={team.id} className="flex items-center justify-between p-3 border-border rounded-lg">
                   <div>
                     <p className="font-medium">{team.name}</p>
                     <p className="text-sm text-muted-foreground">
@@ -128,7 +128,7 @@ function TeamSettingsCard({
               ))}
 
               {userTeams.joinedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={team.id} className="flex items-center justify-between p-3 border-border rounded-lg">
                   <div>
                     <p className="font-medium">{team.name}</p>
                     <p className="text-sm text-muted-foreground">
