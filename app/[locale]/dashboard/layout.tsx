@@ -19,12 +19,12 @@ const DashboardSidebar = dynamic(
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
-  { ssr: false, loading: () => null }
+  { loading: () => null }
 );
 
 const DashboardClientOverlays = dynamic(
   () => import("./components/dashboard-client-overlays").then((m) => m.DashboardClientOverlays),
-  { ssr: false, loading: () => null }
+  { loading: () => null }
 );
 
 export const metadata: Metadata = {
