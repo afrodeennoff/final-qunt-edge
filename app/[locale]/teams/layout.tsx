@@ -1,6 +1,6 @@
 
 import { Metadata } from 'next';
-import { RootProviders } from "@/components/providers/root-providers";
+import { PublicRootProviders } from "@/components/providers/root-providers";
 
 type Locale = 'en' | 'fr';
 
@@ -25,8 +25,8 @@ export default async function TeamLayout({
   children: React.ReactNode,
 }) {
   return (
-    <RootProviders>
+    <PublicRootProviders>
       {children}
-    </RootProviders>
+    </PublicRootProviders>
   );
 }

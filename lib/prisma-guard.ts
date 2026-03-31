@@ -122,9 +122,11 @@ export async function isPrismaTableAvailable(tableName: string, schema = 'public
       prismaTableAvailability.set(cacheKey, exists)
       return exists
     } catch {
-      // Assume available when the probe itself cannot run (connection/auth issues).
-      prismaTableAvailability.set(cacheKey, true)
-      return true
+      // Probe failed — assume table might not exist and serve fallback immediately.
+      // This prevents DB connection errors from surfacing to users.
+      prismaTableAvailability.set(cacheKey, false)
+      console.warn(`[PrismaGuard] Table probe failed for '${tableName}' — assuming unavailable, serving fallback`)
+      return false
     } finally {
       prismaTableProbes.delete(cacheKey)
     }
@@ -168,9 +170,9 @@ export async function isPrismaColumnAvailable(
       prismaColumnAvailability.set(cacheKey, exists)
       return exists
     } catch {
-      // Assume available when the probe itself cannot run (connection/auth issues).
-      prismaColumnAvailability.set(cacheKey, true)
-      return true
+      prismaColumnAvailability.set(cacheKey, false)
+      console.warn(`[PrismaGuard] Column probe failed for '${tableName}.${columnName}' — assuming unavailable, serving fallback`)
+      return false
     } finally {
       prismaColumnProbes.delete(cacheKey)
     }

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight,
   BadgePercent,
@@ -16,6 +16,8 @@ import {
   Star,
   Wallet,
 } from 'lucide-react'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { BadgeV2 } from '@/components/ui/v2'
 import type {
   DealItem,
   DealsOverview,
@@ -25,6 +27,9 @@ import type {
   UnifiedFirm,
 } from '@/server/deals'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
+import { EvalCostCalculator } from '../calculator/components/eval-cost-calculator'
+import { FirmComparisonGrid } from '../compare/components/firm-comparison-grid'
+import { GuideLibrary } from '../guides/components/guide-library'
 
 type SortKey = 'discount' | 'price-low' | 'price-high' | 'expiring'
 
@@ -54,12 +59,91 @@ const sortOptions: ReadonlyArray<{ key: SortKey; label: string }> = [
   { key: 'price-high', label: 'Highest price' },
 ]
 
-const dealsQuickLinkItems: ReadonlyArray<{ href: string; label: string }> = [
-  { href: '/deals/compare', label: 'Compare' },
-  { href: '/deals/guides', label: 'Guides' },
-  { href: '/deals/calculator', label: 'Calculator' },
-  { href: '/deals/faq', label: 'FAQ' },
+const TABS: ReadonlyArray<{ id: string; label: string }> = [
+  { id: 'deals-board', label: 'Deals Board' },
+  { id: 'matchup', label: 'Matchup' },
+  { id: 'cost-planner', label: 'Cost Planner' },
+  { id: 'playbooks', label: 'Playbooks' },
+  { id: 'help', label: 'Help' },
 ]
+
+const faqFallbackItems: ReadonlyArray<{ question: string; answer: string }> = [
+  {
+    question: 'What is Qunt Edge Deals?',
+    answer:
+      'Qunt Edge Deals is a curated deals surface for futures prop firms. It helps you spot active promos quickly, then move into deeper analysis before you commit to a challenge.',
+  },
+  {
+    question: 'Are these offers maintained in real time?',
+    answer:
+      'Offers are reviewed frequently and refreshed when terms change. Because firms can update campaigns without notice, always confirm the final checkout details before purchase.',
+  },
+  {
+    question: 'Does Qunt Edge guarantee a discount will still be active?',
+    answer:
+      'No. We track and surface deals, but final eligibility is controlled by each prop firm. If an offer expires, use the matchup and cost-planning tools to evaluate the next best option.',
+  },
+  {
+    question: 'How should I choose between deals?',
+    answer:
+      'Start with your risk model and payout timeline, not just the biggest headline discount. Fees, drawdown mechanics, and reset costs can matter more than the first promo percentage.',
+  },
+  {
+    question: 'Where can I ask a question that is not listed here?',
+    answer:
+      'You can reach Qunt Edge support from the support page. Include the firm name and the offer you saw so we can help you verify the best current path.',
+  },
+]
+
+function DealsTabBar({
+  activeTab,
+  onTabClick,
+}: {
+  activeTab: string
+  onTabClick: (id: string) => void
+}) {
+  return (
+    <nav className="sticky top-[68px] z-40 border-b border-border bg-background/80 backdrop-blur">
+      <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+        <div className="-mb-px flex gap-1 overflow-x-auto scrollbar-none">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onTabClick(tab.id)}
+              className={`relative whitespace-nowrap px-4 py-3 text-sm font-medium transition-colors sm:px-5 ${
+                activeTab === tab.id
+                  ? 'text-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+function hasActiveDealFilters(
+  search: string,
+  selectedFirm: string,
+  selectedMarket: 'All' | MarketType,
+  selectedDiscount: string,
+  sortKey: SortKey,
+): boolean {
+  return (
+    search.trim().length > 0 ||
+    selectedFirm !== 'All' ||
+    selectedMarket !== 'All' ||
+    selectedDiscount !== 'all' ||
+    sortKey !== 'discount'
+  )
+}
 
 function formatPrice(value: number): string {
   if (value <= 0) return 'Free'
@@ -232,6 +316,7 @@ export function DealsExperience({
       browseDeals={browseDeals}
       filteredDeals={filteredDeals}
       faqs={faqs}
+      firms={firms}
       overview={overview}
       spotlights={spotlights}
       hadFetchError={hadFetchError}
@@ -262,6 +347,7 @@ function DealsBoard({
   browseDeals,
   filteredDeals,
   faqs,
+  firms,
   overview,
   spotlights,
   hadFetchError,
@@ -288,20 +374,62 @@ function DealsBoard({
   browseDeals: DealItem[]
   filteredDeals: DealItem[]
   faqs: FaqItem[]
+  firms: UnifiedFirm[]
   overview: DealsOverview
   spotlights: DealsSpotlightCollection
   hadFetchError: boolean
   lastUpdated: string | null
 }) {
-  const hasActiveFilters =
-    search.trim().length > 0 ||
-    selectedFirm !== 'All' ||
-    selectedMarket !== 'All' ||
-    selectedDiscount !== 'all' ||
-    sortKey !== 'discount'
+  const hasActiveFilters = hasActiveDealFilters(search, selectedFirm, selectedMarket, selectedDiscount, sortKey)
   const topDiscountDeal = getTopDiscountDeal(filteredDeals)
   const spotlightDeals = useMemo(() => getSpotlightDeals(filteredDeals), [filteredDeals])
   const expiringCount = filteredDeals.filter(isExpiringDeal).length
+
+  const [activeTab, setActiveTab] = useState('deals-board')
+
+  useEffect(() => {
+    const updateFromHash = () => {
+      const hash = window.location.hash.slice(1)
+      if (hash && TABS.some((t) => t.id === hash)) {
+        setActiveTab(hash)
+      }
+    }
+    updateFromHash()
+    window.addEventListener('hashchange', updateFromHash)
+    return () => window.removeEventListener('hashchange', updateFromHash)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id
+            if (TABS.some((t) => t.id === id)) {
+              setActiveTab(id)
+            }
+          }
+        }
+      },
+      { rootMargin: '-30% 0px -60% 0px' },
+    )
+
+    for (const tab of TABS) {
+      const el = document.getElementById(tab.id)
+      if (el) observer.observe(el)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToTab = useCallback((id: string) => {
+    const el = document.getElementById(id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      history.replaceState(null, '', `#${id}`)
+      setActiveTab(id)
+    }
+  }, [])
 
   const resetFilters = () => {
     onSearchChange('')
@@ -311,71 +439,222 @@ function DealsBoard({
     onSortChange('discount')
   }
 
+  const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
+      </div>
 
-        {spotlightDeals.length > 0 ? (
-          <BiggestDealsCarousel
+      <DealsTabBar activeTab={activeTab} onTabClick={scrollToTab} />
+
+      <section id="deals-board" className="scroll-mt-[120px]">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-8 sm:px-6 lg:px-8">
+          {spotlightDeals.length > 0 ? (
+            <BiggestDealsCarousel
+              locale={locale}
+              deals={spotlightDeals}
+              copiedCode={copiedCode}
+              onCopyCode={onCopyCode}
+            />
+          ) : null}
+
+          <section className="grid gap-4 lg:grid-cols-3">
+            <InsightCard
+              label="Best visible discount"
+              value={topDiscountDeal ? `${topDiscountDeal.discountPercent}% off` : 'No current match'}
+              helper={topDiscountDeal ? `${topDiscountDeal.firmName} • ${topDiscountDeal.couponCode}` : 'Widen filters to surface a current promo'}
+            />
+            <InsightCard
+              label="Expiring soon"
+              value={expiringCount.toString()}
+              helper="Deals ending in the next two weeks inside the current board"
+            />
+            <InsightCard
+              label="Current board"
+              value={`${filteredDeals.length}`}
+              helper={`Sorted by ${sortOptions.find((item) => item.key === sortKey)?.label.toLowerCase() ?? 'best discount'}`}
+            />
+          </section>
+
+          <DealsFilterPanel
+            localePrefix={localePrefix}
+            search={search}
+            selectedFirm={selectedFirm}
+            selectedMarket={selectedMarket}
+            selectedDiscount={selectedDiscount}
+            sortKey={sortKey}
+            onSearchChange={onSearchChange}
+            onFirmChange={onFirmChange}
+            onMarketChange={onMarketChange}
+            onDiscountChange={onDiscountChange}
+            onSortChange={onSortChange}
+            onResetFilters={resetFilters}
+            hasActiveFilters={hasActiveFilters}
+            firmOptions={firmOptions}
+            spotlights={spotlights}
+            lastUpdated={lastUpdated}
+            topFirms={topFirms}
+          />
+
+          <DealsContentSections
             locale={locale}
-            deals={spotlightDeals}
+            featuredDeals={featuredDeals}
+            expiringDeals={expiringDeals}
+            browseDeals={browseDeals}
+            filteredDeals={filteredDeals}
             copiedCode={copiedCode}
             onCopyCode={onCopyCode}
+            hadFetchError={hadFetchError}
           />
-        ) : null}
+        </div>
+      </section>
 
-        <section className="grid gap-4 lg:grid-cols-3">
-          <InsightCard
-            label="Best visible discount"
-            value={topDiscountDeal ? `${topDiscountDeal.discountPercent}% off` : 'No current match'}
-            helper={topDiscountDeal ? `${topDiscountDeal.firmName} • ${topDiscountDeal.couponCode}` : 'Widen filters to surface a current promo'}
-          />
-          <InsightCard
-            label="Expiring soon"
-            value={expiringCount.toString()}
-            helper="Deals ending in the next two weeks inside the current board"
-          />
-          <InsightCard
-            label="Current board"
-            value={`${filteredDeals.length}`}
-            helper={`Sorted by ${sortOptions.find((item) => item.key === sortKey)?.label.toLowerCase() ?? 'best discount'}`}
-          />
-        </section>
-
-        <DealsFilterPanel
-          localePrefix={localePrefix}
-          search={search}
-          selectedFirm={selectedFirm}
-          selectedMarket={selectedMarket}
-          selectedDiscount={selectedDiscount}
-          sortKey={sortKey}
-          onSearchChange={onSearchChange}
-          onFirmChange={onFirmChange}
-          onMarketChange={onMarketChange}
-          onDiscountChange={onDiscountChange}
-          onSortChange={onSortChange}
-          onResetFilters={resetFilters}
-          hasActiveFilters={hasActiveFilters}
-          firmOptions={firmOptions}
-          spotlights={spotlights}
-          lastUpdated={lastUpdated}
-          topFirms={topFirms}
-        />
-
-        <DealsContentSections
-          locale={locale}
-          featuredDeals={featuredDeals}
-          expiringDeals={expiringDeals}
-          browseDeals={browseDeals}
-          filteredDeals={filteredDeals}
-          copiedCode={copiedCode}
-          onCopyCode={onCopyCode}
-          faqs={faqs}
-          hadFetchError={hadFetchError}
-        />
-      </div>
+      <DealsTabSections locale={locale} firms={firms} faqItems={faqItems} />
     </div>
+  )
+}
+
+function DealsTabSections({
+  locale,
+  firms,
+  faqItems,
+}: {
+  locale: string
+  firms: UnifiedFirm[]
+  faqItems: readonly { question: string; answer: string }[]
+}) {
+  return (
+    <>
+      {/* ── Matchup ── */}
+      <section id="matchup" className="scroll-mt-[120px] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <BadgeV2 variant="accent" className="mb-3">Matchup</BadgeV2>
+            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Compare prop firm tradeoffs before you pay</h2>
+            <p className="mt-3 text-muted-foreground">Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.</p>
+          </div>
+          <div className="mx-auto mb-6 grid max-w-2xl grid-cols-3 gap-3">
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Models</p>
+              <p className="mt-1 text-lg font-bold text-foreground">3</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">View</p>
+              <p className="mt-1 text-lg font-bold text-foreground">Live</p>
+            </div>
+          </div>
+          <FirmComparisonGrid firms={firms} />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-base font-semibold text-foreground">1. Set max month-one spend</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Include evaluation fee, any likely retry budget, and platform costs.</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-base font-semibold text-foreground">2. Pick executable drawdown</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Favor rule sets you can consistently follow during volatile sessions.</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-base font-semibold text-foreground">3. Align payout cadence</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Match payout timing with your capital recycling and scaling plan.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Cost Planner ── */}
+      <section id="cost-planner" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <BadgeV2 variant="accent" className="mb-3">Cost Planner</BadgeV2>
+            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Model your evaluation cost before you start</h2>
+            <p className="mt-3 text-muted-foreground">Set realistic expectations for resets, platform costs, and payout targets.</p>
+          </div>
+          <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Input Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Fees + resets</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Output Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Net after costs</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Risk Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Ratio signal</p>
+            </div>
+          </div>
+          <EvalCostCalculator />
+          <div className="mt-6 rounded-2xl border border-border bg-card p-5 sm:p-6">
+            <h3 className="text-lg font-semibold text-foreground">Interpretation tips</h3>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">If your cost-to-payout ratio rises above 40%, reconsider account size, reset assumptions, or execution pace.</li>
+              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">Use the Matchup tab to cross-check whether a different drawdown model can reduce expected reset frequency.</li>
+              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">Pair this with the Playbooks tab to align risk rules with the same assumptions entered here.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Playbooks ── */}
+      <section id="playbooks" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <BadgeV2 variant="accent" className="mb-3">Playbooks</BadgeV2>
+            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Prop firm playbooks for disciplined execution</h2>
+            <p className="mt-3 text-muted-foreground">Convert policy language into concrete actions you can execute during evaluation and funded phases.</p>
+          </div>
+          <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Focus</p>
+              <p className="mt-1 font-semibold text-foreground">Execution Quality</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Mode</p>
+              <p className="mt-1 font-semibold text-foreground">Actionable Steps</p>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Outcome</p>
+              <p className="mt-1 font-semibold text-foreground">Lower Rule Breaches</p>
+            </div>
+          </div>
+          <GuideLibrary locale={locale} />
+        </div>
+      </section>
+
+      {/* ── Help / FAQ ── */}
+      <section id="help" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <BadgeV2 variant="accent" className="mb-3">Help</BadgeV2>
+            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Deals FAQ</h2>
+            <p className="mt-3 text-muted-foreground">Everything on this page is specific to how Qunt Edge presents and maintains prop firm deal information.</p>
+          </div>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {['Deals basics', 'Offer updates', 'Risk fit', 'Support'].map((chip) => (
+              <span key={chip} className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">{chip}</span>
+            ))}
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {faqItems.map((item, index) => (
+              <AccordionItem key={item.question} value={`item-${index}`} className="mb-3 rounded-xl border border-border bg-card px-4">
+                <AccordionTrigger className="py-4 text-left text-base font-semibold text-foreground hover:no-underline">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 pt-1 text-sm leading-relaxed text-muted-foreground">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+    </>
   )
 }
 
@@ -546,7 +825,6 @@ function DealsContentSections({
   filteredDeals,
   copiedCode,
   onCopyCode,
-  faqs,
   hadFetchError,
 }: {
   locale: string
@@ -556,7 +834,6 @@ function DealsContentSections({
   filteredDeals: DealItem[]
   copiedCode: string | null
   onCopyCode: (code: string) => void
-  faqs: FaqItem[]
   hadFetchError: boolean
 }) {
   return (
@@ -590,8 +867,6 @@ function DealsContentSections({
         copiedCode={copiedCode}
         onCopyCode={onCopyCode}
       />
-
-      {faqs.length > 0 ? <DealsFaqSection faqs={faqs} localePrefix={`/${locale}`} /> : null}
 
       {hadFetchError ? (
         <p className="text-sm text-amber-500">
@@ -650,36 +925,6 @@ function BrowseDealsSection({
   )
 }
 
-function DealsFaqSection({ faqs, localePrefix }: { faqs: FaqItem[]; localePrefix: string }) {
-  return (
-    <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">FAQ</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Questions traders usually ask before checkout</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            These answers cover verification, timing, and risk-fit so you can make the next move with less guesswork.
-          </p>
-        </div>
-        <Link
-          href={`${localePrefix}/deals/faq`}
-          className="inline-flex items-center justify-center rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-input"
-        >
-          Open full FAQ
-        </Link>
-      </div>
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        {faqs.slice(0, 6).map((faq) => (
-          <div key={faq.question} className="rounded-2xl border border-border bg-card p-4">
-            <h3 className="text-sm font-semibold text-foreground">{faq.question}</h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{faq.answer}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 function DealsHero({
   localePrefix,
   overview,
@@ -719,22 +964,6 @@ function DealsHero({
           <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toString()} icon={Building2} />
           <StatCard label="Account value" value={formatCompactCurrency(overview.totalAccountValue)} icon={Wallet} />
           <StatCard label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
-        </div>
-        <div className="rounded-2xl border border-border bg-background/40 p-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Explore deals tools
-          </p>
-          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {dealsQuickLinkItems.map((item) => (
-              <Link
-                key={item.href}
-                href={`${localePrefix}${item.href}`}
-                className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-input"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </section>

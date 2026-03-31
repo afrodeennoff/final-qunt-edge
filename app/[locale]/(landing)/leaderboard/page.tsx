@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-query'
 import { LeaderboardContent } from './components/leaderboard-content'
-import { getSiteOrigin } from '@/lib/site-url'
+import { buildPublicMetadata } from '@/lib/seo'
 
 const VALID_SORTS: LeaderboardSort[] = ['monthly_pnl', 'winrate', 'totalTrades']
-const SITE_ORIGIN = getSiteOrigin()
 
 export async function generateMetadata({
   params,
@@ -12,19 +11,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const canonical = `${SITE_ORIGIN}/${locale}/leaderboard`
-
-  return {
+  return buildPublicMetadata({
     title: 'Trader Leaderboard | Qunt Edge',
     description: 'See public trader rankings based on real monthly performance, win rate, and trade activity.',
-    alternates: { canonical },
-    openGraph: {
-      title: 'Trader Leaderboard | Qunt Edge',
-      description: 'See public trader rankings based on real monthly performance, win rate, and trade activity.',
-      url: canonical,
-      type: 'website',
-    },
-  }
+    path: '/leaderboard',
+    locale,
+  })
 }
 
 export default async function LeaderboardPage({

@@ -1323,7 +1323,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                 <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                   <AlertDialogTrigger asChild>
                     <ButtonV2 
-                      variant="destructive"
+                      variant="error"
                       className="h-10 font-normal whitespace-nowrap"
                       onClick={() => setShowDeleteDialog(true)}
                     >

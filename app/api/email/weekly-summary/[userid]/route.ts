@@ -54,7 +54,7 @@ export async function POST(req: Request, props: { params: Promise<{ userid: stri
         emailData: {
           from: 'Qunt Edge <newsletter@eu.updates.qunt-edge.vercel.app>',
           to: [newsletter.email],
-          replyTo: 'hugo.demenez@qunt-edge.vercel.app',
+          replyTo: process.env.WEEKLY_SUMMARY_REPLY_TO ?? 'team@qunt-edge.com',
           subject: user.language === 'fr' ? 'Nous manquons de vous voir sur Qunt Edge' : 'We miss you on Qunt Edge',
           html: missingYouEmailHtml
         }

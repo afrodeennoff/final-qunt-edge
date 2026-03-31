@@ -630,7 +630,7 @@ function PayoutDialog({
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <ButtonV2 
-                  variant="destructive"
+                  variant="error"
                   size="sm"
                   className="w-full sm:w-auto"
                   disabled={isProcessing}
@@ -1558,7 +1558,7 @@ function AccountsOverviewComponent({
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <ButtonV2 
-                        variant="destructive"
+                        variant="error"
                         size="sm"
                         disabled={isDeleting || !canDeleteAccount}
                       >

@@ -33,7 +33,8 @@ export async function generateMetadata({
       canonical,
       languages: {
         'x-default': `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        'en': `${SITE_ORIGIN}/en${PAGE_PATH}`,
+        'en-US': `${SITE_ORIGIN}/en${PAGE_PATH}`,
+        'fr-FR': `${SITE_ORIGIN}/fr${PAGE_PATH}`,
       },
     },
   };

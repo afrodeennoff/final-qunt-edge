@@ -167,7 +167,7 @@ export async function POST(req: Request) {
 
     // Send email
     const { error } = await resend.emails.send({
-      from: 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
+      from: process.env.TEAM_INVITE_FROM ?? 'Qunt Edge Team <team@qunt-edge.com>',
       to: email,
       subject: existingUser?.language === 'fr'
         ? `Invitation à rejoindre ${team.name} sur Qunt Edge`

@@ -175,7 +175,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                         type="submit"
                         name="action"
                         value="upheld"
-                        variant="destructive"
+                        variant="error"
                         size="sm"
                         className="w-32"
                       >

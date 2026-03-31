@@ -18,8 +18,11 @@ const welcomeWebhookSchema = z.object({
 }).passthrough()
 
 function isAuthorizedWebhook(request: Request): boolean {
-  const secret = process.env.WELCOME_WEBHOOK_SECRET || process.env.SUPABASE_WEBHOOK_SECRET
-  if (!secret) return false
+  const secret = process.env.WELCOME_WEBHOOK_SECRET
+  if (!secret) {
+    logger.error('[WelcomeWebhook] WELCOME_WEBHOOK_SECRET is not configured — rejecting all requests')
+    return false
+  }
 
   const authHeader = request.headers.get('authorization') || ''
   const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
@@ -109,7 +112,7 @@ export async function POST(req: Request) {
           to: record.email,
           subject: userLanguage === 'fr' ? 'Bienvenue sur Qunt Edge' : 'Welcome to Qunt Edge',
           react: WelcomeEmail({ firstName, email: record.email, language: userLanguage, youtubeId: youtubeId || 'ZBrIZpCh_7Q' }),
-          replyTo: 'hugo.demenez@qunt-edge.vercel.app',
+          replyTo: process.env.WELCOME_REPLY_TO ?? 'team@qunt-edge.com',
           headers: {
             'List-Unsubscribe': `<${unsubscribeUrl}>`,
             'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
@@ -131,7 +134,13 @@ export async function POST(req: Request) {
           { status: 200 }
         )
       } catch (error) {
-        logger.error("[WelcomeWebhook] Request handling failed", { error })
+        const errorName = error instanceof Error ? error.name : 'Unknown'
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        logger.error("[WelcomeWebhook] Request handling failed", {
+          errorName,
+          errorMessage,
+          // Do NOT log full error object — could leak webhook payload
+        })
         return toValidationErrorResponse(error)
       }
     }

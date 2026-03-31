@@ -9,6 +9,10 @@ import {
   FileText,
   Shield,
   ArrowRight,
+  Radar,
+  Bot,
+  Sparkles,
+  ShieldAlert,
 } from 'lucide-react'
 import { GlassCard } from '@/components/ui/glass-card'
 import { BadgeV2 } from '@/components/ui/v2'
@@ -109,6 +113,47 @@ const features = [
 
 type Feature = (typeof features)[number]
 
+const aiFeatures = [
+  {
+    title: 'Behavior Drift Radar',
+    description:
+      'Flags subtle shifts in risk behavior and setup quality before they become drawdowns.',
+    icon: Radar,
+  },
+  {
+    title: 'AI Session Debrief',
+    description:
+      'Creates concise recaps of what worked, what broke, and what to adjust next session.',
+    icon: Bot,
+  },
+  {
+    title: 'Execution Quality Score',
+    description:
+      'Scores trades against your ruleset so process wins are visible, even on flat PnL days.',
+    icon: Brain,
+  },
+  {
+    title: 'Playbook Auto-Builder',
+    description:
+      'Converts your best sessions into reusable setup templates and checklist-ready plans.',
+    icon: Sparkles,
+  },
+  {
+    title: 'Risk Intervention Alerts',
+    description:
+      'Escalates coaching prompts when sizing, frequency, or emotional variance crosses limits.',
+    icon: ShieldAlert,
+  },
+  {
+    title: 'Weekly Performance Briefs',
+    description:
+      'Auto-compiles concise weekly reports for self-review, mentors, or desk standups.',
+    icon: Bot,
+  },
+] as const
+
+type AIFeature = (typeof aiFeatures)[number]
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function ProblemCard({ problem }: { problem: Problem }) {
@@ -183,6 +228,32 @@ function FeatureCard({ feature }: { feature: Feature }) {
   )
 }
 
+function AIFeatureCard({ feature }: { feature: AIFeature }) {
+  const Icon = feature.icon
+
+  return (
+    <GlassCard
+      variant="subtle"
+      hover
+      size="sm"
+      className="relative overflow-hidden h-full bg-gradient-to-br from-[oklch(0.55_0.22_290/0.06)] to-transparent"
+    >
+      <div className="mb-3 inline-flex items-center justify-center rounded-xl w-10 h-10">
+        <div className="absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_290/0.15)] blur-sm" />
+        <div className="relative inline-flex items-center justify-center rounded-xl w-10 h-10 border border-[oklch(0.55_0.22_290/0.4)] bg-[oklch(0.55_0.22_290/0.1)]">
+          <Icon className="w-4 h-4 text-[oklch(0.55_0.22_290)]" />
+        </div>
+      </div>
+      <h3 className="text-[0.95rem] font-semibold text-foreground [font-family:var(--home-display)]">
+        {feature.title}
+      </h3>
+      <p className="mt-1.5 text-[0.82rem] leading-relaxed text-muted-foreground/70 [font-family:var(--home-copy)]">
+        {feature.description}
+      </p>
+    </GlassCard>
+  )
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function FeaturesBento() {
@@ -211,8 +282,8 @@ export default function FeaturesBento() {
             </span>
           </h2>
           <p className="mt-4 text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-            Problems mapped to solutions. Analytics, AI, and team collaboration
-            in one platform.
+            Whether you&apos;re protecting a funded account or sharpening your personal
+            edge — analytics, AI coaching, and team collaboration in one platform.
           </p>
         </motion.div>
 
@@ -243,6 +314,42 @@ export default function FeaturesBento() {
             </MotionStaggerItem>
           ))}
         </MotionStagger>
+
+        <div className="mt-16 mb-8">
+          <BadgeV2
+            variant="outline"
+            size="sm"
+            className="border-[oklch(0.55_0.22_290/0.35)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
+          >
+            AI-Powered
+          </BadgeV2>
+        </div>
+
+        <MotionStagger
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
+          delay={STAGGER_CARD}
+        >
+          {aiFeatures.map((feature) => (
+            <MotionStaggerItem key={feature.title}>
+              <AIFeatureCard feature={feature} />
+            </MotionStaggerItem>
+          ))}
+        </MotionStagger>
+
+        <div className="mt-4 rounded-2xl border border-[oklch(0.55_0.22_290/0.2)] bg-[oklch(0.55_0.22_290/0.05)] p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              AI decisions stay auditable with a transparent reason trail, so
+              every recommendation can be reviewed.
+            </p>
+            <BadgeV2
+              variant="outline"
+              className="w-fit shrink-0 border-[oklch(0.55_0.22_290/0.35)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
+            >
+              Explainable AI
+            </BadgeV2>
+          </div>
+        </div>
       </div>
     </MotionSection>
     </div>

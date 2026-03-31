@@ -65,7 +65,7 @@ function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
       state="error"
       errorMessage={t('widgets.deprecated.description')}
       actions={(
-        <ButtonV2  variant="destructive" size="sm" onClick={onRemove}>
+        <ButtonV2  variant="error" size="sm" onClick={onRemove}>
           {t('widgets.deprecated.remove')}
         </ButtonV2>
       )}
@@ -267,7 +267,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <ButtonV2 
-                  variant="destructive"
+                  variant="error"
                   size="icon"
                   className="h-8 w-8 rounded-full border border-border/20 bg-semantic-error-bg/80 text-foreground hover:bg-semantic-error-bg"
                   aria-label="Remove widget"

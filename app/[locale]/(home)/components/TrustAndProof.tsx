@@ -1,5 +1,5 @@
 import { BadgeV2 } from "@/components/ui/v2"
-import { ShieldCheck, Lock, Server, LifeBuoy, MessageSquareQuote, Check } from 'lucide-react'
+import { ShieldCheck, Lock, Server, LifeBuoy, Check } from 'lucide-react'
 
 const trustPillars = [
   {
@@ -21,21 +21,6 @@ const trustPillars = [
     title: 'Support You Can Reach',
     body: 'Product support, in-app guidance, and direct escalation paths for active traders and teams.',
     icon: LifeBuoy,
-  },
-]
-
-const testimonials = [
-  {
-    quote: 'The review cadence finally made my discipline measurable instead of subjective.',
-    role: 'Futures Trader',
-  },
-  {
-    quote: 'Our team moved from PnL storytelling to process accountability in one dashboard.',
-    role: 'Desk Manager',
-  },
-  {
-    quote: 'The weekly brief made coaching conversations faster because the data is already organized.',
-    role: 'Mentor / Coach',
   },
 ]
 
@@ -78,15 +63,7 @@ export default function TrustAndProof() {
           })}
         </div>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          {testimonials.map((item) => (
-            <article key={item.role} className="marketing-panel rounded-2xl p-6">
-              <MessageSquareQuote className="h-5 w-5 text-foreground" />
-              <p className="mt-3 text-sm leading-relaxed text-foreground [font-family:var(--home-copy)]">“{item.quote}”</p>
-              <p className="mt-3 text-[11px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">{item.role}</p>
-            </article>
-          ))}
-
+        <div className="mt-6">
           <article className="marketing-panel rounded-2xl p-6">
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">
               What We Enforce

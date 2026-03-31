@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
-import { LeaderboardIcon, DealsIcon } from "@/components/icons/svg-icons"
+import { LeaderboardIcon } from "@/components/icons/svg-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -146,8 +146,27 @@ export function UnifiedSidebar({
   const { isQueryParamOnly } = useNavigationHelper()
   const pathname = usePathname()
   const normalizedPathname = stripLocalePrefix(pathname || '/').replace(/\/$/, '') || '/'
-  const isDashboardShellRoute =
-    normalizedPathname === '/dashboard' || normalizedPathname.startsWith('/dashboard/')
+  const isSidebarEnabledRoute =
+    normalizedPathname === '/dashboard' ||
+    normalizedPathname.startsWith('/dashboard/') ||
+    normalizedPathname === '/teams' ||
+    normalizedPathname.startsWith('/teams/')
+  const hasDashboardOrTeamsNavItems = useMemo(
+    () =>
+      items.some((item) => {
+        if (!item.href) return false
+        const [hrefPath] = item.href.split('?')
+        const normalizedHrefPath = stripLocalePrefix(hrefPath).replace(/\/$/, '') || '/'
+        return (
+          normalizedHrefPath === '/dashboard' ||
+          normalizedHrefPath.startsWith('/dashboard/') ||
+          normalizedHrefPath === '/teams' ||
+          normalizedHrefPath.startsWith('/teams/')
+        )
+      }),
+    [items]
+  )
+  const shouldRenderSidebar = isSidebarEnabledRoute || hasDashboardOrTeamsNavItems
 
   const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
     const withLocalePath = (p: string) => {
@@ -233,7 +252,7 @@ export function UnifiedSidebar({
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User"
   const initials = useMemo(() => getUserInitials(user), [user])
 
-  return isDashboardShellRoute ? (
+  return shouldRenderSidebar ? (
     <Sidebar
       collapsible="icon"
       className={cn(

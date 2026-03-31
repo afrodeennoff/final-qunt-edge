@@ -1,5 +1,6 @@
 import { createClient, ensureUserInDatabase, getWebsiteURL } from '@/server/auth'
 import { NextResponse } from 'next/server'
+import { timingSafeEqual } from 'node:crypto'
 
 function isNextRedirectError(error: unknown): boolean {
   return (
@@ -16,14 +17,7 @@ function parseStateCookie(cookieHeader: string): string | undefined {
   return match ? decodeURIComponent(match[1]) : undefined
 }
 
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false
-  let result = 0
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i)
-  }
-  return result === 0
-}
+
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -70,7 +64,11 @@ export async function GET(request: Request) {
   const stateCookie = parseStateCookie(cookieHeader)
 
   if (stateParam || stateCookie) {
-    if (!stateParam || !stateCookie || !timingSafeEqual(stateParam, stateCookie)) {
+    if (
+      !stateParam ||
+      !stateCookie ||
+      !timingSafeEqual(Buffer.from(stateParam), Buffer.from(stateCookie))
+    ) {
       console.error('[Auth Callback] OAuth CSRF validation failed — state mismatch or missing')
       return NextResponse.redirect(
         new URL(withLocalePrefix('/authentication?error=csrf'), websiteURL)

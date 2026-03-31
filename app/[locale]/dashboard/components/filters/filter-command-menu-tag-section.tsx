@@ -351,7 +351,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
                     {t('widgets.tags.cancel')}
                   </ButtonV2>
                   <ButtonV2 
-                    variant="destructive"
+                    variant="error"
                     size="sm"
                     className="h-7 text-xs"
                     onClick={confirmDelete}

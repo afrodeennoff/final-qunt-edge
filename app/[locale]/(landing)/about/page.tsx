@@ -4,10 +4,7 @@ import { BadgeV2 } from "@/components/ui/v2"
 import { BookOpen, Code, LineChart, GraduationCap } from "lucide-react"
 import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
 import Link from "next/link"
-import { getSiteOrigin } from "@/lib/site-url"
-
-const SITE_ORIGIN = getSiteOrigin();
-const PAGE_PATH = "/about";
+import { buildPublicMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -15,20 +12,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
-
-  return {
+  return buildPublicMetadata({
     title: "About Qunt Edge | Trading Performance Intelligence",
     description:
       "Learn how Qunt Edge helps discretionary traders improve execution quality, risk discipline, and decision consistency.",
-    alternates: {
-      canonical,
-      languages: {
-        "en-US": `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        "fr-FR": `${SITE_ORIGIN}/fr${PAGE_PATH}`,
-      },
-    },
-  };
+    path: "/about",
+    locale,
+  });
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {

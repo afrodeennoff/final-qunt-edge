@@ -1,17 +1,14 @@
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
-import ProblemStatement from './ProblemStatement'
 import FeaturesBento from './FeaturesBento'
 import HowItWorks from './HowItWorks'
 import AnalysisDemo from './AnalysisDemo'
-import AudienceSegmentation from './AudienceSegmentation'
-import AIFeatures from './AIFeatures'
 import SocialProof from './SocialProof'
 import ComparisonSection from './ComparisonSection'
+import RollingAdBanner from './RollingAdBanner'
 import PricingSection from './PricingSection'
 import FAQSection from './FAQSection'
 import FinalCTA from './FinalCTA'
-import RollingAdBanner from './RollingAdBanner'
 
 interface HomeContentProps {
   locale: string
@@ -34,24 +31,13 @@ export default function HomeContent({ locale }: HomeContentProps) {
 
       <main className="relative z-10 mx-auto w-full max-w-[1360px]">
         <Hero locale={locale} />
-
         <LiveStatsStrip />
-
-        <ProblemStatement />
         <FeaturesBento />
         <HowItWorks />
         <AnalysisDemo />
-
-        <AudienceSegmentation />
-
-        <AIFeatures />
-
         <SocialProof />
-
         <ComparisonSection />
-
         <RollingAdBanner />
-
         <PricingSection />
         <FAQSection />
         <FinalCTA locale={locale} />

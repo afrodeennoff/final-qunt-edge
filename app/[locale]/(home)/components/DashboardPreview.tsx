@@ -10,8 +10,15 @@ export default function DashboardPreview() {
   const bars = [65, 72, 68, 85, 78, 92, 88, 95, 82, 100, 94, 98]
 
   return (
-    <div className="relative mx-auto max-w-5xl px-2 sm:px-4 scan-line-overlay">
-      <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 shadow-[0_0_60px_-15px_hsl(var(--primary)/0.2)] backdrop-blur-sm">
+    <div
+      className="relative mx-auto max-w-5xl px-2 sm:px-4 scan-line-overlay"
+      role="img"
+      aria-label="Interactive demo dashboard preview — shown metrics are illustrative only"
+    >
+      <div className="overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.85)] shadow-2xl shadow-primary/5 shadow-[0_0_60px_-15px_hsl(var(--primary)/0.2)] backdrop-blur-sm relative">
+        <span className="absolute top-3 right-3 z-10 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-primary">
+          Demo
+        </span>
         <div className="flex items-center gap-2 rounded-t-xl border-b border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-1))] px-3 py-3 sm:px-4">
           <div className="flex gap-1.5">
             <div className="w-3 h-3 rounded-full bg-destructive/80" />

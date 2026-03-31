@@ -580,7 +580,7 @@ export function RithmicCredentialsManager({
               {t("common.cancel")}
             </ButtonV2>
             <ButtonV2 
-              variant="destructive"
+              variant="error"
               onClick={() =>
                 selectedCredentialId && handleDelete(selectedCredentialId)
               }

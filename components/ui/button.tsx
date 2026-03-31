@@ -14,7 +14,7 @@ const buttonVariants = cva(
         solid: "bg-v2-accent text-v2-accent-foreground shadow-sm hover:bg-v2-accent-hover hover:scale-[1.01] hover:shadow-md hover:shadow-v2-accent/20 active:scale-[0.98]",
         outline: "border border-v2-border bg-v2-bg-base text-v2-text-primary hover:bg-v2-bg-hover hover:scale-[1.01] active:scale-[0.98]",
         ghost: "text-v2-text-secondary hover:text-v2-text-primary hover:bg-v2-bg-hover",
-        destructive: "bg-v2-error text-v2-accent-foreground hover:bg-v2-error/90 shadow-sm hover:scale-[1.01] hover:shadow-md hover:shadow-v2-error/20 active:scale-[0.98]",
+        error: "bg-v2-error text-v2-accent-foreground hover:bg-v2-error/90 shadow-sm hover:scale-[1.01] hover:shadow-md hover:shadow-v2-error/20 active:scale-[0.98]",
         link: "text-v2-accent underline-offset-4 hover:underline",
         "gradient-primary": "bg-gradient-to-r from-v2-accent via-v2-accent/90 to-v2-accent-hover text-v2-accent-foreground shadow-sm hover:shadow-lg hover:shadow-v2-accent/30 hover:scale-[1.01] active:scale-[0.98]",
         "gradient-secondary": "bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover border border-v2-border text-v2-text-primary shadow-sm hover:shadow-md hover:scale-[1.01] active:scale-[0.98]",

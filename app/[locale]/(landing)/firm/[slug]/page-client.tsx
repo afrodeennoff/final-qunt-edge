@@ -1056,7 +1056,31 @@ function RulesSection({ firm }: { firm: FirmData }) {
               Loss limits and drawdown rules for each account size.
             </CardV2Description>
 
-            <div className="mt-6 overflow-x-auto">
+            <div className="mt-6 grid gap-3 lg:hidden">
+              {accountSizes.map(([key, size]) => (
+                <article key={key} className="rounded-2xl border border-border/70 bg-background/50 p-4">
+                  <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
+                  <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
+                    <div>
+                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Daily Loss</dt>
+                      <dd className="mt-1 font-medium text-foreground">
+                        {size.dailyLoss !== null ? formatCompactCurrency(size.dailyLoss) : 'No limit'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Max Drawdown</dt>
+                      <dd className="mt-1 font-medium text-foreground">{formatCompactCurrency(size.drawdown)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Profit Target</dt>
+                      <dd className="mt-1 font-medium text-foreground">{formatCompactCurrency(size.target)}</dd>
+                    </div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-6 hidden overflow-x-auto lg:block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border/40">
@@ -1326,8 +1350,8 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
   const visibleCouponCount = getVisibleCouponCount(firm)
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(88,129,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(88,129,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_24%,hsl(var(--background))_100%)]">
+      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">

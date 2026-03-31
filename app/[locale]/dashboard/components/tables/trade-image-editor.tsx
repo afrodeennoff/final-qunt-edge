@@ -703,7 +703,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
               Close
             </ButtonV2>
             <ButtonV2 
-              variant="destructive"
+              variant="error"
               onClick={async () => {
                 await handleRemoveAllImages();
                 setShowDeleteConfirm(false);

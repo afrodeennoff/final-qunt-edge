@@ -330,7 +330,7 @@ export default function BillingManagement() {
                   <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
                     <DialogTrigger asChild>
                       <ButtonV2  
-                        variant="destructive" 
+                        variant="error" 
                         className="sm:w-auto"
                       >
                         {t('billing.cancelSubscription')}
@@ -400,7 +400,7 @@ export default function BillingManagement() {
                           {t('pricing.cancelSubscription.cancel')}
                         </ButtonV2>
                         <ButtonV2 
-                          variant="destructive"
+                          variant="error"
                           onClick={() => {
                             handleSubscriptionAction('cancel')
                             setIsCancelDialogOpen(false)

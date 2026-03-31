@@ -44,7 +44,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
               ?
             </h2>
             <p className="text-[0.95rem] sm:text-lg text-muted-foreground/75 mb-10 leading-relaxed [font-family:var(--home-copy)]">
-              Join 2,400+ traders who have improved their performance with Qunt Edge.
+              Join traders tracking their performance with Qunt Edge.
               Start your free audit today.
             </p>
             <MagneticButton strength={8}>

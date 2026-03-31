@@ -774,7 +774,7 @@ export function TeamManagement({
                   {isOwner && (
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <ButtonV2  variant="destructive" size="sm" className="flex-1 text-xs">
+                        <ButtonV2  variant="error" size="sm" className="flex-1 text-xs">
                           <Trash2 className="h-3 w-3 mr-1" />
                           {t('teams.management.delete')}
                         </ButtonV2>

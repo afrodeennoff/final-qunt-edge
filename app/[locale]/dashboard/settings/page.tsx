@@ -688,7 +688,7 @@ export default function SettingsPage() {
               </Link>
               <Separator />
               <ButtonV2 
-                variant="destructive"
+                variant="error"
                 className="w-full justify-start"
                 onClick={async () => {
                   clearTradovate()

@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { PricingPageClient } from "./pricing-page-client";
-import { getSiteOrigin } from "@/lib/site-url";
-
-const SITE_ORIGIN = getSiteOrigin();
-const PAGE_PATH = "/pricing";
+import { buildPublicMetadata } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -11,20 +8,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${SITE_ORIGIN}/${locale}${PAGE_PATH}`;
-
-  return {
+  return buildPublicMetadata({
     title: "Pricing | Qunt Edge",
     description:
       "Compare Qunt Edge plans for individual traders and teams. Start free, then upgrade for AI debriefs and behavior analytics.",
-    alternates: {
-      canonical,
-      languages: {
-        "en-US": `${SITE_ORIGIN}/en${PAGE_PATH}`,
-        "fr-FR": `${SITE_ORIGIN}/fr${PAGE_PATH}`,
-      },
-    },
-  };
+    path: "/pricing",
+    locale,
+  });
 }
 
 export default function PricingPage() {

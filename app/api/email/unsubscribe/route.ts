@@ -56,10 +56,9 @@ export async function GET(request: Request) {
       }
     })
 
-    // Redirect to the newsletter preferences page
+    // Redirect to the newsletter preferences page (do NOT expose email in URL)
     const redirectUrl = new URL('/newsletter', requestUrl.origin)
     redirectUrl.searchParams.set('status', 'unsubscribed')
-    redirectUrl.searchParams.set('email', email)
 
     return NextResponse.redirect(redirectUrl)
   } catch (error) {

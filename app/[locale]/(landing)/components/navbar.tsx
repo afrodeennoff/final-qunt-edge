@@ -109,7 +109,7 @@ export default function Navbar() {
                         key={link.href}
                         href={`/${locale}${link.href}`}
                         onClick={() => setMobileOpen(false)}
-                        className="block rounded-xl px-3 py-2 text-sm text-[hsl(var(--mk-text))]"
+                        className="block rounded-xl px-3 py-3 text-sm text-[hsl(var(--mk-text))]"
                       >
                         {link.title}
                       </Link>

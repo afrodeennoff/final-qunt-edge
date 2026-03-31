@@ -63,19 +63,19 @@ const teams = {
 
   // Testimonials
   'teams.testimonials.title': 'What clients say about their results',
-  'teams.testimonials.description': 'Real firms. Real numbers. Real results.',
+  'teams.testimonials.description': 'Testimonials coming soon.',
 
-  'teams.testimonials.quote1': 'We increased our profit per trader by 41% in 3 months. The multi-account view showed us patterns we never saw before.',
-  'teams.testimonials.author1': 'Sarah Chen',
-  'teams.testimonials.role1': 'Head of Trading, Quantum Capital',
+  'teams.testimonials.quote1': '',
+  'teams.testimonials.author1': '',
+  'teams.testimonials.role1': '',
 
-  'teams.testimonials.quote2': 'Finally caught a trader going rogue before he blew up his account. The real-time alerts saved us $2.3M.',
-  'teams.testimonials.author2': 'Michael Rodriguez',
-  'teams.testimonials.role2': 'CTO, PropTrade Solutions',
+  'teams.testimonials.quote2': '',
+  'teams.testimonials.author2': '',
+  'teams.testimonials.role2': '',
 
-  'teams.testimonials.quote3': 'Compliance reports that used to take 3 days now take 10 minutes. Our auditors love the transparency.',
-  'teams.testimonials.author3': 'Emma Thompson',
-  'teams.testimonials.role3': 'Risk Manager, Alpha Fund',
+  'teams.testimonials.quote3': '',
+  'teams.testimonials.author3': '',
+  'teams.testimonials.role3': '',
 
   // CTA sections
   'teams.cta.demo.title': 'See your trading data like never before',
@@ -155,7 +155,7 @@ const teams = {
 
   // CTA section
   'teams.cta.createAccount.title': 'Ready to get started?',
-  'teams.cta.createAccount.description': 'See why 500+ trading firms trust Qunt Edge. Schedule a consultation today.',
+  'teams.cta.createAccount.description': 'See why trading firms trust Qunt Edge. Schedule a consultation today.',
   'teams.cta.createAccount.button': 'Get Started',
   'teams.cta.createAccount.subtext': 'Custom onboarding • Setup in 5 minutes • No long-term contracts',
 

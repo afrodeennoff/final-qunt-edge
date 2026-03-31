@@ -804,7 +804,7 @@ export function FormatPreview({
           {isAutoProcessing && (
             <ButtonV2 
               onClick={stopProcessing}
-              variant="destructive"
+              variant="error"
             >
               {t('import.processing.stopProcessing')}
             </ButtonV2>

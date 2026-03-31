@@ -9,7 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '', changeFrequency: 'weekly', priority: 1 },
     { path: '/best-trading-journal', changeFrequency: 'weekly', priority: 0.95 },
     { path: '/about', changeFrequency: 'monthly', priority: 0.8 },
-    { path: '/teams', changeFrequency: 'weekly', priority: 0.75 },
     { path: '/pricing', changeFrequency: 'weekly', priority: 0.9 },
     { path: '/support', changeFrequency: 'monthly', priority: 0.7 },
     { path: '/deals', changeFrequency: 'daily', priority: 0.9 },

@@ -14,7 +14,9 @@ export async function generateMetadata(props: { params: Promise<{ locale: Locale
   const description = descriptions[params.locale] || descriptions.en;
 
   return {
-    title: 'Qunt Edge Enterprise',
+    title: {
+      absolute: 'Qunt Edge Enterprise | Team Trading Analytics',
+    },
     description,
   };
 }

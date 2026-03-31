@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { createSecureSlug } from '@/lib/security/slug'
+import type { Prisma } from '@/prisma/generated/prisma'
 
 export type ReferralTier = {
   level: number
@@ -14,8 +15,8 @@ export class ReferralAlreadyAppliedError extends Error {
   }
 }
 
-async function getReferralWithRedemptions(referralId: string) {
-  return prisma.referral.findUnique({
+async function getReferralWithRedemptionsTx(tx: Prisma.TransactionClient, referralId: string) {
+  return tx.referral.findUnique({
     where: { id: referralId },
     include: {
       redemptions: {
@@ -130,7 +131,7 @@ export async function addReferredUser(referralId: string, referredUserId: string
 
       if (existingRedemption) {
         if (existingRedemption.referralId === referralId) {
-          return getReferralWithRedemptions(referralId)
+          return getReferralWithRedemptionsTx(tx, referralId)
         }
         throw new ReferralAlreadyAppliedError('User has already applied another referral code')
       }
@@ -142,7 +143,7 @@ export async function addReferredUser(referralId: string, referredUserId: string
         },
       })
 
-      return getReferralWithRedemptions(referralId)
+      return getReferralWithRedemptionsTx(tx, referralId)
     })
 
     return referral

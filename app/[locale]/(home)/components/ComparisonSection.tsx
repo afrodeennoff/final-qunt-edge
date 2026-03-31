@@ -76,7 +76,7 @@ export default function ComparisonSection() {
             Difference From Others
           </BadgeV2>
           <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
-            Why we're different
+            Why we&apos;re different
             <span className="block text-foreground">from standard trading analytics tools</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground/80 leading-[1.75] [font-family:var(--home-copy)]">

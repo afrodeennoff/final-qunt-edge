@@ -10,7 +10,12 @@ import { getDatabaseUserId, getUserId } from './auth'
 import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { logger } from '@/lib/logger'
 import { FEATURE_FLAGS } from '@/lib/feature-flags'
-import { isPrismaSchemaMismatchError, withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
+import {
+  isPrismaColumnAvailable,
+  isPrismaSchemaMismatchError,
+  markPrismaColumnUnavailable,
+  withPrismaSchemaMismatchFallback
+} from '@/lib/prisma-guard'
 import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 import type { SharedParams } from './shared'
@@ -91,6 +96,78 @@ const GLOBAL_FINANCIAL_EVENTS_CACHE_TAG = (locale: string) => `global-financial-
 const USER_DATA_CORE_CACHE_TAG = (userId: string) => `user-data-core-${userId}` as const
 const USER_DATA_SUPPLEMENTAL_CACHE_TAG = (userId: string) => `user-data-supplemental-${userId}` as const
 const DASHBOARD_LAYOUT_CACHE_TAG = (userId: string) => `dashboard-layout-${userId}` as const
+const USER_TABLE_NAME = 'User'
+const AUTH_USER_ID_COLUMN = 'auth_user_id'
+const DASHBOARD_THEME_COLUMN = 'dashboardTheme'
+
+type CoreUserCompatRecord = {
+  id: string
+  email: string
+  auth_user_id?: string | null
+  isFirstConnection?: boolean | null
+  isBeta?: boolean | null
+  language?: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function toCompatUser(record: CoreUserCompatRecord, authUserId: string): User {
+  return {
+    id: record.id,
+    email: record.email,
+    auth_user_id: record.auth_user_id ?? authUserId,
+    isFirstConnection: record.isFirstConnection ?? true,
+    isBeta: record.isBeta ?? false,
+    language: record.language ?? 'en',
+    dashboardTheme: 'blue',
+    showOnLeaderboard: false,
+    etpToken: null,
+    etpTokenHash: null,
+    etpTokenExpiresAt: null,
+    thorToken: null,
+    thorTokenHash: null,
+    thorTokenExpiresAt: null,
+    mt5TokenHash: null,
+    mt5TokenExpiresAt: null,
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt
+  }
+}
+
+async function findCoreUserByIdCompat(userId: string, authUserId: string): Promise<User | null> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        isFirstConnection: true,
+        isBeta: true,
+        language: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+
+    return user ? toCompatUser(user, authUserId) : null
+  } catch (error) {
+    if (!isPrismaSchemaMismatchError(error)) {
+      throw error
+    }
+
+    const legacyUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+
+    return legacyUser ? toCompatUser(legacyUser, authUserId) : null
+  }
+}
 
 async function loadGlobalTickDetails() {
   return withPrismaSchemaMismatchFallback(
@@ -117,51 +194,42 @@ async function loadCoreUserData(authUserId: string | null, userId: string): Prom
   }
 
   const loadUserData = async (): Promise<User | null> => {
+    const hasAuthUserIdColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+    if (!hasAuthUserIdColumn) {
+      return findCoreUserByIdCompat(userId, authUserId)
+    }
+
     try {
-      return await prisma.user.findUnique({
-        where: { auth_user_id: authUserId }
+      const user = await prisma.user.findUnique({
+        where: { auth_user_id: authUserId },
+        select: {
+          id: true,
+          email: true,
+          auth_user_id: true,
+          isFirstConnection: true,
+          isBeta: true,
+          language: true,
+          createdAt: true,
+          updatedAt: true
+        }
       })
+
+      if (user) {
+        return toCompatUser(user, authUserId)
+      }
     } catch (error) {
       if (!isPrismaSchemaMismatchError(error)) {
         throw error
       }
 
-      logger.warn('[getUserData] Schema mismatch while loading user profile; using compatibility select', {
-        userId,
-      })
-
-      const legacyUser = await prisma.user.findUnique({
-        where: { id: authUserId },
-        select: {
-          id: true,
-          email: true,
-          isFirstConnection: true,
-          isBeta: true,
-          language: true,
-          etpToken: true,
-          etpTokenHash: true,
-          etpTokenExpiresAt: true,
-          thorToken: true,
-          thorTokenHash: true,
-          thorTokenExpiresAt: true,
-          createdAt: true,
-          updatedAt: true,
-        }
-      })
-
-      if (!legacyUser) {
-        return null
-      }
-
-      return {
-        ...legacyUser,
-        auth_user_id: authUserId,
-        dashboardTheme: 'blue',
-        showOnLeaderboard: false,
-        mt5TokenHash: null,
-        mt5TokenExpiresAt: null,
-      } satisfies User
+      markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
+      logger.warn(
+        '[getUserData] Schema mismatch while loading user by auth_user_id; falling back to id lookup',
+        { userId }
+      )
     }
+
+    return findCoreUserByIdCompat(userId, authUserId)
   }
 
   const [userData, subscription] = await Promise.all([
@@ -389,6 +457,11 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
   const userId = await getDatabaseUserId()
   if (!userId) return null
 
+  const hasDashboardThemeColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
+  if (!hasDashboardThemeColumn) {
+    return null
+  }
+
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -399,6 +472,9 @@ export async function getUserDashboardTheme(): Promise<DashboardTheme | null> {
     }
     return null
   } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      markPrismaColumnUnavailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
+    }
     logger.error('[getUserDashboardTheme] Error fetching user theme', { error, userId })
     return null
   }
@@ -411,6 +487,11 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
     throw new Error(`Invalid theme: ${theme}`)
   }
 
+  const hasDashboardThemeColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
+  if (!hasDashboardThemeColumn) {
+    return 'blue'
+  }
+
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -420,6 +501,10 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
     logger.info('[setUserDashboardTheme] Theme updated', { userId, theme })
     return updatedUser.dashboardTheme as DashboardTheme
   } catch (error) {
+    if (isPrismaSchemaMismatchError(error)) {
+      markPrismaColumnUnavailable(USER_TABLE_NAME, DASHBOARD_THEME_COLUMN)
+      return 'blue'
+    }
     logger.error('[setUserDashboardTheme] Error updating user theme', { error, userId, theme })
     throw new Error('Failed to update theme')
   }

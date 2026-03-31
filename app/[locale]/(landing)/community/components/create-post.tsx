@@ -228,7 +228,7 @@ export function CreatePost({ children }: Props) {
                               />
                               <Button 
                                 type="button"
-                                variant="destructive"
+                                variant="error"
                                 size="icon"
                                 className="absolute -top-2 -right-2 h-6 w-6"
                                 onClick={() => removeScreenshot(index)}

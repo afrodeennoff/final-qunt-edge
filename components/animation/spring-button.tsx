@@ -13,7 +13,7 @@ const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 20 }
 
 interface SpringButtonProps {
   className?: string
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "mono"
+  variant?: "default" | "error" | "outline" | "secondary" | "ghost" | "link" | "mono"
   size?: "default" | "sm" | "lg" | "icon"
   children: React.ReactNode
   disabled?: boolean
@@ -81,7 +81,7 @@ export function SpringButton({
 
 interface RippleButtonProps {
   className?: string
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "mono"
+  variant?: "default" | "error" | "outline" | "secondary" | "ghost" | "link" | "mono"
   size?: "default" | "sm" | "lg" | "icon"
   children: React.ReactNode
   disabled?: boolean
@@ -160,7 +160,7 @@ export function RippleButton({
 
 interface GlowButtonProps {
   className?: string
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "mono"
+  variant?: "default" | "error" | "outline" | "secondary" | "ghost" | "link" | "mono"
   size?: "default" | "sm" | "lg" | "icon"
   children: React.ReactNode
   disabled?: boolean

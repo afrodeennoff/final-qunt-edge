@@ -442,7 +442,7 @@ function SubscriberRow({
           )}
         </ButtonV2>
         <ButtonV2 
-          variant="destructive"
+          variant="error"
           size="sm"
           onClick={() => onDelete(subscriber.email)}
         >
