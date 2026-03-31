@@ -1,5 +1,29 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Dashboard backend id-resolution fix + widget data recovery (2026-04-01)
+
+### Accomplishments
+- Fixed cross-module user-id resolution drift that could produce empty dashboard widget data:
+  - `server/trades.ts` `resolveWritableUserId` now prefers divergent `auth_user_id` mapping before raw `id`.
+  - `server/team-membership.ts` `resolveTeamUserId` now uses the same precedence.
+- Added regression coverage in `tests/server/user-id-resolution.test.ts` for:
+  - divergent `id`/`auth_user_id` rows,
+  - non-divergent fallback behavior,
+  - missing-user failure path.
+- Retained sidebar/layout/data fail-soft changes in current working tree:
+  - `components/ui/unified-sidebar.tsx` desktop auto-expand guard for collapsed state.
+  - `context/data-provider.tsx` layout fallback seeding, one-shot force trades refetch on empty load, cached snapshot preservation on load failure, normalized layout save ids.
+  - `server/auth.ts` `getDatabaseUserId` preference for divergent `auth_user_id`.
+
+### Verification
+- `npx vitest run tests/server/user-id-resolution.test.ts tests/performance/trades-mutation-batch.test.ts tests/server/groups-delete.test.ts tests/server/rithmic-sync-actions.test.ts` passes.
+- `./node_modules/.bin/eslint server/trades.ts server/team-membership.ts context/data-provider.tsx components/ui/unified-sidebar.tsx tests/server/user-id-resolution.test.ts` passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+
+### Blockers
+- Project-wide eslint on `server/auth.ts` still reports pre-existing `no-explicit-any` errors not introduced in this fix.
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: Dashboard/Teams sidebar reliability + widget shell rescue (2026-04-01)
 
 ### Accomplishments

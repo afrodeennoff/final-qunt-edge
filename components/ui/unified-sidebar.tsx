@@ -141,7 +141,7 @@ export function UnifiedSidebar({
   const t = useI18n()
   const translate = t as unknown as (key: string) => string
   const isActive = useActiveLink()
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, state, setOpen } = useSidebar()
   const { isLoading } = useNavigationLoading()
   const { isQueryParamOnly } = useNavigationHelper()
   const pathname = usePathname()
@@ -167,6 +167,16 @@ export function UnifiedSidebar({
     [items]
   )
   const shouldRenderSidebar = isSidebarEnabledRoute || hasDashboardOrTeamsNavItems
+  const autoExpandedDesktopRef = useRef(false)
+
+  useEffect(() => {
+    if (!shouldRenderSidebar || isMobile) return
+    if (state !== 'collapsed') return
+    if (autoExpandedDesktopRef.current) return
+
+    autoExpandedDesktopRef.current = true
+    setOpen(true)
+  }, [isMobile, setOpen, shouldRenderSidebar, state])
 
   const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
     const withLocalePath = (p: string) => {

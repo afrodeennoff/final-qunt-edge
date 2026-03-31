@@ -510,6 +510,8 @@ export const DataProvider: React.FC<{
   const loadData = useCallback(async () => {
     logger.debug({ isSharedView }, "DataProvider: loadData triggered");
     // Prevent multiple simultaneous loads
+    let hasLocalSnapshot = false;
+
     try {
       setIsLoading(true);
 
@@ -601,7 +603,6 @@ export const DataProvider: React.FC<{
       activeUserIdRef.current = userId;
 
       // Parallel: layout fetch + cache reads
-      let hasLocalSnapshot = false;
       if (userId && !isSharedView) {
         const shouldHydrateLayout =
           !dashboardLayoutRef.current || dashboardLayoutRef.current.userId !== userId;
@@ -624,7 +625,14 @@ export const DataProvider: React.FC<{
             );
           } else {
             // If no layout exists in database, use default layout
-            setDashboardLayout(defaultLayouts);
+            setDashboardLayout({
+              id: userId,
+              userId,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              desktop: defaultLayouts.desktop,
+              mobile: defaultLayouts.mobile,
+            });
           }
         } else if (dashboardLayoutResult.status === "rejected" && shouldHydrateLayout) {
           logger.warn(
@@ -691,10 +699,22 @@ export const DataProvider: React.FC<{
             return;
           }
 
-          const safeTrades =
+          let safeTrades =
             userId && !isSharedView
               ? await withTimeout(fetchAllTrades(userId, false), 20000, "fetchAllTrades(user)")
               : await withTimeout(fetchAllTrades(null, false), 20000, "fetchAllTrades(anonymous)");
+
+          if (userId && !isSharedView && safeTrades.length === 0) {
+            logger.warn(
+              { userId },
+              "Initial trades fetch returned empty; retrying once with force refresh"
+            );
+            safeTrades = await withTimeout(
+              fetchAllTrades(userId, true),
+              20000,
+              "fetchAllTrades(user,force)"
+            );
+          }
 
           const tradesToUse =
             safeTrades.length > 0
@@ -766,16 +786,20 @@ export const DataProvider: React.FC<{
       await refreshFromServer();
     } catch (error) {
       logger.error({ error }, "FATAL: Error loading data");
-      // Only fallback to mock data in development
-      if (process.env.NODE_ENV === 'development') {
-        const currentUserId = (await getUserId().catch(() => null)) || "error-fallback";
-        logger.warn({ userId: currentUserId }, "Falling back to mock data due to error");
-        setTrades(sanitizeTradesForState(generateMockTrades(currentUserId)));
+      if (hasLocalSnapshot) {
+        logger.warn("Preserving cached dashboard snapshot after load failure");
       } else {
-        setTrades([]);
+        // Only fallback to mock data in development
+        if (process.env.NODE_ENV === 'development') {
+          const currentUserId = (await getUserId().catch(() => null)) || "error-fallback";
+          logger.warn({ userId: currentUserId }, "Falling back to mock data due to error");
+          setTrades(sanitizeTradesForState(generateMockTrades(currentUserId)));
+        } else {
+          setTrades([]);
+        }
+        setAccounts([]);
+        setGroups([]);
       }
-      setAccounts([]);
-      setGroups([]);
     } finally {
       setIsLoading(false);
     }
@@ -1989,8 +2013,14 @@ export const DataProvider: React.FC<{
       if (!supabaseUser?.id) return;
 
       try {
-        setDashboardLayout(layout as unknown as DashboardLayoutWithWidgets);
-        await saveDashboardLayoutAction(layout);
+        const normalizedLayout = {
+          ...layout,
+          id: layout.id || supabaseUser.id,
+          userId: layout.userId || supabaseUser.id,
+        };
+
+        setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets);
+        await saveDashboardLayoutAction(normalizedLayout);
       } catch (error: unknown) {
         logger.error({ error }, "Error saving dashboard layout");
         throw error;

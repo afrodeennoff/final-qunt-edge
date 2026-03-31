@@ -148,12 +148,20 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
     where: { id: rawUserId },
     select: { id: true },
   })
-  if (byId?.id) return byId.id
 
   const byAuthId = await prisma.user.findUnique({
     where: { auth_user_id: rawUserId },
     select: { id: true },
   })
+  if (byAuthId?.id && byAuthId.id !== rawUserId) {
+    logger.warn('[resolveWritableUserId] Divergent auth mapping detected; using auth_user_id row', {
+      rawUserId,
+      resolvedUserId: byAuthId.id,
+    })
+    return byAuthId.id
+  }
+
+  if (byId?.id) return byId.id
   if (byAuthId?.id) return byAuthId.id
 
   throw new Error('Unable to resolve writable user')

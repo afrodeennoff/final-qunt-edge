@@ -4,6 +4,29 @@
 
 ---
 
+## NEW (2026-04-01): User-id resolver precedence must stay consistent across auth/trades/teams modules
+
+### Mistake
+`getDatabaseUserId` was updated to prefer divergent `auth_user_id` mappings, but writable/team resolvers still preferred raw `id` first, causing `Forbidden` checks and empty dashboard data for accounts with legacy-mapped user rows.
+
+### Root Cause
+User-id resolution logic was duplicated across modules with different precedence, creating identity drift between auth bootstrap and mutation/read paths.
+
+### Rule
+Any resolver that maps auth user id -> database `User.id` must use identical precedence: prefer divergent `auth_user_id` mapping first, then raw `id`, then same-id `auth_user_id` fallback.
+
+### Example
+```ts
+// BAD
+if (byId?.id) return byId.id
+if (byAuthId?.id) return byAuthId.id
+
+// GOOD
+if (byAuthId?.id && byAuthId.id !== rawUserId) return byAuthId.id
+if (byId?.id) return byId.id
+if (byAuthId?.id) return byAuthId.id
+```
+
 ## NEW (2026-04-01): Dashboard layout fetch failures must fail-soft to defaults
 
 ### Mistake

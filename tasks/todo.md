@@ -1,3 +1,20 @@
+## Task: Dashboard backend data resolution + sidebar reliability hardening (2026-04-01)
+
+- [x] Align writable user-id resolvers with `getDatabaseUserId` precedence when `id` and `auth_user_id` diverge.
+- [x] Keep dashboard data bootstrap fail-soft behavior for layout/trades state and preserve cached snapshots on refresh failures.
+- [x] Add regression coverage for divergent user-id mapping resolution.
+- [x] Run targeted verification (`vitest`, eslint touched scope, typecheck).
+
+Verification:
+- `npx vitest run tests/server/user-id-resolution.test.ts tests/performance/trades-mutation-batch.test.ts tests/server/groups-delete.test.ts tests/server/rithmic-sync-actions.test.ts` passes (11/11 tests).
+- `./node_modules/.bin/eslint server/trades.ts server/team-membership.ts context/data-provider.tsx components/ui/unified-sidebar.tsx tests/server/user-id-resolution.test.ts` passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+
+## Review
+- Root-cause fix: data fetch/update paths previously resolved raw auth ids by `id` first in some modules while auth bootstrap resolved by `auth_user_id` first when divergent, causing `Forbidden`/empty dashboard data for affected users.
+- `server/trades.ts` and `server/team-membership.ts` now use the same divergent-mapping precedence as `server/auth.ts` so reads/mutations target the correct `User.id`.
+- Regression tests now pin this precedence to prevent future drift.
+
 ## Task: Sidebar + Teams Dashboard reliability fix (2026-04-01)
 
 - [x] Remove dashboard sidebar lazy fallback path so `/dashboard` mounts the real sidebar component directly.

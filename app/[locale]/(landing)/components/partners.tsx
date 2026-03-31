@@ -24,7 +24,7 @@ export default function Partners() {
                                 src="/logos/ninjatrader-ob.svg"
                                 alt="NinjaTrader"
                                 fill
-                                sizes="(max-width: 768px) 100vw, 50vw"
+                                sizes="(max-width: 767px) 100vw, 50vw"
                                 className="object-contain filter dark:brightness-0 dark:invert"
                                 priority
                             />
@@ -34,7 +34,7 @@ export default function Partners() {
                                 src="/logos/rithmic-logo-white.png"
                                 alt="Rithmic"
                                 fill
-                                sizes="(max-width: 768px) 100vw, 50vw"
+                                sizes="(max-width: 767px) 100vw, 50vw"
                                 className="object-contain"
                                 priority
                             />

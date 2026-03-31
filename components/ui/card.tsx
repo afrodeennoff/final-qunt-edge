@@ -113,9 +113,9 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
       className={cn(
         "relative flex flex-col gap-2",
         {
-          "p-4": size === "sm",
-          "p-6": size === "md",
-          "p-8": size === "lg",
+          "p-3 sm:p-4": size === "sm",
+          "p-4 sm:p-6": size === "md",
+          "p-4 sm:p-6 lg:p-8": size === "lg",
         },
         className
       )}
@@ -215,9 +215,9 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
       className={cn(
         "text-v2-text-primary",
         {
-          "p-4 pt-0": size === "sm",
-          "p-6 pt-0": size === "md",
-          "p-8 pt-0": size === "lg",
+          "p-3 pt-0 sm:p-4 sm:pt-0": size === "sm",
+          "p-4 pt-0 sm:p-6 sm:pt-0": size === "md",
+          "p-4 pt-0 sm:p-6 sm:pt-0 lg:p-8 lg:pt-0": size === "lg",
         },
         className
       )}
@@ -238,9 +238,9 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
       className={cn(
         "flex items-center",
         {
-          "p-4 pt-0": size === "sm",
-          "p-6 pt-0": size === "md",
-          "p-8 pt-0": size === "lg",
+          "p-3 pt-0 sm:p-4 sm:pt-0": size === "sm",
+          "p-4 pt-0 sm:p-6 sm:pt-0": size === "md",
+          "p-4 pt-0 sm:p-6 sm:pt-0 lg:p-8 lg:pt-0": size === "lg",
         },
         className
       )}

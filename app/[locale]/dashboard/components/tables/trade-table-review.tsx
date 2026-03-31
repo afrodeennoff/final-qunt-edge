@@ -1104,6 +1104,9 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             </div>
           );
         },
+        size: 60,
+        enableSorting: false,
+        enableHiding: false,
       },
       {
         id: "tags",
@@ -1231,8 +1234,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
     onColumnFiltersChange: handleColumnFiltersChange,
     onColumnVisibilityChange: handleColumnVisibilityChange,
     defaultColumn: {
-      size: 400,
-      minSize: 100,
+      size: 150,
+      minSize: 60,
     },
   });
 
@@ -1444,7 +1447,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         }}
       >
         <div className="relative w-full min-w-fit">
-          <table className="w-full border-separate border-spacing-0 caption-bottom text-sm">
+          <table className="w-full table-fixed border-separate border-spacing-0 caption-bottom text-sm">
             <thead className="sticky top-0 z-10 border-b bg-muted/90 shadow-xs backdrop-blur-xs [&_tr]:border-b">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr

@@ -8,12 +8,14 @@ export async function resolveTeamUserId(rawUserId: string): Promise<string> {
     where: { id: rawUserId },
     select: { id: true },
   })
-  if (byId?.id) return byId.id
 
   const byAuthId = await prisma.user.findUnique({
     where: { auth_user_id: rawUserId },
     select: { id: true },
   })
+  if (byAuthId?.id && byAuthId.id !== rawUserId) return byAuthId.id
+
+  if (byId?.id) return byId.id
   if (byAuthId?.id) return byAuthId.id
 
   throw new Error("Unable to resolve user")

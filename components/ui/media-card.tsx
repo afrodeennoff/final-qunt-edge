@@ -61,7 +61,7 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
             src={image}
             alt={title}
             fill
-            sizes="(max-width: 768px) 100vw, 33vw"
+            sizes="(max-width: 767px) 100vw, 33vw"
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           />
           {badges && badges.length > 0 && (

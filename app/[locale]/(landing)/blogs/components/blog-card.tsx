@@ -57,7 +57,7 @@ export function BlogCard({ post }: Props) {
               alt={post.title}
               fill
               className="object-cover transition-transform group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 767px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}

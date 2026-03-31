@@ -8,7 +8,7 @@ import { useDashboardStats } from "@/context/data-provider";
 
 export default function CalendarPnl() {
   const { calendarData } = useDashboardStats()
-  const isMobile = useMediaQuery("(max-width: 640px)")
+  const isMobile = useMediaQuery("(max-width: 767px)")
 
   return isMobile ? (
     <MobileCalendarPnl calendarData={calendarData} />

@@ -770,16 +770,15 @@ export async function getDatabaseUserId(): Promise<string> {
     where: { id: rawUserId },
     select: { id: true },
   })
-  if (byId?.id) return byId.id
 
+  let byAuthId: { id: string } | null = null
   const hasAuthUserIdColumn = await isPrismaColumnAvailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
   if (hasAuthUserIdColumn) {
     try {
-      const byAuthId = await prisma.user.findUnique({
+      byAuthId = await prisma.user.findUnique({
         where: { auth_user_id: rawUserId },
         select: { id: true },
       })
-      if (byAuthId?.id) return byAuthId.id
     } catch (error) {
       if (!isPrismaSchemaMismatchError(error)) {
         throw error
@@ -787,6 +786,19 @@ export async function getDatabaseUserId(): Promise<string> {
       markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
     }
   }
+
+  // Prefer legacy auth_user_id mapping if it points to a different row than raw auth id.
+  // This avoids selecting an empty shadow user row while data (trades/accounts/layouts) lives on legacy id.
+  if (byAuthId?.id && byAuthId.id !== rawUserId) {
+    console.warn(
+      '[getDatabaseUserId] Divergent auth mapping detected; using auth_user_id row',
+      { rawUserId, resolvedUserId: byAuthId.id }
+    )
+    return byAuthId.id
+  }
+
+  if (byId?.id) return byId.id
+  if (byAuthId?.id) return byAuthId.id
 
   let resolvedEmail = user.email?.trim().toLowerCase() || ""
 
