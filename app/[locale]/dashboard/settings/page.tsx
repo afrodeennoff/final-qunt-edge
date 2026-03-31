@@ -12,6 +12,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { BadgeV2 } from "@/components/ui/v2"
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
+import { useTheme } from "@/context/theme-provider"
+import { VALID_DASHBOARD_THEMES } from "@/lib/constants/dashboard-themes"
 import {
   User,
   Settings,
@@ -26,7 +28,8 @@ import {
   LogOut,
   Building2,
   Eye,
-  EyeOff
+  EyeOff,
+  Palette,
 } from "lucide-react"
 import { signOut, setPasswordAction } from "@/server/auth"
 import Link from 'next/link'
@@ -303,6 +306,7 @@ export default function SettingsPage() {
   const setTimezone = useUserStore(state => state.setTimezone)
   const resetUser = useUserStore(state => state.resetUser)
   const clearTradovate = useTradovateSyncStore((state) => state.clearAll)
+  const { theme, setTheme } = useTheme()
 
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [pushNotifications, setPushNotifications] = useState(false)
@@ -448,16 +452,41 @@ export default function SettingsPage() {
             </CardV2Description>
           </CardV2Header>
           <CardV2Content className="space-y-6">
-            {/* Theme Settings */}
+            {/* Accent Color Settings */}
             <div>
-              <Label className="text-base font-medium">Theme</Label>
-              <div className="mt-2 grid gap-3">
+              <Label className="text-base font-medium flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                Accent Color
+              </Label>
+              <div className="mt-2">
                 <div className="rounded-md border border-border/50 bg-background/30 p-3">
-                  <p className="mb-2 text-sm font-medium">Interface mode</p>
-                  <ButtonV2  variant="outline" className="w-full justify-start sm:w-[200px]" disabled>
-                    <Moon className="mr-2 h-4 w-4" />
-                    <span>Dark (fixed)</span>
-                  </ButtonV2>
+                  <p className="mb-3 text-sm text-muted-foreground">Choose your dashboard accent color</p>
+                  <div className="flex gap-3">
+                    {VALID_DASHBOARD_THEMES.map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setTheme(t)}
+                        className="relative flex flex-col items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg p-1"
+                        aria-label={`Set accent color to ${t}`}
+                        aria-pressed={theme === t}
+                      >
+                        <span
+                          className={`h-8 w-8 rounded-full transition-all ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
+                          style={{
+                            backgroundColor: t === 'blue' ? 'oklch(0.55 0.22 264)'
+                              : t === 'violet' ? 'oklch(0.60 0.22 290)'
+                              : t === 'emerald' ? 'oklch(0.55 0.20 160)'
+                              : t === 'amber' ? 'oklch(0.60 0.20 70)'
+                              : 'oklch(0.58 0.22 10)',
+                          }}
+                        />
+                        <span className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                          {t}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

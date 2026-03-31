@@ -27,6 +27,56 @@ const configWithRedirects: NextConfig = {
         permanent: true,
       },
       {
+        source: '/:locale/propfirmperk',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/propfirmperk/:path*',
+        destination: '/:locale/deals/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale/porpfirmpeak',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/porpfirmpeak/:path*',
+        destination: '/:locale/deals/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale/propfirmpeak',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/propfirmpeak/:path*',
+        destination: '/:locale/deals/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale/porpfirmpreak',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/porpfirmpreak/:path*',
+        destination: '/:locale/deals/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:locale/propfirmpreak',
+        destination: '/:locale/deals',
+        permanent: true,
+      },
+      {
+        source: '/:locale/propfirmpreak/:path*',
+        destination: '/:locale/deals/:path*',
+        permanent: true,
+      },
+      {
         source: '/:locale/blog',
         destination: '/:locale/blogs',
         permanent: true,

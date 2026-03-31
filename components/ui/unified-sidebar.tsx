@@ -136,6 +136,7 @@ export function UnifiedSidebar({
   actions,
   timezone,
   onLogout,
+  styleVariant = 'default',
 }: UnifiedSidebarConfig) {
   const t = useI18n()
   const translate = t as unknown as (key: string) => string
@@ -144,6 +145,10 @@ export function UnifiedSidebar({
   const { isLoading } = useNavigationLoading()
   const { isQueryParamOnly } = useNavigationHelper()
   const pathname = usePathname()
+  const normalizedPathname = stripLocalePrefix(pathname || '/').replace(/\/$/, '') || '/'
+  const isDashboardShellRoute =
+    normalizedPathname === '/dashboard' || normalizedPathname.startsWith('/dashboard/')
+
   const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
     const withLocalePath = (p: string) => {
       const m = pathname?.match(/^\/([a-z]{2})(?:-[A-Za-z]{2})?/)
@@ -228,8 +233,16 @@ export function UnifiedSidebar({
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User"
   const initials = useMemo(() => getUserInitials(user), [user])
 
-  return (
-    <Sidebar collapsible="icon" className="pointer-events-auto border-r-0 text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient">
+  return isDashboardShellRoute ? (
+    <Sidebar
+      collapsible="icon"
+      className={cn(
+        'pointer-events-auto text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient',
+        styleVariant === 'minimal'
+          ? 'border-r-0'
+          : 'border-r border-sidebar-border/40'
+      )}
+    >
       <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-xl z-0" />
       <SidebarHeader className="h-16 border-b border-sidebar-border/30 px-2 py-0 relative z-10 bg-gradient-to-b from-sidebar-accent/20 to-transparent">
         <SidebarMenu>
@@ -460,7 +473,9 @@ export function UnifiedSidebar({
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
-      <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/20" />
+      {styleVariant !== 'minimal' ? (
+        <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/20" />
+      ) : null}
     </Sidebar>
-  )
+  ) : null
 }

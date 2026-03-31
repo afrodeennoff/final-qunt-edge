@@ -156,6 +156,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
                 email: user?.email,
                 full_name: user?.user_metadata?.full_name
             }}
+            styleVariant="minimal"
             timezone={{
                 value: timezone,
                 options: timezones,
