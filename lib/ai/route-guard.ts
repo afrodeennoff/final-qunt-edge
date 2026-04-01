@@ -2,6 +2,7 @@ import { canAccessAiFeature, type AiGuardFeature } from './entitlements'
 import { assertWithinAiBudget } from './usage-budget'
 import { apiError } from '../api-response'
 import { createRouteClient } from '../supabase/route-client'
+import { isAdmin } from '@/server/authz'
 
 type LimiterResult = {
   success: boolean
@@ -31,6 +32,11 @@ export async function guardAiRequest(
       ok: false,
       response: apiError('UNAUTHORIZED', 'Authentication required', 401),
     }
+  }
+
+  // Admin bypass — skip entitlement, budget, and rate-limit checks
+  if (isAdmin(user.id)) {
+    return { ok: true, userId: user.id, email: user.email }
   }
 
   const entitlement = await canAccessAiFeature(user.id, feature)
