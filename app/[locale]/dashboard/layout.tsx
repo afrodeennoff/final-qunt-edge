@@ -84,7 +84,7 @@ export default async function DashboardLayout({
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
               </div>
 
-              <div className="relative z-0 flex h-svh min-h-0 flex-col">
+              <div className="relative z-0 flex h-svh min-h-0 flex-col pt-safe">
                 <DashboardHeader />
                 <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain pb-safe scroll-smooth">
                   <div className="min-h-full">

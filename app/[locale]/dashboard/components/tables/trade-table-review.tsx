@@ -1447,7 +1447,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
         }}
       >
         <div className="relative w-full min-w-fit">
-          <table className="w-full table-fixed border-separate border-spacing-0 caption-bottom text-sm">
+          <table className="w-full table-auto border-separate border-spacing-0 caption-bottom text-sm">
             <thead className="sticky top-0 z-10 border-b bg-muted/90 shadow-xs backdrop-blur-xs [&_tr]:border-b">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr

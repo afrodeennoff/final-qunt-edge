@@ -337,7 +337,7 @@
     @apply rounded-br-sm;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     @apply select-none;
 
     &[data-customizing='true'] {
