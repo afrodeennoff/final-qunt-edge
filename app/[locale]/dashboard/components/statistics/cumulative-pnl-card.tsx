@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useDashboardStats } from "@/context/data-provider"
-import { TrendingUp, TrendingDown, Info } from "lucide-react"
+import { TrendingUp, TrendingDown, Minus, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { WidgetSize } from '../../types/dashboard'
 import { useI18n, useCurrentLocale } from '@/locales/client'
@@ -53,14 +53,16 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
         contentClassName="flex h-full items-center justify-center px-2 py-1"
       >
         <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
-          {isPositive ? (
+          {netPnl === 0 ? (
+            <Minus className="h-4 w-4 shrink-0 text-muted-foreground" />
+          ) : isPositive ? (
             <TrendingUp className="h-4 w-4 shrink-0 metric-positive" />
           ) : (
             <TrendingDown className="h-4 w-4 shrink-0 metric-negative" />
           )}
           <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">Net</span>
           <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
-            {isPositive ? '+' : '-'}{formatCurrency(netPnl)}
+            {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
           </span>
           <TooltipProvider>
             <Tooltip>
@@ -80,17 +82,17 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
   return (
     <WidgetShell
       title={t('statistics.profitLoss.net')}
-      icon={isPositive ? <TrendingUp className={cn(iconSize, "metric-positive")} /> : <TrendingDown className={cn(iconSize, "metric-negative")} />}
+      icon={netPnl === 0 ? <Minus className={cn(iconSize, "text-muted-foreground")} /> : isPositive ? <TrendingUp className={cn(iconSize, "metric-positive")} /> : <TrendingDown className={cn(iconSize, "metric-negative")} />}
       info={t('widgets.cumulativePnl.tooltip')}
       className="h-full"
       contentClassName="flex flex-col justify-center gap-3 p-4"
     >
       <div className={cn(
         "text-center micro-sans font-black tracking-tight tabular-nums",
-        isPositive ? "metric-positive" : "metric-negative",
+        netPnl === 0 ? "text-foreground" : isPositive ? "metric-positive" : "metric-negative",
         valueSizeClass === 'text-2xl' ? 'text-3xl' : 'text-xl'
       )}>
-        {isPositive ? '+' : '-'}{formatCurrency(netPnl)}
+        {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
       </div>
 
       <div className="grid grid-cols-2 gap-2 pt-2">

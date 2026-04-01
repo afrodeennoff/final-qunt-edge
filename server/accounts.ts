@@ -252,6 +252,8 @@ export async function deleteTradesByIdsAction(tradeIds: string[]): Promise<void>
     })
   })
 
+  updateTag(`user-data-core-${userId}`)
+  updateTag(`user-data-supplemental-${userId}`)
   updateTag(`trades-${userId}`)
   updateTag(`user-data-${userId}`)
   updateTag(`dashboard-${userId}`)

@@ -134,8 +134,10 @@ export async function revalidateCache(tags: string[]) {
 }
 
 export async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
-  await updateTag(`trades-${userId}`)
+  await updateTag(`user-data-core-${userId}`)
+  await updateTag(`user-data-supplemental-${userId}`)
   await Promise.all([
+    updateTag(`trades-${userId}`),
     invalidateCacheNamespace('ai-trades'),
     invalidateCacheNamespace('behavior-insights'),
   ])
@@ -335,6 +337,8 @@ async function saveTradesForResolvedUser(
         skipDuplicates: true
       })
 
+      await updateTag(`user-data-core-${userId}`)
+      await updateTag(`user-data-supplemental-${userId}`)
       await updateTag(`user-data-${userId}`)
       await Promise.all([
         updateTag(`trades-${userId}`),

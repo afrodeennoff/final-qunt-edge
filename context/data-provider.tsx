@@ -63,7 +63,7 @@ import { DashboardLayoutWithWidgets, useUserStore } from "@/store/user-store";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 import { useFinancialEventsStore } from "@/store/financial-events-store";
 import { useTradesStore } from "@/store/trades-store";
-import { getTradesCache, setTradesCache, getUserDataCache, setUserDataCache } from "@/lib/indexeddb/trades-cache"
+import { clearTradesCache, getTradesCache, setTradesCache, getUserDataCache, setUserDataCache } from "@/lib/indexeddb/trades-cache"
 import { deleteTagAction } from "@/server/tags";
 import { useCurrentLocale } from "@/locales/client";
 import { useMoodStore } from "@/store/mood-store";
@@ -127,6 +127,7 @@ export interface DashboardDataState {
 interface DashboardUiState {
   isLoading: boolean;
   isRevalidating: boolean;
+  refreshError: string | null;
   isMobile: boolean;
   isSharedView: boolean;
   isAdmin: boolean;
@@ -166,6 +167,7 @@ export interface DashboardActions {
   refreshTradesOnly: (options?: { force?: boolean }) => Promise<void>;
   refreshUserDataOnly: (options?: { force?: boolean; includeSubscription?: boolean }) => Promise<void>;
   refreshAllData: (options?: { force?: boolean }) => Promise<void>;
+  retryDataLoad: () => Promise<void>;
   isPlusUser: () => boolean;
   changeIsFirstConnection: (isFirstConnection: boolean) => void;
 
@@ -319,6 +321,7 @@ export const DataProvider: React.FC<{
     (state) => state.setError
   );
   const [isRevalidating, setIsRevalidating] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
   const bootstrappedSharedSlugRef = useRef<string | null>(null);
   const dashboardLayoutRef = useRef(dashboardLayout);
   const activeUserIdRef = useRef<string | null>(null);
@@ -674,9 +677,6 @@ export const DataProvider: React.FC<{
         if (cachedTrades && Array.isArray(cachedTrades) && cachedTrades.length > 0) {
           hasLocalSnapshot = true;
           setTrades(sanitizeTradesForState(cachedTrades as Trade[]));
-        } else if (cachedUserData) {
-          hasLocalSnapshot = true;
-          setTrades([]);
         }
 
         if (cachedUserData) {
@@ -751,8 +751,10 @@ export const DataProvider: React.FC<{
           setTickDetails(data.tickDetails);
           setIsFirstConnection(data.userData?.isFirstConnection || false);
 
+          // Always write accounts from server — cached snapshot may be stale
+          setAccounts(normalizedAccounts);
+
           if (!hasLocalSnapshot) {
-            setAccounts(normalizedAccounts);
             setIsLoading(false);
           }
 
@@ -786,7 +788,9 @@ export const DataProvider: React.FC<{
 
       if (hasLocalSnapshot) {
         void refreshFromServer().catch((error) => {
+          const message = error instanceof Error ? error.message : "Unknown error";
           logger.error({ error }, "Background refresh failed");
+          setRefreshError(message);
         });
         return;
       }
@@ -811,6 +815,7 @@ export const DataProvider: React.FC<{
     } finally {
       loadInProgressRef.current = false;
       setIsLoading(false);
+      setRefreshError(null);
     }
   }, [
     adminView,
@@ -820,19 +825,6 @@ export const DataProvider: React.FC<{
     fetchAllTrades,
     hydrateSharedAccountMetrics,
     sanitizeTradesForState,
-    setAccounts,
-    setDashboardLayout,
-    setEvents,
-    setGroups,
-    setIsLoading,
-    setMoods,
-    setSubscription,
-    setSupabaseUser,
-    setTags,
-    setTickDetails,
-    setTrades,
-    setUser,
-    resetUserState,
     syncSharedDataState,
     withTimeout,
     supabase,
@@ -930,6 +922,13 @@ export const DataProvider: React.FC<{
             if (withLoading) setIsLoading(false);
             return;
           }
+        }
+
+        // Clear stale IndexedDB cache when force-refreshing to prevent serving stale data
+        if (force) {
+          clearTradesCache(userId).catch((err) =>
+            logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
+          );
         }
 
         const safeTrades = await fetchAllTrades(userId, force);
@@ -1045,6 +1044,11 @@ export const DataProvider: React.FC<{
     },
     [refreshTradesOnly, refreshUserDataOnly, supabaseUser?.id]
   );
+
+  const retryDataLoad = useCallback(async () => {
+    setRefreshError(null);
+    await loadData();
+  }, [loadData]);
 
   // Dev-only: persist trades store into IndexedDB so reloads avoid DB hits
   useEffect(() => {
@@ -1995,6 +1999,11 @@ export const DataProvider: React.FC<{
       try {
         // Delete from database
         await deleteTradesByIdsAction(tradeIds);
+
+        // Clear IndexedDB cache since trades were mutated
+        clearTradesCache(supabaseUser.id).catch((err) =>
+          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
+        );
       } catch (error) {
         // On error, refresh to restore the correct state
         logger.error({ error }, "Error deleting trades");
@@ -2070,11 +2079,12 @@ export const DataProvider: React.FC<{
     () => ({
       isLoading,
       isRevalidating,
+      refreshError,
       isMobile,
       isSharedView,
       isAdmin,
     }),
-    [isLoading, isRevalidating, isMobile, isSharedView, isAdmin]
+    [isLoading, isRevalidating, refreshError, isMobile, isSharedView, isAdmin]
   );
 
   const filtersValue = useMemo<DashboardFiltersState>(
@@ -2140,6 +2150,7 @@ export const DataProvider: React.FC<{
       refreshTradesOnly,
       refreshUserDataOnly,
       refreshAllData,
+      retryDataLoad,
       changeIsFirstConnection,
       updateTrades,
       deleteTrades,
@@ -2162,6 +2173,7 @@ export const DataProvider: React.FC<{
       refreshAllData,
       refreshTradesOnly,
       refreshUserDataOnly,
+      retryDataLoad,
       changeIsFirstConnection,
       updateTrades,
       deleteTrades,
