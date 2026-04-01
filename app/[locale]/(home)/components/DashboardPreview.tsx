@@ -68,7 +68,7 @@ export default function DashboardPreview() {
           </div>
 
           <div className="relative">
-            <div className="absolute inset-0 rounded-lg blur-xl bg-[oklch(0.55_0.22_264/0.1)] animate-glow-pulse" />
+            <div className="absolute inset-0 rounded-lg blur-xl bg-primary/10 animate-glow-pulse" />
             <div className="relative h-40 overflow-hidden rounded-b-2xl rounded-t-xl border border-[hsl(var(--mk-border)/0.25)] bg-[hsl(var(--mk-bg-1))] sm:h-48">
             <div className="absolute inset-0 grid grid-cols-12">
               {Array.from({ length: 12 }).map((_, i) => (

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { InteractiveWrapper } from '@/components/animation/interactive'
+import { MOTION_EASE } from './_constants'
 
 const steps = [
   { name: 'Sync Data', text: 'Ingest broker fills, account history, and journal context into one timeline.' },
@@ -11,7 +12,17 @@ const steps = [
   { name: 'Improve Weekly', text: 'Turn findings into clear interventions and measure compliance momentum.' },
 ]
 
-const ease = [0.25, 0.46, 0.45, 0.94]
+const lineGradient =
+  'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary)/0.7), transparent)'
+const lineMask =
+  'linear-gradient(90deg, black 0%, black 80%, transparent 100%)'
+
+const lineGradientVertical =
+  'linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary)/0.7), transparent)'
+const lineMaskVertical =
+  'linear-gradient(180deg, black 0%, black 80%, transparent 100%)'
+
+const ease = MOTION_EASE as unknown as number[]
 
 export default function HowItWorks() {
   return (
@@ -34,9 +45,9 @@ export default function HowItWorks() {
           <motion.div
             className="pointer-events-none absolute left-[10%] right-[10%] top-6 h-px origin-left"
             style={{
-              background: 'linear-gradient(90deg, oklch(0.55 0.22 264), oklch(0.45 0.18 290), transparent)',
-              mask: 'linear-gradient(90deg, black 0%, black 80%, transparent 100%)',
-              WebkitMask: 'linear-gradient(90deg, black 0%, black 80%, transparent 100%)',
+              background: lineGradient,
+              mask: lineMask,
+              WebkitMask: lineMask,
             }}
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -53,8 +64,8 @@ export default function HowItWorks() {
                 transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[oklch(0.55_0.22_264)] bg-[oklch(0.07_0_0)] shadow-[0_0_20px_oklch(0.55_0.22_264/0.3)]">
-                    <span className="text-sm font-bold font-mono text-[oklch(0.55_0.22_264)]">
+                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+                    <span className="text-sm font-bold font-mono text-primary">
                       0{i + 1}
                     </span>
                   </div>
@@ -74,9 +85,9 @@ export default function HowItWorks() {
           <motion.div
             className="pointer-events-none absolute bottom-[8%] left-6 top-[8%] w-px origin-top"
             style={{
-              background: 'linear-gradient(180deg, oklch(0.55 0.22 264), oklch(0.45 0.18 290), transparent)',
-              mask: 'linear-gradient(180deg, black 0%, black 80%, transparent 100%)',
-              WebkitMask: 'linear-gradient(180deg, black 0%, black 80%, transparent 100%)',
+              background: lineGradientVertical,
+              mask: lineMaskVertical,
+              WebkitMask: lineMaskVertical,
             }}
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -93,8 +104,8 @@ export default function HowItWorks() {
                 transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[oklch(0.55_0.22_264)] bg-[oklch(0.07_0_0)] shadow-[0_0_20px_oklch(0.55_0.22_264/0.3)]">
-                    <span className="text-sm font-bold font-mono text-[oklch(0.55_0.22_264)]">
+                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+                    <span className="text-sm font-bold font-mono text-primary">
                       0{i + 1}
                     </span>
                   </div>

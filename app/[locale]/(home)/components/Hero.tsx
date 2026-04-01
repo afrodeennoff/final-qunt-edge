@@ -10,30 +10,13 @@ import DashboardPreview from './DashboardPreview'
 const ease = [0.25, 0.46, 0.45, 0.94]
 
 export default function Hero({ locale }: { locale: string }) {
-  const partnerLinks = [
-    {
-      name: 'NinjaTrader',
-      href: `/${locale}/firm/`,
-      badge: 'Execution Partner',
-    },
-    {
-      name: 'Tradovate',
-      href: `/${locale}/firm/`,
-      badge: 'Platform Partner',
-    },
-    {
-      name: 'FundingPips Trading',
-      href: `/${locale}/firm/funding-pips`,
-      badge: 'Prop Partner',
-    },
-  ] as const
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-[68px] overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute inset-0 bg-mesh-animated opacity-40" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[oklch(0.55_0.22_264/0.08)] blur-3xl animate-orb-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-[oklch(0.45_0.18_290/0.06)] blur-3xl animate-orb-float" style={{ animationDelay: '-5s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/[0.08] blur-3xl animate-orb-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/[0.06] blur-3xl animate-orb-float" style={{ animationDelay: '-5s' }} />
       </div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--primary)/0.1),transparent)]" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:72px_72px] opacity-60" />
@@ -155,32 +138,27 @@ export default function Hero({ locale }: { locale: string }) {
             </div>
           </motion.div>
 
-          {/* Partner strip */}
+          {/* Broker logos strip */}
           <motion.div
             className="mt-12 w-full pb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, ease }}
           >
-            <p className="mb-3 text-center text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/40 [font-family:var(--home-copy)]">
-              Partners
+            <p className="mb-4 text-center text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/40 [font-family:var(--home-copy)]">
+              Connects with your broker
             </p>
-            <div className="mx-auto grid max-w-3xl grid-cols-1 gap-2 sm:grid-cols-3">
-              {partnerLinks.map((partner) => (
-                <Link
-                  key={partner.name}
-                  href={partner.href}
-                  aria-label={`Open ${partner.name} partner firm page`}
-                  className="group rounded-xl border border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-surface)/0.55)] px-3 py-3 text-left transition-colors hover:border-primary/35 hover:bg-[hsl(var(--mk-surface)/0.72)]"
-                >
-                  <p className="text-sm font-medium text-foreground/90 [font-family:var(--home-display)]">
-                    {partner.name}
-                  </p>
-                  <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground/65 [font-family:var(--home-copy)]">
-                    {partner.badge}
-                  </p>
-                </Link>
-              ))}
+            <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3">
+              {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'NinjaTrader'].map(
+                (broker) => (
+                  <span
+                    key={broker}
+                    className="text-[0.82rem] font-medium tracking-wide text-muted-foreground/50 transition-colors hover:text-foreground/80 [font-family:var(--home-display)]"
+                  >
+                    {broker}
+                  </span>
+                ),
+              )}
             </div>
           </motion.div>
         </div>

@@ -29,8 +29,6 @@ import {
   TYPO_EYEBROW,
 } from './_constants'
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
 const problems = [
   {
     badge: 'Data Fragmentation',
@@ -67,7 +65,7 @@ const features = [
     description:
       'Decile analysis, heatmaps, and custom metrics that expose what PnL hides.',
     colSpan: 'lg:col-span-2',
-    accent: 'blue' as const,
+    highlighted: false,
   },
   {
     icon: Brain,
@@ -75,7 +73,7 @@ const features = [
     description:
       'Pattern recognition, behavioral analysis, and explainable AI that turns raw trades into a coaching system.',
     colSpan: 'lg:col-span-2',
-    accent: 'purple' as const,
+    highlighted: true,
   },
   {
     icon: Users,
@@ -83,31 +81,31 @@ const features = [
     description:
       'Share layouts, compare performance, and accelerate improvement together.',
     colSpan: 'lg:col-span-1',
-    accent: 'blue' as const,
-  },
-  {
-    icon: FileText,
-    title: 'Coach-Ready Exports',
-    description:
-      'PDF briefs and shareable reports for structured mentorship sessions.',
-    colSpan: 'lg:col-span-1',
-    accent: 'blue' as const,
+    highlighted: false,
   },
   {
     icon: Download,
     title: 'Multi-Broker Import',
     description:
       'Connect Tradovate, Rithmic, IBKR, or import CSV. Your data, your way.',
+    colSpan: 'lg:col-span-3',
+    highlighted: false,
+  },
+  {
+    icon: FileText,
+    title: 'Coach-Ready Exports',
+    description:
+      'PDF briefs and shareable reports for structured mentorship sessions.',
     colSpan: 'lg:col-span-2',
-    accent: 'blue' as const,
+    highlighted: false,
   },
   {
     icon: Shield,
     title: 'Enterprise Security',
     description:
       'Bank-grade encryption and SOC2 compliance protect every trade you upload.',
-    colSpan: 'lg:col-span-4',
-    accent: 'blue' as const,
+    colSpan: 'lg:col-span-2',
+    highlighted: false,
   },
 ] as const
 
@@ -154,8 +152,6 @@ const aiFeatures = [
 
 type AIFeature = (typeof aiFeatures)[number]
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
 function ProblemCard({ problem }: { problem: Problem }) {
   const Icon = problem.icon
   return (
@@ -187,32 +183,26 @@ function ProblemCard({ problem }: { problem: Problem }) {
 
 function FeatureCard({ feature }: { feature: Feature }) {
   const Icon = feature.icon
-  const hue = feature.accent === 'purple' ? '290' : '264'
-  const isPurple = feature.accent === 'purple'
 
   return (
     <GlassCard
       variant="strong"
       hover
       size="md"
-      className={`relative overflow-hidden h-full${isPurple ? ' bg-gradient-to-br from-[oklch(0.55_0.22_290/0.08)] to-transparent' : ''}`}
+      className={`relative overflow-hidden h-full${feature.highlighted ? ' border-primary/25 shadow-[0_0_32px_-12px_hsl(var(--primary)/0.15)]' : ''}`}
     >
       <div className="mb-4 inline-flex items-center justify-center rounded-xl w-12 h-12">
-        <div
-          className={`absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_${hue}/0.15)] blur-sm`}
-        />
-        <div
-          className={`relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-[oklch(0.55_0.22_${hue}/0.4)] bg-[oklch(0.55_0.22_${hue}/0.1)]`}
-        >
-          <Icon className={`w-5 h-5 text-[oklch(0.55_0.22_${hue})]`} />
+        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-primary/40 bg-primary/10">
+          <Icon className="w-5 h-5 text-primary" />
         </div>
       </div>
 
-      {isPurple && (
+      {feature.highlighted && (
         <BadgeV2
           variant="outline"
           size="sm"
-          className="mb-2 border-[oklch(0.55_0.22_290/0.4)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
+          className="mb-2 border-primary/40 bg-primary/10 text-primary"
         >
           AI-Powered
         </BadgeV2>
@@ -236,12 +226,12 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
       variant="subtle"
       hover
       size="sm"
-      className="relative overflow-hidden h-full bg-gradient-to-br from-[oklch(0.55_0.22_290/0.06)] to-transparent"
+      className="relative overflow-hidden h-full bg-gradient-to-br from-primary/[0.06] to-transparent"
     >
       <div className="mb-3 inline-flex items-center justify-center rounded-xl w-10 h-10">
-        <div className="absolute inset-0 rounded-xl bg-[oklch(0.55_0.22_290/0.15)] blur-sm" />
-        <div className="relative inline-flex items-center justify-center rounded-xl w-10 h-10 border border-[oklch(0.55_0.22_290/0.4)] bg-[oklch(0.55_0.22_290/0.1)]">
-          <Icon className="w-4 h-4 text-[oklch(0.55_0.22_290)]" />
+        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex items-center justify-center rounded-xl w-10 h-10 border border-primary/40 bg-primary/10">
+          <Icon className="w-4 h-4 text-primary" />
         </div>
       </div>
       <h3 className="text-[0.95rem] font-semibold text-foreground [font-family:var(--home-display)]">
@@ -254,104 +244,102 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
   )
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
 export default function FeaturesBento() {
   return (
     <div id="features">
-    <MotionSection className={BORDER_SECTION}>
-      <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center mb-14 lg:mb-20"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
-        >
-          <p
-            className={`${TYPO_EYEBROW} text-muted-foreground/60 mb-3 [font-family:var(--home-copy)]`}
+      <MotionSection className={BORDER_SECTION}>
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-14 lg:mb-20"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
           >
-            The Solution
-          </p>
-          <h2
-            className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
-          >
-            Everything you need to{' '}
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              trade smarter
-            </span>
-          </h2>
-          <p className="mt-4 text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
-            Whether you&apos;re protecting a funded account or sharpening your personal
-            edge — analytics, AI coaching, and team collaboration in one platform.
-          </p>
-        </motion.div>
-
-        <MotionStagger
-          className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 mb-16"
-          delay={STAGGER_CARD}
-        >
-          {problems.map((problem) => (
-            <MotionStaggerItem key={problem.title}>
-              <ProblemCard problem={problem} />
-            </MotionStaggerItem>
-          ))}
-        </MotionStagger>
-
-        <div className="mb-8">
-          <BadgeV2 variant="accent" size="sm">
-            Features
-          </BadgeV2>
-        </div>
-
-        <MotionStagger
-          className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-4"
-          delay={STAGGER_CARD}
-        >
-          {features.map((feature) => (
-            <MotionStaggerItem key={feature.title} className={feature.colSpan}>
-              <FeatureCard feature={feature} />
-            </MotionStaggerItem>
-          ))}
-        </MotionStagger>
-
-        <div className="mt-16 mb-8">
-          <BadgeV2
-            variant="outline"
-            size="sm"
-            className="border-[oklch(0.55_0.22_290/0.35)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
-          >
-            AI-Powered
-          </BadgeV2>
-        </div>
-
-        <MotionStagger
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
-          delay={STAGGER_CARD}
-        >
-          {aiFeatures.map((feature) => (
-            <MotionStaggerItem key={feature.title}>
-              <AIFeatureCard feature={feature} />
-            </MotionStaggerItem>
-          ))}
-        </MotionStagger>
-
-        <div className="mt-4 rounded-2xl border border-[oklch(0.55_0.22_290/0.2)] bg-[oklch(0.55_0.22_290/0.05)] p-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              AI decisions stay auditable with a transparent reason trail, so
-              every recommendation can be reviewed.
-            </p>
-            <BadgeV2
-              variant="outline"
-              className="w-fit shrink-0 border-[oklch(0.55_0.22_290/0.35)] bg-[oklch(0.55_0.22_290/0.1)] text-[oklch(0.55_0.22_290)]"
+            <p
+              className={`${TYPO_EYEBROW} text-muted-foreground/60 mb-3 [font-family:var(--home-copy)]`}
             >
-              Explainable AI
+              The Solution
+            </p>
+            <h2
+              className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
+            >
+              Everything you need to{' '}
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                trade smarter
+              </span>
+            </h2>
+            <p className="mt-4 text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
+              Whether you&apos;re protecting a funded account or sharpening your personal
+              edge — analytics, AI coaching, and team collaboration in one platform.
+            </p>
+          </motion.div>
+
+          <MotionStagger
+            className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 mb-16"
+            delay={STAGGER_CARD}
+          >
+            {problems.map((problem) => (
+              <MotionStaggerItem key={problem.title}>
+                <ProblemCard problem={problem} />
+              </MotionStaggerItem>
+            ))}
+          </MotionStagger>
+
+          <div className="mb-8">
+            <BadgeV2 variant="accent" size="sm">
+              Features
             </BadgeV2>
           </div>
+
+          <MotionStagger
+            className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-4"
+            delay={STAGGER_CARD}
+          >
+            {features.map((feature) => (
+              <MotionStaggerItem key={feature.title} className={feature.colSpan}>
+                <FeatureCard feature={feature} />
+              </MotionStaggerItem>
+            ))}
+          </MotionStagger>
+
+          <div className="mt-16 mb-8">
+            <BadgeV2
+              variant="outline"
+              size="sm"
+              className="border-primary/35 bg-primary/10 text-primary"
+            >
+              AI-Powered
+            </BadgeV2>
+          </div>
+
+          <MotionStagger
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
+            delay={STAGGER_CARD}
+          >
+            {aiFeatures.map((feature) => (
+              <MotionStaggerItem key={feature.title}>
+                <AIFeatureCard feature={feature} />
+              </MotionStaggerItem>
+            ))}
+          </MotionStagger>
+
+          <div className="mt-4 rounded-2xl border border-primary/20 bg-primary/[0.05] p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                AI decisions stay auditable with a transparent reason trail, so
+                every recommendation can be reviewed.
+              </p>
+              <BadgeV2
+                variant="outline"
+                className="w-fit shrink-0 border-primary/35 bg-primary/10 text-primary"
+              >
+                Explainable AI
+              </BadgeV2>
+            </div>
+          </div>
         </div>
-      </div>
-    </MotionSection>
+      </MotionSection>
     </div>
   )
 }
