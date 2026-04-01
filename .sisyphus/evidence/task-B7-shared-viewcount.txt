@@ -1,0 +1,24 @@
+# Task B7: shared.ts view count fire-and-forget documentation
+
+## Command
+npm run typecheck
+
+## Result: PASS
+
+## Commit
+[v2 ce5d56d] docs(security): document shared view count as intentional fire-and-forget
+
+## Change
+Added comment above the fire-and-forget view count increment in getShared():
+
+  // View count is intentionally fire-and-forget — it's non-sensitive public metadata.
+  // The slug must exist and isSharedAccessible() must pass first, so no auth needed.
+  // Background update of view count to not block response
+  prisma.shared.update({ ... })
+
+## Location
+server/shared.ts, line 115
+
+## Verification
+- typecheck: PASS
+- git commit: ce5d56d (13 files changed, +2831/-129, including evidence files)
