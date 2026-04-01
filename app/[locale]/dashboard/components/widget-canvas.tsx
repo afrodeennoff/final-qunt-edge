@@ -27,8 +27,10 @@ import { Prisma, DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
 import { motion, useReducedMotion } from 'framer-motion'
 import { WidgetShell } from "@/components/ui/widget-shell"
+import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
 import { useSearchParams } from "next/navigation"
+import { logger } from "@/lib/logger"
 import {
   generateResponsiveLayouts,
   getEffectiveWidgetSize,
@@ -55,6 +57,17 @@ const createLayoutSignature = (widgets: Widget[]) =>
     .map((widget) => `${widget.i}:${widget.x}:${widget.y}:${widget.w}:${widget.h}`)
     .sort()
     .join("|")
+
+function WidgetErrorFallback({ widgetId }: { widgetId: string }) {
+  const translate = useI18n() as unknown as (key: string) => string
+  return (
+    <WidgetShell
+      title={translate("widgets.error.title") || "Widget Error"}
+      state="error"
+      errorMessage={translate("widgets.error.description") || "This widget encountered an error."}
+    />
+  )
+}
 
 function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
   const t = useI18n()
@@ -383,7 +396,7 @@ export default function WidgetCanvas() {
     try {
       await saveDashboardLayout(toPrismaLayout(pendingLayouts))
     } catch (error) {
-      console.error('Error saving dashboard layout:', error)
+      logger.error({ error }, 'Error saving dashboard layout')
     }
   }, [saveDashboardLayout])
 
@@ -435,7 +448,7 @@ export default function WidgetCanvas() {
       setLayouts(updatedLayouts);
       queueLayoutSave(updatedLayouts)
     } catch (error) {
-      console.error('Error updating layout:', error);
+      logger.error({ error }, 'Error updating layout');
       // Revert to previous layout on error
       setLayouts(layouts);
     }
@@ -643,20 +656,22 @@ export default function WidgetCanvas() {
                       size={widget.size}
                       currentType={widget.type}
                     >
-                      <div className={cn(
-                        "h-full w-full rounded-xl transition-all duration-500 group/widget overflow-hidden relative precision-panel border border-v2-border/60",
-                        isCustomizing
-                          ? "border-[hsl(var(--precision-cobalt)/0.7)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
-                          : "bg-v2-bg-surface/95 hover:border-v2-border/80"
-                      )}>
-                        {showDataDebug && !isCustomizing && (
-                          <DebugDataBadge />
-                        )}
-                        <div className="absolute inset-0 bg-linear-to-b from-card/[0.02] to-transparent pointer-events-none" />
-                        <div className="relative h-full w-full">
-                          {renderWidget(widget)}
+                      <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
+                        <div className={cn(
+                          "h-full w-full rounded-xl transition-all duration-500 group/widget overflow-hidden relative precision-panel border border-v2-border/60",
+                          isCustomizing
+                            ? "border-[hsl(var(--precision-cobalt)/0.7)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
+                            : "bg-v2-bg-surface/95 hover:border-v2-border/80"
+                        )}>
+                          {showDataDebug && !isCustomizing && (
+                            <DebugDataBadge />
+                          )}
+                          <div className="absolute inset-0 bg-linear-to-b from-card/[0.02] to-transparent pointer-events-none" />
+                          <div className="relative h-full w-full">
+                            {renderWidget(widget)}
+                          </div>
                         </div>
-                      </div>
+                      </ErrorBoundary>
                     </WidgetWrapper>
                   </motion.div>
                 </div>

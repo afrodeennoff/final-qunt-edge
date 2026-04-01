@@ -5,8 +5,6 @@ import { BlogCategory } from '@/prisma/generated/prisma'
 import { BlogCard } from './blog-card'
 import { InputV2 } from '@/components/ui/v2'
 import { ButtonV2 } from '@/components/ui/v2'
-import { useI18n } from '@/locales/client'
-
 type BlogPost = {
   id: string
   title: string
@@ -26,7 +24,6 @@ type Props = {
 }
 
 export function BlogList({ initialPosts }: Props) {
-  const t = useI18n()
   const [selectedCategory, setSelectedCategory] = useState<BlogCategory | 'ALL'>('ALL')
   const [searchQuery, setSearchQuery] = useState('')
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getUserDashboardTheme, setUserDashboardTheme } from '@/server/user-data'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
+import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 
 export async function GET(request: Request) {
   try {
@@ -58,7 +58,7 @@ export async function PUT(request: Request) {
       })
     }
 
-    if (!VALID_DASHBOARD_THEMES.includes(theme as any)) {
+    if (!(VALID_DASHBOARD_THEMES as readonly DashboardTheme[]).includes(theme as DashboardTheme)) {
       return apiError('VALIDATION_FAILED', `Invalid theme. Must be one of: ${VALID_DASHBOARD_THEMES.join(', ')}`, 400, undefined, {
         'Cache-Control': 'no-store, max-age=0',
       })

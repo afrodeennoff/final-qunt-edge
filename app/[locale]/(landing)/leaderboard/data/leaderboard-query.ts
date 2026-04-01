@@ -84,11 +84,11 @@ function sortAndRankLeaderboardEntries(
   }))
 }
 
- function getFallbackLeaderboardEntries(sort: LeaderboardSort): LeaderboardEntry[] {
+ function getFallbackLeaderboardEntries(_sort: LeaderboardSort): LeaderboardEntry[] {
    return []
  }
 
- export async function getFallbackLeaderboardEntryByUserId(userId: string): Promise<LeaderboardEntry | null> {
+ export async function getFallbackLeaderboardEntryByUserId(_userId: string): Promise<LeaderboardEntry | null> {
    return null
  }
 

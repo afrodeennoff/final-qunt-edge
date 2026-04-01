@@ -14,6 +14,17 @@ interface WebhookEvent {
   created_at?: number
 }
 
+/**
+ * Extends the Whop SDK's Membership.User type with email,
+ * which is present in the API response but missing from the SDK type definition.
+ */
+interface WhopMembershipUser {
+  id: string
+  name: string | null
+  username: string
+  email?: string
+}
+
 interface WebhookProcessingResult {
   success: boolean
   eventType: string
@@ -892,7 +903,9 @@ export class WebhookService {
 
       const membership = await whop.memberships.retrieve(membershipId)
 
-      if (!membership || !(membership.user as any)?.email) {
+      const user = membership.user as WhopMembershipUser | null
+
+      if (!membership || !user?.email) {
         return {
           success: false,
           eventType: 'payment.succeeded',
@@ -901,10 +914,10 @@ export class WebhookService {
         }
       }
 
-      const metadata = (membership.metadata as Record<string, any>) || {}
-      const userId = metadata.user_id || (membership.user as any)?.id
+      const metadata = (membership.metadata as Record<string, string>) || {}
+      const userId = metadata.user_id || user.id
       const amount = payment.amount || 0
-      const email = (membership.user as any)?.email
+      const email = user.email
 
       if (!email) {
         return {
@@ -965,7 +978,9 @@ export class WebhookService {
 
       const membership = await whop.memberships.retrieve(membershipId)
 
-      if (!membership || !(membership.user as any)?.email) {
+      const user = membership.user as WhopMembershipUser | null
+
+      if (!membership || !user?.email) {
         return {
           success: false,
           eventType: 'payment.failed',
@@ -974,9 +989,9 @@ export class WebhookService {
         }
       }
 
-      const metadata = (membership.metadata as Record<string, any>) || {}
-      const userId = metadata.user_id || (membership.user as any)?.id
-      const email = (membership.user as any)?.email
+      const metadata = (membership.metadata as Record<string, string>) || {}
+      const userId = metadata.user_id || user.id
+      const email = user.email
 
       if (this.retryAttempts.size >= this.maxRetryAttemptEntries && !this.retryAttempts.has(membershipId)) {
         const oldestKey = this.retryAttempts.keys().next().value as string | undefined

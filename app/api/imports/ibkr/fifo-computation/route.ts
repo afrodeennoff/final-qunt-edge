@@ -153,7 +153,7 @@ export async function POST(request: Request) {
         }
 
         // Validate orders
-        const validOrders = orders.filter((order: any) => {
+        const validOrders = orders.filter((order: Order) => {
             try {
                 orderSchema.parse(order);
                 return true;

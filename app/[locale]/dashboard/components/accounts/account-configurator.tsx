@@ -27,6 +27,7 @@ import { useUserStore } from '@/store/user-store'
 import { Plus, Search } from 'lucide-react'
 import { toast } from 'sonner'
 import { Command, CommandList, CommandGroup, CommandItem } from "@/components/ui/command"
+import { logger } from '@/lib/logger'
 
 interface AccountConfiguratorProps {
   account: Account
@@ -80,7 +81,7 @@ export function AccountConfigurator({
     const accountSize = firm.accountSizes[sizeKey]
     
     if (!firm || !accountSize) {
-      console.error('Template not found:', firmKey, sizeKey)
+      logger.error({ firmKey, sizeKey }, 'Template not found')
       return
     }
 
@@ -140,7 +141,7 @@ export function AccountConfigurator({
         })
       }
     } catch (error) {
-      console.error("Error creating group:", error)
+      logger.error({ error }, "Error creating group")
       toast.error(t("common.error"), {
         description: t("filters.errorCreatingGroup", { name: groupNameToCreate })
       })
@@ -155,7 +156,7 @@ export function AccountConfigurator({
       const created = await saveGroup(HIDDEN_GROUP_NAME)
       return created?.id ?? null
     } catch (error) {
-      console.error("Error ensuring hidden group:", error)
+      logger.error({ error }, "Error ensuring hidden group")
       toast.error(t("common.error"), {
         description: t("filters.errorCreatingGroup", { name: HIDDEN_GROUP_NAME })
       })

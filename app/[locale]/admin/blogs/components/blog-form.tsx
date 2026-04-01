@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -78,7 +78,6 @@ export function BlogForm({ post, locale }: Props) {
     },
   })
 
-  const titleValue = watch('title')
   const excerptValue = watch('excerpt')
   const isPublished = watch('published')
 

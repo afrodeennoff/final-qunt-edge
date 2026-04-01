@@ -18,10 +18,12 @@ import { ChatHeader } from "./header";
 import { EquityChartMessage } from "./equity-chart-message";
 import { useCurrentLocale } from "@/locales/client";
 import { useI18n } from "@/locales/client";
+import { useRouter } from "next/navigation";
 import { loadChat, saveChat } from "./actions/chat";
 import { useUserStore } from "@/store/user-store";
 import { useChatStore } from "@/store/chat-store";
 import { format } from "date-fns";
+import { logger } from "@/lib/logger";
 import { DotStream } from "ldrs/react";
 import "ldrs/react/DotStream.css";
 import { useMoodStore } from "@/store/mood-store";
@@ -174,6 +176,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
   const { supabaseUser: user } = useUserStore.getState();
   const locale = useCurrentLocale();
   const t = useI18n();
+  const router = useRouter();
   const [isStarted, setIsStarted] = useState(false);
   const [hideFirstMessage, setHideFirstMessage] = useState(false);
   const { messages: storedMessages, setMessages: setStoredMessages } =
@@ -238,7 +241,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
               setStoredMessages(parsedConversation as UIMessage[]);
               setIsStarted(true);
             } catch (e) {
-              console.error("Failed to parse conversation:", e);
+              logger.error({ error: e }, "Failed to parse conversation");
               setStoredMessages([]);
             }
           }
@@ -387,7 +390,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                     {/* v5: no reload helper; allow page refresh for now */}
                     <ButtonV2 
                       type="button"
-                      onClick={() => window.location.reload()}
+                      onClick={() => router.refresh()}
                       size="sm"
                       variant="outline"
                     >

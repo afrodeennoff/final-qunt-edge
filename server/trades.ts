@@ -767,7 +767,7 @@ export async function addTagToTrade(tradeId: string, tag: string) {
     await invalidateTradeRelatedCaches(userId)
     return updatedTrade
   } catch (error) {
-    console.error('Failed to add tag:', error)
+    logger.error('[trades] Failed to add tag', { error })
     throw error
   }
 }
@@ -801,7 +801,7 @@ export async function removeTagFromTrade(tradeId: string, tagToRemove: string) {
     await invalidateTradeRelatedCaches(userId)
     return updatedTrade
   } catch (error) {
-    console.error('Failed to remove tag:', error)
+    logger.error('[trades] Failed to remove tag', { error })
     throw error
   }
 }
@@ -824,7 +824,7 @@ export async function deleteTagFromAllTrades(tag: string) {
     await invalidateTradeRelatedCaches(userId)
     return { success: true, tradesUpdated: Number(result) }
   } catch (error) {
-    console.error('Failed to delete tag:', error)
+    logger.error('[trades] Failed to delete tag', { error })
     throw error
   }
 }
@@ -857,7 +857,7 @@ export async function updateTradeImage(
     await invalidateTradeRelatedCaches(userId)
     return trades
   } catch (error) {
-    console.error('Failed to update trade image:', error)
+    logger.error('[trades] Failed to update trade image', { error })
     throw error
   }
 }
@@ -889,7 +889,7 @@ export async function addTagsToTradesForDay(date: string, tags: string[]) {
     await invalidateTradeRelatedCaches(userId)
     return { success: true, tradesUpdated: Number(result) }
   } catch (error) {
-    console.error('Failed to add tags to trades for day:', error)
+    logger.error('[trades] Failed to add tags to trades for day', { error })
     throw error
   }
 }

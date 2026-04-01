@@ -1,5 +1,6 @@
 'use server'
 import { createServerClient } from '@supabase/ssr'
+import type { UserIdentity } from '@supabase/auth-js'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
@@ -750,12 +751,8 @@ async function requireAuthenticatedUser() {
 
 // Optimized function that uses middleware data when available
 export async function getUserId(): Promise<string> {
-  try {
-    const user = await requireAuthenticatedUser()
-    return user.id
-  } catch (error: any) {
-    handleAuthError(error)
-  }
+  const user = await requireAuthenticatedUser()
+  return user.id
 }
 
 /**
@@ -926,7 +923,7 @@ export async function linkGoogleAccount() {
   }
 }
 
-export async function unlinkIdentity(identity: any) {
+export async function unlinkIdentity(identity: UserIdentity) {
   const supabase = await createClient()
   const { error } = await supabase.auth.unlinkIdentity(identity)
   if (error) {

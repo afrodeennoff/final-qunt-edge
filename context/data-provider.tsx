@@ -319,6 +319,7 @@ export const DataProvider: React.FC<{
   const bootstrappedSharedSlugRef = useRef<string | null>(null);
   const dashboardLayoutRef = useRef(dashboardLayout);
   const activeUserIdRef = useRef<string | null>(null);
+  const loadInProgressRef = useRef(false);
 
   useEffect(() => {
     dashboardLayoutRef.current = dashboardLayout;
@@ -510,6 +511,11 @@ export const DataProvider: React.FC<{
   const loadData = useCallback(async () => {
     logger.debug({ isSharedView }, "DataProvider: loadData triggered");
     // Prevent multiple simultaneous loads
+    if (loadInProgressRef.current) {
+      logger.debug("DataProvider: skipping concurrent loadData call");
+      return;
+    }
+    loadInProgressRef.current = true;
     let hasLocalSnapshot = false;
 
     try {
@@ -556,7 +562,6 @@ export const DataProvider: React.FC<{
         setEvents([]);
         setTickDetails([]);
         setAccounts([]);
-        setGroups([]);
         setDashboardLayout({
           id: "admin-layout",
           userId: "admin",
@@ -801,6 +806,7 @@ export const DataProvider: React.FC<{
         setGroups([]);
       }
     } finally {
+      loadInProgressRef.current = false;
       setIsLoading(false);
     }
   }, [

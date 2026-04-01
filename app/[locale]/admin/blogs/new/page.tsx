@@ -10,7 +10,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { locale } = await params
+  await params
   return {
     title: 'New Blog Post',
   }

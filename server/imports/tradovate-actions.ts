@@ -848,16 +848,15 @@ export async function refreshTradovateToken(refreshToken: string): Promise<Trado
 
     // Validate the token response structure
     if (!tokens || typeof tokens !== 'object') {
-      logger.error('Invalid refresh token response structure:', tokens)
+      logger.error('Invalid refresh token response structure')
       return { error: 'Invalid refresh token response structure from Tradovate' }
     }
 
     if (!tokens.access_token || !tokens.refresh_token || !tokens.expires_in) {
-      logger.error('Missing required fields in refresh token response:', {
+      logger.error('Missing required fields in refresh token response', {
         hasAccessToken: !!tokens.access_token,
         hasRefreshToken: !!tokens.refresh_token,
         hasExpiresIn: !!tokens.expires_in,
-        tokens
       })
       return { error: 'Invalid refresh token response from Tradovate - missing required fields' }
     }

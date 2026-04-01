@@ -5,6 +5,19 @@ import { prisma } from '@/lib/prisma'
 import { getWhop, parseWhopDate } from '@/lib/whop'
 import { logger } from '@/lib/logger'
 
+type PlanInterval = 'month' | 'quarter' | 'year' | 'lifetime'
+
+const VALID_PLAN_INTERVALS: ReadonlySet<string> = new Set<PlanInterval>([
+  'month', 'quarter', 'year', 'lifetime',
+])
+
+function toPlanInterval(value: string | null | undefined, fallback: PlanInterval = 'month'): PlanInterval {
+  if (value && VALID_PLAN_INTERVALS.has(value)) {
+    return value as PlanInterval
+  }
+  return fallback
+}
+
 export type SubscriptionWithPrice = {
   id: string
   status: string
@@ -69,7 +82,7 @@ export async function getSubscriptionData() {
     if (localSubscription && hasActiveLocalSubscription) {
       logger.debug('[getSubscriptionData] Cache Hit', { email: normalizedEmail });
 
-      const interval = localSubscription.interval as any || 'month';
+      const interval = toPlanInterval(localSubscription.interval);
 
       return {
         id: localSubscription.id,
@@ -139,7 +152,7 @@ export async function getSubscriptionData() {
     // Get plan details
     const planId = membership.plan.id;
     const planName = membership.product.title || 'PLUS';
-    const interval = planName.toLowerCase().includes('monthly') ? 'month' :
+    const interval: PlanInterval = planName.toLowerCase().includes('monthly') ? 'month' :
       planName.toLowerCase().includes('quarterly') ? 'quarter' :
         planName.toLowerCase().includes('yearly') ? 'year' :
           planName.toLowerCase().includes('lifetime') ? 'lifetime' : 'month';
@@ -195,7 +208,7 @@ export async function getSubscriptionData() {
         id: planId,
         name: planName,
         amount: 0, // We'd need to fetch the plan for the exact amount
-        interval: interval as any,
+        interval: interval,
       },
       // Whop invoices/payments can be fetched if needed
       invoices: []

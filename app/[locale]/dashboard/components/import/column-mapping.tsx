@@ -8,6 +8,7 @@ import { ImportType } from './import-type-selection'
 import { mappingSchema } from '@/app/api/ai/mappings/schema'
 import { cn } from '@/lib/utils'
 import { z } from 'zod/v3';
+import { logger } from '@/lib/logger'
 
 type MappingObject = z.infer<typeof mappingSchema>
 type MappingKey = keyof MappingObject
@@ -120,7 +121,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
         const errorCode = errorData?.error?.code
 
         if (errorCode === 'RATE_LIMITED') {
-          console.error('Rate limit exceeded for AI mapping')
+          logger.error('Rate limit exceeded for AI mapping')
           return
         }
 
@@ -131,7 +132,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
       const parsed = mappingSchema.parse(payload)
       applyAIMappings(parsed as MappingObject)
     } catch (requestError) {
-      console.error('Error generating AI mappings:', requestError)
+      logger.error({ error: requestError }, 'Error generating AI mappings')
     } finally {
       setIsLoading(false)
     }

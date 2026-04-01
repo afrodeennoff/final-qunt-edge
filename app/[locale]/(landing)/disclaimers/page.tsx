@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { buildPublicMetadata } from '@/lib/seo'
 import { DisclaimersContent } from './disclaimers-content'
 
