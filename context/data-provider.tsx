@@ -129,6 +129,7 @@ interface DashboardUiState {
   isRevalidating: boolean;
   isMobile: boolean;
   isSharedView: boolean;
+  isAdmin: boolean;
 }
 
 export interface DashboardFiltersState {
@@ -269,12 +270,14 @@ export const DataProvider: React.FC<{
   adminView?: {
     userId: string;
   };
+  isAdmin?: boolean;
 }> = ({
   children,
   isSharedView = false,
   initialSharedSlug,
   initialSharedData = null,
   adminView = null,
+  isAdmin = false,
 }) => {
   const supabase = useMemo(() => createClient(), []);
   const params = useParams();
@@ -1310,6 +1313,7 @@ export const DataProvider: React.FC<{
   );
 
   const isPlusUser = () => {
+    if (isAdmin) return true;
     // Use Whop subscription store for more accurate subscription status
     const whopSubscription = useSubscriptionStore.getState().subscription;
     if (whopSubscription) {
@@ -2068,8 +2072,9 @@ export const DataProvider: React.FC<{
       isRevalidating,
       isMobile,
       isSharedView,
+      isAdmin,
     }),
-    [isLoading, isRevalidating, isMobile, isSharedView]
+    [isLoading, isRevalidating, isMobile, isSharedView, isAdmin]
   );
 
   const filtersValue = useMemo<DashboardFiltersState>(

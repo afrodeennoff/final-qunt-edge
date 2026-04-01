@@ -22,9 +22,9 @@ function DashboardProvidersInner({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function DashboardProviders({ children }: { children: React.ReactNode }) {
+export function DashboardProviders({ children, isAdmin = false }: { children: React.ReactNode; isAdmin?: boolean }) {
   return (
-    <DataProvider>
+    <DataProvider isAdmin={isAdmin}>
       <DashboardProvidersInner>{children}</DashboardProvidersInner>
     </DataProvider>
   );

@@ -69,9 +69,9 @@ export default async function DashboardLayout({
         }}
       />
       <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout initialTheme={userTheme}>
-      <DashboardProviders>
+      <DashboardProviders isAdmin={isAdmin}>
         <DashboardClientOverlays />
-        <DashboardProvider>
+          <DashboardProvider>
           <DashboardScrollReset />
           <div className="flex min-h-screen w-full overflow-x-hidden bg-background selection:bg-primary/20 selection:text-primary">
             <DashboardSidebar isAdmin={isAdmin} />
