@@ -185,8 +185,18 @@ type TradeUUIDSource = {
 }
 
 function generateTradeUUID(trade: TradeUUIDSource): string {
-  // Use multiple unique identifiers plus data fingerprint to minimize collision risk
-  // entryId + closeId from broker should be globally unique per account
+  // Use multiple unique identifiers plus data fingerprint to minimize collision risk.
+  //
+  // Duplicate detection behavior with/without entryId & closeId:
+  // - WITH entryId/closeId: These broker-assigned IDs provide the strongest uniqueness
+  //   guarantee. When present, they dominate the UUID signature so that re-importing the
+  //   exact same broker trade always produces the same UUID → deduplication works reliably.
+  // - WITHOUT entryId/closeId (CSV imports, manual entry): The UUID falls back to a
+  //   composite fingerprint of userId + accountNumber + instrument + dates + prices +
+  //   quantity + side + pnl + commission. Two trades with identical field values will
+  //   be treated as duplicates. This is intentional — it prevents accidental double-import
+  //   of the same CSV row. To force a unique UUID when broker IDs are absent, at least
+  //   one distinguishing field (e.g., a unique groupId or different timestamps) must differ.
   const tradeSignature = [
     trade.userId || '',
     trade.accountNumber || '',

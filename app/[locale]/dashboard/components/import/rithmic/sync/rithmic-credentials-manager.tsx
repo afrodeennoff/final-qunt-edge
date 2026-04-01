@@ -73,7 +73,7 @@ export function RithmicCredentialsManager({
   onAddNew,
 }: RithmicCredentialsManagerProps) {
   const [credentials, setCredentials] =
-    useState<Record<string, RithmicCredentialSet>>(getAllRithmicData());
+    useState<Record<string, RithmicCredentialSet>>({});
   const [synchronizations, setSynchronizations] = useState<Synchronization[]>(
     []
   );
@@ -122,6 +122,8 @@ export function RithmicCredentialsManager({
     };
 
     fetchSynchronizations();
+
+    getAllRithmicData().then(setCredentials);
   }, [t]);
 
   // Build a merged view of synchronizations and local credentials
@@ -304,9 +306,9 @@ export function RithmicCredentialsManager({
 
   const allEntries = [...syncEntries, ...localOnlyCredentials];
 
-  function handleDelete(id: string) {
-    clearRithmicData(id);
-    setCredentials(getAllRithmicData());
+  async function handleDelete(id: string) {
+    await clearRithmicData(id);
+    setCredentials(await getAllRithmicData());
     setIsDeleteDialogOpen(false);
   }
 

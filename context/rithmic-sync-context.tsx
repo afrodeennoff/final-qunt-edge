@@ -91,6 +91,17 @@ export function RithmicSyncContextProvider({
   const wsRef = useRef<WebSocket | null>(null);
   const syncCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const MAX_RECONNECT_ATTEMPTS = 5;
+  const reconnectAttemptRef = useRef(0);
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingConnectionRef = useRef<{
+    url: string;
+    token: string;
+    accounts: string[];
+    startDate: string;
+  } | null>(null);
+  const isAutoSyncingRef = useRef(false);
+
   useEffect(() => {
     wsRef.current = ws;
   }, [ws]);
@@ -129,6 +140,13 @@ export function RithmicSyncContextProvider({
   } = useRithmicSyncStore();
 
   const disconnect = useCallback(() => {
+    if (reconnectTimerRef.current) {
+      clearTimeout(reconnectTimerRef.current);
+      reconnectTimerRef.current = null;
+    }
+    reconnectAttemptRef.current = 0;
+    pendingConnectionRef.current = null;
+
     if (wsRef.current) {
       wsRef.current.close();
       setWs(null);
@@ -414,6 +432,9 @@ export function RithmicSyncContextProvider({
 
   const connect = useCallback(
     (url: string, token: string, accounts: string[], startDate: string) => {
+      reconnectAttemptRef.current = 0;
+      pendingConnectionRef.current = { url, token, accounts, startDate };
+
       if (ws) {
         ws.close();
       }
@@ -451,6 +472,7 @@ export function RithmicSyncContextProvider({
       const newWs = new WebSocket(url);
 
       newWs.onopen = () => {
+        reconnectAttemptRef.current = 0;
         setIsConnected(true);
         setConnectionStatus("Connected");
 
@@ -511,8 +533,28 @@ export function RithmicSyncContextProvider({
           status,
           message: `WebSocket disconnected: ${closeMessage}`,
         });
-        // Reset auto sync state on close
-        setIsAutoSyncing(false);
+
+        if (event.code !== 1000 && pendingConnectionRef.current && reconnectAttemptRef.current < MAX_RECONNECT_ATTEMPTS) {
+          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptRef.current), 16000);
+          reconnectAttemptRef.current += 1;
+
+          handleMessage({
+            type: "log",
+            level: "warn",
+            message: `Reconnecting in ${(delay / 1000).toFixed(0)}s (attempt ${reconnectAttemptRef.current}/${MAX_RECONNECT_ATTEMPTS})`,
+          });
+
+          reconnectTimerRef.current = setTimeout(() => {
+            const pending = pendingConnectionRef.current;
+            if (pending) {
+              connect(pending.url, pending.token, pending.accounts, pending.startDate);
+            }
+          }, delay);
+        } else {
+          reconnectAttemptRef.current = 0;
+          pendingConnectionRef.current = null;
+          setIsAutoSyncing(false);
+        }
       };
 
       setWs(newWs);
@@ -558,8 +600,7 @@ export function RithmicSyncContextProvider({
   // Run a sync for a credential
   const performSyncForCredential = useCallback(
     async (credentialId: string) => {
-      // If we are already syncing, return
-      if (isAutoSyncing) return;
+      if (isAutoSyncingRef.current || isAutoSyncing) return;
 
       // Reset processing state, message history
       resetProcessingState();
@@ -568,22 +609,18 @@ export function RithmicSyncContextProvider({
       const userId = await getUserId();
       // Ensure we are not already syncing
       // Prevent multiple syncs at the same time
-      if (!userId || isAutoSyncing) return;
+      if (!userId || isAutoSyncingRef.current || isAutoSyncing) return;
 
-      // Access local storage
-      const savedData = getRithmicData(credentialId);
+      const savedData = await getRithmicData(credentialId);
 
-      // If we do not find the credential, return
       if (!savedData) return;
 
-      // Set the auto sync flag so we don't perform multiple syncs at the same time
+      isAutoSyncingRef.current = true;
       setIsAutoSyncing(true);
 
       try {
-        // Authenticate and get accounts
         const { http } = getProtocols();
 
-        // Make fetch request to get accounts
         const response = (await Promise.race([
           fetch(
             `${http}//${process.env.NEXT_PUBLIC_RITHMIC_API_URL}/accounts`,
@@ -605,7 +642,6 @@ export function RithmicSyncContextProvider({
           ),
         ])) as Response;
 
-        // Handle rate limit error specifically
         if (response.status === 429) {
           const data = await response.json();
           const params = parseRateLimitMessage(data.detail);
@@ -713,6 +749,7 @@ export function RithmicSyncContextProvider({
           message: error instanceof Error ? error.message : "Unknown error",
         };
       } finally {
+        isAutoSyncingRef.current = false;
         setIsAutoSyncing(false);
       }
     },
@@ -832,13 +869,10 @@ export function RithmicSyncContextProvider({
   const isSyncRouteActive = pathname?.includes("/dashboard/import") ?? false;
 
   const checkAndPerformSyncs = useCallback(async () => {
-    // If we are still loading trades, return
     if (isLoading) return;
     if (!isSyncRouteActive) return;
-    // If auto-sync is disabled, return
     if (!autoSyncEnabled) return;
-    // If we are already syncing, return
-    if (isAutoSyncing) return;
+    if (isAutoSyncingRef.current) return;
     try {
       // Call API route instead of server action
       const response = await fetch("/api/rithmic/synchronizations", {
@@ -867,7 +901,7 @@ export function RithmicSyncContextProvider({
     } catch (error) {
       console.warn("Error during rithmic auto-sync check:", error);
     }
-  }, [isLoading, isSyncRouteActive, syncInterval, autoSyncEnabled, isAutoSyncing, performSyncForCredential]);
+  }, [isLoading, isSyncRouteActive, syncInterval, autoSyncEnabled, performSyncForCredential]);
 
   // Auto-sync checking interval
   useEffect(() => {

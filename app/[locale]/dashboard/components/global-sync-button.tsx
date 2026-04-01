@@ -46,7 +46,7 @@ export function GlobalSyncButton() {
 
         try {
             // 1. Sync Rithmic
-            const rithmicCredentials = getAllRithmicData()
+            const rithmicCredentials = await getAllRithmicData()
             const rithmicIds = Object.keys(rithmicCredentials)
 
             for (const id of rithmicIds) {
@@ -72,11 +72,11 @@ export function GlobalSyncButton() {
     const [nextSyncText, setNextSyncText] = useState<string>("")
 
     useEffect(() => {
-        const updateNextSync = () => {
+        const updateNextSync = async () => {
             if (typeof document !== "undefined" && document.visibilityState === "hidden") {
                 return
             }
-            const rithmicData = getAllRithmicData()
+            const rithmicData = await getAllRithmicData()
             const rithmicTimestamps = Object.values(rithmicData).map(d => new Date(d.lastSyncTime).getTime())
             const latestRithmicSync = rithmicTimestamps.length > 0 ? safeArrayMax(rithmicTimestamps) : 0
 

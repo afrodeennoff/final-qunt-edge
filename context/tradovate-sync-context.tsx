@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useRef, ReactNode } from 'react'
 import { useDashboardActions } from '@/context/data-provider'
 import { usePathname } from 'next/navigation'
 import { toast } from 'sonner'
@@ -37,6 +37,7 @@ const TradovateSyncContext = createContext<TradovateSyncContextType | undefined>
 
 export function TradovateSyncContextProvider({ children }: { children: ReactNode }) {
   const [isAutoSyncing, setIsAutoSyncing] = useState(false)
+  const isAutoSyncingRef = useRef(false)
   const [accounts, setAccounts] = useState<Synchronization[]>([])
   const [syncInterval, setSyncInterval] = useState(15) // 15 minutes default
   const [enableAutoSync, setEnableAutoSync] = useState(false)
@@ -204,10 +205,11 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
 
   // Perform sync for all accounts
   const performSyncForAllAccounts = useCallback(async (options?: { skipRefresh?: boolean }) => {
-    if (isAutoSyncing) {
+    if (isAutoSyncingRef.current) {
       return
     }
 
+    isAutoSyncingRef.current = true
     setIsAutoSyncing(true)
     const toastId = toast.loading(t('tradovateSync.bulk.starting'))
 
@@ -221,7 +223,6 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
       let totalNewTrades = 0
       let successCount = 0
 
-      // Sync accounts sequentially to avoid overwhelming the API
       for (const account of validAccounts) {
         toast.loading(t('tradovateSync.bulk.syncing', { accountId: account.accountId }), { id: toastId })
         const result = await performSyncForAccount(account.accountId, { skipToast: true, skipRefresh: true })
@@ -231,11 +232,9 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
           totalNewTrades += result.savedCount || 0
         }
 
-        // Small delay between accounts
         await new Promise(resolve => setTimeout(resolve, 500))
       }
 
-      // Final thorough refresh (unless skipped)
       if (!options?.skipRefresh) {
         await refreshAllData({ force: true })
       }
@@ -247,17 +246,18 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
       }
 
     } catch (error) {
-      console.error('Error during bulk sync:', error)
+      console.warn('Error during bulk sync:', error)
       toast.error(t('tradovateSync.bulk.error'), { id: toastId })
     } finally {
+      isAutoSyncingRef.current = false
       setIsAutoSyncing(false)
     }
-  }, [isAutoSyncing, accounts, performSyncForAccount, t, refreshAllData])
+  }, [accounts, performSyncForAccount, t, refreshAllData])
 
   // Auto-sync checking
   const checkAndPerformSyncs = useCallback(async () => {
     if (!isSyncRouteActive) return
-    if (!enableAutoSync || isAutoSyncing) return
+    if (!enableAutoSync || isAutoSyncingRef.current) return
 
     try {
       const now = Date.now()
@@ -277,7 +277,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
     } catch (error) {
       console.warn('Error during tradovate auto-sync check:', error)
     }
-  }, [isSyncRouteActive, enableAutoSync, isAutoSyncing, accounts, syncInterval, performSyncForAccount]);
+  }, [isSyncRouteActive, enableAutoSync, accounts, syncInterval, performSyncForAccount]);
 
   // Auto-sync checking interval
   useEffect(() => {

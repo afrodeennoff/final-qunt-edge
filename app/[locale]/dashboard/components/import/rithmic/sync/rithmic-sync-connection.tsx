@@ -256,22 +256,25 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
 
   // Load saved data on mount
   useEffect(() => {
-    const allData = getAllRithmicData()
-    const lastCredential = Object.values(allData)[0] // Get first saved credential
-    if (lastCredential && user?.id) {
-      setCredentials({
-        ...lastCredential.credentials,
-        userId: user.id
-      })
-      setSelectedAccounts(lastCredential.selectedAccounts)
-      setShouldSaveCredentials(true)
+    const loadSavedData = async () => {
+      const allData = await getAllRithmicData()
+      const lastCredential = Object.values(allData)[0]
+      if (lastCredential && user?.id) {
+        setCredentials({
+          ...lastCredential.credentials,
+          userId: user.id
+        })
+        setSelectedAccounts(lastCredential.selectedAccounts)
+        setShouldSaveCredentials(true)
+      }
     }
+    loadSavedData()
   }, [user?.id, setSelectedAccounts])
 
   // Update the saveCredentialsAndAccounts function to merge duplicate usernames into one credential set
-  const saveCredentialsAndAccounts = useCallback(() => {
+  const saveCredentialsAndAccounts = useCallback(async () => {
     if (shouldSaveCredentials) {
-      const allData = getAllRithmicData()
+      const allData = await getAllRithmicData()
       
       // Find all credentials with the same username
       const existingCredentials = Object.values(allData).filter(
@@ -309,14 +312,13 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
         }
 
         // Delete all other credentials with the same username
-        existingCredentials.forEach(cred => {
-          if (cred.id !== dataToSave.id) {
-            clearRithmicData(cred.id)
-          }
-        })
+        await Promise.all(
+          existingCredentials
+            .filter(cred => cred.id !== dataToSave.id)
+            .map(cred => clearRithmicData(cred.id))
+        )
 
-        // Save the merged credential
-        saveRithmicData(dataToSave)
+        await saveRithmicData(dataToSave)
         setCurrentCredentialId(dataToSave.id)
 
         // Show toast notification
@@ -339,7 +341,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
           allAccounts
         }
 
-        saveRithmicData(dataToSave)
+        await saveRithmicData(dataToSave)
         setCurrentCredentialId(dataToSave.id)
       }
     }
@@ -403,7 +405,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
     }
 
     // Save credentials and accounts locally
-    saveCredentialsAndAccounts()
+    void saveCredentialsAndAccounts()
     // Store synchronization data in db
     try {
       await setRithmicSynchronization({

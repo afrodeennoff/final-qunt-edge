@@ -804,7 +804,7 @@ export async function renewTradovateAccessToken(accessToken: string, environment
 }
 
 // Keep the old function for backward compatibility (OAuth refresh)
-export async function refreshTradovateToken(refreshToken: string): Promise<TradovateOAuthResult> {
+export async function refreshTradovateToken(refreshToken: string, accountId: string = 'default'): Promise<TradovateOAuthResult> {
   try {
     if (!TRADOVATE_CLIENT_ID || !TRADOVATE_CLIENT_SECRET) {
       return { error: 'Tradovate OAuth credentials not configured' }
@@ -864,10 +864,11 @@ export async function refreshTradovateToken(refreshToken: string): Promise<Trado
     // Calculate expiration time
     const expiresAt = formatDateForAPI(new Date(Date.now() + (tokens.expires_in * 1000)))
 
-    const storeResult = await storeTradovateToken(tokens.access_token, expiresAt, 'demo')
+    const storeResult = await storeTradovateToken(tokens.access_token, expiresAt, 'demo', accountId)
     if (storeResult.error) {
       logger.warn('Failed to store refreshed token in database', {
         reason: storeResult.error,
+        accountId,
       })
     }
 
@@ -1153,7 +1154,7 @@ export async function storeTradovateToken(
         }
       },
       update: {
-        token: authSecurityConfig.tradovateTokenEncryptionEnabled ? null : accessToken,
+        token: accessToken,
         tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
         tokenIv: encryptedEnvelope?.tokenIv ?? null,
         tokenTag: encryptedEnvelope?.tokenTag ?? null,
@@ -1166,7 +1167,7 @@ export async function storeTradovateToken(
         userId: databaseUserId,
         service: 'tradovate',
         accountId: accountId,
-        token: authSecurityConfig.tradovateTokenEncryptionEnabled ? null : accessToken,
+        token: accessToken,
         tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
         tokenIv: encryptedEnvelope?.tokenIv ?? null,
         tokenTag: encryptedEnvelope?.tokenTag ?? null,
@@ -1215,12 +1216,56 @@ export async function getTradovateToken(accountId: string = 'default') {
       return { error: 'No Tradovate token found' }
     }
 
+    const needsEncryptionMigration = authSecurityConfig.tradovateTokenEncryptionEnabled
+      && syncData.token && !syncData.tokenCiphertext
+    const needsPlaintextMigration = !authSecurityConfig.tradovateTokenEncryptionEnabled
+      && !syncData.token && syncData.tokenCiphertext
+
+    if (needsEncryptionMigration || needsPlaintextMigration) {
+      const encryptedEnvelope = authSecurityConfig.tradovateTokenEncryptionEnabled
+        ? encryptToken(accessToken)
+        : null
+
+      await prisma.synchronization.update({
+        where: { id: syncData.id },
+        data: {
+          token: accessToken,
+          tokenCiphertext: encryptedEnvelope?.tokenCiphertext ?? null,
+          tokenIv: encryptedEnvelope?.tokenIv ?? null,
+          tokenTag: encryptedEnvelope?.tokenTag ?? null,
+          tokenKeyVersion: encryptedEnvelope?.tokenKeyVersion ?? null,
+        },
+      }).catch(() => {})
+    }
+
     // Check if token is expired
     const now = new Date()
     const expiresAt = syncData.tokenExpiresAt
 
     if (expiresAt && expiresAt <= now) {
-      return { error: 'Token expired' }
+      logger.info('Tradovate token expired, attempting auto-renewal', { accountId })
+      const renewalResult = await renewTradovateAccessToken(
+        accessToken,
+        syncData.accountId?.toString() === 'live' ? 'live' : 'demo',
+        accountId
+      )
+      if (renewalResult.success && renewalResult.expiresAt) {
+        const fresh = await prisma.synchronization.findFirst({
+          where: { userId: databaseUserId, service: 'tradovate', accountId },
+          select: { token: true, tokenCiphertext: true, tokenIv: true, tokenTag: true },
+        })
+        const renewedAccessToken = fresh?.token || (fresh ? decryptToken(fresh) : null)
+        if (renewedAccessToken) {
+          return {
+            accessToken: renewedAccessToken,
+            expiresAt: renewalResult.expiresAt,
+            environment: syncData.accountId?.toString() === 'live' ? 'live' : 'demo',
+            accountId: syncData.accountId
+          }
+        }
+      }
+      logger.warn('Auto-renewal failed', { accountId, error: renewalResult.error })
+      return { error: 'Token expired and auto-renewal failed' }
     }
 
     return {
@@ -1230,7 +1275,7 @@ export async function getTradovateToken(accountId: string = 'default') {
       accountId: syncData.accountId
     }
   } catch (error) {
-    console.error('Failed to get Tradovate token:', error)
+    logger.error('Failed to get Tradovate token:', { error })
     return { error: 'Failed to get token' }
   }
 }
