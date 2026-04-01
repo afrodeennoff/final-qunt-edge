@@ -1,3 +1,60 @@
+## Task: Build optimization stability + proxy/runtime alignment (2026-04-01)
+
+- [x] Align proxy entrypoint naming with Next.js 16 (`proxy.ts` + `export async function proxy`).
+- [x] Keep Teams protected-route checks aligned in proxy auth boundary (`/teams/dashboard`, `/teams/manage`, `/teams/join`).
+- [x] Prevent build-time execution of runtime-only API handlers (`/api/health`, `/api/cron`, `/api/cron/renewal-notice`) using `connection()`.
+- [x] Make `cacheComponents` configurable without breaking `'use cache'` code paths (default enabled, explicit env opt-out only).
+- [x] Harden robust build retry matcher for transient `_ssgManifest.js` ENOENT race.
+- [x] Verify full production build end-to-end.
+
+Verification:
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end (`✓ Generating static pages ... 170/170`, route table emitted).
+- Earlier terminal noise from build-time execution of `/api/cron` and `/api/health` handlers did not reappear in this successful build run.
+- Official Next.js references reviewed for:
+  - proxy rename (`middleware` -> `proxy` in `proxy.ts`)
+  - `use cache` requiring `cacheComponents`
+  - `connection()` request-time boundary.
+
+## Review
+- Root cause for current build pain was twofold:
+  - transient `.next` artifact race in finalization (`_ssgManifest.js` missing),
+  - runtime-only API handlers being evaluated during build.
+- Fixes now keep the modern build path (`Cache Components`) while reducing false build failures and noisy prerender side effects.
+
+## Task: Teams auth boundary + widget/sidebar data reliability hardening (2026-04-01)
+
+- [x] Protect `/teams/dashboard`, `/teams/manage`, and `/teams/join` at proxy classification level.
+- [x] Add server-layout auth redirects for Teams dashboard/manage shells with locale-aware `next` params.
+- [x] Align Teams analytics/stats authorization with mapped database user id resolution.
+- [x] Replace Teams equity/export user lookups with Prisma user reads (avoid Supabase-admin id mismatch on mapped users).
+- [x] Harden `joinTeam` to require valid pending invitation and accept invitation atomically.
+- [x] Restore `teams/actions/user.ts` request-user resolver behavior to prevent trader VaR regression while keeping Teams auth hardening.
+- [x] Verify with targeted tests, lint, typecheck, local auth-route smoke checks, and Vercel runtime logs.
+
+Verification:
+- `npx vitest run tests/trader-var-action.test.ts tests/server/user-id-resolution.test.ts tests/server/team-analytics.test.ts` passes (13/13).
+- `./node_modules/.bin/eslint proxy.ts 'app/[locale]/teams/dashboard/layout.tsx' 'app/[locale]/teams/manage/layout.tsx' 'app/[locale]/teams/actions/stats.ts' 'app/[locale]/teams/actions/analytics.ts' 'app/[locale]/teams/actions/user.ts' 'app/[locale]/dashboard/settings/actions.ts'` passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+- Local smoke checks (`curl -I`) confirm unauthenticated redirects:
+  - `/en/teams/dashboard` -> `/en/authentication?next=%2Fen%2Fteams%2Fdashboard`
+  - `/en/teams/manage` -> `/en/authentication?next=%2Fen%2Fteams%2Fmanage`
+  - `/en/teams/join` -> `/en/authentication?next=%2Fen%2Fteams%2Fjoin`
+  - `/en/dashboard` -> `/en/authentication?next=%2Fen%2Fdashboard`
+- Vercel runtime logs (production, last 24h) for `/dashboard` and `/teams/dashboard`:
+  - traffic shows 200/307 paths,
+  - no matching error/fatal/warning-level runtime log entries after severity filtering,
+  - no matching 401/403/404/5xx status filters.
+
+## Review
+- Root causes addressed:
+  - Teams protected pages were not consistently enforced by both proxy classification and server layouts.
+  - Teams access checks compared raw Supabase ids in some actions, causing false unauthorized/empty data for mapped users.
+  - Team equity/export/user data code used Supabase Admin user-id fetches that fail for mapped DB ids.
+  - `joinTeam` previously allowed direct team joins without invitation validation.
+- Regression fix:
+  - `app/[locale]/teams/actions/user.ts` briefly regressed VaR flows after resolver substitution; restored request-user lookup semantics to keep action behavior and test guarantees intact.
+
 ## Task: Dashboard backend data resolution + sidebar reliability hardening (2026-04-01)
 
 - [x] Align writable user-id resolvers with `getDatabaseUserId` precedence when `id` and `auth_user_id` diverge.

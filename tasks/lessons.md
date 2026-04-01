@@ -4,6 +4,67 @@
 
 ---
 
+## NEW (2026-04-01): Do not disable `cacheComponents` in a codebase that already uses `'use cache'`
+
+### Mistake
+Set `cacheComponents` to false-by-default while server modules still used `'use cache'`, which caused immediate compile failure across multiple server files.
+
+### Root Cause
+Tried to match old build behavior by toggling framework mode instead of preserving the cache model required by existing data-layer directives.
+
+### Rule
+If any production path uses `'use cache'`, keep `cacheComponents` enabled by default. Only allow explicit opt-out for controlled experiments that remove/replace `'use cache'` usage first.
+
+### Example
+```ts
+// BAD: default false in a repo using 'use cache'
+cacheComponents: process.env.NEXT_CACHE_COMPONENTS === 'true'
+
+// GOOD: default enabled with explicit override
+cacheComponents: process.env.NEXT_CACHE_COMPONENTS !== 'false'
+```
+
+## NEW (2026-04-01): Treat missing `_ssgManifest.js` at build finalization as transient .next artifact race
+
+### Mistake
+Allowed build pipeline to fail hard on finalization ENOENT for `.next/static/**/_ssgManifest.js` after full static generation completed.
+
+### Root Cause
+Retry wrapper only matched `_buildManifest`/`pages-manifest`/`proxy` missing artifact patterns, so a similar `_ssgManifest` race path was uncaught.
+
+### Rule
+When robust build retries are used, include `_ssgManifest.js` (and temp variants) in transient ENOENT matcher patterns.
+
+### Example
+```text
+Error: ENOENT: no such file or directory, open '.next/static/<hash>/_ssgManifest.js'
+```
+
+---
+
+## NEW (2026-04-01): Shared resolver migrations must preserve action call-contracts and query cadence
+
+### Mistake
+Replaced `teams/actions/user.ts` request-user lookup with `resolveTeamUserId`, which changed Prisma query cadence and broke existing trader VaR action tests (`success` flipped false in 3 cases).
+
+### Root Cause
+Resolver reuse was applied without validating call-level behavior assumptions in dependent actions/tests (mock sequencing and lookup order expectations).
+
+### Rule
+When swapping a local lookup for a shared resolver, verify both logical output and call-contract compatibility for the action path (including test mock order). If cadence changes break stable behavior, keep the local lookup or add compatibility fallback.
+
+### Example
+```ts
+// BAD: direct replacement without contract verification
+return await resolveTeamUserId(user.id)
+
+// GOOD: preserve proven action semantics for request-user path
+const mappedUser = await prisma.user.findUnique({ where: { auth_user_id: user.id }, select: { id: true } })
+if (mappedUser?.id) return mappedUser.id
+const fallbackUser = await prisma.user.findUnique({ where: { id: user.id }, select: { id: true } })
+return fallbackUser?.id ?? null
+```
+
 ## NEW (2026-04-01): User-id resolver precedence must stay consistent across auth/trades/teams modules
 
 ### Mistake

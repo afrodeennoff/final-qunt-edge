@@ -1,11 +1,31 @@
 import { Suspense } from "react"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
+import { createClient } from "@/server/auth"
 import { AuthProfileButton } from "../components/auth-profile-button"
 import { AuthProfileButtonSkeleton } from "../components/auth-profile-button-skeleton"
 import { TeamsSidebar } from "../components/teams-sidebar"
+import { redirect } from "next/navigation"
 
-export default function TeamManageLayout({ children }: { children: React.ReactNode }) {
+export default async function TeamManageLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user?.id) {
+    const safeLocale = locale || "en"
+    const nextPath = encodeURIComponent(`/${safeLocale}/teams/manage`)
+    redirect(`/${safeLocale}/authentication?next=${nextPath}`)
+  }
+
   return (
     <SidebarProvider defaultOpen={true}>
       <AuthTimeout />

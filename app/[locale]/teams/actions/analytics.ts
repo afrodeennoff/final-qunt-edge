@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/server/auth'
+import { resolveTeamUserId } from '@/server/team-membership'
 
 type TeamTrade = {
   userId: string
@@ -20,6 +21,7 @@ export async function getTeamAnalyticsDataAction(teamId: string) {
     if (!user?.id) {
       throw new Error('Unauthorized')
     }
+    const requestUserId = await resolveTeamUserId(user.id)
 
     const team = await prisma.team.findUnique({
       where: { id: teamId },
@@ -43,9 +45,9 @@ export async function getTeamAnalyticsDataAction(teamId: string) {
     }
 
     const hasAccess =
-      team.userId === user.id ||
-      team.traderIds.includes(user.id) ||
-      team.managers.some((manager) => manager.managerId === user.id)
+      team.userId === requestUserId ||
+      team.traderIds.includes(requestUserId) ||
+      team.managers.some((manager) => manager.managerId === requestUserId)
 
     if (!hasAccess) {
       throw new Error('Unauthorized')

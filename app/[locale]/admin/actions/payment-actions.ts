@@ -11,7 +11,15 @@ export async function getTransactionsAction(options?: { limit?: number; offset?:
     const { prisma } = await import('@/lib/prisma')
 
     try {
+        // Validate status against known TransactionStatus enum values
+        const validStatuses = ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'PARTIALLY_REFUNDED'] as const
+        const statusValue = options?.status as typeof validStatuses[number] | undefined
+        const statusFilter = statusValue && validStatuses.includes(statusValue)
+            ? { status: statusValue }
+            : undefined
+
         const transactions = await prisma.paymentTransaction.findMany({
+            where: statusFilter,
             orderBy: { createdAt: 'desc' },
             take: options?.limit || 50,
             skip: options?.offset || 0,
@@ -27,7 +35,7 @@ export async function getTransactionsAction(options?: { limit?: number; offset?:
         logAdminMutation({
             action: 'list-transactions',
             actor: admin,
-            details: { limit: options?.limit || 50, offset: options?.offset || 0 }
+            details: { limit: options?.limit || 50, offset: options?.offset || 0, status: options?.status }
         })
 
         return { success: true, transactions }
@@ -91,20 +99,25 @@ export async function getSubscriptionsAction() {
 export async function cancelSubscriptionAction(userId: string) {
     const admin = await assertAdminAccess()
 
-    const result = await subscriptionManager.cancelSubscription({
-        userId,
-        cancelAtPeriodEnd: false,
-        reason: 'Admin cancelled'
-    })
-
-    if (result.success) {
-        logAdminMutation({
-            action: 'cancel-subscription',
-            actor: admin,
-            target: userId
+    try {
+        const result = await subscriptionManager.cancelSubscription({
+            userId,
+            cancelAtPeriodEnd: false,
+            reason: 'Admin cancelled'
         })
-        revalidatePath('/admin')
-    }
 
-    return result
+        if (result.success) {
+            logAdminMutation({
+                action: 'cancel-subscription',
+                actor: admin,
+                target: userId
+            })
+            revalidatePath('/admin')
+        }
+
+        return result
+    } catch (error) {
+        console.error('Error cancelling subscription:', error)
+        return { success: false, error: 'Failed to cancel subscription' }
+    }
 }

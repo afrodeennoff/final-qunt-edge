@@ -1,5 +1,62 @@
 # Session Memory (2026-03-31)
 
+## Current Session: New-build stabilization for optimization + proxy/runtime behavior (2026-04-01)
+
+### Accomplishments
+- Fixed Next.js 16 proxy entrypoint alignment:
+  - `proxy.ts` now exports `proxy` function directly (replacing `middleware`-named default export).
+- Hardened protected-route auth checks in proxy for Teams protected paths:
+  - `/teams/dashboard`, `/teams/manage`, `/teams/join`.
+- Prevented build-time execution of runtime-only handlers by adding `connection()` in:
+  - `app/api/health/route.ts`
+  - `app/api/cron/route.ts`
+  - `app/api/cron/renewal-notice/route.ts`
+- Stabilized build finalization race handling:
+  - `scripts/robust-next-build.mjs` now retries transient missing `_ssgManifest.js` errors in `.next/static/**`.
+- Kept cache-components compatibility intact while allowing explicit override:
+  - `lib/performance/next-config.ts` keeps `cacheComponents` enabled unless `NEXT_CACHE_COMPONENTS=false`.
+  - `.env.example` now documents `NEXT_CACHE_COMPONENTS=true`.
+
+### Verification
+- `npm run -s typecheck` passes.
+- `npm run build` passes end-to-end:
+  - compile succeeds,
+  - static generation completes (`170/170`),
+  - route manifest emitted,
+  - no final `_ssgManifest.js` ENOENT failure.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Current Session: Teams auth/data pipeline hardening + production/runtime verification (2026-04-01)
+
+### Accomplishments
+- Hardened Teams route auth boundaries end-to-end:
+  - `proxy.ts` now treats `/teams/dashboard`, `/teams/manage`, `/teams/join` as private document routes with auth redirect enforcement.
+  - `app/[locale]/teams/dashboard/layout.tsx` and `app/[locale]/teams/manage/layout.tsx` now enforce server-side auth checks and redirect unauthenticated users to locale-specific authentication with `next` continuation.
+- Fixed Teams data authorization mismatches for mapped users:
+  - `app/[locale]/teams/actions/stats.ts` and `app/[locale]/teams/actions/analytics.ts` now authorize via resolved database user id (`resolveTeamUserId`), not raw auth id.
+- Fixed Teams data source mismatches:
+  - Replaced Supabase Admin user lookups in team equity/export/user-equity paths with Prisma user reads so mapped DB ids resolve correctly.
+- Hardened team-join backend flow:
+  - `app/[locale]/dashboard/settings/actions.ts` `joinTeam` now requires a valid pending, unexpired invitation for authenticated email, applies invitation role, and atomically marks invitation `ACCEPTED`.
+  - Team invitation/trader email handling normalized to lowercase.
+- Resolved introduced regression in Teams trader VaR action:
+  - `app/[locale]/teams/actions/user.ts` request-user resolver restored to direct auth-id mapping flow to preserve behavior expected by existing tests.
+
+### Verification
+- `npx vitest run tests/trader-var-action.test.ts tests/server/user-id-resolution.test.ts tests/server/team-analytics.test.ts` passes (13/13).
+- Targeted eslint on touched Teams/proxy/settings files passes with warnings only (0 errors).
+- `npm run -s typecheck` passes.
+- Local auth smoke checks confirm redirect behavior for protected dashboard/team routes.
+- Vercel runtime logs checked for production dashboard/team paths:
+  - matched traffic is 200/307,
+  - no error/fatal/warning-level logs returned under severity filters in the queried window,
+  - no matching 401/403/404/5xx entries under explicit status filters.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: Dashboard backend id-resolution fix + widget data recovery (2026-04-01)
 
 ### Accomplishments

@@ -16,7 +16,6 @@ async function getRequestUserId(): Promise<string | null> {
     where: { auth_user_id: user.id },
     select: { id: true },
   })
-
   if (mappedUser?.id) return mappedUser.id
 
   const fallbackUser = await prisma.user.findUnique({

@@ -82,13 +82,40 @@ export async function joinTeam(teamId: string) {
     if (!user?.id) {
       throw new Error('Unauthorized')
     }
+    if (!user.email) {
+      throw new Error('Authenticated user email is required to join a team')
+    }
     const teamUserId = await resolveTeamUserId(user.id)
+
+    const invitation = await prisma.teamInvitation.findFirst({
+      where: {
+        teamId,
+        email: user.email.toLowerCase(),
+        status: 'PENDING',
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+      select: {
+        id: true,
+        role: true,
+      },
+    })
+
+    if (!invitation) {
+      throw new Error('Valid invitation required to join this team')
+    }
 
     await prisma.$transaction(async (tx) => {
       await ensureTeamMembership(tx, {
         teamId,
         userId: teamUserId,
-        role: MemberRole.TRADER,
+        role: invitation.role ?? MemberRole.TRADER,
+      })
+
+      await tx.teamInvitation.update({
+        where: { id: invitation.id },
+        data: { status: 'ACCEPTED' },
       })
     })
 
@@ -96,7 +123,7 @@ export async function joinTeam(teamId: string) {
     return { success: true }
   } catch (error) {
     console.error('Error joining team:', error)
-    return { success: false, error: 'Failed to join team' }
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to join team' }
   }
 }
 
@@ -561,6 +588,7 @@ export async function addTraderToTeam(teamId: string, traderEmail: string) {
       throw new Error('Unauthorized')
     }
     const teamUserId = await resolveTeamUserId(user.id)
+    const normalizedTraderEmail = traderEmail.trim().toLowerCase()
 
     // Check if user is the owner or admin of this team
     const team = await prisma.team.findUnique({
@@ -588,7 +616,7 @@ export async function addTraderToTeam(teamId: string, traderEmail: string) {
 
     // Find the user by email
     const traderUser = await prisma.user.findUnique({
-      where: { email: traderEmail },
+      where: { email: normalizedTraderEmail },
     })
 
     if (!traderUser) {
@@ -625,6 +653,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       throw new Error('Unauthorized')
     }
     const teamUserId = await resolveTeamUserId(user.id)
+    const normalizedTraderEmail = traderEmail.trim().toLowerCase()
 
     // Check if user is the owner or admin of this team
     const team = await prisma.team.findUnique({
@@ -655,7 +684,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       where: {
         teamId_email: {
           teamId,
-          email: traderEmail,
+          email: normalizedTraderEmail,
         }
       }
     })
@@ -666,7 +695,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
 
     // Check if user is already a trader in this team
     const existingUser = await prisma.user.findUnique({
-      where: { email: traderEmail },
+      where: { email: normalizedTraderEmail },
     })
 
     if (existingUser && team.traderIds.includes(existingUser.id)) {
@@ -678,7 +707,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       where: {
         teamId_email: {
           teamId,
-          email: traderEmail,
+          email: normalizedTraderEmail,
         }
       },
       update: {
@@ -688,7 +717,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
       },
       create: {
         teamId,
-        email: traderEmail,
+        email: normalizedTraderEmail,
         invitedBy: teamUserId,
         status: 'PENDING',
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -708,7 +737,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
     // Render email
     const emailHtml = await render(
       TeamInvitationEmail({
-        email: traderEmail,
+        email: normalizedTraderEmail,
         teamName: team.name,
         inviterName: inviter?.email?.split('@')[0] || 'trader',
         inviterEmail: inviter?.email || 'trader@example.com',
@@ -725,7 +754,7 @@ export async function sendTeamInvitation(teamId: string, traderEmail: string) {
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { error: emailError } = await resend.emails.send({
       from: 'Qunt Edge Team <team@eu.updates.qunt-edge.vercel.app>',
-      to: traderEmail,
+      to: normalizedTraderEmail,
       subject: existingUser?.language === 'fr'
         ? `Invitation à rejoindre ${team.name} sur Qunt Edge`
         : `Invitation to join ${team.name} on Qunt Edge`,
@@ -944,8 +973,10 @@ export async function getTeamInvitationDetails(invitationToken: string) {
       throw new Error('Invitation already accepted')
     }
 
+    const normalizedUserEmail = user.email?.toLowerCase()
+
     // Check if the invitation is for the current user's email
-    if (invitation.email !== user.email) {
+    if (!normalizedUserEmail || invitation.email.toLowerCase() !== normalizedUserEmail) {
       throw new Error('This invitation was sent to a different email address')
     }
 
@@ -1004,8 +1035,10 @@ export async function joinTeamByInvitation(invitationToken: string) {
       throw new Error('Invitation already accepted')
     }
 
+    const normalizedUserEmail = user.email?.toLowerCase()
+
     // Check if the invitation is for the current user's email
-    if (invitation.email !== user.email) {
+    if (!normalizedUserEmail || invitation.email.toLowerCase() !== normalizedUserEmail) {
       throw new Error('This invitation was sent to a different email address')
     }
 

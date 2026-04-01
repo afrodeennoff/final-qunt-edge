@@ -43,24 +43,26 @@ function isAdminDataUnavailableError(error: unknown): boolean {
 }
 
 export async function getUserStats() {
-  await assertAdminAccess()
+  const admin = await assertAdminAccess()
+  console.warn(`[AdminStats] User stats requested by ${admin.email}`)
+
   let supabase: ReturnType<typeof getSupabaseAdminClient> | null = null
 
   try {
     supabase = getSupabaseAdminClient()
   } catch (error) {
-    console.warn('[AdminStats] Supabase admin client unavailable:', error)
-    return {
-      totalUsers: 0,
-      dailyData: [],
-      allUsers: [],
-    }
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(
+      `Supabase admin client initialization failed: ${message}. ` +
+      `Ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set.`
+    )
   }
 
   let allUsers: User[] = []
   let page = 1
   const perPage = 1000
   let hasMore = true
+  let lastError: Error | null = null
 
   while (hasMore) {
     const { data, error } = await supabase.auth.admin.listUsers({
@@ -69,7 +71,8 @@ export async function getUserStats() {
     })
 
     if (error) {
-      console.error('Error fetching users:', error)
+      lastError = error
+      console.error(`[AdminStats] Error fetching users (page ${page}):`, error)
       break
     }
 
@@ -79,6 +82,11 @@ export async function getUserStats() {
       allUsers = [...allUsers, ...data.users]
       page++
     }
+  }
+
+  // Warn if we hit an error mid-pagination
+  if (lastError && allUsers.length > 0) {
+    console.warn(`[AdminStats] Returning partial user data (${allUsers.length} users) due to pagination error`)
   }
 
   // Group users by day of creation
@@ -108,21 +116,44 @@ export async function getUserStats() {
 }
 
 export async function getFreeUsers() {
-  await assertAdminAccess()
+  const admin = await assertAdminAccess()
+  console.warn(`[AdminStats] Free users requested by ${admin.email}`)
+
   let supabase: ReturnType<typeof getSupabaseAdminClient> | null = null
 
   try {
     supabase = getSupabaseAdminClient()
   } catch (error) {
-    console.warn('[AdminStats] Supabase admin client unavailable:', error)
-    return []
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(
+      `Supabase admin client initialization failed: ${message}. ` +
+      `Ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set.`
+    )
   }
 
-  // Get all trades with their user IDs
-  let trades: PrismaTrade[] = []
+  // Get all trades with their user IDs (paginated to avoid timeout on large datasets)
+  const trades: PrismaTrade[] = []
 
   try {
-    trades = await prisma.trade.findMany({})
+    let cursor: string | undefined = undefined
+    const batchSize = 1000
+    const maxBatches = 10 // Safety limit: 10,000 trades max
+
+    for (let i = 0; i < maxBatches; i++) {
+      const batch: Array<{ id: string; userId: string }> = await prisma.trade.findMany({
+        take: batchSize,
+        ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+        select: {
+          id: true,
+          userId: true
+        }
+      })
+
+      trades.push(...batch as PrismaTrade[])
+
+      if (batch.length < batchSize) break // No more data
+      cursor = batch[batch.length - 1].id
+    }
   } catch (error) {
     if (!isAdminDataUnavailableError(error)) {
       throw error
@@ -158,6 +189,7 @@ export async function getFreeUsers() {
   let page = 1
   const perPage = 1000
   let hasMore = true
+  let lastError: Error | null = null
 
   while (hasMore) {
     const { data, error } = await supabase.auth.admin.listUsers({
@@ -166,7 +198,8 @@ export async function getFreeUsers() {
     })
 
     if (error) {
-      console.error('Error fetching users:', error)
+      lastError = error
+      console.error(`[AdminStats] Error fetching users (page ${page}):`, error)
       break
     }
 
@@ -176,6 +209,11 @@ export async function getFreeUsers() {
       allUsers = [...allUsers, ...data.users]
       page++
     }
+  }
+
+  // Warn if we hit an error mid-pagination
+  if (lastError && allUsers.length > 0) {
+    console.warn(`[AdminStats] Returning partial user data (${allUsers.length} users) due to pagination error`)
   }
 
   // Map free users to their emails and trades
@@ -192,7 +230,8 @@ export async function getFreeUsers() {
 }
 
 export async function getNewsletterStats() {
-  await assertAdminAccess()
+  const admin = await assertAdminAccess()
+  console.warn(`[AdminStats] Newsletter stats requested by ${admin.email}`)
 
   try {
     const [totalSubscribers, activeSubscribers, inactiveSubscribers] = await Promise.all([

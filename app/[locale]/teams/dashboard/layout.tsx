@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
+import { createClient } from "@/server/auth"
+import { redirect } from "next/navigation"
 import { TeamsSidebar } from '../components/teams-sidebar'
 
 export const metadata: Metadata = {
@@ -10,7 +12,24 @@ export const metadata: Metadata = {
     },
 }
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+    const { locale } = await params
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user?.id) {
+      const safeLocale = locale || "en"
+      const nextPath = encodeURIComponent(`/${safeLocale}/teams/dashboard`)
+      redirect(`/${safeLocale}/authentication?next=${nextPath}`)
+    }
 
     // If no teams found, show the default dashboard with a message
     return (
