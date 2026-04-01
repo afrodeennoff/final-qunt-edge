@@ -133,7 +133,7 @@ export async function revalidateCache(tags: string[]) {
   )
 }
 
-async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
+export async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
   updateTag(`trades-${userId}`)
   await Promise.all([
     invalidateCacheNamespace('ai-trades'),
@@ -864,6 +864,52 @@ export async function updateTradeImage(
     return trades
   } catch (error) {
     logger.error('[trades] Failed to update trade image', { error })
+    throw error
+  }
+}
+
+export async function groupTradesAction(tradeIds: string[]): Promise<void> {
+  const userId = await getDatabaseUserId()
+  if (!userId) throw new Error('Unauthorized')
+  if (!tradeIds.length) return
+
+  const groupId = tradeIds[0]
+
+  try {
+    const owned = await prisma.trade.count({
+      where: { id: { in: tradeIds }, userId },
+    })
+    if (owned !== tradeIds.length) throw new Error('Forbidden')
+
+    await prisma.trade.updateMany({
+      where: { id: { in: tradeIds }, userId },
+      data: { groupId },
+    })
+    await invalidateTradeRelatedCaches(userId)
+  } catch (error) {
+    logger.error('[groupTrades] Error', { error })
+    throw error
+  }
+}
+
+export async function ungroupTradesAction(tradeIds: string[]): Promise<void> {
+  const userId = await getDatabaseUserId()
+  if (!userId) throw new Error('Unauthorized')
+  if (!tradeIds.length) return
+
+  try {
+    const owned = await prisma.trade.count({
+      where: { id: { in: tradeIds }, userId },
+    })
+    if (owned !== tradeIds.length) throw new Error('Forbidden')
+
+    await prisma.trade.updateMany({
+      where: { id: { in: tradeIds }, userId },
+      data: { groupId: null },
+    })
+    await invalidateTradeRelatedCaches(userId)
+  } catch (error) {
+    logger.error('[ungroupTrades] Error', { error })
     throw error
   }
 }

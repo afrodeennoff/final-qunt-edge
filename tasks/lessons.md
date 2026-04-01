@@ -4,6 +4,70 @@
 
 ---
 
+## NEW (2026-04-01): Optional live-schema columns must be probed before Prisma queries touch them on production paths
+
+### Mistake
+Production dashboard code queried `User.showOnLeaderboard` directly even though the live database schema did not include that column, which caused runtime Prisma failures on trader-profile requests.
+
+### Root Cause
+Code assumed the deployed schema always matched the application schema and did not guard optional or newly introduced columns on live production read/write paths.
+
+### Rule
+If a production-critical Prisma path depends on a column that may be absent on the live database, probe column availability first and degrade explicitly. Do not issue direct Prisma reads/writes against an unverified optional column.
+
+### Example
+```ts
+// GOOD
+if (!(await isPrismaColumnAvailable('User', 'showOnLeaderboard'))) {
+  return { showOnLeaderboard: false }
+}
+```
+
+---
+
+## NEW (2026-04-01): Production deploys must come from a clean verified tree when the main worktree is dirty
+
+### Mistake
+The repository had many unrelated local modifications, so deploying straight from the main worktree would have mixed verified fixes with unverified changes.
+
+### Root Cause
+Deployment flow did not account for dirty-worktree isolation when hotfixing a production issue.
+
+### Rule
+When production needs a targeted fix and the main worktree has unrelated changes, create a clean worktree from the intended base, apply only the verified patch subset there, verify again, and deploy from that clean tree.
+
+### Example
+```bash
+git worktree add --detach /tmp/qunt-edge-deploy HEAD
+# apply only verified hotfix files
+cd /tmp/qunt-edge-deploy
+npm run build
+vercel deploy --prod
+```
+
+---
+
+## NEW (2026-04-01): Legacy localized `/[locale]/import` must stay a page redirect in this repo
+
+### Mistake
+The legacy localized import redirect existed as `app/[locale]/(authentication)/import/route.ts`, which broke this repo’s build/page-data collection path during deployment.
+
+### Root Cause
+The redirect was implemented as a route handler even though this path behaves as a localized document route in the App Router build.
+
+### Rule
+Keep the legacy localized `/{locale}/import` redirect as a `page.tsx` that calls `redirect()`. Do not reintroduce it as a `route.ts` handler in this repo unless the build path is reverified end to end.
+
+### Example
+```tsx
+export default async function LegacyImportRedirect({ params }: Props) {
+  const { locale } = await params
+  redirect(`/${locale}/authentication`)
+}
+```
+
+---
+
 ## NEW (2026-04-01): UUID dedup requires true randomness, not timestamps
 
 ### Mistake

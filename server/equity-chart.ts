@@ -64,6 +64,376 @@ const EMPTY_EQUITY_CHART_RESULT: EquityChartResult = {
   dateRange: { startDate: '', endDate: '' }
 }
 
+// Cached helper for equity chart data
+async function getEquityChartDataCached(userId: string, params: EquityChartParams) {
+  'use cache'
+  cacheLife(EQUITY_CHART_CACHE_LIFETIME)
+  cacheTag(`equity-chart-${userId}`)
+
+  // Use a Prisma transaction to fetch all needed data in a single DB roundtrip
+  const transactionResult = await withPrismaSchemaMismatchFallback(
+    'dashboard:equity-chart:transaction',
+    async () => {
+      const [trades, accounts, groups] = await prisma.$transaction([
+        prisma.trade.findMany({
+          where: { userId },
+          orderBy: { entryDate: 'desc' },
+          select: {
+            id: true,
+            accountNumber: true,
+            entryDate: true,
+            pnl: true,
+            commission: true,
+            instrument: true,
+            timeInPosition: true,
+            tags: true,
+          },
+        }),
+        prisma.account.findMany({
+          where: { userId },
+          select: {
+            number: true,
+            groupId: true,
+            resetDate: true,
+            startingBalance: true,
+            payouts: {
+              select: {
+                date: true,
+                amount: true,
+                status: true,
+              },
+            },
+          },
+        }),
+        prisma.group.findMany({
+          where: { userId },
+          select: {
+            id: true,
+            name: true,
+          },
+        }),
+      ])
+
+      return { trades, accounts, groups }
+    },
+    { trades: [], accounts: [], groups: [] }
+  )
+
+  const { trades, accounts, groups } = transactionResult
+
+  // Get hidden accounts for filtering
+  const hiddenGroup = groups.find(g => g.name === "Hidden Accounts")
+  const hiddenAccountNumbers = accounts
+    .filter(a => a.groupId === hiddenGroup?.id)
+    .map(a => a.number)
+
+  // Apply all filters in a single pass (same logic as DataProvider)
+  const filteredTrades = trades.filter((trade) => {
+    // Skip trades from hidden accounts
+    if (hiddenAccountNumbers.includes(trade.accountNumber)) {
+      return false
+    }
+
+    // Skip trades from not accountNumbers (filter is set)
+    if (params.accountNumbers.length > 0 && !params.accountNumbers.includes(trade.accountNumber)) {
+      return false
+    }
+
+    // Include all trades if showIndividual is false
+    if (!params.showIndividual) {
+      return true
+    }
+
+    let entryDate: Date
+    try {
+      entryDate = new Date(formatInTimeZone(
+        new Date(trade.entryDate),
+        params.timezone,
+        'yyyy-MM-dd HH:mm:ssXXX'
+      ))
+    } catch (error) {
+      console.warn(`[getEquityChartDataAction] Date formatting failed for trade ${trade.id}, using raw date`, error);
+      entryDate = new Date(trade.entryDate);
+    }
+
+    if (!isValid(entryDate)) return false
+
+    // Instrument filter
+    if (params.instruments.length > 0 && !params.instruments.includes(trade.instrument)) {
+      return false
+    }
+
+    // Account filter
+    if (params.accountNumbers.length > 0 && !params.accountNumbers.includes(trade.accountNumber)) {
+      return false
+    }
+
+    // Date range filter
+    if (params.dateRange?.from || params.dateRange?.to) {
+      // Filter from date (keep all trades from this date forward)
+      if (params.dateRange?.from) {
+        const fromDate = startOfDay(new Date(params.dateRange.from))
+        if (entryDate < fromDate) {
+          return false
+        }
+      }
+
+      // Filter to date (keep all trades up to this date)
+      if (params.dateRange?.to) {
+        const toDate = endOfDay(new Date(params.dateRange.to))
+        if (entryDate > toDate) {
+          return false
+        }
+      }
+    }
+
+    // PnL range filter
+    if ((params.pnlRange.min !== undefined && Number(trade.pnl) < params.pnlRange.min) ||
+      (params.pnlRange.max !== undefined && Number(trade.pnl) > params.pnlRange.max)) {
+      return false
+    }
+
+    // Time range filter
+    if (params.timeRange.range && getTimeRangeKey(Number(trade.timeInPosition)) !== params.timeRange.range) {
+      return false
+    }
+
+    // Weekday filter
+    if (params.weekdayFilter?.days && params.weekdayFilter.days.length > 0) {
+      const dayOfWeek = entryDate.getDay()
+      if (!params.weekdayFilter.days.includes(dayOfWeek)) {
+        return false
+      }
+    }
+
+    // Hour filter
+    if (params.hourFilter?.hour !== null) {
+      const hour = entryDate.getHours()
+      if (hour !== params.hourFilter.hour) {
+        return false
+      }
+    }
+
+    // Tag filter
+    if (params.tagFilter.tags.length > 0) {
+      if (!trade.tags.some(tag => params.tagFilter.tags.includes(tag))) {
+        return false
+      }
+    }
+
+    return true
+  }).sort((a, b) => new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime())
+
+  if (!filteredTrades.length) {
+    return EMPTY_EQUITY_CHART_RESULT
+  }
+
+  // Get unique account numbers from filtered trades (for selector)
+  const allAccountNumbers = Array.from(new Set(filteredTrades.map(trade => trade.accountNumber)))
+
+  // Respect selection for chart data, but keep full list for the selector
+  const hasAccountSelection = params.selectedAccounts.length > 0
+  const chartAccountNumbers = hasAccountSelection
+    ? allAccountNumbers.filter(acc => params.selectedAccounts.includes(acc))
+    : allAccountNumbers
+
+  const limitedAccountNumbers = params.showIndividual
+    ? chartAccountNumbers.slice(0, params.maxAccounts)
+    : chartAccountNumbers
+
+  // Create account map for quick lookup
+  const accountMap = new Map(accounts.map(acc => [acc.number, acc]))
+
+  // Filter trades based on reset dates and selected accounts
+  const finalFilteredTrades = filteredTrades.filter(trade => {
+    const isWhitelistedAccount = limitedAccountNumbers.includes(trade.accountNumber)
+
+    if (!isWhitelistedAccount) {
+      return false
+    }
+
+    const account = accountMap.get(trade.accountNumber)
+    if (!account) return true // Include if account not found
+
+    // Filter based on reset date if it exists
+    if (account.resetDate) {
+      return new Date(trade.entryDate) >= new Date(account.resetDate)
+    }
+
+    return true
+  })
+
+  if (!finalFilteredTrades.length) {
+    return {
+      chartData: [],
+      accountNumbers: allAccountNumbers,
+      dateRange: { startDate: '', endDate: '' }
+    }
+  }
+
+  // Calculate date boundaries using only the trades that will be displayed
+  const dates = finalFilteredTrades.map(t => formatInTimeZone(new Date(t.entryDate), params.timezone, 'yyyy-MM-dd'))
+  const startDate = dates.reduce((min, date) => date < min ? date : min)
+  const endDate = dates.reduce((max, date) => date > max ? date : max)
+
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  end.setDate(end.getDate() + 1)
+
+  const allDates = eachDayOfInterval({ start, end })
+
+  // Data sampling for very large datasets
+  const datesToProcess = params.dataSampling === 'sample' && allDates.length > 100
+    ? allDates.filter((_, index) => index % 2 === 0) // Sample every other point
+    : allDates
+
+  // Pre-process trades by date for faster lookup
+  const tradesMap = new Map<string, typeof finalFilteredTrades>()
+
+  finalFilteredTrades.forEach(trade => {
+    const dateKey = formatInTimeZone(new Date(trade.entryDate), params.timezone, 'yyyy-MM-dd')
+    if (!tradesMap.has(dateKey)) {
+      tradesMap.set(dateKey, [])
+    }
+    tradesMap.get(dateKey)!.push(trade)
+  })
+
+  // Create combined events array with trades, payouts, and resets
+  const allEvents: ChartEvent[] = []
+
+  // Add trades
+  finalFilteredTrades.forEach(trade => {
+    allEvents.push({
+      date: new Date(trade.entryDate),
+      amount: Number(trade.pnl) - Number(trade.commission || 0),
+      isPayout: false,
+      isReset: false,
+      accountNumber: trade.accountNumber
+    })
+  })
+
+  // Add payouts and resets
+  limitedAccountNumbers.forEach(accountNumber => {
+    const account = accountMap.get(accountNumber)
+    if (!account) return
+
+    // Add payouts
+    account.payouts?.forEach((payout) => {
+      allEvents.push({
+        date: new Date(payout.date),
+        amount: ['PENDING', 'VALIDATED', 'PAID'].includes(payout.status) ? -Number(payout.amount) : 0,
+        isPayout: true,
+        isReset: false,
+        payoutStatus: payout.status,
+        accountNumber: accountNumber
+      })
+    })
+
+    // Add reset if exists
+    if (account.resetDate) {
+      allEvents.push({
+        date: new Date(account.resetDate),
+        amount: 0, // Reset doesn't change balance directly
+        isPayout: false,
+        isReset: true,
+        accountNumber: accountNumber
+      })
+    }
+  })
+
+  // Sort events by date
+  allEvents.sort((a, b) => a.date.getTime() - b.date.getTime())
+
+  // Use arrays instead of Maps for better performance with small datasets
+  const accountEquities: Record<string, number> = {}
+  const accountFirstActivity: Record<string, string | null> = {}
+
+  limitedAccountNumbers.forEach(acc => {
+    const account = accountMap.get(acc)
+    const startingBalance = account?.startingBalance ? Number(account.startingBalance) : 0
+    accountEquities[acc] = startingBalance
+    accountFirstActivity[acc] = null
+  })
+
+  const chartData: ChartDataPoint[] = []
+
+  datesToProcess.forEach(date => {
+    const dateKey = formatInTimeZone(date, params.timezone, 'yyyy-MM-dd')
+    const totalTradesForThisDate = tradesMap.get(dateKey) || []
+
+    let totalEquity = 0
+    const point: ChartDataPoint = {
+      date: dateKey,
+      equity: 0
+    }
+
+    if (params.showIndividual) {
+      limitedAccountNumbers.forEach(acc => {
+        point[`equity_${acc}`] = undefined
+        point[`payout_${acc}`] = false
+        point[`reset_${acc}`] = false
+        point[`payoutStatus_${acc}`] = ''
+        point[`payoutAmount_${acc}`] = 0
+      })
+    }
+
+    // Process events for this date
+    const dateEvents = allEvents.filter(event =>
+      formatInTimeZone(event.date, params.timezone, 'yyyy-MM-dd') === dateKey
+    )
+
+    // Process each account
+    for (const accountNumber of limitedAccountNumbers) {
+      if (hasAccountSelection && !params.selectedAccounts.includes(accountNumber)) continue
+
+      const accountEvents = dateEvents.filter(event => event.accountNumber === accountNumber)
+
+      // Process account events
+      accountEvents.forEach(event => {
+        if (event.isReset) {
+          accountEquities[accountNumber] = 0
+          point[`reset_${accountNumber}`] = true
+          if (!accountFirstActivity[accountNumber]) {
+            accountFirstActivity[accountNumber] = dateKey
+          }
+        } else {
+          accountEquities[accountNumber] += event.amount
+          if (!accountFirstActivity[accountNumber]) {
+            accountFirstActivity[accountNumber] = dateKey
+          }
+
+          if (event.isPayout) {
+            point[`payout_${accountNumber}`] = true
+            point[`payoutStatus_${accountNumber}`] = event.payoutStatus || ''
+            point[`payoutAmount_${accountNumber}`] = -event.amount
+          }
+        }
+      })
+
+      if (params.showIndividual) {
+        if (accountFirstActivity[accountNumber] && accountFirstActivity[accountNumber] <= dateKey) {
+          point[`equity_${accountNumber}`] = accountEquities[accountNumber]
+        } else {
+          point[`equity_${accountNumber}`] = undefined
+        }
+      }
+      totalEquity += accountEquities[accountNumber]
+    }
+
+    if (!params.showIndividual) {
+      point.equity = totalEquity
+    }
+
+    chartData.push(point)
+  })
+
+  return {
+    chartData,
+    accountNumbers: allAccountNumbers,
+    dateRange: { startDate, endDate }
+  }
+}
+
 export async function getEquityChartDataAction(params: EquityChartParams): Promise<EquityChartResult> {
   // Validate timezone and fallback to UTC if needed
   try {
@@ -74,401 +444,16 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
   }
 
   const userId = await getDatabaseUserId()
+  if (!userId) return EMPTY_EQUITY_CHART_RESULT
 
   try {
-    // Use a Prisma transaction to fetch all needed data in a single DB roundtrip
-    const transactionResult = await withPrismaSchemaMismatchFallback(
-      'dashboard:equity-chart:transaction',
-      async () => {
-        const [trades, accounts, groups] = await prisma.$transaction([
-          prisma.trade.findMany({
-            where: { userId },
-            orderBy: { entryDate: 'desc' },
-            select: {
-              id: true,
-              accountNumber: true,
-              entryDate: true,
-              pnl: true,
-              commission: true,
-              instrument: true,
-              timeInPosition: true,
-              tags: true,
-            },
-          }),
-          prisma.account.findMany({
-            where: { userId },
-            select: {
-              number: true,
-              groupId: true,
-              resetDate: true,
-              startingBalance: true,
-              payouts: {
-                select: {
-                  date: true,
-                  amount: true,
-                  status: true,
-                },
-              },
-            },
-          }),
-          prisma.group.findMany({
-            where: { userId },
-            select: {
-              id: true,
-              name: true,
-            },
-          }),
-        ])
-
-        return { trades, accounts, groups }
-      },
-      { trades: [], accounts: [], groups: [] }
-    )
-    const { trades, accounts, groups } = transactionResult
-
-    // Get hidden accounts for filtering
-    const hiddenGroup = groups.find(g => g.name === "Hidden Accounts")
-    const hiddenAccountNumbers = accounts
-      .filter(a => a.groupId === hiddenGroup?.id)
-      .map(a => a.number)
-
-    // Apply all filters in a single pass (same logic as DataProvider)
-    const filteredTrades = trades.filter((trade) => {
-      // Skip trades from hidden accounts
-      if (hiddenAccountNumbers.includes(trade.accountNumber)) {
-        return false
-      }
-
-      // Skip trades from not accountNumbers (filter is set)
-      if (params.accountNumbers.length > 0 && !params.accountNumbers.includes(trade.accountNumber)) {
-        return false
-      }
-
-      // Include all trades if  showIndividual is false
-      if (!params.showIndividual) {
-        return true
-      }
-
-      // Validate entry date
-
-      let entryDate: Date
-      try {
-        entryDate = new Date(formatInTimeZone(
-          new Date(trade.entryDate),
-          params.timezone,
-          'yyyy-MM-dd HH:mm:ssXXX'
-        ))
-      } catch (error) {
-        console.warn(`[getEquityChartDataAction] Date formatting failed for trade ${trade.id}, using raw date`, error);
-        entryDate = new Date(trade.entryDate);
-      }
-
-      if (!isValid(entryDate)) return false
-
-      // Instrument filter
-      if (params.instruments.length > 0 && !params.instruments.includes(trade.instrument)) {
-        return false
-      }
-
-      // Account filter
-      if (params.accountNumbers.length > 0 && !params.accountNumbers.includes(trade.accountNumber)) {
-        return false
-      }
-
-      // Date range filter
-      if (params.dateRange?.from || params.dateRange?.to) {
-        const tradeDate = startOfDay(entryDate)
-
-        // Filter from date (keep all trades from this date forward)
-        if (params.dateRange?.from) {
-          const fromDate = startOfDay(new Date(params.dateRange.from))
-          if (entryDate < fromDate) {
-            return false
-          }
-        }
-
-        // Filter to date (keep all trades up to this date)
-        if (params.dateRange?.to) {
-          const toDate = endOfDay(new Date(params.dateRange.to))
-          if (entryDate > toDate) {
-            return false
-          }
-        }
-
-        // If both are set and it's a single day, ensure exact match
-        if (params.dateRange?.from && params.dateRange?.to) {
-          const fromDate = startOfDay(new Date(params.dateRange.from))
-          const toDate = endOfDay(new Date(params.dateRange.to))
-          if (fromDate.getTime() === startOfDay(toDate).getTime()) {
-            // Single day selection - already handled above, but ensure exact match
-            if (tradeDate.getTime() !== fromDate.getTime()) {
-              return false
-            }
-          }
-        }
-      }
-
-      // PnL range filter
-      if ((params.pnlRange.min !== undefined && Number(trade.pnl) < params.pnlRange.min) ||
-        (params.pnlRange.max !== undefined && Number(trade.pnl) > params.pnlRange.max)) {
-        return false
-      }
-
-      // Time range filter
-      if (params.timeRange.range && getTimeRangeKey(Number(trade.timeInPosition)) !== params.timeRange.range) {
-        return false
-      }
-
-      // Weekday filter
-      if (params.weekdayFilter?.days && params.weekdayFilter.days.length > 0) {
-        const dayOfWeek = entryDate.getDay()
-        if (!params.weekdayFilter.days.includes(dayOfWeek)) {
-          return false
-        }
-      }
-
-      // Hour filter
-      if (params.hourFilter?.hour !== null) {
-        const hour = entryDate.getHours()
-        if (hour !== params.hourFilter.hour) {
-          return false
-        }
-      }
-
-      // Tag filter
-      if (params.tagFilter.tags.length > 0) {
-        if (!trade.tags.some(tag => params.tagFilter.tags.includes(tag))) {
-          return false
-        }
-      }
-
-      return true
-    }).sort((a, b) => new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime())
-
-    if (!filteredTrades.length) {
-      return EMPTY_EQUITY_CHART_RESULT
-    }
-
-    // Get unique account numbers from filtered trades (for selector)
-    const allAccountNumbers = Array.from(new Set(filteredTrades.map(trade => trade.accountNumber)))
-
-    // Respect selection for chart data, but keep full list for the selector
-    const hasAccountSelection = params.selectedAccounts.length > 0
-    const chartAccountNumbers = hasAccountSelection
-      ? allAccountNumbers.filter(acc => params.selectedAccounts.includes(acc))
-      : allAccountNumbers
-
-    const limitedAccountNumbers = params.showIndividual
-      ? chartAccountNumbers.slice(0, params.maxAccounts)
-      : chartAccountNumbers
-
-    // Create account map for quick lookup
-    const accountMap = new Map(accounts.map(acc => [acc.number, acc]))
-
-    // Filter trades based on reset dates and selected accounts
-    const finalFilteredTrades = filteredTrades.filter(trade => {
-      const isWhitelistedAccount = limitedAccountNumbers.includes(trade.accountNumber)
-
-      if (!isWhitelistedAccount) {
-        return false
-      }
-
-      const account = accountMap.get(trade.accountNumber)
-      if (!account) return true // Include if account not found
-
-      // Filter based on reset date if it exists
-      if (account.resetDate) {
-        return new Date(trade.entryDate) >= new Date(account.resetDate)
-      }
-
-      return true
-    })
-
-    if (!finalFilteredTrades.length) {
-      return {
-        chartData: [],
-        accountNumbers: allAccountNumbers,
-        dateRange: { startDate: '', endDate: '' }
-      }
-    }
-
-    // Calculate date boundaries using only the trades that will be displayed
-    const dates = finalFilteredTrades.map(t => formatInTimeZone(new Date(t.entryDate), params.timezone, 'yyyy-MM-dd'))
-    const startDate = dates.reduce((min, date) => date < min ? date : min)
-    const endDate = dates.reduce((max, date) => date > max ? date : max)
-
-    const start = new Date(startDate)
-    const end = new Date(endDate)
-    end.setDate(end.getDate() + 1)
-
-    const allDates = eachDayOfInterval({ start, end })
-
-    // Data sampling for very large datasets
-    const datesToProcess = params.dataSampling === 'sample' && allDates.length > 100
-      ? allDates.filter((_, index) => index % 2 === 0) // Sample every other point
-      : allDates
-
-    // Pre-process trades by date for faster lookup
-    const tradesMap = new Map<string, typeof finalFilteredTrades>()
-
-    finalFilteredTrades.forEach(trade => {
-      const dateKey = formatInTimeZone(new Date(trade.entryDate), params.timezone, 'yyyy-MM-dd')
-      if (!tradesMap.has(dateKey)) {
-        tradesMap.set(dateKey, [])
-      }
-      tradesMap.get(dateKey)!.push(trade)
-    })
-
-    // Create combined events array with trades, payouts, and resets
-    const allEvents: ChartEvent[] = []
-
-    // Add trades
-    finalFilteredTrades.forEach(trade => {
-      allEvents.push({
-        date: new Date(trade.entryDate),
-        amount: Number(trade.pnl) - Number(trade.commission || 0),
-        isPayout: false,
-        isReset: false,
-        accountNumber: trade.accountNumber
-      })
-    })
-
-    // Add payouts and resets
-    limitedAccountNumbers.forEach(accountNumber => {
-      const account = accountMap.get(accountNumber)
-      if (!account) return
-
-      // Add payouts
-      account.payouts?.forEach((payout) => {
-        allEvents.push({
-          date: new Date(payout.date),
-          amount: ['PENDING', 'VALIDATED', 'PAID'].includes(payout.status) ? -Number(payout.amount) : 0,
-          isPayout: true,
-          isReset: false,
-          payoutStatus: payout.status,
-          accountNumber: accountNumber
-        })
-      })
-
-      // Add reset if exists
-      if (account.resetDate) {
-        allEvents.push({
-          date: new Date(account.resetDate),
-          amount: 0, // Reset doesn't change balance directly
-          isPayout: false,
-          isReset: true,
-          accountNumber: accountNumber
-        })
-      }
-    })
-
-    // Sort events by date
-    allEvents.sort((a, b) => a.date.getTime() - b.date.getTime())
-
-    // Use arrays instead of Maps for better performance with small datasets
-    const accountEquities: Record<string, number> = {}
-    const accountStartingBalances: Record<string, number> = {}
-    const accountFirstActivity: Record<string, string | null> = {}
-
-    limitedAccountNumbers.forEach(acc => {
-      const account = accountMap.get(acc)
-      const startingBalance = account?.startingBalance ? Number(account.startingBalance) : 0
-      accountEquities[acc] = startingBalance
-      accountStartingBalances[acc] = startingBalance
-      accountFirstActivity[acc] = null
-    })
-
-    const chartData: ChartDataPoint[] = []
-
-    datesToProcess.forEach(date => {
-      const dateKey = formatInTimeZone(date, params.timezone, 'yyyy-MM-dd')
-      const relevantTrades = tradesMap.get(dateKey) || []
-
-      let totalEquity = 0
-      const point: ChartDataPoint = {
-        date: dateKey,
-        equity: 0
-      }
-
-      if (params.showIndividual) {
-        limitedAccountNumbers.forEach(acc => {
-          point[`equity_${acc}`] = undefined
-          point[`payout_${acc}`] = false
-          point[`reset_${acc}`] = false
-          point[`payoutStatus_${acc}`] = ''
-          point[`payoutAmount_${acc}`] = 0
-        })
-      }
-
-      // Process events for this date
-      const dateEvents = allEvents.filter(event =>
-        formatInTimeZone(event.date, params.timezone, 'yyyy-MM-dd') === dateKey
-      )
-
-      // Process each account
-      for (const accountNumber of limitedAccountNumbers) {
-        if (hasAccountSelection && !params.selectedAccounts.includes(accountNumber)) continue
-
-        const account = accountMap.get(accountNumber)
-        const accountEvents = dateEvents.filter(event => event.accountNumber === accountNumber)
-
-        // Process account events
-        accountEvents.forEach(event => {
-          if (event.isReset) {
-            // Reset the balance to 0
-            accountEquities[accountNumber] = 0
-            point[`reset_${accountNumber}`] = true
-            // Mark first activity if not already set
-            if (!accountFirstActivity[accountNumber]) {
-              accountFirstActivity[accountNumber] = dateKey
-            }
-          } else {
-            // Add the event amount to equity
-            accountEquities[accountNumber] += event.amount
-
-            // Mark first activity if not already set
-            if (!accountFirstActivity[accountNumber]) {
-              accountFirstActivity[accountNumber] = dateKey
-            }
-
-            if (event.isPayout) {
-              point[`payout_${accountNumber}`] = true
-              point[`payoutStatus_${accountNumber}`] = event.payoutStatus || ''
-              point[`payoutAmount_${accountNumber}`] = -event.amount
-            }
-          }
-        })
-
-        if (params.showIndividual) {
-          // Only show equity if account has had activity
-          if (accountFirstActivity[accountNumber] && accountFirstActivity[accountNumber] <= dateKey) {
-            point[`equity_${accountNumber}`] = accountEquities[accountNumber]
-          } else {
-            // Set to undefined to not show the line
-            point[`equity_${accountNumber}`] = undefined
-          }
-        }
-        totalEquity += accountEquities[accountNumber]
-      }
-
-      if (!params.showIndividual) {
-        point.equity = totalEquity
-      }
-
-      chartData.push(point)
-    })
-
-    return {
-      chartData,
-      accountNumbers: allAccountNumbers,
-      dateRange: { startDate, endDate }
-    }
-
+    return await getEquityChartDataCached(userId, params)
   } catch (error) {
-    console.error('[getEquityChartData] Error:', error)
+    console.error('[getEquityChartDataAction] Error:', error)
     return EMPTY_EQUITY_CHART_RESULT
   }
 }
+
 
 // Helper function for time range filtering (copied from utils)
 function getTimeRangeKey(timeInPosition: number): string {

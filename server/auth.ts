@@ -755,6 +755,9 @@ export async function getUserId(): Promise<string> {
   return user.id
 }
 
+// Hot-path cache for resolved user IDs to avoid repetitive DB lookups
+const userIdCache = new Map<string, string>()
+
 /**
  * Resolve the database user primary key (`User.id`) from an auth/middleware id.
  * Most relational tables (`Account`, `Trade`, `Tag`, `Mood`, etc.) reference `User.id`.
@@ -762,6 +765,10 @@ export async function getUserId(): Promise<string> {
 export async function getDatabaseUserId(): Promise<string> {
   const user = await requireAuthenticatedUser()
   const rawUserId = user.id
+
+  // Check in-memory cache first
+  const cachedId = userIdCache.get(rawUserId)
+  if (cachedId) return cachedId
 
   const byId = await prisma.user.findUnique({
     where: { id: rawUserId },
@@ -791,11 +798,16 @@ export async function getDatabaseUserId(): Promise<string> {
       '[getDatabaseUserId] Divergent auth mapping detected; using auth_user_id row',
       { rawUserId, resolvedUserId: byAuthId.id }
     )
+    userIdCache.set(rawUserId, byAuthId.id)
     return byAuthId.id
   }
 
-  if (byId?.id) return byId.id
-  if (byAuthId?.id) return byAuthId.id
+  const finalId = byId?.id || byAuthId?.id
+  if (finalId) {
+    userIdCache.set(rawUserId, finalId)
+    return finalId
+  }
+
 
   let resolvedEmail = user.email?.trim().toLowerCase() || ""
 

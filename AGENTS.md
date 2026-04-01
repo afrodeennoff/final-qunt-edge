@@ -110,11 +110,14 @@ npm run analyze:bundle         # Bundle analysis
 - **Static manifest build race**: `.next/static/**/_ssgManifest.js` ENOENT during finalization is transient in this workspace; keep robust build retries enabled for this artifact.
 - **Package manager policy**: Keep `vercel.json` install/build commands npm-only unless the user explicitly requests and approves a package-manager change.
 - **Serverless Prisma pool**: Runtime Prisma pool defaults must stay small on Vercel (`PG_POOL_MIN=0`, low `PG_POOL_MAX` cap). Do not use long-lived server pool defaults in serverless functions.
+- **Production runtime pool floor**: In `lib/prisma.ts`, production runtime must floor stale low `PG_POOL_MAX` overrides back to the intended serverless-safe runtime default. Do not let an old env override pin live runtime below the safe floor.
 - **i18n library**: `next-international` (NOT next-intl). Locales: en, fr.
 - **Middleware**: `proxy.ts` (NOT middleware.ts). Handles route classification, auth, CSP, CORS, i18n redirect.
+- **Legacy localized import redirect**: Keep `app/[locale]/(authentication)/import` as a `page.tsx` redirect using `next/navigation`. Do not reintroduce a `route.ts` redirect there unless the full build/deploy path is reverified.
 - **Firm detail routing**: In `app/[locale]/(landing)/firm/[slug]/page.tsx`, alias slug redirects must only target canonical slugs that resolve in DB; otherwise redirect to `/${locale}/propfirms`.
 - **V2 components**: Re-exports of V1 (`CardV2 = Card`). Use V2 imports for new work: `import { CardV2 as Card } from '@/components/ui/v2'`.
 - **Auth sync Prisma reads**: In `ensureUserInDatabase` and similar auth-critical user flows, never use implicit full-row Prisma reads. Always use explicit minimal `select` and add schema-mismatch fallback for `auth_user_id` lookups.
+- **Live-schema optional columns**: For production-facing Prisma reads/writes that touch optional or newly introduced columns (for example trader-profile leaderboard visibility), probe column availability first and degrade explicitly when the live DB schema does not have that column.
 - **User id resolver precedence**: Keep auth-id resolution consistent across `server/auth.ts`, `server/trades.ts`, and `server/team-membership.ts` — when `id` and `auth_user_id` diverge, prefer the `auth_user_id` mapped `User.id` row first.
 - **Teams protected routes**: `/teams/dashboard`, `/teams/manage`, and `/teams/join` are auth-protected surfaces. Keep both proxy classification (`PRIVATE_DOCUMENT_PATH_PREFIXES`) and route/layout guards aligned so unauthenticated requests redirect to locale auth with `next`.
 - **Team invitation join policy**: `joinTeam(teamId)` must require a valid pending, unexpired invitation for the authenticated email and accept that invitation atomically with membership creation.

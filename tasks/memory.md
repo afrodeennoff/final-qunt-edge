@@ -1,5 +1,44 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Vercel-log-driven dashboard production repair + clean production deploy (2026-04-01)
+
+### Accomplishments
+- Rechecked the active production deployment using live Vercel logs instead of relying on local assumptions.
+- Confirmed three real production issues before editing code:
+  - repeated `[DB Pool] High connection usage` warnings on `/en/dashboard` and `/en/dashboard/billing`,
+  - repeated `Invalid prisma.user.findUnique()` failures on `/en/dashboard/trader-profile` caused by a live-schema column mismatch,
+  - one stale Server Action 404 from an older deployment.
+- Fixed schema-mismatch-safe leaderboard visibility handling in `server/user-profile.ts`:
+  - added a real column-availability probe via `isPrismaColumnAvailable`,
+  - `getLeaderboardVisibility()` now returns an explicit disabled state when the column is absent,
+  - `toggleLeaderboardVisibility()` now fails explicitly instead of issuing a broken Prisma query.
+- Fixed production runtime pool sizing in `lib/prisma.ts`:
+  - kept build-time pool behavior small,
+  - added a production runtime floor so stale low `PG_POOL_MAX` overrides cannot pin live serverless runtime below the intended safe default.
+- Fixed the legacy localized import redirect path:
+  - removed `app/[locale]/(authentication)/import/route.ts`,
+  - added `app/[locale]/(authentication)/import/page.tsx` with a locale-aware `redirect()` call.
+- Avoided deploying from the dirty main worktree:
+  - created isolated worktree `/tmp/qunt-edge-deploy` from `HEAD`,
+  - copied only the verified fix subset into that tree,
+  - rebuilt there with npm,
+  - removed accidental `.env` symlinks after the first deploy attempt failed with `ENOENT`,
+  - redeployed successfully.
+- Promoted the verified production deployment:
+  - deployment `dpl_FXjubU6kdJ9WHmfZ9pGwgQU5t82A` is `Ready`,
+  - aliases include `https://qunt-edge.vercel.app`.
+
+### Verification
+- `npm run lint -- lib/prisma.ts server/user-profile.ts 'app/[locale]/(authentication)/import/page.tsx'` passes.
+- `npm run typecheck` passes.
+- `npm run build` passes locally via npm after the import redirect change (`171/171` static pages).
+- `vercel inspect dpl_FXjubU6kdJ9WHmfZ9pGwgQU5t82A` reports `status ● Ready`.
+- `curl https://qunt-edge.vercel.app/en/import` returns the App Router redirect payload containing `NEXT_REDIRECT;replace;/en/authentication;307;`.
+- Post-cutover Vercel runtime-log queries for the old signatures returned no matching sampled lines on the new deployment during the checked window.
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: Backend data integrity fixes — 17 issues across 9 files (2026-04-01)
 
 ### Accomplishments

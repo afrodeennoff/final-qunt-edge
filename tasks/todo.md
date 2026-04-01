@@ -1,3 +1,35 @@
+## Task: Vercel-log-driven dashboard production repair + clean production deploy (2026-04-01)
+
+- [x] Pull live Vercel runtime/build logs for the active production deployment instead of assuming the failure mode.
+- [x] Fix trader-profile backend reads to tolerate a missing `User.showOnLeaderboard` column on the live database.
+- [x] Prevent stale low `PG_POOL_MAX` production overrides from pinning runtime Prisma at an undersized pool.
+- [x] Replace the legacy `app/[locale]/(authentication)/import/route.ts` redirect with a localized `page.tsx` redirect so Next build/page-data collection succeeds.
+- [x] Rebuild locally with npm, deploy only the verified fix subset from a clean worktree, and confirm the production deployment reaches `Ready`.
+- [x] Recheck the live alias and the old log signatures after cutover.
+
+Verification:
+- Active production runtime logs before the fix showed:
+  - repeated `[DB Pool] High connection usage` warnings on `/en/dashboard` and `/en/dashboard/billing`,
+  - repeated `Invalid prisma.user.findUnique()` failures on `/en/dashboard/trader-profile` because the live DB schema did not have the queried leaderboard-visibility column,
+  - one stale Server Action 404 from an older deployment.
+- `npm run lint -- lib/prisma.ts server/user-profile.ts 'app/[locale]/(authentication)/import/page.tsx'` passes.
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm locally after replacing the legacy import route with a page redirect.
+- Clean isolated deploy tree `/tmp/qunt-edge-deploy` built successfully with npm and deployed to Vercel.
+- Production deployment `dpl_FXjubU6kdJ9WHmfZ9pGwgQU5t82A` is `Ready` and serves the `qunt-edge.vercel.app` alias.
+
+## Review
+- Root causes addressed:
+  - live production was still hitting a Prisma read path that assumed `User.showOnLeaderboard` existed even when the deployed database schema did not.
+  - production runtime pool sizing was honoring a stale low `PG_POOL_MAX` override, which kept runtime functions at an undersized connection pool and amplified dashboard pressure warnings.
+  - the legacy localized `/[locale]/import` redirect was implemented as a route handler that broke page-data collection in this repo’s build/deploy path.
+  - the main worktree contained unrelated dirty changes, so deploying directly from it would have mixed unverified changes into production.
+- Fix outcome:
+  - `server/user-profile.ts` now probes column availability before issuing leaderboard-visibility reads/writes and degrades explicitly when that column is absent.
+  - `lib/prisma.ts` now floors production runtime pool sizing back to the serverless-safe default even if a stale lower override is present.
+  - `app/[locale]/(authentication)/import/page.tsx` now owns the localized redirect, and the old `route.ts` redirect was removed.
+  - production was deployed from a clean isolated worktree containing only the verified fix subset, and the alias now points to ready deployment `dpl_FXjubU6kdJ9WHmfZ9pGwgQU5t82A`.
+
 ## Task: Backend data integrity fixes — 17 issues across 9 files (2026-04-01)
 
 - [x] Investigate backend data integrity issues via 3 parallel explore agents

@@ -153,23 +153,13 @@ export function UnifiedSidebar({
     normalizedPathname === '/dashboard' ||
     normalizedPathname.startsWith('/dashboard/') ||
     normalizedPathname === '/teams' ||
-    normalizedPathname.startsWith('/teams/')
-  const hasDashboardOrTeamsNavItems = useMemo(
-    () =>
-      items.some((item) => {
-        if (!item.href) return false
-        const [hrefPath] = item.href.split('?')
-        const normalizedHrefPath = stripLocalePrefix(hrefPath).replace(/\/$/, '') || '/'
-        return (
-          normalizedHrefPath === '/dashboard' ||
-          normalizedHrefPath.startsWith('/dashboard/') ||
-          normalizedHrefPath === '/teams' ||
-          normalizedHrefPath.startsWith('/teams/')
-        )
-      }),
-    [items]
-  )
-  const shouldRenderSidebar = isSidebarEnabledRoute || hasDashboardOrTeamsNavItems
+    normalizedPathname.startsWith('/teams/') ||
+    normalizedPathname === '/admin' ||
+    normalizedPathname.startsWith('/admin/')
+
+  const hasItems = items && items.length > 0
+  const shouldRenderSidebar = isSidebarEnabledRoute || hasItems
+
   const autoExpandedDesktopRef = useRef(false)
 
   useEffect(() => {
@@ -218,7 +208,10 @@ export function UnifiedSidebar({
 
   useEffect(() => {
     clearNavigationFallbackTimer()
+    setPendingHref(null)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRouteKey])
+
 
   useEffect(() => {
     return () => {
