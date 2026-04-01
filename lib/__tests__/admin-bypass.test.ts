@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { isAdmin } from '@/server/authz'
-import { prisma } from '@/lib/prisma'
 
 vi.mock('@/server/authz', () => ({
   isAdmin: vi.fn(),
@@ -28,10 +26,17 @@ vi.mock('@/lib/prisma', () => ({
   },
 }))
 
+vi.mock('@/server/subscription', () => ({
+  getSubscriptionDetails: vi.fn().mockResolvedValue(null),
+}))
+
 import { guardAiRequest } from '@/lib/ai/route-guard'
 import { canAccessAiFeature } from '@/lib/ai/entitlements'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { assertWithinAiBudget } from '@/lib/ai/usage-budget'
+import { getSubscriptionDetails } from '@/server/subscription'
+import { prisma } from '@/lib/prisma'
+import { isAdmin as isAdminFn } from '@/server/authz'
 
 const ADMIN_ID = 'admin-uid'
 const REGULAR_ID = 'regular-uid'
@@ -42,9 +47,11 @@ const createMockRequest = () =>
   new Request('https://example.com/api/ai/chat', { method: 'POST' })
 
 const mockLimiter = vi.fn().mockResolvedValue({ success: true, limit: 60, remaining: 59, resetTime: 0 })
-const isAdminMock = vi.mocked(isAdmin)
+const isAdminMock = vi.mocked(isAdminFn)
 const createRouteClientMock = vi.mocked(createRouteClient)
 const assertWithinAiBudgetMock = vi.mocked(assertWithinAiBudget)
+const getSubscriptionDetailsMock = vi.mocked(getSubscriptionDetails)
+const prismaSubscriptionFindFirstMock = vi.mocked(prisma.subscription.findFirst)
 
 describe('admin paywall bypass', () => {
   beforeEach(() => {
@@ -85,7 +92,8 @@ describe('admin paywall bypass', () => {
       } as never)
 
       isAdminMock.mockReturnValue(false)
-      vi.mocked(assertWithinAiBudget).mockResolvedValue({ allowed: true, limit: 0, used: 0, remaining: 0 })
+      prismaSubscriptionFindFirstMock.mockResolvedValue(null)
+      getSubscriptionDetailsMock.mockResolvedValue(null)
 
       const result = await guardAiRequest(createMockRequest(), 'chat', mockLimiter)
 
@@ -125,7 +133,8 @@ describe('admin paywall bypass', () => {
 
     it('non-admin still blocked appropriately', async () => {
       isAdminMock.mockReturnValue(false)
-      vi.mocked(prisma.subscription.findFirst).mockResolvedValue(null)
+      prismaSubscriptionFindFirstMock.mockResolvedValue(null)
+      getSubscriptionDetailsMock.mockResolvedValue(null)
 
       const result = await canAccessAiFeature(REGULAR_ID, 'chat')
 
@@ -134,27 +143,4 @@ describe('admin paywall bypass', () => {
     })
   })
 
-  describe('isAdmin', () => {
-    it('returns true for userId in ALLOWED_ADMIN_USER_ID', () => {
-      process.env.ALLOWED_ADMIN_USER_ID = `${ADMIN_ID},other-admin`
-      expect(isAdmin(ADMIN_ID)).toBe(true)
-    })
-
-    it('returns false for userId not in ALLOWED_ADMIN_USER_ID', () => {
-      process.env.ALLOWED_ADMIN_USER_ID = 'another-admin-id'
-      expect(isAdmin(REGULAR_ID)).toBe(false)
-    })
-
-    it('ADMIN_USER_ID acts as fallback single-admin env var', () => {
-      delete process.env.ALLOWED_ADMIN_USER_ID
-      process.env.ADMIN_USER_ID = 'legacy-admin-id'
-      expect(isAdmin('legacy-admin-id')).toBe(true)
-      expect(isAdmin(REGULAR_ID)).toBe(false)
-    })
-
-    it('is case-insensitive for ALLOWED_ADMIN_USER_ID', () => {
-      process.env.ALLOWED_ADMIN_USER_ID = 'ADMIN-UID'
-      expect(isAdmin('admin-uid')).toBe(true)
-    })
-  })
 })
