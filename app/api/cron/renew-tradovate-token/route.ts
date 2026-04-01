@@ -177,7 +177,7 @@ async function performDailySync(synchronization: SynchronizationRecord): Promise
     const { getTradovateTrades } = await import('@/app/[locale]/dashboard/components/import/tradovate/actions');
 
     // Fetch and save trades
-    const result = await getTradovateTrades(synchronization.token, { userId: synchronization.userId });
+    const result = await getTradovateTrades(synchronization.token, { userId: synchronization.userId, accountId: synchronization.accountId });
 
     if (result.error) {
       // Security: Log only error message, not full result which may contain sensitive data

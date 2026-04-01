@@ -497,7 +497,7 @@ export async function savePayoutAction(payout: Payout) {
           },
         })
       } else {
-        // Create new payout and increment payoutCount atomically
+        // Create new payout
         payoutResult = await tx.payout.create({
           data: {
             id: payout.id || crypto.randomUUID(),
@@ -512,17 +512,14 @@ export async function savePayoutAction(payout: Payout) {
             }
           },
         })
-
-        // Increment payoutCount on the account atomically
-        await tx.account.update({
-          where: { id: account.id },
-          data: {
-            payoutCount: {
-              increment: 1
-            }
-          }
-        })
       }
+
+      // Reconcile payoutCount with actual count to prevent drift
+      const actualCount = await tx.payout.count({ where: { accountId: account.id } })
+      await tx.account.update({
+        where: { id: account.id },
+        data: { payoutCount: actualCount }
+      })
 
       return payoutResult
     })
@@ -746,13 +743,20 @@ export async function calculateAccountBalanceAction(
  */
 function calculateAccountBalance(
   account: Account,
-  trades: Array<{ accountNumber: string; pnl: Prisma.Decimal; commission: Prisma.Decimal }>
+  trades: Array<{ accountNumber: string; pnl: Prisma.Decimal; commission: Prisma.Decimal }>,
+  payouts?: Array<{ amount: Prisma.Decimal; status: string }>
 ): number {
   let balance = new Prisma.Decimal(account.startingBalance || 0);
 
-  // Calculate PnL from trades
   const tradesPnL = trades.reduce((sum, trade) => sum.plus(trade.pnl.minus(trade.commission)), new Prisma.Decimal(0));
   balance = balance.plus(tradesPnL);
+
+  if (payouts) {
+    const paidPayouts = payouts
+      .filter(p => p.status === 'PAID' || p.status === 'VALIDATED')
+      .reduce((sum, p) => sum.plus(p.amount), new Prisma.Decimal(0));
+    balance = balance.minus(paidPayouts);
+  }
 
   return balance.toNumber();
 }

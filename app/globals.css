@@ -633,15 +633,15 @@
 
   .precision-panel {
     position: relative;
-    border: 1px solid hsl(var(--precision-panel-line) / 0.72);
-    background: hsl(var(--precision-panel));
-    box-shadow: inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.05);
+    border: 1px solid hsl(var(--precision-panel-line) / 0.26);
+    background: hsl(var(--precision-panel) / 0.9);
+    box-shadow: inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.025);
   }
 
   .precision-panel-elevated {
-    border: 1px solid hsl(var(--precision-panel-line) / 0.82);
-    background: hsl(var(--precision-panel-elevated));
-    box-shadow: inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.06), 0 14px 24px -24px rgb(0 0 0 / 0.85);
+    border: 1px solid hsl(var(--precision-panel-line) / 0.34);
+    background: hsl(var(--precision-panel-elevated) / 0.94);
+    box-shadow: inset 0 0 0 1px hsl(var(--precision-panel-inner) / 0.03), 0 14px 24px -24px rgb(0 0 0 / 0.72);
   }
 
   .liquid-panel {

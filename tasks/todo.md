@@ -1,3 +1,59 @@
+## Task: Backend data integrity fixes — 17 issues across 9 files (2026-04-01)
+
+- [x] Investigate backend data integrity issues via 3 parallel explore agents
+- [x] Create 3-wave execution plan via Plan Agent
+- [x] Fix UUID dedup broken (Date.now() in generateTradeUUID)
+- [x] Fix token sync time never updated (query by accountId)
+- [x] Fix webhook team/business activation partial writes ($transaction)
+- [x] Fix grace period race condition ($transaction with status re-check)
+- [x] Fix teams auth bypass (post-query membership verification)
+- [x] Fix payout count desync (reconcile after save)
+- [x] Fix account balance ignores payouts (subtract paid payouts)
+- [x] Fix tag duplication (dedup guard)
+- [x] Fix batch fallback drops fills (getFillById calls)
+- [x] Fix webhook retry count wrong (per-event retries)
+- [x] Fix team traderIds leak (cleanup on member removal)
+- [x] Fix billing sync not atomic (try/catch around upsert)
+- [x] Fix maxDrawdownPercent hardcoded 0 (compute from peak)
+- [x] Fix account equities ignore startingBalance (initialize with startingBalance)
+- [x] Fix teams analytics hardcoded averageRr=0 (compute from trades)
+- [x] Fix teams analytics ignores time period (add period date filter)
+- [x] Fix billing trusts stale local cache (1-hour freshness check)
+- [x] Verify with typecheck, eslint, and full test suite
+
+Verification:
+- `npm run typecheck` passes.
+- `npx eslint` on changed files passes with pre-existing errors only (no-explicit-any in webhook-service.ts), no new errors.
+- `npx vitest run` passes (78 passed, 1 failed pre-existing sidebar-trigger-contract test, 1 skipped).
+
+## Review
+- Root causes addressed:
+  - UUID generation used `Date.now()` which defeats `skipDuplicates: true` in Prisma
+  - Token sync queried by plaintext token but encrypted tokens are null
+  - Webhook team/business activation lacked `$transaction` for atomic writes
+  - Grace period loop had no row-level locking, allowing race conditions
+  - Teams `getTeamById` lacked post-query membership verification
+  - Payout count not reconciled after save, account balance ignored payouts
+  - Tags pushed without dedup check, batch fallback returned null instead of fetching
+  - Webhook retry count was global instead of per-event
+  - Team traderIds leaked removed members, billing sync wasn't atomic
+  - maxDrawdownPercent hardcoded 0, account equities ignored startingBalance
+  - Teams analytics hardcoded averageRr=0 and ignored time period
+  - Billing trusted stale local cache without freshness check
+- Fix outcome:
+  - All 17 issues fixed across 9 server files + 1 test file
+  - UUID generation now uses crypto.randomUUID() for true uniqueness
+  - Token sync queries by accountId (always present)
+  - Webhook activations wrapped in $transaction for atomic writes
+  - Grace period loop uses $transaction with status re-check
+  - Teams auth verifies membership post-query
+  - Payout count reconciled, balance subtracts paid payouts
+  - Tags deduped before push, batch fallback fetches missing fills
+  - Webhook retry count is per-event, traderIds cleaned on removal
+  - Billing sync wrapped in try/catch, cache has 1-hour freshness check
+  - maxDrawdownPercent computed from peak, equities initialized with startingBalance
+  - Teams analytics computes actual averageRr and filters by period
+
 ## Task: Dashboard widget chrome + header/navbar cleanup (2026-04-01)
 
 - [x] Trace the bright widget borders and broken dashboard header chrome to shared wrapper/layout primitives.

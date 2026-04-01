@@ -21,7 +21,7 @@ export async function getTradovateSynchronizations() {
   return getTradovateSynchronizationsInternal()
 }
 
-export async function getTradovateTrades(accessToken: string, options?: { userId?: string }) {
+export async function getTradovateTrades(accessToken: string, options?: { userId?: string; accountId?: string }) {
   return getTradovateTradesInternal(accessToken, options)
 }
 

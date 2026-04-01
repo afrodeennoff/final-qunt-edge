@@ -269,29 +269,24 @@ export function UnifiedSidebar({
     <Sidebar
       collapsible="icon"
       className={cn(
-        'pointer-events-auto text-sidebar-foreground backdrop-blur-xl relative overflow-hidden before:absolute before:inset-0 before:-z-10 before:opacity-40 before:bg-[linear-gradient(135deg,oklch(0.55_0.22_264)_0%,transparent_50%,oklch(0.188_0.0868_261.9799)_100%)] before:animate-mesh-gradient',
+        'pointer-events-auto relative overflow-hidden bg-sidebar/96 text-sidebar-foreground backdrop-blur-xl',
         styleVariant === 'minimal'
-          ? 'border-r-0'
-          : 'border-r border-sidebar-border/40'
+          ? 'border-r border-sidebar-border/8'
+          : 'border-r border-sidebar-border/30'
       )}
     >
-      <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-xl z-0" />
-      <SidebarHeader className="h-16 border-b border-sidebar-border/30 px-2 py-0 relative z-10 bg-gradient-to-b from-sidebar-accent/20 to-transparent">
+      <div className="absolute inset-0 z-0 bg-sidebar/96" />
+      <SidebarHeader className="relative z-10 h-16 border-b border-sidebar-border/12 px-2 py-0">
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex items-center gap-2">
-              <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 transition-all duration-300 hover:bg-sidebar-accent/40 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/80 text-sidebar-primary-foreground shadow-lg shadow-sidebar-primary/20 relative">
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-sidebar-primary-foreground/20 to-transparent" />
-                  <Logo className="size-5 fill-current relative z-10" />
+              <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 rounded-xl transition-all duration-200 hover:bg-sidebar-accent/15">
+                <div className="flex aspect-square size-9 items-center justify-center rounded-xl border border-sidebar-border/12 bg-sidebar-accent/15 text-sidebar-foreground">
+                  <Logo className="size-5 fill-current" />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none px-1.5 overflow-hidden relative z-10">
-                  <div className="flex items-center gap-1.5">
-                    <span className="truncate font-bold tracking-tight text-sm uppercase bg-gradient-to-r from-sidebar-foreground to-sidebar-foreground/70 bg-clip-text text-transparent">Qunt Edge</span>
-                    <div className="size-1.5 rounded-full bg-sidebar-primary/60 animate-glow-pulse" />
-                  </div>
-                  <span className="truncate text-[9px] text-sidebar-foreground/50 uppercase tracking-[0.2em] font-medium">Workspace</span>
+                <div className="flex flex-col gap-0.5 overflow-hidden px-1.5 leading-none">
+                  <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">Qunt Edge</span>
+                  <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/40">Workspace</span>
                 </div>
               </SidebarMenuButton>
             </div>
@@ -299,10 +294,10 @@ export function UnifiedSidebar({
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="relative z-10 px-1.5 scrollbar-thin scrollbar-thumb-sidebar-border/40 scrollbar-track-transparent hover:scrollbar-thumb-sidebar-border/60 scrollbar-w-[3px] overflow-y-auto">
+      <SidebarContent className="relative z-10 overflow-y-auto px-1.5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
         {groupedItems.order.map((groupName, groupIndex) => (
-          <SidebarGroup key={groupName} className="px-2 py-2.5">
-            <SidebarGroupLabel className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-sidebar-foreground/40 pl-1" id={`sidebar-group-${groupIndex}`}>
+          <SidebarGroup key={groupName} className="px-2 py-2">
+            <SidebarGroupLabel className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 pl-1" id={`sidebar-group-${groupIndex}`}>
               {groupName}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -319,7 +314,7 @@ export function UnifiedSidebar({
                   return (
                     <SidebarMenuItem key={`${groupName}-${item.label}-${index}`} className="relative">
                       {itemIsActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-gradient-to-b from-sidebar-primary via-sidebar-primary to-sidebar-primary rounded-r-full animate-slide-indicator shadow-[0_0_8px_oklch(0.55_0.22_264/_0.5)]" />
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-7 bg-sidebar-primary rounded-r-full shadow-[0_0_10px_oklch(0.55_0.22_264/_0.4)]" />
                       )}
                       {href ? (
                         <SidebarMenuButton
@@ -330,8 +325,8 @@ export function UnifiedSidebar({
                           className={cn(
                             "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
                             itemIsActive
-                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/30 shadow-[0_0_20px_oklch(var(--sidebar-ring)/0.1)]"
-                              : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
+                              ? "bg-sidebar-accent/30 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/15"
+                              : "text-sidebar-foreground/78 hover:bg-sidebar-accent/18 hover:text-sidebar-foreground"
                           )}
                         >
                           <Link
@@ -377,8 +372,8 @@ export function UnifiedSidebar({
                           className={cn(
                             "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
                             itemIsActive
-                              ? "bg-sidebar-accent/50 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/30 shadow-[0_0_20px_oklch(var(--sidebar-ring)/0.1)]"
-                              : "hover:bg-sidebar-accent/30 text-sidebar-foreground/80 hover:text-sidebar-foreground"
+                              ? "bg-sidebar-accent/30 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/15"
+                              : "text-sidebar-foreground/78 hover:bg-sidebar-accent/18 hover:text-sidebar-foreground"
                           )}
                         >
                           <div className={cn(
@@ -411,31 +406,31 @@ export function UnifiedSidebar({
         ))}
 
         {actions && (
-          <SidebarGroup className="mt-auto pt-4 pb-2 border-t border-sidebar-border/30 px-2">
+          <SidebarGroup className="mt-auto border-t border-sidebar-border/15 px-2 pb-2 pt-4">
             <SidebarMenu>{actions}</SidebarMenu>
           </SidebarGroup>
         )}
       </SidebarContent>
 
-      <SidebarFooter className="relative z-20 border-t border-sidebar-border/30 p-2 bg-gradient-to-t from-sidebar-accent/15 to-transparent">
+      <SidebarFooter className="relative z-20 border-t border-sidebar-border/15 p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent/50 data-[state=open]:text-sidebar-accent-foreground w-full transition-all duration-200 hover:bg-sidebar-accent/30 group/user relative overflow-hidden"
+                  className="group/user relative w-full overflow-hidden transition-all duration-200 hover:bg-sidebar-accent/18 data-[state=open]:bg-sidebar-accent/30 data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover/user:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10 flex items-center gap-2.5 w-full">
                     <div className="relative">
-                      <Avatar className="h-9 w-9 rounded-xl overflow-hidden border-2 border-sidebar-border/50 shadow-lg ring-2 ring-sidebar-primary/20 transition-all duration-300 group-hover/user:ring-sidebar-primary/40 group-hover/user:border-sidebar-primary/30">
+                      <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-sidebar-border/20 transition-all duration-200 group-hover/user:border-sidebar-border/35">
                         <AvatarImage src={user?.avatar_url} alt={displayName} />
                         <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="absolute -bottom-0.5 -right-0.5 size-3 bg-[oklch(0.55_0.15_166)] rounded-full border-2 border-sidebar animate-status-ring" />
+                      <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-success" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold text-sidebar-foreground">{displayName}</span>
@@ -506,7 +501,7 @@ export function UnifiedSidebar({
       </SidebarFooter>
       <SidebarRail />
       {styleVariant !== 'minimal' ? (
-        <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/20" />
+        <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/15" />
       ) : null}
     </Sidebar>
   ) : null

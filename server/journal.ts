@@ -157,55 +157,76 @@ export async function saveMood(
   }
 }
 
+async function _getMoodForDay(userId: string, date: string) {
+  // Convert date string to Date at midday UTC
+  const targetDate = new Date(date + 'T12:00:00Z')
+  const nextDay = new Date(targetDate)
+  nextDay.setUTCDate(nextDay.getUTCDate() + 1)
+
+  const mood = await prisma.mood.findFirst({
+    where: {
+      userId: userId,
+      day: {
+        gte: new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()),
+        lt: new Date(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate()),
+      },
+    },
+  })
+
+  return mood ? {
+    ...mood,
+    conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
+  } : null
+}
+
+async function _getMoodForDayCached(userId: string, date: string) {
+  'use cache'
+  cacheLife(JOURNAL_CACHE_LIFETIME)
+  cacheTag(`mood-${userId}`)
+  return _getMoodForDay(userId, date)
+}
+
 export async function getMoodForDay(date: string) {
   try {
     const userId = await getDatabaseUserId()
-
-    // Convert date string to Date at midday UTC
-    const targetDate = new Date(date + 'T12:00:00Z')
-    const nextDay = new Date(targetDate)
-    nextDay.setUTCDate(nextDay.getUTCDate() + 1)
-
-    const mood = await prisma.mood.findFirst({
-      where: {
-        userId: userId,
-        day: {
-          gte: new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()),
-          lt: new Date(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate()),
-        },
-      },
-    })
-
-    return mood ? {
-      ...mood,
-      conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
-    } : null
+    return _getMoodForDayCached(userId, date)
   } catch (error) {
     console.error('Error getting mood:', error)
     throw error
   }
 }
 
+async function _getMoodHistory(userId: string, fromDate?: Date, toDate?: Date): Promise<Mood[]> {
+  const moods = await prisma.mood.findMany({
+    where: {
+      userId: userId,
+      day: fromDate ? {
+        gte: fromDate,
+        lt: toDate ? toDate : undefined,
+      } : undefined,
+    },
+    orderBy: {
+      day: 'desc',
+    },
+  })
+
+  return moods.map(mood => ({
+    ...mood,
+    conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
+  }))
+}
+
+async function _getMoodHistoryCached(userId: string, fromDate?: Date, toDate?: Date): Promise<Mood[]> {
+  'use cache'
+  cacheLife(JOURNAL_CACHE_LIFETIME)
+  cacheTag(`mood-${userId}`)
+  return _getMoodHistory(userId, fromDate, toDate)
+}
+
 export async function getMoodHistory(fromDate?: Date, toDate?: Date): Promise<Mood[]> {
   const userId = await getDatabaseUserId()
   try {
-    const moods = await prisma.mood.findMany({
-      where: {
-        userId: userId,
-        day: fromDate ? {
-          gte: fromDate,
-          lt: toDate ? toDate : undefined,
-        } : undefined,
-      },
-      orderBy: {
-        day: 'desc',
-      },
-    })
-
-    return moods.map(mood => ({
-      ...mood,
-      conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
-    }))
+    return _getMoodHistoryCached(userId, fromDate, toDate)
   } catch (error) {
     console.error('Error getting mood history:', error)
     throw error

@@ -275,7 +275,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
       variant="outline"
       className={cn(
         variant === "navbar"
-          ? "h-9 w-9 rounded-xl p-0 justify-center"
+          ? "h-9 w-9 rounded-full border-v2-border/20 bg-v2-bg-base/60 p-0 justify-center text-v2-text-primary shadow-none hover:border-v2-border/35 hover:bg-v2-bg-hover"
           : "justify-start text-left font-normal",
         variant === "toolbar" && "h-10 rounded-full",
         className
@@ -325,8 +325,8 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
   // Trigger on desktop: real input that opens popover and controls search
   const DesktopTriggerInput = (
     <PopoverAnchor asChild>
-      <div className={cn("relative w-[400px]", className)}>
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none z-10" />
+      <div className={cn("relative w-[clamp(220px,28vw,340px)] max-w-full", className)}>
+        <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-v2-text-secondary" />
         <InputV2
           ref={inputRef}
           value={searchValue}
@@ -340,7 +340,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
           }}
           placeholder={t('filters.commandMenu.searchPlaceholder')}
           className={cn(
-            "pl-9 pr-20 w-full transition-all",
+            "w-full rounded-full border-v2-border/20 bg-v2-bg-base/60 pl-9 pr-20 text-v2-text-primary shadow-none transition-all hover:border-v2-border/35 hover:bg-v2-bg-hover focus-visible:ring-1 focus-visible:ring-v2-border/20",
             variant === "toolbar" && "h-10 rounded-full",
             isParsingDate && "opacity-50",
             isParsingDate && "border-primary ring-2 ring-primary ring-offset-2 animate-pulse"
@@ -418,7 +418,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
     <Command 
       ref={commandRef} 
       className={cn(
-        "rounded-lg border",
+        "rounded-2xl border border-v2-border/18 bg-v2-bg-surface/95 shadow-xl shadow-black/20",
         (isMobileDevice || isMobile) && "h-full"
       )} 
       shouldFilter={false}
@@ -467,7 +467,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
           )}
         </div>
       )}
-      <div className="px-3 pt-3 pb-2 border-b bg-muted/40">
+      <div className="border-b border-border/18 bg-v2-bg-base/55 px-3 pb-2 pt-3">
         <p className="text-xs font-medium text-muted-foreground mb-2">
           {t('filters.commandMenu.categories.title')}
         </p>

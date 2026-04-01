@@ -125,16 +125,15 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
     ref
   ) => {
     const config = SIZE_CONFIG[size]
-
-    if (isLoading) {
-      return <StatsCardSkeleton size={size} className={className} />
-    }
-
     const displayValue = React.useMemo(() => {
       if (typeof value !== "number") return value
       if (formatCurrency) return formatCurrencyValue(value, locale)
       return value.toLocaleString(locale === "fr" ? "fr-FR" : "en-US")
     }, [value, formatCurrency, locale])
+
+    if (isLoading) {
+      return <StatsCardSkeleton size={size} className={className} />
+    }
 
     const rawNumber = typeof value === "number" && !formatCurrency ? value : undefined
 
@@ -261,13 +260,18 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
     ref
   ) => {
     const config = SIZE_CONFIG[size]
+    const displayValue = React.useMemo(() => {
+      if (typeof value !== "number") return value
+      if (formatCurrency) return formatCurrencyValue(value, locale)
+      return value.toLocaleString(locale === "fr" ? "fr-FR" : "en-US")
+    }, [value, formatCurrency, locale])
 
     if (isLoading) {
       return (
         <CardV2
           className={cn(
             "relative overflow-hidden rounded-xl border",
-            "border-v2-border/28 bg-v2-bg-surface/90",
+            "border-v2-border/16 bg-v2-bg-surface/88",
             "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
             config.padding,
             className
@@ -281,12 +285,6 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
         </CardV2>
       )
     }
-
-    const displayValue = React.useMemo(() => {
-      if (typeof value !== "number") return value
-      if (formatCurrency) return formatCurrencyValue(value, locale)
-      return value.toLocaleString(locale === "fr" ? "fr-FR" : "en-US")
-    }, [value, formatCurrency, locale])
 
     const rawNumber = typeof value === "number" && !formatCurrency ? value : undefined
 
@@ -306,9 +304,9 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
         data-widget-shell="v2"
         className={cn(
           "group relative overflow-hidden rounded-xl border transition-all duration-[180ms]",
-          "border-v2-border/28 bg-v2-bg-surface/90",
+          "border-v2-border/16 bg-v2-bg-surface/88",
           "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
-          "hover:border-v2-border/38 hover:bg-v2-bg-surface/94",
+          "hover:border-v2-border/24 hover:bg-v2-bg-surface/92",
           glass && "bg-v2-bg-surface/60 backdrop-blur-md",
           !!onClick && "cursor-pointer hover:shadow-md",
           config.padding,

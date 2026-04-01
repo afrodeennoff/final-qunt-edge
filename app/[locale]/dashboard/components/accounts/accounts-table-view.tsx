@@ -388,7 +388,7 @@ function AccountsTableSection({
             <button
               type="button"
               onClick={handleDismissHint}
-              className="text-muted-foreground transition-colors hover:text-muted-foreground pointer-cursor"
+              className="text-muted-foreground transition-colors hover:text-muted-foreground cursor-pointer"
             >
               <XCircle className="h-4 w-4" />
               <span className="sr-only">{t("accounts.table.dismissHint")}</span>

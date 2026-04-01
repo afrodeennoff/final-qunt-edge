@@ -68,7 +68,7 @@ export function calculateRiskMetricsV1(trades: RiskTradeLike[]): RiskMetricsV1 {
       sortinoRatio: 0,
       calmarRatio: 0,
       maxDrawdown: 0,
-      maxDrawdownPercent: 0,
+    maxDrawdownPercent: 0,
       realizedPnl: 0,
       unrealizedPnl: 0,
       winningStreak: 0,
@@ -139,6 +139,8 @@ export function calculateRiskMetricsV1(trades: RiskTradeLike[]): RiskMetricsV1 {
   const years = durationInDays / 365.25
   const annualizedReturn = years > 0 ? totalReturn / years : totalReturn
   const maxDrawdownNumber = maxDrawdown.toNumber()
+  const peakNumber = peak.toNumber()
+  const maxDrawdownPercent = peakNumber > 0 ? (maxDrawdownNumber / peakNumber) * 100 : 0
   const calmarRatio = maxDrawdownNumber > 0 ? annualizedReturn / maxDrawdownNumber : 0
 
   const realizedPnl = toMoneyNumber(

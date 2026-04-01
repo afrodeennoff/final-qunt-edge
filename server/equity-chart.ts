@@ -5,6 +5,9 @@ import { prisma } from '@/lib/prisma'
 import { formatInTimeZone } from 'date-fns-tz'
 import { eachDayOfInterval, startOfDay, endOfDay, isValid } from 'date-fns'
 import { withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
+import { cacheLife, cacheTag } from 'next/cache'
+
+const EQUITY_CHART_CACHE_LIFETIME = { stale: 60, revalidate: 60, expire: 600 } as const
 
 // Types matching the component
 interface ChartDataPoint {
@@ -369,8 +372,9 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
 
     limitedAccountNumbers.forEach(acc => {
       const account = accountMap.get(acc)
-      accountEquities[acc] = 0
-      accountStartingBalances[acc] = account?.startingBalance ? Number(account.startingBalance) : 0
+      const startingBalance = account?.startingBalance ? Number(account.startingBalance) : 0
+      accountEquities[acc] = startingBalance
+      accountStartingBalances[acc] = startingBalance
       accountFirstActivity[acc] = null
     })
 

@@ -618,11 +618,11 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           <>
             <div className="mb-2 grid grid-cols-8 gap-1">
               {WEEKDAYS.map((day) => (
-                <div key={day} className="rounded-md border border-border/55 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+                <div key={day} className="rounded-md border border-border/18 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
                   {translateWeekday(t, day)}
                 </div>
               ))}
-              <div className="rounded-md border border-border/55 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+              <div className="rounded-md border border-border/18 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
                 {t('calendar.weekdays.weekly')}
               </div>
             </div>
@@ -648,7 +648,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                       className={cn(
                         "group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-all duration-200",
                         "hover:-translate-y-[1px] hover:shadow-md",
-                        !dayData && "bg-card/92 border-border/55",
+                        !dayData && "bg-card/86 border-border/18",
                         dayPnl > 0 && "bg-semantic-success-bg/10 border-semantic-success-border/30",
                         dayPnl < 0 && "bg-semantic-error-bg/10 border-semantic-error-border/30",
                         !isCurrentMonth && "opacity-45",
@@ -671,7 +671,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                       />
                       <div className="flex items-start justify-between gap-1">
                         <span className={cn(
-                          "min-w-[18px] rounded-md border border-border/55 bg-card/92 px-1 py-0.5 text-center text-[10px] font-semibold",
+                          "min-w-[18px] rounded-md border border-border/18 bg-card/86 px-1 py-0.5 text-center text-[10px] font-semibold",
                           isToday(date) && "text-primary font-semibold",
                           !isCurrentMonth && "opacity-60"
                         )}>
@@ -738,7 +738,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                         <button
                           type="button"
                           className={cn(
-                            "flex h-full cursor-pointer items-center justify-center rounded-lg border border-border/55 bg-card/92 px-1 transition-all",
+                            "flex h-full cursor-pointer items-center justify-center rounded-lg border border-border/18 bg-card/86 px-1 transition-all",
                             "hover:bg-secondary/50 hover:border-primary/40",
                             index === 6 && "rounded-tr-xl",
                             index === 41 && "rounded-br-xl"

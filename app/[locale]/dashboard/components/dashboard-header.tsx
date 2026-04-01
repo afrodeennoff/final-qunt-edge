@@ -60,7 +60,7 @@ export function DashboardHeader() {
             if (activeTab === 'table') return 'Trades';
             if (activeTab === 'accounts') return 'Accounts';
             if (activeTab === 'chart') return 'Chart the Future';
-            return 'Overview';
+            return 'Dashboard';
         }
         if (pathname.includes('strategies')) return 'Trade Desk';
         if (pathname.includes('reports')) return 'Analytics';
@@ -74,8 +74,8 @@ export function DashboardHeader() {
     };
 
     const title = getTitle();
-    const sectionLabel = isDashboardRoot ? "Workspace" : "Dashboard";
-    const showSectionLabel = !(isDashboardRoot && activeTab === 'accounts');
+    const sectionLabel = "Dashboard";
+    const showSectionLabel = !isDashboardRoot;
     const subtitle = isDashboardRoot
         ? (
             activeTab === 'table'
@@ -84,7 +84,7 @@ export function DashboardHeader() {
                     ? 'Track account growth, balances, and consistency in one place.'
                     : activeTab === 'chart'
                         ? 'Explore scenario planning and forward-looking projections.'
-                        : 'Customize your layout and monitor your most important metrics.'
+                        : 'Trading dashboard'
         )
         : 'Focus mode for analysis, execution, and daily workflow.';
     const hasActiveFilters =
@@ -105,48 +105,47 @@ export function DashboardHeader() {
             )}
             data-dashboard-header="true"
         >
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.05),transparent_20%,transparent_80%,hsl(var(--foreground)_/_0.05))]" />
-            <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6", isMobile ? "h-14" : "h-full")}>
-                <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2 sm:gap-3 pointer-events-auto">
-                    <SidebarTrigger className="h-10 w-10 rounded-full border border-transparent text-v2-text-muted transition-colors hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-8 md:w-8" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.02),transparent_25%,transparent_75%,hsl(var(--foreground)_/_0.02))]" />
+            <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6", isMobile ? "h-14" : "h-full")}>
+                <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 pointer-events-auto">
+                    <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-8 md:w-8 md:rounded-lg" />
                     <div className="flex min-w-0 items-center gap-3">
-                        <div className="mt-0.5 hidden h-7 w-px bg-v2-border/30 sm:block" />
+                        <div className="hidden h-7 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/40 to-v2-border/0 sm:block" />
                         <div className="min-w-0">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2.5">
                                 {showSectionLabel && (
                                     <span className={cn(
-                                        "hidden sm:inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
-                                        "border-v2-border/18 bg-v2-bg-surface/30 text-v2-text-muted",
+                                        "hidden sm:inline-flex rounded-lg border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
+                                        "border-v2-border/15 bg-v2-bg-surface/40 text-v2-text-muted",
                                         "backdrop-blur-sm"
                                     )}>
                                         {sectionLabel}
                                     </span>
                                 )}
-                                <h1 className="truncate text-[10px] font-bold tracking-[0.12em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.16em]">
+                                <h1 className="truncate text-[11px] font-bold tracking-[0.1em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.14em]">
                                     {title}
                                 </h1>
                             </div>
-                            <p className="hidden truncate pt-1 text-xs text-v2-text-secondary lg:block">{subtitle}</p>
+                            {(!isDashboardRoot || activeTab !== 'widgets') ? (
+                                <p className="hidden truncate pt-0.5 text-xs text-v2-text-secondary/80 xl:block">{subtitle}</p>
+                            ) : null}
                         </div>
                     </div>
                 </div>
 
                 <div className={cn(
-                    "flex shrink-0 items-center gap-1.5 sm:gap-2",
+                    "relative z-10 flex shrink-0 items-center gap-1.5 sm:gap-2 pointer-events-auto",
                     isMobile
-                        ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5 shadow-none"
+                        ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5"
                         : cn(
-                            "rounded-full border p-1 shadow-none",
-                            "border-v2-border/18 bg-v2-bg-surface/55 backdrop-blur-xl",
-                            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]"
+                            "rounded-full border p-1 backdrop-blur-xl",
+                            "border-v2-border/15 bg-v2-bg-surface/50",
+                            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02)]"
                         )
                 )}>
                     <div className={cn(
                         "flex shrink-0 items-center gap-1",
-                        isMobile ? "" : cn(
-                            "rounded-full bg-v2-bg-base/60 px-1 py-0.5 ring-1",
-                            "ring-v2-border/10"
-                        )
+                        isMobile ? "" : "rounded-full bg-v2-bg-base/50 px-1 py-0.5"
                     )}>
                         <FilterCommandMenu variant="navbar" />
 
@@ -155,21 +154,21 @@ export function DashboardHeader() {
                         {!isMobile && <DailySummaryModal />}
                     </div>
 
-                    <div className="mx-1 hidden h-6 w-px bg-v2-border/15 sm:block" />
+                    <div className="mx-0.5 hidden h-5 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/30 to-v2-border/0 sm:block" />
 
-                    <div className="hidden sm:flex items-center gap-2">
+                    <div className="hidden sm:flex items-center gap-1.5">
                         <ImportButton />
 
                         {!isPlusUser() && (
                             <Link href={billingHref}>
                                 <button className={cn(
-                                    "group flex h-8 items-center gap-2 rounded-full border px-4",
-                                    "text-[9px] font-bold uppercase tracking-[0.2em] text-v2-text-primary",
-                                    "border-v2-border/20 bg-v2-bg-base/65 transition-all duration-200",
-                                    "hover:bg-v2-accent/10 hover:border-v2-accent/35 hover:shadow-[var(--v2-glow-ambient)]",
-                                    "active:scale-95"
+                                    "group flex h-8 items-center gap-2 rounded-full border px-3.5",
+                                    "text-[9px] font-bold uppercase tracking-[0.18em] text-v2-text-primary",
+                                    "border-v2-accent/20 bg-v2-accent/8 transition-all duration-200",
+                                    "hover:bg-v2-accent/15 hover:border-v2-accent/30 hover:shadow-[var(--v2-glow-ambient)]",
+                                    "active:scale-[0.97]"
                                 )}>
-                                    <Sparkles className="h-3 w-3 animate-pulse text-v2-accent" />
+                                    <Sparkles className="h-3 w-3 text-v2-accent" />
                                     <span>UPGRADE</span>
                                 </button>
                             </Link>
@@ -187,29 +186,19 @@ export function DashboardHeader() {
             ) : null}
 
             {
-                isMobile ? (
-                    hasActiveFilters && (
-                        <div className="relative px-3 pb-3 pt-1">
-                            <div className={cn(
-                                "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
-                                "border-v2-border/20 bg-v2-bg-surface/45"
-                            )}>
-                                <ActiveFilterTags showAccountNumbers={true} />
-                            </div>
+                hasActiveFilters ? (
+                    <div className={cn(
+                        "relative px-3 pb-2.5 pt-1",
+                        !isMobile && "px-4 sm:px-6"
+                    )}>
+                        <div className={cn(
+                            "rounded-lg border px-2.5 py-1.5 backdrop-blur-sm transition-all duration-200",
+                            "border-v2-border/12 bg-v2-bg-surface/35"
+                        )}>
+                            <ActiveFilterTags showAccountNumbers={true} />
                         </div>
-                    )
-                ) : (
-                    hasActiveFilters && (
-                        <div className="relative px-4 pb-3 pt-1 sm:px-8">
-                            <div className={cn(
-                                "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
-                                "border-v2-border/20 bg-v2-bg-surface/45"
-                            )}>
-                                <ActiveFilterTags showAccountNumbers={true} />
-                            </div>
-                        </div>
-                    )
-                )
+                    </div>
+                ) : null
             }
         </header>
     );

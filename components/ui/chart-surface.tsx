@@ -121,12 +121,12 @@ export function ChartSurface({
       data-chart-surface="modern"
       className={cn(
         "relative flex h-full flex-col overflow-hidden rounded-xl border",
-        "border-[hsl(var(--border))_/_0.32]",
-        "bg-[hsl(var(--card))_/_0.9]",
+        "border-[hsl(var(--border))_/_0.18]",
+        "bg-[hsl(var(--card))_/_0.88]",
         "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]",
         "transition-all duration-[180ms] ease-out",
-        "hover:border-[hsl(var(--border))_/_0.4]",
-        "hover:bg-[hsl(var(--card))_/_0.94]",
+        "hover:border-[hsl(var(--border))_/_0.26]",
+        "hover:bg-[hsl(var(--card))_/_0.92]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         className
       )}
@@ -135,7 +135,7 @@ export function ChartSurface({
       {hasHeader && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-b border-border/35",
+            "flex shrink-0 items-center border-b border-border/18",
             isSmall ? "h-10 px-2.5" : "h-12 px-3.5",
             headerClassName
           )}
@@ -173,7 +173,7 @@ export function ChartSurface({
       {hasFooter && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-t border-border/35",
+            "flex shrink-0 items-center border-t border-border/18",
             isSmall ? "h-8 px-2.5" : "h-10 px-3.5",
             footerClassName
           )}

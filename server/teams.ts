@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { MemberRole, Prisma } from '@/prisma/generated/prisma'
 import { ensureTeamMembership } from '@/server/team-membership'
+import { cacheLife, cacheTag } from 'next/cache'
+
+const TEAMS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
 export async function createTeam(userId: string, name: string, organizationId?: string) {
   try {
@@ -31,28 +34,39 @@ export async function createTeam(userId: string, name: string, organizationId?: 
   }
 }
 
+async function _getTeamsByUser(userId: string) {
+  const teams = await prisma.team.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      members: {
+        include: {
+          user: true,
+        }
+      },
+      invitations: true,
+      teamSubscription: true,
+      analytics: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    }
+  })
+
+  return teams
+}
+
+async function _getTeamsByUserCached(userId: string) {
+  'use cache'
+  cacheLife(TEAMS_CACHE_LIFETIME)
+  cacheTag(`teams-${userId}`)
+  return _getTeamsByUser(userId)
+}
+
 export async function getTeamsByUser(userId: string) {
   try {
-    const teams = await prisma.team.findMany({
-      where: {
-        userId,
-      },
-      include: {
-        members: {
-          include: {
-            user: true,
-          }
-        },
-        invitations: true,
-        teamSubscription: true,
-        analytics: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      }
-    })
-
-    return teams
+    return _getTeamsByUserCached(userId)
   } catch (error) {
     console.error('Error fetching teams:', error)
     return []
@@ -86,6 +100,13 @@ export async function getTeamById(teamId: string, userId: string) {
     })
 
     if (!team) {
+      throw new Error('Team not found')
+    }
+
+    // Defensive post-query membership verification
+    const isOwner = team.userId === userId
+    const isMember = team.members.some(m => m.userId === userId)
+    if (!isOwner && !isMember) {
       throw new Error('Team not found')
     }
 
@@ -289,6 +310,13 @@ export async function removeMember(teamId: string, userId: string, requesterUser
       where: { id: member.id }
     })
 
+    await prisma.team.update({
+      where: { id: teamId },
+      data: {
+        traderIds: team.traderIds.filter(id => id !== userId)
+      }
+    })
+
     return { success: true }
   } catch (error) {
     console.error('Error removing member:', error)
@@ -358,12 +386,15 @@ export async function updateTeamAnalytics(
       return { success: true, analytics: null };
     }
 
-    // Use aggregation queries instead of loading all trades
+    const periodDays = period === 'daily' ? 1 : period === 'weekly' ? 7 : 30;
+    const periodStart = new Date();
+    periodStart.setDate(periodStart.getDate() - periodDays);
+
     const [tradeStats, bestMemberResult] = await Promise.all([
-      // Get trade statistics using aggregation
       prisma.trade.aggregate({
         where: {
-          userId: { in: userIds }
+          userId: { in: userIds },
+          entryDate: { gte: periodStart }
         },
         _sum: {
           pnl: true
@@ -372,10 +403,9 @@ export async function updateTeamAnalytics(
           id: true
         }
       }),
-      // Find best performing member using aggregation query
       prisma.trade.groupBy({
         by: ['userId'],
-        where: { userId: { in: userIds } },
+        where: { userId: { in: userIds }, entryDate: { gte: periodStart } },
         _sum: {
           pnl: true
         },
@@ -390,7 +420,16 @@ export async function updateTeamAnalytics(
 
     const totalPnl = Number(tradeStats._sum.pnl || 0);
     const totalTrades = tradeStats._count.id || 0;
-    const averageRr = 0;
+    
+    const rrTrades = await prisma.trade.findMany({
+      where: { userId: { in: userIds }, pnl: { not: 0 }, entryDate: { gte: periodStart } },
+      select: { pnl: true }
+    });
+    const wins = rrTrades.filter(t => Number(t.pnl) > 0);
+    const losses = rrTrades.filter(t => Number(t.pnl) < 0);
+    const avgWin = wins.length > 0 ? wins.reduce((s, t) => s + Number(t.pnl), 0) / wins.length : 0;
+    const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, t) => s + Number(t.pnl), 0) / losses.length) : 0;
+    const averageRr = avgLoss > 0 ? avgWin / avgLoss : 0;
     
     // Get winning trades count
     const winningTradesResult = await prisma.trade.count({

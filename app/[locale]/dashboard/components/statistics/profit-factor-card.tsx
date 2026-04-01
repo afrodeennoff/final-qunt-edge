@@ -61,8 +61,8 @@ function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
       <div className={cn(
         "precision-panel flex items-center gap-1.5 px-3 py-1 rounded-md",
         isProfitable
-          ? "bg-secondary/30 border-border/55"
-          : "bg-secondary/22 border-border/55"
+          ? "bg-secondary/18"
+          : "bg-secondary/14"
       )}>
         <Scale className={cn("h-3 w-3", isProfitable ? "metric-positive" : "metric-negative")} />
         <span className={cn(

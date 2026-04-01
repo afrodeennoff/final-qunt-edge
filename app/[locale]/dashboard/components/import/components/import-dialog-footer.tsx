@@ -3,6 +3,7 @@
 import { ButtonV2 } from "@/components/ui/v2"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
+import { ArrowLeft, ArrowRight, Save } from "lucide-react"
 import { ImportType } from "../import-type-selection"
 import { platforms } from "../config/platforms"
 import { Step } from "../import-button"
@@ -33,36 +34,44 @@ export function ImportDialogFooter({
 
   const currentStepIndex = platform.steps.findIndex(s => s.id === step)
 
-  const getNextButtonText = () => {
-    if (isSaving) return t('import.button.saving')
-    if (currentStep.isLastStep) {
-      return t('import.button.save')
-    }
-    return t('import.button.next')
-  }
+  const isLastStep = currentStep.isLastStep
+  const isFirstStep = currentStepIndex === 0
+  const isSyncFirstStep = isFirstStep && (importType === 'rithmic-sync' || importType === 'tradovate-sync')
 
   return (
-    <div className="flex-none p-4 border-t bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60 h-[68px]">
-      <div className="flex justify-end items-center gap-4">
-        {currentStepIndex > 0 && (
-          <ButtonV2  
-            variant="outline" 
-            onClick={onBack}
-            className="w-fit min-w-[100px]"
-          >
-            {t('import.button.back')}
-          </ButtonV2>
-        )}
-        <ButtonV2  
-          onClick={onNext}
-          className={cn(
-            "w-fit min-w-[100px]",
-            (currentStepIndex === 0 && (importType === 'rithmic-sync' || importType === 'tradovate-sync')) && "invisible"
+    <div className="flex-none border-t border-v2-border bg-v2-bg-surface/95 px-6 py-4 backdrop-blur-sm supports-backdrop-filter:bg-v2-bg-surface/60">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-v2-text-muted tabular-nums">
+          {currentStepIndex + 1} / {platform.steps.length}
+        </span>
+        <div className="flex items-center gap-3">
+          {currentStepIndex > 0 && (
+            <ButtonV2
+              variant="outline"
+              size="sm"
+              onClick={onBack}
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+              disabled={isSaving}
+            >
+              {t('import.button.back')}
+            </ButtonV2>
           )}
-          disabled={isNextDisabled}
-        >
-          {getNextButtonText()}
-        </ButtonV2>
+          <ButtonV2
+            variant="solid"
+            size="sm"
+            onClick={onNext}
+            isLoading={isSaving}
+            loadingText={t('import.button.saving')}
+            rightIcon={!isSaving && (isLastStep ? <Save className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />)}
+            className={cn(
+              "min-w-[100px]",
+              isSyncFirstStep && "invisible"
+            )}
+            disabled={isNextDisabled || isSaving}
+          >
+            {isLastStep ? t('import.button.save') : t('import.button.next')}
+          </ButtonV2>
+        </div>
       </div>
     </div>
   )

@@ -30,6 +30,7 @@
   "/[locale]/faq",
   "/[locale]/firm",
   "/[locale]/firm/[slug]",
+  "/[locale]/import",
   "/[locale]/leaderboard",
   "/[locale]/maintenance",
   "/[locale]/newsletter",

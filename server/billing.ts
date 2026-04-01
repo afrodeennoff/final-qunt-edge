@@ -80,30 +80,37 @@ export async function getSubscriptionData() {
       normalizedStatus === 'TRIALING'
 
     if (localSubscription && hasActiveLocalSubscription) {
-      logger.debug('[getSubscriptionData] Cache Hit', { email: normalizedEmail });
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+      const isFresh = localSubscription.updatedAt > oneHourAgo
 
-      const interval = toPlanInterval(localSubscription.interval);
+      if (isFresh) {
+        logger.debug('[getSubscriptionData] Cache Hit', { email: normalizedEmail });
 
-      return {
-        id: localSubscription.id,
-        status: localSubscription.status,
-        current_period_end: localSubscription.endDate ? Math.floor(localSubscription.endDate.getTime() / 1000) : 0,
-        current_period_start: Math.floor(localSubscription.createdAt.getTime() / 1000),
-        created: Math.floor(localSubscription.createdAt.getTime() / 1000),
-        cancel_at_period_end: false,
-        cancel_at: null,
-        canceled_at: null,
-        trial_end: localSubscription.trialEndsAt ? Math.floor(localSubscription.trialEndsAt.getTime() / 1000) : null,
-        trial_start: null,
-        manage_url: undefined,
-        plan: {
-          id: localSubscription.plan,
-          name: localSubscription.plan,
-          amount: 0,
-          interval: interval
-        },
-        invoices: []
-      } as SubscriptionWithPrice
+        const interval = toPlanInterval(localSubscription.interval);
+
+        return {
+          id: localSubscription.id,
+          status: localSubscription.status,
+          current_period_end: localSubscription.endDate ? Math.floor(localSubscription.endDate.getTime() / 1000) : 0,
+          current_period_start: Math.floor(localSubscription.createdAt.getTime() / 1000),
+          created: Math.floor(localSubscription.createdAt.getTime() / 1000),
+          cancel_at_period_end: false,
+          cancel_at: null,
+          canceled_at: null,
+          trial_end: localSubscription.trialEndsAt ? Math.floor(localSubscription.trialEndsAt.getTime() / 1000) : null,
+          trial_start: null,
+          manage_url: undefined,
+          plan: {
+            id: localSubscription.plan,
+            name: localSubscription.plan,
+            amount: 0,
+            interval: interval
+          },
+          invoices: []
+        } as SubscriptionWithPrice
+      }
+
+      logger.debug('[getSubscriptionData] Cache stale, re-verifying with Whop', { email: normalizedEmail });
     }
 
     logger.info('[getSubscriptionData] Cache Miss - Fetching Whop API', { email: normalizedEmail });
@@ -172,25 +179,30 @@ export async function getSubscriptionData() {
           ? 'TRIAL'
           : whopStatus.toUpperCase()
 
-    // Sync to local DB
-    await prisma.subscription.upsert({
-      where: { userId },
-      update: {
-        email: normalizedEmail,
-        status: dbStatus as 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'PENDING' | 'TRIAL_EXPIRED',
-        plan: planName,
-        endDate: parseWhopDate(membership.renewal_period_end) || null,
-        interval: interval
-      },
-      create: {
-        userId,
-        email: normalizedEmail,
-        plan: planName,
-        status: dbStatus as 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'PENDING' | 'TRIAL_EXPIRED',
-        endDate: parseWhopDate(membership.renewal_period_end) || null,
-        interval: interval
-      }
-    });
+    // Sync to local DB (best-effort — Whop API data is source of truth)
+    try {
+      await prisma.subscription.upsert({
+        where: { userId },
+        update: {
+          email: normalizedEmail,
+          status: dbStatus as 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'PENDING' | 'TRIAL_EXPIRED',
+          plan: planName,
+          endDate: parseWhopDate(membership.renewal_period_end) || null,
+          interval: interval
+        },
+        create: {
+          userId,
+          email: normalizedEmail,
+          plan: planName,
+          status: dbStatus as 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'PENDING' | 'TRIAL_EXPIRED',
+          endDate: parseWhopDate(membership.renewal_period_end) || null,
+          interval: interval
+        }
+      });
+    } catch (dbError) {
+      logger.error('[getSubscriptionData] Failed to sync subscription to local DB', { error: dbError, userId, email: normalizedEmail })
+      // Continue — Whop API data is source of truth, local sync will retry on next request
+    }
 
     return {
       id: membership.id,

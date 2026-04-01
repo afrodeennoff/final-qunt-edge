@@ -1,5 +1,52 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Backend data integrity fixes — 17 issues across 9 files (2026-04-01)
+
+### Accomplishments
+- Investigated backend data integrity issues via 3 parallel explore agents across `server/`, `lib/`, and `prisma/`.
+- Identified 17 data integrity issues (5 critical, 7 high, 5 medium) across 8 server files.
+- Created a 3-wave execution plan via Plan Agent. Executed all 17 fixes in 2 waves.
+- **CRITICAL fixes (5):**
+  1. UUID dedup broken — removed `Date.now()` from `generateTradeUUID` in `server/trades.ts`
+  2. Token sync time never updated — changed `updateLastSyncedAt` to query by `accountId` in `server/imports/tradovate-actions.ts`
+  3. Webhook team/business activation partial writes — wrapped in `$transaction` in `server/webhook-service.ts`
+  4. Grace period race condition — added `$transaction` with status re-check in `server/subscription-manager.ts`
+  5. Teams auth bypass — added post-query membership verification in `server/teams.ts`
+- **HIGH fixes (7):**
+  6. Payout count desync — reconciled `payoutCount` with actual count after save in `server/accounts.ts`
+  7. Account balance ignores payouts — added optional `payouts` parameter to `calculateAccountBalance` in `server/accounts.ts`
+  8. Tag duplication — added dedup guard in `server/trades.ts`
+  9. Batch fallback drops fills — uncommented `getFillById` calls in `server/imports/tradovate-actions.ts`
+  10. Webhook retry count wrong — added per-event `retries` field in `server/webhook-service.ts`
+  11. Team traderIds leak — added `traderIds` cleanup on member removal in `server/teams.ts`
+  12. Billing sync not atomic — wrapped Whop sync upsert in try/catch in `server/billing.ts`
+- **MEDIUM fixes (5):**
+  13. maxDrawdownPercent hardcoded 0 — computed from peak in `lib/analytics/metrics-v1.ts`
+  14. Account equities ignore startingBalance — initialized with `startingBalance` in `server/equity-chart.ts`
+  15. Teams analytics hardcoded averageRr=0 — computed actual averageRr from trades in `server/teams.ts`
+  16. Teams analytics ignores time period — added period date filter in `server/teams.ts`
+  17. Billing trusts stale local cache — added 1-hour freshness check in `server/billing.ts`
+
+### Verification
+- `npm run typecheck` passes.
+- `npx eslint` on changed files passes with pre-existing errors only (no-explicit-any in webhook-service.ts), no new errors.
+- `npx vitest run` passes (78 passed, 1 failed pre-existing sidebar-trigger-contract test, 1 skipped).
+
+### Files Modified
+- `server/trades.ts` — UUID dedup fix + tag dedup guard
+- `server/imports/tradovate-actions.ts` — Token sync query fix + batch fallback
+- `server/webhook-service.ts` — Transaction wrapping + per-event retry count
+- `server/subscription-manager.ts` — Grace period transaction locking
+- `server/teams.ts` — Auth verification + traderIds cleanup + analytics period/averageRr
+- `server/accounts.ts` — Payout count reconciliation + balance payout subtraction
+- `server/billing.ts` — Atomic sync + cache freshness check
+- `lib/analytics/metrics-v1.ts` — maxDrawdownPercent computation
+- `server/equity-chart.ts` — startingBalance initialization
+- `tests/server/team-analytics.test.ts` — Added findMany mock for new analytics code
+
+### Blockers
+- `/init` remains unavailable in this shell.
+
 ## Current Session: Dashboard widget chrome + navbar/header cleanup (2026-04-01)
 
 ### Accomplishments

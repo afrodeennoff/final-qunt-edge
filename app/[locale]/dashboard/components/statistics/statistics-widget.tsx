@@ -17,20 +17,8 @@ interface StatisticsWidgetProps {
   dayData?: CalendarEntry // Optional: if provided, show statistics for this specific day only
 }
 
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => func(...args), wait)
-  }
-}
-
 export default function StatisticsWidget({ size = 'medium', dayData }: StatisticsWidgetProps) {
   const dataContext = useDashboardStats()
-  const [activeTooltip, setActiveTooltip] = React.useState<string | null>(null)
-  const [isTouch, setIsTouch] = React.useState(false)
-  const cardRef = React.useRef<HTMLDivElement>(null)
-  const lastTouchTime = React.useRef(0)
   const t = useI18n()
   const locale = useCurrentLocale()
 
@@ -93,8 +81,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
     return Number(((value / total) * 100).toFixed(2))
   }
   const winRate = toPercent(nbWin, nbTrades)
-  const lossRate = toPercent(nbLoss, nbTrades)
-  const beRate = toPercent(nbBe, nbTrades)
+  const totalResolvedTrades = nbWin + nbLoss + nbBe
 
   // Calculate long/short data
   const chartData = Object.entries(calendarData).map(([date, values]) => ({
@@ -134,47 +121,6 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
       : 0
   }, [dayData, chartData])
 
-  // Colors
-  const positiveColor = "hsl(var(--chart-win))"
-  const negativeColor = "hsl(var(--chart-loss))"
-  const neutralColor = "hsl(var(--muted))"
-
-  // Performance data
-  const performanceData = [
-    { name: 'Win', value: winRate, color: positiveColor },
-    { name: 'BE', value: beRate, color: neutralColor },
-    { name: 'Loss', value: lossRate, color: negativeColor },
-  ]
-
-  // Long/Short data
-  const sideData = [
-    { name: 'Long', value: longRate, color: positiveColor, number: longNumber },
-    { name: 'Short', value: shortRate, color: negativeColor, number: shortNumber },
-  ]
-
-  // Touch event handlers
-  React.useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-        setActiveTooltip(null)
-      }
-    }
-
-    const handleTouchStart = () => {
-      setIsTouch(true)
-    }
-
-    document.addEventListener('mousedown', handleOutsideClick)
-    document.addEventListener('touchstart', handleOutsideClick)
-    window.addEventListener('touchstart', handleTouchStart, { once: true })
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-      document.removeEventListener('touchstart', handleOutsideClick)
-      window.removeEventListener('touchstart', handleTouchStart)
-    }
-  }, [])
-
   return (
     <WidgetShell
       title={t('statistics.title')}
@@ -186,7 +132,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
       <div className="grid h-full grid-cols-2">
           {/* Profit/Loss Section */}
           <div className={cn(
-            "flex flex-col border-r border-b",
+            "flex flex-col border-b border-r border-border/18",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
             <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-v2-text-secondary">{t('statistics.profitLoss.title')}</h3>
@@ -233,7 +179,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
 
           {/* Performance Section */}
           <div className={cn(
-            "flex flex-col border-b",
+            "flex flex-col border-b border-border/18",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
             <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-v2-text-secondary">{t('statistics.performance.title')}</h3>
@@ -281,7 +227,7 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
 
           {/* Activity Section */}
           <div className={cn(
-            "flex flex-col border-r",
+            "flex flex-col border-r border-border/18",
             size === 'tiny' ? "p-1.5" : "p-3"
           )}>
             <h3 className="mb-1.5 font-terminal text-[10px] font-bold uppercase tracking-widest text-v2-text-secondary">{t('statistics.activity.title')}</h3>
@@ -291,8 +237,10 @@ export default function StatisticsWidget({ size = 'medium', dayData }: Statistic
                 <span className="text-sm font-medium text-v2-text-primary font-terminal">{nbTrades}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-v2-text-secondary">{t('statistics.activity.winningTrades')}</span>
-                <span className="text-sm font-medium text-v2-text-primary font-terminal">{nbWin}</span>
+                  <span className="text-xs text-v2-text-secondary">{t('statistics.activity.winningTrades')}</span>
+                <span className="text-sm font-medium text-v2-text-primary font-terminal">
+                  {nbWin}/{totalResolvedTrades}
+                </span>
               </div>
               {size !== 'tiny' && (
                 <div className="flex justify-between items-center">

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const syncResult = await getTradovateTrades(tokenResult.accessToken, { userId: user.id });
+    const syncResult = await getTradovateTrades(tokenResult.accessToken, { userId: user.id, accountId });
     if (syncResult.error) {
       // If it's just duplicate trades, return 200 with 0 saved
       if (syncResult.error === "DUPLICATE_TRADES") {

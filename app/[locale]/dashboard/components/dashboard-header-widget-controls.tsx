@@ -208,11 +208,11 @@ function getHeaderWrapperClass(isMobile: boolean) {
 
 function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
   return cn(
-    "relative group flex items-center gap-2 rounded-lg transition-all duration-300",
+    "relative group flex items-center gap-2 rounded-lg transition-all duration-200",
     isMobile ? "h-11 w-11 justify-center px-0" : "h-8 px-3",
     isCustomizing
-      ? "bg-primary text-primary-foreground shadow-none"
-      : "rounded-full border border-transparent text-v2-text-secondary hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
+      ? "bg-v2-accent text-v2-accent-foreground shadow-sm"
+      : "rounded-full border border-transparent text-v2-text-secondary hover:border-v2-border/15 hover:bg-v2-bg-hover hover:text-v2-text-primary"
   );
 }
 

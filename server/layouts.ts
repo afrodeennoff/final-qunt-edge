@@ -1,7 +1,7 @@
 'use server'
 
 import { DashboardLayout, Prisma } from '@/prisma/generated/prisma'
-import { updateTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { Widget, Layouts } from '@/app/[locale]/dashboard/types/dashboard'
 import { createClient, getUserId, getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
@@ -30,6 +30,7 @@ interface SaveLayoutResult {
 
 const saveLocks = new Map<string, { promise: Promise<SaveLayoutResult>; timestamp: number }>()
 const LOCK_TIMEOUT_MS = 30000 // 30 second max lock lifetime
+const LAYOUT_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
 function validateLayouts(layouts: DashboardLayout): boolean {
   if (!layouts || typeof layouts !== 'object') return false
@@ -51,24 +52,35 @@ function validateLayouts(layouts: DashboardLayout): boolean {
   return validateArray(layouts.desktop) && validateArray(layouts.mobile)
 }
 
+async function _loadDashboardLayout(userId: string): Promise<Layouts | null> {
+  const dashboard = await prisma.dashboardLayout.findUnique({
+    where: { userId },
+  })
+
+  if (!dashboard) return null
+
+  const parse = (json: unknown): Widget[] => {
+    if (Array.isArray(json)) return json as unknown as Widget[]
+    return []
+  }
+
+  return {
+    desktop: parse(dashboard.desktop),
+    mobile: parse(dashboard.mobile)
+  }
+}
+
+async function _loadDashboardLayoutCached(userId: string): Promise<Layouts | null> {
+  'use cache'
+  cacheLife(LAYOUT_CACHE_LIFETIME)
+  cacheTag(`dashboard-layout-${userId}`)
+  return _loadDashboardLayout(userId)
+}
+
 export async function loadDashboardLayoutAction(): Promise<Layouts | null> {
   const userId = await getUserId()
   try {
-    const dashboard = await prisma.dashboardLayout.findUnique({
-      where: { userId },
-    })
-
-    if (!dashboard) return null
-
-    const parse = (json: unknown): Widget[] => {
-      if (Array.isArray(json)) return json as unknown as Widget[]
-      return []
-    }
-
-    return {
-      desktop: parse(dashboard.desktop),
-      mobile: parse(dashboard.mobile)
-    }
+    return _loadDashboardLayoutCached(userId)
   } catch (error) {
     logger.error('[loadDashboardLayout] Error', { error })
     return null

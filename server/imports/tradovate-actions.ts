@@ -355,12 +355,11 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
         }
       } catch (batchError) {
         logger.warn(`Batch fills request error, falling back to individual requests for batch:`, { batchError })
-        // Fallback to individual requests for this batch
         const batchPromises = batch.map(async (fillId) => {
           try {
-            // This is going to spam API calls so we don't do it
-            // const fill = await getFillById(accessToken, fillId)
-            return null
+            const fill = await getFillById(accessToken, fillId)
+            await new Promise(resolve => setTimeout(resolve, 50))
+            return fill
           } catch (error) {
             logger.warn(`Failed to fetch fill ${fillId}:`, { error })
             return null
@@ -1404,13 +1403,12 @@ export async function testCustomTradovateToken(
   }
 }
 
-async function updateLastSyncedAt(userId: string, accessToken: string) {
-  // Update last synced at
+async function updateLastSyncedAt(userId: string, accountId: string) {
   const updateResult = await prisma.synchronization.updateMany({
     where: {
       userId: userId,
       service: 'tradovate',
-      token: accessToken,
+      accountId: accountId,
     },
     data: {
       lastSyncedAt: new Date()
@@ -1423,7 +1421,7 @@ async function updateLastSyncedAt(userId: string, accessToken: string) {
 
 export async function getTradovateTrades(
   accessToken: string,
-  options?: { userId?: string }
+  options?: { userId?: string; accountId?: string }
 ): Promise<TradovateTradesResult> {
   try {
     // If we are on the server
@@ -1451,7 +1449,7 @@ export async function getTradovateTrades(
     // Means there are no trades to import
     if (fillPairs.length === 0) {
       logger.info('No fill pairs returned from Tradovate')
-      await updateLastSyncedAt(userId, accessToken)
+      await updateLastSyncedAt(userId, options?.accountId ?? 'default')
       return { processedTrades: [], savedCount: 0, ordersCount: 0 }
     }
 
@@ -1552,7 +1550,7 @@ export async function getTradovateTrades(
     // Build trades using fill pairs with account resolution
     const processedTrades = await buildTradesFromFillPairs(fillPairs, contracts, fillsById, ordersById, accountsById, userId, tickDetails)
 
-    await updateLastSyncedAt(userId, accessToken)
+    await updateLastSyncedAt(userId, options?.accountId ?? 'default')
 
     if (processedTrades.length === 0) {
       logger.info('No trades could be created from fill pairs')

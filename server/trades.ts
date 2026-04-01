@@ -202,9 +202,6 @@ function generateTradeUUID(trade: TradeUUIDSource): string {
     trade.side || '',
     trade.pnl?.toString() || '',
     trade.commission?.toString() || '',
-    // Add microsecond timestamp component to further reduce collision probability
-    // for trades with identical data submitted at different moments
-    Date.now().toString(36),
   ].join('|')
 
   return uuidv5(tradeSignature, TRADE_NAMESPACE)
@@ -754,7 +751,16 @@ export async function addTagToTrade(tradeId: string, tag: string) {
     throw new Error('Unauthorized')
   }
   try {
-    // Use update instead of updateMany to get the updated record directly
+    const trade = await prisma.trade.findUnique({
+      where: { id: tradeId, userId },
+      select: { tags: true }
+    })
+    if (!trade) {
+      throw new Error('Trade not found')
+    }
+    if (trade.tags.includes(tag.trim())) {
+      return await prisma.trade.findUnique({ where: { id: tradeId } })
+    }
     const updatedTrade = await prisma.trade.update({
       where: { id: tradeId, userId },
       data: {

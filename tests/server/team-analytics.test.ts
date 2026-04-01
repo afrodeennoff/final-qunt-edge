@@ -15,6 +15,7 @@ vi.mock("@/lib/prisma", () => ({
       aggregate: vi.fn(),
       groupBy: vi.fn(),
       count: vi.fn(),
+      findMany: vi.fn(),
     },
   },
 }))
@@ -69,6 +70,7 @@ describe("updateTeamAnalytics", () => {
     vi.mocked(prisma.trade.aggregate).mockResolvedValue({ _sum: { pnl: 100 }, _count: { id: 2 } } as never)
     vi.mocked(prisma.trade.groupBy).mockResolvedValue([{ userId: "u_1", _sum: { pnl: 80 } }] as never)
     vi.mocked(prisma.trade.count).mockResolvedValue(1 as never)
+    vi.mocked(prisma.trade.findMany).mockResolvedValue([{ pnl: 10 }, { pnl: -5 }] as never)
     const upsertResult = { teamId: "team-1", period: "weekly", totalPnl: 100 }
     vi.mocked(prisma.teamAnalytics.upsert).mockResolvedValue(upsertResult as never)
 

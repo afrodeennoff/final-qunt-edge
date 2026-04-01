@@ -31,6 +31,7 @@ interface WebhookProcessingResult {
   processed: boolean
   alreadyProcessed?: boolean
   error?: string
+  retries?: number
 }
 
 export class WebhookService {
@@ -143,7 +144,7 @@ export class WebhookService {
         success: result.success,
         processed: result.processed,
         error: result.error,
-        retries: this.getAttemptCount(result.error),
+        retries: result.retries ?? 0,
       })
 
       if (result.success) {
@@ -206,7 +207,7 @@ export class WebhookService {
       lastResult = await this.handleEventByType(event, prisma)
 
       if (lastResult.success || !this.isRetryableEvent(event.type, lastResult.error)) {
-        return lastResult
+        return { ...lastResult, retries: attempt }
       }
 
       if (attempt < this.maxRetryAttempts) {
@@ -223,7 +224,7 @@ export class WebhookService {
       }
     }
 
-    return lastResult
+    return { ...lastResult, retries: attempt }
   }
 
   private isRetryableEvent(eventType: string, error?: string): boolean {
@@ -454,84 +455,86 @@ export class WebhookService {
     const teamName = metadata.team_name || 'My Team'
     const teamId = metadata.team_id
 
-    // 1. Ensure user exists
-    let user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null
-    if (!user) {
-      user = await prisma.user.findUnique({ where: { email } })
-    }
+    return await prisma.$transaction(async (tx) => {
+      // 1. Ensure user exists
+      let user = userId ? await tx.user.findUnique({ where: { id: userId } }) : null
+      if (!user) {
+        user = await tx.user.findUnique({ where: { email } })
+      }
 
-    if (!user) {
-      // Create user if not exists (Whop user purchasing for the first time)
-      user = await prisma.user.create({
-        data: {
-          email,
-          auth_user_id: userId || `whop_${membership.user.id}`,
-        }
-      })
-    }
+      if (!user) {
+        // Create user if not exists (Whop user purchasing for the first time)
+        user = await tx.user.create({
+          data: {
+            email,
+            auth_user_id: userId || `whop_${membership.user.id}`,
+          }
+        })
+      }
 
-    // 2. Find or create team
-    let team = teamId ? await prisma.team.findUnique({ where: { id: teamId } }) : null
-    if (!team) {
-      team = await prisma.team.findFirst({
-        where: { userId: user.id, name: teamName }
-      })
-    }
+      // 2. Find or create team
+      let team = teamId ? await tx.team.findUnique({ where: { id: teamId } }) : null
+      if (!team) {
+        team = await tx.team.findFirst({
+          where: { userId: user.id, name: teamName }
+        })
+      }
 
-    if (!team) {
-      team = await prisma.team.create({
-        data: {
-          name: teamName,
-          userId: user.id,
-          traderIds: [user.id],
-          managers: {
-            create: {
-              managerId: user.id,
-              access: 'admin'
+      if (!team) {
+        team = await tx.team.create({
+          data: {
+            name: teamName,
+            userId: user.id,
+            traderIds: [user.id],
+            managers: {
+              create: {
+                managerId: user.id,
+                access: 'admin'
+              }
             }
           }
+        })
+      }
+
+      // 3. Create/Update TeamSubscription
+      const endDate = interval === 'lifetime' ?
+        new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000) :
+        (interval === 'year' ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
+
+      await tx.teamSubscription.upsert({
+        where: { teamId: team.id },
+        update: {
+          status: 'ACTIVE',
+          plan: planName.toUpperCase(),
+          interval,
+          endDate,
+          email,
+          userId: user.id
+        },
+        create: {
+          teamId: team.id,
+          userId: user.id,
+          email,
+          plan: planName.toUpperCase(),
+          status: 'ACTIVE',
+          interval,
+          endDate
         }
       })
-    }
 
-    // 3. Create/Update TeamSubscription
-    const endDate = interval === 'lifetime' ?
-      new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000) :
-      (interval === 'year' ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
-
-    await prisma.teamSubscription.upsert({
-      where: { teamId: team.id },
-      update: {
-        status: 'ACTIVE',
-        plan: planName.toUpperCase(),
-        interval,
-        endDate,
+      logger.info({
         email,
-        userId: user.id
-      },
-      create: {
         teamId: team.id,
-        userId: user.id,
-        email,
-        plan: planName.toUpperCase(),
-        status: 'ACTIVE',
-        interval,
-        endDate
+        teamName: team.name,
+        plan: planName
+      }, '[WebhookService] Team Membership activated')
+
+      return {
+        success: true,
+        eventType: 'membership.activated',
+        processed: true
       }
     })
-
-    logger.info({
-      email,
-      teamId: team.id,
-      teamName: team.name,
-      plan: planName
-    }, '[WebhookService] Team Membership activated')
-
-    return {
-      success: true,
-      eventType: 'membership.activated',
-      processed: true
-    }
   }
 
   private async handleBusinessMembershipActivated(
@@ -545,80 +548,82 @@ export class WebhookService {
     const metadata = membership.metadata || {}
     const businessName = metadata.business_name || 'My Business'
 
-    // 1. Ensure user exists
-    let user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null
-    if (!user) {
-      user = await prisma.user.findUnique({ where: { email } })
-    }
+    return await prisma.$transaction(async (tx) => {
+      // 1. Ensure user exists
+      let user = userId ? await tx.user.findUnique({ where: { id: userId } }) : null
+      if (!user) {
+        user = await tx.user.findUnique({ where: { email } })
+      }
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          auth_user_id: userId || `whop_${membership.user.id}`,
-        }
+      if (!user) {
+        user = await tx.user.create({
+          data: {
+            email,
+            auth_user_id: userId || `whop_${membership.user.id}`,
+          }
+        })
+      }
+
+      // 2. Find or create business
+      let business = await tx.business.findFirst({
+        where: { userId: user.id, name: businessName }
       })
-    }
 
-    // 2. Find or create business
-    let business = await prisma.business.findFirst({
-      where: { userId: user.id, name: businessName }
-    })
-
-    if (!business) {
-      business = await prisma.business.create({
-        data: {
-          name: businessName,
-          userId: user.id,
-          traderIds: [user.id],
-          managers: {
-            create: {
-              managerId: user.id,
-              access: 'admin'
+      if (!business) {
+        business = await tx.business.create({
+          data: {
+            name: businessName,
+            userId: user.id,
+            traderIds: [user.id],
+            managers: {
+              create: {
+                managerId: user.id,
+                access: 'admin'
+              }
             }
           }
+        })
+      }
+
+      // 3. Create/Update BusinessSubscription
+      const endDate = interval === 'lifetime' ?
+        new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000) :
+        (interval === 'year' ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
+
+      await tx.businessSubscription.upsert({
+        where: { businessId: business.id },
+        update: {
+          status: 'ACTIVE',
+          plan: planName.toUpperCase(),
+          interval,
+          endDate,
+          email,
+          userId: user.id
+        },
+        create: {
+          businessId: business.id,
+          userId: user.id,
+          email,
+          plan: planName.toUpperCase(),
+          status: 'ACTIVE',
+          interval,
+          endDate
         }
       })
-    }
 
-    // 3. Create/Update BusinessSubscription
-    const endDate = interval === 'lifetime' ?
-      new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000) :
-      (interval === 'year' ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000))
-
-    await prisma.businessSubscription.upsert({
-      where: { businessId: business.id },
-      update: {
-        status: 'ACTIVE',
-        plan: planName.toUpperCase(),
-        interval,
-        endDate,
+      logger.info('[WebhookService] Business Membership activated', {
         email,
-        userId: user.id
-      },
-      create: {
         businessId: business.id,
-        userId: user.id,
-        email,
-        plan: planName.toUpperCase(),
-        status: 'ACTIVE',
-        interval,
-        endDate
+        businessName: business.name,
+        plan: planName
+      })
+
+      return {
+        success: true,
+        eventType: 'membership.activated',
+        processed: true
       }
     })
-
-    logger.info('[WebhookService] Business Membership activated', {
-      email,
-      businessId: business.id,
-      businessName: business.name,
-      plan: planName
-    })
-
-    return {
-      success: true,
-      eventType: 'membership.activated',
-      processed: true
-    }
   }
 
   private async handleMembershipDeactivated(

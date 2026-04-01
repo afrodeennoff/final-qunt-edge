@@ -31,6 +31,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
 import { useSearchParams } from "next/navigation"
 import { logger } from "@/lib/logger"
+import { SkeletonV2 } from "@/components/ui/v2"
 import {
   generateResponsiveLayouts,
   getEffectiveWidgetSize,
@@ -133,10 +134,10 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
       </div>
       {isCustomizing && (
         <>
-          <div className="absolute inset-0 rounded-xl border border-border/25 border-dashed shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.08)]" />
-          <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.18),hsl(var(--background)/0.74)_62%)] opacity-100 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 rounded-xl border border-v2-border/25 border-dashed" />
+          <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100 backdrop-blur-[2px]" />
           <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
-            <div className="flex flex-col items-center gap-2 rounded-lg border border-border/20 bg-popover/45 px-4 py-3 text-foreground/85 backdrop-blur-md">
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-v2-border/15 bg-v2-bg-surface/70 px-4 py-3 text-v2-text-primary backdrop-blur-md shadow-lg">
               <GripVertical className="h-6 w-4" />
               <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
             </div>
@@ -147,13 +148,13 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                 <ButtonV2 
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 rounded-full border-border/25 bg-popover/55 text-foreground hover:bg-popover/75 hover:border-border/40 backdrop-blur-md"
+                  className="h-8 w-8 rounded-full border-v2-border/20 bg-v2-bg-surface/70 text-v2-text-primary hover:bg-v2-bg-hover hover:border-v2-border/35 backdrop-blur-md"
                   aria-label="Change widget size"
                 >
                   <Maximize2 className="h-4 w-4" />
                 </ButtonV2>
               </PopoverTrigger>
-              <PopoverContent className="w-56 border-border/15 bg-popover/85 p-2 text-foreground backdrop-blur-xl">
+              <PopoverContent className="w-56 border-v2-border/15 bg-v2-bg-surface/90 p-2 text-v2-text-primary backdrop-blur-xl">
                 <div className="flex flex-col gap-1">
                   {isMobile ? (
                     <>
@@ -166,7 +167,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-4 rounded",
-                            size === 'tiny' ? "bg-primary" : "bg-muted"
+                            size === 'tiny' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.mobile.small')}</span>
                         </div>
@@ -180,7 +181,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-8 rounded",
-                            size === 'medium' ? "bg-primary" : "bg-muted"
+                            size === 'medium' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.mobile.medium')}</span>
                         </div>
@@ -194,7 +195,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-12 rounded",
-                            size === 'large' ? "bg-primary" : "bg-muted"
+                            size === 'large' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.mobile.large')}</span>
                         </div>
@@ -211,7 +212,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-4 rounded",
-                            size === 'tiny' ? "bg-primary" : "bg-muted"
+                            size === 'tiny' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.tiny')}</span>
                         </div>
@@ -225,7 +226,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-6 rounded",
-                            size === 'small' ? "bg-primary" : "bg-muted"
+                            size === 'small' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.small')}</span>
                         </div>
@@ -239,7 +240,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-8 rounded",
-                            size === 'medium' ? "bg-primary" : "bg-muted"
+                            size === 'medium' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.medium')}</span>
                         </div>
@@ -253,7 +254,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-10 rounded",
-                            size === 'large' ? "bg-primary" : "bg-muted"
+                            size === 'large' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.large')}</span>
                         </div>
@@ -267,7 +268,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                         <div className="flex items-center gap-2">
                           <div className={cn(
                             "h-4 w-12 rounded",
-                            size === 'extra-large' ? "bg-primary" : "bg-muted"
+                            size === 'extra-large' ? "bg-v2-accent" : "bg-muted"
                           )} />
                           <span>{t('widgets.size.extra-large')}</span>
                         </div>
@@ -282,7 +283,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                 <ButtonV2 
                   variant="error"
                   size="icon"
-                  className="h-8 w-8 rounded-full border border-border/20 bg-semantic-error-bg/80 text-foreground hover:bg-semantic-error-bg"
+                  className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-v2-text-primary hover:bg-v2-error/20"
                   aria-label="Remove widget"
                 >
                   <Minus className="h-4 w-4" />
@@ -326,10 +327,10 @@ function DebugDataBadge() {
     Boolean(dateRange?.from || dateRange?.to);
 
   return (
-    <div className="absolute left-2 top-2 z-30 rounded-md border border-border/15 bg-popover/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-foreground/80 backdrop-blur-sm">
+    <div className="absolute left-2 top-2 z-30 rounded-md border border-v2-border/12 bg-v2-bg-surface/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-v2-text-secondary backdrop-blur-sm">
       T:{trades.length} F:{formattedTrades.length}
       {isFiltered && (
-        <span className="ml-2 text-foreground/40">filtered</span>
+        <span className="ml-2 text-v2-text-muted">filtered</span>
       )}
     </div>
   );
@@ -557,12 +558,12 @@ export default function WidgetCanvas() {
   if (!layouts) {
     return (
       <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-        <div className="animate-pulse rounded-2xl border border-v2-border/60 bg-v2-bg-surface/60 p-6" aria-hidden="true">
-          <div className="h-4 w-48 rounded bg-card/10" />
-          <div className="mt-3 h-3 w-96 max-w-full rounded bg-card/10" />
-          <div className="mt-6 flex gap-2">
-            <div className="h-9 w-44 rounded bg-card/10" />
-            <div className="h-9 w-28 rounded bg-card/10" />
+        <div className="rounded-xl border border-v2-border/12 bg-v2-bg-surface/40 p-5 space-y-3" aria-hidden="true">
+          <SkeletonV2 className="h-4 w-48" />
+          <SkeletonV2 className="h-3 w-80 max-w-full" />
+          <div className="flex gap-2 pt-2">
+            <SkeletonV2 className="h-8 w-36 rounded-lg" />
+            <SkeletonV2 className="h-8 w-24 rounded-lg" />
           </div>
         </div>
         <span className="sr-only">Loading dashboard widgets...</span>
@@ -573,24 +574,27 @@ export default function WidgetCanvas() {
   if (currentLayout.length === 0) {
     return (
       <div className="relative mt-0 w-full min-h-0" role="status">
-        <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-v2-border/60 bg-v2-bg-surface/90 p-6 text-v2-text-primary shadow-2xl" role="alert">
-          <div className="text-sm font-semibold tracking-tight">
+        <div className="mx-auto mt-8 max-w-lg rounded-xl border border-v2-border/15 bg-v2-bg-surface/50 p-6 text-center shadow-lg" role="alert">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/15 bg-v2-bg-elevated text-v2-text-muted">
+            <Maximize2 className="h-5 w-5" />
+          </div>
+          <div className="text-sm font-semibold tracking-tight text-v2-text-primary">
             {translate("widgets.emptyLayoutTitle") || "No widgets on your dashboard."}
           </div>
           <div className="mt-2 text-sm text-v2-text-secondary leading-relaxed">
             {translate("widgets.emptyLayoutDescription") || "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
           </div>
-          <div className="mt-5 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
             <ButtonV2 
               onClick={restoreDefaultLayout}
-              className="bg-card text-foreground hover:bg-card/90 font-semibold"
+              className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"
             >
               {translate("widgets.restoreDefaults") || "Restore default layout"}
             </ButtonV2>
             <ButtonV2 
               variant="outline"
               onClick={() => setIsCustomizing(true)}
-              className="border-border/15 bg-transparent text-foreground hover:bg-card/5 hover:text-foreground"
+              className="border-v2-border/15 bg-transparent text-v2-text-primary hover:bg-v2-bg-hover hover:text-v2-text-primary rounded-lg"
             >
               {translate("widgets.edit") || "Edit"}
             </ButtonV2>
@@ -661,7 +665,7 @@ export default function WidgetCanvas() {
                           className={cn(
                             "relative h-full w-full overflow-hidden rounded-xl transition-all duration-300 group/widget",
                             isCustomizing
-                              ? "precision-panel border border-[hsl(var(--precision-cobalt)/0.45)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
+                              ? "border border-v2-accent/30 bg-v2-bg-surface/95 shadow-[var(--v2-glow-ambient)]"
                               : "border border-transparent bg-transparent"
                           )}
                         >
@@ -669,7 +673,7 @@ export default function WidgetCanvas() {
                             <DebugDataBadge />
                           )}
                           {isCustomizing ? (
-                            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-card/[0.02] to-transparent" />
+                            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-v2-accent/[0.03] to-transparent" />
                           ) : null}
                           <div className="relative h-full w-full">
                             {renderWidget(widget)}

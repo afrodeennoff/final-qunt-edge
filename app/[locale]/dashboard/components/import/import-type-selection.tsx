@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter } from "lucide-react"
-import { InputV2 } from "@/components/ui/v2"
+import { InputV2, CardV2, CardV2Content } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useI18n } from "@/locales/client"
 import { platforms, PlatformConfig } from './config/platforms'
@@ -91,19 +91,19 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const selectedPlatform = platforms.find(p => p.type === selectedType)
 
   return (
-    <div className="flex flex-col h-full bg-background/50 backdrop-blur-xl">
-      <div className="grid lg:grid-cols-[1fr_380px] h-full divide-x divide-border overflow-hidden">
+    <div className="flex flex-col h-full bg-v2-bg-base/50 backdrop-blur-xl">
+      <div className="grid lg:grid-cols-[1fr_380px] h-full divide-x divide-v2-border overflow-hidden">
         {/* Left Side: Grid of options */}
         <div className="flex flex-col gap-4 h-full min-h-0 relative">
           {/* Header & Filter */}
-          <div className="p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
+          <div className="p-4 border-b border-v2-border bg-v2-bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-v2-bg-surface/60 sticky top-0 z-10">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
               <InputV2
                 placeholder={t('import.type.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-secondary/50 border-transparent hover:bg-secondary/80 focus:bg-background transition-all"
+                className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
               />
             </div>
 
@@ -112,7 +112,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                 <TabsList className="bg-transparent p-0 h-auto gap-2">
                   <TabsTrigger
                     value="all"
-                    className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
+                    className="data-[state=active]:bg-v2-accent/10 data-[state=active]:text-v2-accent border border-transparent data-[state=active]:border-v2-accent/20 rounded-full px-4 h-8"
                   >
                     <LayoutGrid className="h-3 w-3 mr-2" />
                     All
@@ -121,7 +121,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                     <TabsTrigger
                       key={cat}
                       value={cat}
-                      className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-full px-4 h-8"
+                      className="data-[state=active]:bg-v2-accent/10 data-[state=active]:text-v2-accent border border-transparent data-[state=active]:border-v2-accent/20 rounded-full px-4 h-8"
                     >
                       {categoryIcons[cat]}
                       <span className="ml-2">{getTranslatedCategory(cat)}</span>
@@ -159,10 +159,10 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="col-span-full py-12 text-center text-muted-foreground"
+                    className="col-span-full py-12 text-center text-v2-text-muted"
                   >
                     <ListFilter className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                    <p>{t('import.type.noResults')}</p>
+                    <p className="text-sm">{t('import.type.noResults')}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -171,7 +171,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
         </div>
 
         {/* Right Side: Details Panel */}
-        <div className="hidden lg:block h-full bg-muted/30 border-l relative overflow-hidden">
+        <div className="hidden lg:block h-full bg-v2-bg-hover/30 border-l border-v2-border relative overflow-hidden">
           {selectedType && selectedPlatform ? (
             <motion.div
               key={selectedType}
@@ -189,14 +189,20 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               </div>
             </motion.div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center p-8 text-muted-foreground">
-              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-6">
-                <LayoutGrid className="h-10 w-10 opacity-20" />
-              </div>
-              <h3 className="text-lg font-medium mb-2">Select a Platform</h3>
-              <p className="max-w-xs text-sm opacity-60">
-                Choose a platform from the left to view details and start importing your trades.
-              </p>
+            <div className="h-full flex items-center justify-center p-6">
+              <CardV2 variant="flat" className="w-full max-w-[260px]">
+                <CardV2Content className="flex flex-col items-center justify-center text-center py-8">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-4">
+                    <LayoutGrid className="h-7 w-7 text-v2-text-muted" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-v2-text-primary mb-1.5">
+                    Select a Platform
+                  </h3>
+                  <p className="text-xs text-v2-text-muted leading-relaxed">
+                    Choose a platform from the left to view details and start importing your trades.
+                  </p>
+                </CardV2Content>
+              </CardV2>
             </div>
           )}
         </div>

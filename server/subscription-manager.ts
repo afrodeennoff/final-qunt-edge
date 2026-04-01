@@ -428,55 +428,63 @@ export class SubscriptionManager {
       for (const subscription of expiringSubscriptions) {
         try {
           if (!subscription.endDate) continue
-          const gracePeriodEnd = new Date(subscription.endDate)
-          gracePeriodEnd.setDate(
-            gracePeriodEnd.getDate() + GRACE_PERIOD_CONFIG.duration
-          )
 
-          if (now < gracePeriodEnd && GRACE_PERIOD_CONFIG.enabled) {
-            await prisma.subscription.update({
+          // Process inside transaction with status check to prevent double-processing
+          await prisma.$transaction(async (tx) => {
+            // Re-check status inside transaction — another cron may have processed it
+            const current = await tx.subscription.findUnique({
               where: { id: subscription.id },
-              data: {
-                status: 'PENDING',
-              },
+              select: { status: true, endDate: true },
             })
 
-            await this.recordSubscriptionEvent({
-              userId: subscription.userId,
-              email: subscription.email,
-              subscriptionId: subscription.id,
-              eventType: 'GRACE_PERIOD_STARTED',
-              eventData: {
+            if (!current || current.status !== 'ACTIVE' || !current.endDate) return
+
+            const gracePeriodEnd = new Date(current.endDate)
+            gracePeriodEnd.setDate(
+              gracePeriodEnd.getDate() + GRACE_PERIOD_CONFIG.duration
+            )
+
+            if (now < gracePeriodEnd && GRACE_PERIOD_CONFIG.enabled) {
+              await tx.subscription.update({
+                where: { id: subscription.id },
+                data: { status: 'PENDING' },
+              })
+
+              await tx.subscriptionEvent.create({
+                data: {
+                  userId: subscription.userId,
+                  email: subscription.email,
+                  subscriptionId: subscription.id,
+                  eventType: 'GRACE_PERIOD_STARTED',
+                  eventData: { gracePeriodEndsAt: gracePeriodEnd },
+                },
+              })
+
+              logger.info('[SubscriptionManager] Grace period started', {
+                subscriptionId: subscription.id,
                 gracePeriodEndsAt: gracePeriodEnd,
-              },
-            })
+              })
+            } else {
+              await tx.subscription.update({
+                where: { id: subscription.id },
+                data: { status: 'CANCELLED' },
+              })
 
-            logger.info('[SubscriptionManager] Grace period started', {
-              subscriptionId: subscription.id,
-              gracePeriodEndsAt: gracePeriodEnd,
-            })
-          } else {
-            await prisma.subscription.update({
-              where: { id: subscription.id },
-              data: {
-                status: 'CANCELLED',
-              },
-            })
+              await tx.subscriptionEvent.create({
+                data: {
+                  userId: subscription.userId,
+                  email: subscription.email,
+                  subscriptionId: subscription.id,
+                  eventType: 'GRACE_PERIOD_ENDED',
+                  eventData: { reason: 'grace_period_expired' },
+                },
+              })
 
-            await this.recordSubscriptionEvent({
-              userId: subscription.userId,
-              email: subscription.email,
-              subscriptionId: subscription.id,
-              eventType: 'GRACE_PERIOD_ENDED',
-              eventData: {
-                reason: 'grace_period_expired',
-              },
-            })
-
-            logger.info('[SubscriptionManager] Grace period ended, subscription cancelled', {
-              subscriptionId: subscription.id,
-            })
-          }
+              logger.info('[SubscriptionManager] Grace period ended, subscription cancelled', {
+                subscriptionId: subscription.id,
+              })
+            }
+          })
 
           processed++
         } catch (error) {

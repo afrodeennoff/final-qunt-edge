@@ -4,6 +4,81 @@
 
 ---
 
+## NEW (2026-04-01): UUID dedup requires true randomness, not timestamps
+
+### Mistake
+`generateTradeUUID` used `Date.now()` which produces sequential IDs. When `skipDuplicates: true` is used in Prisma `createMany`, sequential IDs from the same millisecond can collide.
+
+### Root Cause
+Timestamp-based ID generation was used for dedup purposes, but timestamps are not unique within the same millisecond.
+
+### Rule
+For dedup-critical ID generation, use `crypto.randomUUID()` or similar true-random generators. Never use `Date.now()` for IDs that need to be unique across concurrent operations.
+
+### Example
+```ts
+// BAD
+const uuid = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}`
+
+// GOOD
+const uuid = crypto.randomUUID()
+```
+
+---
+
+## NEW (2026-04-01): Webhook mutations must be wrapped in $transaction for atomicity
+
+### Mistake
+`handleTeamMembershipActivated` and `handleBusinessMembershipActivated` performed multiple Prisma writes without `$transaction`, so partial failures could leave the database in an inconsistent state.
+
+### Root Cause
+Each mutation was a separate `await` call with no rollback mechanism. If the second write failed, the first write persisted.
+
+### Rule
+When a webhook handler performs 2+ related mutations, wrap them in `prisma.$transaction([...])` so all writes succeed or all roll back.
+
+### Example
+```ts
+// BAD
+await prisma.teamMember.update(...)
+await prisma.team.update(...)
+
+// GOOD
+await prisma.$transaction([
+  prisma.teamMember.update(...),
+  prisma.team.update(...),
+])
+```
+
+---
+
+## NEW (2026-04-01): Grace period subscription processing needs transaction-level status re-check
+
+### Mistake
+The grace period loop in `processGracePeriodSubscriptions` checked subscription status outside a transaction, so concurrent processing could handle the same subscription twice.
+
+### Root Cause
+No row-level locking or transaction-level re-check meant the status read was stale by the time the mutation executed.
+
+### Rule
+For subscription lifecycle processing, use `$transaction` with a status re-check inside the transaction to prevent concurrent double-processing.
+
+### Example
+```ts
+// BAD
+const sub = await prisma.subscription.findFirst({ where: { status: 'GRACE' } })
+await prisma.subscription.update({ where: { id: sub.id }, data: { status: 'ACTIVE' } })
+
+// GOOD
+await prisma.$transaction(async (tx) => {
+  const sub = await tx.subscription.findFirst({ where: { id: subId, status: 'GRACE' } })
+  if (!sub) return
+  await tx.subscription.update({ where: { id: sub.id }, data: { status: 'ACTIVE' } }
+})
+```
+
+---
+
 ## NEW (2026-04-01): Dashboard widget wrappers must not own chrome in normal mode
 
 ### Mistake

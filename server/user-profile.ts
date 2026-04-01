@@ -4,11 +4,26 @@ import { createClient, getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import type { User } from '@supabase/supabase-js'
 import type { Subscription } from '@/prisma/generated/prisma'
-import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import { cacheLife, cacheTag } from 'next/cache'
+
+const PROFILE_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
+const USER_TABLE_CANDIDATES = ['User', 'user'] as const
+const LEADERBOARD_VISIBILITY_COLUMN = 'showOnLeaderboard'
 
 export type UserProfileData = {
   supabaseUser: User | null
   subscription: Subscription | null
+}
+
+async function hasLeaderboardVisibilityColumn(): Promise<boolean> {
+  for (const tableName of USER_TABLE_CANDIDATES) {
+    if (await isPrismaColumnAvailable(tableName, LEADERBOARD_VISIBILITY_COLUMN)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 function isUserProfileUnavailableError(error: unknown): boolean {
@@ -75,6 +90,10 @@ export async function getUserProfileAction(): Promise<UserProfileData> {
 export async function toggleLeaderboardVisibility(): Promise<{ success: boolean; showOnLeaderboard: boolean; error?: string }> {
   const userId = await getDatabaseUserId()
 
+  if (!(await hasLeaderboardVisibilityColumn())) {
+    return { success: false, showOnLeaderboard: false, error: 'Leaderboard visibility unavailable' }
+  }
+
   let currentUser: { showOnLeaderboard: boolean } | null = null
 
   try {
@@ -115,18 +134,33 @@ export async function toggleLeaderboardVisibility(): Promise<{ success: boolean;
 /**
  * Get the current user's leaderboard visibility status.
  */
+async function _getLeaderboardVisibility(userId: string): Promise<{ showOnLeaderboard: boolean }> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { showOnLeaderboard: true },
+  })
+
+  return { showOnLeaderboard: user?.showOnLeaderboard ?? false }
+}
+
+async function _getLeaderboardVisibilityCached(userId: string): Promise<{ showOnLeaderboard: boolean }> {
+  'use cache'
+  cacheLife(PROFILE_CACHE_LIFETIME)
+  cacheTag(`profile-${userId}`)
+  return _getLeaderboardVisibility(userId)
+}
+
 export async function getLeaderboardVisibility(): Promise<{ showOnLeaderboard: boolean }> {
   const userId = await getDatabaseUserId()
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { showOnLeaderboard: true },
-    })
+    if (!(await hasLeaderboardVisibilityColumn())) {
+      return { showOnLeaderboard: false }
+    }
 
-    return { showOnLeaderboard: user?.showOnLeaderboard ?? false }
+    return _getLeaderboardVisibilityCached(userId)
   } catch (error) {
-    if (!isUserProfileUnavailableError(error)) {
+    if (!isPrismaSchemaMismatchError(error)) {
       throw error
     }
 

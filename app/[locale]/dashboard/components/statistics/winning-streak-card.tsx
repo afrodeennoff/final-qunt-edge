@@ -51,7 +51,7 @@ function WinningStreakCardInner({ size = 'medium' }: WinningStreakCardProps) {
       contentClassName="flex items-center justify-center h-full gap-2 p-2"
       info={t('widgets.winningStreak.tooltip')}
     >
-      <div className="precision-panel flex items-center gap-1.5 px-3 py-1 rounded-md bg-secondary/30 border-border/55">
+      <div className="precision-panel flex items-center gap-1.5 rounded-md bg-secondary/18 px-3 py-1">
         <Award className="h-3 w-3 metric-positive" />
         <span className="font-terminal font-bold text-[11px] uppercase tracking-wider metric-positive">{winningStreak} Trade Streak</span>
       </div>

@@ -13,6 +13,7 @@ const isNextBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const MAX_POOL_LIMIT = 20
 const DEFAULT_SERVERLESS_POOL_MAX = 5
 const DEFAULT_SERVERLESS_POOL_MIN = 0
+const PRODUCTION_RUNTIME_POOL_FLOOR = DEFAULT_SERVERLESS_POOL_MAX
 const MISSING_CONNECTION_ERROR =
   '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
 
@@ -177,8 +178,15 @@ if (!connectionString) {
       ? DEFAULT_SERVERLESS_POOL_MAX
       : MAX_POOL_LIMIT
   const minPoolCap = isProduction ? DEFAULT_SERVERLESS_POOL_MIN : maxPoolCap
-  const poolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
-    ? Math.min(parsedPoolMax, maxPoolCap)
+  const requestedPoolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
+    ? parsedPoolMax
+    : undefined
+  const normalizedRequestedPoolMax =
+    requestedPoolMax !== undefined && isProduction && !isNextBuildPhase
+      ? Math.max(requestedPoolMax, PRODUCTION_RUNTIME_POOL_FLOOR)
+      : requestedPoolMax
+  const poolMax = normalizedRequestedPoolMax !== undefined
+    ? Math.min(normalizedRequestedPoolMax, maxPoolCap)
     : defaultPoolMax
 
   const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin >= 0
@@ -187,6 +195,19 @@ if (!connectionString) {
 
   if (Number.isFinite(parsedPoolMax) && parsedPoolMax > maxPoolCap) {
     console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${maxPoolCap}; using ${maxPoolCap}.`)
+  }
+
+  if (
+    Number.isFinite(parsedPoolMax) &&
+    parsedPoolMax > 0 &&
+    isProduction &&
+    !isNextBuildPhase &&
+    parsedPoolMax < PRODUCTION_RUNTIME_POOL_FLOOR
+  ) {
+    console.warn(
+      `[Prisma] PG_POOL_MAX=${parsedPoolMax} is below the production runtime floor ` +
+      `${PRODUCTION_RUNTIME_POOL_FLOOR}; using ${poolMax}.`
+    )
   }
 
   if (Number.isFinite(parsedPoolMin) && parsedPoolMin > minPoolCap) {
