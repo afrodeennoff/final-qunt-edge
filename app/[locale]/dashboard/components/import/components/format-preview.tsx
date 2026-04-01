@@ -106,7 +106,6 @@ export function FormatPreview({
   );
 
   const [error, setError] = useState<string | null>(null);
-  const [processingBatches] = useState<Set<number>>(new Set());
   const [isAutoProcessing, setIsAutoProcessing] = useState(false);
   const [isStopped, setIsStopped] = useState(false);
   const [completedBatches, setCompletedBatches] = useState<Set<number>>(new Set());
@@ -781,7 +780,6 @@ export function FormatPreview({
         </p>
             <p className="text-xs text-muted-foreground">
               Batches: {completedBatches.size}/{totalBatches} completed
-              {processingBatches.size > 0 && `, ${processingBatches.size} processing`}
             </p>
           </div>
           {isAutoProcessing && (

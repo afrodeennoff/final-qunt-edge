@@ -26,27 +26,21 @@ export default function AccountSelection({
   onAddAccount
 }: AccountSelectionProps) {
   const [isAddingNewAccount, setIsAddingNewAccount] = useState(false)
-  const [localAccounts, setLocalAccounts] = useState<string[]>(accounts)
   const t = useI18n()
-
-  useEffect(() => {
-    setLocalAccounts(prev => Array.from(new Set([...prev, ...accounts])))
-  }, [accounts])
 
   const handleAddAccount = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     if (newAccountNumber.trim()) {
-      if (localAccounts.includes(newAccountNumber.trim())) {
+      if (accounts.includes(newAccountNumber.trim())) {
         toast.error(t('import.error.accountExists'))
         return
       }
-      setLocalAccounts(prev => [...prev, newAccountNumber.trim()])
       setAccountNumbers([...accountNumbers, newAccountNumber.trim()])
       onAddAccount?.(newAccountNumber.trim())
       setNewAccountNumber('')
       setIsAddingNewAccount(false)
     }
-  }, [newAccountNumber, localAccounts, setAccountNumbers, onAddAccount, setNewAccountNumber, t, toast])
+  }, [newAccountNumber, accounts, accountNumbers, setAccountNumbers, onAddAccount, setNewAccountNumber, t, toast])
 
   return (
     <div className="h-full flex flex-col">
@@ -61,7 +55,7 @@ export default function AccountSelection({
 
       <div className="flex-1 overflow-y-auto mt-4 py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {localAccounts.map((account) => (
+          {accounts.map((account: string) => (
             <CardV2
               key={account}
               className={cn(
