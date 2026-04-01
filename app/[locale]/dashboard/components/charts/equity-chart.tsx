@@ -15,15 +15,12 @@ import {
   format,
   parseISO,
   eachDayOfInterval,
-  startOfDay,
-  endOfDay,
 } from "date-fns";
+import type { Locale } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { fr, enUS } from "date-fns/locale";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 
 import {
@@ -48,7 +45,6 @@ import { useI18n } from "@/locales/client";
 import { useCurrentLocale } from "@/locales/client";
 import { useUserStore } from "@/store/user-store";
 import { useEquityChartStore } from "@/store/equity-chart-store";
-import { Payout as PrismaPayout } from "@/prisma/generated/prisma";
 import { AccountSelectionPopover } from "./account-selection-popover";
 import { getEquityChartDataAction } from "@/server/equity-chart";
 import { usePathname } from "next/navigation";
@@ -69,6 +65,18 @@ interface ChartDataPoint {
   [key: `payoutStatus_${string}`]: string;
   [key: `payoutAmount_${string}`]: number;
 }
+
+type TranslateFn = ReturnType<typeof useI18n>;
+
+type DotRendererProps = {
+  cx?: number;
+  cy?: number;
+  payload: ChartDataPoint;
+  index?: number;
+  dataKey?: string;
+};
+
+const EQUITY_CHART_FETCH_TIMEOUT_MS = 12000;
 
 const formatCurrency = (value: number) =>
   `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -131,7 +139,7 @@ const getPayoutColors = (status: string) => {
   }
 };
 
-const renderDot = (props: any) => {
+const renderDot = (props: DotRendererProps) => {
   const { cx, cy, payload, index, dataKey } = props;
   if (typeof cx !== "number" || typeof cy !== "number") {
     return (
@@ -143,7 +151,7 @@ const renderDot = (props: any) => {
 
   if (dataKey === "equity") {
     const resetAccounts = Object.keys(payload).filter(
-      (key) => key.startsWith("reset_") && payload[key]
+      (key) => key.startsWith("reset_") && payload[key as keyof ChartDataPoint]
     );
     if (resetAccounts.length > 0) {
       return (
@@ -162,7 +170,7 @@ const renderDot = (props: any) => {
     }
 
     const payoutAccounts = Object.keys(payload).filter(
-      (key) => key.startsWith("payout_") && payload[key]
+      (key) => key.startsWith("payout_") && payload[key as keyof ChartDataPoint]
     );
     if (payoutAccounts.length > 0) {
       const accountNumber = payoutAccounts[0].replace("payout_", "");
@@ -226,7 +234,6 @@ const OptimizedTooltip = React.memo(
     payload,
     data,
     showIndividual,
-    size,
     accountColorMap,
     t,
     onHover,
@@ -234,14 +241,13 @@ const OptimizedTooltip = React.memo(
     isSharedView,
   }: {
     active?: boolean;
-    payload?: any[];
+    payload?: TooltipProps<number, string>["payload"];
     data?: ChartDataPoint;
     showIndividual: boolean;
-    size: WidgetSize;
     accountColorMap: Map<string, string>;
-    t: any;
+    t: TranslateFn;
     onHover?: (data: ChartDataPoint | null) => void;
-    dateLocale: any;
+    dateLocale: Locale;
     isSharedView?: boolean;
   }) => {
     const effectiveShowIndividual = isSharedView ? false : showIndividual;
@@ -423,8 +429,8 @@ const AccountsLegend = React.memo(
     chartData: ChartDataPoint[];
     hoveredData: ChartDataPoint | null;
     onToggleAccount: (accountNumber: string) => void;
-    t: any;
-    dateLocale: any;
+    t: TranslateFn;
+    dateLocale: Locale;
   }) => {
     if (!accountNumbers.length) return null;
 
@@ -608,7 +614,6 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
     }, []),
     []
   );
-  const yAxisRef = React.useRef<any>(null);
   const t = useI18n();
   const locale = useCurrentLocale();
   const dateLocale = locale === "fr" ? fr : enUS;
@@ -739,43 +744,86 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
       return;
     }
 
+    let cancelled = false;
+
+    const applyClientFallback = () => {
+      const { chartData: computedData, accountNumbers: accNumbers } =
+        computeClientSideData();
+      if (cancelled) return;
+      setChartData(computedData);
+      setAvailableAccountNumbers(accNumbers);
+    };
+
     const fetchChartData = async () => {
       setIsLoading(true);
+      let timeoutId: ReturnType<typeof setTimeout> | null = null;
       try {
-        const result = await getEquityChartDataAction({
-          instruments,
-          accountNumbers,
-          dateRange:
-            dateRange && dateRange.from && dateRange.to
-              ? {
-                from: dateRange.from.toISOString(),
-                to: dateRange.to.toISOString(),
-              }
-              : undefined,
-          pnlRange,
-          tickRange,
-          timeRange,
-          tickFilter,
-          weekdayFilter,
-          hourFilter,
-          tagFilter,
-          timezone,
-          showIndividual,
-          maxAccounts: 8,
-          dataSampling: config.dataSampling,
-          selectedAccounts: Array.from(selectedAccounts),
-        });
+        const result = await Promise.race([
+          getEquityChartDataAction({
+            instruments,
+            accountNumbers,
+            dateRange:
+              dateRange && dateRange.from && dateRange.to
+                ? {
+                  from: dateRange.from.toISOString(),
+                  to: dateRange.to.toISOString(),
+                }
+                : undefined,
+            pnlRange,
+            tickRange,
+            timeRange,
+            tickFilter,
+            weekdayFilter,
+            hourFilter,
+            tagFilter,
+            timezone,
+            showIndividual,
+            maxAccounts: 8,
+            dataSampling: config.dataSampling,
+            selectedAccounts: Array.from(selectedAccounts),
+          }),
+          new Promise<never>((_, reject) => {
+            timeoutId = setTimeout(() => {
+              reject(
+                new Error(
+                  `Equity chart request timed out after ${EQUITY_CHART_FETCH_TIMEOUT_MS}ms`
+                )
+              );
+            }, EQUITY_CHART_FETCH_TIMEOUT_MS);
+          }),
+        ]);
+
+        if (cancelled) return;
+
+        if (result.chartData.length === 0 && formattedTrades.length > 0) {
+          applyClientFallback();
+          return;
+        }
+
         setChartData(result.chartData);
         setAvailableAccountNumbers(result.accountNumbers);
       } catch (error) {
         console.error("Failed to fetch equity chart data:", error);
-        setChartData([]);
-        setAvailableAccountNumbers([]);
+        if (formattedTrades.length > 0) {
+          applyClientFallback();
+        } else if (!cancelled) {
+          setChartData([]);
+          setAvailableAccountNumbers([]);
+        }
       } finally {
-        setIsLoading(false);
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
     };
     fetchChartData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [
     isSharedView,
     computeClientSideData,
@@ -794,6 +842,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
     showIndividual,
     config.dataSampling,
     selectedAccounts,
+    formattedTrades,
   ]);
 
   const chartConfig = React.useMemo(() => {
@@ -961,7 +1010,6 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                       }
                     />
                     <YAxis
-                      ref={yAxisRef}
                       tickLine={false}
                       axisLine={false}
                       width={60}
@@ -988,7 +1036,6 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                           payload={payload}
                           data={payload?.[0]?.payload as ChartDataPoint}
                           showIndividual={showIndividual}
-                          size={size}
                           accountColorMap={accountColorMap}
                           t={t}
                           onHover={throttledSetHoveredData}

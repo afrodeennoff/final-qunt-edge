@@ -88,12 +88,12 @@ export function WidgetShell({
       data-widget-shell="v2"
       className={cn(
         "relative overflow-hidden rounded-xl border",
-        "border-v2-border/60",
-        "bg-v2-bg-surface/95",
-        "shadow-[inset_0_1px_0_oklch(var(--v2-text-primary)/0.05)]",
+        "border-v2-border/28",
+        "bg-v2-bg-surface/90",
+        "shadow-[inset_0_1px_0_oklch(var(--v2-text-primary)/0.035)]",
         "transition-all duration-[180ms] ease-out",
-        "hover:border-v2-border/70",
-        "hover:bg-v2-bg-surface/99",
+        "hover:border-v2-border/38",
+        "hover:bg-v2-bg-surface/94",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         "h-full shadow-none",
         variant === "hoverable" && "hover:shadow-[var(--v2-glow-ambient)]",
@@ -101,7 +101,7 @@ export function WidgetShell({
       )}
     >
       {(title || actions || icon || description) && (
-        <CardV2Header className="border-b border-border px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+        <CardV2Header className="border-b border-border/40 px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
             <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (

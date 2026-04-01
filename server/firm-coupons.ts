@@ -1,7 +1,10 @@
 'use server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { cacheLife, cacheTag } from 'next/cache'
 
-export async function listFirmCoupons(propfirmId: string) {
+const COUPONS_CACHE_LIFETIME = { stale: 1_800, revalidate: 1_800, expire: 3_600 } as const
+
+function loadFirmCoupons(propfirmId: string) {
   if (!hasConfiguredDatabaseConnection) {
     return []
   }
@@ -23,4 +26,15 @@ export async function listFirmCoupons(propfirmId: string) {
       { createdAt: 'desc' },
     ],
   })
+}
+
+async function listFirmCouponsCached(propfirmId: string) {
+  'use cache'
+  cacheLife(COUPONS_CACHE_LIFETIME)
+  cacheTag('firm-coupons', `prop-firm-${propfirmId}`)
+  return loadFirmCoupons(propfirmId)
+}
+
+export async function listFirmCoupons(propfirmId: string) {
+  return listFirmCouponsCached(propfirmId)
 }

@@ -1,5 +1,120 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Dashboard widget chrome + navbar/header cleanup (2026-04-01)
+
+### Accomplishments
+- Traced the white-border / broken-navbar complaint to shared dashboard shell ownership rather than individual widget bugs:
+  - `widget-canvas` applied outer bordered/background panels in normal mode,
+  - shared widget primitives (`WidgetShell`, `ChartSurface`, `ModernStatsCard`) also rendered strong borders,
+  - dashboard header action controls used mismatched border/background treatments.
+- Fixed dashboard widget chrome ownership:
+  - `app/[locale]/dashboard/components/widget-canvas.tsx` now keeps normal-mode widget wrappers transparent.
+  - customize mode still applies the outer precision panel for drag/edit affordances.
+- Softened shared dashboard surfaces:
+  - `components/ui/widget-shell.tsx`
+  - `components/ui/chart-surface.tsx`
+  - `components/ui/stats-card.tsx`
+  now use lower-contrast border/background values appropriate for the dark dashboard.
+- Rebalanced dashboard navbar/action styling in:
+  - `app/[locale]/dashboard/components/dashboard-header.tsx`
+  - `app/[locale]/dashboard/components/global-sync-button.tsx`
+  - `app/[locale]/dashboard/components/dashboard-header-widget-controls.tsx`
+  - `app/[locale]/dashboard/components/import/import-button.tsx`
+  - `app/[locale]/dashboard/components/daily-summary-modal.tsx`
+  so the top bar reads as one consistent pill-based action strip.
+
+### Verification
+- Touched-scope eslint across the 9 UI files passes with warnings only (0 errors).
+- Focused eslint rerun for `app/[locale]/dashboard/components/global-sync-button.tsx` passes with 1 complexity warning (0 errors) after final import cleanup.
+- `npm run lint -- 'server/firm-reviews.ts'` passes (0 errors).
+- `npm run typecheck` passes after fixing `server/firm-reviews.ts`.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route table emitted).
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Current Session: Dashboard-wide sidebar state + query-navigation hardening (2026-04-01)
+
+### Accomplishments
+- Traced the remaining dashboard sidebar problem to two shared causes:
+  - sidebar navigation fallback cleanup only watched `pathname`, while dashboard tab navigation changes `searchParams` on the same route,
+  - authenticated sidebar layouts always started with `defaultOpen={true}` and ignored the persisted `sidebar:state` cookie.
+- Hardened sidebar navigation in `components/ui/unified-sidebar.tsx`:
+  - `useActiveLink` is now exported for testability.
+  - sidebar route-key tracking now watches `pathname + search`.
+  - mobile sidebar navigation now closes for dashboard tab/query-param transitions as well as full route transitions.
+- Added shared sidebar state helper in `lib/sidebar-state.ts`:
+  - exports the sidebar cookie name/max age,
+  - parses persisted open/collapsed state safely.
+- Restored persisted sidebar open/collapsed state across authenticated shells:
+  - `app/[locale]/dashboard/layout.tsx`
+  - `app/[locale]/teams/dashboard/layout.tsx`
+  - `app/[locale]/teams/manage/layout.tsx`
+  - `app/[locale]/admin/layout.tsx` -> passes state into `admin-client-layout.tsx`
+- Added regression coverage in `lib/__tests__/sidebar-state.test.ts` for cookie parsing behavior.
+
+### Verification
+- `npx vitest run 'lib/__tests__/sidebar-state.test.ts'` passes (3/3).
+- Touched-file eslint on sidebar/layout/helper scope passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route manifest emitted).
+
+### Blockers
+- Playwright browser attach did not establish a usable session in this shell (`connect ENOENT root-error`), so this turn’s verification is code/test/build-based rather than browser-driven.
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Current Session: Dashboard data-loading recovery + npm-only build path (2026-04-01)
+
+### Accomplishments
+- Investigated live production/runtime evidence for the dashboard loading complaint:
+  - sampled Vercel runtime logs showed repeated `[DB Pool]` warnings on dashboard paths,
+  - matched dashboard requests were mostly `200`, indicating slow/noisy backend work rather than a route crash.
+- Reduced equity-chart database pressure in `server/equity-chart.ts`:
+  - replaced broad Prisma reads with explicit minimal `select` projections for trades, accounts, payouts, and groups.
+  - restored `trade.id` to the select after typecheck surfaced its downstream dependency.
+- Hardened chart loading behavior in `app/[locale]/dashboard/components/charts/equity-chart.tsx`:
+  - added a bounded timeout for the server chart action,
+  - if the server action times out/fails/returns empty while local formatted trades exist, the chart now falls back to client-side computation instead of staying on `"Loading chart data..."`.
+  - cleaned touched-scope type/lint issues while keeping behavior intact.
+- Enforced npm-only deployment commands in `vercel.json`:
+  - `installCommand` now uses `npm install --no-audit --no-fund`
+  - `buildCommand` now uses `npm run build`
+
+### Verification
+- `npm run lint -- 'app/[locale]/dashboard/components/charts/equity-chart.tsx' server/equity-chart.ts server/authz.ts lib/prisma.ts lib/__tests__/authz.test.ts` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route manifest emitted).
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
+## Current Session: Database/backend stabilization for cron auth + serverless Prisma pool sizing (2026-04-01)
+
+### Accomplishments
+- Investigated live production runtime logs before editing code:
+  - found `/api/cron/renewal-notice` returning `500`,
+  - found repeated `[DB Pool]` warnings on dashboard/settings runtime traffic.
+- Normalized cron auth in `server/authz.ts`:
+  - `requireCronAuth()` now validates documented bearer-secret auth first via `requireServiceAuth()`,
+  - retains `x-vercel-cron` only as an explicit legacy fallback when `VERCEL_CRON_SECRET` is configured.
+- Reduced Prisma serverless runtime pool pressure in `lib/prisma.ts`:
+  - production runtime default pool max lowered to `5`,
+  - production runtime default pool min lowered to `0`,
+  - production env overrides are clamped to safe serverless caps instead of allowing oversized pools.
+- Updated `.env.example` Prisma pool defaults to match runtime-safe values (`PG_POOL_MAX=5`, `PG_POOL_MIN=0`).
+- Added auth regression coverage in `lib/__tests__/authz.test.ts` for:
+  - bearer cron auth,
+  - legacy `x-vercel-cron` fallback auth.
+
+### Verification
+- `npx vitest run lib/__tests__/authz.test.ts` passes (5/5).
+- `npm run lint -- server/authz.ts lib/prisma.ts lib/__tests__/authz.test.ts` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end (`170/170` static pages, route manifest emitted).
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: New-build stabilization for optimization + proxy/runtime behavior (2026-04-01)
 
 ### Accomplishments

@@ -434,7 +434,9 @@ export default function ImportButton() {
       <ButtonV2 
         onClick={() => setIsOpen(true)}
         variant="outline"
-        className={cn("gap-2 flex border-border hover:bg-accent/50 bg-background/50 backdrop-blur-sm group h-10 items-center px-3 md:px-4 w-auto justify-center")}
+        className={cn(
+          "group h-10 w-auto justify-center gap-2 rounded-full border-v2-border/20 bg-v2-bg-base/60 px-3 text-v2-text-primary shadow-none backdrop-blur-sm hover:border-v2-border/35 hover:bg-v2-bg-hover md:px-4"
+        )}
         id="import-data"
         onMouseEnter={() => uploadIconRef.current?.startAnimation()}
         onMouseLeave={() => uploadIconRef.current?.stopAnimation()}

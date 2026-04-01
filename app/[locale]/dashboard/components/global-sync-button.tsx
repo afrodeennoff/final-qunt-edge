@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback, useMemo, useEffect } from "react"
-import { RefreshCw, CheckCircle2, AlertCircle, Clock, Settings2, ShieldCheck, ShieldAlert } from "lucide-react"
+import { useState, useCallback, useEffect } from "react"
+import { RefreshCw, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useSyncContext } from "@/context/sync-context"
 import { useRithmicSyncStore } from "@/store/rithmic-sync-store"
@@ -13,7 +13,6 @@ import { safeArrayMax } from '@/lib/array-utils'
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
@@ -23,7 +22,7 @@ import { BadgeV2 } from "@/components/ui/v2"
 
 export function GlobalSyncButton() {
     const t = useScopedI18n('dashboard')
-    const { rithmic, tradovate, manualSync } = useSyncContext()
+    const { tradovate, manualSync } = useSyncContext()
     const { refreshAllData } = useDashboardActions()
     const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -113,39 +112,39 @@ export function GlobalSyncButton() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <button
+                    type="button"
                     className={cn(
-                        "group relative flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all duration-300",
+                        "group relative flex h-10 items-center gap-2 rounded-full border px-3 transition-all duration-200",
                         isAnySyncing
-                            ? "bg-accent/50 border-border text-foreground cursor-wait"
-                            : "bg-background/50 border-border text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:border-border"
+                            ? "cursor-wait border-v2-accent/30 bg-v2-accent/10 text-v2-text-primary"
+                            : "border-v2-border/20 bg-v2-bg-base/60 text-v2-text-secondary hover:border-v2-border/35 hover:bg-v2-bg-hover hover:text-v2-text-primary"
                     )}
                 >
-                    <div className="relative">
+                    <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-v2-bg-surface/80">
                         <RefreshCw className={cn(
-                            "w-4 h-4 transition-transform duration-700",
+                            "h-4 w-4 transition-transform duration-700",
                             isAnySyncing ? "animate-spin" : "group-hover:rotate-180"
                         )} />
                         {isAnySyncing && <div className="absolute inset-0 bg-primary/15 blur-sm rounded-full" />}
                     </div>
 
-                    <div className="flex flex-col items-start leading-none gap-0.5">
-                        <span className="text-[9px] font-black uppercase tracking-widest">
+                    <div className="hidden items-center gap-1 xl:flex">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
                             {isAnySyncing ? "Syncing" : "Sync"}
                         </span>
                         {!isAnySyncing && (rithmicAutoEnabled || tradovate.enableAutoSync) && (
-                            <span className="text-[7px] text-muted-foreground font-bold group-hover:text-foreground transition-colors">
-                                AUTO ON
+                            <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-v2-text-muted transition-colors group-hover:text-v2-text-secondary">
+                                Auto
                             </span>
                         )}
                     </div>
 
-                    {/* Background Glow when syncing */}
                     {isAnySyncing && (
-                        <div className="absolute inset-0 rounded-lg bg-primary/10 blur-md -z-10" />
+                        <div className="absolute inset-0 -z-10 rounded-full bg-primary/10 blur-md" />
                     )}
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64 bg-popover border-border text-popover-foreground">
+            <DropdownMenuContent align="end" className="w-72 rounded-2xl border border-v2-border/20 bg-v2-bg-surface/95 text-popover-foreground shadow-xl shadow-black/20 backdrop-blur-xl">
                 <DropdownMenuLabel className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
                     {isAnySyncing ? (
@@ -155,7 +154,7 @@ export function GlobalSyncButton() {
                     )}
                 </DropdownMenuLabel>
 
-                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuSeparator className="bg-border/40" />
 
                 <div className="p-2 space-y-3">
                     {/* Auto Sync Rithmic */}
@@ -183,7 +182,7 @@ export function GlobalSyncButton() {
                     </div>
                 </div>
 
-                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuSeparator className="bg-border/40" />
 
                 <div className="p-2">
                     <div className="flex items-center justify-between text-[9px] text-muted-foreground mb-2">
@@ -195,9 +194,10 @@ export function GlobalSyncButton() {
                     </div>
 
                     <button
+                        type="button"
                         onClick={handleGlobalSync}
                         disabled={isAnySyncing}
-                        className="w-full h-8 rounded-md bg-secondary hover:bg-secondary/80 border border-border text-[10px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group/btn disabled:opacity-50 text-secondary-foreground"
+                        className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-v2-border/20 bg-v2-bg-base/70 text-[10px] font-bold uppercase tracking-[0.18em] text-v2-text-primary transition-all hover:border-v2-border/35 hover:bg-v2-bg-hover disabled:opacity-50"
                     >
                         <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing && "animate-spin")} />
                         <span>Force Sync Now</span>

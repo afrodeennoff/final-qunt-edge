@@ -1,3 +1,100 @@
+## Task: Dashboard widget chrome + header/navbar cleanup (2026-04-01)
+
+- [x] Trace the bright widget borders and broken dashboard header chrome to shared wrapper/layout primitives.
+- [x] Remove normal-mode outer widget framing in `widget-canvas` so widget surfaces own their own chrome.
+- [x] Soften shared widget/card surfaces (`WidgetShell`, `ChartSurface`, `ModernStatsCard`) to low-contrast dark-mode borders.
+- [x] Normalize dashboard header action controls (`sync`, `PnL summary`, `import`, customize controls, upgrade`) to one pill-based shadcn-style treatment.
+- [x] Verify touched scope with npm lint/build and record the unrelated workspace typecheck blocker.
+
+Verification:
+- `npm run lint -- 'app/[locale]/dashboard/components/widget-canvas.tsx' 'components/ui/widget-shell.tsx' 'components/ui/chart-surface.tsx' 'components/ui/stats-card.tsx' 'app/[locale]/dashboard/components/dashboard-header.tsx' 'app/[locale]/dashboard/components/global-sync-button.tsx' 'app/[locale]/dashboard/components/dashboard-header-widget-controls.tsx' 'app/[locale]/dashboard/components/import/import-button.tsx' 'app/[locale]/dashboard/components/daily-summary-modal.tsx'` passes with warnings only (0 errors).
+- `npm run lint -- 'app/[locale]/dashboard/components/global-sync-button.tsx'` passes with 1 complexity warning (0 errors) after the final import cleanup.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route table emitted).
+- `npm run typecheck` is currently blocked by an unrelated dirty-worktree change in `server/firm-reviews.ts` and reports `TS2488` / `TS2353` there.
+
+## Review
+- Root causes addressed:
+  - dashboard widgets were getting extra outer chrome from `widget-canvas` even though the actual widget components already render their own card/chart shells.
+  - shared widget surfaces used overly strong border opacity for this dark dashboard, which made the stacked chrome read as white outlines.
+  - the header action strip mixed several independent border/background systems, so the navbar looked visually broken instead of like one composed control bar.
+  - the unrelated full-repo typecheck failure came from the `firm-reviews` cache helper refactor using promise-chain loaders, which regressed the cached loader typing.
+- Fix outcome:
+  - normal-mode dashboard wrappers are now transparent; only customize mode applies outer shell chrome.
+  - `WidgetShell`, `ChartSurface`, and `ModernStatsCard` now use quieter border/background contrast.
+  - the dashboard header actions now share a consistent rounded pill treatment with subdued borders and backgrounds.
+  - `server/firm-reviews.ts` loaders now use direct `async/await` again, which restores correct typing through the cached review/stat helpers.
+
+## Task: Dashboard-wide sidebar state + navigation hardening (2026-04-01)
+
+- [x] Trace the remaining dashboard sidebar failure path across root dashboard, Teams, and Admin shells.
+- [x] Fix dashboard sidebar query-param navigation so tab switches do not leave stale navigation fallback state and mobile sheets close reliably.
+- [x] Restore persisted sidebar open/collapsed state across authenticated shells by reading the sidebar cookie in server layouts.
+- [x] Verify with targeted sidebar tests, touched-file eslint, full typecheck, and full npm production build.
+
+Verification:
+- `npx vitest run 'lib/__tests__/sidebar-state.test.ts'` passes (3/3).
+- `npm run lint -- 'components/ui/unified-sidebar.tsx' 'components/ui/sidebar.tsx' 'app/[locale]/dashboard/layout.tsx' 'app/[locale]/teams/dashboard/layout.tsx' 'app/[locale]/teams/manage/layout.tsx' 'app/[locale]/admin/layout.tsx' 'app/[locale]/admin/admin-client-layout.tsx' 'lib/sidebar-state.ts' 'lib/__tests__/sidebar-state.test.ts'` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route manifest emitted).
+
+## Review
+- Root causes addressed:
+  - dashboard tab navigation uses query params, but the sidebar fallback timer only watched `pathname`, so tab transitions could leave stale sidebar-navigation state behind.
+  - mobile sidebar link handling kept the sheet open for query-param-only transitions, which is wrong for dashboard tab navigation.
+  - authenticated layouts (`dashboard`, `teams/dashboard`, `teams/manage`, `admin`) always booted the sidebar with `defaultOpen={true}` and ignored the persisted `sidebar:state` cookie.
+- Fix outcome:
+  - sidebar navigation now clears its fallback state on full route-key changes (`pathname + search`) and mobile closes on any sidebar navigation click.
+  - dashboard, teams, and admin shells now restore the user’s persisted sidebar open/collapsed state from the cookie on server render.
+
+## Task: Dashboard database pressure + chart loading recovery + npm-only Vercel build (2026-04-01)
+
+- [x] Trace dashboard runtime symptoms and confirm whether failures are hard errors or slow/noisy backend paths.
+- [x] Reduce dashboard equity-chart database reads to explicit minimal Prisma selects instead of broad row materialization.
+- [x] Add deterministic client fallback for slow/empty equity-chart server responses so the UI does not remain stuck on loading.
+- [x] Remove Bun from Vercel install/build commands and keep deployment on npm-only workflow.
+- [x] Verify touched scope with eslint, full typecheck, and full npm production build.
+
+Verification:
+- Vercel runtime logs sampled for dashboard traffic showed repeated `[DB Pool]` pressure warnings but mostly `200` responses, which matched a slow/noisy data path rather than a route crash.
+- `npm run lint -- 'app/[locale]/dashboard/components/charts/equity-chart.tsx' server/equity-chart.ts server/authz.ts lib/prisma.ts lib/__tests__/authz.test.ts` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`170/170` static pages, route manifest emitted).
+
+## Review
+- Root causes addressed:
+  - the equity chart server path fetched more database shape than required for chart computation, increasing pressure on already constrained serverless DB connections.
+  - the client chart component had no bounded timeout/fallback path, so slow server action responses could leave the UI in an indefinite loading state.
+  - deployment config still allowed Bun in Vercel even though this project should build through npm.
+- Fix outcome:
+  - equity-chart Prisma reads are now explicit and minimal.
+  - the chart now falls back to local trade-based computation if the server fetch times out/fails/returns empty while trade data exists.
+  - `vercel.json` now uses npm-only install/build commands.
+
+## Task: Database/backend stabilization for cron auth + Prisma pool pressure (2026-04-01)
+
+- [x] Trace live production backend failures from runtime logs before changing code.
+- [x] Normalize cron route auth around documented bearer-secret flow while keeping explicit legacy header fallback.
+- [x] Reduce Prisma production runtime pool defaults/caps for serverless execution to avoid connection hoarding.
+- [x] Update documented env defaults to match the safe runtime pool configuration.
+- [x] Verify with targeted auth tests, lint, full typecheck, and full production build.
+
+Verification:
+- `npx vitest run lib/__tests__/authz.test.ts` passes (5/5).
+- `npm run lint -- server/authz.ts lib/prisma.ts lib/__tests__/authz.test.ts` passes with warnings only (complexity warnings in `server/authz.ts`, 0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end (`170/170` static pages, route manifest emitted).
+- Production runtime logs inspected before patch showed:
+  - `/api/cron/renewal-notice` `500`
+  - repeated `[DB Pool]` warnings on dashboard/settings requests.
+
+## Review
+- Root causes addressed:
+  - cron auth behavior drifted across routes and did not consistently privilege the documented bearer-secret path used by Vercel cron jobs.
+  - Prisma runtime pool defaults (`max=20`, `min=5`) were too aggressive for serverless functions and could pin unnecessary Postgres connections across warm instances.
+- Fix outcome:
+  - cron auth now validates bearer auth first and only uses `x-vercel-cron` as an explicit legacy fallback when configured.
+  - Prisma production runtime pool defaults are now capped for serverless use, and even over-large env overrides are clamped to safe values.
+
 ## Task: Build optimization stability + proxy/runtime alignment (2026-04-01)
 
 - [x] Align proxy entrypoint naming with Next.js 16 (`proxy.ts` + `export async function proxy`).

@@ -19,9 +19,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Z_INDEX } from "@/lib/config/z-index"
-
-const SIDEBAR_COOKIE_NAME = "sidebar:state"
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+import { SIDEBAR_STATE_COOKIE_MAX_AGE, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "17rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
@@ -104,7 +102,7 @@ const SidebarProvider = React.forwardRef<
         requestAnimationFrame(() => {
           setTimeout(() => {
             try {
-              document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; SameSite=Lax`
+              document.cookie = `${SIDEBAR_STATE_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_STATE_COOKIE_MAX_AGE}; SameSite=Lax`
             } catch (e) {
               console.warn('Could not write sidebar state cookie:', e)
             }

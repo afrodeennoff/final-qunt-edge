@@ -1,9 +1,11 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { updateTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 import { getDatabaseUserId } from './auth';
 import { Mood } from '@/prisma/generated/prisma';
+
+const JOURNAL_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
 export type Conversation = {
   role: 'user' | 'assistant' | 'system';
@@ -19,6 +21,7 @@ export type MindsetData = {
 function invalidateJournalRelatedCaches(userId: string): void {
   updateTag(`user-data-${userId}`)
   updateTag(`dashboard-${userId}`)
+  updateTag(`mood-${userId}`)
 }
 
 export async function saveMindset(

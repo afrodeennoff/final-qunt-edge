@@ -12,6 +12,8 @@ import dynamic from "next/dynamic";
 import { isAdminUser } from "@/server/authz";
 import { getUserDashboardTheme } from "@/server/user-data";
 import { serializeThemeVars } from "@/lib/constants/dashboard-themes";
+import { cookies } from "next/headers";
+import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state";
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
@@ -52,6 +54,10 @@ export default async function DashboardLayout({
   const isAdmin = isAdminUser(user);
   const userTheme = await getUserDashboardTheme() ?? undefined;
   const themeScript = serializeThemeVars(userTheme ?? 'blue');
+  const cookieStore = await cookies();
+  const defaultSidebarOpen = parseSidebarStateCookieValue(
+    cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
+  );
 
   return (
     <>
@@ -62,7 +68,7 @@ export default async function DashboardLayout({
           __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'blue'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
         }}
       />
-      <SidebarRootProviders withAuthTimeout initialTheme={userTheme}>
+      <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout initialTheme={userTheme}>
       <DashboardProviders>
         <DashboardClientOverlays />
         <DashboardProvider>

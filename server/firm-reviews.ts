@@ -1,6 +1,7 @@
 'use server'
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
+import { cacheLife, cacheTag } from 'next/cache'
 
 export type ReviewSortOption = 'newest' | 'oldest' | 'highest' | 'lowest'
 
@@ -33,6 +34,8 @@ export interface ListFirmReviewsResult {
 }
 
 const REVIEWS_PAGE_SIZE = 10
+const REVIEWS_CACHE_LIFETIME = { stale: 1_800, revalidate: 1_800, expire: 3_600 } as const
+const REVIEWS_CACHE_TAG = (propfirmId: string) => `firm-reviews-${propfirmId}`
 
 function getReviewOrderBy(sort: ReviewSortOption) {
   if (sort === 'oldest') {
@@ -78,10 +81,10 @@ export async function createFirmReview(data: { propfirmId: string; rating: numbe
   })
 }
 
-export async function listFirmReviews(
+async function loadFirmReviews(
   propfirmId: string,
-  page = 1,
-  sort: ReviewSortOption = 'newest'
+  page: number,
+  sort: ReviewSortOption
 ): Promise<ListFirmReviewsResult> {
   const normalizedPage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
   const skip = (normalizedPage - 1) * REVIEWS_PAGE_SIZE
@@ -108,7 +111,26 @@ export async function listFirmReviews(
   }
 }
 
-export async function getFirmReviewStats(propfirmId: string) {
+async function listFirmReviewsCached(
+  propfirmId: string,
+  page: number,
+  sort: ReviewSortOption
+): Promise<ListFirmReviewsResult> {
+  'use cache'
+  cacheLife(REVIEWS_CACHE_LIFETIME)
+  cacheTag(REVIEWS_CACHE_TAG(propfirmId))
+  return loadFirmReviews(propfirmId, page, sort)
+}
+
+export async function listFirmReviews(
+  propfirmId: string,
+  page = 1,
+  sort: ReviewSortOption = 'newest'
+): Promise<ListFirmReviewsResult> {
+  return listFirmReviewsCached(propfirmId, page, sort)
+}
+
+async function loadFirmReviewStats(propfirmId: string) {
   const reviews = await prisma.propFirmReview.findMany({
     where: { 
       propFirmId: propfirmId,
@@ -116,7 +138,7 @@ export async function getFirmReviewStats(propfirmId: string) {
     },
     select: { rating: true },
   })
-  
+
   if (reviews.length === 0) {
     return { average: 0, total: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } }
   }
@@ -136,6 +158,17 @@ export async function getFirmReviewStats(propfirmId: string) {
     total: reviews.length,
     distribution,
   }
+}
+
+async function getFirmReviewStatsCached(propfirmId: string) {
+  'use cache'
+  cacheLife(REVIEWS_CACHE_LIFETIME)
+  cacheTag(REVIEWS_CACHE_TAG(propfirmId))
+  return loadFirmReviewStats(propfirmId)
+}
+
+export async function getFirmReviewStats(propfirmId: string) {
+  return getFirmReviewStatsCached(propfirmId)
 }
 
 export async function flagReview(data: { reviewId: string; reason: string; description?: string }) {

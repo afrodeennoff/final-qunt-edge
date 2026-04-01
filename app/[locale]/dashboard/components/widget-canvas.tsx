@@ -125,7 +125,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
         data-widget-shell="true"
         className={cn(
           "h-full min-h-0 w-full",
-          uiV2Enabled && "rounded-xl border border-v2-border/60 bg-v2-bg-surface/95 backdrop-blur-sm",
+          uiV2Enabled && "rounded-xl",
           isCustomizing && "blur-[2px]"
         )}
       >
@@ -657,16 +657,20 @@ export default function WidgetCanvas() {
                       currentType={widget.type}
                     >
                       <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
-                        <div className={cn(
-                          "h-full w-full rounded-xl transition-all duration-500 group/widget overflow-hidden relative precision-panel border border-v2-border/60",
-                          isCustomizing
-                            ? "border-[hsl(var(--precision-cobalt)/0.7)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
-                            : "bg-v2-bg-surface/95 hover:border-v2-border/80"
-                        )}>
+                        <div
+                          className={cn(
+                            "relative h-full w-full overflow-hidden rounded-xl transition-all duration-300 group/widget",
+                            isCustomizing
+                              ? "precision-panel border border-[hsl(var(--precision-cobalt)/0.45)] bg-[hsl(var(--precision-panel-elevated)/0.98)] shadow-[var(--v2-glow-ambient)]"
+                              : "border border-transparent bg-transparent"
+                          )}
+                        >
                           {showDataDebug && !isCustomizing && (
                             <DebugDataBadge />
                           )}
-                          <div className="absolute inset-0 bg-linear-to-b from-card/[0.02] to-transparent pointer-events-none" />
+                          {isCustomizing ? (
+                            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-card/[0.02] to-transparent" />
+                          ) : null}
                           <div className="relative h-full w-full">
                             {renderWidget(widget)}
                           </div>

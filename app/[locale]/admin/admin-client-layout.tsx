@@ -13,8 +13,10 @@ import { SidebarNav } from "./components/sidebar-nav"
 
 export function AdminClientLayout({
   children,
+  defaultSidebarOpen,
 }: {
   children: React.ReactNode
+  defaultSidebarOpen: boolean
 }) {
   const router = useRouter()
   const locale = useCurrentLocale()
@@ -38,7 +40,7 @@ export function AdminClientLayout({
       </Head>
       <RootProviders>
       <DashboardProviders>
-      <SidebarProvider defaultOpen={true}>
+      <SidebarProvider defaultOpen={defaultSidebarOpen}>
         <AuthTimeout />
         <div className="flex min-h-screen w-full bg-background text-foreground">
           <SidebarNav />

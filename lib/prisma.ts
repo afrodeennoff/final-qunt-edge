@@ -11,6 +11,8 @@ const globalForPrisma = globalThis as unknown as {
 const isProduction = process.env.NODE_ENV === 'production'
 const isNextBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const MAX_POOL_LIMIT = 20
+const DEFAULT_SERVERLESS_POOL_MAX = 5
+const DEFAULT_SERVERLESS_POOL_MIN = 0
 const MISSING_CONNECTION_ERROR =
   '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
 
@@ -164,21 +166,31 @@ if (!connectionString) {
 
   prisma = globalForPrisma.prisma ?? createMissingConnectionProxy()
 } else {
-  // Production-grade pool settings: max 20, min 5 for production
-  const defaultPoolMax = isProduction ? (isNextBuildPhase ? 1 : 20) : 5
-  const defaultPoolMin = isProduction ? 5 : 2
+  // Vercel functions are serverless. Keep runtime pools small so warm instances do not pin
+  // excessive idle Postgres connections across dashboard and cron traffic.
+  const defaultPoolMax = isProduction ? (isNextBuildPhase ? 1 : DEFAULT_SERVERLESS_POOL_MAX) : 5
+  const defaultPoolMin = isProduction ? DEFAULT_SERVERLESS_POOL_MIN : 2
 
-  const maxPoolCap = isNextBuildPhase ? 1 : MAX_POOL_LIMIT
+  const maxPoolCap = isNextBuildPhase
+    ? 1
+    : isProduction
+      ? DEFAULT_SERVERLESS_POOL_MAX
+      : MAX_POOL_LIMIT
+  const minPoolCap = isProduction ? DEFAULT_SERVERLESS_POOL_MIN : maxPoolCap
   const poolMax = Number.isFinite(parsedPoolMax) && parsedPoolMax > 0
     ? Math.min(parsedPoolMax, maxPoolCap)
     : defaultPoolMax
 
-  const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin > 0 && parsedPoolMin <= poolMax
-    ? parsedPoolMin
+  const poolMin = Number.isFinite(parsedPoolMin) && parsedPoolMin >= 0
+    ? Math.min(parsedPoolMin, minPoolCap, poolMax)
     : Math.min(defaultPoolMin, poolMax)
 
   if (Number.isFinite(parsedPoolMax) && parsedPoolMax > maxPoolCap) {
     console.warn(`[Prisma] PG_POOL_MAX=${parsedPoolMax} exceeds safe cap ${maxPoolCap}; using ${maxPoolCap}.`)
+  }
+
+  if (Number.isFinite(parsedPoolMin) && parsedPoolMin > minPoolCap) {
+    console.warn(`[Prisma] PG_POOL_MIN=${parsedPoolMin} exceeds safe cap ${minPoolCap}; using ${poolMin}.`)
   }
 
   // Production-grade timeout settings
@@ -243,7 +255,7 @@ if (!connectionString) {
     const idleCount = activePool.idleCount
     const activeConnections = totalCount - idleCount
 
-    // Log warning when pool is at 80% capacity (16/20 connections)
+    // Log warning when pool is at 80% capacity.
     if (activeConnections >= Math.ceil(poolMax * 0.8)) {
       const utilization = ((activeConnections / poolMax) * 100).toFixed(0)
 

@@ -98,17 +98,17 @@ export function DashboardHeader() {
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 overflow-hidden border-b border-transparent backdrop-blur-xl transition-all duration-300",
+                "sticky top-0 z-50 overflow-hidden border-b border-v2-border/10 backdrop-blur-xl transition-all duration-300",
                 "bg-v2-bg-base/95",
                 "supports-[backdrop-filter]:bg-v2-bg-base/85 supports-[backdrop-filter]:backdrop-blur-xl",
                 isMobile ? "pt-safe" : "h-14"
             )}
             data-dashboard-header="true"
         >
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground) / 0.12),transparent_25%,transparent_75%,hsl(var(--foreground) / 0.12))]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.05),transparent_20%,transparent_80%,hsl(var(--foreground)_/_0.05))]" />
             <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6", isMobile ? "h-14" : "h-full")}>
                 <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2 sm:gap-3 pointer-events-auto">
-                    <SidebarTrigger className="h-10 w-10 md:h-7 md:w-7 text-v2-text-muted hover:text-v2-text-primary transition-colors" />
+                    <SidebarTrigger className="h-10 w-10 rounded-full border border-transparent text-v2-text-muted transition-colors hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-8 md:w-8" />
                     <div className="flex min-w-0 items-center gap-3">
                         <div className="mt-0.5 hidden h-7 w-px bg-v2-border/30 sm:block" />
                         <div className="min-w-0">
@@ -116,9 +116,8 @@ export function DashboardHeader() {
                                 {showSectionLabel && (
                                     <span className={cn(
                                         "hidden sm:inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
-                                        "border-v2-border/40 bg-v2-bg-surface/40 text-v2-text-muted",
-                                        "backdrop-blur-sm transition-all duration-200",
-                                        "hover:border-v2-border/60 hover:bg-v2-bg-surface/60"
+                                        "border-v2-border/18 bg-v2-bg-surface/30 text-v2-text-muted",
+                                        "backdrop-blur-sm"
                                     )}>
                                         {sectionLabel}
                                     </span>
@@ -135,19 +134,18 @@ export function DashboardHeader() {
                 <div className={cn(
                     "flex shrink-0 items-center gap-1.5 sm:gap-2",
                     isMobile
-                        ? "rounded-lg border border-v2-border/30 bg-v2-bg-surface/45 p-0.5 shadow-none"
+                        ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5 shadow-none"
                         : cn(
-                            "rounded-2xl border p-1 shadow-sm transition-all duration-200",
-                            "border-v2-border/40 bg-v2-bg-surface/30 backdrop-blur-sm",
-                            "hover:border-v2-border/60 hover:bg-v2-bg-surface/40 hover:shadow-md"
+                            "rounded-full border p-1 shadow-none",
+                            "border-v2-border/18 bg-v2-bg-surface/55 backdrop-blur-xl",
+                            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]"
                         )
                 )}>
                     <div className={cn(
                         "flex shrink-0 items-center gap-1",
                         isMobile ? "" : cn(
-                            "rounded-xl bg-v2-bg-base/60 px-1 py-0.5 ring-1",
-                            "ring-v2-border/10 transition-all duration-200",
-                            "hover:ring-v2-border/20 hover:bg-v2-bg-base/80"
+                            "rounded-full bg-v2-bg-base/60 px-1 py-0.5 ring-1",
+                            "ring-v2-border/10"
                         )
                     )}>
                         <FilterCommandMenu variant="navbar" />
@@ -157,7 +155,7 @@ export function DashboardHeader() {
                         {!isMobile && <DailySummaryModal />}
                     </div>
 
-                    <div className="h-6 w-px bg-v2-border/30 mx-1 hidden sm:block" />
+                    <div className="mx-1 hidden h-6 w-px bg-v2-border/15 sm:block" />
 
                     <div className="hidden sm:flex items-center gap-2">
                         <ImportButton />
@@ -165,10 +163,10 @@ export function DashboardHeader() {
                         {!isPlusUser() && (
                             <Link href={billingHref}>
                                 <button className={cn(
-                                    "group flex h-8 items-center gap-2 rounded-lg border bg-v2-bg-surface px-4",
+                                    "group flex h-8 items-center gap-2 rounded-full border px-4",
                                     "text-[9px] font-bold uppercase tracking-[0.2em] text-v2-text-primary",
-                                    "border-v2-border/60 transition-all duration-200",
-                                    "hover:bg-v2-accent/10 hover:border-v2-accent/50 hover:shadow-[var(--v2-glow-ambient)]",
+                                    "border-v2-border/20 bg-v2-bg-base/65 transition-all duration-200",
+                                    "hover:bg-v2-accent/10 hover:border-v2-accent/35 hover:shadow-[var(--v2-glow-ambient)]",
                                     "active:scale-95"
                                 )}>
                                     <Sparkles className="h-3 w-3 animate-pulse text-v2-accent" />
@@ -194,7 +192,7 @@ export function DashboardHeader() {
                         <div className="relative px-3 pb-3 pt-1">
                             <div className={cn(
                                 "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
-                                "border-v2-border/60 bg-v2-bg-surface/60"
+                                "border-v2-border/20 bg-v2-bg-surface/45"
                             )}>
                                 <ActiveFilterTags showAccountNumbers={true} />
                             </div>
@@ -205,7 +203,7 @@ export function DashboardHeader() {
                         <div className="relative px-4 pb-3 pt-1 sm:px-8">
                             <div className={cn(
                                 "rounded-xl border px-2 py-1.5 backdrop-blur-sm transition-all duration-200",
-                                "border-v2-border/60 bg-v2-bg-surface/60"
+                                "border-v2-border/20 bg-v2-bg-surface/45"
                             )}>
                                 <ActiveFilterTags showAccountNumbers={true} />
                             </div>

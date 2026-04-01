@@ -2,6 +2,8 @@ import { createClient } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { AdminClientLayout } from "./admin-client-layout"
 import { isAdminUser } from "@/server/authz"
+import { cookies } from "next/headers"
+import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
 
 export default async function AdminLayout({
   children,
@@ -24,5 +26,10 @@ export default async function AdminLayout({
     redirect(`/${locale}/dashboard`)
   }
 
-  return <AdminClientLayout>{children}</AdminClientLayout>
+  const cookieStore = await cookies()
+  const defaultSidebarOpen = parseSidebarStateCookieValue(
+    cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
+  )
+
+  return <AdminClientLayout defaultSidebarOpen={defaultSidebarOpen}>{children}</AdminClientLayout>
 }

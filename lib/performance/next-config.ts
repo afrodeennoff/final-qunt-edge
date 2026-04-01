@@ -69,6 +69,20 @@ export function createOptimizedNextConfig(): OptimizedNextConfigResult {
         'decimal.js',
         // Form state — used in auth, admin, community pages
         'react-hook-form',
+        // Form resolvers — Zod schema validation for react-hook-form
+        '@hookform/resolvers',
+        // Schema validation — Zod used across env, API, form validation
+        'zod',
+        // Env validation — t3-oss env-nextjs used in lib/env.ts
+        '@t3-oss/env-nextjs',
+        // Date picker — react-day-picker used in filters and date selection
+        'react-day-picker',
+        // Command menu — cmdk used in searchable command palette
+        'cmdk',
+        // Toast notifications — sonner used for toast feedback
+        'sonner',
+        // Drawer — vaul used for bottom sheet / drawer component
+        'vaul',
         // UI primitives — Dialog, Dropdown, Select, Popover used in 10+ components
         '@radix-ui/react-dialog',
         '@radix-ui/react-dropdown-menu',

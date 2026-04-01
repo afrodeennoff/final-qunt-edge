@@ -4,6 +4,225 @@
 
 ---
 
+## NEW (2026-04-01): Dashboard widget wrappers must not own chrome in normal mode
+
+### Mistake
+Allowed `widget-canvas` wrappers and widget surface components to render full card chrome at the same time, which made dashboard widgets look like they had harsh white double borders.
+
+### Root Cause
+Chrome ownership was split across layers: the grid wrapper rendered its own bordered/background panel even though `WidgetShell`, `ChartSurface`, `StatsCard`, and other widget components already render their own surface.
+
+### Rule
+On the dashboard, normal-mode widget wrappers must stay visually transparent. The visible border/background belongs to the widget surface component itself. Only customize/edit mode may add an outer drag/edit shell.
+
+### Example
+```tsx
+// BAD
+<div className="rounded-xl border border-v2-border/60 bg-v2-bg-surface/95">
+  <ChartSurface />
+</div>
+
+// GOOD
+<div className="rounded-xl border border-transparent bg-transparent">
+  <ChartSurface />
+</div>
+```
+
+## NEW (2026-04-01): Dashboard header actions must share one subdued pill treatment
+
+### Mistake
+Mixed multiple border strengths, shapes, and backgrounds inside the dashboard header action strip, which made the navbar read as broken and inconsistent.
+
+### Root Cause
+Each action control evolved with its own local styles instead of following a single header-shell pattern.
+
+### Rule
+For dashboard header actions, use one shared rounded pill language with low-opacity borders/backgrounds. Avoid mixing square buttons, heavy outlines, and separate visual systems in the same control row.
+
+### Example
+```tsx
+// GOOD
+<div className="rounded-full border border-v2-border/20 bg-v2-bg-surface/55 p-1">
+  <ImportButton />
+  <GlobalSyncButton />
+  <DailySummaryModal />
+</div>
+```
+
+## NEW (2026-04-01): Cached Prisma loaders should stay on direct async/await, not promise-chain wrappers
+
+### Mistake
+Refactored cached review/stat loader helpers to explicit `Promise` chains, which introduced a repo-level TypeScript regression in `server/firm-reviews.ts`.
+
+### Root Cause
+The refactor changed the loader shape without functional benefit and made the cached helper typing more brittle than the original direct async/await form.
+
+### Rule
+For cached server read helpers around Prisma, prefer direct `async/await` loaders that return plain objects. Do not rewrite them into `Promise.all(...).then(...)` or `query.then(...)` chains unless there is a concrete reason and the full repo typecheck is re-verified.
+
+### Example
+```ts
+// GOOD
+async function loadFirmReviews(...) {
+  const [items, total] = await Promise.all([...])
+  return { items, total, page, totalPages }
+}
+```
+
+## NEW (2026-04-01): Dashboard sidebar navigation must track query-param route changes, not just pathname changes
+
+### Mistake
+Sidebar navigation fallback cleanup only listened to `pathname`, while dashboard root navigation changes tabs via query params on the same pathname.
+
+### Root Cause
+The sidebar navigation model assumed route changes always move to a different pathname. Dashboard tab navigation uses `/dashboard?tab=*`, so `searchParams` are part of the real route state.
+
+### Rule
+For dashboard/sidebar navigation, any pending-navigation cleanup or route-match logic that depends on navigation completion must watch the full route key (`pathname + search`), not just `pathname`.
+
+### Example
+```ts
+// BAD
+useEffect(() => {
+  clearNavigationFallbackTimer()
+}, [pathname])
+
+// GOOD
+useEffect(() => {
+  clearNavigationFallbackTimer()
+}, [currentRouteKey])
+```
+
+## NEW (2026-04-01): Authenticated sidebar shells must restore persisted open/collapsed state from the sidebar cookie
+
+### Mistake
+Dashboard, Teams, and Admin shells always booted the sidebar with `defaultOpen={true}`, so hard reloads/direct-entry requests could ignore the user’s persisted sidebar state.
+
+### Root Cause
+Sidebar state persistence was only written client-side; the server layouts never read the cookie to seed the initial provider state.
+
+### Rule
+Any authenticated layout that mounts a persistent sidebar must read the `sidebar:state` cookie on the server and pass the parsed value into `SidebarProvider`/`SidebarRootProviders`.
+
+### Example
+```ts
+const cookieStore = await cookies()
+const defaultSidebarOpen = parseSidebarStateCookieValue(
+  cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
+)
+
+return <SidebarProvider defaultOpen={defaultSidebarOpen}>{children}</SidebarProvider>
+```
+
+---
+
+## NEW (2026-04-01): Dashboard chart server reads must be minimal and have a bounded fallback path
+
+### Mistake
+Allowed the dashboard equity chart to depend on a heavier-than-needed server read path and an unbounded client wait, which left the UI stuck on `"Loading chart data..."` when the server action was slow or degraded.
+
+### Root Cause
+Chart data loading assumed the server action would always return promptly and fetched more database shape than the chart actually needed, increasing pressure on serverless DB connections.
+
+### Rule
+For dashboard chart/data endpoints, select only the fields required for computation. If the client already has sufficient local trade data, add a deterministic timeout/fallback path so the UI degrades to local computation instead of indefinite loading.
+
+### Example
+```ts
+// BAD
+const trades = await prisma.trade.findMany({ where: { userId } })
+const chartData = await getEquityChartDataAction(...)
+
+// GOOD
+const trades = await prisma.trade.findMany({
+  where: { userId },
+  select: {
+    id: true,
+    entryDate: true,
+    pnl: true,
+    commission: true,
+  },
+})
+const chartData = await Promise.race([
+  getEquityChartDataAction(...),
+  timeoutAfter(12000),
+])
+```
+
+## NEW (2026-04-01): Keep this repo on npm-only Vercel install/build commands unless the user explicitly changes package-manager policy
+
+### Mistake
+Left Bun in `vercel.json` install/build fallbacks after the user explicitly asked for npm-only build execution.
+
+### Root Cause
+Earlier optimization work treated package-manager flexibility as harmless, but in this repo it created avoidable divergence from the requested and verified build path.
+
+### Rule
+For this project, keep Vercel `installCommand` and `buildCommand` on npm-only commands unless the user explicitly approves a package-manager change and the new path is re-verified.
+
+### Example
+```json
+// BAD
+{
+  "installCommand": "bun install || npm install",
+  "buildCommand": "bun run build || npm run build"
+}
+
+// GOOD
+{
+  "installCommand": "npm install --no-audit --no-fund",
+  "buildCommand": "npm run build"
+}
+```
+
+---
+
+## NEW (2026-04-01): Serverless Prisma runtime must not reserve oversized minimum pools
+
+### Mistake
+Used production Prisma pool defaults sized like a long-lived server (`max=20`, `min=5`) inside Vercel serverless functions.
+
+### Root Cause
+Pool tuning assumed a persistent Node server. In serverless, each warm function instance can keep idle connections open, so a non-zero minimum pool scales connection pressure with instance count.
+
+### Rule
+For Vercel serverless runtime, keep Prisma runtime pool defaults small and clamp env overrides to safe caps. Default to `min=0` and a low `max` unless a measured workload proves otherwise.
+
+### Example
+```ts
+// BAD
+const defaultPoolMax = isProduction ? 20 : 5
+const defaultPoolMin = isProduction ? 5 : 2
+
+// GOOD
+const defaultPoolMax = isProduction ? 5 : 5
+const defaultPoolMin = isProduction ? 0 : 2
+```
+
+## NEW (2026-04-01): Cron auth should validate documented bearer-secret flow first
+
+### Mistake
+Allowed cron auth logic to diverge across routes and treat a custom header path as a primary mechanism instead of first honoring the documented bearer-secret request.
+
+### Root Cause
+Cron-specific auth evolved separately from generic service auth, so route behavior drifted and became harder to reason about.
+
+### Rule
+For Vercel cron routes, validate `Authorization: Bearer ${CRON_SECRET}` first. Only keep `x-vercel-cron` support as an explicit compatibility fallback when a dedicated legacy secret is configured.
+
+### Example
+```ts
+// GOOD
+return requireServiceAuth(request.headers.get('authorization'), {
+  requestId,
+  serviceName,
+  secretEnvKey: 'CRON_SECRET',
+  allowVercelCron: false,
+})
+```
+
+---
+
 ## NEW (2026-04-01): Do not disable `cacheComponents` in a codebase that already uses `'use cache'`
 
 ### Mistake

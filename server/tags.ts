@@ -2,31 +2,36 @@
 
 import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
-import { updateTag } from 'next/cache'
+import { cacheTag, updateTag } from 'next/cache'
 
 function invalidateTagRelatedCaches(userId: string): void {
   updateTag(`user-data-${userId}`)
   updateTag(`trades-${userId}`)
   updateTag(`dashboard-${userId}`)
+  updateTag(`tags-${userId}`)
+}
+
+async function _getTags(userId: string) {
+  const tags = await prisma.tag.findMany({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+  return tags
+}
+
+async function _getTagsCached(userId: string) {
+  'use cache'
+  cacheTag(`tags-${userId}`)
+  return _getTags(userId)
 }
 
 export async function getTagsAction() {
   const userId = await getDatabaseUserId()
-  try {
-    const tags = await prisma.tag.findMany({
-      where: {
-        userId: userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-
-    return tags
-  } catch (error) {
-    console.error('Failed to fetch tags:', error)
-    throw new Error('Failed to fetch tags')
-  }
+  return _getTagsCached(userId)
 }
 
 export async function createTagAction(formData: {

@@ -16,6 +16,8 @@ const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "sans-serif"],
 });
 
 const fontSerif = Cormorant_Garamond({
@@ -23,6 +25,8 @@ const fontSerif = Cormorant_Garamond({
   variable: "--font-serif",
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: true,
+  fallback: ["Georgia", "serif"],
 });
 
 const fontMono = IBM_Plex_Mono({
@@ -30,6 +34,8 @@ const fontMono = IBM_Plex_Mono({
   variable: "--font-mono",
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: true,
+  fallback: ["Menlo", "monospace"],
 });
 
 const siteMetadata: Metadata = {

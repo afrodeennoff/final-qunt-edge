@@ -4,6 +4,8 @@ import { AuthTimeout } from "@/components/auth/auth-timeout"
 import { createClient } from "@/server/auth"
 import { redirect } from "next/navigation"
 import { TeamsSidebar } from '../components/teams-sidebar'
+import { cookies } from "next/headers"
+import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
 
 export const metadata: Metadata = {
     robots: {
@@ -31,9 +33,14 @@ export default async function DashboardLayout({
       redirect(`/${safeLocale}/authentication?next=${nextPath}`)
     }
 
+    const cookieStore = await cookies()
+    const defaultSidebarOpen = parseSidebarStateCookieValue(
+      cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
+    )
+
     // If no teams found, show the default dashboard with a message
     return (
-        <SidebarProvider defaultOpen={true}>
+        <SidebarProvider defaultOpen={defaultSidebarOpen}>
             <AuthTimeout />
             <div className="flex min-h-screen w-full bg-background selection:bg-muted selection:text-foreground">
                 <TeamsSidebar />

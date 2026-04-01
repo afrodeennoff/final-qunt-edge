@@ -27,6 +27,13 @@ export interface ServiceAccessContext {
   requestId: string
 }
 
+type ServiceAuthOptions = {
+  requestId?: string
+  serviceName?: string
+  secretEnvKey?: string
+  allowVercelCron?: boolean
+}
+
 class AuthzError extends Error {
   status: number
   code: string
@@ -152,12 +159,7 @@ export async function requireAdmin(
 
 export function requireServiceAuth(
   authHeader: string | null,
-  options?: {
-    requestId?: string
-    serviceName?: string
-    secretEnvKey?: string
-    allowVercelCron?: boolean
-  }
+  options?: ServiceAuthOptions
 ): ServiceAccessContext {
   const requestId = options?.requestId ?? crypto.randomUUID()
   const serviceName = options?.serviceName ?? 'cron'
@@ -212,43 +214,38 @@ export function requireCronAuth(
   const requestId = options?.requestId ?? crypto.randomUUID()
   const serviceName = options?.serviceName ?? 'cron'
   const secretEnvKey = options?.secretEnvKey ?? 'CRON_SECRET'
-  const secret = process.env[secretEnvKey]
-
-  if (!secret) {
-    throw new AuthzError(
-      `${serviceName} secret not configured`,
-      500,
-      'AUTH_SERVICE_MISCONFIGURED',
-      requestId
-    )
+  const authOptions: ServiceAuthOptions = {
+    requestId,
+    serviceName,
+    secretEnvKey,
+    allowVercelCron: false,
   }
 
-  const vercelCronHeader = request.headers.get('x-vercel-cron')
-  const authHeader = request.headers.get('authorization')
-
-  if (vercelCronHeader) {
-    const vercelCronSecret = process.env.VERCEL_CRON_SECRET
-    if (vercelCronSecret && vercelCronHeader === vercelCronSecret) {
-      return { service: serviceName, requestId }
+  try {
+    return requireServiceAuth(request.headers.get('authorization'), authOptions)
+  } catch (error) {
+    if (!(error instanceof AuthzError) || error.code !== 'AUTH_UNAUTHORIZED') {
+      throw error
     }
   }
 
-  const candidate = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
-  if (!candidate) {
+  const vercelCronHeader = request.headers.get('x-vercel-cron')
+  const vercelCronSecret = process.env.VERCEL_CRON_SECRET
+
+  if (!vercelCronHeader || !vercelCronSecret) {
     throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
   }
 
   try {
-    const isValid = timingSafeEqual(Buffer.from(candidate), Buffer.from(secret))
+    const isValid = timingSafeEqual(Buffer.from(vercelCronHeader), Buffer.from(vercelCronSecret))
     if (!isValid) {
       throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
     }
+    return { service: serviceName, requestId }
   } catch (error) {
     if (error instanceof AuthzError) throw error
     throw new AuthzError('Unauthorized', 401, 'AUTH_UNAUTHORIZED', requestId)
   }
-
-  return { service: serviceName, requestId }
 }
 
 export function toErrorResponse(error: unknown): NextResponse<ErrorResponse> {

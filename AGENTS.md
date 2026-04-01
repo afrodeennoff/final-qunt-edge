@@ -108,6 +108,8 @@ npm run analyze:bundle         # Bundle analysis
 - **Build requires DB**: `npm run build` checks Prisma migration status against `localhost:5432`. If unavailable, record env blocker, don't treat as code regression.
 - **Proxy build race**: `.next/server/proxy.js` ENOENT = transient race. Use `scripts/robust-next-build.mjs` retries.
 - **Static manifest build race**: `.next/static/**/_ssgManifest.js` ENOENT during finalization is transient in this workspace; keep robust build retries enabled for this artifact.
+- **Package manager policy**: Keep `vercel.json` install/build commands npm-only unless the user explicitly requests and approves a package-manager change.
+- **Serverless Prisma pool**: Runtime Prisma pool defaults must stay small on Vercel (`PG_POOL_MIN=0`, low `PG_POOL_MAX` cap). Do not use long-lived server pool defaults in serverless functions.
 - **i18n library**: `next-international` (NOT next-intl). Locales: en, fr.
 - **Middleware**: `proxy.ts` (NOT middleware.ts). Handles route classification, auth, CSP, CORS, i18n redirect.
 - **Firm detail routing**: In `app/[locale]/(landing)/firm/[slug]/page.tsx`, alias slug redirects must only target canonical slugs that resolve in DB; otherwise redirect to `/${locale}/propfirms`.
@@ -117,8 +119,14 @@ npm run analyze:bundle         # Bundle analysis
 - **Teams protected routes**: `/teams/dashboard`, `/teams/manage`, and `/teams/join` are auth-protected surfaces. Keep both proxy classification (`PRIVATE_DOCUMENT_PATH_PREFIXES`) and route/layout guards aligned so unauthenticated requests redirect to locale auth with `next`.
 - **Team invitation join policy**: `joinTeam(teamId)` must require a valid pending, unexpired invitation for the authenticated email and accept that invitation atomically with membership creation.
 - **Dashboard sidebar shell**: Keep `DashboardSidebar` in `app/[locale]/dashboard/layout.tsx` as a direct import (not dynamic with placeholder rails). Navigation is part of the core shell contract.
+- **Sidebar persistence**: Authenticated sidebar shells (`dashboard`, `teams/dashboard`, `teams/manage`, `admin`) must read the `sidebar:state` cookie server-side and pass it into the sidebar provider as `defaultOpen`.
+- **Sidebar route state**: Dashboard sidebar navigation must treat query params as part of route completion. Cleanup for pending navigation/fallback timers must track `pathname + search`, not just `pathname`.
 - **Mobile mode detection**: `hooks/use-mobile.tsx` should derive state from `matchMedia(...).matches` / `MediaQueryListEvent.matches`, not `window.innerWidth` snapshots.
 - **Dashboard layout bootstrap**: In `context/data-provider.tsx`, if `getDashboardLayout` fails, immediately seed default dashboard layout for the active user (do not leave layout null).
+- **Dashboard chart loading**: In `server/equity-chart.ts`, keep Prisma reads minimal via explicit `select` projections. In the client chart, if the server action is slow/fails/returns empty while local trades exist, fall back to local computation instead of indefinite loading UI.
+- **Dashboard widget chrome ownership**: In `app/[locale]/dashboard/components/widget-canvas.tsx`, keep normal-mode wrappers visually transparent. Widget borders/backgrounds belong to the widget surface component (`WidgetShell`, `ChartSurface`, `StatsCard`, `Card`); only customize mode may add outer shell chrome.
+- **Dashboard header action styling**: Keep `dashboard-header` action controls on one subdued rounded-pill system with low-opacity borders/backgrounds. Do not mix heavy square outlines and pill controls in the same top bar.
+- **Cached Prisma helper style**: For server read helpers that are wrapped by `'use cache'`, prefer direct `async/await` loaders returning plain objects over `Promise.all(...).then(...)` / `query.then(...)` chains. Re-verify full `npm run typecheck` after any cache-helper refactor.
 - **Widget system**: 35+ widget types in `app/[locale]/dashboard/config/widget-registry.tsx`. `WidgetSize = 'tiny' | 'small' | 'small-long' | 'medium' | 'large' | 'extra-large'`.
 - **Chart library**: Recharts with `ChartSurface`/`ChartContainer`/`ChartTooltip` wrappers.
 - **Deploy**: Vercel with cron jobs. `vercel.json` defines 4 cron schedules.

@@ -267,8 +267,8 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
         <CardV2
           className={cn(
             "relative overflow-hidden rounded-xl border",
-            "border-v2-border/65 bg-v2-bg-surface/95",
-            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.05)]",
+            "border-v2-border/28 bg-v2-bg-surface/90",
+            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
             config.padding,
             className
           )}
@@ -305,10 +305,10 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
         ref={ref}
         data-widget-shell="v2"
         className={cn(
-          "relative overflow-hidden rounded-xl border transition-all duration-[180ms]",
-          "border-v2-border/65 bg-v2-bg-surface/95",
-          "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.05)]",
-          "hover:border-v2-border/70 hover:bg-v2-bg-surface/99",
+          "group relative overflow-hidden rounded-xl border transition-all duration-[180ms]",
+          "border-v2-border/28 bg-v2-bg-surface/90",
+          "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
+          "hover:border-v2-border/38 hover:bg-v2-bg-surface/94",
           glass && "bg-v2-bg-surface/60 backdrop-blur-md",
           !!onClick && "cursor-pointer hover:shadow-md",
           config.padding,

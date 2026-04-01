@@ -34,7 +34,6 @@ import {
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { useNavigationLoading } from "@/hooks/use-navigation-loading"
-import { useNavigationHelper } from "@/lib/navigation-utils"
 
 export interface UnifiedSidebarItem {
   href?: string
@@ -87,7 +86,7 @@ function getUserInitials(user?: UnifiedSidebarConfig["user"]) {
   return parts.map((part) => part[0]?.toUpperCase() ?? "").join("")
 }
 
-function useActiveLink() {
+export function useActiveLink() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -143,9 +142,13 @@ export function UnifiedSidebar({
   const isActive = useActiveLink()
   const { isMobile, setOpenMobile, state, setOpen } = useSidebar()
   const { isLoading } = useNavigationLoading()
-  const { isQueryParamOnly } = useNavigationHelper()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const normalizedPathname = stripLocalePrefix(pathname || '/').replace(/\/$/, '') || '/'
+  const currentRouteKey = useMemo(() => {
+    const currentSearch = searchParams?.toString()
+    return currentSearch ? `${pathname || '/'}?${currentSearch}` : (pathname || '/')
+  }, [pathname, searchParams])
   const isSidebarEnabledRoute =
     normalizedPathname === '/dashboard' ||
     normalizedPathname.startsWith('/dashboard/') ||
@@ -215,7 +218,7 @@ export function UnifiedSidebar({
 
   useEffect(() => {
     clearNavigationFallbackTimer()
-  }, [pathname])
+  }, [currentRouteKey])
 
   useEffect(() => {
     return () => {
@@ -337,7 +340,7 @@ export function UnifiedSidebar({
                             onClick={() => {
                               setPendingHref(href)
                               scheduleNavigationFallback(href)
-                              if (isMobile && !isQueryParamOnly(href)) {
+                              if (isMobile) {
                                 setOpenMobile(false)
                               }
                             }}

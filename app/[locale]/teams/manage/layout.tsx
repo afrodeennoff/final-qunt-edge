@@ -6,6 +6,8 @@ import { AuthProfileButton } from "../components/auth-profile-button"
 import { AuthProfileButtonSkeleton } from "../components/auth-profile-button-skeleton"
 import { TeamsSidebar } from "../components/teams-sidebar"
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
 
 export default async function TeamManageLayout({
   children,
@@ -26,8 +28,13 @@ export default async function TeamManageLayout({
     redirect(`/${safeLocale}/authentication?next=${nextPath}`)
   }
 
+  const cookieStore = await cookies()
+  const defaultSidebarOpen = parseSidebarStateCookieValue(
+    cookieStore.get(SIDEBAR_STATE_COOKIE_NAME)?.value
+  )
+
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={defaultSidebarOpen}>
       <AuthTimeout />
       <div className="flex min-h-screen w-full bg-background selection:bg-muted selection:text-foreground">
         <TeamsSidebar />

@@ -78,7 +78,7 @@ export function DashboardHeaderWidgetControls({ isMobile }: DashboardHeaderWidge
 
       {!isMobile && (
         <>
-          <div className="mx-1 h-4 w-px bg-border/50" />
+          <div className="mx-1 h-4 w-px bg-v2-border/15" />
           <ShareButton currentLayout={currentLayout} />
         </>
       )}
@@ -107,15 +107,16 @@ function CustomizingControls({
 }: CustomizingControlsProps) {
   return (
     <div className="flex items-center gap-1.5">
-      <div className="h-4 w-px bg-border/50 mx-0.5" />
+      <div className="mx-0.5 h-4 w-px bg-v2-border/15" />
       <AddWidgetSheet onAddWidget={addWidget} isCustomizing={isCustomizing} />
 
       {!isMobile && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button
+              type="button"
               aria-label={t("widgets.restoreDefaults")}
-              className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-v2-text-secondary transition-colors hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
               title={t("widgets.restoreDefaults")}
             >
               <RotateCcw className="h-4 w-4" />
@@ -140,8 +141,9 @@ function CustomizingControls({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <button
+              type="button"
               aria-label={t("widgets.deleteAll")}
-              className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-foreground/10 text-foreground/60 hover:text-foreground transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-v2-text-secondary transition-colors hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
               title={t("widgets.deleteAll")}
             >
               <Trash2 className="h-4 w-4" />
@@ -171,7 +173,7 @@ function CustomizingControls({
           onClick={flushPendingSaves}
           aria-label="Save pending dashboard changes"
           className={cn(
-            "flex items-center justify-center rounded-lg bg-foreground/10 text-foreground hover:bg-foreground/20 transition-colors animate-pulse",
+            "flex items-center justify-center rounded-full border border-v2-accent/20 bg-v2-accent/10 text-v2-text-primary transition-colors animate-pulse",
             isMobile ? "h-11 w-11" : "h-8 w-8"
           )}
           title="Save Changes"
@@ -183,12 +185,12 @@ function CustomizingControls({
           role="status"
           aria-label="All changes saved"
           className={cn(
-            "flex items-center justify-center text-foreground/70",
+            "flex items-center justify-center rounded-full border border-v2-border/15 bg-v2-bg-base/55 text-v2-text-secondary",
             isMobile ? "h-11 w-11" : "h-8 w-8"
           )}
           title="All changes saved"
         >
-          <CheckCircle2 className="w-4 h-4 text-foreground" />
+          <CheckCircle2 className="w-4 h-4 text-v2-text-primary" />
         </div>
       )}
     </div>
@@ -199,8 +201,8 @@ function getHeaderWrapperClass(isMobile: boolean) {
   return cn(
     "ml-1 flex shrink-0 items-center gap-1.5",
     isMobile
-      ? "rounded-lg border border-border/35 bg-background/70 p-1"
-      : "rounded-xl border border-border/50 bg-background/50 p-1.5 shadow-sm ring-1 ring-foreground/5 backdrop-blur-sm"
+      ? "rounded-full border border-v2-border/15 bg-v2-bg-base/70 p-1"
+      : "rounded-full border border-v2-border/20 bg-v2-bg-base/60 p-1 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)] backdrop-blur-xl"
   );
 }
 
@@ -210,7 +212,7 @@ function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
     isMobile ? "h-11 w-11 justify-center px-0" : "h-8 px-3",
     isCustomizing
       ? "bg-primary text-primary-foreground shadow-none"
-      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+      : "rounded-full border border-transparent text-v2-text-secondary hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
   );
 }
 

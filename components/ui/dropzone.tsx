@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonV2 } from '@/components/ui/v2'
 import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react'
 import { createContext, type PropsWithChildren, useCallback, useContext } from 'react'
+import Image from 'next/image'
 import { useI18n } from '@/locales/client'
 
 export const formatBytes = (
@@ -109,9 +110,17 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             key={`${file.name}-${idx}`}
             className="flex items-center gap-x-4 border-b py-2 first:mt-4 last:mb-4 "
           >
-            {file.type.startsWith('image/') ? (
-              <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-muted flex items-center justify-center">
-                <img src={file.preview} alt={file.name} className="object-cover" />
+            {file.type.startsWith('image/') && file.preview ? (
+              <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-muted flex items-center justify-center relative">
+                <Image
+                  src={file.preview}
+                  alt={file.name}
+                  fill
+                  className="object-cover"
+                  priority={false}
+                  unoptimized
+                  sizes="40px"
+                />
               </div>
             ) : (
               <div className="h-10 w-10 rounded border bg-muted flex items-center justify-center">

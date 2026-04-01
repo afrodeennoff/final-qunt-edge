@@ -4,7 +4,6 @@ import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import { formatInTimeZone } from 'date-fns-tz'
 import { eachDayOfInterval, startOfDay, endOfDay, isValid } from 'date-fns'
-import { Payout as PrismaPayout } from '@/prisma/generated/prisma'
 import { withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 
 // Types matching the component
@@ -81,15 +80,40 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
         const [trades, accounts, groups] = await prisma.$transaction([
           prisma.trade.findMany({
             where: { userId },
-            orderBy: { entryDate: 'desc' }
+            orderBy: { entryDate: 'desc' },
+            select: {
+              id: true,
+              accountNumber: true,
+              entryDate: true,
+              pnl: true,
+              commission: true,
+              instrument: true,
+              timeInPosition: true,
+              tags: true,
+            },
           }),
           prisma.account.findMany({
             where: { userId },
-            include: { payouts: true }
+            select: {
+              number: true,
+              groupId: true,
+              resetDate: true,
+              startingBalance: true,
+              payouts: {
+                select: {
+                  date: true,
+                  amount: true,
+                  status: true,
+                },
+              },
+            },
           }),
           prisma.group.findMany({
             where: { userId },
-            include: { accounts: true }
+            select: {
+              id: true,
+              name: true,
+            },
           }),
         ])
 
@@ -282,7 +306,7 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
       : allDates
 
     // Pre-process trades by date for faster lookup
-    const tradesMap = new Map<string, any[]>()
+    const tradesMap = new Map<string, typeof finalFilteredTrades>()
 
     finalFilteredTrades.forEach(trade => {
       const dateKey = formatInTimeZone(new Date(trade.entryDate), params.timezone, 'yyyy-MM-dd')
@@ -312,7 +336,7 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
       if (!account) return
 
       // Add payouts
-      account.payouts?.forEach((payout: PrismaPayout) => {
+      account.payouts?.forEach((payout) => {
         allEvents.push({
           date: new Date(payout.date),
           amount: ['PENDING', 'VALIDATED', 'PAID'].includes(payout.status) ? -Number(payout.amount) : 0,

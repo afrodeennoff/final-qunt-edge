@@ -5,7 +5,7 @@ vi.mock('@/server/auth', () => ({
 }))
 
 import { createClient } from '@/server/auth'
-import { assertAdminAccess, toErrorResponse } from '@/server/authz'
+import { assertAdminAccess, requireCronAuth, toErrorResponse } from '@/server/authz'
 
 describe('authz', () => {
   const createClientMock = vi.mocked(createClient)
@@ -14,6 +14,8 @@ describe('authz', () => {
     vi.clearAllMocks()
     delete process.env.ALLOWED_ADMIN_USER_ID
     delete process.env.ADMIN_EMAIL_DOMAINS
+    delete process.env.CRON_SECRET
+    delete process.env.VERCEL_CRON_SECRET
   })
 
   it('allows admin by user id', async () => {
@@ -66,5 +68,42 @@ describe('authz', () => {
     expect(response.status).toBe(401)
     expect(payload.code).toBe('AUTH_UNAUTHORIZED')
     expect(payload.requestId).toBe('req-unauthorized')
+  })
+
+  it('accepts bearer auth for cron requests', () => {
+    process.env.CRON_SECRET = 'cron-secret'
+
+    const result = requireCronAuth(
+      new Request('https://example.com/api/cron/renewal-notice', {
+        headers: {
+          authorization: 'Bearer cron-secret',
+        },
+      }),
+      { requestId: 'req-cron-bearer', serviceName: 'cron-renewal-notice' }
+    )
+
+    expect(result).toEqual({
+      service: 'cron-renewal-notice',
+      requestId: 'req-cron-bearer',
+    })
+  })
+
+  it('supports explicit legacy x-vercel-cron secret when configured', () => {
+    process.env.CRON_SECRET = 'cron-secret'
+    process.env.VERCEL_CRON_SECRET = 'legacy-cron-secret'
+
+    const result = requireCronAuth(
+      new Request('https://example.com/api/cron/renewal-notice', {
+        headers: {
+          'x-vercel-cron': 'legacy-cron-secret',
+        },
+      }),
+      { requestId: 'req-cron-header', serviceName: 'cron-renewal-notice' }
+    )
+
+    expect(result).toEqual({
+      service: 'cron-renewal-notice',
+      requestId: 'req-cron-header',
+    })
   })
 })
