@@ -1,5 +1,6 @@
 import { getSubscriptionDetails } from '../../server/subscription'
 import { prisma } from '../prisma'
+import { isAdmin } from '@/server/authz'
 
 export type AiGuardFeature =
   | 'chat'
@@ -28,6 +29,9 @@ export async function canAccessAiFeature(
   userId: string,
   feature: AiGuardFeature,
 ): Promise<EntitlementResult> {
+  // Admin bypass — skip subscription check
+  if (isAdmin(userId)) return { allowed: true, plan: 'ADMIN', isActive: true }
+
   const userSubscription = await prisma.subscription.findFirst({
     where: { userId },
     orderBy: { createdAt: 'desc' },
