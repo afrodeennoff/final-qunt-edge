@@ -1,6 +1,7 @@
 'use server'
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
+import { assertAdminAccess, isAdmin } from '@/server/authz'
 import { cacheLife, cacheTag } from 'next/cache'
 
 export type ReviewSortOption = 'newest' | 'oldest' | 'highest' | 'lowest'
@@ -217,6 +218,7 @@ export async function flagReview(data: { reviewId: string; reason: string; descr
 }
 
 export async function getReviewModerationQueue(page = 1, status?: string) {
+  await assertAdminAccess()
   const take = 20
   const skip = (page - 1) * take
   
@@ -251,7 +253,7 @@ export async function moderateReview(data: {
   action: 'upheld' | 'dismissed' | 'warning_issued'
   notes?: string
 }) {
-  const adminUserId = await getDatabaseUserId()
+  const { userId: adminUserId } = await assertAdminAccess()
   
   // Get the moderation record
   const moderation = await prisma.reviewModeration.findUnique({
@@ -297,14 +299,27 @@ export async function moderateReview(data: {
 }
 
 export async function getFlaggedReviewCount() {
+  await assertAdminAccess()
   return prisma.reviewModeration.count({
     where: { status: 'pending' },
   })
 }
 
 export async function getReviewById(reviewId: string) {
-  return prisma.propFirmReview.findUnique({
-    where: { id: reviewId },
+  let admin = false
+  try {
+    const authUserId = await getDatabaseUserId()
+    admin = isAdmin(authUserId)
+  } catch {
+    // Unauthenticated — treat as non-admin
+  }
+
+  const where = admin
+    ? { id: reviewId }
+    : { id: reviewId, status: 'APPROVED' }
+
+  return prisma.propFirmReview.findFirst({
+    where,
     include: {
       propFirm: {
         select: { name: true, slug: true },
