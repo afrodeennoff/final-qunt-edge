@@ -453,11 +453,6 @@ async function calculateMRR(): Promise<number> {
   return Math.round(mrr)
 }
 
-async function calculateARR(): Promise<number> {
-  const mrr = await calculateMRR()
-  return mrr * 12
-}
-
 async function calculateARPU(): Promise<number> {
   const [activeSubs, totalRevenue] = await Promise.all([
     prisma.subscription.count({ where: { status: 'ACTIVE' } }),
@@ -470,11 +465,4 @@ async function calculateARPU(): Promise<number> {
   return activeSubs > 0
     ? Math.round(Number(totalRevenue._sum.amount ?? 0) / activeSubs)
     : 0
-}
-
-async function calculateLTV(): Promise<number> {
-  const arpu = await calculateARPU()
-  const churnRate = 0.05
-
-  return arpu / churnRate
 }

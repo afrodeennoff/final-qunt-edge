@@ -4,12 +4,12 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Head from "next/head"
 import { toast } from "sonner"
+import { SidebarNav } from "./components/sidebar-nav"
 import { useCurrentLocale } from "@/locales/client"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { RootProviders } from "@/components/providers/root-providers"
 import { DashboardProviders } from "@/components/providers/dashboard-providers"
 import { AuthTimeout } from "@/components/auth/auth-timeout"
-import { SidebarNav } from "./components/sidebar-nav"
 
 export function AdminClientLayout({
   children,

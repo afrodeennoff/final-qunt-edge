@@ -103,3 +103,34 @@ Charts use CSS vars for colors: `hsl(var(--chart-1))` through `hsl(var(--chart-8
 - **No Trading Score duplication** — Always use `lib/score-calculator.ts`
 - **No fake data** — Show honest empty states, never synthesize fallback metrics
 - **No direct Prisma in client** — Route through server actions or API routes
+
+## COMPONENTS
+
+| Subdir | Key Files |
+|--------|-----------|
+| `accounts/` | `AccountsOverview`, `AccountConfigurator`, `AccountTable`, `SuggestionInput` |
+| `analysis/` | `AccountsAnalysis`, `AnalysisOverview` |
+| `calendar/` | `DesktopCalendar`, `MobileCalendar`, `WeeklyCalendar`, `DailyModal`, `Charts` |
+| `charts/` | 15 chart widgets — `EquityChart`, `PnlBarChart`, `PnlBySide`, `CommissionsPnl`, `TradeDistribution`, `WeekdayPnl`, `PnlPerContract`, `TimeInPosition`, etc. |
+| `chat/` | `Chat`, `Header`, `Input`, `UserMessage`, `BotMessage` |
+| `filters/` | `AccountFilter`, `TagFilter` |
+| `import/` | 11 platform imports: Tradovate, Rithmic, FTMO, ATAS, IBKR-PDF, Thor, Topstep, NinjaTrader, Quantower, Tradezella, ETP |
+| `statistics/` | `StatisticsWidget`, `TradePerformanceCard`, `LongShortCard`, `ProfitFactorCard` |
+| `tables/` | `TradeTableReview`, `EditableInstrumentCell`, `TradeImageEditor` |
+| `widgets/` | `SmartInsightsWidget`, `TradingScoreWidget`, `RiskMetricsWidget` |
+| `root` | `WidgetCanvas`, `LazyWidget`, `WidgetRegistry`, `DashboardHeader`, `Navbar`, `PnlSummary`, `GlobalSyncButton` |
+
+## ANTI-PATTERNS (THIS DIR)
+
+- **Never** call `useDashboardTrades()` in components — causes global rerenders
+- **Never** create local state that duplicates DataProvider state
+- **Never** call server actions directly from components — use DataProvider actions
+- **Never** skip `isRevalidating` markers around `refreshFromServer`
+
+## IMPORT PIPELINE
+
+```
+Import Button → platform selector → file upload → processor → AI field mapping → validation → saveTradesAction
+```
+
+Each platform under `components/import/{platform}/` has: `actions.ts`, `processor.tsx`, `field-mapper.tsx`.
