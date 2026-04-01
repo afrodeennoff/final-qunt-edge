@@ -11,7 +11,7 @@ import type { FilterState } from './prop-firm-utils'
 
 interface PropFirmsExplorerProps {
   locale: string
-  firms: UnifiedFirm[]
+  firms?: UnifiedFirm[]
 }
 
 function matchesChallengeType(firm: UnifiedFirm, challengeType: string): boolean {
@@ -57,7 +57,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
   })
 
   const filteredFirms = useMemo(() => {
-    const next = firms.filter((firm) => {
+    const next = (firms ?? []).filter((firm) => {
       if (!matchesSearch(firm, deferredQuery)) return false
       if (filters.platform !== 'All' && firm.platform !== filters.platform) return false
       if (!matchesChallengeType(firm, filters.challengeType)) return false
@@ -78,14 +78,14 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
       <SearchHero
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        totalCount={firms.length}
+        totalCount={(firms ?? []).length}
         filteredCount={filteredFirms.length}
       />
 
       <FilterChips
         filters={filters}
         onFilterChange={setFilters}
-        totalCount={firms.length}
+        totalCount={(firms ?? []).length}
         filteredCount={filteredFirms.length}
       />
 

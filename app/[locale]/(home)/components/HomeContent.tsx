@@ -1,14 +1,32 @@
+import dynamic from 'next/dynamic'
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import FeaturesBento from './FeaturesBento'
-import HowItWorks from './HowItWorks'
-import AnalysisDemo from './AnalysisDemo'
-import SocialProof from './SocialProof'
+import DashboardPreview from './DashboardPreview'
 import ComparisonSection from './ComparisonSection'
 import RollingAdBanner from './RollingAdBanner'
-import PricingSection from './PricingSection'
-import FAQSection from './FAQSection'
+import PropFirmsExplorer from './PropFirmsExplorer'
 import FinalCTA from './FinalCTA'
+
+const SectionSkeleton = () => (
+  <div className="min-h-24 w-full animate-pulse rounded-xl bg-muted/20" />
+)
+
+const LazyHowItWorks = dynamic(() => import('./HowItWorks'), {
+  loading: SectionSkeleton,
+})
+const LazyAnalysisDemo = dynamic(() => import('./AnalysisDemo'), {
+  loading: SectionSkeleton,
+})
+const LazySocialProof = dynamic(() => import('./SocialProof'), {
+  loading: SectionSkeleton,
+})
+const LazyPricingSection = dynamic(() => import('./PricingSection'), {
+  loading: SectionSkeleton,
+})
+const LazyFAQSection = dynamic(() => import('./FAQSection'), {
+  loading: SectionSkeleton,
+})
 
 interface HomeContentProps {
   locale: string
@@ -33,13 +51,15 @@ export default function HomeContent({ locale }: HomeContentProps) {
         <Hero locale={locale} />
         <LiveStatsStrip />
         <FeaturesBento />
-        <HowItWorks />
-        <AnalysisDemo />
-        <SocialProof />
+        <DashboardPreview />
+        <LazyHowItWorks />
+        <LazyAnalysisDemo />
+        <LazySocialProof />
         <ComparisonSection />
         <RollingAdBanner />
-        <PricingSection />
-        <FAQSection />
+        <PropFirmsExplorer locale={locale} />
+        <LazyPricingSection />
+        <LazyFAQSection />
         <FinalCTA locale={locale} />
       </main>
     </div>
