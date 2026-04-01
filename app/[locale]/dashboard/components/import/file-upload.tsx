@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Papa from 'papaparse'
 import { ImportType } from './import-type-selection'
@@ -33,7 +33,14 @@ export default function FileUpload({
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({})
   const [parsedFiles, setParsedFiles] = useState<string[][][]>([])
+  const uploadedFilesRef = useRef<File[]>([])
+  const isConcatenatingRef = useRef(false)
   const t = useI18n()
+
+  // Sync ref with state to avoid stale closure in onDrop
+  useEffect(() => {
+    uploadedFilesRef.current = uploadedFiles
+  }, [uploadedFiles])
 
   // Security: File size and type validation
   const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -214,7 +221,7 @@ export default function FileUpload({
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploadedFiles(prevFiles => [...prevFiles, ...acceptedFiles])
     acceptedFiles.forEach((file, index) => {
-      const totalIndex = uploadedFiles.length + index
+      const totalIndex = uploadedFilesRef.current.length + index
       setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
       
       // Security: Validate file before processing
@@ -234,7 +241,7 @@ export default function FileUpload({
           setUploadProgress(prev => ({ ...prev, [file.name]: 0 }))
         })
     })
-  }, [processFile, setError, uploadedFiles.length, validateFile])
+  }, [processFile, setError, validateFile])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -275,7 +282,10 @@ export default function FileUpload({
       let headers: string[] = []
 
       parsedFiles.forEach((file, index) => {
-        const { headers: fileHeaders, processedData } = platform.processFile!(file)
+        if (!platform.processFile) {
+          throw new Error(`No processFile function defined for platform: ${platform.platformName}`)
+        }
+        const { headers: fileHeaders, processedData } = platform.processFile(file)
         if (index === 0) {
           headers = fileHeaders
           concatenatedData = processedData
@@ -301,10 +311,14 @@ export default function FileUpload({
   }, [importType, parsedFiles, setRawCsvData, setCsvData, setHeaders, setStep, setError])
 
   useEffect(() => {
-    if (parsedFiles.length > 0 && parsedFiles.length === uploadedFiles.length && Object.values(uploadProgress).every(progress => progress === 100)) {
-      concatenateFiles()
-    }
-  }, [parsedFiles, uploadProgress, concatenateFiles, uploadedFiles.length])
+    if (parsedFiles.length === 0 || isConcatenatingRef.current) return
+    if (parsedFiles.length !== uploadedFiles.length) return
+    if (!Object.values(uploadProgress).every(progress => progress === 100)) return
+
+    isConcatenatingRef.current = true
+    concatenateFiles()
+    return () => { isConcatenatingRef.current = false }
+  }, [parsedFiles.length, uploadProgress, uploadedFiles.length])
 
   return (
     <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">

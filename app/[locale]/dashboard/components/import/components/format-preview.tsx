@@ -33,6 +33,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
+import { logger } from "@/lib/logger";
 
 interface FormatPreviewProps {
   trades: string[][];
@@ -130,6 +131,7 @@ export function FormatPreview({
   const retryCountSet1Ref = useRef<Map<number, number>>(new Map());
   const retryCountSet2Ref = useRef<Map<number, number>>(new Map());
   const scheduledTimeoutsRef = useRef<Set<number>>(new Set());
+  const pendingRetriesRef = useRef<Set<number>>(new Set());
   
   // Update refs when state changes
   useEffect(() => {
@@ -239,8 +241,11 @@ export function FormatPreview({
       return;
     }
 
+    pendingRetriesRef.current.add(batchIndex);
+
     const delayMs = RETRY_BASE_DELAY_MS * attempt;
     scheduleManagedTimeout(() => {
+      pendingRetriesRef.current.delete(batchIndex);
       if (!isAutoProcessingRef.current || isStoppedRef.current) return;
       if (setNumber === 1) {
         processNextBatchInSet1();
@@ -259,7 +264,7 @@ export function FormatPreview({
     api: '/api/ai/format-trades',
     schema: z.array(tradeSchema),
     onError(error) {
-      console.error('Error processing batch set 1:', error);
+      logger.error('Error processing batch set 1:', { error: error.message });
       const message = parseAiErrorMessage(error.message);
       const code = parseAiErrorCode(error.message);
       const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
@@ -279,26 +284,27 @@ export function FormatPreview({
     },
     onFinish() {
       const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
-      if (currentBatch !== undefined) {
-        retryCountSet1Ref.current.delete(currentBatch);
-        setCompletedBatches(prev => {
-          return new Set([...prev, currentBatch]);
-        });
-        
-        // Move to next batch in set 1
-        setCurrentBatchIndex1(prev => {
-          return prev + 1;
-        });
-        
-        // Check if all batches are completed
-        if (completedBatchesRef.current.size + 1 === totalBatches) {
-          setIsAutoProcessing(false);
-        } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
-          // Process next batch in set 1 if available and not stopped
-          scheduleManagedTimeout(() => {
-            processNextBatchInSet1();
-          }, 500);
-        }
+      if (currentBatch === undefined) return;
+      if (pendingRetriesRef.current.has(currentBatch)) return;
+
+      retryCountSet1Ref.current.delete(currentBatch);
+      setCompletedBatches(prev => {
+        return new Set([...prev, currentBatch]);
+      });
+      
+      // Move to next batch in set 1
+      setCurrentBatchIndex1(prev => {
+        return prev + 1;
+      });
+      
+      // Check if all batches are completed
+      if (completedBatchesRef.current.size + 1 === totalBatches) {
+        setIsAutoProcessing(false);
+      } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
+        // Process next batch in set 1 if available and not stopped
+        scheduleManagedTimeout(() => {
+          processNextBatchInSet1();
+        }, 500);
       }
     }
   });
@@ -312,7 +318,7 @@ export function FormatPreview({
     api: '/api/ai/format-trades',
     schema: z.array(tradeSchema),
     onError(error) {
-      console.error('Error processing batch set 2:', error);
+      logger.error('Error processing batch set 2:', { error: error.message });
       const message = parseAiErrorMessage(error.message);
       const code = parseAiErrorCode(error.message);
       const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
@@ -332,26 +338,27 @@ export function FormatPreview({
     },
     onFinish() {
       const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
-      if (currentBatch !== undefined) {
-        retryCountSet2Ref.current.delete(currentBatch);
-        setCompletedBatches(prev => {
-          return new Set([...prev, currentBatch]);
-        });
-        
-        // Move to next batch in set 2
-        setCurrentBatchIndex2(prev => {
-          return prev + 1;
-        });
-        
-        // Check if all batches are completed
-        if (completedBatchesRef.current.size + 1 === totalBatches) {
-          setIsAutoProcessing(false);
-        } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
-          // Process next batch in set 2 if available and not stopped
-          scheduleManagedTimeout(() => {
-            processNextBatchInSet2();
-          }, 500);
-        }
+      if (currentBatch === undefined) return;
+      if (pendingRetriesRef.current.has(currentBatch)) return;
+
+      retryCountSet2Ref.current.delete(currentBatch);
+      setCompletedBatches(prev => {
+        return new Set([...prev, currentBatch]);
+      });
+      
+      // Move to next batch in set 2
+      setCurrentBatchIndex2(prev => {
+        return prev + 1;
+      });
+      
+      // Check if all batches are completed
+      if (completedBatchesRef.current.size + 1 === totalBatches) {
+        setIsAutoProcessing(false);
+      } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
+        // Process next batch in set 2 if available and not stopped
+        scheduleManagedTimeout(() => {
+          processNextBatchInSet2();
+        }, 500);
       }
     }
   });

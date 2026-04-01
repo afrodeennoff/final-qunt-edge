@@ -134,7 +134,7 @@ export async function revalidateCache(tags: string[]) {
 }
 
 export async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
-  updateTag(`trades-${userId}`)
+  await updateTag(`trades-${userId}`)
   await Promise.all([
     invalidateCacheNamespace('ai-trades'),
     invalidateCacheNamespace('behavior-insights'),
@@ -320,14 +320,20 @@ async function saveTradesForResolvedUser(
         })
       }
 
-      return tx.trade.createMany({
+      const tradeResult = await tx.trade.createMany({
         data: userAssignedTrades,
         skipDuplicates: true
       })
-    })
 
-    updateTag(`user-data-${userId}`)
-    await invalidateTradeRelatedCaches(userId)
+      await updateTag(`user-data-${userId}`)
+      await Promise.all([
+        updateTag(`trades-${userId}`),
+        invalidateCacheNamespace('ai-trades'),
+        invalidateCacheNamespace('behavior-insights'),
+      ])
+
+      return tradeResult
+    })
 
     if (result.count === 0) {
       logger.info('[saveTrades] No trades added. Duplicate check.')
@@ -343,7 +349,7 @@ async function saveTradesForResolvedUser(
     return {
       error: 'DATABASE_ERROR',
       numberOfTradesAdded: 0,
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: 'Database operation failed'
     }
   }
 }

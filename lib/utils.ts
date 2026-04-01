@@ -4,6 +4,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { format } from "date-fns"
 import { formatInTimeZone } from 'date-fns-tz'
+import { v5 as uuidv5 } from 'uuid'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -254,7 +255,19 @@ export function generateTradeHash(trade: {
   entryId?: unknown
   closeId?: unknown
 }): string {
-  // Handle undefined values by converting them to empty strings or default values
-  const hashString = `${trade.userId || ''}-${trade.accountNumber || ''}-${trade.instrument || ''}-${trade.entryDate || ''}-${trade.closeDate || ''}-${trade.quantity || 0}-${trade.entryId || ''}-${trade.closeId || ''}-${trade.timeInPosition || 0}`
-  return hashString
+  const TRADE_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8'
+  const entryDateStr = trade.entryDate instanceof Date ? trade.entryDate.toISOString() : String(trade.entryDate || '')
+  const closeDateStr = trade.closeDate instanceof Date ? trade.closeDate.toISOString() : String(trade.closeDate || '')
+  const hashString = [
+    String(trade.userId || ''),
+    String(trade.accountNumber || ''),
+    String(trade.instrument || ''),
+    entryDateStr,
+    closeDateStr,
+    String(trade.quantity || 0),
+    String(trade.entryId || ''),
+    String(trade.closeId || ''),
+    String(trade.timeInPosition || 0),
+  ].join('|')
+  return uuidv5(hashString, TRADE_NAMESPACE)
 }

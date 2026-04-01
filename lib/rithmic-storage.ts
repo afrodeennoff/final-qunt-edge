@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 export interface RithmicCredentialSet {
   id: string // unique identifier for this credential set
   credentials: {
@@ -26,7 +28,7 @@ export function saveRithmicData(data: RithmicCredentialSet): void {
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData))
   } catch (error) {
-    console.error('Failed to save Rithmic data:', error)
+    logger.error('Failed to save Rithmic data:', { error })
   }
 }
 
@@ -35,7 +37,7 @@ export function getRithmicData(id: string): RithmicCredentialSet | null {
     const allData = getAllRithmicData()
     return allData[id] || null
   } catch (error) {
-    console.error('Failed to retrieve Rithmic data:', error)
+    logger.error('Failed to retrieve Rithmic data:', { error })
     return null
   }
 }
@@ -71,7 +73,7 @@ export function getAllRithmicData(): Record<string, RithmicCredentialSet> {
     
     return validatedData
   } catch (error) {
-    console.error('Failed to retrieve all Rithmic data:', error)
+    logger.error('Failed to retrieve all Rithmic data:', { error })
     // If there's an error, clear the corrupted data
     localStorage.removeItem(STORAGE_KEY)
     return {}
@@ -88,7 +90,7 @@ export function clearRithmicData(id?: string): void {
       localStorage.removeItem(STORAGE_KEY)
     }
   } catch (error) {
-    console.error('Failed to clear Rithmic data:', error)
+    logger.error('Failed to clear Rithmic data:', { error })
   }
 }
 
@@ -102,7 +104,7 @@ export function updateLastSyncTime(id: string): void {
       })
     }
   } catch (error) {
-    console.error('Failed to update last sync time:', error)
+    logger.error('Failed to update last sync time:', { error })
   }
 }
 

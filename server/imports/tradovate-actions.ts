@@ -753,7 +753,7 @@ export async function handleTradovateCallback(code: string, state: string): Prom
 }
 
 // New function using Tradovate's renewAccessToken endpoint
-export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = 'demo'): Promise<TradovateOAuthResult> {
+export async function renewTradovateAccessToken(accessToken: string, environment: 'demo' | 'live' = 'demo', accountId?: string): Promise<TradovateOAuthResult> {
   try {
     const apiBaseUrl = environment === 'demo' ? TRADOVATE_ENVIRONMENTS.demo.api : 'https://live.tradovateapi.com'
 
@@ -786,7 +786,8 @@ export async function renewTradovateAccessToken(accessToken: string, environment
     });
 
     // Update database with new token
-    const storeResult = await storeTradovateToken(renewalData.accessToken, renewalData.expirationTime, environment)
+    const effectiveAccountId = accountId || 'default'
+    const storeResult = await storeTradovateToken(renewalData.accessToken, renewalData.expirationTime, environment, effectiveAccountId)
     if (storeResult.error) {
       logger.warn('Failed to update token in database:', { error: storeResult.error })
       // Continue anyway - token is still valid for this session
@@ -1181,7 +1182,7 @@ export async function storeTradovateToken(
 
     return { success: true }
   } catch (error) {
-    console.error('Failed to store Tradovate token:', error)
+    logger.error('Failed to store Tradovate token:', { error })
     return { error: 'Failed to store token' }
   }
 }

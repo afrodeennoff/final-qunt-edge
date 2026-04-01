@@ -9,6 +9,7 @@ import { mappingSchema } from '@/app/api/ai/mappings/schema'
 import { cn } from '@/lib/utils'
 import { z } from 'zod/v3';
 import { logger } from '@/lib/logger'
+import { toast } from "sonner"
 
 type MappingObject = z.infer<typeof mappingSchema>
 type MappingKey = keyof MappingObject
@@ -122,6 +123,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
 
         if (errorCode === 'RATE_LIMITED') {
           logger.error('Rate limit exceeded for AI mapping')
+          toast.error('AI mapping rate limited. Please wait a moment and try again.')
           return
         }
 
@@ -133,6 +135,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
       applyAIMappings(parsed as MappingObject)
     } catch (requestError) {
       logger.error({ error: requestError }, 'Error generating AI mappings')
+      toast.error(requestError instanceof Error ? requestError.message : 'Failed to generate AI mappings')
     } finally {
       setIsLoading(false)
     }
@@ -261,7 +264,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                   <TableCell>{displayName}</TableCell>
                   <TableCell>
                     {csvData.slice(1, 4).map((row, i) => (
-                      <span key={i} className="mr-2">{row[index]}</span>
+                      <span key={i} className="mr-2">{row[index] ?? ''}</span>
                     ))}
                   </TableCell>
                   <TableCell>
@@ -283,7 +286,7 @@ export default function ColumnMapping({ headers, csvData, mappings, setMappings,
                               className={isAlreadyMapped ? "opacity-50 cursor-not-allowed" : ""}
                             >
                               {column}
-                              {columnConfig[column].required && (
+                              {columnConfig[column]?.required && (
                                 <span className="ml-1 text-semantic-warning">*</span>
                               )}
                               {isAlreadyMapped && (

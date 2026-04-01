@@ -16,6 +16,7 @@ import AccountSelection from "./account-selection";
 import { useDashboardActions } from "@/context/data-provider";
 import ColumnMapping from "./column-mapping";
 import { useI18n } from "@/locales/client";
+import { logger } from "@/lib/logger";
 import { ImportDialogHeader } from "./components/import-dialog-header";
 import { ImportDialogFooter } from "./components/import-dialog-footer";
 import { platforms } from "./config/platforms";
@@ -192,7 +193,13 @@ export default function ImportButton() {
     const platform =
       platforms.find((p) => p.type === importType) ||
       platforms.find((p) => p.platformName === "csv-ai");
-    if (!platform) return;
+    if (!platform) {
+      toast.error("Unable to find platform configuration", {
+        description: "Please select a different import type",
+      });
+      logger.warn("[ImportButton] Platform not found", { importType });
+      return;
+    }
 
     const currentStepIndex = platform.steps.findIndex((s) => s.id === step);
     if (currentStepIndex === -1) return;
@@ -352,7 +359,7 @@ export default function ImportButton() {
           processedTrades={processedTrades}
           setProcessedTrades={setProcessedTrades}
           extractedText={text}
-          userId={user?.id || ""}
+          userId={user?.id || supabaseUser?.id || ""}
         />
       );
     }

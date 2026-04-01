@@ -8,12 +8,15 @@ import { toImportTradeDraft } from "./trade-types";
  */
 export function createTradeWithDefaults(input: Partial<ImportTradeDraft>): ImportTradeDraft {
   const normalized = toImportTradeDraft(input);
+  if (!normalized.accountNumber || !normalized.instrument) {
+    throw new Error('Trade validation failed: accountNumber and instrument are required')
+  }
   return {
     ...normalized,
     id: normalized.id || generateTradeHash(normalized),
     accountNumber: normalized.accountNumber || "",
     instrument: normalized.instrument || "",
-    side: normalized.side || "",
+    side: normalized.side ?? null,
     quantity: normalized.quantity ?? 0,
     entryPrice: normalized.entryPrice ?? 0,
     closePrice: normalized.closePrice ?? 0,
