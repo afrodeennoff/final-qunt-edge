@@ -17,18 +17,20 @@ type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
   contentClassName?: string
   className?: string
+  showSidebar?: boolean
 }>
 
 export default function MarketingLayoutShell({
   children,
   contentClassName = 'mx-auto w-full max-w-[1320px]',
   className,
+  showSidebar = true,
 }: MarketingLayoutShellProps) {
   return (
     <div className={cn('marketing-shell min-h-screen w-full overflow-x-hidden', className)}>
       <div className="pointer-events-none fixed inset-0 hidden marketing-grid opacity-[0.18] sm:block" />
       <div className="flex min-h-screen w-full">
-        <LandingSidebar />
+        {showSidebar ? <LandingSidebar /> : null}
         <SidebarInset className="flex-1 min-h-0">
           <Navbar />
           <div className="relative z-10 pt-16 sm:pt-20 lg:pt-24">

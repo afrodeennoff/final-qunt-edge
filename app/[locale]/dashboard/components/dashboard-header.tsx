@@ -108,7 +108,7 @@ export function DashboardHeader() {
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.02),transparent_25%,transparent_75%,hsl(var(--foreground)_/_0.02))]" />
             <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6", isMobile ? "h-14" : "h-full")}>
                 <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 pointer-events-auto">
-                    <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-8 md:w-8 md:rounded-lg" />
+                    <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-7 md:w-7 md:rounded-lg" />
                     <div className="flex min-w-0 items-center gap-3">
                         <div className="hidden h-7 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/40 to-v2-border/0 sm:block" />
                         <div className="min-w-0">

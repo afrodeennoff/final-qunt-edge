@@ -141,7 +141,7 @@ export function UnifiedSidebar({
   const t = useI18n()
   const translate = t as unknown as (key: string) => string
   const isActive = useActiveLink()
-  const { isMobile, setOpenMobile, state, setOpen } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
   const { isLoading } = useNavigationLoading()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -160,17 +160,6 @@ export function UnifiedSidebar({
 
   const hasItems = items && items.length > 0
   const shouldRenderSidebar = isSidebarEnabledRoute || hasItems
-
-  const autoExpandedDesktopRef = useRef(false)
-
-  useEffect(() => {
-    if (!shouldRenderSidebar || isMobile) return
-    if (state !== 'collapsed') return
-    if (autoExpandedDesktopRef.current) return
-
-    autoExpandedDesktopRef.current = true
-    setOpen(true)
-  }, [isMobile, setOpen, shouldRenderSidebar, state])
 
   const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
     const withLocalePath = (p: string) => {
@@ -258,40 +247,46 @@ export function UnifiedSidebar({
 
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User"
   const initials = useMemo(() => getUserInitials(user), [user])
+  const itemButtonClass =
+    "pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
+  const inactiveItemClass =
+    "text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground"
+  const activeItemClass =
+    "bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]"
 
   return shouldRenderSidebar ? (
     <Sidebar
       collapsible="icon"
       className={cn(
-        'pointer-events-auto relative overflow-hidden bg-sidebar/96 text-sidebar-foreground backdrop-blur-xl',
+        'pointer-events-auto overflow-hidden bg-sidebar text-sidebar-foreground',
         styleVariant === 'minimal'
-          ? 'border-r border-sidebar-border/8'
-          : 'border-r border-sidebar-border/30'
+          ? 'border-r border-sidebar-border/12'
+          : 'border-r border-sidebar-border/25'
       )}
     >
-      <div className="absolute inset-0 z-0 bg-sidebar/96" />
-      <SidebarHeader className="relative z-10 h-16 border-b border-sidebar-border/12 px-2 py-0">
+      <SidebarHeader className="h-16 border-b border-sidebar-border/12 px-2 py-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex items-center gap-2">
-              <SidebarMenuButton size="lg" className="group pointer-events-auto flex-1 rounded-xl transition-all duration-200 hover:bg-sidebar-accent/15">
-                <div className="flex aspect-square size-9 items-center justify-center rounded-xl border border-sidebar-border/12 bg-sidebar-accent/15 text-sidebar-foreground">
-                  <Logo className="size-5 fill-current" />
-                </div>
-                <div className="flex flex-col gap-0.5 overflow-hidden px-1.5 leading-none">
-                  <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">Qunt Edge</span>
-                  <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/40">Workspace</span>
-                </div>
-              </SidebarMenuButton>
-            </div>
+            <SidebarMenuButton
+              size="lg"
+              className="pointer-events-auto h-12 rounded-xl px-2 text-sidebar-foreground hover:bg-sidebar-accent/12 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
+            >
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-accent/10 text-sidebar-foreground">
+                <Logo className="size-5 fill-current" />
+              </div>
+              <div className="grid min-w-0 flex-1 gap-0.5 px-1.5 text-left leading-none group-data-[collapsible=icon]:hidden">
+                <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">Qunt Edge</span>
+                <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/40">Workspace</span>
+              </div>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="relative z-10 overflow-y-auto px-1.5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
+      <SidebarContent className="overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
         {groupedItems.order.map((groupName, groupIndex) => (
-          <SidebarGroup key={groupName} className="px-2 py-2">
-            <SidebarGroupLabel className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 pl-1" id={`sidebar-group-${groupIndex}`}>
+          <SidebarGroup key={groupName} className="px-0 py-1.5">
+            <SidebarGroupLabel className="mb-1.5 pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35" id={`sidebar-group-${groupIndex}`}>
               {groupName}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -308,7 +303,7 @@ export function UnifiedSidebar({
                   return (
                     <SidebarMenuItem key={`${groupName}-${item.label}-${index}`} className="relative">
                       {itemIsActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-7 bg-sidebar-primary rounded-r-full shadow-[0_0_10px_oklch(0.55_0.22_264/_0.4)]" />
+                        <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
                       )}
                       {href ? (
                         <SidebarMenuButton
@@ -317,10 +312,8 @@ export function UnifiedSidebar({
                           tooltip={label}
                           disabled={isItemDisabled}
                           className={cn(
-                            "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
-                            itemIsActive
-                              ? "bg-sidebar-accent/30 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/15"
-                              : "text-sidebar-foreground/78 hover:bg-sidebar-accent/18 hover:text-sidebar-foreground"
+                            itemButtonClass,
+                            itemIsActive ? activeItemClass : inactiveItemClass
                           )}
                         >
                           <Link
@@ -333,24 +326,20 @@ export function UnifiedSidebar({
                                 setOpenMobile(false)
                               }
                             }}
-                            className="flex items-center w-full relative z-10"
+                            className="flex w-full items-center"
                             aria-busy={isPendingItem}
                           >
-                            <div className={cn(
-                              "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
-                              itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
-                            )} />
                             {isPendingItem || (isLoading && itemIsActive) ? (
                               <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
                             ) : (
                               <span className={cn(
-                                "shrink-0 transition-all duration-200",
-                                itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                                "shrink-0 transition-colors duration-200",
+                                itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
                               )}>{item.icon}</span>
                             )}
                             <span className={cn(
-                              "ml-3 truncate transition-all duration-200",
-                              itemIsActive ? "font-semibold" : ""
+                              "ml-3 truncate group-data-[collapsible=icon]:hidden",
+                              itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
                             )}>{label}</span>
                           </Link>
                         </SidebarMenuButton>
@@ -364,24 +353,18 @@ export function UnifiedSidebar({
                             if (isMobile) setOpenMobile(false)
                           }}
                           className={cn(
-                            "pointer-events-auto rounded-xl font-medium transition-all duration-200 relative overflow-hidden group/btn",
-                            itemIsActive
-                              ? "bg-sidebar-accent/30 text-sidebar-accent-foreground font-semibold ring-1 ring-sidebar-ring/15"
-                              : "text-sidebar-foreground/78 hover:bg-sidebar-accent/18 hover:text-sidebar-foreground"
+                            itemButtonClass,
+                            itemIsActive ? activeItemClass : inactiveItemClass
                           )}
                         >
-                          <div className={cn(
-                            "absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 transition-opacity duration-300",
-                            itemIsActive ? "opacity-100" : "group-hover/btn:opacity-60"
-                          )} />
-                          <div className="flex items-center w-full relative z-10">
+                          <div className="flex w-full items-center">
                             <span className={cn(
-                              "shrink-0 transition-all duration-200",
-                              itemIsActive ? "text-sidebar-primary scale-110" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                              "shrink-0 transition-colors duration-200",
+                              itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
                             )}>{item.icon}</span>
                             <span className={cn(
-                              "ml-3 truncate transition-all duration-200",
-                              itemIsActive ? "font-semibold" : ""
+                              "ml-3 truncate group-data-[collapsible=icon]:hidden",
+                              itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
                             )}>{label}</span>
                           </div>
                         </SidebarMenuButton>
@@ -400,25 +383,24 @@ export function UnifiedSidebar({
         ))}
 
         {actions && (
-          <SidebarGroup className="mt-auto border-t border-sidebar-border/15 px-2 pb-2 pt-4">
+          <SidebarGroup className="mt-auto border-t border-sidebar-border/15 px-0 pb-1 pt-3">
             <SidebarMenu>{actions}</SidebarMenu>
           </SidebarGroup>
         )}
       </SidebarContent>
 
-      <SidebarFooter className="relative z-20 border-t border-sidebar-border/15 p-2">
+      <SidebarFooter className="border-t border-sidebar-border/15 p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="group/user relative w-full overflow-hidden transition-all duration-200 hover:bg-sidebar-accent/18 data-[state=open]:bg-sidebar-accent/30 data-[state=open]:text-sidebar-accent-foreground"
+                  className="group/user h-12 w-full rounded-xl px-2 transition-colors duration-200 hover:bg-sidebar-accent/14 data-[state=open]:bg-sidebar-accent/20 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-sidebar-primary/0 via-sidebar-primary/5 to-sidebar-primary/0 opacity-0 group-hover/user:opacity-100 transition-opacity duration-300" />
-                  <div className="relative z-10 flex items-center gap-2.5 w-full">
-                    <div className="relative">
-                      <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-sidebar-border/20 transition-all duration-200 group-hover/user:border-sidebar-border/35">
+                  <div className="flex w-full items-center gap-2.5">
+                    <div className="relative shrink-0">
+                      <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-sidebar-border/20 transition-colors duration-200 group-hover/user:border-sidebar-border/35">
                         <AvatarImage src={user?.avatar_url} alt={displayName} />
                         <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                           {initials}
@@ -426,11 +408,11 @@ export function UnifiedSidebar({
                       </Avatar>
                       <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-success" />
                     </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
+                    <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                       <span className="truncate font-semibold text-sidebar-foreground">{displayName}</span>
                       <span className="truncate text-xs text-sidebar-foreground/50">{user?.email || "Free Plan"}</span>
                     </div>
-                    <MoreHorizontal className="ml-auto size-4 text-sidebar-foreground/40 transition-transform duration-200 group-hover/user:rotate-90 group-hover/user:text-sidebar-foreground/60" />
+                    <MoreHorizontal className="ml-auto size-4 text-sidebar-foreground/40 transition-transform duration-200 group-hover/user:rotate-90 group-hover/user:text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden" />
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -494,9 +476,6 @@ export function UnifiedSidebar({
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
-      {styleVariant !== 'minimal' ? (
-        <div className="absolute inset-0 pointer-events-none border-r border-sidebar-border/15" />
-      ) : null}
     </Sidebar>
   ) : null
 }

@@ -1,3 +1,26 @@
+## Task: Sidebar shell repair for dashboard Safari misalignment + remove marketing sidebar from home page (2026-04-01)
+
+- [x] Trace the sidebar shown on the home page and identify whether it comes from the dashboard shell or the marketing shell.
+- [x] Remove the marketing `LandingSidebar` from the home layout only, without changing other landing pages.
+- [x] Fix the shared desktop sidebar shell so the rendered sidebar stays aligned with its reserved column instead of drifting/clipping on dashboard Safari views.
+- [x] Re-verify sidebar contracts, typecheck, and full npm build after the shared sidebar primitive change.
+
+Verification:
+- `npx vitest run tests/sidebar-trigger-contract.test.ts lib/__tests__/sidebar-state.test.ts` passes (7/7).
+- `npm run lint -- 'components/ui/sidebar.tsx' 'components/ui/unified-sidebar.tsx' 'app/[locale]/(landing)/components/marketing-layout-shell.tsx' 'app/[locale]/(home)/layout.tsx' 'app/[locale]/dashboard/components/dashboard-header.tsx' 'tests/sidebar-trigger-contract.test.ts' 'lib/__tests__/sidebar-state.test.ts'` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`172/172` static pages). Existing build-time noise remains for `server/database.ts` star exports and `/api/debug-data` prerender bailout logs, but the build exits successfully.
+
+## Review
+- Root causes addressed:
+  - the home page was explicitly mounting the marketing `LandingSidebar` through `MarketingLayoutShell`, so the sidebar on home was not a dashboard leak.
+  - the shared desktop `Sidebar` implementation reserved layout width with one element but rendered the visible panel as a separate fixed layer. In Safari, that split layout was drifting out of alignment with the reserved column, which matches the screenshot where the sidebar appears pushed down/clipped while the left gutter still exists.
+- Fix outcome:
+  - `app/[locale]/(home)/layout.tsx` now disables the marketing sidebar via `showSidebar={false}`.
+  - `app/[locale]/(landing)/components/marketing-layout-shell.tsx` now supports per-layout sidebar opt-out.
+  - `components/ui/sidebar.tsx` now keeps the desktop sidebar in the layout flow with a sticky full-height panel instead of a separate fixed layer, so the rendered sidebar stays aligned with its column.
+  - `components/ui/unified-sidebar.tsx` remains on the shadcn-style collapse contract and no longer force-reopens itself on desktop.
+
 ## Task: Vercel-log-driven dashboard production repair + clean production deploy (2026-04-01)
 
 - [x] Pull live Vercel runtime/build logs for the active production deployment instead of assuming the failure mode.

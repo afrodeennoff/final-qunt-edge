@@ -31,4 +31,13 @@ describe("Dashboard sidebar trigger contract", () => {
 
     expect(source).not.toContain("SidebarTrigger")
   })
+
+  it("does not force desktop auto-expansion inside unified sidebar", () => {
+    const source = readFileSync(
+      join(process.cwd(), "components/ui/unified-sidebar.tsx"),
+      "utf8"
+    )
+
+    expect(source).not.toContain("autoExpandedDesktopRef")
+  })
 })

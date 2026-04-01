@@ -1,5 +1,39 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Sidebar shell repair for dashboard Safari misalignment + remove marketing sidebar from home page (2026-04-01)
+
+### Accomplishments
+- Investigated the two sidebar complaints from the screenshots instead of treating them as one bug:
+  - the home page sidebar came from the marketing shell,
+  - the dashboard sidebar misalignment came from the shared desktop sidebar primitive.
+- Recorded the user correction explicitly: when screenshots show broken sidebars on different surfaces, do not collapse them into one issue. Trace each screenshot to its owning shell/layout first.
+- Confirmed the home page source:
+  - `app/[locale]/(home)/layout.tsx` reused `MarketingLayoutShell`,
+  - `MarketingLayoutShell` always mounted `LandingSidebar`,
+  - `LandingSidebar` was therefore intentionally present on home until this fix.
+- Removed the home-page marketing sidebar without affecting other landing pages:
+  - `app/[locale]/(landing)/components/marketing-layout-shell.tsx` now accepts `showSidebar`,
+  - `app/[locale]/(home)/layout.tsx` passes `showSidebar={false}`.
+- Repaired the shared desktop sidebar shell in `components/ui/sidebar.tsx`:
+  - replaced the split gap-plus-fixed desktop panel with a sticky in-layout desktop panel,
+  - kept collapse width handling on the root sidebar wrapper so the visible sidebar stays aligned with the reserved column.
+- Preserved the earlier shadcn-style dashboard sidebar cleanup in `components/ui/unified-sidebar.tsx`:
+  - no forced desktop auto-open,
+  - cleaner collapse behavior for header/footer/profile rows.
+- Fixed the dashboard sidebar contrast regression on warm themes:
+  - `components/ui/sidebar.tsx` no longer forces `text-sidebar-accent-foreground` on hover/active menu buttons,
+  - `components/ui/unified-sidebar.tsx` now uses readable foreground text plus subtle `sidebar-primary` tint backgrounds for active nav pills.
+- Aligned the dashboard header trigger contract in `app/[locale]/dashboard/components/dashboard-header.tsx` and extended `tests/sidebar-trigger-contract.test.ts` to guard against the forced auto-open regression.
+
+### Verification
+- `npx vitest run tests/sidebar-trigger-contract.test.ts lib/__tests__/sidebar-state.test.ts` passes (7/7).
+- Touched-scope eslint passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`172/172` static pages).
+
+### Blockers
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: Vercel-log-driven dashboard production repair + clean production deploy (2026-04-01)
 
 ### Accomplishments

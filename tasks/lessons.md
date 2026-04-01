@@ -4,6 +4,88 @@
 
 ---
 
+## NEW (2026-04-01): Screenshot-reported sidebar bugs must be split by owning shell before editing
+
+### Mistake
+Different sidebar complaints from the home page and dashboard were initially treated as one shared bug, which risks fixing the wrong layer and wasting time.
+
+### Root Cause
+The screenshots were not traced back to their owning layouts first. In this repo, the home page can mount the marketing sidebar while the dashboard uses a separate authenticated shell and shared sidebar primitive.
+
+### Rule
+When a user reports a broken sidebar from screenshots, identify the exact surface first (`(home)`, `(landing)`, `dashboard`, `teams`, `admin`) and trace the mounted sidebar component/layout before changing code. Do not merge visually similar sidebar issues across different shells.
+
+### Example
+```text
+Home page screenshot -> check app/[locale]/(home)/layout.tsx and MarketingLayoutShell
+Dashboard screenshot -> check app/[locale]/dashboard/layout.tsx and components/ui/sidebar.tsx
+```
+
+---
+
+## NEW (2026-04-01): Sidebar active pills on dark surfaces must keep foreground text, not accent-foreground text
+
+### Mistake
+The sidebar nav used shadcn active-state text semantics tied to `sidebar-accent-foreground`, which became dark-on-dark on warm dashboard themes.
+
+### Root Cause
+`SidebarMenuButton` assumed the active background would be a strong accent surface, but this app uses subtle dark tinted pills in the sidebar. On warm themes, accent-foreground is not readable on those darker surfaces.
+
+### Rule
+For dashboard sidebars on dark surfaces, active and hover menu text must stay on `sidebar-foreground`. Use accent/primary only for tint backgrounds, borders, and icon emphasis, not for the main active text color.
+
+### Example
+```tsx
+// GOOD
+data-[active=true]:bg-sidebar-primary/14
+data-[active=true]:text-sidebar-foreground
+```
+
+---
+
+## NEW (2026-04-01): The home page must opt out of the marketing landing sidebar explicitly
+
+### Mistake
+The home page rendered the marketing `LandingSidebar` because it reused `MarketingLayoutShell`, which always mounted that sidebar.
+
+### Root Cause
+The marketing shell did not support per-layout sidebar opt-out, so the home layout inherited a navigation pattern that the home page should not show.
+
+### Rule
+Keep `MarketingLayoutShell` configurable. The home layout must pass `showSidebar={false}` so the landing sidebar does not appear on the home page.
+
+### Example
+```tsx
+<MarketingLayoutShell showSidebar={false}>
+  {children}
+</MarketingLayoutShell>
+```
+
+---
+
+## NEW (2026-04-01): Safari dashboard sidebars must stay in layout flow, not as a split gap plus fixed panel
+
+### Mistake
+The desktop sidebar reserved width with one element but rendered the visible sidebar as a separate fixed layer, which drifted out of alignment on Safari dashboard views.
+
+### Root Cause
+The split layout made the visual sidebar depend on fixed-position behavior that did not stay aligned with the layout column in the affected browser/rendering path.
+
+### Rule
+For this project’s desktop shells, keep the visible sidebar in layout flow with a sticky full-height panel. Do not reintroduce a separate fixed desktop sidebar layer unless Safari alignment is reverified.
+
+### Example
+```tsx
+// GOOD
+<div className="relative hidden h-svh w-(--sidebar-width) overflow-hidden md:block">
+  <div className="sticky top-0 flex h-svh w-full">
+    ...
+  </div>
+</div>
+```
+
+---
+
 ## NEW (2026-04-01): Optional live-schema columns must be probed before Prisma queries touch them on production paths
 
 ### Mistake
