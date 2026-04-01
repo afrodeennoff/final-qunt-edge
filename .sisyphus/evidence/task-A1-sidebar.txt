@@ -1,0 +1,33 @@
+# Task A1 Evidence: Remove sidebar from team landing layout
+
+## Status: ✅ COMPLETED (previously applied)
+
+## Verification
+
+### File Check
+```bash
+$ grep "showSidebar={false}" app/\[locale\]/teams/\(landing\)/layout.tsx
+```
+
+**Result**: Found at line 31:
+```tsx
+<MarketingLayoutShell contentClassName="w-full" showSidebar={false}>
+```
+
+### TypeScript Check
+```bash
+$ npm run typecheck
+✓ Types generated successfully
+```
+
+**Result**: ✅ PASSED (0 errors)
+
+## Evidence
+- `app/[locale]/teams/(landing)/layout.tsx` line 31 contains `showSidebar={false}`
+- TypeScript compilation successful
+
+## Commit
+```
+fix(layout): remove sidebar from public team page
+```
+(Note: Already committed in previous session - no changes needed)

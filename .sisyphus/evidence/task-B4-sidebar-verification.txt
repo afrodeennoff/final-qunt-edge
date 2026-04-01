@@ -1,0 +1,43 @@
+# Task B4: Admin Sidebar Visibility — VERIFICATION REPORT
+
+**Date**: 2026-04-02
+**Status**: ✅ VERIFIED — All components are correctly wired
+
+---
+
+## Verification Results
+
+### 1. `app/[locale]/dashboard/layout.tsx`
+- Line 12: `import { isAdminUser } from "@/server/authz"` ✅
+- Line 54: `const isAdmin = isAdminUser(user)` ✅
+- `isAdmin` prop is passed to `DashboardSidebar` ✅
+
+### 2. `components/sidebar/dashboard-sidebar.tsx`
+- Line 28: `export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean })` ✅
+- Line 134: `...(isAdmin ? [{ href: \`/${locale}/admin\`, icon: <Shield ... />, label: "Admin", group: "System" }] : [])` ✅
+- Admin nav item (Shield icon) is conditionally rendered when `isAdmin === true` ✅
+
+### 3. `app/[locale]/admin/layout.tsx`
+- Line 4: `import { isAdminUser } from "@/server/authz"` ✅
+- Line 21-23: Redirects unauthenticated users to auth page ✅
+- Line 25-27: `if (!isAdminUser(user)) { redirect(\`/${locale}/dashboard\`) }` ✅
+- Admin pages are protected server-side ✅
+
+### 4. `proxy.ts`
+- Line 179: `"/admin"` in `PRIVATE_DOCUMENT_PATH_PREFIXES` ✅
+- Line 434: `const isAdminRoute = pathMatchesPrefix(normalizedPathname, "/admin")` ✅
+- Lines 445, 479-482: Admin route auth handling via `handleAdminAuth` ✅
+- Line 634: `authUrl.searchParams.set("error", "admin_access_required")` ✅
+
+---
+
+## Conclusion
+
+The admin sidebar visibility flow is **fully implemented and correctly wired**:
+
+1. Server-side `isAdminUser()` check in dashboard layout → passes `isAdmin` prop to sidebar
+2. Sidebar conditionally renders "Admin" nav item (Shield icon) only when `isAdmin === true`
+3. Admin pages are guarded at the layout level with redirect to dashboard
+4. Middleware (`proxy.ts`) classifies and authorizes `/admin` routes
+
+**No code changes needed. No issues found.**

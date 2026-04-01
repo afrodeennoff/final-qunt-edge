@@ -1,0 +1,19 @@
+Task B6: Add admin auth to server/firm-reviews.ts
+Status: COMPLETED
+Commit: c831b25 fix(security): add admin auth to review moderation endpoints
+
+Changes in server/firm-reviews.ts:
+1. Added import: assertAdminAccess, isAdmin from @/server/authz
+2. getReviewModerationQueue() — added await assertAdminAccess() at top (L221)
+3. moderateReview() — replaced getDatabaseUserId() with assertAdminAccess(), destructured userId as adminUserId (L256)
+4. getFlaggedReviewCount() — added await assertAdminAccess() at top (L302)
+5. getReviewById() — added admin-aware access control:
+   - Tries getDatabaseUserId() + isAdmin() check
+   - Unauthenticated users fall through to non-admin path
+   - Admin: returns any review by id
+   - Non-admin/unauthenticated: returns only APPROVED reviews
+   - Changed findUnique → findFirst with conditional where clause
+
+Verification:
+- npm run typecheck (npx tsc --noEmit): PASSED (zero errors)
+- git commit: c831b25 on branch v2

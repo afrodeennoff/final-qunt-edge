@@ -1,0 +1,80 @@
+# Task B2: Admin bypass to AI entitlements and budget
+
+## Status: ✅ COMPLETED
+
+## Changes
+
+### File 1: lib/ai/entitlements.ts
+- Added `import { isAdmin } from '@/server/authz'`
+- Added admin bypass as FIRST line in `canAccessAiFeature()` body:
+  ```typescript
+  if (isAdmin(userId)) return { allowed: true, plan: 'ADMIN', isActive: true }
+  ```
+
+### File 2: lib/ai/usage-budget.ts
+- Added `import { isAdmin } from '@/server/authz'`
+- Added admin bypass as FIRST line in `assertWithinAiBudget()` body:
+  ```typescript
+  if (isAdmin(userId)) return { allowed: true, limit: Infinity, used: 0, remaining: Infinity }
+  ```
+
+## Verification
+
+### TypeScript check: PASSED
+```
+npm run typecheck → ✓ Types generated successfully
+```
+
+### Git commit
+```
+commit d4d0141
+feat(auth): add admin bypass to AI entitlements and budget
+2 files changed, 8 insertions(+)
+```
+
+## Diff
+
+```diff
+diff --git a/lib/ai/entitlements.ts b/lib/ai/entitlements.ts
+index 43d4e0d..3069a9f 100644
+--- a/lib/ai/entitlements.ts
++++ b/lib/ai/entitlements.ts
+@@ -1,5 +1,6 @@
+ import { getSubscriptionDetails } from '../../server/subscription'
+ import { prisma } from '../prisma'
++import { isAdmin } from '@/server/authz'
+ 
+ export type AiGuardFeature =
+   | 'chat'
+@@ -28,6 +29,9 @@ export async function canAccessAiFeature(
+   userId: string,
+   feature: AiGuardFeature,
+ ): Promise<EntitlementResult> {
++  // Admin bypass — skip subscription check
++  if (isAdmin(userId)) return { allowed: true, plan: 'ADMIN', isActive: true }
++
+   const userSubscription = await prisma.subscription.findFirst({
+     where: { userId },
+     orderBy: { createdAt: 'desc' },
+
+diff --git a/lib/ai/usage-budget.ts b/lib/ai/usage-budget.ts
+index 5906788..64839c5 100644
+--- a/lib/ai/usage-budget.ts
++++ b/lib/ai/usage-budget.ts
+@@ -1,4 +1,5 @@
+ import { prisma } from '../prisma'
++import { isAdmin } from '@/server/authz'
+ 
+ const ACTIVE_MONTHLY_AI_TOKEN_LIMIT = 2_000_000
+ const INACTIVE_MONTHLY_AI_TOKEN_LIMIT = 150_000
+@@ -81,6 +82,9 @@ export async function assertWithinAiBudget(
+   userId: string,
+   isActive: boolean,
+ ): Promise<{ allowed: boolean; limit: number; used: number; remaining: number }> {
++  // Admin bypass — unlimited token budget
++  if (isAdmin(userId)) return { allowed: true, limit: Infinity, used: 0, remaining: Infinity }
++
+   const limit = isActive ? ACTIVE_MONTHLY_AI_TOKEN_LIMIT : INACTIVE_MONTHLY_AI_TOKEN_LIMIT
+   const used = await getMonthlyAiUsage(userId)
+   const remaining = Math.max(0, limit - used)
+```

@@ -111,6 +111,8 @@ export async function getShared(slug: string): Promise<{ params: SharedParams, t
     if (!result) return null
     if (!isSharedAccessible({ isPublic: result.params.isPublic, expiresAt: result.params.expiresAt ?? null })) return null
 
+    // View count is intentionally fire-and-forget — it's non-sensitive public metadata.
+    // The slug must exist and isSharedAccessible() must pass first, so no auth needed.
     // Background update of view count to not block response
     prisma.shared.update({
       where: { slug },

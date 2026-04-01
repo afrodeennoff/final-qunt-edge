@@ -1,0 +1,46 @@
+# Task B1: Admin AI Bypass — Evidence
+
+## Commit
+```
+feat(auth): add admin bypass to AI route guard
+```
+
+**SHA**: 071ee31
+
+## Diff
+
+```diff
+diff --git a/lib/ai/route-guard.ts b/lib/ai/route-guard.ts
+index 2916feb..caca504 100644
+--- a/lib/ai/route-guard.ts
++++ b/lib/ai/route-guard.ts
+@@ -2,6 +2,7 @@ import { canAccessAiFeature, type AiGuardFeature } from './entitlements'
+ import { assertWithinAiBudget } from './usage-budget'
+ import { apiError } from '../api-response'
+ import { createRouteClient } from '../supabase/route-client'
++import { isAdmin } from '@/server/authz'
+ 
+ type LimiterResult = {
+   success: boolean
+@@ -33,6 +34,11 @@ export async function guardAiRequest(
+     }
+   }
+ 
++  // Admin bypass — skip entitlement, budget, and rate-limit checks
++  if (isAdmin(user.id)) {
++    return { ok: true, userId: user.id, email: user.email }
++  }
++
+   const entitlement = await canAccessAiFeature(user.id, feature)
+   if (!entitlement.allowed) {
+     return {
+```
+
+## Verification
+- TypeScript typecheck: **PASS**
+- Commit: **SUCCESS** (1 file changed, 6 insertions)
+
+## What was done
+1. Imported `isAdmin` from `@/server/authz` into `lib/ai/route-guard.ts`
+2. Added admin bypass block immediately after auth check (line 34-37), before `canAccessAiFeature()` is called
+3. Bypass skips entitlement checks, budget assertions, and rate-limit checks for users whose `userId` matches `ALLOWED_ADMIN_USER_ID` or `ADMIN_USER_ID` env vars

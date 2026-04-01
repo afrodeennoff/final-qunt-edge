@@ -1,34 +1,21 @@
 {
-  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/fix-all-import-issues.md",
-  "started_at": "2026-04-01T19:55:37.735Z",
+  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/MEGA-all-plans.md",
+  "started_at": "2026-04-01T21:22:00.000Z",
   "session_ids": [
-    "ses_2b5c6c070ffewnBtp76kpga2RQ",
-    "ses_2b56186bfffemqxeD5dc8kB3J3",
-    "ses_2b5616a08ffefkzO6lecs85Nrg",
-    "ses_2b561798cffeZ6O0NnWII3jrz2",
-    "ses_2b55aa16cffeDxaUoMP38WTPPr",
-    "ses_2b55a8e44fferyRdz7NjgGgF0k"
+    "ses_2b551c4e9ffervcj0yr7tLXbPY",
+    "ses_2b5107c1fffenbiularL2Fzw2J",
+    "ses_2b50f2db5ffePQDU2r6depbM5y",
+    "ses_2b50f1ecfffeLJvH0Awnkq6dPe",
+    "ses_2b50ee318ffedCcy80IziCk6z5",
+    "ses_2b50f0f50ffeOaOkVfxDCB6ivr",
+    "ses_2b50cefbaffe47l8U3q62MpYpp",
+    "ses_2b50d1c1cffexL1zmnrtLR7ZPG",
+    "ses_2b50d0dafffewi2VwlkdekO7B0",
+    "ses_2b50cdcdeffehoh95E4EwB3uPx",
+    "ses_2b50cff82ffe4jBMkhOZ2hjoEi",
+    "ses_2b5096cd4ffeZn7LpZNAKbQVQi"
   ],
-  "plan_name": "fix-all-import-issues",
+  "plan_name": "MEGA-all-plans",
   "agent": "atlas",
-  "task_sessions": {
-    "todo:1": {
-      "task_key": "todo:1",
-      "task_label": "1",
-      "task_title": "Fix `toast` undefined crash in account-selection",
-      "session_id": "ses_2b56186bfffemqxeD5dc8kB3J3",
-      "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-04-01T19:57:52.452Z"
-    },
-    "todo:5": {
-      "task_key": "todo:5",
-      "task_label": "5",
-      "task_title": "Fix non-null assertion in processFile",
-      "session_id": "ses_2b55aa16cffeDxaUoMP38WTPPr",
-      "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-04-01T20:05:19.375Z"
-    }
-  }
+  "task_sessions": {}
 }

@@ -1,0 +1,67 @@
+# Task B3 Evidence: Admin bypass in isPlusUser()
+
+## Status: COMPLETED
+
+## Commit
+```
+1cfa246 feat(auth): add admin bypass to isPlusUser UI gate
+```
+
+## Changes Made
+
+### 1. context/data-provider.tsx
+
+**a. DashboardUiState interface (line 127-132)**
+Added `isAdmin: boolean` to the interface.
+
+**b. DataProvider props (line 260-280)**
+Added `isAdmin?: boolean` to the DataProvider props interface.
+
+**c. DataProvider destructuring (line 278)**
+Added `isAdmin = false` as a default prop.
+
+**d. uiStateValue context (line 2065-2073)**
+Added `isAdmin` to the DashboardUiState context value object and dependency array.
+
+**e. isPlusUser() (line 1312-1314)**
+Added admin bypass as the FIRST line:
+```ts
+const isPlusUser = () => {
+  if (isAdmin) return true;
+  // Use Whop subscription store for more accurate subscription status
+```
+
+### 2. components/providers/dashboard-providers.tsx
+
+Added `isAdmin?: boolean` prop to `DashboardProviders` and passed it through to `DataProvider`:
+```ts
+export function DashboardProviders({ children, isAdmin = false }: { children: React.ReactNode; isAdmin?: boolean }) {
+  return (
+    <DataProvider isAdmin={isAdmin}>
+      <DashboardProvidersInner>{children}</DashboardProvidersInner>
+    </DataProvider>
+  );
+}
+```
+
+### 3. app/[locale]/dashboard/layout.tsx (line 72)
+
+Pass server-side `isAdmin` boolean to `DashboardProviders`:
+```tsx
+<DashboardProviders isAdmin={isAdmin}>
+```
+
+The `isAdmin` value comes from `isAdminUser(user)` in the server component (line 54), using the existing auth flow — no client-side env vars or manual checks.
+
+## Verification
+
+- `npm run typecheck`: **PASSED** (0 errors)
+- `git log --oneline -1`: `1cfa246 feat(auth): add admin bypass to isPlusUser UI gate`
+- 3 files changed, 10 insertions(+), 5 deletions(-)
+
+## Design Decisions
+
+1. **Server-side origin**: `isAdmin` is computed server-side via `isAdminUser(user)` in the dashboard layout, then propagated through `DashboardProviders` → `DataProvider` → `isPlusUser()`.
+2. **Following existing pattern**: `isAdmin` was added to `DashboardUiState` and `uiStateValue` following the exact same pattern as `isSharedView`.
+3. **Default = false**: `isAdmin` defaults to `false` to preserve existing behavior for non-admin users.
+4. **Bypass is FIRST**: The admin check in `isPlusUser()` is the very first line, before any subscription store lookups.
