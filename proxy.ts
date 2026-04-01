@@ -178,9 +178,7 @@ const PRIVATE_DOCUMENT_PATH_PREFIXES = [
   "/authentication",
   "/admin",
 ]
-const PUBLIC_READ_API_PATHS = new Set<string>([
-  "/api/health",
-])
+const PUBLIC_READ_API_PATHS = new Set<string>([])
 const PUBLIC_API_PATH_PREFIXES = [
   "/api/health",
   "/api/og",

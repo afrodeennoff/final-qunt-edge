@@ -6,7 +6,7 @@ import { useI18n } from "@/locales/client";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { PlatformConfig } from "../config/platforms";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface PlatformCardProps {
     platform: PlatformConfig;
@@ -26,17 +26,18 @@ export function PlatformCard({
     isWeekend,
 }: PlatformCardProps) {
     const t = useI18n();
+    const shouldReduceMotion = useReducedMotion();
 
     const isInteractive = !platform.isDisabled && !platform.isComingSoon;
 
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            whileHover={{ y: -2 }}
-            transition={{ duration: 0.2 }}
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+            exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
+            whileHover={shouldReduceMotion ? {} : { y: -2 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             onMouseEnter={() => onHover(platform.category)}
             onMouseLeave={onLeave}
             className="h-full"

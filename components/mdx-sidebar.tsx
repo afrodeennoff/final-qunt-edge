@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 import { ChevronRight, FileText, Book, Code, Layout, Zap, Shield, Cpu, Database as DatabaseIcon } from "lucide-react"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 
@@ -23,26 +24,26 @@ const docGroups: DocGroup[] = [
   {
     title: "Getting Started",
     items: [
-      { title: "Introduction", href: "/docs/introduction", icon: <FileText className="size-4.5" /> },
-      { title: "Quick Start", href: "/docs/quick-start", icon: <Zap className="size-4.5" /> },
-      { title: "Installation", href: "/docs/installation", icon: <Layout className="size-4.5" /> },
+      { title: "Introduction", href: "/docs/introduction", icon: <FileText className={NAV_ICON_SIZE} /> },
+      { title: "Quick Start", href: "/docs/quick-start", icon: <Zap className={NAV_ICON_SIZE} /> },
+      { title: "Installation", href: "/docs/installation", icon: <Layout className={NAV_ICON_SIZE} /> },
     ]
   },
   {
     title: "Core Concepts",
     items: [
-      { title: "Dashboard", href: "/docs/dashboard", icon: <Layout className="size-4.5" /> },
-      { title: "Widgets", href: "/docs/widgets", icon: <Code className="size-4.5" /> },
-      { title: "Data Management", href: "/docs/data-management", icon: <DatabaseIcon className="size-4.5" /> },
+      { title: "Dashboard", href: "/docs/dashboard", icon: <Layout className={NAV_ICON_SIZE} /> },
+      { title: "Widgets", href: "/docs/widgets", icon: <Code className={NAV_ICON_SIZE} /> },
+      { title: "Data Management", href: "/docs/data-management", icon: <DatabaseIcon className={NAV_ICON_SIZE} /> },
     ]
   },
   {
     title: "Features",
     items: [
-      { title: "Trading Analysis", href: "/docs/trading-analysis", icon: <Book className="size-4.5" /> },
-      { title: "Performance Tracking", href: "/docs/performance-tracking", icon: <FileText className="size-4.5" /> },
-      { title: "Account Management", href: "/docs/account-management", icon: <Shield className="size-4.5" /> },
-      { title: "Integration", href: "/docs/integration", icon: <Cpu className="size-4.5" /> },
+      { title: "Trading Analysis", href: "/docs/trading-analysis", icon: <Book className={NAV_ICON_SIZE} /> },
+      { title: "Performance Tracking", href: "/docs/performance-tracking", icon: <FileText className={NAV_ICON_SIZE} /> },
+      { title: "Account Management", href: "/docs/account-management", icon: <Shield className={NAV_ICON_SIZE} /> },
+      { title: "Integration", href: "/docs/integration", icon: <Cpu className={NAV_ICON_SIZE} /> },
     ]
   },
 ]
@@ -75,7 +76,7 @@ export function MdxSidebar() {
       ...item,
       label: item.title,
       group: group.title,
-      icon: item.icon || <FileText className="size-4.5" />
+      icon: item.icon || <FileText className={NAV_ICON_SIZE} />
     }))
   )
 

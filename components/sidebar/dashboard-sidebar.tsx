@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
 import {
     Activity,
     BarChart3,
@@ -137,16 +138,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         }] : []),
     ], [locale, refreshAllData, isAdmin])
 
-    const timezones = React.useMemo(() => [
-        'UTC',
-        'Europe/Paris',
-        'America/New_York',
-        'America/Chicago',
-        'America/Los_Angeles',
-        'Asia/Tokyo',
-        'Asia/Shanghai',
-        'Australia/Sydney',
-    ], [])
+    const timezones = [...SUPPORTED_TIMEZONES]
 
     return (
         <UnifiedSidebar

@@ -4,6 +4,8 @@ import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe, ArrowLeft } from 
 import { useUserStore } from "@/store/user-store"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { usePathname } from "next/navigation"
+import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
+import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
 
 function resolveTeamPathContext(pathname: string) {
   const segments = pathname.split('/').filter(Boolean)
@@ -33,61 +35,52 @@ export function TeamsSidebar() {
   const navItems: UnifiedSidebarItem[] = [
     {
       href: slug ? `${dashboardRoot}/${slug}` : dashboardRoot,
-      icon: <LayoutDashboard className="size-4.5" />,
+      icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
       label: "Overview",
       group: "Team Overview",
       exact: true
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/analytics` : dashboardRoot,
-      icon: <BarChart3 className="size-4.5" />,
+      icon: <BarChart3 className={NAV_ICON_SIZE} />,
       label: "Analytics",
       group: "Team Overview",
       disabled: !slug
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/traders` : dashboardRoot,
-      icon: <TrendingUp className="size-4.5" />,
+      icon: <TrendingUp className={NAV_ICON_SIZE} />,
       label: "Traders",
       group: "Team Overview",
       disabled: !slug
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/members` : `${teamsRoot}/manage`,
-      icon: <Users className="size-4.5" />,
+      icon: <Users className={NAV_ICON_SIZE} />,
       label: "Members & Roles",
       group: "Management"
     },
     {
       href: `${localePrefix}/propfirms`,
-      icon: <Globe className="size-4.5" />,
+      icon: <Globe className={NAV_ICON_SIZE} />,
       label: "Prop Firms",
       group: "Resources"
     },
     {
       href: `${localePrefix}/deals`,
-      icon: <Globe className="size-4.5" />,
+      icon: <Globe className={NAV_ICON_SIZE} />,
       label: "Deals",
       group: "Resources"
     },
     {
       href: `${localePrefix}/dashboard`,
-      icon: <ArrowLeft className="size-4.5" />,
+      icon: <ArrowLeft className={NAV_ICON_SIZE} />,
       label: "Main Dashboard",
       group: "System"
     },
   ]
 
-  const timezones = [
-    'UTC',
-    'Europe/Paris',
-    'America/New_York',
-    'America/Chicago',
-    'America/Los_Angeles',
-    'Asia/Tokyo',
-    'Asia/Shanghai',
-    'Australia/Sydney',
-  ]
+  const timezones = [...SUPPORTED_TIMEZONES]
 
   const resetUser = useUserStore(state => state.resetUser)
 

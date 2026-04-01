@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter } from "lucide-react"
 import { InputV2, CardV2, CardV2Content } from "@/components/ui/v2"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useI18n } from "@/locales/client"
 import { platforms, PlatformConfig } from './config/platforms'
 import { PlatformCard } from './components/platform-card'
@@ -157,12 +158,19 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   ))
                 ) : (
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="col-span-full py-12 text-center text-v2-text-muted"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="col-span-full py-16 text-center"
                   >
-                    <ListFilter className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                    <p className="text-sm">{t('import.type.noResults')}</p>
+                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-5">
+                      <ListFilter className="h-8 w-8 text-v2-text-muted" />
+                    </div>
+                    <p className="text-base font-medium text-v2-text-primary mb-1.5">
+                      {t('import.type.noResults')}
+                    </p>
+                    <p className="text-sm text-v2-text-muted">
+                      Try adjusting your search or filter criteria
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -170,8 +178,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           </ScrollArea>
         </div>
 
-        {/* Right Side: Details Panel */}
-        <div className="hidden lg:block h-full bg-v2-bg-hover/30 border-l border-v2-border relative overflow-hidden">
+        <div className="hidden lg:flex h-full bg-v2-bg-hover/30 border-l border-v2-border relative overflow-hidden">
           {selectedType && selectedPlatform ? (
             <motion.div
               key={selectedType}
@@ -206,6 +213,25 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
             </div>
           )}
         </div>
+
+        {selectedType && selectedPlatform && (
+          <Sheet open={!!selectedType} onOpenChange={() => setSelectedType('')}>
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border">
+              <SheetHeader className="mb-4">
+                <SheetTitle className="text-v2-text-primary">
+                  {t(selectedPlatform.name as any, { count: 1 })}
+                </SheetTitle>
+              </SheetHeader>
+              <div className="h-[calc(85vh-80px)] overflow-y-auto">
+                {selectedPlatform.customComponent ? (
+                  <selectedPlatform.customComponent setIsOpen={setIsOpen} />
+                ) : (
+                  <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
     </div>
   )

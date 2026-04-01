@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
+import { NAVIGATION_TIMEOUT_MS } from "@/lib/constants/sidebar"
 import { LeaderboardIcon } from "@/components/icons/svg-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -65,7 +66,7 @@ export interface UnifiedSidebarConfig {
   styleVariant?: "default" | "minimal" // Simplified to shadcn default
 }
 
-const NAVIGATION_STALL_TIMEOUT_MS = 8000
+const NAVIGATION_STALL_TIMEOUT_MS = NAVIGATION_TIMEOUT_MS
 
 function stripLocalePrefix(pathname: string) {
   if (!pathname) return "/"

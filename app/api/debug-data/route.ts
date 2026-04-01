@@ -4,8 +4,6 @@ import { apiError } from '@/lib/api-response'
 import logger, { withLogContext } from '@/lib/logger'
 import { prisma, hasConfiguredDatabaseConnection } from '@/lib/prisma'
 
-export const runtime = 'edge'
-
 export async function GET(request: NextRequest) {
   const requestId = crypto.randomUUID()
 
