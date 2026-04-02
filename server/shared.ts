@@ -113,11 +113,27 @@ export async function getShared(slug: string): Promise<{ params: SharedParams, t
 
     // View count is intentionally fire-and-forget — it's non-sensitive public metadata.
     // The slug must exist and isSharedAccessible() must pass first, so no auth needed.
+    // Skip increment if the viewer is the owner of the shared dashboard.
     // Background update of view count to not block response
-    prisma.shared.update({
-      where: { slug },
-      data: { viewCount: { increment: 1 } }
-    }).catch(err => console.error('[getShared] Failed to update view count:', err))
+    const ownerUserId = result.params.userId
+    let skipIncrement = false
+
+    try {
+      const viewerUserId = await getDatabaseUserId()
+      if (viewerUserId === ownerUserId) {
+        skipIncrement = true
+      }
+    } catch {
+      // Not authenticated - allow increment for public anonymous views
+      skipIncrement = false
+    }
+
+    if (!skipIncrement) {
+      prisma.shared.update({
+        where: { slug },
+        data: { viewCount: { increment: 1 } }
+      }).catch(err => console.error('[getShared] Failed to update view count:', err))
+    }
 
     return {
       ...result,

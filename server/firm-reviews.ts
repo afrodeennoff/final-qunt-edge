@@ -305,6 +305,18 @@ export async function getFlaggedReviewCount() {
   })
 }
 
+/**
+ * Get a single review by ID.
+ *
+ * SECURITY: This function is designed to serve both PUBLIC and ADMIN use cases.
+ * - Public users (unauthenticated or non-admin): can only access APPROVED reviews
+ * - Admins: can access ALL reviews (including pending/rejected/flagged)
+ *
+ * This is enforced via query filters, NOT via assertAdminAccess(), to preserve
+ * public access to approved reviews. Non-admins requesting non-approved reviews
+ * receive null (intentional - prevents enumeration attacks while maintaining
+ * the security boundary).
+ */
 export async function getReviewById(reviewId: string) {
   let admin = false
   try {
