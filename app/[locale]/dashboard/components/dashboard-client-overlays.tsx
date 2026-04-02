@@ -3,7 +3,9 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { useRithmicSyncStore } from "@/store/rithmic-sync-store";
+import { useDashboardRefreshError, useDashboardActions } from "@/context/data-provider";
 
 const Modals = dynamic(() => import("@/components/modals"), {
   ssr: false,
@@ -25,6 +27,26 @@ export function DashboardClientOverlays() {
   const isImportRoute = pathname?.endsWith("/dashboard/import") || pathname?.endsWith("/dashboard/import/");
   const { autoSyncEnabled: rithmicAutoEnabled } = useRithmicSyncStore();
   const hasActiveSync = isImportRoute || rithmicAutoEnabled;
+
+  const refreshError = useDashboardRefreshError();
+  const { retryDataLoad } = useDashboardActions();
+
+  useEffect(() => {
+    if (!refreshError) return;
+
+    const toastId = toast.error("Failed to refresh dashboard data", {
+      description: refreshError,
+      action: {
+        label: "Retry",
+        onClick: () => retryDataLoad(),
+      },
+      duration: Infinity,
+    });
+
+    return () => {
+      toast.dismiss(toastId);
+    };
+  }, [refreshError, retryDataLoad]);
 
   useEffect(() => {
     const schedule: (cb: IdleRequestCallback) => number =

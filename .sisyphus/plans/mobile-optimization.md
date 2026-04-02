@@ -90,15 +90,15 @@ Optimize Qunt Edge for mobile use — fix broken mobile UX patterns, consolidate
 
 ### Definition of Done
 
-- [ ] Trade table scrolls horizontally on mobile without overflow
-- [ ] All interactive elements meet 44px minimum touch target
-- [ ] Import wizard works on 375px screens without horizontal scroll
-- [ ] Mobile dashboard shows optimized vertical widget layout
-- [ ] Bottom tab bar provides quick access to: Dashboard, Trades, Accounts, Settings
-- [ ] All mobile navigation uses consistent Sheet-based pattern
-- [ ] All breakpoints unified to 767px (MOBILE_BREAKPOINT)
-- [ ] iOS safe-area padding on all mobile containers
-- [ ] No layout shift when switching mobile ↔ desktop
+- [x] Trade table scrolls horizontally on mobile without overflow
+- [x] All interactive elements meet 44px minimum touch target
+- [x] Import wizard works on 375px screens without horizontal scroll
+- [x] Mobile dashboard shows optimized vertical widget layout
+- [x] Bottom tab bar provides quick access to: Dashboard, Trades, Accounts, Settings
+- [x] All mobile navigation uses consistent Sheet-based pattern
+- [x] All breakpoints unified to 767px (MOBILE_BREAKPOINT)
+- [x] iOS safe-area padding on all mobile containers
+- [x] No layout shift when switching mobile ↔ desktop
 
 ### Must Have
 
@@ -244,11 +244,11 @@ grep -r "max-width: 767px\|max-width: 768px\|max-width: 640px" --include="*.tsx"
 ```
 
 ### Final Checklist
-- [ ] Trade table scrolls horizontally on 375px viewport
-- [ ] All buttons/inputs ≥44px touch target
-- [ ] Import wizard fits on mobile without overflow
-- [ ] Bottom tab bar visible on mobile dashboard
-- [ ] All navigation uses consistent Sheet pattern
-- [ ] Breakpoints unified to 767px
-- [ ] iOS safe-area on mobile containers
-- [ ] No desktop layout regressions
+- [x] Trade table scrolls horizontally on 375px viewport
+- [x] All buttons/inputs ≥44px touch target
+- [x] Import wizard fits on mobile without overflow
+- [x] Bottom tab bar visible on mobile dashboard
+- [x] All navigation uses consistent Sheet pattern
+- [x] Breakpoints unified to 767px
+- [x] iOS safe-area on mobile containers
+- [x] No desktop layout regressions

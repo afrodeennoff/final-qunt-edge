@@ -1,30 +1,28 @@
 {
-  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/MEGA-all-plans.md",
-  "started_at": "2026-04-01T21:47:51.754Z",
+  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/MASTER-final-fix.md",
+  "started_at": "2026-04-02T14:33:51.462Z",
   "session_ids": [
-    "ses_2b551c4e9ffervcj0yr7tLXbPY",
-    "ses_2b4fab857ffeGRbuxd1x6w1zA7",
-    "ses_2b4fad254ffeOra2IC3xKFWbS3",
-    "ses_2b4faa1e8ffeFtStU4s4SWR00n",
-    "ses_2b4f1ed5affeAPST9iByN53v6F",
-    "ses_2b4f040c6ffeLBCUX92kTCUICX",
-    "ses_2b4f06c68ffewRKRZtQUNm5Ytw",
-    "ses_2b4ee577cffe3hr9CbhCaUvf7x",
-    "ses_2b4d6ab79ffe04g7gMq7WU6XLM",
-    "ses_2b4d65fe9ffeH6DM4XSirpsSQr",
-    "ses_2b4d582a1ffen6odEqUNX2r7MV",
-    "ses_2b4d53919ffeT24HJhOWaDdMoJ",
-    "ses_2b4d485c5ffeqRkqYRRs7iIFHi",
-    "ses_2b2d2fec1ffePAoiCmQ5JL3jH4",
-    "ses_2b2acc3ceffeDUEcxU7Q5rxzfh",
-    "ses_2b27eb969ffe19b863X1IosJ1T",
-    "ses_2b23ba370ffegs19oic4svGOSc",
-    "ses_2b23632e2ffeg4fyJ5H11snlMy",
-    "ses_2b23632dbffeMfRqxFf6l6EHoz",
-    "ses_2b21ceea2ffeSwEnxG0cwnxepe",
-    "ses_2b21ceea1ffevtJwcVy3xVIflX"
+    "ses_2b17462a0ffevVn4c24Esa81z9",
+    "ses_2b11d2d50ffeU8G0r1sK3jPOTI",
+    "ses_2b11d6756ffeGBJdVg6hUcZ6DB",
+    "ses_2b11d843dffelo21ZOJlahetgj",
+    "ses_2b1119a5bffeb3E4P0PVmnH2rD",
+    "ses_2b1119aa6ffevBXMwm9t7DmERS",
+    "ses_2b0992dbaffeEUi41SjrEXM7us",
+    "ses_2b098c620ffesXi6FyQDFXBXM6",
+    "ses_2b09865bfffeqfcuGm5TrR3ffX"
   ],
-  "plan_name": "MEGA-all-plans",
+  "plan_name": "MASTER-final-fix",
   "agent": "atlas",
-  "task_sessions": {}
+  "task_sessions": {
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "Add Cache Tag Invalidation for Trade Mutations",
+      "session_id": "ses_2b1119aa6ffevBXMwm9t7DmERS",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-02T16:02:43.934Z"
+    }
+  }
 }

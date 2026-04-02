@@ -106,155 +106,41 @@ Wave 2 (Race Condition Fixes):
 **Line**: ~268
 
 **Acceptance Criteria**:
-- [ ] Clear comment explaining optional IDs
-- [ ] Document duplicate detection behavior
-- [ ] TypeScript passes
+- [x] Clear comment explaining optional IDs
+- [x] Document duplicate detection behavior
+- [x] TypeScript passes
 
----
+- [x] Token refreshed for correct accountId
+- [x] Multi-account setups work properly
+- [x] No token overwrites
 
-### Task 2: Fix token refresh accountId bug
+- [x] Automatic reconnection on drop
+- [x] Exponential backoff (1s, 2s, 4s, 8s, 16s)
+- [x] Max 5 retries with failure notification
 
-**What to do**:
-- In `server/imports/tradovate-actions.ts` line 789
-- The current code uses: `const effectiveAccountId = accountId || 'default'`
-- This is wrong when called from `getTradovateToken` auto-refresh path
-- Need to derive the actual accountId from the token's stored accountId
+- [x] No concurrent syncs
+- [x] State protected during sync
+- [x] No duplicate data
 
-**File**: `server/imports/tradovate-actions.ts`
-**Line**: ~789
+- [x] Atomic check-and-set for sync state
+- [x] No state changes during sync
+- [x] Proper cleanup in finally
 
-**Current bug**:
-```typescript
-const effectiveAccountId = accountId || 'default'  // WRONG - uses param not stored value
-```
+- [x] `npm run typecheck` passes (0 errors)
+- [x] `npm run lint` passes (within budget)
+- [x] `npm run build` succeeds
 
-**Fix**:
-- Read the accountId from the synchronization record being refreshed
-- Use `syncData.accountId` instead of the function parameter
+- [x] F1: TypeScript verification — `npm run typecheck`
+- [x] F2: Lint verification — `npm run lint`
+- [x] F3: Build verification — `npm run build`
+- [x] F4: Review all changes for regressions
 
-**Acceptance Criteria**:
-- [ ] Token refreshed for correct accountId
-- [ ] Multi-account setups work properly
-- [ ] No token overwrites
-
----
-
-### Task 3: Verify and fix WebSocket reconnect logic
-
-**What to do**:
-- Review `context/rithmic-sync-context.tsx` lines 537-560
-- Verify exponential backoff is implemented correctly
-- Check that max retries are enforced
-- Ensure failure notification is sent after max retries
-
-**File**: `context/rithmic-sync-context.tsx`
-**Lines**: 537-560
-
-**Current state**:
-- Has reconnect attempt counter
-- Has exponential delay calculation
-- Need to verify it's complete
-
-**Acceptance Criteria**:
-- [ ] Automatic reconnection on drop
-- [ ] Exponential backoff (1s, 2s, 4s, 8s, 16s)
-- [ ] Max 5 retries with failure notification
-
----
-
-### Task 4: Fix sync race condition
-
-**What to do**:
-- In `context/rithmic-sync-context.tsx` lines 834-870
-- The bug: check `isAutoSyncing` then await — race between check and execution
-- Add mutex/lock pattern using refs
-
-**File**: `context/rithmic-sync-context.tsx`
-**Lines**: 834-870
-
-**Fix pattern**:
-```typescript
-// Use atomic check-and-set
-if (isAutoSyncingRef.current) return
-isAutoSyncingRef.current = true
-try {
-  // ... sync logic
-} finally {
-  isAutoSyncingRef.current = false
-}
-```
-
-**Acceptance Criteria**:
-- [ ] No concurrent syncs
-- [ ] State protected during sync
-- [ ] No duplicate data
-
----
-
-### Task 5: Fix bulk sync async guard
-
-**What to do**:
-- In `context/tradovate-sync-context.tsx` lines 206-255
-- Add proper async guard using refs
-- Check and set in single atomic operation
-
-**File**: `context/tradovate-sync-context.tsx`
-**Lines**: 206-255
-
-**Fix pattern**:
-```typescript
-const isSyncingRef = useRef(false)
-// At start of sync:
-if (isSyncingRef.current) return
-isSyncingRef.current = true
-```
-
-**Acceptance Criteria**:
-- [ ] Atomic check-and-set for sync state
-- [ ] No state changes during sync
-- [ ] Proper cleanup in finally
-
----
-
-### Task 6: Build verification
-
-**What to do**:
-- Run `npm run typecheck` — verify 0 errors
-- Run `npm run lint` — verify within warning budget
-- Run `npm run build` — verify production build succeeds
-
-**Acceptance Criteria**:
-- [ ] `npm run typecheck` passes (0 errors)
-- [ ] `npm run lint` passes (within budget)
-- [ ] `npm run build` succeeds
-
----
-
-## Final Verification Wave
-
-- [ ] F1: TypeScript verification — `npm run typecheck`
-- [ ] F2: Lint verification — `npm run lint`  
-- [ ] F3: Build verification — `npm run build`
-- [ ] F4: Review all changes for regressions
-
----
-
-## Success Criteria
-
-### Verification Commands
-```bash
-npm run typecheck  # Expected: 0 errors
-npm run lint      # Expected: 0 errors (within budget)
-npm run build     # Expected: Build succeeds
-```
-
-### Issue Resolution
-- [ ] Task 19 documented
-- [ ] Task 21 fixed (correct accountId)
-- [ ] Task 24 verified/fixed (reconnect)
-- [ ] Task 25 fixed (race condition)
-- [ ] Task 26 fixed (bulk sync guard)
-- [ ] F19 completed (build verification)
+- [x] Task 19 documented
+- [x] Task 21 fixed (correct accountId)
+- [x] Task 24 verified/fixed (reconnect)
+- [x] Task 25 fixed (race condition)
+- [x] Task 26 fixed (bulk sync guard)
+- [x] F19 completed (build verification)
 
 ---
 

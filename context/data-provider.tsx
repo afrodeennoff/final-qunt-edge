@@ -1927,6 +1927,12 @@ export const DataProvider: React.FC<{
         );
         setTrades(updatedTrades);
         const updatedCount = await updateTradesAction(tradeIds, update);
+
+        // Clear IndexedDB cache since trades were mutated
+        clearTradesCache(supabaseUser.id).catch((err) =>
+          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
+        );
+
         if (updatedCount === 0 || updatedCount !== tradeIds.length) {
           throw new Error(
             `Failed to persist trade updates (updated ${updatedCount}/${tradeIds.length})`,
@@ -1953,6 +1959,11 @@ export const DataProvider: React.FC<{
           )
         );
         await groupTradesAction(tradeIds);
+
+        // Clear IndexedDB cache since trades were mutated
+        clearTradesCache(supabaseUser.id).catch((err) =>
+          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
+        );
       } catch (error) {
         logger.error({ error }, "Error grouping trades, rolling back");
         setTrades(previousTrades);
@@ -1973,6 +1984,11 @@ export const DataProvider: React.FC<{
           )
         );
         await ungroupTradesAction(tradeIds);
+
+        // Clear IndexedDB cache since trades were mutated
+        clearTradesCache(supabaseUser.id).catch((err) =>
+          logger.error({ err }, "Failed to clear trades cache in IndexedDB"),
+        );
       } catch (error) {
         logger.error({ error }, "Error ungrouping trades, rolling back");
         setTrades(previousTrades);
@@ -2270,6 +2286,14 @@ export const useDashboardIsSharedView = () => {
     throw new Error("useDashboardIsSharedView must be used within a DataProvider");
   }
   return context.isSharedView;
+};
+
+export const useDashboardRefreshError = () => {
+  const context = useContext(DashboardUiStateContext);
+  if (!context) {
+    throw new Error("useDashboardRefreshError must be used within a DataProvider");
+  }
+  return context.refreshError;
 };
 
 export const useDashboardTradeItems = () => {

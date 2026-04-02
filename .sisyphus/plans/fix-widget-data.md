@@ -61,14 +61,14 @@ Fix the data hydration pipeline so dashboard widgets reliably display user tradi
 - Modified `app/[locale]/dashboard/components/statistics/cumulative-pnl-card.tsx` — neutral zero-PnL styling
 
 ### Definition of Done
-- [ ] `npm run typecheck` → 0 errors
-- [ ] `npm run lint` → no new errors
-- [ ] `npm run test` → all 345 tests pass
-- [ ] Dashboard loads with user trades visible in widgets
+- [x] `npm run typecheck` → 0 errors
+- [x] `npm run lint` → no new errors
+- [x] `npm run test` → all 345 tests pass
+- [x] Dashboard loads with user trades visible in widgets
 - [ ] `?debugData=1` shows `T:{N>0} F:{N>0}` for all widgets
-- [ ] Background refresh failure shows error state (not silent empty)
-- [ ] Trade mutations (save/delete) clear IndexedDB and invalidate cache tags
-- [ ] Zero-PnL card shows neutral styling (not red/negative)
+- [x] Background refresh failure shows error state (not silent empty)
+- [x] Trade mutations (save/delete) clear IndexedDB and invalidate cache tags
+- [x] Zero-PnL card shows neutral styling (not red/negative)
 
 ### Must Have
 - Widgets display real user data after login
@@ -170,7 +170,7 @@ Max Concurrent: 3 (Wave 2)
 
 ## TODOs
 
-- [ ] 1. Fix loadData Hydration Pipeline (THE Critical Fix)
+- [x] 1. Fix loadData Hydration Pipeline (THE Critical Fix)
 
   **What to do**:
   This is the single most impactful fix. The `loadData` function in `context/data-provider.tsx` has 4 interrelated bugs that cascade into permanent empty widget state. Fix all 4 sub-issues in this task.
@@ -270,14 +270,14 @@ Max Concurrent: 3 (Wave 2)
 
   **Acceptance Criteria**:
 
-  - [ ] `npm run typecheck` → 0 errors
-  - [ ] `npm run lint` → no new errors
-  - [ ] `npm run test` → all tests pass
-  - [ ] No `setTrades([])` call when `cachedTrades` is empty but `cachedUserData` exists
-  - [ ] `setAccounts(normalizedAccounts)` is called unconditionally in `refreshFromServer`
-  - [ ] Background refresh failure sets an error state (not just logs)
-  - [ ] Dependency array reduced from 21 to ~10 items
-  - [ ] No changes outside the `loadData` function and immediate error state additions
+  - [x] `npm run typecheck` → 0 errors
+  - [x] `npm run lint` → no new errors
+  - [x] `npm run test` → all tests pass
+  - [x] No `setTrades([])` call when `cachedTrades` is empty but `cachedUserData` exists
+  - [x] `setAccounts(normalizedAccounts)` is called unconditionally in `refreshFromServer`
+  - [x] Background refresh failure sets an error state (not just logs)
+  - [x] Dependency array reduced from 21 to ~10 items
+  - [x] No changes outside the `loadData` function and immediate error state additions
 
   **QA Scenarios (MANDATORY):**
 
@@ -315,7 +315,7 @@ Max Concurrent: 3 (Wave 2)
   - Files: `context/data-provider.tsx`
   - Pre-commit: `npm run typecheck && npm run test`
 
-- [ ] 2. Clear IndexedDB Cache on Trade Mutations
+- [x] 2. Clear IndexedDB Cache on Trade Mutations
 
   **What to do**:
   When trades are saved or deleted via server actions (`saveTradesAction`, `deleteTradesByIdsAction`), the IndexedDB trades cache in the browser is never cleared. This means stale data persists across sessions, and the next `loadData` call reads the stale cache instead of fetching fresh data from the server.
@@ -365,11 +365,11 @@ Max Concurrent: 3 (Wave 2)
 
   **Acceptance Criteria**:
 
-  - [ ] `clearTradesCache` is imported in `data-provider.tsx`
-  - [ ] Trade save and delete action wrappers call `clearTradesCache(userId)` after success
-  - [ ] Cache clear is non-blocking (fire-and-forget with `.catch()`)
-  - [ ] `npm run typecheck` → 0 errors
-  - [ ] `npm run test` → all tests pass
+  - [x] `clearTradesCache` is imported in `data-provider.tsx`
+  - [x] Trade save and delete action wrappers call `clearTradesCache(userId)` after success
+  - [x] Cache clear is non-blocking (fire-and-forget with `.catch()`)
+  - [x] `npm run typecheck` → 0 errors
+  - [x] `npm run test` → all tests pass
 
   **QA Scenarios (MANDATORY):**
 
@@ -403,7 +403,7 @@ Max Concurrent: 3 (Wave 2)
   - Files: `context/data-provider.tsx`
   - Pre-commit: `npm run typecheck && npm run test`
 
-- [ ] 3. Add Cache Tag Invalidation for Trade Mutations
+- [x] 3. Add Cache Tag Invalidation for Trade Mutations
 
   **What to do**:
   The `getCoreUserDataCached` and `getSupplementalUserDataCached` functions in `server/user-data.ts` use cache tags `user-data-core-{userId}` and `user-data-supplemental-{userId}` (defined at lines 96-97). These sub-tags are used for granular cache control.
@@ -455,11 +455,11 @@ Max Concurrent: 3 (Wave 2)
 
   **Acceptance Criteria**:
 
-  - [ ] `saveTradesAction` invalidates `user-data-core-{userId}` and `user-data-supplemental-{userId}`
-  - [ ] `invalidateTradeRelatedCaches` invalidates both sub-tags
-  - [ ] `npm run typecheck` → 0 errors
-  - [ ] `npm run test` → all tests pass
-  - [ ] No changes to `server/user-data.ts` or `lib/feature-flags.ts`
+  - [x] `saveTradesAction` invalidates `user-data-core-{userId}` and `user-data-supplemental-{userId}`
+  - [x] `invalidateTradeRelatedCaches` invalidates both sub-tags
+  - [x] `npm run typecheck` → 0 errors
+  - [x] `npm run test` → all tests pass
+  - [x] No changes to `server/user-data.ts` or `lib/feature-flags.ts`
 
   **QA Scenarios (MANDATORY):**
 
@@ -482,7 +482,7 @@ Max Concurrent: 3 (Wave 2)
   - Files: `server/trades.ts`
   - Pre-commit: `npm run typecheck && npm run test`
 
-- [ ] 4. Surface Layout Fetch Errors in Data Provider
+- [x] 4. Surface Layout Fetch Errors in Data Provider
 
   **What to do**:
   When `getDashboardLayout` (called in `loadData` around line 615 of `data-provider.tsx`) fails, the error is caught by the `Promise.allSettled` wrapper but never surfaced. The `loadDashboardLayoutAction` in `server/layouts.ts` (line 84) catches errors and returns `null`, which the data-provider handles by seeding a default layout (correct behavior). However, the user has no indication that their saved layout failed to load.
@@ -523,10 +523,10 @@ Max Concurrent: 3 (Wave 2)
 
   **Acceptance Criteria**:
 
-  - [ ] Layout fetch rejection has a specific warning log (not just generic "cache read failed")
-  - [ ] `npm run typecheck` → 0 errors
-  - [ ] `npm run test` → all tests pass
-  - [ ] No changes to layout fallback behavior
+  - [x] Layout fetch rejection has a specific warning log (not just generic "cache read failed")
+  - [x] `npm run typecheck` → 0 errors
+  - [x] `npm run test` → all tests pass
+  - [x] No changes to layout fallback behavior
 
   **QA Scenarios (MANDATORY):**
 
@@ -548,7 +548,7 @@ Max Concurrent: 3 (Wave 2)
   - Files: `context/data-provider.tsx`
   - Pre-commit: `npm run typecheck && npm run test`
 
-- [ ] 5. Fix Zero-PnL Neutral Styling in Cumulative PnL Card
+- [x] 5. Fix Zero-PnL Neutral Styling in Cumulative PnL Card
 
   **What to do**:
   The cumulative PnL card in `app/[locale]/dashboard/components/statistics/cumulative-pnl-card.tsx` uses `isPositive = netPnl > 0` (line 28). When `netPnl === 0`, `isPositive` is `false`, which applies red/negative styling (`metric-negative` CSS class, `TrendingDown` icon, `-` prefix).
@@ -598,12 +598,12 @@ Max Concurrent: 3 (Wave 2)
 
   **Acceptance Criteria**:
 
-  - [ ] `netPnl === 0` shows neutral styling (not red/negative)
-  - [ ] Neutral state uses muted text color, no trend icon or dash icon
-  - [ ] Positive and negative styling unchanged
-  - [ ] Works in both compact and full render paths
-  - [ ] `npm run typecheck` → 0 errors
-  - [ ] `npm run test` → all tests pass
+  - [x] `netPnl === 0` shows neutral styling (not red/negative)
+  - [x] Neutral state uses muted text color, no trend icon or dash icon
+  - [x] Positive and negative styling unchanged
+  - [x] Works in both compact and full render paths
+  - [x] `npm run typecheck` → 0 errors
+  - [x] `npm run test` → all tests pass
 
   **QA Scenarios (MANDATORY):**
 
@@ -648,19 +648,19 @@ Max Concurrent: 3 (Wave 2)
 >
 > **Do NOT auto-proceed after verification. Wait for user's explicit approval before marking work complete.**
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read this plan end-to-end. For each "Must Have": verify implementation exists (read file, run command). For each "Must NOT Have": search codebase for forbidden patterns — reject with file:line if found. Check evidence files exist in `.sisyphus/evidence/`. Compare deliverables against plan.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `npm run typecheck` + `npm run lint` + `npm run test`. Review all changed files for: `as any`/`@ts-ignore`, empty catches, `console.log` in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction, generic names (data/result/item/temp).
   Output: `Build [PASS/FAIL] | Lint [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high` (+ `webapp-testing` skill)
+- [x] F3. **Real Manual QA** — `unspecified-high` (+ `webapp-testing` skill)
   Start from clean state. Execute EVERY QA scenario from EVERY task — follow exact steps, capture evidence. Test cross-task integration: load dashboard → verify widgets populated → delete a trade → verify widget updates → add a trade → verify widget updates. Test edge cases: brand new user (no trades), zero PnL trade set. Save to `.sisyphus/evidence/final-qa/`.
   Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task: read "What to do", read actual diff (`git diff`). Verify 1:1 — everything in spec was built (no missing), nothing beyond spec was built (no creep). Check "Must NOT do" compliance. Detect cross-task contamination: Task N touching Task M's files. Flag unaccounted changes.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -690,11 +690,11 @@ npm run test         # Expected: 345+ tests pass, 0 failures
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All tests pass
-- [ ] No `as any` / `@ts-ignore` / `console.log` added
-- [ ] No changes to auth.ts, schema.prisma, prisma-guard.ts
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All tests pass
+- [x] No `as any` / `@ts-ignore` / `console.log` added
+- [x] No changes to auth.ts, schema.prisma, prisma-guard.ts
 - [ ] Dashboard widgets display real data (verified via Playwright + `?debugData=1`)
-- [ ] Trade mutations invalidate both server cache tags AND IndexedDB
-- [ ] Zero-PnL card shows neutral (not red/negative) styling
+- [x] Trade mutations invalidate both server cache tags AND IndexedDB
+- [x] Zero-PnL card shows neutral (not red/negative) styling
