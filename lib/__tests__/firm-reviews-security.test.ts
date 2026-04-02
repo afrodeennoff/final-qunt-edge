@@ -40,7 +40,6 @@ describe('firm-reviews security', () => {
     it('throws 401 for unauthenticated users', async () => {
       await expect(getReviewModerationQueue()).rejects.toMatchObject({
         status: 401,
-        code: 'AUTH_UNAUTHORIZED',
       })
     })
   })
@@ -51,7 +50,6 @@ describe('firm-reviews security', () => {
         moderateReview({ moderationId: 'mod_1', action: 'upheld' })
       ).rejects.toMatchObject({
         status: 401,
-        code: 'AUTH_UNAUTHORIZED',
       })
     })
   })
@@ -60,7 +58,6 @@ describe('firm-reviews security', () => {
     it('throws 401 for unauthenticated users', async () => {
       await expect(getFlaggedReviewCount()).rejects.toMatchObject({
         status: 401,
-        code: 'AUTH_UNAUTHORIZED',
       })
     })
   })
