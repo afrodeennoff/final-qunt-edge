@@ -4,10 +4,9 @@ import React, { useState, useEffect } from 'react'
 import Link from "next/link"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Logo } from "@/components/logo"
-import { Moon, Menu } from "lucide-react"
+import { Moon } from "lucide-react"
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -20,6 +19,7 @@ import { cn } from '@/lib/utils'
 import { useI18n } from "@/locales/client"
 import { LanguageSelector } from "@/components/ui/language-selector"
 import { BadgeV2 } from "@/components/ui/v2"
+import { UnifiedMobileNav, type MobileNavGroup } from '@/components/mobile-nav'
 
 const ListItem = React.forwardRef<
     React.ComponentRef<"a">,
@@ -107,14 +107,10 @@ function MobileNavContent({
 }
 
 export default function TeamNavbar() {
-    const [isOpen, setIsOpen] = useState(false)
     const [hoveredItem, setHoveredItem] = useState<string | null>(null)
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const t = useI18n()
-
-    const toggleMenu = () => setIsOpen(!isOpen)
-    const closeMenu = () => setIsOpen(false)
 
     useEffect(() => {
         const controlNavbar = () => {
@@ -225,21 +221,14 @@ export default function TeamNavbar() {
                         <Moon className="h-4 w-4 text-primary" />
                         <span className="text-xs uppercase tracking-[0.14em]">Dark</span>
                     </ButtonV2>
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild>
-                            <ButtonV2  variant="ghost" size="icon" className="flex lg:hidden" onClick={toggleMenu}>
-                                <Menu className="h-6 w-6" />
-                                <span className="sr-only">Open menu</span>
-                            </ButtonV2>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px] sm:w-[400px] lg:hidden">
-                            <div className="flex flex-col h-full">
-                                <div className="grow overflow-y-auto py-6">
-                                    <MobileNavContent onLinkClick={closeMenu} t={t} />
-                                </div>
+                    <UnifiedMobileNav
+                        groups={[]}
+                        footer={
+                            <div className="flex flex-col gap-4">
+                                <MobileNavContent onLinkClick={() => {}} t={t} />
                             </div>
-                        </SheetContent>
-                    </Sheet>
+                        }
+                    />
                 </div>
             </header>
         </>

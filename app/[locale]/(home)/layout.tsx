@@ -26,7 +26,9 @@ export default function HomeLayout({
   return (
     <PublicRootProviders>
       <MarketingLayoutShell className="home-borderless-shell" contentClassName="w-full" showSidebar={false}>
-        {children}
+        <div className="pb-safe">
+          {children}
+        </div>
       </MarketingLayoutShell>
     </PublicRootProviders>
   );

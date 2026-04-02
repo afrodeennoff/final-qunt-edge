@@ -25,6 +25,11 @@ const DashboardClientOverlays = dynamic(
   { loading: () => null }
 );
 
+const MobileBottomNav = dynamic(
+  () => import("@/components/mobile-bottom-nav").then((m) => m.MobileBottomNav),
+  { loading: () => null, ssr: false }
+);
+
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -86,7 +91,7 @@ export default async function DashboardLayout({
 
               <div className="relative z-0 flex h-svh min-h-0 flex-col pt-safe">
                 <DashboardHeader />
-                <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain pb-safe scroll-smooth">
+                <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain pb-[calc(theme(spacing.16)+env(safe-area-inset-bottom))] md:pb-safe scroll-smooth">
                   <div className="min-h-full">
                     <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8 xl:px-12 py-6 sm:py-8">
                       <ErrorBoundary>
@@ -96,6 +101,7 @@ export default async function DashboardLayout({
                   </div>
                 </main>
               </div>
+              <MobileBottomNav />
             </SidebarInset>
           </div>
         </DashboardProvider>

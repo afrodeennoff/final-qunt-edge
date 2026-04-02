@@ -137,7 +137,7 @@ export default function NavbarFilters() {
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </ButtonV2>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[200px] max-w-[90vw] p-0">
           <Command>
             <CommandInput placeholder={`Search ${type}...`} onValueChange={setSearchTerm} />
             <CommandList>

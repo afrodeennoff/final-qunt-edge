@@ -53,7 +53,7 @@ export function PnlRangeFilter() {
           <ChevronDown className="h-4 w-4" />
         </ButtonV2>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
+      <DropdownMenuContent className="w-56 max-w-[90vw]" align="start">
         <DropdownMenuItem onClick={() => handlePresetSelect(undefined, undefined)}>
           {t('filters.allTrades')}
         </DropdownMenuItem>

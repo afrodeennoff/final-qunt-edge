@@ -59,7 +59,7 @@ function FilterDropdown({
           <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
         </ButtonV2>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[300px]" align="start">
+      <DropdownMenuContent className="w-[300px] max-w-[90vw]" align="start">
         <Command shouldFilter={false}>
           <CommandInput 
             placeholder={t('filters.search')} 

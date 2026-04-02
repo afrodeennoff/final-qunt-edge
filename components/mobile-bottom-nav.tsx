@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Activity, LayoutDashboard, Settings, TrendingUp } from 'lucide-react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { Activity, LayoutDashboard, Settings, Sparkles, TrendingUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -14,6 +14,7 @@ interface NavItem {
   icon: React.ElementType
   label: string
   exact?: boolean
+  tab?: string
 }
 
 function useNavItems(): NavItem[] {
@@ -24,17 +25,26 @@ function useNavItems(): NavItem[] {
         href: `/${locale}/dashboard`,
         icon: LayoutDashboard,
         label: 'Dashboard',
+        tab: 'widgets',
         exact: true,
       },
       {
         href: `/${locale}/dashboard?tab=table`,
         icon: TrendingUp,
         label: 'Trades',
+        tab: 'table',
+      },
+      {
+        href: `/${locale}/dashboard?tab=chart`,
+        icon: Sparkles,
+        label: 'Chart',
+        tab: 'chart',
       },
       {
         href: `/${locale}/dashboard?tab=accounts`,
         icon: Activity,
         label: 'Accounts',
+        tab: 'accounts',
       },
       {
         href: `/${locale}/dashboard/settings`,
@@ -46,16 +56,62 @@ function useNavItems(): NavItem[] {
   )
 }
 
-function isActive(pathname: string, item: NavItem): boolean {
-  if (item.exact) {
-    return pathname === item.href.split('?')[0]
+function useIsActive(item: NavItem): boolean {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const locale = useCurrentLocale()
+  const basePath = `/${locale}/dashboard`
+
+  const isOnDashboard = pathname === basePath
+
+  if (item.tab) {
+    const activeTab = searchParams.get('tab') || 'widgets'
+    return isOnDashboard && activeTab === item.tab
   }
-  return pathname === item.href.split('?')[0]
+
+  if (item.exact) {
+    return isOnDashboard && (!searchParams.get('tab') || searchParams.get('tab') === 'widgets')
+  }
+
+  return pathname === item.href
+}
+
+function TabItem({ item }: { item: NavItem }) {
+  const active = useIsActive(item)
+  const Icon = item.icon
+
+  return (
+    <Link
+      href={item.href}
+      className={cn(
+        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[44px] py-1.5 transition-colors duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+      )}
+      aria-current={active ? 'page' : undefined}
+    >
+      <Icon
+        className={cn(
+          'size-5 transition-all duration-200',
+          active ? 'scale-110 text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/75'
+        )}
+      />
+      <span
+        className={cn(
+          'text-[10px] font-medium leading-tight transition-colors duration-200',
+          active ? 'text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/75'
+        )}
+      >
+        {item.label}
+      </span>
+      {active && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-6 rounded-full bg-sidebar-primary" />
+      )}
+    </Link>
+  )
 }
 
 function MobileBottomNav() {
   const isMobile = useIsMobile()
-  const pathname = usePathname()
   const items = useNavItems()
 
   if (!isMobile) return null
@@ -64,45 +120,15 @@ function MobileBottomNav() {
     <nav
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 md:hidden',
-        'border-t border-border/50',
-        'bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60'
+        'border-t border-sidebar-border/30',
+        'bg-sidebar pb-safe'
       )}
+      aria-label="Dashboard navigation"
     >
-      <div className='flex h-16 items-center justify-around px-2 pb-safe'>
-        {items.map((item) => {
-          const active = isActive(pathname, item)
-          const Icon = item.icon
-
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={cn(
-                'group flex flex-1 flex-col items-center gap-0.5 py-1.5 transition-colors duration-200',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
-              )}
-            >
-              <Icon
-                className={cn(
-                  'size-5 transition-colors duration-200',
-                  active
-                    ? 'text-primary'
-                    : 'text-muted-foreground group-hover:text-foreground'
-                )}
-              />
-              <span
-                className={cn(
-                  'text-[10px] font-medium leading-none transition-colors duration-200',
-                  active
-                    ? 'text-primary'
-                    : 'text-muted-foreground group-hover:text-foreground'
-                )}
-              >
-                {item.label}
-              </span>
-            </Link>
-          )
-        })}
+      <div className="flex h-14 items-center justify-around px-2">
+        {items.map((item) => (
+          <TabItem key={item.label} item={item} />
+        ))}
       </div>
     </nav>
   )

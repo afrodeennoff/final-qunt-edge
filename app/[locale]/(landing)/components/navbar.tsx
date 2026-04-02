@@ -1,12 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { ButtonV2 } from '@/components/ui/v2'
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { UnifiedMobileNav } from '@/components/mobile-nav'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale } from '@/locales/client'
@@ -29,7 +28,6 @@ export default function Navbar() {
   const pathname = usePathname()
   const locale = useCurrentLocale()
   const isMobile = useIsMobile()
-  const [mobileOpen, setMobileOpen] = useState(false)
 
   const isHomePath = useMemo(() => pathname === '/' || /^\/[a-z]{2}$/.test(pathname), [pathname])
 
@@ -86,43 +84,14 @@ export default function Navbar() {
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </ButtonV2>
 
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <ButtonV2 
-                  type="button"
-                  variant="ghost"
-                  className="h-10 w-10 rounded-full text-[hsl(var(--mk-text))] lg:hidden"
-                  aria-label="Open navigation menu"
-                >
-                  <Menu className="h-4.5 w-4.5" aria-hidden="true" />
+            <UnifiedMobileNav
+              groups={[{ links: LINKS.map((l) => ({ href: l.href, label: l.title })) }]}
+              footer={
+                <ButtonV2 asChild className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
                 </ButtonV2>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[88vw] max-w-[320px] border-l border-[hsl(var(--mk-border)/0.35)] bg-[hsl(var(--mk-bg-1))] p-0">
-                <div className="flex h-full flex-col p-6">
-                  <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Primary site navigation and account access actions.
-                  </SheetDescription>
-                  <div className="space-y-2">
-                    {LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={`/${locale}${link.href}`}
-                        onClick={() => setMobileOpen(false)}
-                        className="block rounded-xl px-3 py-3 text-sm text-[hsl(var(--mk-text))]"
-                      >
-                        {link.title}
-                      </Link>
-                    ))}
-                  </div>
-                  <ButtonV2  asChild className="mt-auto h-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    <Link href={`/${locale}/authentication`} onClick={() => setMobileOpen(false)}>
-                      Start Free Audit
-                    </Link>
-                  </ButtonV2>
-                </div>
-              </SheetContent>
-            </Sheet>
+              }
+            />
           </div>
         </motion.div>
       </motion.div>

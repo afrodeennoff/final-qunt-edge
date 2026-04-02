@@ -26,7 +26,9 @@ export default async function TeamLayout({
 }) {
   return (
     <PublicRootProviders>
-      {children}
+      <div className="pb-safe">
+        {children}
+      </div>
     </PublicRootProviders>
   );
 }

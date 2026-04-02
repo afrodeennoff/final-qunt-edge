@@ -568,7 +568,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
     <Popover open={open} onOpenChange={handleOpenChange} modal={false}>
       {DesktopTriggerInput}
       <PopoverContent 
-        className="p-0" 
+        className="max-w-[90vw] p-0" 
         style={{ width: inputWidth ? `${inputWidth}px` : '400px' }}
         align="start"
         onOpenAutoFocus={(e) => e.preventDefault()}

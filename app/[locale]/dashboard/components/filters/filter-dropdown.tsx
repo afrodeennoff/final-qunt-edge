@@ -54,13 +54,13 @@ export function FilterDropdown() {
             )}
           </ButtonV2>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56 max-w-[90vw]">
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               {t('filters.accounts')}
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent className="w-[300px]">
+              <DropdownMenuSubContent className="w-[300px] max-w-[90vw]">
                 <AccountFilter showAccountNumbers={true}/>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
