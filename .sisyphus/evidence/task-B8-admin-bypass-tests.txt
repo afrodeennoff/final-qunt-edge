@@ -1,0 +1,41 @@
+Task: B8 — Admin Paywall Bypass Tests
+Date: Thu Apr 02 2026
+Commit: cc5c8f3
+
+== Test Results ==
+PASS lib/__tests__/admin-bypass.test.ts (5 tests) 8ms
+PASS lib/__tests__/is-admin.test.ts (4 tests) 2ms
+
+Test Files  2 passed (2)
+Tests       9 passed (9)
+
+== Test Coverage ==
+admin-bypass.test.ts:
+  guardAiRequest > returns ok:true for admin without calling entitlement or budget checks
+  guardAiRequest > blocks non-admin when entitlement is denied
+  guardAiRequest > returns 401 for unauthenticated requests
+  canAccessAiFeature > returns allowed:true with ADMIN plan for admin userId
+  canAccessAiFeature > non-admin still blocked appropriately
+
+is-admin.test.ts:
+  isAdmin > returns true for userId in ALLOWED_ADMIN_USER_ID
+  isAdmin > returns false for userId not in ALLOWED_ADMIN_USER_ID
+  isAdmin > ADMIN_USER_ID acts as fallback single-admin env var
+  isAdmin > is case-insensitive for ALLOWED_ADMIN_USER_ID
+
+== Commit ==
+cc5c8f3 test(auth): add tests for admin paywall bypass
+2 files changed, 43 insertions(+), 28 deletions(-)
+ create mode 100644 lib/__tests__/is-admin.test.ts
+
+== Mock Strategy ==
+- vi.mock('@/server/authz') → isAdmin mocked via vi.fn()
+- vi.mock('@/lib/prisma') → prisma.subscription.findFirst mocked
+- vi.mock('@/server/subscription') → getSubscriptionDetails mocked
+- vi.mock('@/lib/supabase/route-client') → createRouteClient mocked
+- vi.mock('@/lib/rate-limit') → rate limiter mocked
+- vi.mock('@/lib/ai/usage-budget') → assertWithinAiBudget mocked
+
+== Files Created/Modified ==
+lib/__tests__/admin-bypass.test.ts (rewritten, existing file)
+lib/__tests__/is-admin.test.ts (new file)

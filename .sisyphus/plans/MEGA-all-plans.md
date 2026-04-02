@@ -129,7 +129,7 @@ Each stream follows its own verification strategy from the source plan.
 
 ### Stream A: Team Sidebar Fix (1 task)
 
-- [ ] A1. Remove sidebar from team landing layout
+- [x] A1. Remove sidebar from team landing layout
 
   **What to do**: Edit `app/[locale]/teams/(landing)/layout.tsx` — add `showSidebar={false}` to `MarketingLayoutShell`
 
@@ -146,8 +146,7 @@ Each stream follows its own verification strategy from the source plan.
 
 #### Wave B1 (4 tasks, parallel)
 
-- [ ] B1. Admin bypass in `guardAiRequest()` — single choke point
-
+- [x] B1. Admin bypass in `guardAiRequest()` — single choke point
   **What to do**: `lib/ai/route-guard.ts` — import `isAdmin` from `@/server/authz`, add early-return before `canAccessAiFeature()`
 
   **Source**: `.sisyphus/plans/admin-security-overhaul.md` Task 1
@@ -160,7 +159,7 @@ Each stream follows its own verification strategy from the source plan.
 
   **Commit**: `feat(auth): add admin bypass to AI route guard`
 
-- [ ] B2. Admin bypass in `canAccessAiFeature()` + `assertWithinAiBudget()`
+- [x] B2. Admin bypass in `canAccessAiFeature()` + `assertWithinAiBudget()`
 
   **What to do**: `lib/ai/entitlements.ts` + `lib/ai/usage-budget.ts` — import `isAdmin`, add early-returns
 
@@ -169,12 +168,12 @@ Each stream follows its own verification strategy from the source plan.
   **References**: `lib/ai/entitlements.ts`, `lib/ai/usage-budget.ts`
 
   **Acceptance Criteria**:
-  - [ ] Both files have `isAdmin` bypass, admin gets unlimited tokens
-  - [ ] `npm run typecheck` passes
+  - [x] Both files have `isAdmin` bypass, admin gets unlimited tokens
+  - [x] `npm run typecheck` passes
 
   **Commit**: `feat(auth): add admin bypass to AI entitlements and budget`
 
-- [ ] B3. Admin bypass in `isPlusUser()` — hide UPGRADE buttons
+- [x] B3. Admin bypass in `isPlusUser()` — hide UPGRADE buttons
 
   **What to do**: `context/data-provider.tsx` — propagate admin status from server through context, check in `isPlusUser()`
 
@@ -183,13 +182,13 @@ Each stream follows its own verification strategy from the source plan.
   **References**: `context/data-provider.tsx:1312` `isPlusUser()`, `dashboard/layout.tsx:54`
 
   **Acceptance Criteria**:
-  - [ ] Admin sees no UPGRADE buttons
-  - [ ] Admin status from server, not client env
-  - [ ] `npm run typecheck` passes
+  - [x] Admin sees no UPGRADE buttons
+  - [x] Admin status from server, not client env
+  - [x] `npm run typecheck` passes
 
   **Commit**: `feat(auth): add admin bypass to isPlusUser UI gate`
 
-- [ ] B4. Verify admin sidebar visibility
+- [x] B4. Verify admin sidebar visibility
 
   **What to do**: Verify existing admin sidebar flow is correct — no changes expected
 
@@ -198,14 +197,15 @@ Each stream follows its own verification strategy from the source plan.
   **References**: `dashboard-sidebar.tsx:134`, `admin/layout.tsx`, `proxy.ts`
 
   **Acceptance Criteria**:
-  - [ ] Admin nav only visible to admins
-  - [ ] Admin pages redirect non-admins
+  - [x] Admin nav only visible to admins
+  - [x] Admin pages redirect non-admins
 
   **Commit**: NO (verification only)
 
 #### Wave B2 (3 tasks, parallel)
 
-- [ ] B5. Fix `teams.ts` security — inviteMember + acceptInvitation + getTeamAnalytics
+- [x] B5. Fix `teams.ts` security — inviteMember + acceptInvitation + getTeamAnalytics
+
 
   **What to do**: Add auth/membership checks to `server/teams.ts`:
   - `inviteMember()`: add `getDatabaseUserId()` + team membership check
@@ -224,7 +224,8 @@ Each stream follows its own verification strategy from the source plan.
 
   **Commit**: `fix(security): add auth checks to team invitation and analytics`
 
-- [ ] B6. Fix `firm-reviews.ts` security — moderation queue + moderate + getReviewById
+- [x] B6. Fix `firm-reviews.ts` security — moderation queue + moderate + getReviewById
+
 
   **What to do**: Add `assertAdminAccess()` to `server/firm-reviews.ts`:
   - `getReviewModerationQueue()`: add admin auth
@@ -243,7 +244,8 @@ Each stream follows its own verification strategy from the source plan.
 
   **Commit**: `fix(security): add admin auth to review moderation endpoints`
 
-- [ ] B7. Fix `shared.ts` — view count documentation
+- [x] B7. Fix `shared.ts` — view count documentation
+
 
   **What to do**: Add comment documenting fire-and-forget view count is intentional
 
@@ -259,7 +261,8 @@ Each stream follows its own verification strategy from the source plan.
 
 #### Wave B3 (2 tasks, parallel)
 
-- [ ] B8. Tests for admin paywall bypass
+- [x] B8. Tests for admin paywall bypass
+
 
   **What to do**: Create `lib/__tests__/admin-bypass.test.ts` — test guardAiRequest, canAccessAiFeature, isPlusUser with admin/non-admin
 
@@ -272,7 +275,7 @@ Each stream follows its own verification strategy from the source plan.
 
   **Commit**: `test(auth): add tests for admin paywall bypass`
 
-- [ ] B9. Tests for teams + firm-reviews security
+- [x] B9. Tests for teams + firm-reviews security
 
   **What to do**: Create `server/__tests__/teams-security.test.ts` + `firm-reviews-security.test.ts`
 
@@ -295,24 +298,24 @@ Reference the source plan for detailed task breakdowns. Tasks are organized by p
 
 #### CRITICAL (remaining from 14 total)
 
-- [ ] C1. Import UI flow — CRITICAL issues (UI flow category, critical severity)
-- [ ] C2. Import AI mapping — CRITICAL issues (AI mapping category, critical severity)
-- [ ] C3. Trade saving — CRITICAL issues (trade saving category, critical severity)
-- [ ] C4. Sync integration — CRITICAL issues (sync category, critical severity)
+- [x] C1. Import UI flow — CRITICAL issues (UI flow category, critical severity)
+- [x] C2. Import AI mapping — CRITICAL issues (AI mapping category, critical severity)
+- [x] C3. Trade saving — CRITICAL issues (trade saving category, critical severity)
+- [x] C4. Sync integration — CRITICAL issues (sync category, critical severity)
 
 #### HIGH (remaining from 19 total)
 
-- [ ] C5. Import UI flow — HIGH issues (UI flow category, high severity)
-- [ ] C6. Import AI mapping — HIGH issues (AI mapping category, high severity)
-- [ ] C7. Trade saving — HIGH issues (trade saving category, high severity)
-- [ ] C8. Sync integration — HIGH issues (sync category, high severity)
+- [x] C5. Import UI flow — HIGH issues (UI flow category, high severity)
+- [x] C6. Import AI mapping — HIGH issues (AI mapping category, high severity)
+- [x] C7. Trade saving — HIGH issues (trade saving category, high severity)
+- [x] C8. Sync integration — HIGH issues (sync category, high severity)
 
 #### MEDIUM (remaining from 27 total)
 
-- [ ] C9. Import UI flow — MEDIUM issues
-- [ ] C10. Import AI mapping — MEDIUM issues
-- [ ] C11. Trade saving — MEDIUM issues
-- [ ] C12. Sync integration — MEDIUM issues
+- [x] C9. Import UI flow — MEDIUM issues
+- [x] C10. Import AI mapping — MEDIUM issues
+- [x] C11. Trade saving — MEDIUM issues
+- [x] C12. Sync integration — MEDIUM issues
 
 **For full task details, see**: `.sisyphus/plans/fix-all-import-issues.md`
 
@@ -324,33 +327,33 @@ Reference the source plan for detailed task breakdowns. Tasks are organized by p
 
 **Source**: `.sisyphus/plans/fix-widget-data.md`
 
-- [ ] D1. Fix `loadData` hydration in `context/data-provider.tsx` — empty snapshot + skipped accounts
+- [x] D1. Fix `loadData` hydration in `context/data-provider.tsx` — empty snapshot + skipped accounts
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 1
 
   **References**: `context/data-provider.tsx:loadData`, `server/user-data.ts`
 
-- [ ] D2. Fix `loadData` dependency array explosion (21 deps)
+- [x] D2. Fix `loadData` dependency array explosion (21 deps)
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 2
 
-- [ ] D3. Add IndexedDB cache clearing on trade mutations
+- [x] D3. Add IndexedDB cache clearing on trade mutations
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 3
 
   **References**: `server/trades.ts` (trade mutations), `context/data-provider.tsx` (cache clear)
 
-- [ ] D4. Add missing cache tag invalidation for `user-data-core-*` / `user-data-supplemental-*`
+- [x] D4. Add missing cache tag invalidation for `user-data-core-*` / `user-data-supplemental-*`
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 4
 
   **References**: `server/trades.ts`, `server/user-data.ts:cacheTag`
 
-- [ ] D5. Background refresh error surfacing with retry capability
+- [x] D5. Background refresh error surfacing with retry capability
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 5
 
-- [ ] D6. Zero-PnL neutral styling in cumulative PnL card
+- [x] D6. Zero-PnL neutral styling in cumulative PnL card
 
   **Source**: `.sisyphus/plans/fix-widget-data.md` Task 6
 
@@ -365,77 +368,77 @@ Reference the source plan for detailed task breakdowns. Tasks are organized by p
 
 #### Wave E1 — Foundation (5 tasks, parallel)
 
-- [ ] E1. Fix Checkbox touch targets (16px → 44px)
+- [x] E1. Fix Checkbox touch targets (16px → 44px)
 
   **File**: `components/ui/checkbox.tsx`
 
-- [ ] E2. Fix RadioGroup touch targets (16px → 44px)
+- [x] E2. Fix RadioGroup touch targets (16px → 44px)
 
   **File**: `components/ui/radio-group.tsx`
 
-- [ ] E3. Fix Card padding responsive
+- [x] E3. Fix Card padding responsive
 
   **Files**: `components/ui/card.tsx`, `card-header.tsx`, `card-content.tsx`, `card-footer.tsx`
 
-- [ ] E4. Fix Popover width responsive
+- [x] E4. Fix Popover width responsive
 
   **File**: `components/ui/popover.tsx`
 
-- [ ] E5. Fix DropdownMenu width responsive
+- [x] E5. Fix DropdownMenu width responsive
 
   **File**: `components/ui/dropdown-menu.tsx`
 
 #### Wave E2 — Critical UX (4 tasks, parallel)
 
-- [ ] E6. Fix Trade Table horizontal scroll
+- [x] E6. Fix Trade Table horizontal scroll
 
   **File**: `app/[locale]/dashboard/components/tables/trade-table-review.tsx`
 
-- [ ] E7. Fix Import dialog mobile width
+- [x] E7. Fix Import dialog mobile width
 
   **File**: `app/[locale]/dashboard/components/import/import-button.tsx`
 
-- [ ] E8. Standardize responsive breakpoints (640/768 → 767px)
+- [x] E8. Standardize responsive breakpoints (640/768 → 767px)
 
   **Files**: All components using inconsistent breakpoints
 
-- [ ] E9. Add safe-area to dashboard layout
+- [x] E9. Add safe-area to dashboard layout
 
   **File**: `app/[locale]/dashboard/layout.tsx`
 
 #### Wave E3 — Navigation (6 tasks, parallel)
 
-- [ ] E10. Create mobile bottom tab bar
+- [x] E10. Create mobile bottom tab bar
 
   **File**: `components/mobile-bottom-nav.tsx` (NEW)
 
-- [ ] E11. Create unified mobile nav component
+- [x] E11. Create unified mobile nav component
 
   **File**: `components/mobile-nav.tsx` (NEW)
 
-- [ ] E12. Update landing navbar to use unified nav
+- [x] E12. Update landing navbar to use unified nav
 
   **File**: `app/[locale]/(landing)/components/navbar.tsx`
 
-- [ ] E13. Update home Navigation to use unified nav
+- [x] E13. Update home Navigation to use unified nav
 
   **File**: `app/[locale]/(home)/components/Navigation.tsx`
 
-- [ ] E14. Update teams navbar to use unified nav
+- [x] E14. Update teams navbar to use unified nav
 
   **File**: `app/[locale]/teams/components/team-navbar.tsx`
 
-- [ ] E15. Mobile dashboard optimized layout
+- [x] E15. Mobile dashboard optimized layout
 
   **File**: `app/[locale]/dashboard/components/widget-canvas.tsx`
 
 #### Wave E4 — Polish (2 tasks)
 
-- [ ] E16. Fix filter dropdowns mobile
+- [x] E16. Fix filter dropdowns mobile
 
   **Files**: `app/[locale]/dashboard/components/filters/*.tsx`
 
-- [ ] E17. Add safe-area to landing + teams layouts
+- [x] E17. Add safe-area to landing + teams layouts
 
   **Files**: `app/[locale]/(landing)/layout.tsx`, `app/[locale]/teams/layout.tsx`
 
@@ -450,55 +453,55 @@ Reference the source plan for detailed task breakdowns. Tasks are organized by p
 
 #### Wave F0 — Foundation (2 tasks, SEQUENTIAL — blocks everything else)
 
-- [ ] F1. Delete orphan components
+- [x] F1. Delete orphan components
 
   **Delete**: `DeferredHomeSections.tsx`, `OnboardingJourney.tsx`, `ProofStrip.tsx`, `Differentiators.tsx`, `Qualification.tsx`, `TrustStats.tsx`, `CTA.tsx`, `TrustStrip.tsx`
 
-- [ ] F2. Restructure `HomeContent.tsx` — new section order, dynamic imports for below-fold
+- [x] F2. Restructure `HomeContent.tsx` — new section order, dynamic imports for below-fold
 
   **File**: `app/[locale]/(home)/components/HomeContent.tsx`
 
 #### Wave F1 — Rewrites (6 tasks, parallel)
 
-- [ ] F3. Rewrite `Hero.tsx` — problem-first headline, framer-motion stagger, broker logos
+- [x] F3. Rewrite `Hero.tsx` — problem-first headline, framer-motion stagger, broker logos
 
-- [ ] F4. Create `LiveStatsStrip.tsx` — animated counters (NEW)
+- [x] F4. Create `LiveStatsStrip.tsx` — animated counters (NEW)
 
-- [ ] F5. Rewrite `ProblemStatement.tsx` — asymmetric bento, scroll-triggered reveals
+- [x] F5. Rewrite `ProblemStatement.tsx` — asymmetric bento, scroll-triggered reveals
 
-- [ ] F6. Create `FeaturesBento.tsx` — bento grid with specific col-spans (NEW)
+- [x] F6. Create `FeaturesBento.tsx` — bento grid with specific col-spans (NEW)
 
-- [ ] F7. Rewrite `HowItWorks.tsx` — horizontal 5-step pipeline
+- [x] F7. Rewrite `HowItWorks.tsx` — horizontal 5-step pipeline
 
-- [ ] F8. Rewrite `DashboardPreview.tsx` — floating metric badges, glow effect, "Live" indicator
+- [x] F8. Rewrite `DashboardPreview.tsx` — floating metric badges, glow effect, "Live" indicator
 
 #### Wave F2 — More Rewrites (5 tasks, parallel)
 
-- [ ] F9. Create `AudienceSegmentation.tsx` — 2-column prop firm / independent traders (NEW)
+- [x] F9. Create `AudienceSegmentation.tsx` — 2-column prop firm / independent traders (NEW)
 
-- [ ] F10. Create `AIFeatures.tsx` — bento grid of all AI features (NEW)
+- [x] F10. Create `AIFeatures.tsx` — bento grid of all AI features (NEW)
 
-- [ ] F11. Create `SocialProof.tsx` — merged stats + testimonials + trust pillars (NEW)
+- [x] F11. Create `SocialProof.tsx` — merged stats + testimonials + trust pillars (NEW)
 
-- [ ] F12. Rewrite `PricingSection.tsx` — glassmorphism cards
+- [x] F12. Rewrite `PricingSection.tsx` — glassmorphism cards
 
-- [ ] F13. Rewrite `FinalCTA.tsx` — bold gradient CTA with ambient glow
+- [x] F13. Rewrite `FinalCTA.tsx` — bold gradient CTA with ambient glow
 
 #### Wave F3 — Polish (3 tasks)
 
-- [ ] F14. Polish `AnalysisDemo.tsx` — wrap in motion.section, add whileInView
+- [x] F14. Polish `AnalysisDemo.tsx` — wrap in motion.section, add whileInView
 
-- [ ] F15. Polish `ComparisonSection.tsx` — framer-motion row reveals
+- [x] F15. Polish `ComparisonSection.tsx` — framer-motion row reveals
 
-- [ ] F16. Polish `FAQSection.tsx` — motion.div section entrance
+- [x] F16. Polish `FAQSection.tsx` — motion.div section entrance
 
 #### Wave F4 — Integration (3 tasks)
 
-- [ ] F17. Integration test — verify HomeContent renders all sections
+- [x] F17. Integration test — verify HomeContent renders all sections
 
-- [ ] F18. Delete superseded files — `Features.tsx`, `AIFuturesSection.tsx`
+- [x] F18. Delete superseded files — `Features.tsx`, `AIFuturesSection.tsx`
 
-- [ ] F19. Build verification — `npm run typecheck`, `npm run lint`, Playwright spot-check
+- [x] F19. Build verification — `npm run typecheck`, `npm run lint`, Playwright spot-check
 
 **Agent**: `visual-engineering` (all tasks)
 **Reference source**: `.sisyphus/plans/home-redesign.md` for full component specs (741 lines of detailed design specs)
@@ -509,16 +512,18 @@ Reference the source plan for detailed task breakdowns. Tasks are organized by p
 
 > 4 review agents run in PARALLEL across ALL streams. ALL must APPROVE.
 
-- [ ] FV1. **Plan Compliance Audit** — `oracle`
+- [x] FV1. **Plan Compliance Audit** — `oracle`
   Read each source plan. For every "Must Have": verify implementation exists. For every "Must NOT Have": search for violations. Cross-check all 6 plans.
 
-- [ ] FV2. **Code Quality Review** — `unspecified-high`
+- [x] FV2. **Code Quality Review** — `unspecified-high`
+
   `npm run typecheck` + `npm run lint` + `npm run test` across all changed files.
 
-- [ ] FV3. **Visual Regression Check** — `visual-engineering`
+- [x] FV3. **Visual Regression Check** — `visual-engineering`
+
   Playwright screenshots of: dashboard (desktop + mobile), home page, admin panel, mobile navigation. Verify no layout breakage.
 
-- [ ] FV4. **Scope Fidelity Check** — `deep`
+- [x] FV4. **Scope Fidelity Check** — `deep`
   For each stream: diff against source plan. Detect cross-stream contamination. Verify no creep.
 
 ---
@@ -550,33 +555,33 @@ npm run build                  # Expected: production build succeeds
 **Stream A**: Team landing has no sidebar ✓
 
 **Stream B**:
-- [ ] Admin bypasses AI paywall (all 12 AI routes)
-- [ ] Admin sees no UPGRADE buttons
-- [ ] Non-admin blocked from moderation queue
-- [ ] Non-admin cannot invite to arbitrary teams
-- [ ] Non-admin cannot read other teams' analytics
-- [ ] All security tests pass
+- [x] Admin bypasses AI paywall (all 12 AI routes)
+- [x] Admin sees no UPGRADE buttons
+- [x] Non-admin blocked from moderation queue
+- [x] Non-admin cannot invite to arbitrary teams
+- [x] Non-admin cannot read other teams' analytics
+- [x] All security tests pass
 
 **Stream C**:
-- [ ] Import UI flow works end-to-end
-- [ ] AI mapping correctly maps all fields
-- [ ] Trades save without duplicates
-- [ ] Sync integrations stable
+- [x] Import UI flow works end-to-end
+- [x] AI mapping correctly maps all fields
+- [x] Trades save without duplicates
+- [x] Sync integrations stable
 
 **Stream D**:
-- [ ] Widgets display data after page load
-- [ ] No empty/zero widget states on populated accounts
-- [ ] Cache invalidation works on trade mutations
+- [x] Widgets display data after page load
+- [x] No empty/zero widget states on populated accounts
+- [x] Cache invalidation works on trade mutations
 
 **Stream E**:
-- [ ] All touch targets ≥44px
-- [ ] Trade table scrolls horizontally on mobile
-- [ ] Import wizard fits on 375px viewport
-- [ ] Bottom tab bar visible on mobile
+- [x] All touch targets ≥44px
+- [x] Trade table scrolls horizontally on mobile
+- [x] Import wizard fits on 375px viewport
+- [x] Bottom tab bar visible on mobile
 
 **Stream F**:
-- [ ] Home page renders all sections in order
-- [ ] Hero animations stagger correctly
-- [ ] Bento grids display properly
-- [ ] No duplicate renders
-- [ ] Real data (PropFirmsExplorer, RollingAdBanner) still works
+- [x] Home page renders all sections in order
+- [x] Hero animations stagger correctly
+- [x] Bento grids display properly
+- [x] No duplicate renders
+- [x] Real data (PropFirmsExplorer, RollingAdBanner) still works

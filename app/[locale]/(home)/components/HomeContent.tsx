@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import FeaturesBento from './FeaturesBento'
+import ProblemStatement from './ProblemStatement'
 import DashboardPreview from './DashboardPreview'
 import ComparisonSection from './ComparisonSection'
 import RollingAdBanner from './RollingAdBanner'
@@ -16,6 +17,13 @@ const LazyHowItWorks = dynamic(() => import('./HowItWorks'), {
   loading: SectionSkeleton,
 })
 const LazyAnalysisDemo = dynamic(() => import('./AnalysisDemo'), {
+  loading: SectionSkeleton,
+})
+const LazyAudienceSegmentation = dynamic(
+  () => import('./AudienceSegmentation'),
+  { loading: SectionSkeleton }
+)
+const LazyAIFeatures = dynamic(() => import('./AIFeatures'), {
   loading: SectionSkeleton,
 })
 const LazySocialProof = dynamic(() => import('./SocialProof'), {
@@ -51,9 +59,12 @@ export default function HomeContent({ locale }: HomeContentProps) {
         <Hero locale={locale} />
         <LiveStatsStrip />
         <FeaturesBento />
+        <ProblemStatement />
         <DashboardPreview />
         <LazyHowItWorks />
         <LazyAnalysisDemo />
+        <LazyAudienceSegmentation />
+        <LazyAIFeatures />
         <LazySocialProof />
         <ComparisonSection />
         <RollingAdBanner />

@@ -169,6 +169,17 @@ export async function resolveWritableUserId(rawUserId: string): Promise<string> 
   throw new Error('Unable to resolve writable user')
 }
 
+/**
+ * TradeUUIDSource defines the minimum set of fields required to generate a unique
+ * trade identifier.
+ *
+ * Why entryId/closeId are optional:
+ * - Not all broker APIs provide entry/close IDs. Some exports (CSV, manual entry) only
+ *   include the trade data itself without broker-assigned identifiers.
+ * - When provided by the broker (Tradovate, Rithmic, MT5), these IDs offer the strongest
+ *   uniqueness guarantee for duplicate detection.
+ * - When absent, uniqueness must be derived from the trade's data fields.
+ */
 type TradeUUIDSource = {
   userId?: string
   accountNumber?: string
@@ -186,19 +197,21 @@ type TradeUUIDSource = {
   commission?: { toString: () => string } | string | number
 }
 
+/**
+ * Generates a deterministic UUID for a trade to enable reliable duplicate detection.
+ *
+ * Duplicate detection behavior:
+ * - WITH entryId/closeId: These broker-assigned IDs provide the strongest uniqueness
+ *   guarantee. When present, they dominate the UUID signature (lines 222-223) so that
+ *   re-importing the exact same broker trade always produces the same UUID → deduplication
+ *   works reliably.
+ * - WITHOUT entryId/closeId (CSV imports, manual entry): Falls back to a composite fingerprint
+ *   of userId + accountNumber + instrument + dates + prices + quantity + side + pnl +
+ *   commission. Two trades with identical field values are treated as duplicates. This is
+ *   intentional — it prevents accidental double-import of the same CSV row. To force a unique
+ *   UUID when broker IDs are absent, at least one distinguishing field must differ.
+ */
 function generateTradeUUID(trade: TradeUUIDSource): string {
-  // Use multiple unique identifiers plus data fingerprint to minimize collision risk.
-  //
-  // Duplicate detection behavior with/without entryId & closeId:
-  // - WITH entryId/closeId: These broker-assigned IDs provide the strongest uniqueness
-  //   guarantee. When present, they dominate the UUID signature so that re-importing the
-  //   exact same broker trade always produces the same UUID → deduplication works reliably.
-  // - WITHOUT entryId/closeId (CSV imports, manual entry): The UUID falls back to a
-  //   composite fingerprint of userId + accountNumber + instrument + dates + prices +
-  //   quantity + side + pnl + commission. Two trades with identical field values will
-  //   be treated as duplicates. This is intentional — it prevents accidental double-import
-  //   of the same CSV row. To force a unique UUID when broker IDs are absent, at least
-  //   one distinguishing field (e.g., a unique groupId or different timestamps) must differ.
   const tradeSignature = [
     trade.userId || '',
     trade.accountNumber || '',

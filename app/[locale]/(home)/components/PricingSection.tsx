@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { ButtonV2 } from '@/components/ui/v2'
 import { MagneticButton } from '@/components/animation/interactive'
+import { MOTION_EASE } from './_constants'
 
 type BillingCycle = 'monthly' | 'annual'
 
@@ -75,18 +76,7 @@ const plans = [
   },
 ]
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      delay: i * 0.1,
-      ease: [0.25, 0.46, 0.45, 0.94] as const,
-    },
-  }),
-}
+const ease = MOTION_EASE as unknown as number[]
 
 export default function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true)
@@ -101,7 +91,7 @@ export default function PricingSection() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+          transition={{ duration: 0.5, ease }}
         >
           <h2 className="text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight [font-family:var(--home-display)]">
             Simple, transparent{' '}
@@ -112,7 +102,7 @@ export default function PricingSection() {
           </p>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-input/60 border border-border/50">
+          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[hsl(var(--mk-surface)/0.6)] border border-[hsl(var(--mk-border)/0.3)]">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
@@ -140,27 +130,26 @@ export default function PricingSection() {
           </div>
         </motion.div>
 
-        {/* Pricing Cards */}
+        {/* Pricing Cards - Glassmorphism */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
-              custom={index}
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              variants={cardVariants}
+              transition={{ duration: 0.5, delay: index * 0.1, ease }}
               className={`
-                relative rounded-2xl border p-7 lg:p-8 backdrop-blur-sm transition-all duration-300
+                relative rounded-2xl border p-7 lg:p-8 transition-all duration-300
                 ${
                   plan.variant === 'featured'
-                    ? 'glass-accent-border border-primary/30 bg-card/80 shadow-[0_0_48px_-16px_hsl(var(--primary)/0.2)]'
-                    : 'bg-card/60 border-border/40 hover:border-border/70 hover:bg-card/70'
+                    ? 'border-primary/30 bg-[hsl(var(--card)/0.5)] backdrop-blur-xl shadow-[0_0_48px_-16px_hsl(var(--primary)/0.2)]'
+                    : 'border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--card)/0.5)] backdrop-blur-xl hover:border-[hsl(var(--mk-border)/0.5)]'
                 }
               `}
             >
               {plan.variant === 'featured' && (
-                <div className="absolute -inset-1 rounded-3xl bg-[oklch(0.55_0.22_264/0.1)] blur-xl -z-10" />
+                <div className="absolute -inset-1 rounded-3xl bg-primary/10 blur-xl -z-10" />
               )}
               {/* Badge */}
               {plan.badge && (
@@ -220,7 +209,7 @@ export default function PricingSection() {
               ) : (
                 <ButtonV2
                   variant="outline"
-                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border-[oklch(0.55_0.22_264/0.3)] hover:border-[oklch(0.55_0.22_264)]"
+                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border-[hsl(var(--mk-border)/0.3)] hover:border-[hsl(var(--mk-border)/0.6)]"
                 >
                   {plan.cta}
                 </ButtonV2>

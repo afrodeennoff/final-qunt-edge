@@ -551,6 +551,17 @@ export function RithmicSyncContextProvider({
             }
           }, delay);
         } else {
+          handleMessage({
+            type: "log",
+            level: "error",
+            message: `Connection failed after ${MAX_RECONNECT_ATTEMPTS} reconnect attempts. Please try connecting again manually.`,
+          });
+          handleMessage({
+            type: "connection_status",
+            status: "failed",
+            message: `WebSocket reconnect failed after ${MAX_RECONNECT_ATTEMPTS} attempts`,
+          });
+
           reconnectAttemptRef.current = 0;
           pendingConnectionRef.current = null;
           setIsAutoSyncing(false);
@@ -873,6 +884,8 @@ export function RithmicSyncContextProvider({
     if (!isSyncRouteActive) return;
     if (!autoSyncEnabled) return;
     if (isAutoSyncingRef.current) return;
+
+    isAutoSyncingRef.current = true;
     try {
       // Call API route instead of server action
       const response = await fetch("/api/rithmic/synchronizations", {
@@ -900,6 +913,8 @@ export function RithmicSyncContextProvider({
       }
     } catch (error) {
       console.warn("Error during rithmic auto-sync check:", error);
+    } finally {
+      isAutoSyncingRef.current = false;
     }
   }, [isLoading, isSyncRouteActive, syncInterval, autoSyncEnabled, performSyncForCredential]);
 

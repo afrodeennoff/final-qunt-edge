@@ -1243,11 +1243,11 @@ export async function getTradovateToken(accountId: string = 'default') {
     const expiresAt = syncData.tokenExpiresAt
 
     if (expiresAt && expiresAt <= now) {
-      logger.info('Tradovate token expired, attempting auto-renewal', { accountId })
+      logger.info('Tradovate token expired, attempting auto-renewal', { accountId: syncData.accountId })
       const renewalResult = await renewTradovateAccessToken(
         accessToken,
         syncData.accountId?.toString() === 'live' ? 'live' : 'demo',
-        accountId
+        syncData.accountId
       )
       if (renewalResult.success && renewalResult.expiresAt) {
         const fresh = await prisma.synchronization.findFirst({

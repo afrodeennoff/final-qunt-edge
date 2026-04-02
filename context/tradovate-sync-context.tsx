@@ -205,9 +205,7 @@ export function TradovateSyncContextProvider({ children }: { children: ReactNode
 
   // Perform sync for all accounts
   const performSyncForAllAccounts = useCallback(async (options?: { skipRefresh?: boolean }) => {
-    if (isAutoSyncingRef.current) {
-      return
-    }
+    if (isAutoSyncingRef.current) return
 
     isAutoSyncingRef.current = true
     setIsAutoSyncing(true)

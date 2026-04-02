@@ -27,7 +27,7 @@ const DashboardClientOverlays = dynamic(
 
 const MobileBottomNav = dynamic(
   () => import("@/components/mobile-bottom-nav").then((m) => m.MobileBottomNav),
-  { loading: () => null, ssr: false }
+  { loading: () => null }
 );
 
 export const metadata: Metadata = {
