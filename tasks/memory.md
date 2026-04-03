@@ -3,6 +3,15 @@
 ## Current Session: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
 
 ### Accomplishments
+- Rechecked the repo after the dashboard/build fixes instead of assuming the remaining state:
+  - confirmed the active touched dashboard/chat/sidebar/build files still have 0 lint errors,
+  - reran full-repo lint/typecheck/build,
+  - reduced the repo-wide quiet-lint error count from `298` to `263`.
+- Fixed a concentrated helper/test failure cluster:
+  - `components/sidebar/__tests__/sidebar.test.tsx` no longer mutates shared render-count state during render.
+  - `lib/performance/optimized-components.tsx` now avoids the prior invalid conditional-hook and custom-memo patterns that tripped React hooks lint and typecheck.
+  - `lib/performance/render-optimization.ts` now uses typed debounced/throttled callback helpers that compile cleanly with real callsites like `components/ui/optimized-input.tsx`.
+  - `lib/debug/event-tracker.ts`, `lib/debug/performance-monitor.ts`, `lib/debug/render-tracker.tsx`, and `lib/performance/memory-leak-detector.ts` now route diagnostic reporting through allowed `console.warn` calls instead of disallowed console APIs.
 - Eliminated the remaining owned Next build noise:
   - `server/database.ts` no longer uses `export *` across cached server modules, so the conflicting `$$RSC_SERVER_CACHE_0` warning is gone.
   - `app/api/debug-data/route.ts` now calls `await connection()` before reading auth headers, so the previous inferred prerender bailout log no longer appears during build.
@@ -26,6 +35,7 @@
 - Added retention regression coverage in `tests/lib/chat-retention.test.ts`.
 
 ### Verification
+- `npx eslint lib/performance/optimized-components.tsx lib/performance/render-optimization.ts lib/debug/event-tracker.ts lib/debug/performance-monitor.ts lib/debug/render-tracker.tsx lib/performance/memory-leak-detector.ts components/sidebar/__tests__/sidebar.test.tsx` passes with warnings only (0 errors).
 - `npx eslint server/database.ts app/api/debug-data/route.ts` passes.
 - `npm run test -- tests/lib/chat-retention.test.ts` passes (3/3).
 - `npx vitest run tests/sidebar-trigger-contract.test.ts lib/__tests__/sidebar-state.test.ts tests/server/layout-isolation.test.ts` passes (8/8).
@@ -33,9 +43,10 @@
 - Touched-scope eslint across the modified retention/cache/chat/sidebar/data-provider files passes with warnings only (0 errors).
 - `npm run typecheck` passes.
 - `npm run build` passes end-to-end via npm (`173/173` static pages) with the prior `server/database.ts` barrel warning and `/api/debug-data` prerender bailout noise removed.
+- Full-repo `npm run lint -- --quiet` still fails, but the error count is now `263` instead of `298`.
 
 ### Blockers
-- Full-repo `npm run lint` still fails with a large pre-existing repo-wide backlog (`504 errors`, `999 warnings`) outside this change set, so the repository is not globally lint-clean.
+- Full-repo `npm run lint -- --quiet` still fails with a large pre-existing repo-wide backlog (`263` remaining errors), dominated by `no-explicit-any` across dashboard/import/embed/server files plus several React hooks memoization findings in unrelated files.
 - Browser/dev-server verification is partially blocked in this shell: the local `next dev` process is reachable only within its own session namespace, and Playwright attach failed with `connect ENOENT root-error`.
 - `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
 

@@ -1,9 +1,28 @@
 ## Task: End-to-end pending recheck after dashboard/build fixes (2026-04-03)
 
-- [ ] Re-run the current verification stack to measure any remaining pending failures (`lint`, `typecheck`, `build`, targeted tests if needed).
-- [ ] Isolate any remaining failures inside the active touched scope rather than the unrelated repo-wide backlog.
-- [ ] Apply minimal fixes for any still-failing touched-scope files.
-- [ ] Re-run verification and record the exact remaining blockers, if any.
+- [x] Re-run the current verification stack to measure any remaining pending failures (`lint`, `typecheck`, `build`, targeted tests if needed).
+- [x] Isolate any remaining failures inside the active touched scope rather than the unrelated repo-wide backlog.
+- [x] Apply minimal fixes for any still-failing touched-scope files.
+- [x] Re-run verification and record the exact remaining blockers, if any.
+
+Verification:
+- `npx eslint 'app/[locale]/dashboard/components/charts/tick-distribution.tsx' 'app/[locale]/dashboard/components/charts/time-in-position.tsx' 'app/[locale]/dashboard/components/chat/equity-chart-message.tsx' components/ui/unified-sidebar.tsx context/data-provider.tsx server/layouts.ts server/database.ts app/api/debug-data/route.ts tests/sanitize.test.ts` passes with warnings only (0 errors).
+- `npx eslint lib/performance/optimized-components.tsx lib/performance/render-optimization.ts lib/debug/event-tracker.ts lib/debug/performance-monitor.ts lib/debug/render-tracker.tsx lib/performance/memory-leak-detector.ts components/sidebar/__tests__/sidebar.test.tsx` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end to end via npm.
+- `npm run lint -- --quiet` still fails repo-wide, but the error count dropped from `298` to `263`.
+- `npx vitest run components/sidebar/__tests__/sidebar.test.tsx` is not runnable through this workspace config because `components/sidebar/__tests__/**` is excluded from Vitest discovery.
+
+## Review
+- Root causes addressed:
+  - the prior verification state was incomplete: touched files were clean, but the repo still had concentrated hard failures in shared performance/debug helpers and one sidebar test lint violation.
+  - the performance helper layer used patterns that violate the current React hooks lint rules (`useMemo` wrappers with variable dependency lists, ref reads during render, and a conditional hook call in the optimization HOC).
+  - the debug/performance reporting helpers still used `console.group`, `console.info`, and `console.table`, which violate this repo's `no-console` policy.
+- Fix outcome:
+  - `components/sidebar/__tests__/sidebar.test.tsx` no longer mutates outer render state during render.
+  - `lib/performance/optimized-components.tsx` and `lib/performance/render-optimization.ts` now satisfy typecheck and hooks lint without the prior invalid memo/ref patterns.
+  - `lib/debug/event-tracker.ts`, `lib/debug/performance-monitor.ts`, `lib/debug/render-tracker.tsx`, and `lib/performance/memory-leak-detector.ts` now report through allowed `console.warn` paths.
+  - repo-wide quiet lint remains blocked by pre-existing `no-explicit-any`, `react-hooks/preserve-manual-memoization`, and a smaller set of console/display-name issues in many unrelated files, but this pass removed `35` hard errors from that backlog.
 
 ## Task: Build warning cleanup for server barrel + debug route (2026-04-03)
 

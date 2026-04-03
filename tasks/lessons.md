@@ -51,6 +51,30 @@ export async function GET(request: Request) {
 
 ---
 
+## NEW (2026-04-03): Shared React performance helpers must not rely on render-time ref reads or custom memo wrappers that fight hooks lint
+
+### Mistake
+The shared performance helper layer used a conditional hook call, custom `useMemo` wrapper patterns, and render-time `ref.current` reads that passed local type checks initially but failed the repo's React hooks lint and then regressed full typecheck.
+
+### Root Cause
+The helper implementation optimized around manual memoization semantics instead of the actual constraints enforced by the current React hooks/compiler lint rules in this repo.
+
+### Rule
+In shared React helper hooks/components, do not read `ref.current` during render to emulate memoization, do not call hooks conditionally, and do not build wrapper hooks that depend on variable `useMemo` dependency lists fighting the hooks linter. Prefer direct hook usage with compliant inline callbacks or simpler semantics that preserve correctness under lint.
+
+### Example
+```tsx
+// BAD
+if (!ref.current || changed(ref.current.deps, deps)) {
+  ref.current = { value: factory(), deps }
+}
+
+// GOOD
+const memoized = useCallback((...args) => callback(...args), [callback])
+```
+
+---
+
 ## NEW (2026-04-01): Screenshot-reported sidebar bugs must be split by owning shell before editing
 
 ### Mistake
