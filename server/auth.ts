@@ -570,21 +570,20 @@ export async function ensureUserInDatabase(
             },
             select: USER_SYNC_SELECT,
           });
-        await ensureDashboardLayoutBackfill(user.id);
-        return updatedUser;
-      } catch (updateError) {
-        if (isPrismaSchemaMismatchError(updateError) && canUpdateLanguage) {
-          markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+          await ensureDashboardLayoutBackfill(user.id);
+          return updatedUser;
+        } catch (updateError) {
+          if (isPrismaSchemaMismatchError(updateError) && canUpdateLanguage) {
+            markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
+          }
+          console.error('[ensureUserInDatabase] ERROR: Failed to update user record:', updateError);
+          throw new Error('Failed to update user');
         }
-        console.error('[ensureUserInDatabase] ERROR: Failed to update user record:', updateError);
-        throw new Error('Failed to update user');
-      }
     }
     if (!options?.skipDefaultLayout) {
       await ensureDashboardLayoutBackfill(user.id);
     }
     return existingUserByAuthId;
-    }
 
     // If user doesn't exist by auth_user_id, check if email exists
     if (user.email) {

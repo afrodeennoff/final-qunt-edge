@@ -177,8 +177,12 @@ export default function ImportButton() {
             description: t("import.error.noTradesAddedDescription"),
           });
         } else {
+          const details =
+            typeof result.details === "string"
+              ? result.details
+              : t("import.error.failedDescription");
           toast.error(t("import.error.failed"), {
-            description: t("import.error.failedDescription"),
+            description: details,
           });
         }
         // Don't proceed further if there's an error
@@ -200,9 +204,11 @@ export default function ImportButton() {
       // Reset the import process
       resetImportState();
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : t("import.error.failedDescription");
       console.error("Error saving trades:", error);
       toast.error(t("import.error.failed"), {
-        description: t("import.error.failedDescription"),
+        description: message,
       });
     } finally {
       setIsSaving(false);
@@ -470,14 +476,6 @@ export default function ImportButton() {
     )
       return true;
 
-    // Account selection for ATAS (now handled in processor)
-    if (
-      importType === "atas" &&
-      currentStep.component === platform.processorComponent &&
-      selectedAccountNumbers.length === 0
-    )
-      return true;
-
     return false;
   };
 
@@ -498,7 +496,7 @@ export default function ImportButton() {
       </ButtonV2>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen} >
-        <DialogContent className="flex flex-col w-full max-w-[600px] sm:max-w-[600px] h-[90dvh] sm:h-[80dvh] p-0">
+        <DialogContent className="flex h-[90dvh] w-full max-w-[600px] flex-col border-v2-border bg-v2-bg-surface text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80dvh] sm:max-w-[600px] p-0">
           <ImportDialogHeader step={step} importType={importType} />
 
           <div className="flex-1 overflow-hidden p-6">{renderStep()}</div>
