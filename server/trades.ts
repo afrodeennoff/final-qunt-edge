@@ -277,10 +277,16 @@ async function saveTradesForResolvedUser(
         continue
       }
 
+      const normalizedAccountNumber = trade.accountNumber.trim()
+      if (!normalizedAccountNumber) {
+        validationErrors.push(`Trade ${trade.instrument} is missing account number`)
+        continue
+      }
+
       userAssignedTrades.push({
         ...trade,
         userId: userId,
-        accountNumber: trade.accountNumber.trim(),
+        accountNumber: normalizedAccountNumber,
         entryPrice: new Prisma.Decimal(trade.entryPrice),
         closePrice: new Prisma.Decimal(trade.closePrice),
         pnl: new Prisma.Decimal(trade.pnl),
@@ -298,17 +304,6 @@ async function saveTradesForResolvedUser(
         error: 'INVALID_DATA',
         numberOfTradesAdded: 0,
         details: validationErrors.join('; ')
-      }
-    }
-
-    const missingAccountNumberTrades = userAssignedTrades.filter(
-      trade => !trade.accountNumber || trade.accountNumber.length === 0
-    )
-    if (missingAccountNumberTrades.length > 0) {
-      return {
-        error: 'INVALID_DATA',
-        numberOfTradesAdded: 0,
-        details: 'One or more trades are missing account numbers'
       }
     }
 

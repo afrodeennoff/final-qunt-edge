@@ -71,11 +71,6 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
         return
       }
 
-      if (!item.accountNumber) {
-        item.accountNumber = 'unknown-account'
-      }
-
-
       // Compute entryDate and closeDate with the time from entryTime and closeTime
       if (entryTime && closeTime) {
         item.entryDate = new Date(`${item.entryDate} ${entryTime.slice(0, 8)}`).toISOString();

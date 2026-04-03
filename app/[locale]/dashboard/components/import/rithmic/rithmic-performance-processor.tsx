@@ -27,7 +27,6 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
 
     const processTrades = useCallback(() => {
         const newTrades: Trade[] = [];
-        const accountNumber = 'default-account'; // Replace with actual account number
 
         csvData.forEach(row => {
             const item: Partial<Trade> = {};
@@ -82,9 +81,12 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
             }
             // This is going to be set later
             item.userId = ''
-            if (!item.accountNumber) {
-                item.accountNumber = accountNumber;
+            const normalizedAccountNumber =
+                typeof item.accountNumber === 'string' ? item.accountNumber.trim() : '';
+            if (!normalizedAccountNumber) {
+                return;
             }
+            item.accountNumber = normalizedAccountNumber;
             item.id = `${item.entryId}-${item.closeId}`;
             newTrades.push(item as Trade);
         });

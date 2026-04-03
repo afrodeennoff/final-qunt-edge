@@ -95,6 +95,39 @@ export default function ImportButton() {
         );
       }
 
+      if (tradesToSave.length === 0) {
+        toast.error(t("import.error.noTradesAdded"), {
+          description: t("import.error.noTradesAddedDescription"),
+        });
+        return;
+      }
+
+      const knownAccounts = Array.from(
+        new Set(
+          [...accounts.map((account) => account.number), ...trades.map((trade) => trade.accountNumber)]
+            .map((account) => account?.trim())
+            .filter((account): account is string => Boolean(account))
+        )
+      );
+      const hasMissingAccountNumber = tradesToSave.some(
+        (trade) => !trade.accountNumber || !String(trade.accountNumber).trim()
+      );
+
+      if (accountNumbers.length === 0 && hasMissingAccountNumber) {
+        if (knownAccounts.length === 1) {
+          const fallbackAccount = knownAccounts[0];
+          tradesToSave = tradesToSave.map((trade) => ({
+            ...trade,
+            accountNumber: trade.accountNumber?.trim() || fallbackAccount,
+          }));
+        } else {
+          toast.error(t("import.error.invalidData"), {
+            description: "Missing account numbers in imported trades. Select an account before saving.",
+          });
+          return;
+        }
+      }
+
       let newTrades: ImportTradeDraft[] = [];
       // If accountNumbers is empty, we should just save processedTrades with the accountNumber from the processedTrades
       if (accountNumbers.length === 0) {
@@ -174,7 +207,19 @@ export default function ImportButton() {
     } finally {
       setIsSaving(false);
     }
-  }, [processedTrades, accountNumbers, selectedAccountNumbers, importType, user, supabaseUser, t, refreshTradesOnly, refreshUserDataOnly]);
+  }, [
+    processedTrades,
+    accountNumbers,
+    selectedAccountNumbers,
+    importType,
+    user,
+    supabaseUser,
+    accounts,
+    trades,
+    t,
+    refreshTradesOnly,
+    refreshUserDataOnly,
+  ]);
 
   const resetImportState = () => {
     setImportType("");

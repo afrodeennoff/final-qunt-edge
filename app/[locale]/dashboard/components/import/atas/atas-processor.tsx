@@ -40,6 +40,21 @@ const formatPnl = (
   return { pnl: numericValue };
 };
 
+const DEFAULT_IMPORT_TIMEZONE = "UTC";
+
+const resolveValidTimeZone = (timezone: string | undefined): string => {
+  if (!timezone || String(timezone).trim() === "") {
+    return DEFAULT_IMPORT_TIMEZONE;
+  }
+
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: timezone });
+    return timezone;
+  } catch {
+    return DEFAULT_IMPORT_TIMEZONE;
+  }
+};
+
 const parseAtasDate = (dateValue: any, timezone: string): string | undefined => {
   if (!dateValue || String(dateValue).trim() === "") {
     return undefined;
@@ -149,17 +164,24 @@ const parseAtasDate = (dateValue: any, timezone: string): string | undefined => 
   }
 };
 
+const normalizeAtasHeader = (header: string): string =>
+  String(header)
+    .replace(/^\uFEFF/, "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
 // ATAS column mappings - only map fields that exist in the database schema
-const atasMappings: { [key: string]: string } = {
-  Account: "accountNumber",
-  Instrument: "instrument",
-  "Open time": "entryDate",
-  "Open price": "entryPrice",
-  "Open volume": "quantity",
-  "Close time": "closeDate",
-  "Close price": "closePrice",
-  PnL: "pnl",
-  Comment: "comment",
+const atasMappings: Record<string, keyof Trade> = {
+  account: "accountNumber",
+  instrument: "instrument",
+  "open time": "entryDate",
+  "open price": "entryPrice",
+  "open volume": "quantity",
+  "close time": "closeDate",
+  "close price": "closePrice",
+  pnl: "pnl",
+  comment: "comment",
 };
 
 export default function AtasProcessor({
@@ -184,6 +206,10 @@ export default function AtasProcessor({
   const [internalSelectedAccounts, setInternalSelectedAccounts] = useState<
     string[]
   >([]);
+  const safeTimezone = useMemo(
+    () => resolveValidTimeZone(timezone),
+    [timezone]
+  );
 
   // Use provided selectedAccountNumbers or fall back to internal state
   const currentSelectedAccounts =
@@ -269,17 +295,47 @@ export default function AtasProcessor({
     ) as string[];
   }, [allProcessedTrades]);
 
+  useEffect(() => {
+    if (availableAccounts.length === 0) {
+      return;
+    }
+
+    setCurrentSelectedAccounts((previous) => {
+      if (previous.length === 0) {
+        return [...availableAccounts];
+      }
+
+      const next = previous.filter((account) =>
+        availableAccounts.includes(account)
+      );
+
+      if (next.length === previous.length) {
+        return previous;
+      }
+
+      return next;
+    });
+  }, [availableAccounts, setCurrentSelectedAccounts]);
+
   const processTrades = useCallback(() => {
     const newTrades: Trade[] = [];
     const missingCommissionsTemp: { [key: string]: boolean } = {};
+    const normalizedHeaders = headers.map(normalizeAtasHeader);
+    const closeQuantityIndex = normalizedHeaders.findIndex(
+      (header) => header === "close volume"
+    );
+    const openQuantityIndex = normalizedHeaders.findIndex(
+      (header) => header === "open volume"
+    );
 
     csvData.forEach((row) => {
       const item: Partial<Trade> = {};
       let quantity = 0;
 
       headers.forEach((header, index) => {
-        if (atasMappings[header]) {
-          const key = atasMappings[header] as keyof Trade;
+        const normalizedHeader = normalizeAtasHeader(header);
+        const key = atasMappings[normalizedHeader];
+        if (key) {
           const cellValue = row[index];
 
           switch (key) {
@@ -296,7 +352,7 @@ export default function AtasProcessor({
               break;
             case "entryDate":
             case "closeDate":
-              item[key] = parseAtasDate(cellValue, timezone);
+              item[key] = parseAtasDate(cellValue, safeTimezone);
               break;
             case "entryPrice":
             case "closePrice":
@@ -337,7 +393,6 @@ export default function AtasProcessor({
       item.instrument = String(item.instrument).trim();
 
       // Validate that open and close quantities match (for complete trades)
-      const closeQuantityIndex = headers.findIndex((h) => h === "Close volume");
       const closeQuantity =
         closeQuantityIndex >= 0
           ? Math.abs(parseFloat(String(row[closeQuantityIndex])) || 0)
@@ -352,10 +407,10 @@ export default function AtasProcessor({
 
       // Determine trade side based on quantity sign in the original data
       const originalOpenVolume = parseFloat(
-        String(row[headers.findIndex((h) => h === "Open volume")] || "0")
+        String((openQuantityIndex >= 0 ? row[openQuantityIndex] : "0") || "0")
       );
       const originalCloseVolume = parseFloat(
-        String(row[headers.findIndex((h) => h === "Close volume")] || "0")
+        String((closeQuantityIndex >= 0 ? row[closeQuantityIndex] : "0") || "0")
       );
 
       if (originalOpenVolume > 0 && originalCloseVolume < 0) {
@@ -445,11 +500,9 @@ export default function AtasProcessor({
   }, [
     csvData,
     headers,
-    accountNumbers,
-    existingTrades,
     existingCommissions,
     setProcessedTrades,
-    t,
+    safeTimezone,
   ]);
 
   const handleCommissionChange = (instrument: string, value: string) => {

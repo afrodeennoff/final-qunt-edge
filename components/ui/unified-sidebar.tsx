@@ -185,6 +185,7 @@ export function UnifiedSidebar({
     return [...items, ...extras]
   }, [items, pathname])
   const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const navigationFallbackTimerRef = useRef<number | null>(null)
 
   const clearNavigationFallbackTimer = useCallback(() => {
@@ -218,7 +219,17 @@ export function UnifiedSidebar({
     }
   }, [clearNavigationFallbackTimer])
 
-  const groupedItems = useMemo(() => {
+  const handleGroupOpenChange = useCallback((groupName: string, isOpen: boolean) => {
+    setOpenGroups((previous) => {
+      if (previous[groupName] === isOpen) return previous
+      return {
+        ...previous,
+        [groupName]: isOpen,
+      }
+    })
+  }, [])
+
+  const groupedItems = (() => {
     const order: string[] = []
     const groups: Record<string, UnifiedSidebarItem[]> = {}
 
@@ -252,7 +263,30 @@ export function UnifiedSidebar({
     })
 
     return { groups, order: sortedOrder }
-  }, [extendedItems])
+  })()
+
+  useEffect(() => {
+    setOpenGroups((previous) => {
+      const next: Record<string, boolean> = { ...previous }
+      let hasChanges = false
+
+      for (const groupName of groupedItems.order) {
+        if (!(groupName in next)) {
+          next[groupName] = DEFAULT_OPEN_GROUPS.has(groupName)
+          hasChanges = true
+        }
+      }
+
+      for (const groupName of Object.keys(next)) {
+        if (!groupedItems.groups[groupName]) {
+          delete next[groupName]
+          hasChanges = true
+        }
+      }
+
+      return hasChanges ? next : previous
+    })
+  }, [groupedItems.groups, groupedItems.order])
 
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User"
   const initials = useMemo(() => getUserInitials(user), [user])
@@ -296,7 +330,8 @@ export function UnifiedSidebar({
         {groupedItems.order.map((groupName, groupIndex) => (
           <Collapsible
             key={groupName}
-            defaultOpen={DEFAULT_OPEN_GROUPS.has(groupName)}
+            open={openGroups[groupName] ?? DEFAULT_OPEN_GROUPS.has(groupName)}
+            onOpenChange={(isOpen) => handleGroupOpenChange(groupName, isOpen)}
             className="group/collapsible"
           >
             <SidebarGroup className="px-0 py-1.5">

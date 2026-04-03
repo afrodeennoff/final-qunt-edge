@@ -14,6 +14,9 @@ const MAX_POOL_LIMIT = 20
 const DEFAULT_SERVERLESS_POOL_MAX = 5
 const DEFAULT_SERVERLESS_POOL_MIN = 0
 const PRODUCTION_RUNTIME_POOL_FLOOR = DEFAULT_SERVERLESS_POOL_MAX
+const DB_POOL_WARN_UTILIZATION_THRESHOLD = 0.8
+const DB_POOL_WARN_COOLDOWN_MS = 30000
+const DB_POOL_WARN_MIN_MAX_CONNECTIONS = 3
 const MISSING_CONNECTION_ERROR =
   '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
 
@@ -157,6 +160,7 @@ const parsedPoolMin = Number.parseInt(process.env.PG_POOL_MIN ?? '', 10)
 
 let pool: pg.Pool | undefined
 let prisma: PrismaClient
+let lastPoolWarningAt = 0
 
 if (!connectionString) {
   if (process.env.NODE_ENV !== 'test') {
@@ -270,14 +274,23 @@ if (!connectionString) {
     console.error('[Prisma] Unexpected error on idle client', err)
   })
 
-  // Monitor pool utilization - log when at 80% capacity
+  // Monitor pool utilization and rate-limit warnings to avoid noisy logs under burst traffic.
   activePool.on('acquire', () => {
+    if (poolMax < DB_POOL_WARN_MIN_MAX_CONNECTIONS) {
+      return
+    }
+
     const totalCount = activePool.totalCount
     const idleCount = activePool.idleCount
     const activeConnections = totalCount - idleCount
+    const utilizationRatio = activeConnections / poolMax
 
-    // Log warning when pool is at 80% capacity.
-    if (activeConnections >= Math.ceil(poolMax * 0.8)) {
+    if (utilizationRatio >= DB_POOL_WARN_UTILIZATION_THRESHOLD) {
+      const now = Date.now()
+      if (now - lastPoolWarningAt < DB_POOL_WARN_COOLDOWN_MS) {
+        return
+      }
+      lastPoolWarningAt = now
       const utilization = ((activeConnections / poolMax) * 100).toFixed(0)
 
       // Use logger.warn for production logging
