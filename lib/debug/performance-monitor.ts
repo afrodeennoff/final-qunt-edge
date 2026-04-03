@@ -91,31 +91,26 @@ class PerformanceMonitor {
   }
 
   printReport() {
-    console.group('🔍 Performance Monitor Report')
     const metrics = this.getMetrics() as PerformanceMetrics[]
-    
+
     if (metrics.length === 0) {
-      console.info('No metrics recorded yet')
-      console.groupEnd()
+      console.warn('[PerformanceMonitor] No metrics recorded yet')
       return
     }
 
-    console.table(
-      metrics.map(m => ({
+    const summarizedMetrics = metrics.map(m => ({
         Component: m.componentName,
         Renders: m.renderCount,
         'Avg Time (ms)': m.averageRenderTime.toFixed(2),
         'Last Time (ms)': m.lastRenderTime.toFixed(2),
         'Memory (MB)': m.memoryUsage?.toFixed(2) ?? 'N/A',
       }))
-    )
 
     const slowComponents = this.getSlowComponents()
-    if (slowComponents.length > 0) {
-      console.warn('⚠️ Slow Components (>16ms):', slowComponents.map(c => c.componentName))
-    }
-
-    console.groupEnd()
+    console.warn('[PerformanceMonitor] Report', {
+      metrics: summarizedMetrics,
+      slowComponents: slowComponents.map(component => component.componentName),
+    })
   }
 }
 

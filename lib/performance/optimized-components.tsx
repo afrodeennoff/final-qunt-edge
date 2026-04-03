@@ -1,6 +1,6 @@
 'use client'
 
-import React, { memo, useMemo, forwardRef, useCallback } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 import { usePerformanceOptimization } from './render-optimization'
 
 export interface OptimizedComponentProps {
@@ -12,22 +12,17 @@ export function withPerformanceOptimization<P extends object>(
   Component: React.ComponentType<P>,
   componentName?: string
 ): React.ComponentType<P & OptimizedComponentProps> {
-  const WrappedComponent = memo(
-    forwardRef<any, P & OptimizedComponentProps>((props, ref) => {
-      const { enableMemo = true, disableOptimization = false, ...rest } = props
-      const name = componentName || Component.displayName || Component.name || 'Component'
+  const WrappedComponent = memo(function OptimizedComponent(props: P & OptimizedComponentProps) {
+    const { enableMemo = true, disableOptimization = false, ...rest } = props
+    const name = componentName || Component.displayName || Component.name || 'Component'
+    const { isLowPerformance } = usePerformanceOptimization(name)
 
-      if (!disableOptimization) {
-        const { isLowPerformance } = usePerformanceOptimization(name)
+    if (!disableOptimization && isLowPerformance && !enableMemo) {
+      console.warn(`⚠️ Low performance mode active for ${name}`)
+    }
 
-        if (isLowPerformance && !enableMemo) {
-          console.warn(`⚠️ Low performance mode active for ${name}`)
-        }
-      }
-
-      return <Component ref={ref} {...(rest as P)} />
-    })
-  )
+    return <Component {...(rest as P)} />
+  })
 
   WrappedComponent.displayName = `Optimized(${Component.displayName || Component.name || 'Component'})`
 
@@ -50,15 +45,16 @@ export function createMemoizedComponent<P extends object>(
   return MemoizedComponent
 }
 
-export function useOptimizedCallback<T extends (...args: any[]) => any>(
+export function useOptimizedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
-  deps: React.DependencyList
+  _deps: React.DependencyList
 ): T {
-  return useMemo(() => callback, deps) as T
+  const memoizedCallback = useCallback((...args: Parameters<T>) => callback(...args), [callback])
+  return memoizedCallback as T
 }
 
-export function useOptimizedMemo<T>(factory: () => T, deps: React.DependencyList): T {
-  return useMemo(factory, deps)
+export function useOptimizedMemo<T>(factory: () => T, _deps: React.DependencyList): T {
+  return useMemo(() => factory(), [factory])
 }
 
 interface OptimizedListProps<T> {
@@ -171,7 +167,7 @@ export function OptimizedVirtualGrid<T>({
       <div style={{ height: totalHeight, position: 'relative' }}>
         <div style={{ transform: `translateY(${offsetY}px)` }}>
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: '1rem' }}>
-            {visibleItems.map((item, arrayIndex) => {
+            {visibleItems.map((item) => {
               const actualIndex = items.indexOf(item)
               return (
                 <div key={keyExtractor(item, actualIndex)}>

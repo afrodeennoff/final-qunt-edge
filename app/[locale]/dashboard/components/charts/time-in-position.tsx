@@ -58,7 +58,7 @@ interface CustomTooltipProps {
     };
   }>;
   label?: number | string;
-  t: (key: string) => string;
+  t: ReturnType<typeof useI18n>;
 }
 
 function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {

@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
-import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
+import { ChevronRight, LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
 import { NAVIGATION_TIMEOUT_MS } from "@/lib/constants/sidebar"
@@ -32,6 +32,11 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { useNavigationLoading } from "@/hooks/use-navigation-loading"
@@ -72,6 +77,7 @@ export interface UnifiedSidebarConfig {
 }
 
 const NAVIGATION_STALL_TIMEOUT_MS = NAVIGATION_TIMEOUT_MS
+const DEFAULT_OPEN_GROUPS = new Set(["Overview", "Trading", "Analytics", "System"])
 
 function stripLocalePrefix(pathname: string) {
   if (!pathname) return "/"
@@ -270,125 +276,139 @@ export function UnifiedSidebar({
       <SidebarHeader className="h-16 border-b border-sidebar-border/12 px-2 py-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <div
-              className="flex h-12 items-center rounded-xl px-2 text-sidebar-foreground group-data-[collapsible=icon]:justify-center"
-              aria-label="Qunt Edge workspace"
+            <SidebarMenuButton
+              size="lg"
+              className="h-12 rounded-xl px-2 data-[state=open]:bg-sidebar-accent/20 data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
             >
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-accent/10 text-sidebar-foreground">
+              <div className="flex aspect-square size-9 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-primary text-sidebar-primary-foreground">
                 <Logo className="size-5 fill-current" />
               </div>
               <div className="grid min-w-0 flex-1 gap-0.5 px-1.5 text-left leading-none group-data-[collapsible=icon]:hidden">
-                <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">Qunt Edge</span>
-                <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/40">Workspace</span>
+                <span className="truncate text-sm font-semibold tracking-tight">Qunt Edge</span>
+                <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/45">Workspace</span>
               </div>
-            </div>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent className="overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
         {groupedItems.order.map((groupName, groupIndex) => (
-          <SidebarGroup key={groupName} className="px-0 py-1.5">
-            <SidebarGroupLabel className="mb-1.5 pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35" id={`sidebar-group-${groupIndex}`}>
-              {groupName}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
-                {groupedItems.groups[groupName].map((item, index) => {
-                  const label = item.i18nKey ? translate(item.i18nKey) : item.label
-                  const href = item.href
-                  const isItemDisabled = Boolean(item.disabled)
-                  const itemIsActive = !isItemDisabled && !!href && isActive(href, item.exact)
-                  const isPendingItem = Boolean(
-                    href &&
-                      pendingNavigation?.href === href &&
-                      pendingNavigation.routeKeyAtSchedule === currentRouteKey &&
-                      !isActive(href, item.exact)
-                  )
+          <Collapsible
+            key={groupName}
+            defaultOpen={DEFAULT_OPEN_GROUPS.has(groupName)}
+            className="group/collapsible"
+          >
+            <SidebarGroup className="px-0 py-1.5">
+              <CollapsibleTrigger asChild>
+                <SidebarGroupLabel
+                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 hover:text-sidebar-foreground/55"
+                  id={`sidebar-group-${groupIndex}`}
+                >
+                  <span>{groupName}</span>
+                  <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                </SidebarGroupLabel>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
+                    {groupedItems.groups[groupName].map((item, index) => {
+                      const label = item.i18nKey ? translate(item.i18nKey) : item.label
+                      const href = item.href
+                      const isItemDisabled = Boolean(item.disabled)
+                      const itemIsActive = !isItemDisabled && !!href && isActive(href, item.exact)
+                      const isPendingItem = Boolean(
+                        href &&
+                          pendingNavigation?.href === href &&
+                          pendingNavigation.routeKeyAtSchedule === currentRouteKey &&
+                          !isActive(href, item.exact)
+                      )
 
-                  return (
-                    <SidebarMenuItem key={`${groupName}-${item.label}-${index}`} className="relative">
-                      {itemIsActive && (
-                        <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
-                      )}
-                      {href ? (
-                        <SidebarMenuButton
-                          asChild
-                          isActive={itemIsActive}
-                          tooltip={label}
-                          disabled={isItemDisabled}
-                          className={cn(
-                            itemButtonClass,
-                            itemIsActive ? activeItemClass : inactiveItemClass
+                      return (
+                        <SidebarMenuItem key={`${groupName}-${item.label}-${index}`} className="relative">
+                          {itemIsActive && (
+                            <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
                           )}
-                        >
-                          <Link
-                            href={href}
-                            prefetch={false}
-                            onClick={() => {
-                              setPendingNavigation({
-                                href,
-                                routeKeyAtSchedule: currentRouteKey,
-                              })
-                              scheduleNavigationFallback(href)
-                              if (isMobile) {
-                                setOpenMobile(false)
-                              }
-                            }}
-                            className="flex w-full items-center"
-                            aria-busy={isPendingItem}
-                          >
-                            {isPendingItem || (isLoading && itemIsActive) ? (
-                              <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
-                            ) : (
-                              <span className={cn(
-                                "shrink-0 transition-colors duration-200",
-                                itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
-                              )}>{item.icon}</span>
-                            )}
-                            <span className={cn(
-                              "ml-3 truncate group-data-[collapsible=icon]:hidden",
-                              itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
-                            )}>{label}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      ) : (
-                        <SidebarMenuButton
-                          isActive={itemIsActive}
-                          tooltip={label}
-                          disabled={isItemDisabled}
-                          onClick={() => {
-                            item.action?.()
-                            if (isMobile) setOpenMobile(false)
-                          }}
-                          className={cn(
-                            itemButtonClass,
-                            itemIsActive ? activeItemClass : inactiveItemClass
+                          {href ? (
+                            <SidebarMenuButton
+                              asChild
+                              isActive={itemIsActive}
+                              tooltip={label}
+                              disabled={isItemDisabled}
+                              className={cn(
+                                itemButtonClass,
+                                itemIsActive ? activeItemClass : inactiveItemClass
+                              )}
+                            >
+                              <Link
+                                href={href}
+                                prefetch={false}
+                                onClick={() => {
+                                  setPendingNavigation({
+                                    href,
+                                    routeKeyAtSchedule: currentRouteKey,
+                                  })
+                                  scheduleNavigationFallback(href)
+                                  if (isMobile) {
+                                    setOpenMobile(false)
+                                  }
+                                }}
+                                className="flex w-full items-center"
+                                aria-busy={isPendingItem}
+                              >
+                                {isPendingItem || (isLoading && itemIsActive) ? (
+                                  <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
+                                ) : (
+                                  <span className={cn(
+                                    "shrink-0 transition-colors duration-200",
+                                    itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                                  )}>{item.icon}</span>
+                                )}
+                                <span className={cn(
+                                  "ml-3 truncate group-data-[collapsible=icon]:hidden",
+                                  itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
+                                )}>{label}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          ) : (
+                            <SidebarMenuButton
+                              isActive={itemIsActive}
+                              tooltip={label}
+                              disabled={isItemDisabled}
+                              onClick={() => {
+                                item.action?.()
+                                if (isMobile) setOpenMobile(false)
+                              }}
+                              className={cn(
+                                itemButtonClass,
+                                itemIsActive ? activeItemClass : inactiveItemClass
+                              )}
+                            >
+                              <div className="flex w-full items-center">
+                                <span className={cn(
+                                  "shrink-0 transition-colors duration-200",
+                                  itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
+                                )}>{item.icon}</span>
+                                <span className={cn(
+                                  "ml-3 truncate group-data-[collapsible=icon]:hidden",
+                                  itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
+                                )}>{label}</span>
+                              </div>
+                            </SidebarMenuButton>
                           )}
-                        >
-                          <div className="flex w-full items-center">
-                            <span className={cn(
-                              "shrink-0 transition-colors duration-200",
-                              itemIsActive ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80"
-                            )}>{item.icon}</span>
-                            <span className={cn(
-                              "ml-3 truncate group-data-[collapsible=icon]:hidden",
-                              itemIsActive ? "font-semibold text-sidebar-foreground" : "text-sidebar-foreground"
-                            )}>{label}</span>
-                          </div>
-                        </SidebarMenuButton>
-                      )}
-                      {item.badge && (
-                        <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
-                          {item.badge}
-                        </SidebarMenuBadge>
-                      )}
-                    </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+                          {item.badge && (
+                            <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
+                              {item.badge}
+                            </SidebarMenuBadge>
+                          )}
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </SidebarGroup>
+          </Collapsible>
         ))}
 
         {actions && (

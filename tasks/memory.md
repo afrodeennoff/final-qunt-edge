@@ -3,6 +3,9 @@
 ## Current Session: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
 
 ### Accomplishments
+- Eliminated the remaining owned Next build noise:
+  - `server/database.ts` no longer uses `export *` across cached server modules, so the conflicting `$$RSC_SERVER_CACHE_0` warning is gone.
+  - `app/api/debug-data/route.ts` now calls `await connection()` before reading auth headers, so the previous inferred prerender bailout log no longer appears during build.
 - Centralized cache invalidation for dashboard-adjacent data in `lib/cache/cache-invalidation.ts` and wired the shared helpers through `server/groups.ts`, `server/tags.ts`, `server/journal.ts`, `server/accounts.ts`, `server/trades.ts`, and `server/user-data.ts`.
 - Standardized dashboard layout/equity cache tags:
   - `server/user-data.ts` now tags dashboard-layout reads with shared dashboard/layout tags.
@@ -23,12 +26,13 @@
 - Added retention regression coverage in `tests/lib/chat-retention.test.ts`.
 
 ### Verification
+- `npx eslint server/database.ts app/api/debug-data/route.ts` passes.
 - `npm run test -- tests/lib/chat-retention.test.ts` passes (3/3).
 - `npx vitest run tests/sidebar-trigger-contract.test.ts lib/__tests__/sidebar-state.test.ts tests/server/layout-isolation.test.ts` passes (8/8).
 - `npx vitest run tests/api/ai-chat-tool-policy-alignment.test.ts tests/api/ai-full-history-ux.test.ts` passes (8/8).
 - Touched-scope eslint across the modified retention/cache/chat/sidebar/data-provider files passes with warnings only (0 errors).
 - `npm run typecheck` passes.
-- `npm run build` passes end-to-end via npm (`173/173` static pages).
+- `npm run build` passes end-to-end via npm (`173/173` static pages) with the prior `server/database.ts` barrel warning and `/api/debug-data` prerender bailout noise removed.
 
 ### Blockers
 - Full-repo `npm run lint` still fails with a large pre-existing repo-wide backlog (`504 errors`, `999 warnings`) outside this change set, so the repository is not globally lint-clean.

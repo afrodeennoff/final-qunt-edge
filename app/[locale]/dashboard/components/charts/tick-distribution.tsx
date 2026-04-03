@@ -56,7 +56,7 @@ interface CustomTooltipProps {
   payload?: Array<{
     payload: ChartDataPoint;
   }>;
-  t: (key: string) => string;
+  t: ReturnType<typeof useI18n>;
 }
 
 function CustomTooltip({ active, payload, t }: CustomTooltipProps) {

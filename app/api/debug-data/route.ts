@@ -1,11 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { connection, NextResponse } from 'next/server'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiError } from '@/lib/api-response'
 import logger, { withLogContext } from '@/lib/logger'
 import { prisma, hasConfiguredDatabaseConnection } from '@/lib/prisma'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const requestId = crypto.randomUUID()
+
+  // This route always depends on request headers for auth, so keep it request-time only.
+  await connection()
 
   return withLogContext(
     {

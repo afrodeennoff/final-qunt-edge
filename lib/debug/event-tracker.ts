@@ -117,31 +117,23 @@ class EventListenerTracker {
   }
 
   printReport() {
-    console.group('🔍 Event Listener Tracker Report')
     const listeners = this.getActiveListeners()
-    
-    console.info(`Total active listeners: ${listeners.length}`)
-    
+
     const byComponent = listeners.reduce((acc, l) => {
       acc[l.component] = (acc[l.component] || 0) + 1
       return acc
     }, {} as Record<string, number>)
-    
-    console.table(
-      Object.entries(byComponent).map(([component, count]) => ({
-        Component: component,
-        'Listener Count': count,
-      }))
-    )
 
     const byType = listeners.reduce((acc, l) => {
       acc[l.type] = (acc[l.type] || 0) + 1
       return acc
     }, {} as Record<string, number>)
-    
-    console.info('Listeners by type:', byType)
-    
-    console.groupEnd()
+
+    console.warn('[EventListenerTracker] Report', {
+      totalActiveListeners: listeners.length,
+      byComponent,
+      byType,
+    })
   }
 
   clear() {

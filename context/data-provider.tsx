@@ -526,6 +526,7 @@ export const DataProvider: React.FC<{
     let hasLocalSnapshot = false;
 
     try {
+      setRefreshError(null);
       setIsLoading(true);
 
       if (isSharedView) {
@@ -805,6 +806,9 @@ export const DataProvider: React.FC<{
       await refreshFromServer();
     } catch (error) {
       logger.error({ error }, "FATAL: Error loading data");
+      const message =
+        error instanceof Error ? error.message : "Failed to load dashboard data";
+      setRefreshError(message);
       if (hasLocalSnapshot) {
         logger.warn("Preserving cached dashboard snapshot after load failure");
       } else {
@@ -822,7 +826,6 @@ export const DataProvider: React.FC<{
     } finally {
       loadInProgressRef.current = false;
       setIsLoading(false);
-      setRefreshError(null);
     }
   }, [
     adminView,
@@ -1028,6 +1031,9 @@ export const DataProvider: React.FC<{
         }
       } catch (error) {
         logger.error({ error }, "Error refreshing user data");
+        setRefreshError(
+          error instanceof Error ? error.message : "Failed to refresh dashboard user data"
+        );
       } finally {
         if (withLoading) setIsLoading(false);
       }
@@ -1068,6 +1074,9 @@ export const DataProvider: React.FC<{
         logger.info("Successfully refreshed trades and user data");
       } catch (error) {
         logger.error({ error }, "Error refreshing all data");
+        setRefreshError(
+          error instanceof Error ? error.message : "Failed to refresh dashboard data"
+        );
       } finally {
         setIsLoading(false);
       }

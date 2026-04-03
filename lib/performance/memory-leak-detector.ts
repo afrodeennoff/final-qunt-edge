@@ -267,33 +267,30 @@ class MemoryLeakDetector {
    * Generate memory leak report
    */
   generateReport() {
-    console.group('🔍 Memory Leak Report');
-    
-    console.info('\n📊 Memory Snapshots:');
-    console.table(
-      this.snapshots.slice(-10).map(s => ({
+    const snapshots = this.snapshots.slice(-10).map(s => ({
         Time: new Date(s.timestamp).toLocaleTimeString(),
         'Heap Used': `${(s.heapUsed / 1048576).toFixed(2)} MB`,
         'Components': s.components,
         'Listeners': s.listeners,
       }))
-    );
 
     if (this.leaks.length > 0) {
-      console.info('\n⚠️ Detected Leaks:');
-      console.table(
-        this.leaks.map(leak => ({
+      console.warn('[MemoryLeakDetector] Report', {
+        snapshots,
+        leaks: this.leaks.map(leak => ({
           Component: leak.component,
           Type: leak.type,
           Severity: leak.severity,
           Description: leak.description,
-        }))
-      );
+        })),
+      })
     } else {
-      console.info('\n✅ No memory leaks detected');
+      console.warn('[MemoryLeakDetector] Report', {
+        snapshots,
+        leaks: [],
+        status: 'No memory leaks detected',
+      })
     }
-
-    console.groupEnd();
   }
 
   /**

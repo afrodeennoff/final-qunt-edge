@@ -54,9 +54,16 @@ function validateLayouts(layouts: DashboardLayout): boolean {
 }
 
 async function _loadDashboardLayout(userId: string): Promise<Layouts | null> {
-  const dashboard = await prisma.dashboardLayout.findUnique({
+  let dashboard = await prisma.dashboardLayout.findUnique({
     where: { userId },
   })
+
+  if (!dashboard) {
+    await createDefaultDashboardLayout(userId)
+    dashboard = await prisma.dashboardLayout.findUnique({
+      where: { userId },
+    })
+  }
 
   if (!dashboard) return null
 

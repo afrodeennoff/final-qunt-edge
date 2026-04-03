@@ -322,19 +322,19 @@ describe("Sidebar Performance", () => {
       { href: "/settings", icon: <span />, label: "Settings", group: "Settings" },
     ]
 
-    const renderCount = { count: 0 }
+    const onRender = vi.fn()
 
     const TestComponent = () => {
-      renderCount.count++
+      onRender()
       return <div>Sidebar Test</div>
     }
 
     render(<TestComponent />)
 
-    const initialCount = renderCount.count
+    const initialCount = onRender.mock.calls.length
 
     render(<TestComponent />)
 
-    expect(renderCount.count).toBe(initialCount + 1)
+    expect(onRender.mock.calls.length).toBe(initialCount + 1)
   })
 })

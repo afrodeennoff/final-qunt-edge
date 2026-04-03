@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 
 interface FPSMetrics {
   current: number
@@ -83,11 +83,23 @@ export const renderOptimizationEngine = new RenderOptimizationEngine()
 
 export function usePerformanceOptimization(componentName: string) {
   const renderStartTime = useRef<number>(0)
-  const isLowPerformanceRef = useRef(false)
+  const [isLowPerformance, setIsLowPerformance] = useState(false)
+  const [fps, setFps] = useState<FPSMetrics>(() => renderOptimizationEngine.getFPSMetrics())
 
   useEffect(() => {
     renderOptimizationEngine.startFPSMonitoring()
-    return () => renderOptimizationEngine.stopFPSMonitoring()
+    const syncMetrics = () => {
+      setIsLowPerformance(renderOptimizationEngine.isLowPerformance())
+      setFps(renderOptimizationEngine.getFPSMetrics())
+    }
+
+    syncMetrics()
+    const intervalId = window.setInterval(syncMetrics, 1000)
+
+    return () => {
+      window.clearInterval(intervalId)
+      renderOptimizationEngine.stopFPSMonitoring()
+    }
   }, [])
 
   useEffect(() => {
@@ -100,20 +112,16 @@ export function usePerformanceOptimization(componentName: string) {
     }
   })
 
-  useEffect(() => {
-    isLowPerformanceRef.current = renderOptimizationEngine.isLowPerformance()
-  }, [])
-
   return {
-    isLowPerformance: isLowPerformanceRef.current,
-    fps: renderOptimizationEngine.getFPSMetrics()
+    isLowPerformance,
+    fps,
   }
 }
 
-export function useDebouncedCallback<T extends (...args: any[]) => any>(
-  callback: T,
+export function useDebouncedCallback<TArgs extends unknown[], TResult>(
+  callback: (...args: TArgs) => TResult,
   delay: number
-): T {
+): (...args: TArgs) => void {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const callbackRef = useRef(callback)
 
@@ -121,20 +129,20 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     callbackRef.current = callback
   }, [callback])
 
-  return useCallback((...args: Parameters<T>) => {
+  return useCallback((...args: TArgs) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
     timeoutRef.current = setTimeout(() => {
       callbackRef.current(...args)
     }, delay)
-  }, [delay]) as T
+  }, [delay])
 }
 
-export function useThrottledCallback<T extends (...args: any[]) => any>(
-  callback: T,
+export function useThrottledCallback<TArgs extends unknown[], TResult>(
+  callback: (...args: TArgs) => TResult,
   interval: number
-): T {
+): (...args: TArgs) => void {
   const lastRunRef = useRef(0)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const callbackRef = useRef(callback)
@@ -143,7 +151,7 @@ export function useThrottledCallback<T extends (...args: any[]) => any>(
     callbackRef.current = callback
   }, [callback])
 
-  return useCallback((...args: Parameters<T>) => {
+  return useCallback((...args: TArgs) => {
     const now = Date.now()
     const timeSinceLastRun = now - lastRunRef.current
 
@@ -157,5 +165,5 @@ export function useThrottledCallback<T extends (...args: any[]) => any>(
         callbackRef.current(...args)
       }, interval - timeSinceLastRun)
     }
-  }, [interval]) as T
+  }, [interval])
 }

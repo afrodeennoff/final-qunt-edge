@@ -45,10 +45,7 @@ interface EquityChartMessageProps {
   totalTrades: number;
 }
 
-type TranslateFn = (
-  key: string,
-  params?: Record<string, string | number>,
-) => string;
+type TranslateFn = ReturnType<typeof useI18n>;
 
 type DotRendererProps = {
   cx?: number;
@@ -100,9 +97,13 @@ const renderDot = (props: DotRendererProps) => {
   // For grouped view (dataKey is "equity"), check all accounts
   if (dataKey === "equity") {
     // Check for reset indicators
-    const resetAccounts = Object.keys(payload).filter(
-      (key) => key.startsWith("reset_") && payload[key],
-    );
+    const resetAccounts = Object.keys(payload).filter((key): key is `reset_${string}` => {
+      if (!key.startsWith("reset_")) {
+        return false;
+      }
+
+      return Boolean(payload[key as `reset_${string}`]);
+    });
     if (resetAccounts.length > 0) {
       return (
         <circle
@@ -118,9 +119,13 @@ const renderDot = (props: DotRendererProps) => {
     }
 
     // Check for payout indicators
-    const payoutAccounts = Object.keys(payload).filter(
-      (key) => key.startsWith("payout_") && payload[key],
-    );
+    const payoutAccounts = Object.keys(payload).filter((key): key is `payout_${string}` => {
+      if (!key.startsWith("payout_")) {
+        return false;
+      }
+
+      return Boolean(payload[key as `payout_${string}`]);
+    });
     if (payoutAccounts.length > 0) {
       const accountNumber = payoutAccounts[0].replace("payout_", "");
       const status = payload[`payoutStatus_${accountNumber}`] || "";

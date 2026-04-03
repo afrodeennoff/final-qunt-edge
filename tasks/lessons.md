@@ -1,6 +1,53 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-04-01
+**Last Updated:** 2026-04-03
+
+---
+
+## NEW (2026-04-03): Shared server barrels must not star-re-export cache-component modules
+
+### Mistake
+`server/database.ts` re-exported `trades.ts` and `layouts.ts` with `export *`, which produced conflicting generated `$$RSC_SERVER_CACHE_*` exports during Next.js build.
+
+### Root Cause
+Modules that contain `'use cache'` loaders can emit generated server-cache symbols. A shared barrel that star-re-exports multiple such modules can leak and collide those internal names.
+
+### Rule
+Do not use `export *` in shared server barrels that re-export modules with cached server loaders or other generated internals. Re-export only the explicit public functions and types you intend to expose.
+
+### Example
+```ts
+// BAD
+export * from './trades'
+export * from './layouts'
+
+// GOOD
+export { getTradesAction, saveTradesAction } from './trades'
+export type { SerializedTrade } from './trades'
+export { saveDashboardLayoutAction } from './layouts'
+```
+
+---
+
+## NEW (2026-04-03): Request-header auth routes should declare the runtime boundary with `connection()`
+
+### Mistake
+`/api/debug-data` depended on request headers for auth, but the handler did not explicitly call `connection()`, so build output logged an inferred prerender bailout for that route.
+
+### Root Cause
+The route was correctly dynamic, but the request-time boundary was implicit. Next.js still surfaced noisy build diagnostics because the handler relied on request-bound data without declaring that boundary up front.
+
+### Rule
+For route handlers that intentionally depend on request headers/cookies and should never participate in build-time prerender analysis, call `await connection()` at the top of the handler before reading request-bound auth state.
+
+### Example
+```ts
+export async function GET(request: Request) {
+  await connection()
+  const supabase = createRouteClient(request)
+  // ...
+}
+```
 
 ---
 

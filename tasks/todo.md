@@ -1,3 +1,30 @@
+## Task: End-to-end pending recheck after dashboard/build fixes (2026-04-03)
+
+- [ ] Re-run the current verification stack to measure any remaining pending failures (`lint`, `typecheck`, `build`, targeted tests if needed).
+- [ ] Isolate any remaining failures inside the active touched scope rather than the unrelated repo-wide backlog.
+- [ ] Apply minimal fixes for any still-failing touched-scope files.
+- [ ] Re-run verification and record the exact remaining blockers, if any.
+
+## Task: Build warning cleanup for server barrel + debug route (2026-04-03)
+
+- [x] Reproduce the remaining build warnings and trace them to owned files.
+- [x] Replace `server/database.ts` star re-exports with explicit named exports so cached server internals do not collide in the barrel.
+- [x] Mark `/api/debug-data` as request-time only so Next does not emit inferred prerender bailout noise during build.
+- [x] Re-verify with touched-scope lint, full typecheck, and full production build.
+
+Verification:
+- `npx eslint server/database.ts app/api/debug-data/route.ts` passes.
+- `npm run typecheck` passes.
+- `npm run build` passes end to end via npm. The previous `server/database.ts` conflicting-star-export warnings are gone, and `/api/debug-data` no longer emits the old prerender bailout log during build.
+
+## Review
+- Root causes addressed:
+  - `server/database.ts` used `export *` across two server modules that contain cached server-only internals, so Next's compiled cache exports collided in the shared barrel.
+  - `/api/debug-data` always depends on request headers for auth, but the runtime-only boundary was implicit, so build output still logged an inferred prerender bailout for that route.
+- Fix outcome:
+  - `server/database.ts` now re-exports only explicit named APIs and types from `trades.ts` and `layouts.ts`, preserving the barrel without leaking conflicting generated cache symbols.
+  - `app/api/debug-data/route.ts` now calls `await connection()` at the top of `GET`, which keeps the route explicitly request-time only and removes that build-time noise.
+
 ## Task: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
 
 - [x] Centralize dashboard/equity cache tags and align invalidation across layout, trades, accounts, groups, tags, journal, and imports.

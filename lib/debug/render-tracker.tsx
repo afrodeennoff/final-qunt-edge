@@ -47,30 +47,24 @@ class RenderTracker {
   }
 
   printReport() {
-    console.group('🔍 Render Tracker Report')
-    
     const topRenderers = this.getTopRenderers(20)
-    
+
     if (topRenderers.length === 0) {
-      console.info('No renders tracked yet')
-      console.groupEnd()
+      console.warn('[RenderTracker] No renders tracked yet')
       return
     }
 
-    console.table(
-      topRenderers.map(r => ({
-        Component: r.componentName,
-        Renders: r.renderCount,
-      }))
-    )
-
     const frequentRerenders = topRenderers.filter(r => r.renderCount > 50)
-    if (frequentRerenders.length > 0) {
-      console.warn('⚠️ Components with frequent re-renders:', 
-        frequentRerenders.map(r => `${r.componentName} (${r.renderCount} renders)`))
-    }
 
-    console.groupEnd()
+    console.warn('[RenderTracker] Report', {
+      topRenderers: topRenderers.map(renderer => ({
+        component: renderer.componentName,
+        renders: renderer.renderCount,
+      })),
+      frequentRerenders: frequentRerenders.map(
+        renderer => `${renderer.componentName} (${renderer.renderCount} renders)`
+      ),
+    })
   }
 
   clear() {
