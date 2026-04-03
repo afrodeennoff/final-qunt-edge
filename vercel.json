@@ -17,6 +17,10 @@
     {
       "path": "/api/cron/renew-tradovate-token",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/chat-retention",
+      "schedule": "0 3 * * *"
     }
   ]
 }

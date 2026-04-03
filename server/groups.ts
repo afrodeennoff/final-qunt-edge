@@ -1,23 +1,17 @@
 'use server'
 
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { Group as PrismaGroup, Account as PrismaAccount } from '@/prisma/generated/prisma'
 import { logger } from '@/lib/logger'
 import { getDatabaseUserId, getUserId } from './auth'
 import { resolveWritableUserId } from './trades'
+import { CACHE_TAGS, invalidateGroupRelatedCaches } from '@/lib/cache/cache-invalidation'
 
 const GROUPS_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
 export interface GroupWithAccounts extends PrismaGroup {
   accounts: PrismaAccount[]
-}
-
-function invalidateGroupRelatedCaches(userId: string) {
-  updateTag(`user-data-${userId}`)
-  updateTag(`trades-${userId}`)
-  updateTag(`dashboard-layout-${userId}`)
-  updateTag(`dashboard-${userId}`)
 }
 
 async function _getGroups(userId: string): Promise<GroupWithAccounts[]> {
@@ -33,7 +27,7 @@ async function _getGroups(userId: string): Promise<GroupWithAccounts[]> {
 async function _getGroupsCached(userId: string): Promise<GroupWithAccounts[]> {
   'use cache'
   cacheLife(GROUPS_CACHE_LIFETIME)
-  cacheTag(`groups-${userId}`)
+  cacheTag(CACHE_TAGS.GROUPS(userId))
   return _getGroups(userId)
 }
 

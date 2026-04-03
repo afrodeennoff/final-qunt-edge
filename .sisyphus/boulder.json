@@ -1,28 +1,32 @@
 {
-  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/MASTER-final-fix.md",
-  "started_at": "2026-04-02T14:33:51.462Z",
+  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/admin-security-remaining.md",
+  "started_at": "2026-04-02T18:32:13.789Z",
   "session_ids": [
     "ses_2b17462a0ffevVn4c24Esa81z9",
-    "ses_2b11d2d50ffeU8G0r1sK3jPOTI",
-    "ses_2b11d6756ffeGBJdVg6hUcZ6DB",
-    "ses_2b11d843dffelo21ZOJlahetgj",
-    "ses_2b1119a5bffeb3E4P0PVmnH2rD",
-    "ses_2b1119aa6ffevBXMwm9t7DmERS",
-    "ses_2b0992dbaffeEUi41SjrEXM7us",
-    "ses_2b098c620ffesXi6FyQDFXBXM6",
-    "ses_2b09865bfffeqfcuGm5TrR3ffX"
+    "ses_2b086caf7ffezNFCxcnBkYPSco",
+    "ses_2b08260c3ffe55jMRf4lWws1hA",
+    "ses_2b074f53effeDThmc0zMEz3cjs"
   ],
-  "plan_name": "MASTER-final-fix",
+  "plan_name": "admin-security-remaining",
   "agent": "atlas",
   "task_sessions": {
-    "todo:3": {
-      "task_key": "todo:3",
-      "task_label": "3",
-      "task_title": "Add Cache Tag Invalidation for Trade Mutations",
-      "session_id": "ses_2b1119aa6ffevBXMwm9t7DmERS",
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Fix `getReviewById()` admin enforcement in `server/firm-reviews.ts`",
+      "session_id": "ses_2b086caf7ffezNFCxcnBkYPSco",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-04-02T16:02:43.934Z"
+      "updated_at": "2026-04-02T18:35:31.381Z"
+    },
+    "todo:2": {
+      "task_key": "todo:2",
+      "task_label": "2",
+      "task_title": "Fix `getShared()` view count ownership in `server/shared.ts`",
+      "session_id": "ses_2b08260c3ffe55jMRf4lWws1hA",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-02T18:40:05.559Z"
     }
   }
 }

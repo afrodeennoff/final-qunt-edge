@@ -154,20 +154,24 @@ const renderCounts = {
   derived: 0,
 }
 
+function recordRender(key: keyof typeof renderCounts) {
+  renderCounts[key] += 1
+}
+
 const StateConsumer = memo(function StateConsumer() {
-  renderCounts.state += 1
+  recordRender("state")
   const isLoading = useDataIsLoading()
   return <div data-testid="state-consumer">{String(isLoading)}</div>
 })
 
 const ActionsConsumer = memo(function ActionsConsumer() {
-  renderCounts.actions += 1
+  recordRender("actions")
   const { isPlusUser } = useDataActions()
   return <div data-testid="actions-consumer">{String(isPlusUser())}</div>
 })
 
 const DerivedConsumer = memo(function DerivedConsumer() {
-  renderCounts.derived += 1
+  recordRender("derived")
   const formattedTrades = useDataFormattedTrades()
   return <div data-testid="derived-consumer">{formattedTrades.length}</div>
 })

@@ -30,6 +30,7 @@ import {
   loadSharedData,
   updateIsFirstConnectionAction,
 } from "@/server/user-data";
+import { loadDashboardLayoutAction } from "@/server/layouts";
 import {
   getTradesAction,
   getTradeImagesAction,
@@ -700,17 +701,23 @@ export const DataProvider: React.FC<{
       const refreshFromServer = async () => {
         setIsRevalidating(true);
         try {
-          const data = await withTimeout(getUserData(), 20000, "getUserData");
+          const userDataPromise = withTimeout(getUserData(), 20000, "getUserData");
+          const tradesPromise =
+            userId && !isSharedView
+              ? withTimeout(fetchAllTrades(userId, false), 20000, "fetchAllTrades(user)")
+              : withTimeout(fetchAllTrades(null, false), 20000, "fetchAllTrades(anonymous)");
+
+          const [data, initialTrades] = await Promise.all([
+            userDataPromise,
+            tradesPromise,
+          ]);
 
           if (!data) {
             await signOut();
             return;
           }
 
-          let safeTrades =
-            userId && !isSharedView
-              ? await withTimeout(fetchAllTrades(userId, false), 20000, "fetchAllTrades(user)")
-              : await withTimeout(fetchAllTrades(null, false), 20000, "fetchAllTrades(anonymous)");
+          let safeTrades = initialTrades;
 
           if (userId && !isSharedView && safeTrades.length === 0) {
             logger.warn(
@@ -967,11 +974,18 @@ export const DataProvider: React.FC<{
       if (withLoading) setIsLoading(true);
 
       try {
-        const data = await withTimeout(
-          getUserData(force),
-          20000,
-          "getUserData(refresh)"
-        );
+        const [data, dashboardLayoutData] = await Promise.all([
+          withTimeout(
+            getUserData(force),
+            20000,
+            "getUserData(refresh)"
+          ),
+          withTimeout(
+            loadDashboardLayoutAction(force),
+            15000,
+            "loadDashboardLayoutAction(refresh)"
+          ),
+        ]);
 
         if (!data) {
           await signOut();
@@ -996,6 +1010,18 @@ export const DataProvider: React.FC<{
         setEvents(data.financialEvents);
         setTickDetails(data.tickDetails);
         setIsFirstConnection(data.userData?.isFirstConnection || false);
+        setDashboardLayout(
+          dashboardLayoutData
+            ? (dashboardLayoutData as unknown as DashboardLayoutWithWidgets)
+            : {
+                id: supabaseUser.id,
+                userId: supabaseUser.id,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                desktop: defaultLayouts.desktop,
+                mobile: defaultLayouts.mobile,
+              }
+        );
 
         if (includeSubscription) {
           await loadSubscriptionData();
@@ -1017,6 +1043,8 @@ export const DataProvider: React.FC<{
       setEvents,
       setTickDetails,
       setIsFirstConnection,
+      setDashboardLayout,
+      supabaseUser?.id,
       loadSubscriptionData,
       withTimeout,
     ]
@@ -1029,12 +1057,14 @@ export const DataProvider: React.FC<{
 
       setIsLoading(true);
       try {
-        await refreshTradesOnly({ force, withLoading: false });
-        await refreshUserDataOnly({
-          force,
-          includeSubscription: true,
-          withLoading: false,
-        });
+        await Promise.all([
+          refreshTradesOnly({ force, withLoading: false }),
+          refreshUserDataOnly({
+            force,
+            includeSubscription: true,
+            withLoading: false,
+          }),
+        ]);
         logger.info("Successfully refreshed trades and user data");
       } catch (error) {
         logger.error({ error }, "Error refreshing all data");

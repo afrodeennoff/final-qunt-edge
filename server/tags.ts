@@ -2,14 +2,8 @@
 
 import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
-import { cacheTag, updateTag } from 'next/cache'
-
-function invalidateTagRelatedCaches(userId: string): void {
-  updateTag(`user-data-${userId}`)
-  updateTag(`trades-${userId}`)
-  updateTag(`dashboard-${userId}`)
-  updateTag(`tags-${userId}`)
-}
+import { cacheTag } from 'next/cache'
+import { CACHE_TAGS, invalidateTagRelatedCaches } from '@/lib/cache/cache-invalidation'
 
 async function _getTags(userId: string) {
   const tags = await prisma.tag.findMany({
@@ -25,7 +19,7 @@ async function _getTags(userId: string) {
 
 async function _getTagsCached(userId: string) {
   'use cache'
-  cacheTag(`tags-${userId}`)
+  cacheTag(CACHE_TAGS.TAGS(userId))
   return _getTags(userId)
 }
 

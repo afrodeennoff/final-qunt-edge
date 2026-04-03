@@ -1,9 +1,11 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { getDatabaseUserId } from './auth';
-import { Mood } from '@/prisma/generated/prisma';
+import { Mood, Prisma } from '@/prisma/generated/prisma';
+import { CACHE_TAGS, invalidateJournalRelatedCaches } from '@/lib/cache/cache-invalidation';
+import { isStoredChatConversationExpired, readStoredChatConversation } from '@/lib/chat-retention';
 
 const JOURNAL_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 
@@ -17,12 +19,6 @@ export type MindsetData = {
   selectedNews: string[];
   journalContent: string;
 };
-
-function invalidateJournalRelatedCaches(userId: string): void {
-  updateTag(`user-data-${userId}`)
-  updateTag(`dashboard-${userId}`)
-  updateTag(`mood-${userId}`)
-}
 
 export async function saveMindset(
   data: MindsetData,
@@ -173,16 +169,20 @@ async function _getMoodForDay(userId: string, date: string) {
     },
   })
 
-  return mood ? {
-    ...mood,
-    conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
-  } : null
+  return (mood
+    ? {
+        ...mood,
+        conversation: mood.conversation
+          ? readStoredChatConversation(mood.conversation)
+          : null,
+      }
+    : null) as Mood | null
 }
 
 async function _getMoodForDayCached(userId: string, date: string) {
   'use cache'
   cacheLife(JOURNAL_CACHE_LIFETIME)
-  cacheTag(`mood-${userId}`)
+  cacheTag(CACHE_TAGS.MOOD(userId))
   return _getMoodForDay(userId, date)
 }
 
@@ -210,17 +210,46 @@ async function _getMoodHistory(userId: string, fromDate?: Date, toDate?: Date): 
     },
   })
 
-  return moods.map(mood => ({
+  return moods.map((mood) => ({
     ...mood,
-    conversation: mood.conversation ? JSON.parse(mood.conversation as string) : null,
-  }))
+    conversation: mood.conversation
+      ? readStoredChatConversation(mood.conversation)
+      : null,
+  })) as Mood[]
 }
 
 async function _getMoodHistoryCached(userId: string, fromDate?: Date, toDate?: Date): Promise<Mood[]> {
   'use cache'
   cacheLife(JOURNAL_CACHE_LIFETIME)
-  cacheTag(`mood-${userId}`)
+  cacheTag(CACHE_TAGS.MOOD(userId))
   return _getMoodHistory(userId, fromDate, toDate)
+}
+
+export async function cleanupExpiredChatConversations(now: Date = new Date()) {
+  const moods = await prisma.mood.findMany({
+    select: {
+      id: true,
+      userId: true,
+      conversation: true,
+    },
+  })
+
+  let cleaned = 0
+
+  for (const mood of moods) {
+    if (!mood.conversation || !isStoredChatConversationExpired(mood.conversation, now)) {
+      continue
+    }
+
+    await prisma.mood.update({
+      where: { id: mood.id },
+      data: { conversation: Prisma.JsonNull },
+    })
+    invalidateJournalRelatedCaches(mood.userId)
+    cleaned += 1
+  }
+
+  return { scanned: moods.length, cleaned }
 }
 
 export async function getMoodHistory(fromDate?: Date, toDate?: Date): Promise<Mood[]> {

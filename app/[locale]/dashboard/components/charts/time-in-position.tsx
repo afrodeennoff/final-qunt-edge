@@ -51,9 +51,14 @@ const formatTime = (minutes: number) => {
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{
+    payload: {
+      avgTimeInPosition: number;
+      tradeCount: number;
+    };
+  }>;
   label?: number | string;
-  t: any;
+  t: (key: string) => string;
 }
 
 function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {

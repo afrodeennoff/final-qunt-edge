@@ -56,7 +56,7 @@ interface CustomTooltipProps {
   payload?: Array<{
     payload: ChartDataPoint;
   }>;
-  t: any;
+  t: (key: string) => string;
 }
 
 function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
@@ -126,7 +126,7 @@ export default React.memo(function TickDistributionChart({
   }, [trades, tickDetails]);
   const hasData = chartData.some((entry) => entry.count > 0);
 
-  const handleBarClick = (data: any) => {
+  const handleBarClick = (data: ChartDataPoint | undefined) => {
     if (!data || !trades.length) return;
     const clickedTicks = data.ticks;
     if (tickFilter.value === clickedTicks) {

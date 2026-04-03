@@ -6,6 +6,7 @@ import { formatInTimeZone } from 'date-fns-tz'
 import { eachDayOfInterval, startOfDay, endOfDay, isValid } from 'date-fns'
 import { withPrismaSchemaMismatchFallback } from '@/lib/prisma-guard'
 import { cacheLife, cacheTag } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
 const EQUITY_CHART_CACHE_LIFETIME = { stale: 60, revalidate: 60, expire: 600 } as const
 
@@ -50,6 +51,7 @@ interface EquityChartParams {
   maxAccounts: number
   dataSampling: 'all' | 'sample'
   selectedAccounts: string[]
+  forceRefresh?: boolean
 }
 
 interface EquityChartResult {
@@ -64,12 +66,7 @@ const EMPTY_EQUITY_CHART_RESULT: EquityChartResult = {
   dateRange: { startDate: '', endDate: '' }
 }
 
-// Cached helper for equity chart data
-async function getEquityChartDataCached(userId: string, params: EquityChartParams) {
-  'use cache'
-  cacheLife(EQUITY_CHART_CACHE_LIFETIME)
-  cacheTag(`equity-chart-${userId}`)
-
+async function getEquityChartData(userId: string, params: EquityChartParams) {
   // Use a Prisma transaction to fetch all needed data in a single DB roundtrip
   const transactionResult = await withPrismaSchemaMismatchFallback(
     'dashboard:equity-chart:transaction',
@@ -359,7 +356,6 @@ async function getEquityChartDataCached(userId: string, params: EquityChartParam
 
   datesToProcess.forEach(date => {
     const dateKey = formatInTimeZone(date, params.timezone, 'yyyy-MM-dd')
-    const totalTradesForThisDate = tradesMap.get(dateKey) || []
 
     let totalEquity = 0
     const point: ChartDataPoint = {
@@ -434,6 +430,14 @@ async function getEquityChartDataCached(userId: string, params: EquityChartParam
   }
 }
 
+// Cached helper for equity chart data
+async function getEquityChartDataCached(userId: string, params: EquityChartParams) {
+  'use cache'
+  cacheLife(EQUITY_CHART_CACHE_LIFETIME)
+  cacheTag(CACHE_TAGS.EQUITY_CHART(userId))
+  return getEquityChartData(userId, params)
+}
+
 export async function getEquityChartDataAction(params: EquityChartParams): Promise<EquityChartResult> {
   // Validate timezone and fallback to UTC if needed
   try {
@@ -447,6 +451,12 @@ export async function getEquityChartDataAction(params: EquityChartParams): Promi
   if (!userId) return EMPTY_EQUITY_CHART_RESULT
 
   try {
+    if (params.forceRefresh) {
+      const uncachedParams: EquityChartParams = { ...params }
+      delete uncachedParams.forceRefresh
+      return await getEquityChartData(userId, uncachedParams)
+    }
+
     return await getEquityChartDataCached(userId, params)
   } catch (error) {
     console.error('[getEquityChartDataAction] Error:', error)

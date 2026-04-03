@@ -1,3 +1,32 @@
+## Task: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
+
+- [x] Centralize dashboard/equity cache tags and align invalidation across layout, trades, accounts, groups, tags, journal, and imports.
+- [x] Make dashboard refresh orchestration parallel and make refresh/layout errors sticky until a successful recovery.
+- [x] Fix remaining sidebar shell/accessibility regressions in shared dashboard navigation surfaces.
+- [x] Add explicit force-refresh paths for dashboard layout and equity chart reads.
+- [x] Add 24-hour retention guards and scheduled cleanup for chat-owned transient data only.
+- [x] Standardize chat rendering on the current streamed UI-message path and remove direct provider bypasses where they still leak through.
+- [x] Verify with targeted tests, lint, typecheck, and build; record outcomes and residual blockers.
+
+Verification:
+- `npm run test -- tests/lib/chat-retention.test.ts` passes (3/3).
+- `npx eslint lib/chat-retention.ts tests/lib/chat-retention.test.ts server/journal.ts server/user-data.ts server/groups.ts server/tags.ts server/accounts.ts server/trades.ts 'app/[locale]/dashboard/components/chat/actions/chat.ts' 'app/[locale]/dashboard/components/chat/chat.tsx' 'app/[locale]/dashboard/components/chat/bot-message.tsx' components/ui/unified-sidebar.tsx app/api/cron/chat-retention/route.ts context/data-provider.tsx server/equity-chart.ts` passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`173/173` static pages).
+
+## Review
+- Root causes addressed:
+  - dashboard cache invalidation had drifted across server modules, so related updates were not guaranteed to evict the same layout/dashboard/equity surfaces.
+  - dashboard refresh orchestration still did sequential user-data/layout/trade fetches, which made recovery slower and allowed stale layout state to lag behind successful user-data refreshes.
+  - the dashboard chat still mixed newer streamed UI-message handling with legacy text-only assumptions, and persisted transient chat indefinitely in `Mood.conversation`.
+  - the shared sidebar still contained an inert interactive wrapper and menu semantics that did not match the rendered structure.
+- Fix outcome:
+  - dashboard/tag/group/journal/account/trade invalidation is now routed through shared helpers in `lib/cache/cache-invalidation.ts`.
+  - `context/data-provider.tsx` now refreshes user data, dashboard layout, and trade data in parallel and reseeds the default layout when layout fetches return empty.
+  - transient dashboard chat is stored as a 24-hour expiring envelope, read through retention guards, cleaned by `cleanupExpiredChatConversations()`, and pruned daily through `/api/cron/chat-retention`.
+  - chat rendering now hydrates/persists structured UI messages, uses AI Elements response/reasoning rendering, and keeps typed tool-part handling aligned with the current streamed message path.
+  - `components/ui/unified-sidebar.tsx` no longer renders an inert clickable section label and no longer applies `role="menu"` to plain navigation markup.
+
 ## Task: Sidebar shell repair for dashboard Safari misalignment + remove marketing sidebar from home page (2026-04-01)
 
 - [x] Trace the sidebar shown on the home page and identify whether it comes from the dashboard shell or the marketing shell.

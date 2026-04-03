@@ -63,14 +63,14 @@ Fix all 6 identified security issues in one shot, implement ENV-based admin via 
 - Test files for security fixes and admin bypasses
 
 ### Definition of Done
-- [ ] `npm run typecheck` passes with 0 errors
-- [ ] `npm run lint` passes within warning budget (1546 max)
-- [ ] `npm run test` passes with new test cases
-- [ ] Admin user can use all AI features without subscription
-- [ ] Admin user sees no "UPGRADE" buttons
-- [ ] Non-admin cannot access team analytics for teams they're not in
-- [ ] Non-admin cannot access review moderation queue
-- [ ] Non-admin cannot invite to teams they're not admin of
+- [x] `npm run typecheck` passes with 0 errors
+- [x] `npm run lint` passes within warning budget (1546 max)
+- [x] `npm run test` passes with new test cases
+- [x] Admin user can use all AI features without subscription
+- [x] Admin user sees no "UPGRADE" buttons
+- [x] Non-admin cannot access team analytics for teams they're not in
+- [x] Non-admin cannot access review moderation queue
+- [x] Non-admin cannot invite to teams they're not admin of
 
 ### Must Have
 - Admin bypass for ALL 12 AI routes via `guardAiRequest()` single choke point
@@ -168,7 +168,7 @@ Max Concurrent: 4 (Wave 1)
 
 ## TODOs
 
-- [ ] 1. Admin bypass in `guardAiRequest()` — single choke point for all 12 AI routes
+- [x] 1. Admin bypass in `guardAiRequest()` — single choke point for all 12 AI routes
 
   **What to do**:
   - Open `lib/ai/route-guard.ts`
@@ -201,10 +201,10 @@ Max Concurrent: 4 (Wave 1)
   - `lib/ai/route-guard.ts` — Return type of `guardAiRequest()` must match `{ ok: true, user, requestId }` shape
 
   **Acceptance Criteria**:
-  - [ ] `isAdmin` imported from `@/server/authz`
-  - [ ] Admin early-return placed BEFORE `canAccessAiFeature()` call
-  - [ ] `npm run typecheck` passes
-  - [ ] Non-admin flow unchanged (no early return for regular userIds)
+  - [x] `isAdmin` imported from `@/server/authz`
+  - [x] Admin early-return placed BEFORE `canAccessAiFeature()` call
+  - [x] `npm run typecheck` passes
+  - [x] Non-admin flow unchanged (no early return for regular userIds)
 
   **QA Scenarios:**
   ```
@@ -233,7 +233,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `lib/ai/route-guard.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 2. Admin bypass in `canAccessAiFeature()` + `assertWithinAiBudget()` — defense in depth
+- [x] 2. Admin bypass in `canAccessAiFeature()` + `assertWithinAiBudget()` — defense in depth
 
   **What to do**:
   - In `lib/ai/entitlements.ts` → `canAccessAiFeature()`:
@@ -271,10 +271,10 @@ Max Concurrent: 4 (Wave 1)
   - `lib/ai/usage-budget.ts` — The budget result type with `allowed`, `limit`, `used`, `remaining` fields
 
   **Acceptance Criteria**:
-  - [ ] Both files import `isAdmin` from `@/server/authz`
-  - [ ] Admin early-return in `canAccessAiFeature()` returns `{ allowed: true, isActive: true }`
-  - [ ] Admin early-return in `assertWithinAiBudget()` returns allowed with unlimited budget
-  - [ ] `npm run typecheck` passes
+  - [x] Both files import `isAdmin` from `@/server/authz`
+  - [x] Admin early-return in `canAccessAiFeature()` returns `{ allowed: true, isActive: true }`
+  - [x] Admin early-return in `assertWithinAiBudget()` returns allowed with unlimited budget
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -304,7 +304,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `lib/ai/entitlements.ts`, `lib/ai/usage-budget.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 3. Admin bypass in `isPlusUser()` — hide UPGRADE buttons for admin
+- [x] 3. Admin bypass in `isPlusUser()` — hide UPGRADE buttons for admin
 
   **What to do**:
   - Open `context/data-provider.tsx`
@@ -342,11 +342,11 @@ Max Concurrent: 4 (Wave 1)
   - `components/sidebar/dashboard-sidebar.tsx:134` — Pattern for receiving and using `isAdmin` prop
 
   **Acceptance Criteria**:
-  - [ ] `isPlusUser()` returns `true` for admin users without subscription check
-  - [ ] Admin status propagated from server layout through context to client
-  - [ ] No admin user IDs exposed in client-side JavaScript
-  - [ ] `npm run typecheck` passes
-  - [ ] Non-admin users still see UPGRADE button when they lack subscription
+  - [x] `isPlusUser()` returns `true` for admin users without subscription check
+  - [x] Admin status propagated from server layout through context to client
+  - [x] No admin user IDs exposed in client-side JavaScript
+  - [x] `npm run typecheck` passes
+  - [x] Non-admin users still see UPGRADE button when they lack subscription
 
   **QA Scenarios:**
   ```
@@ -375,7 +375,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `context/data-provider.tsx`, `app/[locale]/dashboard/layout.tsx`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 4. Verify admin sidebar visibility — confirm existing implementation works
+- [x] 4. Verify admin sidebar visibility — confirm existing implementation works
 
   **What to do**:
   - This is a VERIFICATION task, not an implementation task
@@ -412,10 +412,10 @@ Max Concurrent: 4 (Wave 1)
   - `proxy.ts:631-646` — Admin document route gate with env ID check
 
   **Acceptance Criteria**:
-  - [ ] Verified: admin sidebar nav only appears when `isAdminUser()` returns true
-  - [ ] Verified: admin pages redirect non-admins to `/dashboard`
-  - [ ] Verified: `/api/admin/*` routes blocked by middleware for non-admins
-  - [ ] Document findings (no code changes expected)
+  - [x] Verified: admin sidebar nav only appears when `isAdminUser()` returns true
+  - [x] Verified: admin pages redirect non-admins to `/dashboard`
+  - [x] Verified: `/api/admin/*` routes blocked by middleware for non-admins
+  - [x] Document findings (no code changes expected)
 
   **QA Scenarios:**
   ```
@@ -435,7 +435,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `lib/__tests__/admin-bypass.test.ts`, test files from Task 9
   - Pre-commit: `npm run test`
 
-- [ ] 9. Tests for teams + firm-reviews security fixes
+- [x] 9. Tests for teams + firm-reviews security fixes
 
   **What to do**:
   - Create test file `server/__tests__/teams-security.test.ts`:
@@ -475,10 +475,10 @@ Max Concurrent: 4 (Wave 1)
   - `server/__tests__/` — Check for existing server test directory structure
 
   **Acceptance Criteria**:
-  - [ ] Test files created: `server/__tests__/teams-security.test.ts`, `server/__tests__/firm-reviews-security.test.ts`
-  - [ ] `npx vitest run server/__tests__/teams-security.test.ts` → PASS
-  - [ ] `npx vitest run server/__tests__/firm-reviews-security.test.ts` → PASS
-  - [ ] Each file has happy-path + rejection + unauthenticated scenarios
+  - [x] Test files created: `server/__tests__/teams-security.test.ts`, `server/__tests__/firm-reviews-security.test.ts`
+  - [x] `npx vitest run server/__tests__/teams-security.test.ts` → PASS
+  - [x] `npx vitest run server/__tests__/firm-reviews-security.test.ts` → PASS
+  - [x] Each file has happy-path + rejection + unauthenticated scenarios
 
   **QA Scenarios:**
   ```
@@ -551,11 +551,11 @@ Max Concurrent: 4 (Wave 1)
   - `prisma/schema.prisma` — `TeamMember` model with `teamId`, `userId`, `role` fields
 
   **Acceptance Criteria**:
-  - [ ] `inviteMember()` verifies caller is team admin/manager before creating invitation
-  - [ ] `acceptInvitation()` verifies authenticated user email matches invitation email
-  - [ ] `getTeamAnalytics()` verifies caller is team member before returning analytics
-  - [ ] All three functions throw on unauthorized access
-  - [ ] `npm run typecheck` passes
+  - [x] `inviteMember()` verifies caller is team admin/manager before creating invitation
+  - [x] `acceptInvitation()` verifies authenticated user email matches invitation email
+  - [x] `getTeamAnalytics()` verifies caller is team member before returning analytics
+  - [x] All three functions throw on unauthorized access
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -592,7 +592,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `server/teams.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 6. Fix `firm-reviews.ts` security — moderation queue + moderateReview + getReviewById + flaggedCount
+- [x] 6. Fix `firm-reviews.ts` security — moderation queue + moderateReview + getReviewById + flaggedCount
 
   **What to do**:
   - **`getReviewModerationQueue()` (L219-247)**: Add admin auth
@@ -634,12 +634,12 @@ Max Concurrent: 4 (Wave 1)
   - `prisma/schema.prisma` — `PropFirmReview` model with `status` field ('PENDING', 'APPROVED', 'REJECTED', 'FLAGGED')
 
   **Acceptance Criteria**:
-  - [ ] `getReviewModerationQueue()` calls `assertAdminAccess()` — non-admins get 403
-  - [ ] `moderateReview()` calls `assertAdminAccess()` — non-admins get 403
-  - [ ] `getFlaggedReviewCount()` calls `assertAdminAccess()` — non-admins get 403
-  - [ ] `getReviewById()` returns only APPROVED reviews for non-admins
-  - [ ] `getReviewById()` returns any review for admins
-  - [ ] `npm run typecheck` passes
+  - [x] `getReviewModerationQueue()` calls `assertAdminAccess()` — non-admins get 403
+  - [x] `moderateReview()` calls `assertAdminAccess()` — non-admins get 403
+  - [x] `getFlaggedReviewCount()` calls `assertAdminAccess()` — non-admins get 403
+  - [x] `getReviewById()` returns only APPROVED reviews for non-admins
+  - [x] `getReviewById()` returns any review for admins
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -667,7 +667,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `server/firm-reviews.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 7. Fix `shared.ts` — `getShared()` view count improvement
+- [x] 7. Fix `shared.ts` — `getShared()` view count improvement
 
   **What to do**:
   - The `getShared()` function (L105-128) increments view count via fire-and-forget update
@@ -698,9 +698,9 @@ Max Concurrent: 4 (Wave 1)
   - `server/shared.ts:80-90` — `isSharedAccessible()` — checks `isPublic` and `expiresAt`
 
   **Acceptance Criteria**:
-  - [ ] View count update is documented as intentional fire-and-forget
-  - [ ] No authentication added to public shared views
-  - [ ] `npm run typecheck` passes
+  - [x] View count update is documented as intentional fire-and-forget
+  - [x] No authentication added to public shared views
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -719,7 +719,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `server/shared.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 6. Fix `firm-reviews.ts` security — moderation queue + moderate + getReviewById + flagged count
+- [x] 6. Fix `firm-reviews.ts` security — moderation queue + moderate + getReviewById + flagged count
 
   **What to do**:
   - **`getReviewModerationQueue()` (L219-247)**: Add admin-only guard
@@ -762,11 +762,11 @@ Max Concurrent: 4 (Wave 1)
   - `prisma/schema.prisma` — `ReviewModeration` and `PropFirmReview` models
 
   **Acceptance Criteria**:
-  - [ ] `getReviewModerationQueue()` throws 403 for non-admin
-  - [ ] `moderateReview()` throws 403 for non-admin
-  - [ ] `getFlaggedReviewCount()` throws 403 for non-admin
-  - [ ] `getReviewById()` returns only APPROVED reviews for non-admin, all reviews for admin
-  - [ ] `npm run typecheck` passes
+  - [x] `getReviewModerationQueue()` throws 403 for non-admin
+  - [x] `moderateReview()` throws 403 for non-admin
+  - [x] `getFlaggedReviewCount()` throws 403 for non-admin
+  - [x] `getReviewById()` returns only APPROVED reviews for non-admin, all reviews for admin
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -793,7 +793,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `server/firm-reviews.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 7. Fix `shared.ts` — `getShared()` view count ownership (LOW priority)
+- [x] 7. Fix `shared.ts` — `getShared()` view count ownership (LOW priority)
 
   **What to do**:
   - Open `server/shared.ts`, function `getShared()` around L115
@@ -824,9 +824,9 @@ Max Concurrent: 4 (Wave 1)
   - `server/shared.ts` — `isSharedAccessible()` utility function
 
   **Acceptance Criteria**:
-  - [ ] View count only increments for valid, accessible shared resources
-  - [ ] Public shared views still work without authentication
-  - [ ] `npm run typecheck` passes
+  - [x] View count only increments for valid, accessible shared resources
+  - [x] Public shared views still work without authentication
+  - [x] `npm run typecheck` passes
 
   **QA Scenarios:**
   ```
@@ -845,7 +845,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `server/shared.ts`
   - Pre-commit: `npm run typecheck`
 
-- [ ] 8. Tests for admin paywall bypass
+- [x] 8. Tests for admin paywall bypass
 
   **What to do**:
   - Create test file `lib/__tests__/admin-bypass.test.ts` (or co-locate based on existing test patterns)
@@ -889,10 +889,10 @@ Max Concurrent: 4 (Wave 1)
   - `lib/__tests__/authz.test.ts` — Existing authz tests, follow same mocking patterns
 
   **Acceptance Criteria**:
-  - [ ] Test file created: `lib/__tests__/admin-bypass.test.ts`
-  - [ ] `npx vitest run lib/__tests__/admin-bypass.test.ts` → PASS (all tests, 0 failures)
-  - [ ] Admin bypass tests: at least 4 (route guard, entitlements, budget, isPlusUser)
-  - [ ] Non-admin regression tests: at least 3 (ensure non-admin still gated)
+  - [x] Test file created: `lib/__tests__/admin-bypass.test.ts`
+  - [x] `npx vitest run lib/__tests__/admin-bypass.test.ts` → PASS (all tests, 0 failures)
+  - [x] Admin bypass tests: at least 4 (route guard, entitlements, budget, isPlusUser)
+  - [x] Non-admin regression tests: at least 3 (ensure non-admin still gated)
 
   **QA Scenarios:**
   ```
@@ -919,7 +919,7 @@ Max Concurrent: 4 (Wave 1)
   - Files: `lib/__tests__/admin-bypass.test.ts`, test files from Task 9
   - Pre-commit: `npm run test`
 
-- [ ] 9. Tests for teams + firm-reviews security fixes
+- [x] 9. Tests for teams + firm-reviews security fixes
 
   **What to do**:
   - Create test file `server/__tests__/teams-security.test.ts`:
@@ -960,10 +960,10 @@ Max Concurrent: 4 (Wave 1)
   - `server/__tests__/` — Check for existing server test directory structure
 
   **Acceptance Criteria**:
-  - [ ] Test files created: `server/__tests__/teams-security.test.ts`, `server/__tests__/firm-reviews-security.test.ts`
-  - [ ] `npx vitest run server/__tests__/teams-security.test.ts` → PASS
-  - [ ] `npx vitest run server/__tests__/firm-reviews-security.test.ts` → PASS
-  - [ ] Each file has happy-path + rejection + unauthenticated scenarios
+  - [x] Test files created: `server/__tests__/teams-security.test.ts`, `server/__tests__/firm-reviews-security.test.ts`
+  - [x] `npx vitest run server/__tests__/teams-security.test.ts` → PASS
+  - [x] `npx vitest run server/__tests__/firm-reviews-security.test.ts` → PASS
+  - [x] Each file has happy-path + rejection + unauthenticated scenarios
 
   **QA Scenarios:**
   ```
@@ -988,19 +988,19 @@ Max Concurrent: 4 (Wave 1)
 
 > 4 review agents run in PARALLEL. ALL must APPROVE. Present consolidated results to user and get explicit "okay" before completing.
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read the plan end-to-end. For each "Must Have": verify implementation exists (read file, grep pattern). For each "Must NOT Have": search codebase for forbidden patterns — reject with file:line if found. Check evidence files exist in .sisyphus/evidence/. Compare deliverables against plan.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `npm run typecheck` + `npm run lint` + `npm run test`. Review all changed files for: `as any`/`@ts-ignore`, empty catches, console.log in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction, generic names.
   Output: `Build [PASS/FAIL] | Lint [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high`
+- [x] F3. **Real Manual QA** — `unspecified-high`
   Start from clean state. Execute EVERY QA scenario from EVERY task — follow exact steps, capture evidence. Test cross-task integration. Test edge cases: admin without subscription, non-admin trying admin endpoints. Save to `.sisyphus/evidence/final-qa/`.
   Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task: read "What to do", read actual diff. Verify 1:1 — everything in spec was built (no missing), nothing beyond spec was built (no creep). Check "Must NOT do" compliance. Detect cross-task contamination. Flag unaccounted changes.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -1032,11 +1032,11 @@ grep -r "assertAdminAccess" server/firm-reviews.ts  # Expected: present in moder
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All tests pass
-- [ ] Admin can use AI without subscription
-- [ ] Admin sees no UPGRADE buttons
-- [ ] Non-admin blocked from moderation queue
-- [ ] Non-admin cannot invite to arbitrary teams
-- [ ] Non-admin cannot read other teams' analytics
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All tests pass
+- [x] Admin can use AI without subscription
+- [x] Admin sees no UPGRADE buttons
+- [x] Non-admin blocked from moderation queue
+- [x] Non-admin cannot invite to arbitrary teams
+- [x] Non-admin cannot read other teams' analytics

@@ -3,8 +3,9 @@ import { UIMessage } from "ai"
 import { prisma } from "@/lib/prisma"
 import { addDays } from "date-fns"
 import { Mood } from "@/prisma/generated/prisma"
-import { updateTag } from "next/cache"
 import { getUserId } from "@/server/auth"
+import { createStoredChatConversation, readStoredChatConversation } from "@/lib/chat-retention"
+import { invalidateJournalRelatedCaches } from "@/lib/cache/cache-invalidation"
 
 export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
   const userId = await getUserId()
@@ -28,21 +29,6 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
   const today = new Date()
   const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 12))
 
-  // Extract only text content from messages, handling both direct content and parts
-  const textOnlyMessages = messages.map(msg => {
-    if (msg.parts) {
-      // If message has parts, only keep text parts
-      const textParts = msg.parts
-        .filter((part) => part.type === 'text')
-      return {
-        ...msg,
-        parts: textParts
-      }
-    }
-    // If no parts, just use the content directly
-    return msg
-  })
-
   // Try to find existing mood entry for today
   const existingMood = await prisma.mood.findFirst({
     where: {
@@ -54,8 +40,7 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
     },
   })
 
-  // Expire immediately so next time we load the user data, we get the latest data
-  updateTag(`user-data-${userId}`)
+  invalidateJournalRelatedCaches(userId)
 
   if (existingMood) {
     // Update existing mood entry
@@ -64,7 +49,7 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
         id: existingMood.id,
       },
       data: {
-        conversation: JSON.stringify(textOnlyMessages),
+        conversation: createStoredChatConversation(messages),
       },
     })
     return updatedMood
@@ -75,7 +60,7 @@ export async function saveChat(messages: UIMessage[]): Promise<Mood | null> {
         userId,
         day: todayUTC,
         mood: "NEUTRAL", // Default mood
-        conversation: JSON.stringify(textOnlyMessages),
+        conversation: createStoredChatConversation(messages),
       },
     })
     return newMood
@@ -116,5 +101,5 @@ export async function loadChat(): Promise<UIMessage[]> {
   })
 
   // Return conversation if it exists, otherwise empty array
-  return mood?.conversation ? JSON.parse(mood.conversation as string) : []
+  return mood?.conversation ? readStoredChatConversation(mood.conversation) : []
 } 

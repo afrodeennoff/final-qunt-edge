@@ -1,5 +1,40 @@
 # Session Memory (2026-03-31)
 
+## Current Session: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
+
+### Accomplishments
+- Centralized cache invalidation for dashboard-adjacent data in `lib/cache/cache-invalidation.ts` and wired the shared helpers through `server/groups.ts`, `server/tags.ts`, `server/journal.ts`, `server/accounts.ts`, `server/trades.ts`, and `server/user-data.ts`.
+- Standardized dashboard layout/equity cache tags:
+  - `server/user-data.ts` now tags dashboard-layout reads with shared dashboard/layout tags.
+  - `server/equity-chart.ts` now exposes an explicit uncached `forceRefresh` path while keeping the default cached path on `CACHE_TAGS.EQUITY_CHART(userId)`.
+- Reduced dashboard refresh waterfalls in `context/data-provider.tsx`:
+  - user data and layout are refreshed in parallel,
+  - overall refresh runs user-data/layout and trades in parallel,
+  - missing dashboard layout now reseeds to the default layout instead of leaving layout state null/stale.
+- Added transient chat retention infrastructure:
+  - new `lib/chat-retention.ts` stores dashboard chat as a versioned 24-hour envelope and preserves legacy array parsing as a fallback.
+  - `app/[locale]/dashboard/components/chat/actions/chat.ts`, `server/journal.ts`, and `server/user-data.ts` now read/write chat through retention-aware helpers.
+  - `server/journal.ts` now exports `cleanupExpiredChatConversations()` to clear expired transient chat from `Mood.conversation`.
+  - new cron route `app/api/cron/chat-retention/route.ts` runs the cleanup behind `requireCronAuth()`, and `vercel.json` schedules it daily.
+- Brought the dashboard chat UI onto the streamed UI-message path:
+  - `app/[locale]/dashboard/components/chat/bot-message.tsx` now uses AI Elements `Response`.
+  - `app/[locale]/dashboard/components/chat/chat.tsx` now hydrates structured UI messages, renders reasoning parts through AI Elements, and replaces `any`-based tool-part handling with typed local message-part helpers.
+- Fixed the remaining shared sidebar accessibility regression in `components/ui/unified-sidebar.tsx` by removing the inert clickable section label and the mismatched `role="menu"` usage.
+- Added retention regression coverage in `tests/lib/chat-retention.test.ts`.
+
+### Verification
+- `npm run test -- tests/lib/chat-retention.test.ts` passes (3/3).
+- `npx vitest run tests/sidebar-trigger-contract.test.ts lib/__tests__/sidebar-state.test.ts tests/server/layout-isolation.test.ts` passes (8/8).
+- `npx vitest run tests/api/ai-chat-tool-policy-alignment.test.ts tests/api/ai-full-history-ux.test.ts` passes (8/8).
+- Touched-scope eslint across the modified retention/cache/chat/sidebar/data-provider files passes with warnings only (0 errors).
+- `npm run typecheck` passes.
+- `npm run build` passes end-to-end via npm (`173/173` static pages).
+
+### Blockers
+- Full-repo `npm run lint` still fails with a large pre-existing repo-wide backlog (`504 errors`, `999 warnings`) outside this change set, so the repository is not globally lint-clean.
+- Browser/dev-server verification is partially blocked in this shell: the local `next dev` process is reachable only within its own session namespace, and Playwright attach failed with `connect ENOENT root-error`.
+- `/init` remains unavailable in this shell (`zsh: no such file or directory: /init`).
+
 ## Current Session: Sidebar shell repair for dashboard Safari misalignment + remove marketing sidebar from home page (2026-04-01)
 
 ### Accomplishments

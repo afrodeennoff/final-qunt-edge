@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useRef, useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
 import { ButtonV2 } from "@/components/ui/v2";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2 } from "lucide-react";
@@ -16,10 +16,16 @@ import { UserMessage } from "./user-message";
 import { ChatInput } from "./input";
 import { ChatHeader } from "./header";
 import { EquityChartMessage } from "./equity-chart-message";
+import { Response } from "@/components/ai-elements/response";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai-elements/reasoning";
 import { useCurrentLocale } from "@/locales/client";
 import { useI18n } from "@/locales/client";
 import { useRouter } from "next/navigation";
-import { loadChat, saveChat } from "./actions/chat";
+import { saveChat } from "./actions/chat";
 import { useUserStore } from "@/store/user-store";
 import { useChatStore } from "@/store/chat-store";
 import { format } from "date-fns";
@@ -27,6 +33,7 @@ import { logger } from "@/lib/logger";
 import { DotStream } from "ldrs/react";
 import "ldrs/react/DotStream.css";
 import { useMoodStore } from "@/store/mood-store";
+import { readStoredChatConversation } from "@/lib/chat-retention";
 
 // Types
 interface ChatWidgetProps {
@@ -34,6 +41,116 @@ interface ChatWidgetProps {
 }
 
 export type ChatStatus = "error" | "submitted" | "streaming" | "ready";
+
+type ChatTextPart = {
+  type: "text";
+  text: string;
+};
+
+type ChatReasoningPart = {
+  type: "reasoning";
+  text?: string;
+};
+
+type ChatFilePart = {
+  type: "file";
+  mediaType?: string;
+  url: string;
+};
+
+type ChatStepStartPart = {
+  type: "step-start";
+};
+
+type ChatToolState =
+  | "input-available"
+  | "call"
+  | "partial-call"
+  | "result"
+  | "output-available"
+  | "error";
+
+type GenericToolPart = {
+  type: `tool-${string}`;
+  state: ChatToolState;
+  toolCallId: string;
+  input?: Record<string, unknown>;
+  output?: unknown;
+  errorText?: string;
+};
+
+type AskForConfirmationToolPart = Omit<GenericToolPart, "type" | "input" | "output"> & {
+  type: "tool-askForConfirmation";
+  input?: {
+    message?: string;
+  };
+  output?: string;
+};
+
+type EquityChartToolOutput = {
+  chartData: React.ComponentProps<typeof EquityChartMessage>["chartData"];
+  accountNumbers: React.ComponentProps<typeof EquityChartMessage>["accountNumbers"];
+  showIndividual: React.ComponentProps<typeof EquityChartMessage>["showIndividual"];
+  dateRange: React.ComponentProps<typeof EquityChartMessage>["dateRange"];
+  timezone: React.ComponentProps<typeof EquityChartMessage>["timezone"];
+  totalTrades: React.ComponentProps<typeof EquityChartMessage>["totalTrades"];
+};
+
+type EquityChartToolPart = Omit<GenericToolPart, "type" | "output"> & {
+  type: "tool-generateEquityChart";
+  output?: EquityChartToolOutput;
+};
+
+type ChatPart =
+  | ChatTextPart
+  | ChatReasoningPart
+  | ChatFilePart
+  | ChatStepStartPart
+  | AskForConfirmationToolPart
+  | EquityChartToolPart
+  | GenericToolPart;
+
+type ChatInputFile = {
+  type: "file";
+  mediaType: string;
+  url: string;
+};
+
+type UIMessageWithParts = UIMessage & {
+  content?: string;
+  parts?: ChatPart[];
+};
+
+function getMessageParts(message: UIMessage): ChatPart[] {
+  const { parts } = message as UIMessageWithParts;
+  return Array.isArray(parts) ? parts : [];
+}
+
+function getMessageContent(message: UIMessage): string {
+  const { content } = message as UIMessageWithParts;
+  return typeof content === "string" ? content : "";
+}
+
+function isToolPart(part: ChatPart): part is GenericToolPart | AskForConfirmationToolPart | EquityChartToolPart {
+  return part.type.startsWith("tool-");
+}
+
+function normalizeStoredMessage(message: UIMessage): UIMessage {
+  const parts = getMessageParts(message);
+  if (parts.length > 0) {
+    return message;
+  }
+
+  const content = getMessageContent(message);
+  if (!content) {
+    return message;
+  }
+
+  return {
+    ...message,
+    parts: [{ type: "text", text: content }],
+  } satisfies UIMessageWithParts;
+}
 
 // Removed custom scroll state - using use-stick-to-bottom instead
 
@@ -44,23 +161,20 @@ const MESSAGE_BATCH_SIZE = 50;
 
 // Message virtualization hook
 function useMessageVirtualization(messages: UIMessage[]) {
-  const [visibleRange, setVisibleRange] = useState({
-    start: 0,
-    end: MESSAGE_BATCH_SIZE,
-  });
-  const [shouldShowAll, setShouldShowAll] = useState(false);
+  const [showAllRequested, setShowAllRequested] = useState(false);
+  const shouldShowAll =
+    showAllRequested || messages.length <= MESSAGE_BATCH_SIZE;
 
-  useEffect(() => {
-    if (messages.length <= MESSAGE_BATCH_SIZE) {
-      setShouldShowAll(true);
-      setVisibleRange({ start: 0, end: messages.length });
-    } else if (!shouldShowAll) {
-      setVisibleRange({
-        start: Math.max(0, messages.length - MESSAGE_BATCH_SIZE),
-        end: messages.length,
-      });
-    }
-  }, [messages.length, shouldShowAll]);
+  const visibleRange = useMemo(
+    () =>
+      shouldShowAll
+        ? { start: 0, end: messages.length }
+        : {
+            start: Math.max(0, messages.length - MESSAGE_BATCH_SIZE),
+            end: messages.length,
+          },
+    [messages.length, shouldShowAll]
+  );
 
   const visibleMessages = useMemo(() => {
     if (shouldShowAll) return messages;
@@ -68,9 +182,8 @@ function useMessageVirtualization(messages: UIMessage[]) {
   }, [messages, visibleRange, shouldShowAll]);
 
   const loadMoreMessages = useCallback(() => {
-    setShouldShowAll(true);
-    setVisibleRange({ start: 0, end: messages.length });
-  }, [messages.length]);
+    setShowAllRequested(true);
+  }, []);
 
   return {
     visibleMessages,
@@ -137,12 +250,10 @@ const ToolCallMessage = ({
   toolName,
   args,
   state,
-  output,
 }: {
   toolName: string;
-  args: any;
+  args?: Record<string, unknown>;
   state: string;
-  output?: any;
 }) => {
   const isLoading = state === "call" || state === "partial-call";
   return (
@@ -189,21 +300,21 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
 
   // Helper to extract plain text from a UI message
   const getMessageText = useCallback((message: UIMessage) => {
-    const parts: any[] = (message as any).parts || [];
+    const parts = getMessageParts(message);
 
     // Check if this message contains tool results that should be rendered as components
-    const toolParts = parts.filter((p: any) => p?.type?.startsWith("tool-"));
+    const toolParts = parts.filter((part) => isToolPart(part));
     if (toolParts.length > 0) {
       // Don't extract text for tool messages - they should be handled by the parts renderer
       return "";
     }
 
     const textParts = parts
-      .filter((p: any) => p?.type === "text" && typeof p?.text === "string")
-      .map((p: any) => p.text);
+      .filter((part): part is ChatTextPart => part.type === "text")
+      .map((part) => part.text);
     if (textParts.length > 0) return textParts.join("\n");
     // Fallback for potential legacy content
-    return ((message as any).content as string) || "";
+    return getMessageContent(message);
   }, []);
 
   // Load stored messages when component mounts
@@ -224,18 +335,8 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
             try {
               // Hydrate conversation, parsing JSON and mapping to UIMessage structure (including parts)
               const parsedConversation =
-                JSON.parse(currentMood.conversation as string)?.map(
-                  (msg: any) => {
-                    // If legacy structure with just content, wrap as a text part
-                    if (!msg.parts && msg.content) {
-                      return {
-                        ...msg,
-                        parts: [{ type: "text", text: msg.content }],
-                      };
-                    }
-                    // Ensure modern messages already have .parts array
-                    return msg;
-                  }
+                readStoredChatConversation(currentMood.conversation).map(
+                  normalizeStoredMessage
                 ) || [];
 
               setStoredMessages(parsedConversation as UIMessage[]);
@@ -251,12 +352,10 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
       }
     };
     loadStoredMessages();
-  }, [user?.id, moods]);
+  }, [user?.id, moods, setStoredMessages, storedMessages.length]);
 
   const [input, setInput] = useState("");
-  const [files, setFiles] = useState<
-    { type: "file"; mediaType: string; url: string }[]
-  >([]);
+  const [files, setFiles] = useState<ChatInputFile[]>([]);
 
   const {
     messages,
@@ -309,10 +408,10 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
   const hasPendingToolCalls = useMemo(
     () =>
       messages.some((message) =>
-        (message as any).parts?.some(
-          (part: any) =>
-            part?.type?.startsWith("tool-") &&
-            !["result", "output-available", "error"].includes(part?.state)
+        getMessageParts(message).some(
+          (part) =>
+            isToolPart(part) &&
+            !["result", "output-available", "error"].includes(part.state)
         )
       ),
     [messages]
@@ -427,13 +526,13 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                   case "user":
                     return (
                       <UserMessage key={message.id}>
-                        {message.parts
-                          ? message.parts.map((part: any, index: number) => {
+                        {getMessageParts(message).length > 0
+                          ? getMessageParts(message).map((part, index: number) => {
                             if (part.type === "text") {
                               return (
-                                <span key={`${message.id}-text-${index}`}>
+                                <Response key={`${message.id}-text-${index}`}>
                                   {part.text}
-                                </span>
+                                </Response>
                               );
                             }
                             if (
@@ -459,11 +558,11 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                       </UserMessage>
                     );
                   case "assistant":
-                    if (message.parts) {
-                      return message.parts.map((part: any, index: number) => {
+                    if (getMessageParts(message).length > 0) {
+                      return getMessageParts(message).map((part, index: number) => {
                         switch (part.type) {
                           case "step-start":
-                            if (message.parts && message.parts.length > index) {
+                            if (getMessageParts(message).length > index) {
                               return null;
                             }
                             return (
@@ -479,6 +578,19 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                               >
                                 {part.text}
                               </BotMessage>
+                            );
+                          case "reasoning":
+                            return (
+                              <Reasoning
+                                key={`${message.id}-reasoning-${index}`}
+                                defaultOpen={false}
+                                isStreaming={uiStatus === "streaming"}
+                              >
+                                <ReasoningTrigger />
+                                <ReasoningContent>
+                                  {part.text ?? ""}
+                                </ReasoningContent>
+                              </Reasoning>
                             );
                           case "file":
                             if (part.mediaType?.startsWith("image/")) {
@@ -499,6 +611,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                             }
                             return null;
                           case "tool-askForConfirmation": {
+                            const confirmationPart = part as AskForConfirmationToolPart
                             switch (part.state) {
                               case "input-available":
                                 return (
@@ -506,7 +619,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                     key={`${part.toolCallId}-input`}
                                     status={uiStatus}
                                   >
-                                    {part.input?.message}
+                                    {confirmationPart.input?.message}
                                   </BotMessage>
                                 );
                               case "call":
@@ -515,7 +628,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                     key={`${part.toolCallId}-call`}
                                     status={uiStatus}
                                   >
-                                    {part.input?.message}
+                                    {confirmationPart.input?.message}
                                     <div className="flex gap-2 mt-2">
                                       <ButtonV2 
                                         variant="ghost"
@@ -553,7 +666,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                     key={`${part.toolCallId}-result`}
                                     status={uiStatus}
                                   >
-                                    Response: {part.output}
+                                    Response: {confirmationPart.output}
                                   </BotMessage>
                                 );
                               default:
@@ -561,6 +674,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                             }
                           }
                           case "tool-generateEquityChart": {
+                            const equityChartPart = part as EquityChartToolPart
                             switch (part.state) {
                               case "input-available":
                               case "call":
@@ -574,7 +688,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                 );
                               case "result":
                               case "output-available":
-                                const chartData = part.output;
+                                const chartData = equityChartPart.output;
 
                                 // Check if we have valid chart data
                                 if (
@@ -632,7 +746,6 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                   toolName={toolName}
                                   args={part.input}
                                   state={part.state}
-                                  output={part.output}
                                 />
                               );
                             }
@@ -662,7 +775,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           onSend={() => {
             if (!input.trim() && files.length === 0) return;
 
-            const parts: any[] = [];
+            const parts: Array<ChatTextPart | ChatInputFile> = [];
             if (input.trim()) {
               parts.push({ type: "text", text: input });
             }

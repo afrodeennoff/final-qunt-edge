@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import { LogOut, MoreHorizontal, Loader2 } from "lucide-react"
@@ -35,6 +35,11 @@ import {
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { useNavigationLoading } from "@/hooks/use-navigation-loading"
+
+type PendingNavigation = {
+  href: string
+  routeKeyAtSchedule: string
+}
 
 export interface UnifiedSidebarItem {
   href?: string
@@ -173,16 +178,16 @@ export function UnifiedSidebar({
     }
     return [...items, ...extras]
   }, [items, pathname])
-  const [pendingHref, setPendingHref] = useState<string | null>(null)
+  const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
   const navigationFallbackTimerRef = useRef<number | null>(null)
 
-  const clearNavigationFallbackTimer = () => {
+  const clearNavigationFallbackTimer = useCallback(() => {
     if (navigationFallbackTimerRef.current === null) return
     window.clearTimeout(navigationFallbackTimerRef.current)
     navigationFallbackTimerRef.current = null
-  }
+  }, [])
 
-  const scheduleNavigationFallback = (href: string) => {
+  const scheduleNavigationFallback = useCallback((href: string) => {
     clearNavigationFallbackTimer()
     navigationFallbackTimerRef.current = window.setTimeout(() => {
       const targetUrl = new URL(href, window.location.origin)
@@ -194,20 +199,18 @@ export function UnifiedSidebar({
         window.location.assign(targetUrl.toString())
       }
     }, NAVIGATION_STALL_TIMEOUT_MS)
-  }
+  }, [clearNavigationFallbackTimer])
 
   useEffect(() => {
     clearNavigationFallbackTimer()
-    setPendingHref(null)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRouteKey])
+  }, [clearNavigationFallbackTimer, currentRouteKey])
 
 
   useEffect(() => {
     return () => {
       clearNavigationFallbackTimer()
     }
-  }, [])
+  }, [clearNavigationFallbackTimer])
 
   const groupedItems = useMemo(() => {
     const order: string[] = []
@@ -267,9 +270,9 @@ export function UnifiedSidebar({
       <SidebarHeader className="h-16 border-b border-sidebar-border/12 px-2 py-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="pointer-events-auto h-12 rounded-xl px-2 text-sidebar-foreground hover:bg-sidebar-accent/12 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
+            <div
+              className="flex h-12 items-center rounded-xl px-2 text-sidebar-foreground group-data-[collapsible=icon]:justify-center"
+              aria-label="Qunt Edge workspace"
             >
               <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-accent/10 text-sidebar-foreground">
                 <Logo className="size-5 fill-current" />
@@ -278,7 +281,7 @@ export function UnifiedSidebar({
                 <span className="truncate text-sm font-semibold tracking-tight text-sidebar-foreground">Qunt Edge</span>
                 <span className="truncate text-[9px] font-medium uppercase tracking-[0.16em] text-sidebar-foreground/40">Workspace</span>
               </div>
-            </SidebarMenuButton>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -290,14 +293,17 @@ export function UnifiedSidebar({
               {groupName}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu role="menu" aria-labelledby={`sidebar-group-${groupIndex}`}>
+              <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
                 {groupedItems.groups[groupName].map((item, index) => {
                   const label = item.i18nKey ? translate(item.i18nKey) : item.label
                   const href = item.href
                   const isItemDisabled = Boolean(item.disabled)
                   const itemIsActive = !isItemDisabled && !!href && isActive(href, item.exact)
                   const isPendingItem = Boolean(
-                    href && pendingHref === href && !isActive(href, item.exact)
+                    href &&
+                      pendingNavigation?.href === href &&
+                      pendingNavigation.routeKeyAtSchedule === currentRouteKey &&
+                      !isActive(href, item.exact)
                   )
 
                   return (
@@ -320,7 +326,10 @@ export function UnifiedSidebar({
                             href={href}
                             prefetch={false}
                             onClick={() => {
-                              setPendingHref(href)
+                              setPendingNavigation({
+                                href,
+                                routeKeyAtSchedule: currentRouteKey,
+                              })
                               scheduleNavigationFallback(href)
                               if (isMobile) {
                                 setOpenMobile(false)

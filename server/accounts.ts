@@ -5,9 +5,12 @@ import { Trade, Payout, Prisma } from '@/prisma/generated/prisma'
 import { computeMetricsForAccounts } from '@/lib/account-metrics'
 import { Account, Trade as NormalizedTrade, TradeInput } from '@/lib/data-types'
 import { decimalToNumber } from '@/lib/trade-types'
-import { updateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
-import { invalidateAllUserCaches } from '@/lib/cache/cache-invalidation'
+import {
+  invalidateAccountRelatedCaches,
+  invalidateAllUserCaches,
+  invalidateDashboardDataCaches,
+} from '@/lib/cache/cache-invalidation'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
 
@@ -64,9 +67,7 @@ export async function removeAccountsFromTradesAction(accountNumbers: string[]): 
       userId: userId
     }
   })
-  updateTag(`trades-${userId}`)
-  updateTag(`user-data-${userId}`)
-  // Invalidate all user-related caches
+  invalidateAccountRelatedCaches(userId)
   invalidateAllUserCaches(userId)
 }
 
@@ -78,9 +79,7 @@ export async function removeAccountFromTradesAction(accountNumber: string): Prom
       userId: userId
     }
   })
-  updateTag(`trades-${userId}`)
-  updateTag(`user-data-${userId}`)
-  // Invalidate all user-related caches
+  invalidateAccountRelatedCaches(userId)
   invalidateAllUserCaches(userId)
 }
 
@@ -97,9 +96,7 @@ export async function deleteInstrumentGroupAction(accountNumber: string, instrum
     }
   })
   if (effectiveUserId) {
-    updateTag(`trades-${effectiveUserId}`)
-    updateTag(`user-data-${effectiveUserId}`)
-    // Invalidate all user-related caches
+    invalidateAccountRelatedCaches(effectiveUserId)
     invalidateAllUserCaches(effectiveUserId)
   }
 }
@@ -147,9 +144,7 @@ export async function updateCommissionForGroupAction(accountNumber: string, inst
     await Promise.all(updateOperations)
   })
 
-  updateTag(`trades-${userId}`)
-  updateTag(`user-data-${userId}`)
-  // Invalidate all user-related caches
+  invalidateAccountRelatedCaches(userId)
   invalidateAllUserCaches(userId)
 }
 
@@ -214,9 +209,7 @@ export async function renameAccountAction(oldAccountNumber: string, newAccountNu
       })
     })
 
-    updateTag(`trades-${userId}`)
-    updateTag(`user-data-${userId}`)
-    // Invalidate all user-related caches
+    invalidateAccountRelatedCaches(userId)
     invalidateAllUserCaches(userId)
   } catch (error) {
     console.error('Error renaming account:', error)
@@ -252,11 +245,7 @@ export async function deleteTradesByIdsAction(tradeIds: string[]): Promise<void>
     })
   })
 
-  updateTag(`user-data-core-${userId}`)
-  updateTag(`user-data-supplemental-${userId}`)
-  updateTag(`trades-${userId}`)
-  updateTag(`user-data-${userId}`)
-  updateTag(`dashboard-${userId}`)
+  invalidateDashboardDataCaches(userId)
   // Invalidate all user-related caches
   invalidateAllUserCaches(userId)
 }
@@ -388,8 +377,7 @@ export async function setupAccountAction(account: Account): Promise<Account> {
     payouts: savedAccount.payouts,
     group: savedAccount.group,
   } as unknown as Account
-  updateTag(`user-data-${userId}`)
-  updateTag(`trades-${userId}`)
+  invalidateAccountRelatedCaches(userId)
   // Invalidate all user-related caches
   invalidateAllUserCaches(userId)
   return result
@@ -403,8 +391,7 @@ export async function deleteAccountAction(account: Account) {
       userId: userId
     }
   })
-  updateTag(`user-data-${userId}`)
-  updateTag(`trades-${userId}`)
+  invalidateAccountRelatedCaches(userId)
   // Invalidate all user-related caches
   invalidateAllUserCaches(userId)
 }
@@ -526,7 +513,7 @@ export async function savePayoutAction(payout: Payout) {
       return payoutResult
     })
 
-    updateTag(`user-data-${userId}`)
+    invalidateAccountRelatedCaches(userId)
     // Invalidate all user-related caches
     invalidateAllUserCaches(userId)
     return result
@@ -584,7 +571,7 @@ export async function deletePayoutAction(payoutId: string) {
       });
     });
 
-    updateTag(`user-data-${userId}`)
+    invalidateAccountRelatedCaches(userId)
     // Invalidate all user-related caches
     invalidateAllUserCaches(userId)
     return true;
@@ -608,8 +595,7 @@ export async function renameInstrumentAction(accountNumber: string, oldInstrumen
         instrument: newInstrumentName
       }
     })
-    updateTag(`trades-${userId}`)
-    updateTag(`user-data-${userId}`)
+    invalidateAccountRelatedCaches(userId)
     // Invalidate all user-related caches
     invalidateAllUserCaches(userId)
   } catch (error) {
@@ -662,8 +648,7 @@ export async function createAccountAction(accountNumber: string) {
         payoutCount: 0,
       },
     })
-    updateTag(`user-data-${userId}`)
-    updateTag(`trades-${userId}`)
+    invalidateAccountRelatedCaches(userId)
     invalidateAllUserCaches(userId)
     return account
   } catch (error) {

@@ -6,8 +6,14 @@ import { Plus, Upload, Send, StopCircle, X, Image as ImageIcon, Link, FileText, 
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 
+type ChatAttachmentFile = {
+  type: 'file'
+  mediaType: string
+  url: string
+}
+
 // Helper function to convert files to data URLs
-async function convertFilesToDataURLs(files: FileList) {
+async function convertFilesToDataURLs(files: Iterable<File>): Promise<ChatAttachmentFile[]> {
   return Promise.all(
     Array.from(files).map(
       file =>
@@ -49,8 +55,8 @@ export function ChatInput({
   input: string
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   stop: () => void
-  onFilesChange?: (files: { type: 'file'; mediaType: string; url: string }[]) => void
-  files?: { type: 'file'; mediaType: string; url: string }[]
+  onFilesChange?: (files: ChatAttachmentFile[]) => void
+  files?: ChatAttachmentFile[]
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const t = useI18n();
@@ -81,7 +87,7 @@ export function ChatInput({
       )
       
       try {
-        const fileParts = await convertFilesToDataURLs(supportedFiles as any)
+        const fileParts = await convertFilesToDataURLs(supportedFiles)
         onFilesChange?.(fileParts)
       } catch (error) {
         console.error('Error converting files:', error)
@@ -216,7 +222,7 @@ export function ChatInput({
 
     if (supportedFiles.length > 0) {
       try {
-        const fileParts = await convertFilesToDataURLs(supportedFiles as any)
+        const fileParts = await convertFilesToDataURLs(supportedFiles)
         onFilesChange?.([...files, ...fileParts])
       } catch (error) {
         console.error('Error converting dropped files:', error)

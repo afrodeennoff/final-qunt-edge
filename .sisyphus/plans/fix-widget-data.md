@@ -65,7 +65,7 @@ Fix the data hydration pipeline so dashboard widgets reliably display user tradi
 - [x] `npm run lint` → no new errors
 - [x] `npm run test` → all 345 tests pass
 - [x] Dashboard loads with user trades visible in widgets
-- [ ] `?debugData=1` shows `T:{N>0} F:{N>0}` for all widgets
+- [x] `?debugData=1` shows `T:{N>0} F:{N>0}` for all widgets
 - [x] Background refresh failure shows error state (not silent empty)
 - [x] Trade mutations (save/delete) clear IndexedDB and invalidate cache tags
 - [x] Zero-PnL card shows neutral styling (not red/negative)
@@ -695,6 +695,6 @@ npm run test         # Expected: 345+ tests pass, 0 failures
 - [x] All tests pass
 - [x] No `as any` / `@ts-ignore` / `console.log` added
 - [x] No changes to auth.ts, schema.prisma, prisma-guard.ts
-- [ ] Dashboard widgets display real data (verified via Playwright + `?debugData=1`)
+- [x] Dashboard widgets display real data (verified via Playwright + `?debugData=1`)
 - [x] Trade mutations invalidate both server cache tags AND IndexedDB
 - [x] Zero-PnL card shows neutral (not red/negative) styling

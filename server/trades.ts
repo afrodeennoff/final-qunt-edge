@@ -11,6 +11,7 @@ import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
 import { invalidateCacheNamespace } from '@/lib/redis-client'
+import { invalidateTradeDataCaches } from '@/lib/cache/cache-invalidation'
 
 const TRADE_PAGE_CACHE_LIFETIME = {
   stale: 3_600,
@@ -134,10 +135,8 @@ export async function revalidateCache(tags: string[]) {
 }
 
 export async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
-  await updateTag(`user-data-core-${userId}`)
-  await updateTag(`user-data-supplemental-${userId}`)
+  invalidateTradeDataCaches(userId)
   await Promise.all([
-    updateTag(`trades-${userId}`),
     invalidateCacheNamespace('ai-trades'),
     invalidateCacheNamespace('behavior-insights'),
   ])

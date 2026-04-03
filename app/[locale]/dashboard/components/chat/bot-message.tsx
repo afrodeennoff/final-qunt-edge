@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import type React from "react"
-import { Streamdown } from "streamdown"
 import { ButtonV2 } from "@/components/ui/v2"
 import { toast } from "sonner"
 import { useRef } from "react"
 import { ClipboardCheckIcon, type ClipboardCheckIconHandle } from "@/components/animated-icons/clipboard-check"
 import { ChatStatus } from "./chat"
 import { useI18n } from "@/locales/client"
+import { Response } from "@/components/ai-elements/response"
 
 // Message Components
 export function BotMessage({ children, status }: { children: React.ReactNode, status?: ChatStatus }) {
@@ -26,7 +26,7 @@ export function BotMessage({ children, status }: { children: React.ReactNode, st
     if (typeof children === "string") {
       return (
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <Streamdown>{children}</Streamdown>
+          <Response>{children}</Response>
         </div>
       );
     }

@@ -112,7 +112,7 @@ export function RootProviders({
                     .map((key) => caches.delete(key))
             );
             if (cacheDebugEnabled) {
-                console.info(`${logPrefix} service worker disabled; existing registrations cleared.`);
+                console.warn(`${logPrefix} service worker disabled; existing registrations cleared.`);
             }
         };
 
@@ -146,7 +146,7 @@ export function RootProviders({
 
         const handleControllerChange = () => {
             if (cacheDebugEnabled) {
-                console.info(`${logPrefix} service worker controller changed`, {
+                console.warn(`${logPrefix} service worker controller changed`, {
                     pathname: window.location.pathname,
                     hasController: Boolean(navigator.serviceWorker.controller),
                 });

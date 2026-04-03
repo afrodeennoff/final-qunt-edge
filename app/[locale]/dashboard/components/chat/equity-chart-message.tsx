@@ -45,6 +45,19 @@ interface EquityChartMessageProps {
   totalTrades: number;
 }
 
+type TranslateFn = (
+  key: string,
+  params?: Record<string, string | number>,
+) => string;
+
+type DotRendererProps = {
+  cx?: number;
+  cy?: number;
+  payload: ChartDataPoint;
+  index?: number;
+  dataKey?: string;
+};
+
 // Optimized constants
 const formatCurrency = (value: number) =>
   `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -73,8 +86,8 @@ function createAccountColorMap(accountNumbers: string[]): Map<string, string> {
 }
 
 // Custom dot renderer for payouts and resets
-const renderDot = (props: any) => {
-  const { cx, cy, payload, index, dataKey } = props;
+const renderDot = (props: DotRendererProps) => {
+  const { cx, cy, payload, index = 0, dataKey } = props;
   if (typeof cx !== "number" || typeof cy !== "number") {
     return (
       <circle key={`dot-${index}-empty`} cx={cx} cy={cy} r={0} fill="none" />
@@ -190,11 +203,11 @@ const EquityChartTooltip = React.memo(
     t,
   }: {
     active?: boolean;
-    payload?: any[];
+    payload?: TooltipProps<number, string>["payload"];
     data?: ChartDataPoint;
     showIndividual: boolean;
     accountColorMap: Map<string, string>;
-    t: any;
+    t: TranslateFn;
   }) => {
     if (!active || !payload || !payload.length || !data) return null;
 

@@ -1,13 +1,14 @@
 'use server'
 
 import { DashboardLayout, Prisma } from '@/prisma/generated/prisma'
-import { cacheLife, cacheTag, updateTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { Widget, Layouts } from '@/app/[locale]/dashboard/types/dashboard'
 import { createClient, getUserId, getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
 import { defaultLayouts } from '@/lib/default-layouts'
 import { logger } from '@/lib/logger'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
+import { CACHE_TAGS, invalidateDashboardLayout } from '@/lib/cache/cache-invalidation'
 
 async function assertLayoutOwnership(layoutId: string): Promise<DashboardLayout> {
   const userId = await getDatabaseUserId()
@@ -73,14 +74,15 @@ async function _loadDashboardLayout(userId: string): Promise<Layouts | null> {
 async function _loadDashboardLayoutCached(userId: string): Promise<Layouts | null> {
   'use cache'
   cacheLife(LAYOUT_CACHE_LIFETIME)
-  cacheTag(`dashboard-layout-${userId}`)
+  cacheTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId))
+  cacheTag(CACHE_TAGS.DASHBOARD(userId))
   return _loadDashboardLayout(userId)
 }
 
-export async function loadDashboardLayoutAction(): Promise<Layouts | null> {
+export async function loadDashboardLayoutAction(forceRefresh = false): Promise<Layouts | null> {
   const userId = await getUserId()
   try {
-    return _loadDashboardLayoutCached(userId)
+    return forceRefresh ? _loadDashboardLayout(userId) : _loadDashboardLayoutCached(userId)
   } catch (error) {
     logger.error('[loadDashboardLayout] Error', { error })
     return null
@@ -191,7 +193,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
         })
       })
 
-      updateTag(`dashboard-${userId}`)
+      invalidateDashboardLayout(userId)
 
       logger.info('[saveDashboardLayout] Success', { userId })
       return { success: true }
@@ -470,7 +472,7 @@ export async function saveDashboardLayoutWithVersionAction(
       })
     })
 
-    updateTag(`dashboard-${userId}`)
+    invalidateDashboardLayout(userId)
 
     logger.info('[saveDashboardLayoutWithVersion] Success', { userId })
     return { success: true }

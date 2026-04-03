@@ -18,6 +18,7 @@ import {
 } from '@/lib/prisma-guard'
 import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
+import { readStoredChatConversation } from '@/lib/chat-retention'
 import type { SharedParams } from './shared'
 
 export type SharedDataResponse = {
@@ -95,7 +96,6 @@ const GLOBAL_TICK_DETAILS_CACHE_TAG = 'global-tick-details'
 const GLOBAL_FINANCIAL_EVENTS_CACHE_TAG = (locale: string) => `global-financial-events-${locale}` as const
 const USER_DATA_CORE_CACHE_TAG = (userId: string) => `user-data-core-${userId}` as const
 const USER_DATA_SUPPLEMENTAL_CACHE_TAG = (userId: string) => `user-data-supplemental-${userId}` as const
-const DASHBOARD_LAYOUT_CACHE_TAG = (userId: string) => `dashboard-layout-${userId}` as const
 const USER_TABLE_NAME = 'User'
 const AUTH_USER_ID_COLUMN = 'auth_user_id'
 const DASHBOARD_THEME_COLUMN = 'dashboardTheme'
@@ -288,7 +288,17 @@ async function loadSupplementalUserData(userId: string): Promise<{
     )
   ])
 
-  return { accounts, groups, tags, moodHistory }
+  return {
+    accounts,
+    groups,
+    tags,
+    moodHistory: moodHistory.map((mood) => ({
+      ...mood,
+      conversation: mood.conversation
+        ? readStoredChatConversation(mood.conversation)
+        : null,
+    })) as Mood[],
+  }
 }
 
 async function loadDashboardLayout(userId: string): Promise<DashboardLayout | null> {
@@ -326,7 +336,7 @@ async function getSupplementalUserDataCached(userId: string) {
 async function getDashboardLayoutCached(userId: string) {
   'use cache'
   cacheLife(CACHE_LIFETIMES.dashboardLayout)
-  cacheTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId), DASHBOARD_LAYOUT_CACHE_TAG(userId))
+  cacheTag(CACHE_TAGS.DASHBOARD_LAYOUT(userId), CACHE_TAGS.DASHBOARD(userId))
   return loadDashboardLayout(userId)
 }
 

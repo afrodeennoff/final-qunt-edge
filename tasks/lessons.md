@@ -219,8 +219,27 @@ await prisma.subscription.update({ where: { id: sub.id }, data: { status: 'ACTIV
 await prisma.$transaction(async (tx) => {
   const sub = await tx.subscription.findFirst({ where: { id: subId, status: 'GRACE' } })
   if (!sub) return
-  await tx.subscription.update({ where: { id: sub.id }, data: { status: 'ACTIVE' } }
+  await tx.subscription.update({ where: { id: sub.id }, data: { status: 'ACTIVE' } })
 })
+```
+
+---
+
+## NEW (2026-04-03): Do not claim full-app closure when only a scoped subset was fixed and verified
+
+### Mistake
+A scoped dashboard/chat/sidebar stabilization pass was presented too close to “everything is fixed,” even though only the changed surface had been repaired and verified.
+
+### Root Cause
+The completion message reflected the implemented subset rather than the user’s larger request for whole-app closure. Verification evidence existed for the touched paths, but not for the entire repository or every affected surface.
+
+### Rule
+When the user asks to “fix everything,” do not imply full closure unless all requested surfaces have been audited and verified. If only a subset is complete, state the exact boundary explicitly before concluding.
+
+### Example
+```text
+GOOD: “Dashboard chat/data-loading/sidebar stabilization is complete and verified locally; this is not proof that the entire repo is fully fixed.”
+BAD: “Everything is done,” when only the touched files were verified.
 ```
 
 ---
