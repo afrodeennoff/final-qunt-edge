@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { BadgeV2 } from "@/components/ui/v2"
 import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
 import { MOTION_EASE } from './_constants'

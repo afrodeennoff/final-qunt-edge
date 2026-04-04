@@ -1,6 +1,6 @@
 'use client'
 import React, { useRef } from 'react';
-import { motion, Variants, useScroll, useTransform } from 'framer-motion';
+import { motion, Variants, useScroll, useTransform } from 'motion/react';
 import Link from "next/link";
 import { useCurrentLocale } from '@/locales/client';
 

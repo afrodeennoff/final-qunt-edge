@@ -2,7 +2,7 @@
 
 import type { ComponentType } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { Github, MessageCircle, Youtube } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { useI18n, useCurrentLocale } from '@/locales/client'

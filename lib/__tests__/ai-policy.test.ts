@@ -2,14 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const envKeys = [
   "AI_MODEL",
-  "AI_MODEL_DEFAULT",
-  "AI_MODEL_CHAT",
-  "AI_MODEL_SUPPORT",
-  "AI_MODEL_EDITOR",
-  "AI_MODEL_MAPPINGS",
-  "AI_MODEL_FORMAT_TRADES",
-  "AI_MODEL_ANALYSIS",
-  "AI_MODEL_SEARCH",
   "AI_TIMEOUT_MS",
   "AI_MAX_STEPS",
   "AI_LOG_SAMPLE_RATE",
@@ -38,19 +30,12 @@ describe("AI policy", () => {
     expect(getAiPolicy("chat").model).toBe("glm-4.7-flash");
   });
 
-  it("uses AI_MODEL_DEFAULT over legacy AI_MODEL", async () => {
+  it("uses AI_MODEL env override for all features", async () => {
     process.env.AI_MODEL = "openai/gpt-4o-mini";
-    process.env.AI_MODEL_DEFAULT = "zai/glm-4.7-flash";
     const { getAiPolicy } = await import("@/lib/ai/policy");
-    expect(getAiPolicy("analysis").model).toBe("zai/glm-4.7-flash");
-  });
-
-  it("uses per-feature override when provided", async () => {
-    process.env.AI_MODEL_DEFAULT = "zai/glm-4.7-flash";
-    process.env.AI_MODEL_SUPPORT = "openai/gpt-4o-mini";
-    const { getAiPolicy } = await import("@/lib/ai/policy");
+    expect(getAiPolicy("chat").model).toBe("openai/gpt-4o-mini");
     expect(getAiPolicy("support").model).toBe("openai/gpt-4o-mini");
-    expect(getAiPolicy("chat").model).toBe("zai/glm-4.7-flash");
+    expect(getAiPolicy("analysis").model).toBe("openai/gpt-4o-mini");
   });
 
   it("reads timeout and max steps from env", async () => {

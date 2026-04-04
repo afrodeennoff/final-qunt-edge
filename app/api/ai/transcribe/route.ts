@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   const { userId } = guard
 
   try {
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.AI_API_KEY) {
       return apiError('SERVICE_UNAVAILABLE', 'Transcription service is not configured', 503)
     }
 

@@ -1,3 +1,5 @@
+import { useReducedMotionValue } from "@/context/reduced-motion-context"
+import { useReducedMotionValue } from "@/context/reduced-motion-context"
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -25,7 +27,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import { Prisma, DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { WidgetShell } from "@/components/ui/widget-shell"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
@@ -349,7 +351,7 @@ export default function WidgetCanvas() {
   } = useDashboard()
   const t = useI18n()
   const translate = t as unknown as (key: string) => string
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = useReducedMotionValue()
   const showDataDebug = searchParams.get("debugData") === "1"
   const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { Lock, Server, ShieldCheck, LifeBuoy, Clock, Trophy, Globe, MessageSquare } from 'lucide-react'
 import { BadgeV2 } from '@/components/ui/v2'
 import { AnimatedCounter } from '@/components/animation/enhanced-motion'

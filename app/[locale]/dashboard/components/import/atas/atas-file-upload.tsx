@@ -2,7 +2,6 @@
 
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import ExcelJS from "exceljs";
 import { ImportType } from "../import-type-selection";
 import { Progress } from "@/components/ui/progress";
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from "lucide-react";
@@ -54,6 +53,7 @@ export default function AtasFileUpload({
 
         reader.onload = async (e) => {
           try {
+            const { default: ExcelJS } = await import("exceljs");
             const workbook = new ExcelJS.Workbook();
             await workbook.xlsx.load(e.target?.result as ArrayBuffer);
 

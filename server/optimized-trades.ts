@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/prisma/generated/prisma'
 import { executeOptimizedQuery } from '@/lib/query-optimizer'
 
 export async function getOptimizedTradesForUser(userId: string, filters?: {
@@ -97,18 +98,20 @@ export async function getTradeCountByInstrument(userId: string) {
 }
 
 export async function getDailyPnLOptimized(userId: string, accountNumbers?: string[]) {
+  const accountFilter = accountNumbers && accountNumbers.length > 0
+    ? Prisma.sql`AND account_number = ANY(${accountNumbers})`
+    : Prisma.sql``
+
   return executeOptimizedQuery(
     'getDailyPnL',
     () => prisma.$queryRaw`
-      SELECT 
+      SELECT
         DATE(entry_date) as date,
         SUM(pnl - commission) as net_pnl,
         COUNT(*) as trade_count
       FROM "Trade"
       WHERE user_id = ${userId}
-        ${accountNumbers && accountNumbers.length > 0 
-          ? prisma.$queryRaw`AND account_number = ANY(${accountNumbers})` 
-          : prisma.$queryRaw``}
+        ${accountFilter}
       GROUP BY DATE(entry_date)
       ORDER BY date DESC
       LIMIT 365

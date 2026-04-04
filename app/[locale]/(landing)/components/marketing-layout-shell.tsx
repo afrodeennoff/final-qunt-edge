@@ -1,7 +1,7 @@
 import Navbar from './navbar'
 import Footer from './footer'
 import { cn } from '@/lib/utils'
-import { MotionStagger, MotionStaggerItem } from '@/components/motion/motion-primitives'
+import { MotionStagger, MotionStaggerItem } from '@/components/animation/motion-primitives'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
 import { SidebarInset } from '@/components/ui/sidebar'
 import dynamic from 'next/dynamic'

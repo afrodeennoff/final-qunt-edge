@@ -17,11 +17,6 @@ import {
   PromptInputBody,
   PromptInputButton,
   type PromptInputMessage,
-  PromptInputModelSelect,
-  PromptInputModelSelectContent,
-  PromptInputModelSelectItem,
-  PromptInputModelSelectTrigger,
-  PromptInputModelSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputToolbar,
@@ -34,7 +29,7 @@ import {
 import { Fragment, useEffect, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { Response } from '@/components/ai-elements/response';
-import { GlobeIcon, RefreshCcwIcon } from 'lucide-react';
+import { RefreshCcwIcon } from 'lucide-react';
 import { useI18n } from '@/locales/client';
 import {
   Source,
@@ -53,7 +48,6 @@ import { ClipboardCheckIcon } from '@/components/animated-icons/clipboard-check'
 import SupportForm from './components/support-form';
 import { toast } from 'sonner';
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell';
-import { SUPPORT_MODEL_OPTIONS, type SupportModelId, isSupportModelId } from '@/lib/ai/support-models';
 
 const ChatBotDemo = () => {
   const t = useI18n();
@@ -82,8 +76,6 @@ const ChatBotDemo = () => {
     return t('support.errors.generic')
   }
   const [input, setInput] = useState('');
-  const [model, setModel] = useState<SupportModelId>(SUPPORT_MODEL_OPTIONS[0].value);
-  const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, setMessages } = useChat(
     {
       transport: new DefaultChatTransport({
@@ -130,12 +122,6 @@ const ChatBotDemo = () => {
       {
         text: message.text || 'Sent with attachments',
         files: message.files
-      },
-      {
-        body: {
-          model: model,
-          webSearch: webSearch,
-        },
       },
     );
     setInput('');
@@ -264,7 +250,7 @@ const ChatBotDemo = () => {
                                   onClick={() =>
                                     sendMessage(
                                       { text: part.text },
-                                      { body: { model: model, webSearch: webSearch } }
+                                       { body: {} }
                                     )
                                   }
                                   label={t('common.retry')}
@@ -352,32 +338,6 @@ const ChatBotDemo = () => {
                   <PromptInputActionAddAttachments />
                 </PromptInputActionMenuContent>
               </PromptInputActionMenu>
-              <PromptInputButton
-                variant={webSearch ? 'default' : 'ghost'}
-                onClick={() => setWebSearch(!webSearch)}
-              >
-                <GlobeIcon size={16} />
-                <span>{t('support.search')}</span>
-              </PromptInputButton>
-                <PromptInputModelSelect
-                  onValueChange={(value) => {
-                    if (isSupportModelId(value)) {
-                      setModel(value);
-                    }
-                  }}
-                  value={model}
-                >
-                <PromptInputModelSelectTrigger>
-                  <PromptInputModelSelectValue />
-                </PromptInputModelSelectTrigger>
-                <PromptInputModelSelectContent>
-                  {SUPPORT_MODEL_OPTIONS.map((model) => (
-                    <PromptInputModelSelectItem key={model.value} value={model.value}>
-                      {model.name}
-                    </PromptInputModelSelectItem>
-                  ))}
-                </PromptInputModelSelectContent>
-              </PromptInputModelSelect>
             </PromptInputTools>
             <PromptInputSubmit disabled={!input.trim()} status={status} />
           </PromptInputToolbar>

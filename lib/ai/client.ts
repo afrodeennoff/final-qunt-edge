@@ -5,7 +5,7 @@ import { cacheAiResponse, setAiResponseCache, getAiCacheStats, resetAiCacheStats
 import type { LanguageModelV3, LanguageModelV3CallOptions } from "@ai-sdk/provider";
 
 const baseURL = process.env.AI_BASE_URL || "https://openrouter.ai/api/v1";
-const aiApiKey = process.env.OPENROUTER_API_KEY;
+const aiApiKey = process.env.AI_API_KEY;
 
 let hasWarnedMissingApiKey = false;
 let hasWarnedMissingBaseUrl = false;
@@ -13,10 +13,6 @@ let hasWarnedMissingBaseUrl = false;
 const aiClient = createOpenAI({
   baseURL,
   apiKey: aiApiKey,
-  headers: {
-    "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://quntedge.com",
-    "X-Title": "Qunt Edge",
-  },
 });
 
 function normalizeModelForOpenRouter(model: string): string {
@@ -34,7 +30,7 @@ function normalizeModelForOpenRouter(model: string): string {
 // Enhanced AI language model with caching (only for non-streaming generations)
 export function getAiLanguageModel(feature: AiFeature) {
   if (!aiApiKey && !hasWarnedMissingApiKey) {
-    console.warn("[AI] OPENROUTER_API_KEY is missing. AI routes will fail until it is configured.");
+    console.warn("[AI] AI_API_KEY is missing. AI routes will fail until it is configured.");
     hasWarnedMissingApiKey = true;
   }
 

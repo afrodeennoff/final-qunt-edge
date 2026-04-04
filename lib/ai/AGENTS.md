@@ -1,73 +1,68 @@
-# lib/ai — AI Layer (Client, Router, Telemetry, Entitlements)
+# lib/ai — AI Layer (Client, Policy, Telemetry, Entitlements)
 
 > **Conventions & Developer Guide**: See root `./AGENTS.md` for shared conventions.
 
-**Scope**: `lib/ai/`, `lib/ai/router/`
+**Scope**: `lib/ai/`
 
 ## OVERVIEW
-AI integration layer with Vercel AI SDK, OpenRouter fallback router, entitlements, telemetry, and prompt safety.
+AI integration layer with Vercel AI SDK (`@ai-sdk/openai`), entitlements, telemetry, and prompt safety.
 
-## ROUTER ARCHITECTURE
+## CONFIGURATION
+
+All AI features are configured via 3 environment variables:
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `AI_API_KEY` | API key for the AI provider | `sk-...` |
+| `AI_BASE_URL` | OpenAI-compatible base URL | `https://api.openai.com/v1` |
+| `AI_MODEL` | Model identifier used for all AI features | `gpt-4o-mini` |
+
+Operational overrides (optional):
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `AI_TIMEOUT_MS` | Request timeout in milliseconds | `60000` |
+| `AI_MAX_STEPS` | Max tool-call steps per request | `10` |
+| `AI_LOG_SAMPLE_RATE` | Fraction of successful requests to log | `0.25` |
+
+## ARCHITECTURE
 
 ```
 client.ts
-    └── getAiLanguageModel(feature) → routes through router
-    └── createCompletionWithRouter() → explicit free-tier first
-router/
-    ├── config.ts       # Feature flag: AI_ROUTER_ENABLED
-    ├── openrouter.ts  # OpenRouter API client
-    ├── circuit.ts      # Circuit breaker (Redis)
-    ├── cache.ts       # Per-user response cache (Redis)
-    ├── reservations.ts # Budget reservation (Redis)
-    └── fallback.ts     # Provider chain: OpenRouter Free → Auto → Liquid LFM → GLM
+    └── getAiLanguageModel(feature) → creates model via @ai-sdk/openai
+    └── Proxy wrapper adds Redis/in-memory caching for doGenerate only
 ```
-
-## PROVIDER CHAIN
-
-| Priority | Provider | Trigger |
-|----------|---------|---------|
-| 1 | OpenRouter Free (`free`) | Always attempted first when router enabled |
-| 2 | OpenRouter Auto (`auto`) | Fallback if free exhausted |
-| 3 | Liquid LFM (`liquid-lfm`) | Fallback if auto fails |
-| 4 | GLM (via `AI_BASE_URL`) | Final fallback |
-
-Router disabled by default → uses `AI_BASE_URL` directly.
 
 ## KEY FILES
 
 | File | Purpose |
 |------|---------|
-| `client.ts` | AI client factory, `getAiLanguageModel()`, `createCompletionWithRouter()` |
-| `router/config.ts` | `AI_ROUTER_ENABLED`, provider chain config |
-| `router/openrouter.ts` | OpenRouter API client with response transformation |
-| `router/circuit.ts` | Redis-backed circuit breaker, failure thresholds |
-| `router/cache.ts` | Per-user cache keys: `ai:exact:${userId}:${feature}:${hash}` |
-| `router/reservations.ts` | Atomic budget reservation (Redis), **fail-closed** |
-| `router/fallback.ts` | Provider chain with cost estimation |
-| `router/index.ts` | Public exports |
+| `client.ts` | AI client factory, `getAiLanguageModel()`, caching proxy |
+| `policy.ts` | Per-feature temperature/timeouts, model resolution from `AI_MODEL` |
 | `entitlements.ts` | AI feature entitlement checks |
 | `telemetry.ts` | AI usage logging |
-| `policy.ts` | AI usage policies |
 | `usage-budget.ts` | Usage budget tracking |
 | `prompt-safety.ts` | Prompt injection detection (threshold: 0.5) |
-| `route-guard.ts` | AI route protection |
+| `route-guard.ts` | AI route protection (auth + entitlements + budget + rate-limit) |
 | `trade-access.ts` | AI trade data access control |
 | `trade-normalization.ts` | AI trade data normalization |
 | `get-all-trades.ts` | Trade data fetching for AI (user-scoped) |
 | `errors.ts` | AI error types |
 | `error-utils.ts` | AI error utilities |
+| `timeout.ts` | AI request timeout utilities |
+| `cache.ts` | AI response caching (Redis + in-memory) |
 
 ## SECURITY RULES
 
-- **Cache keys**: Always include `userId` to prevent cross-user cache pollution
+- **No hardcoded credentials**: All AI keys read from `AI_API_KEY` env var
+- **No hardcoded URLs**: Base URL read from `AI_BASE_URL` env var
+- **Cache keys**: Always include feature identifier to prevent cross-feature pollution
 - **Budget**: Must **never** fall back to in-memory store when Redis unavailable → throw explicit error
-- **Prompt injection**: High-risk threshold lowered to `0.5` (from `0.7`)
-- **API config**: `AI_BASE_URL` must be set → throws in dev if missing when router disabled
+- **Prompt injection**: High-risk threshold at `0.5`
 
 ## CONVENTIONS
 
-- Routes use `getAiLanguageModel()` which auto-checks router config
-- Explicit free-tier attempts use `createCompletionWithRouter()`
+- Routes use `getAiLanguageModel(feature)` for all AI model access
 - All AI routes must pass through `route-guard.ts`
 - Entitlements checked via `entitlements.ts` before AI calls
 - Telemetry logged via `telemetry.ts` for all AI requests
@@ -78,12 +73,11 @@ All AI routes standardize on:
 ```typescript
 { error: { code, message, details? } }
 ```
-Use `apiError()` from `lib/api-utils.ts` — never return raw strings as errors.
+Use `apiError()` from `lib/api-response.ts` — never return raw strings as errors.
 
 ## DEPENDENCIES
 
-- `lib/ai/router/index.ts` — Public router interface
 - `lib/rate-limit.ts` — Rate limiting for AI routes
-- `lib/redis-cache.ts` — Redis connection
+- `lib/redis-client.ts` — Redis connection
 - `lib/logger.ts` — Logging
-- `lib/api-utils.ts` — `apiError()` helper
+- `lib/api-response.ts` — `apiError()` helper

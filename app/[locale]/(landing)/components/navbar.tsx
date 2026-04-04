@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ButtonV2 } from '@/components/ui/v2'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
 import { Logo } from '@/components/logo'

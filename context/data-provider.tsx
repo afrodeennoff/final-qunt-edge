@@ -215,24 +215,24 @@ type DataContextType = DashboardDataState &
   DashboardDerivedState &
   DashboardActions;
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
-const DashboardDataStateContext = createContext<DashboardDataState | undefined>(
+export const DataContext = createContext<DataContextType | undefined>(undefined);
+export const DashboardDataStateContext = createContext<DashboardDataState | undefined>(
   undefined
 );
-const DashboardUiStateContext = createContext<DashboardUiState | undefined>(
+export const DashboardUiStateContext = createContext<DashboardUiState | undefined>(
   undefined
 );
-const DashboardTradesListContext = createContext<Trade[] | undefined>(undefined);
-const DashboardAccountsListContext = createContext<Account[] | undefined>(
+export const DashboardTradesListContext = createContext<Trade[] | undefined>(undefined);
+export const DashboardAccountsListContext = createContext<Account[] | undefined>(
   undefined
 );
-const DashboardFiltersContext = createContext<DashboardFiltersState | undefined>(
+export const DashboardFiltersContext = createContext<DashboardFiltersState | undefined>(
   undefined
 );
-const DashboardDerivedContext = createContext<DashboardDerivedState | undefined>(
+export const DashboardDerivedContext = createContext<DashboardDerivedState | undefined>(
   undefined
 );
-const DashboardActionsContext = createContext<DashboardActions | undefined>(
+export const DashboardActionsContext = createContext<DashboardActions | undefined>(
   undefined
 );
 
@@ -2294,104 +2294,24 @@ export const DataProvider: React.FC<{
   );
 };
 
-export const useData = () => {
-  const context = useContext(DataContext);
-  if (!context) {
-    throw new Error("useData must be used within a DataProvider");
-  }
-  return context;
-};
+// Hooks are defined in data-provider-hooks.tsx for separation of concerns
+// Re-exported here for backward compatibility with existing consumers
+export {
+  useData,
+  useDashboardTrades,
+  useDashboardIsMobile,
+  useDashboardIsLoading,
+  useDashboardIsRevalidating,
+  useDashboardIsSharedView,
+  useDashboardRefreshError,
+  useDashboardTradeItems,
+  useDashboardAccountsList,
+  useDashboardFilters,
+  useDashboardStats,
+  useDashboardActions,
+} from './data-provider-hooks'
 
-export const useDashboardTrades = () => {
-  const context = useContext(DashboardDataStateContext);
-  if (!context) {
-    throw new Error("useDashboardTrades must be used within a DataProvider");
-  }
-  return context;
-};
-
-export const useDashboardIsMobile = () => {
-  const context = useContext(DashboardUiStateContext);
-  if (!context) {
-    throw new Error("useDashboardIsMobile must be used within a DataProvider");
-  }
-  return context.isMobile;
-};
-
-export const useDashboardIsLoading = () => {
-  const context = useContext(DashboardUiStateContext);
-  if (!context) {
-    throw new Error("useDashboardIsLoading must be used within a DataProvider");
-  }
-  return context.isLoading;
-};
-
-export const useDashboardIsRevalidating = () => {
-  const context = useContext(DashboardUiStateContext);
-  if (!context) {
-    throw new Error("useDashboardIsRevalidating must be used within a DataProvider");
-  }
-  return context.isRevalidating;
-};
-
-export const useDashboardIsSharedView = () => {
-  const context = useContext(DashboardUiStateContext);
-  if (!context) {
-    throw new Error("useDashboardIsSharedView must be used within a DataProvider");
-  }
-  return context.isSharedView;
-};
-
-export const useDashboardRefreshError = () => {
-  const context = useContext(DashboardUiStateContext);
-  if (!context) {
-    throw new Error("useDashboardRefreshError must be used within a DataProvider");
-  }
-  return context.refreshError;
-};
-
-export const useDashboardTradeItems = () => {
-  const context = useContext(DashboardTradesListContext);
-  if (!context) {
-    throw new Error("useDashboardTradeItems must be used within a DataProvider");
-  }
-  return context;
-};
-
-export const useDashboardAccountsList = () => {
-  const context = useContext(DashboardAccountsListContext);
-  if (!context) {
-    throw new Error("useDashboardAccountsList must be used within a DataProvider");
-  }
-  return context;
-};
-
-export const useDashboardFilters = () => {
-  const context = useContext(DashboardFiltersContext);
-  if (!context) {
-    throw new Error("useDashboardFilters must be used within a DataProvider");
-  }
-  return context;
-};
-
-export const useDashboardStats = () => {
-  const context = useContext(DashboardDerivedContext);
-  if (!context) {
-    throw new Error("useDashboardStats must be used within a DataProvider");
-  }
-  return context;
-};
-
-export const useDashboardActions = () => {
-  const context = useContext(DashboardActionsContext);
-  if (!context) {
-    throw new Error("useDashboardActions must be used within a DataProvider");
-  }
-  return context;
-};
-
- // Add getTimeRangeKey function at the top level
- function getTimeRangeKey(timeInPosition: number): string {
+function getTimeRangeKey(timeInPosition: number): string {
   const minutes = timeInPosition / 60; // Convert seconds to minutes
   if (minutes < 1) return "under1min";
   if (minutes >= 1 && minutes < 5) return "1to5min";

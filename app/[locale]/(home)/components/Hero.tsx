@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import { BadgeV2, ButtonV2 } from '@/components/ui/v2'
 import { MagneticButton } from '@/components/animation/interactive'

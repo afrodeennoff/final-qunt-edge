@@ -1,3 +1,5 @@
+import { useReducedMotionValue } from "@/context/reduced-motion-context"
+import { useReducedMotionValue } from "@/context/reduced-motion-context"
 "use client";
 
 import { BadgeV2, CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
@@ -6,7 +8,7 @@ import { useI18n } from "@/locales/client";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { PlatformConfig } from "../config/platforms";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "motion/react";
 
 interface PlatformCardProps {
     platform: PlatformConfig;
@@ -26,7 +28,7 @@ export function PlatformCard({
     isWeekend,
 }: PlatformCardProps) {
     const t = useI18n();
-    const shouldReduceMotion = useReducedMotion();
+    const shouldReduceMotion = useReducedMotionValue();
 
     const isInteractive = !platform.isDisabled && !platform.isComingSoon;
 

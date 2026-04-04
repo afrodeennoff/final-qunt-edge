@@ -3,12 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const {
   streamTextMock,
   convertToModelMessagesMock,
-  createCompletionWithRouterMock,
   logAiRequestMock,
 } = vi.hoisted(() => ({
   streamTextMock: vi.fn(),
   convertToModelMessagesMock: vi.fn(),
-  createCompletionWithRouterMock: vi.fn(),
   logAiRequestMock: vi.fn(),
 }));
 
@@ -24,8 +22,6 @@ vi.mock("@/lib/ai/route-guard", () => ({
 
 vi.mock("@/lib/ai/client", () => ({
   getAiLanguageModel: vi.fn(() => "model"),
-  getAiLanguageModelById: vi.fn(() => "model"),
-  createCompletionWithRouter: (...args: unknown[]) => createCompletionWithRouterMock(...args),
 }));
 
 vi.mock("@/lib/ai/telemetry", async () => {
@@ -41,8 +37,7 @@ import { POST } from "@/app/api/ai/support/route";
 describe("ai support route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.OPENROUTER_API_KEY = "test-key";
-    delete process.env.OPENAI_API_KEY;
+    process.env.AI_API_KEY = "test-key";
     convertToModelMessagesMock.mockResolvedValue([{ role: "user", content: "hello" }]);
   });
 
@@ -58,7 +53,6 @@ describe("ai support route", () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           messages: [{ role: "user", content: "Help me" }],
-          webSearch: false,
         }),
       }) as never,
     );
@@ -69,27 +63,5 @@ describe("ai support route", () => {
         sendReasoning: false,
       }),
     );
-  });
-
-  it("supports router-only configuration without OPENAI_API_KEY", async () => {
-    const toUIMessageStreamResponse = vi.fn().mockReturnValue(new Response("ok", { status: 200 }));
-    streamTextMock.mockReturnValue({
-      toUIMessageStreamResponse,
-    });
-
-    const res = await POST(
-      new Request("http://localhost/api/ai/support", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: "Help me" }],
-          webSearch: false,
-        }),
-      }) as never,
-    );
-
-    expect(res.status).toBe(200);
-    expect(streamTextMock).toHaveBeenCalled();
-    expect(createCompletionWithRouterMock).not.toHaveBeenCalled();
   });
 });

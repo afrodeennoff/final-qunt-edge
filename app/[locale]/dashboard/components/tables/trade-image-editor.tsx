@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { ButtonV2 } from "@/components/ui/v2";
 import { ZoomIn, ZoomOut, X, Upload } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import {
   HoverCard,

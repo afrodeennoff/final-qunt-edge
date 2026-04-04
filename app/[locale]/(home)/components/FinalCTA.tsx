@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ButtonV2 } from '@/components/ui/v2'
 import { MagneticButton } from '@/components/animation/interactive'
 import { MOTION_EASE } from './_constants'

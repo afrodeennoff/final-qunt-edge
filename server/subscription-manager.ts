@@ -131,10 +131,14 @@ export class SubscriptionManager {
       const updateData: any = {}
       const eventLogs: Array<{ eventType: string; eventData: any }> = []
 
+      const PLAN_TIER_ORDER = ['MONTHLY', 'QUARTERLY', 'YEARLY', 'LIFETIME'] as const
+
       if (data.plan && data.plan !== subscription.plan) {
         updateData.plan = data.plan.toUpperCase()
+        const oldTier = PLAN_TIER_ORDER.indexOf(subscription.plan as typeof PLAN_TIER_ORDER[number])
+        const newTier = PLAN_TIER_ORDER.indexOf(data.plan.toUpperCase() as typeof PLAN_TIER_ORDER[number])
         eventLogs.push({
-          eventType: data.plan > subscription.plan ? 'PLAN_UPGRADED' : 'PLAN_DOWNGRADED',
+          eventType: newTier > oldTier ? 'PLAN_UPGRADED' : 'PLAN_DOWNGRADED',
           eventData: {
             oldPlan: subscription.plan,
             newPlan: data.plan,

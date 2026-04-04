@@ -3,12 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const {
   streamTextMock,
   convertToModelMessagesMock,
-  createCompletionWithRouterMock,
   logAiRequestMock,
 } = vi.hoisted(() => ({
   streamTextMock: vi.fn(),
   convertToModelMessagesMock: vi.fn(),
-  createCompletionWithRouterMock: vi.fn(),
   logAiRequestMock: vi.fn(),
 }));
 
@@ -30,8 +28,6 @@ vi.mock("@/lib/ai/route-guard", () => ({
 
 vi.mock("@/lib/ai/client", () => ({
   getAiLanguageModel: vi.fn(() => "direct-model"),
-  getAiLanguageModelById: vi.fn(() => "direct-model"),
-  createCompletionWithRouter: (...args: unknown[]) => createCompletionWithRouterMock(...args),
 }));
 
 vi.mock("@/lib/ai/telemetry", async () => {
@@ -45,9 +41,7 @@ vi.mock("@/lib/ai/telemetry", async () => {
 describe("AI Router - Comprehensive Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.OPENROUTER_API_KEY = "test-openrouter-key";
-    process.env.OPENAI_API_KEY = "test-openai-key";
-    process.env.AI_ROUTER_ENABLED = "false";
+    process.env.AI_API_KEY = "test-ai-key";
 
     convertToModelMessagesMock.mockResolvedValue([{ role: "user", content: "hello" }]);
     streamTextMock.mockReturnValue({
@@ -55,7 +49,7 @@ describe("AI Router - Comprehensive Integration Tests", () => {
     });
   });
 
-  it("support route uses direct streaming when router is disabled", async () => {
+  it("support route uses streaming with configured model", async () => {
     const { POST } = await import("@/app/api/ai/support/route");
     const response = await POST(
       new Request("http://localhost/api/ai/support", {
@@ -67,39 +61,5 @@ describe("AI Router - Comprehensive Integration Tests", () => {
 
     expect(response.status).toBe(200);
     expect(streamTextMock).toHaveBeenCalled();
-    expect(createCompletionWithRouterMock).not.toHaveBeenCalled();
   });
-
-  it("support route runs router path without OPENAI_API_KEY", async () => {
-    delete process.env.OPENAI_API_KEY;
-
-    const { POST } = await import("@/app/api/ai/support/route");
-    const response = await POST(
-      new Request("http://localhost/api/ai/support", {
-        method: "POST",
-        body: JSON.stringify({ messages: [{ role: "user", content: "Help me" }] }),
-        headers: { "Content-Type": "application/json" },
-      }) as never,
-    );
-
-    expect(response.status).toBe(200);
-    expect(streamTextMock).toHaveBeenCalled();
-    expect(createCompletionWithRouterMock).not.toHaveBeenCalled();
-  });
-
-  it("support route falls back to direct path when router attempt fails", async () => {
-    const { POST } = await import("@/app/api/ai/support/route");
-    const response = await POST(
-      new Request("http://localhost/api/ai/support", {
-        method: "POST",
-        body: JSON.stringify({ messages: [{ role: "user", content: "Help me" }] }),
-        headers: { "Content-Type": "application/json" },
-      }) as never,
-    );
-
-    expect(response.status).toBe(200);
-    expect(streamTextMock).toHaveBeenCalled();
-    expect(createCompletionWithRouterMock).not.toHaveBeenCalled();
-  });
-
 });
