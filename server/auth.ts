@@ -592,9 +592,7 @@ export async function ensureUserInDatabase(
         select: { id: true },
       });
 
-      const isDifferentUser =
-        !!existingUserByEmail &&
-        existingUserByEmail.id !== user.id
+      const isDifferentUser = existingUserByEmail !== null && existingUserByEmail?.id !== user.id
 
       if (isDifferentUser) {
         await signOutSilently();
@@ -622,14 +620,14 @@ export async function ensureUserInDatabase(
       }
 
       return newUser;
-    } catch (createError) {
+    } catch (createError: unknown) {
       if (isPrismaSchemaMismatchError(createError)) {
         markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
         markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
         return upsertUserByIdAndEmailCompat(user.id, user.email || '')
       }
-      if (createError instanceof Error &&
-        createError.message.includes('Unique constraint failed')) {
+      const errObj = createError as { message?: string }
+      if (errObj?.message?.includes('Unique constraint failed')) {
         await signOutSilently();
         throw new Error('Database integrity error: Duplicate user records found');
       }
@@ -637,6 +635,8 @@ export async function ensureUserInDatabase(
       await signOutSilently();
       throw new Error('Failed to create user account');
     }
+  }
+
   } catch (error) {
     // Re-throw NEXT_REDIRECT errors immediately (these are normal Next.js redirects)
     if (error instanceof Error && (

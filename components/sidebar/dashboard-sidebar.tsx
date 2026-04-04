@@ -19,6 +19,7 @@ import {
     TrendingUp,
     Shield,
 } from "lucide-react"
+import { LeaderboardIcon } from "@/components/icons/svg-icons"
 
 import { useDashboardActions } from "@/context/data-provider"
 import { useUserStore } from "@/store/user-store"
@@ -105,6 +106,12 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             href: `/${locale}/deals`,
             icon: <Globe className={NAV_ICON_SIZE} />,
             label: "Deals",
+            group: "Community"
+        },
+        {
+            href: `/${locale}/leaderboard`,
+            icon: <LeaderboardIcon size={20} />,
+            label: "Leaderboard",
             group: "Community"
         },
         {

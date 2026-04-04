@@ -7,7 +7,6 @@ import { ChevronRight, LogOut, MoreHorizontal, Loader2 } from "lucide-react"
 
 import { Logo } from "@/components/logo"
 import { NAVIGATION_TIMEOUT_MS } from "@/lib/constants/sidebar"
-import { LeaderboardIcon } from "@/components/icons/svg-icons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -172,18 +171,6 @@ export function UnifiedSidebar({
   const hasItems = items && items.length > 0
   const shouldRenderSidebar = isSidebarEnabledRoute || hasItems
 
-  const extendedItems: UnifiedSidebarItem[] = useMemo(() => {
-    const withLocalePath = (p: string) => {
-      const m = pathname?.match(/^\/([a-z]{2})(?:-[A-Za-z]{2})?/)
-      const locale = m?.[1] ?? 'en'
-      return `/${locale}${p.startsWith('/') ? p : '/' + p}`
-    }
-    const extras: UnifiedSidebarItem[] = []
-    if (!items?.some((it) => it.href?.includes('/leaderboard'))) {
-      extras.push({ href: withLocalePath('/leaderboard'), icon: <LeaderboardIcon size={20} />, label: 'Leaderboard' })
-    }
-    return [...items, ...extras]
-  }, [items, pathname])
   const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
   const navigationFallbackTimerRef = useRef<number | null>(null)
@@ -233,7 +220,7 @@ export function UnifiedSidebar({
     const order: string[] = []
     const groups: Record<string, UnifiedSidebarItem[]> = {}
 
-    extendedItems.forEach((item) => {
+    items.forEach((item) => {
       const group = item.group || "Settings"
       if (!groups[group]) {
         groups[group] = []

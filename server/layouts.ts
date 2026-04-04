@@ -87,7 +87,8 @@ async function _loadDashboardLayoutCached(userId: string): Promise<Layouts | nul
 }
 
 export async function loadDashboardLayoutAction(forceRefresh = false): Promise<Layouts | null> {
-  const userId = await getUserId()
+  const userId = await getDatabaseUserId()
+  if (!userId) return null
   try {
     return forceRefresh ? _loadDashboardLayout(userId) : _loadDashboardLayoutCached(userId)
   } catch (error) {
@@ -97,7 +98,8 @@ export async function loadDashboardLayoutAction(forceRefresh = false): Promise<L
 }
 
 export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promise<SaveLayoutResult> {
-  const userId = await getUserId()
+  const authUserId = await getUserId()
+  const userId = await getDatabaseUserId()
 
   if (!userId) {
     return { success: false, error: 'User not authenticated' }
@@ -128,20 +130,20 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
       where: { id: userId },
       create: {
         id: userId,
-        auth_user_id: userId,
+        auth_user_id: authUserId,
         email: resolvedEmail,
       },
       update: {
         email: resolvedEmail,
       },
     })
-  } catch (error) {
+  } catch (error: unknown) {
     if (
       isPrismaSchemaMismatchError(error)
     ) {
       await prisma.$executeRaw`
         INSERT INTO "public"."User" ("id", "email", "auth_user_id")
-        VALUES (${userId}, ${resolvedEmail}, ${userId})
+        VALUES (${userId}, ${resolvedEmail}, ${authUserId})
         ON CONFLICT ("id")
         DO UPDATE SET "email" = EXCLUDED."email"
       `
@@ -416,7 +418,7 @@ export async function saveDashboardLayoutWithVersionAction(
     deviceId: string
   }
 ): Promise<SaveLayoutResult> {
-  const userId = await getUserId()
+  const userId = await getDatabaseUserId()
 
   if (!userId) {
     return { success: false, error: 'User not authenticated' }
