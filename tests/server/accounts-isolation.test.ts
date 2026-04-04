@@ -28,6 +28,7 @@ vi.mock("next/cache", () => ({
 
 vi.mock("@/lib/cache/cache-invalidation", () => ({
   invalidateAllUserCaches: invalidateAllUserCachesMock,
+  invalidateAccountRelatedCaches: vi.fn(),
 }))
 
 vi.mock("@/lib/prisma", () => ({

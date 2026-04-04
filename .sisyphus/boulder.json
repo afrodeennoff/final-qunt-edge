@@ -1,12 +1,8 @@
 {
-  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/dashboard-stabilization.md",
-  "started_at": "2026-04-03T04:49:19.084Z",
-  "session_ids": [
-    "ses_2b008e2b8ffeV434jojFo5SaOG",
-    "ses_2a99969d5ffe5G00VEpHJshWEQ",
-    "ses_2a6cb2d5cffeBjR3O1hDvud6fL"
-  ],
-  "plan_name": "dashboard-stabilization",
+  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/admin-panel-audit-fix.md",
+  "started_at": "2026-04-05T10:00:00.000Z",
+  "session_ids": [],
+  "plan_name": "admin-panel-audit-fix",
   "agent": "atlas",
   "task_sessions": {}
 }

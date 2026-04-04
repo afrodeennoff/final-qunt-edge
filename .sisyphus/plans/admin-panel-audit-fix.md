@@ -163,7 +163,7 @@ Max Concurrent: 3 (Waves 1 & 2)
 
 ## TODOs
 
-- [ ] 1. **Fix deprecated `next/head` in admin-client-layout.tsx**
+- [x] 1. **Fix deprecated `next/head` in admin-client-layout.tsx**
 
   **What to do**:
   - Remove `import Head from "next/head"` from `app/[locale]/admin/admin-client-layout.tsx`
@@ -229,7 +229,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/layout.tsx`, `app/[locale]/admin/admin-client-layout.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 2. **Add Reviews link to sidebar navigation**
+- [x] 2. **Add Reviews link to sidebar navigation**
 
   **What to do**:
   - Open `app/[locale]/admin/components/sidebar-nav.tsx`
@@ -296,7 +296,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/components/sidebar-nav.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 3. **Remove double-wrapping in reviews/page.tsx**
+- [x] 3. **Remove double-wrapping in reviews/page.tsx**
 
   **What to do**:
   - Open `app/[locale]/admin/reviews/page.tsx`
@@ -348,7 +348,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/reviews/page.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 4. **Replace raw `<textarea>` with TextareaV2 in prop firm edit**
+- [x] 4. **Replace raw `<textarea>` with TextareaV2 in prop firm edit**
 
   **What to do**:
   - Open `app/[locale]/admin/propfirms/[id]/page.tsx`
@@ -412,7 +412,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/propfirms/[id]/page.tsx`, `app/[locale]/admin/error.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 5. **Replace raw `<button>` with ButtonV2 in error.tsx**
+- [x] 5. **Replace raw `<button>` with ButtonV2 in error.tsx**
 
   **What to do**:
   - Open `app/[locale]/admin/error.tsx`
@@ -466,7 +466,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/propfirms/[id]/page.tsx`, `app/[locale]/admin/error.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 6. **Verify v2-* Tailwind tokens in reviews page**
+- [x] 6. **Verify v2-* Tailwind tokens in reviews page**
 
   **What to do**:
   - Check if Tailwind tokens like `v2-error`, `v2-accent`, `v2-accent-foreground`, `v2-success` used in `reviews/page.tsx` are defined in the Tailwind config or CSS variables
@@ -517,7 +517,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: `app/[locale]/admin/reviews/page.tsx` (only if changes needed)
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 7. **Add loading.tsx skeleton states to admin pages**
+- [x] 7. **Add loading.tsx skeleton states to admin pages**
 
   **What to do**:
   - Create `loading.tsx` files with Skeleton components for each admin route segment:
@@ -576,7 +576,7 @@ Max Concurrent: 3 (Waves 1 & 2)
   - Files: 5 new `loading.tsx` files
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 8. **Final verification — typecheck + lint**
+- [x] 8. **Final verification — typecheck + lint**
 
   **What to do**:
   - Run `npx tsc --noEmit` — verify 0 errors
