@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { defaultLayouts } from '@/lib/default-layouts'
 import { logger } from '@/lib/logger'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
-import { CACHE_TAGS, invalidateDashboardLayout } from '@/lib/cache/cache-invalidation'
+import { CACHE_TAGS, invalidateDashboardLayout, invalidateEquityChart } from '@/lib/cache/cache-invalidation'
 
 async function assertLayoutOwnership(layoutId: string): Promise<DashboardLayout> {
   const userId = await getDatabaseUserId()
@@ -203,6 +203,7 @@ export async function saveDashboardLayoutAction(layouts: DashboardLayout): Promi
       })
 
       invalidateDashboardLayout(userId)
+      invalidateEquityChart(userId)
 
       logger.info('[saveDashboardLayout] Success', { userId })
       return { success: true }
@@ -482,6 +483,7 @@ export async function saveDashboardLayoutWithVersionAction(
     })
 
     invalidateDashboardLayout(userId)
+      invalidateEquityChart(userId)
 
     logger.info('[saveDashboardLayoutWithVersion] Success', { userId })
     return { success: true }

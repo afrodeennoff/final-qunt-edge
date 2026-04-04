@@ -2,7 +2,6 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Head from "next/head"
 import { toast } from "sonner"
 import { SidebarNav } from "./components/sidebar-nav"
 import { useCurrentLocale } from "@/locales/client"
@@ -35,9 +34,6 @@ export function AdminClientLayout({
 
   return (
     <>
-      <Head>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
       <RootProviders>
       <DashboardProviders>
       <SidebarProvider defaultOpen={defaultSidebarOpen}>

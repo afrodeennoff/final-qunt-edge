@@ -4,6 +4,11 @@ import { AdminClientLayout } from "./admin-client-layout"
 import { isAdminUser } from "@/server/authz"
 import { cookies } from "next/headers"
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export default async function AdminLayout({
   children,

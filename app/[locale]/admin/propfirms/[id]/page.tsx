@@ -15,7 +15,7 @@ import {
 } from '@/server/prop-firms'
 import { assertAdminAccess } from '@/server/authz'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ButtonV2, InputV2 } from "@/components/ui/v2"
+import { ButtonV2, InputV2, TextareaV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
 
@@ -313,11 +313,10 @@ export default async function PropFirmEditPage({
 
             <div className={fieldClass}>
               <Label htmlFor="description">Description</Label>
-              <textarea
+              <TextareaV2
                 id="description"
                 name="description"
                 rows={3}
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 defaultValue={firm?.description ?? ''}
               />
             </div>
@@ -421,12 +420,11 @@ function ReviewsSection({
                       </label>
                       <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
                     </div>
-                    <textarea
+                    <TextareaV2
                       name="content"
                       defaultValue={review.content ?? ''}
                       placeholder="Review content"
                       rows={2}
-                      className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                     />
                   </form>
                   <p className="text-xs text-muted-foreground">

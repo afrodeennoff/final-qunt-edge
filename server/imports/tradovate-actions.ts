@@ -13,6 +13,7 @@ import { logger } from '@/lib/logger'
 import { authSecurityConfig } from '@/lib/security/auth-config'
 import { createOAuthState, consumeOAuthState } from '@/lib/security/oauth-state'
 import { decryptToken, encryptToken } from '@/lib/security/token-crypto'
+import { invalidateEquityChart } from '@/lib/cache/cache-invalidation'
 
 import { formatTimestamp, formatDateToTimestamp } from '@/lib/date-utils'
 import { createTradeWithDefaults } from '@/lib/trade-factory'
@@ -1180,6 +1181,7 @@ export async function storeTradovateToken(
     // Revalidate user data to ensure new sync accounts appear
     const { updateTag } = await import('next/cache')
     updateTag(`user-data-${databaseUserId}`)
+    invalidateEquityChart(databaseUserId)
 
     return { success: true }
   } catch (error) {

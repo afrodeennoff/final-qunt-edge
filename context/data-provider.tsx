@@ -1063,7 +1063,7 @@ export const DataProvider: React.FC<{
 
       setIsLoading(true);
       try {
-        await Promise.all([
+        const results = await Promise.allSettled([
           refreshTradesOnly({ force, withLoading: false }),
           refreshUserDataOnly({
             force,
@@ -1071,6 +1071,21 @@ export const DataProvider: React.FC<{
             withLoading: false,
           }),
         ]);
+        
+        // Check if both succeeded
+        const failed = results.filter(r => r.status === 'rejected');
+        if (failed.length > 0) {
+          const errors = failed.map(r => r.reason).join(', ');
+          logger.error({ errors }, "Error refreshing some data");
+          setRefreshError(
+            errors || "Failed to refresh dashboard data"
+          );
+          // Don't clear loading here - keep error state sticky
+          return;
+        }
+        
+        // Only clear error on full success
+        setRefreshError(null);
         logger.info("Successfully refreshed trades and user data");
       } catch (error) {
         logger.error({ error }, "Error refreshing all data");

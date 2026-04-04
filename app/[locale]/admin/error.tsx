@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { ButtonV2 } from '@/components/ui/v2'
 
 export default function AdminError({
   error,
@@ -21,20 +22,17 @@ export default function AdminError({
           {error.message || 'An admin error occurred.'}
         </p>
         <div className="mt-4 flex gap-2">
-          <button
-            className="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground"
+          <ButtonV2
             onClick={reset}
-            type="button"
           >
             Retry
-          </button>
-          <button
-            className="rounded-md border px-3 py-2 text-sm"
+          </ButtonV2>
+          <ButtonV2
+            variant="outline"
             onClick={() => window.location.assign('/dashboard')}
-            type="button"
           >
             Go to dashboard
-          </button>
+          </ButtonV2>
         </div>
       </section>
     </main>

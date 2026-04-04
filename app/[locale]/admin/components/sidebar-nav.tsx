@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, BarChart, UserPlus, Send, Building2, Tags, BookOpen } from "lucide-react"
+import { Mail, BarChart, UserPlus, Send, Building2, Tags, BookOpen, Shield } from "lucide-react"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { useCurrentLocale } from "@/locales/client"
 
@@ -22,6 +22,11 @@ export function SidebarNav() {
       href: `/${locale}/admin/blogs`,
       label: "Blog",
       icon: <BookOpen className="size-4" />,
+    },
+    {
+      href: `/${locale}/admin/reviews`,
+      label: "Reviews",
+      icon: <Shield className="size-4" />,
     },
     {
       href: `/${locale}/admin/newsletter-builder`,

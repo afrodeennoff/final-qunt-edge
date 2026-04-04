@@ -4,6 +4,7 @@ import { createClient } from './auth'
 import { updateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { generateSecureToken } from '@/lib/api-auth'
+import { invalidateEquityChart } from '@/lib/cache/cache-invalidation'
 
 export async function generateThorToken() {
   const supabase = await createClient()
@@ -24,6 +25,7 @@ export async function generateThorToken() {
     const token = await generateSecureToken(dbUser.id, 'thor')
 
     updateTag(`user-data-${dbUser.id}`)
+    invalidateEquityChart(dbUser.id)
     return { token }
   } catch (error) {
     // Security: Log only error type and message, not full error object
