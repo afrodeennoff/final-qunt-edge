@@ -412,6 +412,8 @@ export async function signUpWithPasswordAction(
     throw new Error(passwordError)
   }
 
+  const requestIp = await getRequestIp()
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
   if (!supabaseUrl || !supabaseKey) {
@@ -423,6 +425,15 @@ export async function signUpWithPasswordAction(
   }
 
   try {
+    const guard = await checkAuthGuard({
+      email,
+      ip: requestIp,
+      actionType: 'signup',
+    })
+    if (!guard.allowed) {
+      throw new Error(`${GENERIC_AUTH_ERROR}|RETRY_AFTER=${guard.retryAfterSeconds}`)
+    }
+
     const supabase = await createClient()
     const websiteURL = await getWebsiteURL()
     const callbackParams = new URLSearchParams()
@@ -643,8 +654,6 @@ export async function ensureUserInDatabase(
       await signOutSilently();
       throw new Error('Failed to create user account');
     }
-  }
-
   } catch (error) {
     // Re-throw NEXT_REDIRECT errors immediately (these are normal Next.js redirects)
     if (error instanceof Error && (
@@ -1011,7 +1020,7 @@ export async function getUserIdentities() {
     }
 
     return identities
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleAuthError(error)
   }
 }

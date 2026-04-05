@@ -3,9 +3,15 @@ import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiError } from '@/lib/api-response'
 import logger, { withLogContext } from '@/lib/logger'
 import { prisma, hasConfiguredDatabaseConnection } from '@/lib/prisma'
+import { isAdminUser } from '@/server/authz'
 
 export async function GET(request: Request) {
   const requestId = crypto.randomUUID()
+
+  // Disable in production unless explicitly enabled
+  if (process.env.NODE_ENV === 'production' && process.env.ENABLE_DEBUG_ENDPOINT !== 'true') {
+    return apiError('NOT_FOUND', 'Not found', 404)
+  }
 
   // This route always depends on request headers for auth, so keep it request-time only.
   await connection()
@@ -21,9 +27,13 @@ export async function GET(request: Request) {
       const supabase = createRouteClient(request)
       const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-      const authenticated = !authError && user != null
-      const userId = user?.id
-      const email = user?.email
+      if (authError || !user) {
+        return apiError('AUTH_UNAUTHORIZED', 'Authentication required', 401)
+      }
+
+      if (!isAdminUser(user)) {
+        return apiError('AUTH_FORBIDDEN', 'Admin access required', 403)
+      }
 
       const environment = {
         nodeEnv: process.env.NODE_ENV || 'development',
@@ -66,9 +76,9 @@ export async function GET(request: Request) {
       }
 
       const auth = {
-        authenticated,
-        userId,
-        email,
+        authenticated: true,
+        userId: user.id,
+        email: user.email,
       }
 
       const response = {
@@ -82,7 +92,6 @@ export async function GET(request: Request) {
 
       logger.info('Debug data retrieved', {
         requestId,
-        authenticated,
         dbHealthy: dbHealthy,
       })
 

@@ -1,24 +1,27 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl:*)",
-      "Bash(command:*)",
-      "Bash(brew:*)",
-      "Bash(npx:*)",
-      "Bash(npm:*)",
-      "Bash(oh-my-opencode:*)",
+      "Bash(grep:*)",
+      "Bash(wc:*)",
+      "Bash(node:*)",
       "Bash(ls:*)",
-      "Bash(find:*)",
-      "Bash(opencode:*)",
-      "WebFetch",
+      "Bash(mkdir:*)",
       "Bash(cat:*)",
-      "Bash(CONFIG_FILE=\"$HOME/.claude/.omc-config.json\":*)",
-      "Bash(lsof:*)",
-      "Bash(sleep:*)",
-      "mcp__acp__Edit"
+      "Bash(rm:*)",
+      "Bash(head:*)",
+      "Bash(find:*)",
+      "Bash(sed:*)",
+      "Bash(git:*)",
+      "Bash(npx:*)",
+      "Bash(cd:*)",
+      "Bash(cd /Users/timon/Downloads/qunt-edge/server/webhook-service.ts tail -5)",
+      "mcp__acp__Edit",
+      "mcp__acp__Write"
     ]
   },
   "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   }
 }

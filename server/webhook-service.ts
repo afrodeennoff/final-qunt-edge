@@ -4,6 +4,16 @@ import type { PrismaClient } from '@/prisma/generated/prisma'
 import { logger } from '@/lib/logger'
 import { subscriptionManager } from './subscription-manager'
 import { paymentService } from './payment-service'
+import {
+  validateMembership,
+  validatePayment,
+  validateRefund,
+  validateInvoice,
+  type MembershipPayload,
+  type PaymentPayload,
+  type RefundPayload,
+  type InvoicePayload,
+} from './webhook-schemas'
 import crypto from 'crypto'
 
 interface WebhookEvent {
@@ -69,6 +79,10 @@ export class WebhookService {
       const hmac = crypto.createHmac('sha256', secret)
       hmac.update(payload)
       const digest = hmac.digest('hex')
+
+      if (signature.length !== digest.length) {
+        return false
+      }
 
       return crypto.timingSafeEqual(
         Buffer.from(signature),
@@ -262,11 +276,6 @@ export class WebhookService {
     await new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  private getAttemptCount(error?: string): number {
-    if (!error) return 0
-    return this.stats.retryCount
-  }
-
   private async acquireWebhookLock(_prisma: PrismaClient, event: WebhookEvent): Promise<boolean> {
     try {
       await prisma.processedWebhook.create({
@@ -281,7 +290,7 @@ export class WebhookService {
       })
 
       return true
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error?.code === 'P2002') {
         return false
       }
@@ -329,37 +338,37 @@ export class WebhookService {
 
     switch (type) {
       case 'membership.activated':
-        return await this.handleMembershipActivated(data, prisma)
+        return await this.handleMembershipActivated(validateMembership(data), prisma)
 
       case 'membership.deactivated':
-        return await this.handleMembershipDeactivated(data, prisma)
+        return await this.handleMembershipDeactivated(validateMembership(data), prisma)
 
       case 'membership.updated':
-        return await this.handleMembershipUpdated(data, prisma)
+        return await this.handleMembershipUpdated(validateMembership(data), prisma)
 
       case 'membership.trialing':
-        return await this.handleMembershipTrialing(data, prisma)
+        return await this.handleMembershipTrialing(validateMembership(data), prisma)
 
       case 'payment.succeeded':
-        return await this.handlePaymentSucceeded(data, prisma)
+        return await this.handlePaymentSucceeded(validatePayment(data), prisma)
 
       case 'payment.failed':
-        return await this.handlePaymentFailed(data, prisma)
+        return await this.handlePaymentFailed(validatePayment(data), prisma)
 
       case 'payment.refunded':
-        return await this.handlePaymentRefunded(data, prisma)
+        return await this.handlePaymentRefunded(validateRefund(data), prisma)
 
       case 'payment.partially_refunded':
-        return await this.handlePaymentPartiallyRefunded(data, prisma)
+        return await this.handlePaymentPartiallyRefunded(validateRefund(data), prisma)
 
       case 'invoice.created':
-        return await this.handleInvoiceCreated(data, prisma)
+        return await this.handleInvoiceCreated(validateInvoice(data), prisma)
 
       case 'invoice.paid':
-        return await this.handleInvoicePaid(data, prisma)
+        return await this.handleInvoicePaid(validateInvoice(data), prisma)
 
       case 'invoice.payment_failed':
-        return await this.handleInvoicePaymentFailed(data, prisma)
+        return await this.handleInvoicePaymentFailed(validateInvoice(data), prisma)
 
       default:
         logger.warn('[WebhookService] Unhandled event type', { eventType: type })
@@ -372,7 +381,7 @@ export class WebhookService {
   }
 
   private async handleMembershipActivated(
-    membership: any,
+    membership: MembershipPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -443,7 +452,7 @@ export class WebhookService {
   }
 
   private async handleTeamMembershipActivated(
-    membership: any,
+    membership: MembershipPayload,
     email: string,
     userId: string | undefined,
     planName: string,
@@ -537,7 +546,7 @@ export class WebhookService {
   }
 
   private async handleBusinessMembershipActivated(
-    membership: any,
+    membership: MembershipPayload,
     email: string,
     userId: string | undefined,
     planName: string,
@@ -626,7 +635,7 @@ export class WebhookService {
   }
 
   private async handleMembershipDeactivated(
-    membership: any,
+    membership: MembershipPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -642,6 +651,7 @@ export class WebhookService {
       const email = membership.user.email.toLowerCase().trim();
       const metadata = membership.metadata || {}
       const type = metadata.type || 'individual'
+      const userId = typeof metadata.user_id === 'string' ? metadata.user_id : undefined
 
       if (type === 'team') {
         return await this.handleTeamMembershipDeactivated(membership, email, prisma)
@@ -649,9 +659,10 @@ export class WebhookService {
         return await this.handleBusinessMembershipDeactivated(membership, email, prisma)
       }
 
-      const subscription = await prisma.subscription.findUnique({
-        where: { email },
-      })
+      // Prefer userId lookup over email to avoid issues with email changes
+      const subscription = userId
+        ? await prisma.subscription.findUnique({ where: { userId } })
+        : await prisma.subscription.findUnique({ where: { email } })
 
       if (!subscription) {
         logger.warn('[WebhookService] Subscription not found for deactivation', {
@@ -665,14 +676,14 @@ export class WebhookService {
       }
 
       await prisma.subscription.update({
-        where: { email },
+        where: { id: subscription.id },
         data: {
           status: 'CANCELLED',
           endDate: new Date(),
         },
       })
 
-      logger.info('[WebhookService] Membership deactivated', { email })
+      logger.info('[WebhookService] Membership deactivated', { email: subscription.email })
 
       return {
         success: true,
@@ -691,7 +702,7 @@ export class WebhookService {
   }
 
   private async handleTeamMembershipDeactivated(
-    membership: any,
+    membership: MembershipPayload,
     email: string,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
@@ -718,7 +729,7 @@ export class WebhookService {
   }
 
   private async handleBusinessMembershipDeactivated(
-    membership: any,
+    membership: MembershipPayload,
     email: string,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
@@ -745,7 +756,7 @@ export class WebhookService {
   }
 
   private async handleMembershipUpdated(
-    membership: any,
+    membership: MembershipPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -761,6 +772,7 @@ export class WebhookService {
       const email = membership.user.email.toLowerCase().trim();
       const metadata = membership.metadata || {}
       const type = metadata.type || 'individual'
+      const userId = typeof metadata.user_id === 'string' ? metadata.user_id : undefined
       const planName = metadata.plan || membership.product?.title || 'PLUS'
 
       const interval = planName.toLowerCase().includes('monthly') ? 'month' :
@@ -768,12 +780,12 @@ export class WebhookService {
           planName.toLowerCase().includes('yearly') ? 'year' :
             planName.toLowerCase().includes('lifetime') ? 'lifetime' : 'month'
 
-      const status = membership.status.toUpperCase()
+      const status = membership.status?.toUpperCase()
       const endDate = parseWhopDate(membership.renewal_period_end)
 
       if (type === 'team') {
         await prisma.teamSubscription.updateMany({
-          where: { email },
+          where: userId ? { userId } : { email },
           data: {
             plan: planName.toUpperCase(),
             interval,
@@ -783,7 +795,7 @@ export class WebhookService {
         })
       } else if (type === 'business') {
         await prisma.businessSubscription.updateMany({
-          where: { email },
+          where: userId ? { userId } : { email },
           data: {
             plan: planName.toUpperCase(),
             interval,
@@ -792,8 +804,10 @@ export class WebhookService {
           }
         })
       } else {
+        // Prefer userId lookup over email
+        const lookupWhere = userId ? { userId } : { email }
         await prisma.subscription.update({
-          where: { email },
+          where: lookupWhere,
           data: {
             plan: planName.toUpperCase(),
             interval,
@@ -826,7 +840,7 @@ export class WebhookService {
   }
 
   private async handleMembershipTrialing(
-    membership: any,
+    membership: MembershipPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -842,12 +856,13 @@ export class WebhookService {
       const email = membership.user.email.toLowerCase().trim();
       const metadata = membership.metadata || {}
       const type = metadata.type || 'individual'
+      const userId = typeof metadata.user_id === 'string' ? metadata.user_id : undefined
 
       const trialEndsAt = parseWhopDate(membership.trial_period_end)
 
       if (type === 'team') {
         await prisma.teamSubscription.updateMany({
-          where: { email },
+          where: userId ? { userId } : { email },
           data: {
             status: 'PENDING',
             trialEndsAt
@@ -855,15 +870,16 @@ export class WebhookService {
         })
       } else if (type === 'business') {
         await prisma.businessSubscription.updateMany({
-          where: { email },
+          where: userId ? { userId } : { email },
           data: {
             status: 'PENDING',
             trialEndsAt
           }
         })
       } else {
+        const lookupWhere = userId ? { userId } : { email }
         await prisma.subscription.update({
-          where: { email },
+          where: lookupWhere,
           data: {
             status: 'PENDING',
             trialEndsAt,
@@ -890,7 +906,7 @@ export class WebhookService {
   }
 
   private async handlePaymentSucceeded(
-    payment: any,
+    payment: PaymentPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -965,7 +981,7 @@ export class WebhookService {
   }
 
   private async handlePaymentFailed(
-    payment: any,
+    payment: PaymentPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -1036,7 +1052,7 @@ export class WebhookService {
   }
 
   private async handlePaymentRefunded(
-    refund: any,
+    refund: RefundPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -1071,14 +1087,14 @@ export class WebhookService {
   }
 
   private async handlePaymentPartiallyRefunded(
-    refund: any,
+    refund: RefundPayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     return await this.handlePaymentRefunded(refund, prisma)
   }
 
   private async handleInvoiceCreated(
-    invoice: any,
+    invoice: InvoicePayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -1126,7 +1142,7 @@ export class WebhookService {
   }
 
   private async handleInvoicePaid(
-    invoice: any,
+    invoice: InvoicePayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {
@@ -1160,7 +1176,7 @@ export class WebhookService {
   }
 
   private async handleInvoicePaymentFailed(
-    invoice: any,
+    invoice: InvoicePayload,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     try {

@@ -19,7 +19,7 @@ export interface PlanConfig {
 
 export const PLAN_CONFIGS: Record<string, PlanConfig> = {
   monthly: {
-    id: process.env.NEXT_PUBLIC_WHOP_MONTHLY_PLAN_ID || 'plan_55MGVOxft6Ipz',
+    id: process.env.NEXT_PUBLIC_WHOP_MONTHLY_PLAN_ID || '',
     name: 'Monthly',
     lookupKey: 'monthly',
     amount: 2900,
@@ -28,7 +28,7 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
     features: ['Full platform access', 'Unlimited accounts', 'Priority support'],
   },
   quarterly: {
-    id: process.env.NEXT_PUBLIC_WHOP_6MONTH_PLAN_ID || 'plan_LqkGRNIhM2A2z',
+    id: process.env.NEXT_PUBLIC_WHOP_6MONTH_PLAN_ID || '',
     name: 'Quarterly',
     lookupKey: 'quarterly',
     amount: 7500,
@@ -37,7 +37,7 @@ export const PLAN_CONFIGS: Record<string, PlanConfig> = {
     features: ['Full platform access', 'Unlimited accounts', 'Priority support', 'Save 15%'],
   },
   yearly: {
-    id: process.env.NEXT_PUBLIC_WHOP_YEARLY_PLAN_ID || 'plan_JWhvqxtgDDqFf',
+    id: process.env.NEXT_PUBLIC_WHOP_YEARLY_PLAN_ID || '',
     name: 'Yearly',
     lookupKey: 'yearly',
     amount: 25000,
@@ -88,7 +88,10 @@ export class PaymentService {
         return { success: false, error: 'Invalid plan selected' }
       }
 
-      const companyId = process.env.WHOP_COMPANY_ID || 'biz_jh37YZGpH5dWIY'
+      const companyId = process.env.WHOP_COMPANY_ID
+      if (!companyId) {
+        return { success: false, error: 'Payment service not configured' }
+      }
 
       const checkoutMetadata: Record<string, unknown> = {
         user_id: userId,

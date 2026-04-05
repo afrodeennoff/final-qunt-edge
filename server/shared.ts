@@ -216,7 +216,11 @@ async function getSharedCached(slug: string): Promise<{ params: SharedParams, tr
         createdAt: true,
       }
     }),
-    prisma.tickDetails.findMany(),
+    prisma.tickDetails.findMany({
+      where: {
+        userId: shared.userId,
+      },
+    }),
     prisma.group.findMany({
       where: {
         userId: shared.userId,

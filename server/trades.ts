@@ -410,6 +410,17 @@ export interface PrecomputedStats {
   grossWin: number;
 }
 
+function formatAvgPositionTime(avgTimeSeconds: number): string {
+  const hours = Math.floor(avgTimeSeconds / 3600);
+  const minutesLeft = Math.floor((avgTimeSeconds % 3600) / 60);
+  const secondsLeft = Math.floor(avgTimeSeconds % 60);
+  return [
+    hours > 0 ? `${hours}h` : '',
+    `${minutesLeft}m`,
+    `${secondsLeft}s`
+  ].filter(Boolean).join(' ') || '0s';
+}
+
 function computeStatsFromTrades(trades: SerializedTrade[]): PrecomputedStats {
   if (!trades.length) {
     return {
@@ -584,17 +595,39 @@ async function loadTradesPage(
 
   // Compute stats on server for first page (most common case)
   if (computeStats && page === 1) {
-    // Fetch all trades for stats calculation (cached separately)
-    const allTrades = await prisma.trade.findMany({
-      where,
-      orderBy: { entryDate: 'desc' },
-      select: {
-        pnl: true,
-        commission: true,
-        timeInPosition: true,
-      }
-    })
-    result.statistics = computeStatsFromTrades(allTrades.map(serializeTrade))
+    // Use DB aggregation for sums/counts (avoids fetching all rows)
+    const [aggregated, pnlRows] = await Promise.all([
+      prisma.trade.aggregate({
+        where,
+        _sum: { pnl: true, commission: true, timeInPosition: true },
+        _count: true,
+      }),
+      // Fetch only ordered pnl values for winning streak calculation
+      prisma.trade.findMany({
+        where,
+        orderBy: { entryDate: 'desc' },
+        select: { pnl: true },
+      }),
+    ])
+
+    const tradesForStats = pnlRows.map((t) => ({
+      pnl: t.pnl?.toString() || '0',
+      commission: '0',
+      timeInPosition: '0',
+    })) as SerializedTrade[]
+
+    const stats = computeStatsFromTrades(tradesForStats)
+    // Override with DB-aggregated values for accuracy
+    result.statistics = {
+      ...stats,
+      cumulativeFees: Number(aggregated._sum.commission ?? 0),
+      cumulativePnl: Number(aggregated._sum.pnl ?? 0),
+      totalPositionTime: Number(aggregated._sum.timeInPosition ?? 0),
+      nbTrades: aggregated._count,
+      averagePositionTime: formatAvgPositionTime(
+        aggregated._count > 0 ? Number(aggregated._sum.timeInPosition ?? 0) / aggregated._count : 0
+      ),
+    }
   }
 
   return result

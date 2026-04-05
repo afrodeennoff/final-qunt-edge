@@ -114,9 +114,10 @@ class SecurityManager {
   }
 
   hashPII(data: string): string {
-    const hash = crypto.createHash('sha256')
-    hash.update(data + this.config.encryptionKey)
-    return hash.digest('hex')
+    return crypto
+      .createHmac('sha256', this.config.encryptionKey)
+      .update(data)
+      .digest('hex')
   }
 
   sanitizeInput(input: string): string {
