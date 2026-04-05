@@ -31,20 +31,13 @@ function jsonResponse(body: unknown, status = 200) {
   })
 }
 
-function errorResponse(
+function ocrError(
   requestId: string,
   status: number,
   error: string,
   code: string
-): Response {
-  return jsonResponse(
-    {
-      error: { code, message: error, details: { requestId } },
-      code,
-      requestId,
-    },
-    status,
-  )
+) {
+  return apiError(code, error, status, { requestId })
 }
 
 function normalizeAttachment(body: OCRRequestBody): Attachment | null {
@@ -129,11 +122,11 @@ export async function POST(request: Request) {
     const attachment = normalizeAttachment(json)
 
     if (!attachment) {
-      return errorResponse(requestId, 400, 'No file provided', 'IMPORT_FILE_MISSING')
+      return ocrError(requestId, 400, 'No file provided', 'IMPORT_FILE_MISSING')
     }
 
     if (attachment.type !== 'application/pdf') {
-      return errorResponse(requestId, 400, 'Invalid file type. Only PDF files are allowed.', 'IMPORT_FILE_TYPE_INVALID')
+      return ocrError(requestId, 400, 'Invalid file type. Only PDF files are allowed.', 'IMPORT_FILE_TYPE_INVALID')
     }
 
     let pdfBuffer: Buffer
@@ -144,15 +137,15 @@ export async function POST(request: Request) {
         requestId,
         error: error instanceof Error ? error.message : 'Unknown payload error',
       })
-      return errorResponse(requestId, 400, 'Invalid file content format', 'IMPORT_FILE_CONTENT_INVALID')
+      return ocrError(requestId, 400, 'Invalid file content format', 'IMPORT_FILE_CONTENT_INVALID')
     }
 
     if (pdfBuffer.length === 0) {
-      return errorResponse(requestId, 400, 'PDF file is empty', 'IMPORT_FILE_EMPTY')
+      return ocrError(requestId, 400, 'PDF file is empty', 'IMPORT_FILE_EMPTY')
     }
 
     if (pdfBuffer.length > MAX_PDF_BYTES) {
-      return errorResponse(
+      return ocrError(
         requestId,
         413,
         `PDF exceeds ${MAX_PDF_BYTES / (1024 * 1024)}MB size limit`,
@@ -163,7 +156,7 @@ export async function POST(request: Request) {
     const extractedText = await extractTextFromPdf(pdfBuffer)
 
     if (!extractedText || extractedText.startsWith('PDF processing failed:')) {
-      return errorResponse(
+      return ocrError(
         requestId,
         422,
         extractedText || 'PDF parsing produced no text',
@@ -177,6 +170,6 @@ export async function POST(request: Request) {
       requestId,
       error: error instanceof Error ? error.message : 'Unknown error',
     })
-    return errorResponse(requestId, 500, 'Failed to process request', 'IMPORT_OCR_INTERNAL_ERROR')
+    return ocrError(requestId, 500, 'Failed to process request', 'IMPORT_OCR_INTERNAL_ERROR')
   }
 }

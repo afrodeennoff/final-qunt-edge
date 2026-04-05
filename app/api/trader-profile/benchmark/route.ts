@@ -3,6 +3,7 @@ import { Prisma } from "@/prisma/generated/prisma"
 import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
 import { isPrismaSchemaMismatchError } from "@/lib/prisma-guard"
+import { apiError } from "@/lib/api-response"
 
 const sanitizeErrorMessage = (error: unknown): string => {
   if (error instanceof Error && error.message) {
@@ -180,11 +181,11 @@ export async function GET() {
     try {
       currentUserId = await getDatabaseUserId()
     } catch {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
 
     if (!currentUserId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
 
     let snapshotTableAvailable = true
@@ -286,6 +287,6 @@ export async function GET() {
       phase: "benchmark",
       errorMessage: sanitizeErrorMessage(error),
     })
-    return NextResponse.json({ error: "Failed to build benchmark" }, { status: 500 })
+    return apiError('INTERNAL_ERROR', 'Failed to build benchmark', 500)
   }
 }

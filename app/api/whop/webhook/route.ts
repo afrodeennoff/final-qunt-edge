@@ -7,7 +7,24 @@ import type { ErrorResponse } from "@/server/authz";
 
 export async function POST(req: NextRequest) {
     const requestId = crypto.randomUUID();
-    const requestBodyText = await req.text();
+    let requestBodyText: string;
+
+    try {
+        requestBodyText = await req.text();
+    } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to read request body";
+        logger.error('[Webhook] Failed to read request body', {
+            requestId,
+            error: message,
+        });
+        const response: ErrorResponse = {
+            error: "Failed to read request body",
+            code: "WEBHOOK_BODY_READ_ERROR",
+            requestId,
+        };
+        return NextResponse.json(response, { status: 400 });
+    }
+
     const headers = Object.fromEntries(req.headers);
 
     let event;

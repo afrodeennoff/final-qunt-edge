@@ -2,6 +2,7 @@ import { connection, NextResponse } from 'next/server'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { createRouteClient } from '@/lib/supabase/route-client'
+import { apiError } from '@/lib/api-response'
 
 export async function GET(request: Request) {
   // This endpoint requires request headers for auth; opt out of build-time prerender.
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
     const supabase = createRouteClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     if (authError || !user?.id) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+      return apiError('UNAUTHORIZED', 'Authentication required', 401)
     }
 
     const data = await getPropfirmCatalogueData('allTime')
@@ -41,6 +42,6 @@ export async function GET(request: Request) {
     })
   } catch (error) {
     console.warn('Error fetching propfirm stats:', error)
-    return NextResponse.json({ error: 'Failed to fetch propfirm statistics' }, { status: 500 })
+    return apiError('INTERNAL_ERROR', 'Failed to fetch propfirm statistics', 500)
   }
 }

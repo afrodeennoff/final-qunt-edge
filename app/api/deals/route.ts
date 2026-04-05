@@ -2,6 +2,25 @@ import { NextResponse } from 'next/server'
 import { getActiveDeals, type DealItem } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from './_auth'
+import { apiError } from '@/lib/api-response'
+import { z } from 'zod'
+
+const VALID_SORT_FIELDS = ['discountPercent', 'challengeFee', 'firmName', 'payoutModel', 'drawdownType', 'category', 'platform'] as const
+type SortField = (typeof VALID_SORT_FIELDS)[number]
+
+const dealsQuerySchema = z.object({
+  search: z.string().optional(),
+  market: z.enum(['Futures', 'Forex', 'Crypto']).optional(),
+  platform: z.enum(['Tradovate', 'Rithmic', 'MetaTrader 5', 'cTrader', 'DXtrade']).optional(),
+  payoutModel: z.enum(['Bi-weekly', 'Weekly', 'On-demand', 'Monthly']).optional(),
+  drawdownType: z.enum(['Trailing', 'Static', 'End-of-day']).optional(),
+  minFee: z.coerce.number().min(0).optional(),
+  maxFee: z.coerce.number().min(0).optional(),
+  sortBy: z.enum(VALID_SORT_FIELDS).default('discountPercent'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+  limit: z.coerce.number().int().min(1).max(200).default(DEFAULT_LIMIT),
+  offset: z.coerce.number().int().min(0).default(DEFAULT_OFFSET),
+})
 
 const DEFAULT_LIMIT = 50
 const DEFAULT_OFFSET = 0
@@ -27,19 +46,18 @@ export async function GET(request: Request) {
     }
 
     const searchParams = getSearchParams(request)
-    
-    // Extract query parameters
-    const search = searchParams.get('search') || ''
-    const market = searchParams.get('market') as 'Futures' | 'Forex' | 'Crypto' | null
-    const platform = searchParams.get('platform') as 'Tradovate' | 'Rithmic' | 'MetaTrader 5' | 'cTrader' | 'DXtrade' | null
-    const payoutModel = searchParams.get('payoutModel') as 'Bi-weekly' | 'Weekly' | 'On-demand' | 'Monthly' | null
-    const drawdownType = searchParams.get('drawdownType') as 'Trailing' | 'Static' | 'End-of-day' | null
-    const minFee = searchParams.get('minFee') ? parseFloat(searchParams.get('minFee')!) : null
-    const maxFee = searchParams.get('maxFee') ? parseFloat(searchParams.get('maxFee')!) : null
-    const sortBy = searchParams.get('sortBy') || 'discountPercent'
-    const sortOrder = (searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc'
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : DEFAULT_LIMIT
-    const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : DEFAULT_OFFSET
+    let params: z.infer<typeof dealsQuerySchema>
+    try {
+      params = dealsQuerySchema.parse(Object.fromEntries(searchParams.entries()))
+    } catch (validationError) {
+      if (validationError instanceof z.ZodError) {
+        return apiError('VALIDATION_FAILED', 'Invalid query parameters', 400, {
+          issues: validationError.errors,
+        })
+      }
+      throw validationError
+    }
+    const { search, market, platform, payoutModel, drawdownType, minFee, maxFee, sortBy, sortOrder, limit, offset } = params
     
     // Get all active deals
     const allDeals = await getActiveDeals()
@@ -72,11 +90,11 @@ export async function GET(request: Request) {
       }
       
       // Fee range filter
-      if (minFee !== null && deal.challengeFee < minFee) {
+      if (minFee !== undefined && deal.challengeFee < minFee) {
         return false
       }
       
-      if (maxFee !== null && deal.challengeFee > maxFee) {
+      if (maxFee !== undefined && deal.challengeFee > maxFee) {
         return false
       }
       
@@ -84,13 +102,13 @@ export async function GET(request: Request) {
     })
     
     // Apply sorting
+    const sortKey = sortBy as keyof DealItem
     filteredDeals.sort((a, b) => {
-      // Safely access properties using type assertion
-      const valueA = a[sortBy as keyof DealItem]
-      const valueB = b[sortBy as keyof DealItem]
+      const valueA = a[sortKey]
+      const valueB = b[sortKey]
       
       // Handle special sorting cases
-      if (sortBy === 'challengeFee') {
+      if (sortKey === 'challengeFee') {
         const feeA = (valueA as number) ?? 0
         const feeB = (valueB as number) ?? 0
         return sortOrder === 'asc' ? feeA - feeB : feeB - feeA
@@ -144,9 +162,6 @@ export async function GET(request: Request) {
     }
 
     logger.error('[api/deals] Error fetching active deals:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch deals' },
-      { status: 500 }
-    )
+    return apiError('INTERNAL_ERROR', 'Failed to fetch deals', 500)
   }
 }

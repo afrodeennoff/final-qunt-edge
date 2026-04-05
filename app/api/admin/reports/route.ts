@@ -112,7 +112,9 @@ export async function GET(req: NextRequest) {
     }
 
     if (isPrerenderInterruption(error)) {
-      return apiError('UNAUTHORIZED', 'Unauthorized', 401, { requestId })
+      // During static generation, cookies() is unavailable. Return an empty
+      // response so the build succeeds without caching real user data.
+      return NextResponse.json(null)
     }
 
     logger.error('[Admin Reports] Failed to generate report', { error })

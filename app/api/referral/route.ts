@@ -9,6 +9,7 @@ import {
   ReferralAlreadyAppliedError,
 } from '@/server/referral'
 import { logger } from '@/lib/logger'
+import { apiError } from '@/lib/api-response'
 import { parseJson } from '../_utils/validate'
 import { z } from 'zod'
 
@@ -33,10 +34,7 @@ export async function GET() {
     const userId = await getDatabaseUserId()
 
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
 
     // Get or create referral for the user
@@ -67,16 +65,10 @@ export async function GET() {
     )
   } catch (error) {
     if (isUnauthenticatedError(error)) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
     logger.error('[referral/GET] Error', { error })
-    return NextResponse.json(
-      { error: 'Failed to fetch referral data' },
-      { status: 500 }
-    )
+    return apiError('INTERNAL_ERROR', 'Failed to fetch referral data', 500)
   }
 }
 
@@ -87,28 +79,19 @@ export async function POST(req: NextRequest) {
     const userId = await getDatabaseUserId()
 
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
 
     // Find referral by slug
     const referral = await getReferralBySlug(slug)
 
     if (!referral) {
-      return NextResponse.json(
-        { error: 'Invalid referral code' },
-        { status: 404 }
-      )
+      return apiError('NOT_FOUND', 'Invalid referral code', 404)
     }
 
     // Check if user is trying to use their own referral code
     if (referral.userId === userId) {
-      return NextResponse.json(
-        { error: 'You cannot use your own referral code' },
-        { status: 400 }
-      )
+      return apiError('BAD_REQUEST', 'You cannot use your own referral code', 400)
     }
 
     await addReferredUser(referral.id, userId)
@@ -119,21 +102,12 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     if (isUnauthenticatedError(error)) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return apiError('UNAUTHORIZED', 'Unauthorized', 401)
     }
     if (error instanceof ReferralAlreadyAppliedError) {
-      return NextResponse.json(
-        { error: 'You have already been referred' },
-        { status: 400 }
-      )
+      return apiError('BAD_REQUEST', 'You have already been referred', 400)
     }
     logger.error('[referral/POST] Error', { error })
-    return NextResponse.json(
-      { error: 'Failed to apply referral code' },
-      { status: 500 }
-    )
+    return apiError('INTERNAL_ERROR', 'Failed to apply referral code', 500)
   }
 }

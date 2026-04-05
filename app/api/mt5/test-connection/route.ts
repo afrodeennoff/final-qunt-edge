@@ -73,8 +73,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('[mt5/test-connection] Error testing connection:', error)
     
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    
-    return apiError('INTERNAL_ERROR', errorMessage, 500, { requestId })
+    return apiError('INTERNAL_ERROR', 'Failed to test MT5 connection', 500, { requestId })
   }
 }

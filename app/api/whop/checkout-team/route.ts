@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { getWebsiteURL } from "@/server/auth";
 import { getWhop } from "@/lib/whop";
 import { createRouteClient } from "@/lib/supabase/route-client";
+import { apiError } from "@/lib/api-response";
+
+const TEAM_NAME_MAX_LENGTH = 100
+const TEAM_NAME_PATTERN = /^[a-zA-Z0-9\s\-_.]+$/
 
 function safeLocale(value: string | null | undefined): string {
     const raw = (value || "").trim().toLowerCase();
@@ -65,6 +69,13 @@ export async function POST(req: Request) {
     const teamName = body.get('teamName') as string | null;
     const locale = safeLocale(body.get('locale') as string | null);
 
+    // Validate teamName
+    if (teamName) {
+        if (teamName.length > TEAM_NAME_MAX_LENGTH || !TEAM_NAME_PATTERN.test(teamName)) {
+            return apiError('VALIDATION_FAILED', 'Invalid team name. Must be 1-100 characters, letters, numbers, spaces, hyphens, underscores, and dots only.', 400);
+        }
+    }
+
     const supabase = createRouteClient(req);
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -88,6 +99,13 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const teamName = searchParams.get('teamName');
     const locale = safeLocale(searchParams.get('locale'));
+
+    // Validate teamName
+    if (teamName) {
+        if (teamName.length > TEAM_NAME_MAX_LENGTH || !TEAM_NAME_PATTERN.test(teamName)) {
+            return apiError('VALIDATION_FAILED', 'Invalid team name. Must be 1-100 characters, letters, numbers, spaces, hyphens, underscores, and dots only.', 400);
+        }
+    }
 
     const supabase = createRouteClient(req);
     const { data: { user } } = await supabase.auth.getUser();

@@ -1,22 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep:*)",
-      "Bash(wc:*)",
-      "Bash(node:*)",
-      "Bash(ls:*)",
-      "Bash(mkdir:*)",
-      "Bash(cat:*)",
-      "Bash(rm:*)",
-      "Bash(head:*)",
+      "Bash(tree:*)",
       "Bash(find:*)",
-      "Bash(sed:*)",
-      "Bash(git:*)",
+      "Bash(cat:*)",
       "Bash(npx:*)",
-      "Bash(cd:*)",
-      "Bash(cd /Users/timon/Downloads/qunt-edge/server/webhook-service.ts tail -5)",
-      "mcp__acp__Edit",
-      "mcp__acp__Write"
+      "Bash(npx tsc:*)"
     ]
   },
   "enabledPlugins": {
