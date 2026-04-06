@@ -59,7 +59,7 @@ import {
 import { createClient } from "@/lib/supabase";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 
-import { signOut, getUserId, getDatabaseUserId, updateUserLanguage } from "@/server/auth";
+import { signOut, getUserId, updateUserLanguage } from "@/server/auth";
 import { DashboardLayoutWithWidgets, useUserStore } from "@/store/user-store";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 import { useFinancialEventsStore } from "@/store/financial-events-store";
@@ -601,7 +601,7 @@ export const DataProvider: React.FC<{
       }
 
       setSupabaseUser(user);
-      const userId = await withTimeout(getDatabaseUserId(), 15000, "getDatabaseUserId");
+      const userId = await withTimeout(getUserId(), 15000, "getUserId");
       if (activeUserIdRef.current && activeUserIdRef.current !== userId) {
         // Prevent transient cross-user UI bleed before the next user's snapshot loads.
         resetUserState();
@@ -921,7 +921,7 @@ export const DataProvider: React.FC<{
       if (withLoading) setIsLoading(true);
 
       try {
-        const userId = await getDatabaseUserId();
+        const userId = await getUserId();
         if (!userId) return;
 
         // Dev-only: serve trades from IndexedDB to avoid DB hits when possible
