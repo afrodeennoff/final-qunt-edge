@@ -839,6 +839,27 @@ export async function getDatabaseUserId(): Promise<string> {
         select: { id: true },
       })
     } catch (error) {
+      const isUniqueConstraintError =
+        (typeof error === 'object' &&
+          error !== null &&
+          'code' in error &&
+          (error as { code?: string }).code === 'P2002') ||
+        (error instanceof Error && error.message.includes('Unique constraint failed'))
+
+      if (isUniqueConstraintError) {
+        const existingByEmail = resolvedEmail
+          ? await prisma.user.findUnique({
+              where: { email: resolvedEmail },
+              select: { id: true },
+            })
+          : null
+
+        if (existingByEmail?.id) {
+          userIdCache.set(rawUserId, existingByEmail.id)
+          return { id: existingByEmail.id }
+        }
+      }
+
       if (!isPrismaSchemaMismatchError(error)) {
         throw error
       }
