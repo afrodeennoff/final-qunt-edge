@@ -155,28 +155,37 @@ export function PropFirmCatalogueExperience({
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(74,125,255,0.08),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card))_20%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <section className="grid gap-6 rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-6 shadow-[0_34px_110px_-70px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(860px_290px_at_14%_4%,hsl(var(--primary)/0.1),transparent_72%),radial-gradient(760px_260px_at_85%_4%,hsl(var(--accent)/0.09),transparent_74%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.22)_24%,hsl(var(--background))_100%)]">
+      <div className="mx-auto flex max-w-[1320px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <section className="grid gap-6 rounded-[2rem] border border-[hsl(var(--mk-border)/0.74)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-6 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               Prop firm catalogue
             </div>
-            <h1 className="mt-5 text-[clamp(2.4rem,6vw,5rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
+            <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.8rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
               {title}
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+            <p className="mt-4 max-w-2xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
               {description}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href={`/${locale}/deals`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
+              <Link
+                href={`/${locale}/deals`}
+                className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_16px_28px_-14px_hsl(var(--primary)/0.75)]"
+              >
                 Browse deals
               </Link>
-              <Link href={`/${locale}`} className="rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground">
+              <Link
+                href={`/${locale}`}
+                className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+              >
                 Back to home
               </Link>
-              <Link href={`/${locale}/best-trading-journal`} className="rounded-full border border-border bg-background/80 px-5 py-3 text-sm font-medium text-foreground">
+              <Link
+                href={`/${locale}/best-trading-journal`}
+                className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+              >
                 Best trading journal
               </Link>
             </div>
@@ -196,7 +205,7 @@ export function PropFirmCatalogueExperience({
 
             <RegisteredAccountsChart data={registeredAccountsChartData} />
 
-            <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+            <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.82)] p-5 shadow-[0_24px_60px_-44px_hsl(var(--foreground)/0.9)] sm:p-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
@@ -210,7 +219,7 @@ export function PropFirmCatalogueExperience({
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="rounded-xl border border-border/60 bg-background/70 px-4 py-4 transition-colors hover:bg-background"
+                  className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] px-4 py-4 transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.84)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -227,7 +236,7 @@ export function PropFirmCatalogueExperience({
           </>
         ) : null}
 
-        <section className="rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.56),hsl(var(--background)/0.46))] p-3 shadow-[0_18px_70px_-60px_rgba(0,0,0,0.95)] sm:p-4">
+        <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.82)] p-3 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.9)] sm:p-4">
           <div className="flex items-center gap-2">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/65" />
@@ -235,7 +244,7 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
-                className="h-9 w-full rounded-lg border border-border/60 bg-background/60 pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55"
+                className="h-9 w-full rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 focus:border-primary/35"
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -245,7 +254,7 @@ export function PropFirmCatalogueExperience({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="shrink-0 rounded-lg border border-border/60 bg-background/55 px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-card"
+                className="shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.75)] px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
               >
                 Reset
               </button>
@@ -253,7 +262,7 @@ export function PropFirmCatalogueExperience({
           </div>
         </section>
 
-        <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+        <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.82)] p-5 shadow-[0_24px_60px_-44px_hsl(var(--foreground)/0.9)] sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Catalogue board</p>
@@ -268,7 +277,7 @@ export function PropFirmCatalogueExperience({
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="group rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-5 transition-all hover:-translate-y-0.5 hover:border-foreground/15"
+                  className="group rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[linear-gradient(155deg,hsl(var(--mk-surface)/0.9),hsl(var(--mk-surface-muted)/0.68))] p-5 transition-all hover:-translate-y-0.5 hover:border-primary/25"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -283,7 +292,7 @@ export function PropFirmCatalogueExperience({
                           ? 'border-primary/30 bg-primary/10 text-primary'
                           : firm.category === 'Futures'
                             ? 'border-success/30 bg-success/10 text-success'
-                            : 'border-border bg-card text-muted-foreground'
+                            : 'border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.76)] text-muted-foreground'
                       }`}
                     >
                       {firm.category}
@@ -311,7 +320,7 @@ export function PropFirmCatalogueExperience({
                     />
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-border/60 pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-[hsl(var(--mk-border)/0.72)] pt-4">
                     <p className="max-w-[75%] text-sm text-muted-foreground">
                       {firm.stats.sizeBreakdown === 'No sized accounts'
                         ? `${firm.stats.accountsCount.toLocaleString()} accounts • ${formatCompactCurrency(firm.stats.totalAccountValue)} total`
@@ -346,8 +355,8 @@ function StatCard({
   icon: typeof Building2
 }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
+      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
@@ -368,9 +377,9 @@ function PayoutPill({
   variant: 'paid' | 'pending' | 'refused'
 }) {
   const borderStyles = {
-    paid: 'border-success/30 bg-[linear-gradient(135deg,hsl(var(--success)/0.14),hsl(var(--success)/0.05))]',
-    pending: 'border-warning/30 bg-[linear-gradient(135deg,hsl(var(--warning)/0.14),hsl(var(--warning)/0.05))]',
-    refused: 'border-destructive/30 bg-[linear-gradient(135deg,hsl(var(--destructive)/0.14),hsl(var(--destructive)/0.05))]',
+    paid: 'border-success/35 bg-[linear-gradient(135deg,hsl(var(--success)/0.18),hsl(var(--mk-surface-muted)/0.65))]',
+    pending: 'border-warning/35 bg-[linear-gradient(135deg,hsl(var(--warning)/0.16),hsl(var(--mk-surface-muted)/0.65))]',
+    refused: 'border-destructive/35 bg-[linear-gradient(135deg,hsl(var(--destructive)/0.16),hsl(var(--mk-surface-muted)/0.65))]',
   }
 
   const labelStyles = {
@@ -395,7 +404,7 @@ function PayoutPill({
   const countLabel = count === 0 ? 'No payouts' : `${count} payout${count === 1 ? '' : 's'}`
 
   return (
-    <div className={`rounded-3xl border px-4 py-3 ${borderStyles[variant]}`}>
+    <div className={`rounded-3xl border px-4 py-3 shadow-[0_14px_26px_-22px_hsl(var(--foreground)/0.85)] ${borderStyles[variant]}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className={`text-base font-medium ${labelStyles[variant]}`}>{label}</p>
@@ -467,8 +476,8 @@ function RegisteredAccountsChart({
   }
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/70 bg-[linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_100%)] shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)]">
-      <CardHeader className="border-b border-border/50 bg-[linear-gradient(180deg,hsl(var(--background)/0.55)_0%,transparent_100%)] px-6 pb-3 pt-4">
+    <Card className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.82)] shadow-[0_30px_66px_-48px_hsl(var(--foreground)/0.92)]">
+      <CardHeader className="border-b border-[hsl(var(--mk-border)/0.72)] bg-[linear-gradient(180deg,hsl(var(--mk-surface-muted)/0.62)_0%,transparent_100%)] px-6 pb-3 pt-4">
         <div className="flex flex-col gap-2">
           <div className="min-w-0">
             <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">Registered Accounts by Prop Firm</CardTitle>
@@ -477,7 +486,7 @@ function RegisteredAccountsChart({
             <span className="shrink-0 text-xs text-muted-foreground">
               {registeredAccountsChartConfig[activeMetric].label}
             </span>
-            <div className="inline-flex shrink-0 rounded-full border border-border/60 bg-background/70 p-1">
+            <div className="inline-flex shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.68)] p-1">
               {metricTabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -485,8 +494,8 @@ function RegisteredAccountsChart({
                   onClick={() => setActiveMetric(tab.key)}
                   className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                     activeMetric === tab.key
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
+                      : 'text-muted-foreground hover:bg-[hsl(var(--mk-surface-muted)/0.8)] hover:text-foreground'
                   }`}
                 >
                   {tab.label}
@@ -498,7 +507,7 @@ function RegisteredAccountsChart({
       </CardHeader>
       <CardContent className="pt-3">
         {chartData.length > 0 ? (
-          <div className="overflow-hidden rounded-3xl border border-border/60 bg-[linear-gradient(180deg,hsl(var(--background)/0.9)_0%,hsl(var(--card)/0.45)_100%)] p-3">
+          <div className="overflow-hidden rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-3">
             <ChartContainer config={registeredAccountsChartConfig} className="h-[360px] w-full overflow-hidden">
               <BarChart
                 accessibilityLayer

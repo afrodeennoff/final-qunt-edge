@@ -9,18 +9,36 @@ import DashboardPreview from './DashboardPreview'
 
 const ease = [0.25, 0.46, 0.45, 0.94]
 
-export default function Hero({ locale }: { locale: string }) {
+const capabilityCards = [
+  {
+    title: 'Execution Audits',
+    description: 'Spot quality drift before it hits your PnL',
+    tone:
+      'from-[hsl(var(--primary)/0.3)] via-[hsl(var(--primary)/0.16)] to-[hsl(var(--primary)/0.03)]',
+  },
+  {
+    title: 'AI Debriefs',
+    description: 'Session-level insights with actionable next steps',
+    tone:
+      'from-[hsl(var(--accent)/0.34)] via-[hsl(var(--primary)/0.15)] to-[hsl(var(--mk-surface-muted)/0.35)]',
+  },
+  {
+    title: 'Team Coaching',
+    description: 'Review setups, process, and risk with your desk',
+    tone:
+      'from-[hsl(var(--chart-2)/0.3)] via-[hsl(var(--primary)/0.12)] to-[hsl(var(--mk-surface-muted)/0.3)]',
+  },
+] as const
 
+export default function Hero({ locale }: { locale: string }) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-[68px] overflow-hidden">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-20 pt-[74px]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute inset-0 bg-mesh-animated opacity-40" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-primary/[0.08] blur-3xl animate-orb-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/[0.06] blur-3xl animate-orb-float" style={{ animationDelay: '-5s' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(1100px_450px_at_50%_-8%,hsl(var(--primary)/0.22),transparent_72%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(600px_280px_at_12%_18%,hsl(var(--accent)/0.15),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(580px_280px_at_86%_20%,hsl(var(--primary)/0.12),transparent_72%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.03)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--primary)/0.1),transparent)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:72px_72px] opacity-60" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_300px_at_85%_15%,hsl(var(--primary)/0.06),transparent_70%)]" />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
@@ -31,45 +49,39 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <BadgeV2
               variant="outline"
-              className="mb-8 border-[hsl(var(--mk-border)/0.5)] bg-[hsl(var(--mk-surface)/0.6)] backdrop-blur-sm rounded-full px-4 py-1.5 shadow-glow-primary"
+              className="mb-8 rounded-full border-[hsl(var(--primary)/0.24)] bg-[hsl(var(--mk-surface-muted)/0.8)] px-4 py-1.5 backdrop-blur-sm"
             >
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2" />
-              <span className="text-[0.78rem] tracking-wide text-muted-foreground">
-                Live Decision Telemetry
+              <span className="text-[0.75rem] tracking-[0.08em] text-muted-foreground">
+                Precision Trading Intelligence
               </span>
             </BadgeV2>
           </motion.div>
 
           <motion.h1
-            className="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold tracking-[-0.035em] leading-[1.05] mb-0 max-w-4xl text-foreground text-gradient-primary [font-family:var(--home-display)]"
+            className="max-w-4xl text-[clamp(2.45rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.032em] text-foreground [font-family:var(--home-display)]"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease }}
           >
-            Your next edge starts
-          </motion.h1>
-
-          <motion.h1
-            className="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold tracking-[-0.035em] leading-[1.05] mb-6 max-w-4xl bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent [font-family:var(--home-display)]"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease }}
-          >
-            with better decisions.
+            Audit execution quality.
+            <span className="mt-1 block bg-gradient-to-r from-primary via-primary/90 to-[hsl(var(--accent)/0.92)] bg-clip-text text-transparent">
+              Compound your edge.
+            </span>
           </motion.h1>
 
           <motion.p
-            className="text-[clamp(1rem,2vw,1.25rem)] text-muted-foreground/90 max-w-2xl mx-auto mb-8 leading-[1.7] [font-family:var(--home-copy)]"
+            className="mx-auto mb-8 mt-6 max-w-2xl text-[clamp(1rem,2vw,1.2rem)] leading-[1.5] text-muted-foreground/90 [font-family:var(--home-copy)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3, ease }}
           >
-            Qunt Edge isolates execution quality, behavioral drift, and risk discipline
-            in one surface.
+            Qunt Edge turns scattered trade data into a clear execution story, so you can
+            review decisions faster, coach better, and trade with tighter discipline.
           </motion.p>
 
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-3"
+            className="mb-2 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4, ease }}
@@ -78,7 +90,7 @@ export default function Hero({ locale }: { locale: string }) {
               <ButtonV2
                 asChild
                 size="lg"
-                className="bg-primary hover:bg-primary/90 btn-primary-glow rounded-xl px-7 h-12 text-[0.92rem] font-medium w-full sm:w-auto shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.5)]"
+                className="btn-primary-glow h-12 w-full rounded-full bg-primary px-8 text-[0.9rem] font-medium shadow-[0_16px_30px_-16px_hsl(var(--primary)/0.72)] hover:bg-primary/90 sm:w-auto"
               >
                 <Link href={`/${locale}/authentication?next=dashboard`}>
                   Start Free Audit
@@ -89,7 +101,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="border-border/60 hover:bg-card/80 rounded-xl px-7 h-12 text-[0.92rem] w-full sm:w-auto group transition-all duration-200"
+              className="group h-12 w-full rounded-full border-[hsl(var(--mk-border)/0.78)] bg-[hsl(var(--mk-surface)/0.58)] px-8 text-[0.9rem] transition-all duration-200 hover:bg-[hsl(var(--mk-surface-muted)/0.72)] sm:w-auto"
             >
               <a href="#how-it-works">
                 Watch Demo
@@ -99,13 +111,38 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.div>
 
           <motion.p
-            className="text-[0.78rem] text-muted-foreground/50 tracking-wide mb-10"
+            className="mb-10 text-[0.78rem] tracking-wide text-muted-foreground/55"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.45 }}
           >
             No credit card · First audit in minutes
           </motion.p>
+
+          <motion.div
+            className="mb-10 grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-3"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.5, ease }}
+          >
+            {capabilityCards.map((card) => (
+              <div
+                key={card.title}
+                className="rounded-3xl border border-[hsl(var(--mk-border)/0.8)] bg-[hsl(var(--mk-surface)/0.82)] p-4 text-left shadow-[0_20px_36px_-28px_hsl(var(--foreground)/0.75)]"
+              >
+                <div
+                  className={`rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-gradient-to-br ${card.tone} px-3 py-2`}
+                >
+                  <p className="text-[0.74rem] font-medium uppercase tracking-[0.12em] text-foreground/88">
+                    {card.title}
+                  </p>
+                  <p className="mt-1 text-[0.82rem] leading-relaxed text-foreground/72">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
 
           <motion.div
             className="w-full"
@@ -127,10 +164,10 @@ export default function Hero({ locale }: { locale: string }) {
                 className="relative"
               >
                 <div
-                  className="absolute -inset-4 rounded-3xl opacity-100 blur-2xl"
+                  className="absolute -inset-6 rounded-3xl opacity-100 blur-2xl"
                   style={{
                     boxShadow:
-                      '0 40px 80px -20px hsl(var(--primary)/0.15)',
+                      '0 42px 90px -24px hsl(var(--primary)/0.2)',
                   }}
                 />
                 <DashboardPreview />
@@ -145,15 +182,15 @@ export default function Hero({ locale }: { locale: string }) {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, ease }}
           >
-            <p className="mb-4 text-center text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/40 [font-family:var(--home-copy)]">
-              Connects with your broker
+            <p className="mb-4 text-center text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/48 [font-family:var(--home-copy)]">
+              Trusted broker integrations
             </p>
-            <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
               {['Tradovate', 'Rithmic', 'IBKR', 'CQG', 'NinjaTrader'].map(
                 (broker) => (
                   <span
                     key={broker}
-                    className="text-[0.82rem] font-medium tracking-wide text-muted-foreground/50 transition-colors hover:text-foreground/80 [font-family:var(--home-display)]"
+                    className="rounded-full border border-[hsl(var(--mk-border)/0.74)] bg-[hsl(var(--mk-surface)/0.6)] px-3 py-1.5 text-[0.78rem] font-medium tracking-wide text-muted-foreground/65 transition-colors hover:text-foreground/90 [font-family:var(--home-display)]"
                   >
                     {broker}
                   </span>

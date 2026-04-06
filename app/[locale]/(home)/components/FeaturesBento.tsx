@@ -37,6 +37,8 @@ const problems = [
     description:
       'Scattered across brokers, spreadsheets, and memory — never analysis.',
     solution: 'Advanced Analytics',
+    tone:
+      'from-[hsl(var(--primary)/0.16)] via-[hsl(var(--mk-surface-muted)/0.35)] to-transparent',
   },
   {
     badge: 'Repeating Mistakes',
@@ -45,6 +47,8 @@ const problems = [
     description:
       'No structured review means no improvement loop. Patterns stay invisible.',
     solution: 'AI Insights',
+    tone:
+      'from-[hsl(var(--accent)/0.18)] via-[hsl(var(--primary)/0.14)] to-transparent',
   },
   {
     badge: 'Team Isolation',
@@ -53,6 +57,8 @@ const problems = [
     description:
       'Siloed data makes performance gaps invisible until they cost you.',
     solution: 'Team Sync',
+    tone:
+      'from-[hsl(var(--chart-2)/0.16)] via-[hsl(var(--primary)/0.12)] to-transparent',
   },
 ] as const
 
@@ -66,6 +72,8 @@ const features = [
       'Decile analysis, heatmaps, and custom metrics that expose what PnL hides.',
     colSpan: 'lg:col-span-2',
     highlighted: false,
+    tone:
+      'from-[hsl(var(--primary)/0.18)] via-[hsl(var(--mk-surface-muted)/0.4)] to-transparent',
   },
   {
     icon: Brain,
@@ -74,6 +82,8 @@ const features = [
       'Pattern recognition, behavioral analysis, and explainable AI that turns raw trades into a coaching system.',
     colSpan: 'lg:col-span-2',
     highlighted: true,
+    tone:
+      'from-[hsl(var(--accent)/0.2)] via-[hsl(var(--primary)/0.16)] to-transparent',
   },
   {
     icon: Users,
@@ -82,6 +92,8 @@ const features = [
       'Share layouts, compare performance, and accelerate improvement together.',
     colSpan: 'lg:col-span-1',
     highlighted: false,
+    tone:
+      'from-[hsl(var(--chart-2)/0.16)] via-[hsl(var(--mk-surface-muted)/0.34)] to-transparent',
   },
   {
     icon: Download,
@@ -90,6 +102,8 @@ const features = [
       'Connect Tradovate, Rithmic, IBKR, or import CSV. Your data, your way.',
     colSpan: 'lg:col-span-3',
     highlighted: false,
+    tone:
+      'from-[hsl(var(--primary)/0.16)] via-[hsl(var(--mk-surface-muted)/0.36)] to-transparent',
   },
   {
     icon: FileText,
@@ -98,6 +112,8 @@ const features = [
       'PDF briefs and shareable reports for structured mentorship sessions.',
     colSpan: 'lg:col-span-2',
     highlighted: false,
+    tone:
+      'from-[hsl(var(--accent)/0.16)] via-[hsl(var(--mk-surface-muted)/0.3)] to-transparent',
   },
   {
     icon: Shield,
@@ -106,6 +122,8 @@ const features = [
       'Bank-grade encryption and SOC2 compliance protect every trade you upload.',
     colSpan: 'lg:col-span-2',
     highlighted: false,
+    tone:
+      'from-[hsl(var(--chart-2)/0.14)] via-[hsl(var(--primary)/0.08)] to-transparent',
   },
 ] as const
 
@@ -117,36 +135,48 @@ const aiFeatures = [
     description:
       'Flags subtle shifts in risk behavior and setup quality before they become drawdowns.',
     icon: Radar,
+    tone:
+      'from-[hsl(var(--primary)/0.14)] via-[hsl(var(--mk-surface-muted)/0.26)] to-transparent',
   },
   {
     title: 'AI Session Debrief',
     description:
       'Creates concise recaps of what worked, what broke, and what to adjust next session.',
     icon: Bot,
+    tone:
+      'from-[hsl(var(--accent)/0.16)] via-[hsl(var(--primary)/0.08)] to-transparent',
   },
   {
     title: 'Execution Quality Score',
     description:
       'Scores trades against your ruleset so process wins are visible, even on flat PnL days.',
     icon: Brain,
+    tone:
+      'from-[hsl(var(--primary)/0.16)] via-[hsl(var(--mk-surface-muted)/0.26)] to-transparent',
   },
   {
     title: 'Playbook Auto-Builder',
     description:
       'Converts your best sessions into reusable setup templates and checklist-ready plans.',
     icon: Sparkles,
+    tone:
+      'from-[hsl(var(--accent)/0.14)] via-[hsl(var(--chart-2)/0.12)] to-transparent',
   },
   {
     title: 'Risk Intervention Alerts',
     description:
       'Escalates coaching prompts when sizing, frequency, or emotional variance crosses limits.',
     icon: ShieldAlert,
+    tone:
+      'from-[hsl(var(--primary)/0.12)] via-[hsl(var(--mk-surface-muted)/0.28)] to-transparent',
   },
   {
     title: 'Weekly Performance Briefs',
     description:
       'Auto-compiles concise weekly reports for self-review, mentors, or desk standups.',
     icon: Bot,
+    tone:
+      'from-[hsl(var(--chart-2)/0.14)] via-[hsl(var(--primary)/0.09)] to-transparent',
   },
 ] as const
 
@@ -159,12 +189,17 @@ function ProblemCard({ problem }: { problem: Problem }) {
       variant="subtle"
       hover
       size="sm"
-      className="relative overflow-hidden h-full"
+      className="relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.8)] bg-[hsl(var(--mk-surface)/0.88)] shadow-[0_18px_34px_-26px_hsl(var(--foreground)/0.75)]"
     >
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-destructive/20 bg-destructive/[0.06]">
-        <Icon className="h-4 w-4 text-destructive/80" />
+      <div className={`absolute inset-x-0 top-0 h-20 bg-gradient-to-b ${problem.tone}`} />
+      <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10">
+        <Icon className="h-4 w-4 text-primary" />
       </div>
-      <BadgeV2 variant="error" size="sm" className="mb-3">
+      <BadgeV2
+        variant="outline"
+        size="sm"
+        className="mb-3 rounded-full border-primary/30 bg-primary/10 text-primary"
+      >
         {problem.badge}
       </BadgeV2>
       <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
@@ -173,7 +208,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
       <p className="mt-2 text-[0.82rem] leading-relaxed text-muted-foreground/70 [font-family:var(--home-copy)]">
         {problem.description}
       </p>
-      <div className="mt-3 flex items-center gap-1.5 text-[0.78rem] font-medium text-primary">
+      <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[0.76rem] font-medium text-primary">
         <ArrowRight className="w-3 h-3" />
         <span>{problem.solution}</span>
       </div>
@@ -189,11 +224,12 @@ function FeatureCard({ feature }: { feature: Feature }) {
       variant="strong"
       hover
       size="md"
-      className={`relative overflow-hidden h-full${feature.highlighted ? ' border-primary/25 shadow-[0_0_32px_-12px_hsl(var(--primary)/0.15)]' : ''}`}
+      className={`relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.8)] bg-[hsl(var(--mk-surface)/0.92)] ${feature.highlighted ? 'border-primary/35 shadow-[0_0_40px_-20px_hsl(var(--primary)/0.45)]' : 'shadow-[0_20px_38px_-30px_hsl(var(--foreground)/0.75)]'}`}
     >
-      <div className="mb-4 inline-flex items-center justify-center rounded-xl w-12 h-12">
-        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex items-center justify-center rounded-xl w-12 h-12 border border-primary/40 bg-primary/10">
+      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.tone}`} />
+      <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 rounded-2xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/38 bg-primary/10">
           <Icon className="w-5 h-5 text-primary" />
         </div>
       </div>
@@ -202,16 +238,16 @@ function FeatureCard({ feature }: { feature: Feature }) {
         <BadgeV2
           variant="outline"
           size="sm"
-          className="mb-2 border-primary/40 bg-primary/10 text-primary"
+          className="mb-2 rounded-full border-primary/38 bg-primary/10 text-primary"
         >
           AI-Powered
         </BadgeV2>
       )}
 
-      <h3 className="text-lg font-semibold text-gradient-primary [font-family:var(--home-display)]">
+      <h3 className="relative text-lg font-medium text-gradient-primary [font-family:var(--home-display)]">
         {feature.title}
       </h3>
-      <p className="mt-1.5 text-[0.88rem] text-muted-foreground/70 leading-relaxed [font-family:var(--home-copy)]">
+      <p className="relative mt-1.5 text-[0.88rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
     </GlassCard>
@@ -226,18 +262,19 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
       variant="subtle"
       hover
       size="sm"
-      className="relative overflow-hidden h-full bg-gradient-to-br from-primary/[0.06] to-transparent"
+      className="relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.78)] bg-[hsl(var(--mk-surface)/0.88)]"
     >
-      <div className="mb-3 inline-flex items-center justify-center rounded-xl w-10 h-10">
-        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex items-center justify-center rounded-xl w-10 h-10 border border-primary/40 bg-primary/10">
+      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.tone}`} />
+      <div className="relative mb-3 inline-flex h-10 w-10 items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 rounded-2xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/40 bg-primary/10">
           <Icon className="w-4 h-4 text-primary" />
         </div>
       </div>
-      <h3 className="text-[0.95rem] font-semibold text-foreground [font-family:var(--home-display)]">
+      <h3 className="relative text-[0.95rem] font-medium text-foreground [font-family:var(--home-display)]">
         {feature.title}
       </h3>
-      <p className="mt-1.5 text-[0.82rem] leading-relaxed text-muted-foreground/70 [font-family:var(--home-copy)]">
+      <p className="relative mt-1.5 text-[0.82rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
     </GlassCard>
@@ -250,16 +287,16 @@ export default function FeaturesBento() {
       <MotionSection className={BORDER_SECTION}>
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-14 lg:mb-20"
+            className="mb-14 text-center lg:mb-20"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
           >
             <p
-              className={`${TYPO_EYEBROW} text-muted-foreground/60 mb-3 [font-family:var(--home-copy)]`}
+              className={`${TYPO_EYEBROW} mb-3 text-muted-foreground/62 [font-family:var(--home-copy)]`}
             >
-              The Solution
+              Platform Capabilities
             </p>
             <h2
               className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
@@ -269,7 +306,7 @@ export default function FeaturesBento() {
                 trade smarter
               </span>
             </h2>
-            <p className="mt-4 text-[0.95rem] sm:text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="mx-auto mt-4 max-w-2xl text-[0.95rem] leading-[1.5] text-muted-foreground/72 sm:text-lg">
               Whether you&apos;re protecting a funded account or sharpening your personal
               edge — analytics, AI coaching, and team collaboration in one platform.
             </p>
@@ -287,7 +324,7 @@ export default function FeaturesBento() {
           </MotionStagger>
 
           <div className="mb-8">
-            <BadgeV2 variant="accent" size="sm">
+            <BadgeV2 variant="accent" size="sm" className="rounded-full px-3">
               Features
             </BadgeV2>
           </div>
@@ -307,7 +344,7 @@ export default function FeaturesBento() {
             <BadgeV2
               variant="outline"
               size="sm"
-              className="border-primary/35 bg-primary/10 text-primary"
+              className="rounded-full border-primary/35 bg-primary/10 px-3 text-primary"
             >
               AI-Powered
             </BadgeV2>
@@ -324,15 +361,15 @@ export default function FeaturesBento() {
             ))}
           </MotionStagger>
 
-          <div className="mt-4 rounded-2xl border border-primary/20 bg-primary/[0.05] p-6">
+          <div className="mt-5 rounded-3xl border border-primary/25 bg-[linear-gradient(135deg,hsl(var(--primary)/0.08),hsl(var(--accent)/0.06)_55%,hsl(var(--mk-surface-muted)/0.2))] p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="text-[hsl(var(--muted-foreground)/0.85)] text-sm leading-[1.5]">
                 AI decisions stay auditable with a transparent reason trail, so
                 every recommendation can be reviewed.
               </p>
               <BadgeV2
                 variant="outline"
-                className="w-fit shrink-0 border-primary/35 bg-primary/10 text-primary"
+                className="w-fit shrink-0 rounded-full border-primary/35 bg-primary/10 text-primary"
               >
                 Explainable AI
               </BadgeV2>

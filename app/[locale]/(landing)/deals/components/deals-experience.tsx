@@ -103,24 +103,21 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-[68px] z-40 border-b border-border bg-background/80 backdrop-blur">
+    <nav className="sticky top-[68px] z-40 border-b border-[hsl(var(--mk-border)/0.68)] bg-[hsl(var(--background)/0.82)] backdrop-blur">
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        <div className="-mb-px flex gap-1 overflow-x-auto scrollbar-none">
+        <div className="my-2 flex gap-1.5 overflow-x-auto rounded-full border border-[hsl(var(--mk-border)/0.75)] bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => onTabClick(tab.id)}
-              className={`relative whitespace-nowrap px-4 py-3 text-sm font-medium transition-colors sm:px-5 ${
+              className={`relative whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-medium transition-all sm:px-5 ${
                 activeTab === tab.id
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-[hsl(var(--mk-surface-muted)/0.95)] text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.22),0_12px_24px_-18px_hsl(var(--primary)/0.55)]'
+                  : 'text-muted-foreground hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:text-foreground'
               }`}
             >
               {tab.label}
-              {activeTab === tab.id && (
-                <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-primary" />
-              )}
             </button>
           ))}
         </div>
@@ -442,7 +439,7 @@ function DealsBoard({
   const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[radial-gradient(900px_280px_at_15%_0%,hsl(var(--primary)/0.11),transparent_72%),radial-gradient(860px_260px_at_85%_2%,hsl(var(--accent)/0.1),transparent_72%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.22)_26%,hsl(var(--background))_100%)]">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
       </div>
@@ -528,38 +525,38 @@ function DealsTabSections({
   return (
     <>
       {/* ── Matchup ── */}
-      <section id="matchup" className="scroll-mt-[120px] py-16 sm:py-20">
+      <section id="matchup" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3">Matchup</BadgeV2>
-            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Compare prop firm tradeoffs before you pay</h2>
+            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Matchup</BadgeV2>
+            <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Compare prop firm tradeoffs before you pay</h2>
             <p className="mt-3 text-muted-foreground">Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.</p>
           </div>
           <div className="mx-auto mb-6 grid max-w-2xl grid-cols-3 gap-3">
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
               <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Models</p>
               <p className="mt-1 text-lg font-bold text-foreground">3</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">View</p>
               <p className="mt-1 text-lg font-bold text-foreground">Live</p>
             </div>
           </div>
           <FirmComparisonGrid firms={firms} />
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
               <h3 className="text-base font-semibold text-foreground">1. Set max month-one spend</h3>
               <p className="mt-2 text-sm text-muted-foreground">Include evaluation fee, any likely retry budget, and platform costs.</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
               <h3 className="text-base font-semibold text-foreground">2. Pick executable drawdown</h3>
               <p className="mt-2 text-sm text-muted-foreground">Favor rule sets you can consistently follow during volatile sessions.</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
               <h3 className="text-base font-semibold text-foreground">3. Align payout cadence</h3>
               <p className="mt-2 text-sm text-muted-foreground">Match payout timing with your capital recycling and scaling plan.</p>
             </div>
@@ -568,57 +565,57 @@ function DealsTabSections({
       </section>
 
       {/* ── Cost Planner ── */}
-      <section id="cost-planner" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+      <section id="cost-planner" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3">Cost Planner</BadgeV2>
-            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Model your evaluation cost before you start</h2>
+            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Cost Planner</BadgeV2>
+            <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Model your evaluation cost before you start</h2>
             <p className="mt-3 text-muted-foreground">Set realistic expectations for resets, platform costs, and payout targets.</p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Input Layer</p>
               <p className="mt-1 font-semibold text-foreground">Fees + resets</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Output Layer</p>
               <p className="mt-1 font-semibold text-foreground">Net after costs</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Risk Layer</p>
               <p className="mt-1 font-semibold text-foreground">Ratio signal</p>
             </div>
           </div>
           <EvalCostCalculator />
-          <div className="mt-6 rounded-2xl border border-border bg-card p-5 sm:p-6">
+          <div className="mt-6 rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.82)] p-5 sm:p-6">
             <h3 className="text-lg font-semibold text-foreground">Interpretation tips</h3>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">If your cost-to-payout ratio rises above 40%, reconsider account size, reset assumptions, or execution pace.</li>
-              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">Use the Matchup tab to cross-check whether a different drawdown model can reduce expected reset frequency.</li>
-              <li className="rounded-lg border border-border bg-background/50 px-3 py-2">Pair this with the Playbooks tab to align risk rules with the same assumptions entered here.</li>
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">If your cost-to-payout ratio rises above 40%, reconsider account size, reset assumptions, or execution pace.</li>
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Use the Matchup tab to cross-check whether a different drawdown model can reduce expected reset frequency.</li>
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Pair this with the Playbooks tab to align risk rules with the same assumptions entered here.</li>
             </ul>
           </div>
         </div>
       </section>
 
       {/* ── Playbooks ── */}
-      <section id="playbooks" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+      <section id="playbooks" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3">Playbooks</BadgeV2>
-            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Prop firm playbooks for disciplined execution</h2>
+            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Playbooks</BadgeV2>
+            <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Prop firm playbooks for disciplined execution</h2>
             <p className="mt-3 text-muted-foreground">Convert policy language into concrete actions you can execute during evaluation and funded phases.</p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Focus</p>
               <p className="mt-1 font-semibold text-foreground">Execution Quality</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Mode</p>
               <p className="mt-1 font-semibold text-foreground">Actionable Steps</p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-3 text-center">
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
               <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Outcome</p>
               <p className="mt-1 font-semibold text-foreground">Lower Rule Breaches</p>
             </div>
@@ -628,21 +625,21 @@ function DealsTabSections({
       </section>
 
       {/* ── Help / FAQ ── */}
-      <section id="help" className="scroll-mt-[120px] border-t border-border py-16 sm:py-20">
+      <section id="help" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3">Help</BadgeV2>
-            <h2 className="text-3xl font-bold text-foreground sm:text-4xl">Deals FAQ</h2>
+            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Help</BadgeV2>
+            <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Deals FAQ</h2>
             <p className="mt-3 text-muted-foreground">Everything on this page is specific to how Qunt Edge presents and maintains prop firm deal information.</p>
           </div>
           <div className="mb-4 flex flex-wrap gap-2">
             {['Deals basics', 'Offer updates', 'Risk fit', 'Support'].map((chip) => (
-              <span key={chip} className="rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">{chip}</span>
+              <span key={chip} className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.68)] px-3 py-1 text-xs text-muted-foreground">{chip}</span>
             ))}
           </div>
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
-              <AccordionItem key={item.question} value={`item-${index}`} className="mb-3 rounded-xl border border-border bg-card px-4">
+              <AccordionItem key={item.question} value={`item-${index}`} className="mb-3 rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] px-4">
                 <AccordionTrigger className="py-4 text-left text-base font-semibold text-foreground hover:no-underline">
                   {item.question}
                 </AccordionTrigger>
@@ -891,7 +888,7 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+    <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_24px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Browse all live deals</p>
@@ -915,7 +912,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+        <div className="mt-6 rounded-3xl border border-dashed border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-8 text-center text-sm text-muted-foreground">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -933,26 +930,35 @@ function DealsHero({
   overview: DealsOverview
 }) {
   return (
-    <section className="grid gap-6 rounded-3xl border border-border bg-card p-5 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-7">
+    <section className="grid gap-6 rounded-[2rem] border border-[hsl(var(--mk-border)/0.74)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-5 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
       <div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
         </div>
-        <h1 className="mt-5 text-[clamp(2.4rem,6vw,5.2rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
+        <h1 className="mt-5 text-[clamp(2.25rem,5.4vw,4.8rem)] font-medium leading-[0.98] tracking-[-0.04em] text-foreground">
           Open current promos without losing the firm context.
         </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+        <p className="mt-4 max-w-2xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
           Browse active challenge discounts, compare pricing by market and firm, and move straight into the firm record when you want more context.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={`${localePrefix}/propfirms`} className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
+          <Link
+            href={`${localePrefix}/propfirms`}
+            className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_16px_28px_-14px_hsl(var(--primary)/0.75)]"
+          >
             Compare firms
           </Link>
-          <Link href={`${localePrefix}/deals/compare`} className="rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-foreground">
+          <Link
+            href={`${localePrefix}/deals/compare`}
+            className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+          >
             Compare pricing
           </Link>
-          <Link href={`${localePrefix}/best-trading-journal`} className="rounded-full border border-border bg-card px-5 py-3 text-sm font-medium text-foreground">
+          <Link
+            href={`${localePrefix}/best-trading-journal`}
+            className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+          >
             Best trading journal guide
           </Link>
         </div>
@@ -1009,7 +1015,7 @@ function DealsFilterPanel({
 }) {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+      <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_26px_60px_-44px_hsl(var(--foreground)/0.9)]">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -1017,7 +1023,7 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-11 w-full rounded-xl border border-border bg-card pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/20"
+              className="h-11 w-full rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/35"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -1035,8 +1041,8 @@ function DealsFilterPanel({
                 onClick={() => onDiscountChange(option.value)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   selectedDiscount === option.value
-                    ? 'border-foreground/15 bg-foreground text-background'
-                    : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                    ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
+                    : 'border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1051,8 +1057,8 @@ function DealsFilterPanel({
                 onClick={() => onSortChange(item.key)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                   sortKey === item.key
-                    ? 'border-foreground/15 bg-foreground text-background'
-                    : 'border-border bg-card text-muted-foreground hover:text-foreground'
+                    ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
+                    : 'border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -1062,12 +1068,12 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-dashed border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[hsl(var(--mk-border)/0.75)] bg-[hsl(var(--mk-surface-muted)/0.6)] px-4 py-3 text-sm text-muted-foreground">
             <span>The deal board is narrowed right now. Reset to return to the full live tape.</span>
             <button
               type="button"
               onClick={onResetFilters}
-              className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-input"
+              className="rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
             >
               Reset filters
             </button>
@@ -1075,21 +1081,21 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+      <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_26px_60px_-44px_hsl(var(--foreground)/0.9)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Board snapshot</p>
         <div className="mt-4 space-y-3">
           <RadarRow label="Futures coverage" value={`${spotlights.futures.length} spotlights`} />
           <RadarRow label="CFD coverage" value={`${spotlights.cfd.length} spotlights`} />
           <RadarRow label="Last refreshed" value={lastUpdated ?? spotlights.updatedAt} />
         </div>
-        <div className="mt-5 rounded-xl border border-border bg-card p-4">
+        <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.62)] p-4">
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Top payout firms</p>
           <div className="mt-3 space-y-2">
             {topFirms.map((firm) => (
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
-                className="flex items-center justify-between rounded-xl border border-border bg-input px-3 py-2 text-sm transition-colors hover:bg-card"
+                className="flex items-center justify-between rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-sm transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.7)]"
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
                 <span className="text-muted-foreground">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</span>
@@ -1097,14 +1103,14 @@ function DealsFilterPanel({
             ))}
           </div>
         </div>
-        <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-4">
+        <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.62)] px-4 py-4">
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Need policy context?</p>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">The FAQ covers verification, timing, and risk-fit questions.</p>
           </div>
           <Link
             href={`${localePrefix}/deals/faq`}
-            className="shrink-0 rounded-full border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-input"
+            className="shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
           >
             FAQ
           </Link>
@@ -1130,7 +1136,7 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-5 shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)] sm:p-6">
+    <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_24px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-6">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{title}</p>
       <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
@@ -1159,10 +1165,10 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group rounded-2xl border border-border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/15">
+    <div className="group rounded-3xl border border-[hsl(var(--mk-border)/0.74)] bg-[linear-gradient(155deg,hsl(var(--mk-surface)/0.9),hsl(var(--mk-surface-muted)/0.66))] p-4 transition-all hover:-translate-y-0.5 hover:border-primary/25">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="inline-flex items-center rounded-full border border-border bg-input px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="inline-flex items-center rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.78)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {deal.category}
           </div>
           <h3 className="mt-3 text-lg font-semibold text-foreground">{deal.firmName}</h3>
@@ -1170,8 +1176,8 @@ function DealCard({
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-2xl border border-success/30 bg-success/10 px-3 py-2 text-right">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Discount</p>
+        <div className="rounded-2xl border border-primary/30 bg-primary/10 px-3 py-2 text-right">
+          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Discount</p>
           <p className="mt-1 text-xl font-semibold text-foreground">{deal.discountPercent}%</p>
         </div>
       </div>
@@ -1187,14 +1193,14 @@ function DealCard({
         <button
           type="button"
           onClick={() => onCopyCode(deal.couponCode)}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-input px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
         >
           <Copy className="h-4 w-4" />
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
         <Link
           href={firmHref}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-input px-4 py-2 text-sm font-medium text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
         >
           View firm
         </Link>
@@ -1203,7 +1209,7 @@ function DealCard({
             href={claimHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[0_14px_24px_-14px_hsl(var(--primary)/0.8)]"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
@@ -1211,7 +1217,7 @@ function DealCard({
         ) : (
           <Link
             href={claimHref}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-[0_14px_24px_-14px_hsl(var(--primary)/0.8)]"
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
@@ -1232,8 +1238,8 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.75)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
+      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
@@ -1244,8 +1250,8 @@ function StatCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-input p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-3">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
     </div>
   )
@@ -1253,7 +1259,7 @@ function StatPill({ label, value }: { label: string; value: string }) {
 
 function RadarRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-3">
+    <div className="flex items-center justify-between rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-3">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-foreground">{value}</span>
     </div>
@@ -1270,8 +1276,8 @@ function InsightCard({
   helper: string
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-[0_18px_80px_-65px_rgba(0,0,0,0.95)]">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.92)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
       <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{helper}</p>
     </div>
@@ -1291,7 +1297,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-11 rounded-xl border border-border bg-card px-4 text-sm text-foreground outline-none"
+      className="h-11 rounded-full border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.7)] px-4 text-sm text-foreground outline-none transition-colors focus:border-primary/35"
     >
       {options.map((option) => (
         <option key={option} value={option}>

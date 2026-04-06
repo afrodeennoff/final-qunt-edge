@@ -1,33 +1,87 @@
-"use client";
+'use client'
 
-import dynamic from "next/dynamic";
-import { UnifiedPageShell, UnifiedSurface } from "@/components/layout/unified-page-shell";
+import dynamic from 'next/dynamic'
+import { ShieldCheck, Sparkles, Users } from 'lucide-react'
+import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
-const PricingPlans = dynamic(() => import("@/components/pricing-plans"), {
+const PricingPlans = dynamic(() => import('@/components/pricing-plans'), {
   ssr: false,
   loading: () => (
-    <div className="mx-auto w-full max-w-4xl rounded-2xl border border-border/70 bg-card/60 p-6 sm:p-8">
-      <div className="mb-6 h-6 w-48 animate-pulse rounded bg-muted" />
+    <div className="mx-auto w-full max-w-5xl rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-6 shadow-[0_28px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-8">
+      <div className="mb-6 h-6 w-56 animate-pulse rounded-full bg-muted/60" />
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="h-80 animate-pulse rounded-xl bg-muted/70" />
-        <div className="h-80 animate-pulse rounded-xl bg-muted/70" />
+        <div className="h-[420px] animate-pulse rounded-3xl bg-muted/60" />
+        <div className="h-[420px] animate-pulse rounded-3xl bg-muted/60" />
       </div>
     </div>
   ),
-});
+})
 
 export function PricingPageClient() {
   return (
-    <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-12 sm:py-16">
-      <UnifiedSurface>
-        <header className="mb-8 space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Qunt Edge Pricing</h1>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            Choose the plan that matches your trading cadence, review depth, and team workflow.
+    <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
+      <section className="relative overflow-hidden rounded-[2rem] border border-[hsl(var(--mk-border)/0.75)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.92),hsl(var(--background)/0.7))] p-5 shadow-[0_36px_80px_-62px_hsl(var(--foreground)/0.95)] sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,hsl(var(--primary)/0.18),transparent_72%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,hsl(var(--accent)/0.16),transparent_74%)]" />
+
+        <header className="relative mb-8 space-y-4 lg:mb-10">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            Pricing Plans
+          </span>
+
+          <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground">
+            Pick a plan that matches your execution cadence.
+          </h1>
+
+          <p className="max-w-3xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
+            Start with the essentials, then unlock deeper AI debriefs and behavior analytics
+            as your workflow matures.
           </p>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <PricingMetaChip
+              icon={ShieldCheck}
+              label="No lock-in"
+              value="Monthly flexibility"
+            />
+            <PricingMetaChip
+              icon={Users}
+              label="Teams ready"
+              value="Shared coaching flows"
+            />
+            <PricingMetaChip
+              icon={Sparkles}
+              label="AI included"
+              value="Debriefs and pattern review"
+            />
+          </div>
         </header>
-        <PricingPlans />
-      </UnifiedSurface>
+
+        <div className="relative">
+          <PricingPlans />
+        </div>
+      </section>
     </UnifiedPageShell>
-  );
+  )
+}
+
+function PricingMetaChip({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof ShieldCheck
+  label: string
+  value: string
+}) {
+  return (
+    <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface-muted)/0.78)] px-4 py-3">
+      <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        <Icon className="h-3.5 w-3.5 text-primary" />
+        {label}
+      </p>
+      <p className="mt-2 text-sm font-medium text-foreground">{value}</p>
+    </div>
+  )
 }

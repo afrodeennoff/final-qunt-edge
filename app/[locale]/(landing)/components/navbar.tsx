@@ -43,34 +43,39 @@ export default function Navbar() {
         initial={isMobile ? false : { opacity: 0, y: -18 }}
         animate={isMobile ? undefined : { opacity: 1, y: 0 }}
         transition={isMobile ? undefined : { duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1320px] px-4 pt-4 sm:px-6"
+        className="mx-auto w-full max-w-[1320px] px-4 pt-3 sm:px-6 sm:pt-4"
       >
         <motion.div
           className={cn(
-            'flex h-[56px] items-center rounded-full px-2.5 sm:h-[62px] sm:px-3.5',
-            'bg-[hsl(var(--mk-surface)/0.78)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.74)] backdrop-blur-xl shadow-none'
+            'flex h-[58px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
+            'border-[hsl(var(--mk-border)/0.7)] bg-[hsl(var(--mk-surface)/0.84)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.78)] backdrop-blur-xl',
+            'shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.65)]'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--mk-surface-muted)/0.85)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--primary)/0.25)] bg-[hsl(var(--mk-surface-muted)/0.92)]">
               <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex">Qunt Edge</span>
+            <span className="hidden text-sm font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:inline-flex">Qunt Edge</span>
           </Link>
 
           <nav className="mx-auto hidden items-center gap-1 lg:flex">
             {LINKS.map((link) => (
-              <motion.div key={link.href} whileHover={isMobile ? undefined : { y: -1 }} transition={isMobile ? undefined : { duration: 0.2 }}>
+              <motion.div
+                key={link.href}
+                whileHover={isMobile ? undefined : { y: -1 }}
+                transition={isMobile ? undefined : { duration: 0.2 }}
+              >
                 <Link
                   key={link.href}
                   href={`/${locale}${link.href}`}
                   className={cn(
-                    'relative rounded-full px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] transition-all duration-200',
+                    'relative rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-primary/15 text-[hsl(var(--mk-text))] after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:w-4/5 after:rounded-full after:bg-[oklch(0.55_0.22_264)] after:shadow-[0_0_8px_oklch(0.55_0.22_264/0.5)]'
-                      : 'text-foreground/80 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
+                      ? 'bg-[hsl(var(--mk-surface-muted)/0.95)] text-[hsl(var(--mk-text))] shadow-[0_0_0_1px_hsl(var(--primary)/0.2),0_12px_24px_-18px_hsl(var(--primary)/0.6)]'
+                      : 'text-foreground/78 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
                   )}
                 >
                   {link.title}
@@ -79,15 +84,29 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
-            <ButtonV2  asChild variant="gradient-primary" size="sm" className="hidden rounded-full px-5 text-[10px] font-semibold uppercase tracking-[0.14em] md:inline-flex">
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+            <Link
+              href={`/${locale}/authentication`}
+              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-foreground/75 transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.65)] hover:text-[hsl(var(--mk-text))] md:inline-flex"
+            >
+              Login
+            </Link>
+            <ButtonV2
+              asChild
+              variant="gradient-primary"
+              size="sm"
+              className="hidden rounded-full px-5 text-[11px] font-semibold tracking-[0.03em] md:inline-flex"
+            >
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </ButtonV2>
 
             <UnifiedMobileNav
               groups={[{ links: LINKS.map((l) => ({ href: l.href, label: l.title })) }]}
               footer={
-                <ButtonV2 asChild className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <ButtonV2
+                  asChild
+                  className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                >
                   <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
                 </ButtonV2>
               }
