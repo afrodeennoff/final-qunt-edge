@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     } catch (validationError) {
       if (validationError instanceof z.ZodError) {
         return apiError('VALIDATION_FAILED', 'Invalid query parameters', 400, {
-          issues: validationError.errors,
+          issues: validationError.issues,
         })
       }
       throw validationError

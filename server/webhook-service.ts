@@ -292,7 +292,12 @@ export class WebhookService {
 
       return true
     } catch (error: unknown) {
-      if (error?.code === 'P2002') {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code?: string }).code === 'P2002'
+      ) {
         return false
       }
       throw error
@@ -396,10 +401,10 @@ export class WebhookService {
       }
 
       const email = membership.user.email.toLowerCase().trim();
-      const metadata = membership.metadata || {}
-      const userId = metadata.user_id
-      const type = metadata.type || 'individual'
-      const planName = metadata.plan || membership.product?.title || 'PLUS'
+      const metadata = membership.metadata || {} as Record<string, unknown>
+      const userId = metadata.user_id as string | undefined
+      const type = (metadata.type as string) || 'individual'
+      const planName = String(metadata.plan || membership.product?.title || 'PLUS')
 
       const interval = planName.toLowerCase().includes('monthly') ? 'month' :
         planName.toLowerCase().includes('quarterly') ? 'quarter' :
@@ -461,8 +466,11 @@ export class WebhookService {
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     const metadata = membership.metadata || {}
-    const teamName = metadata.team_name || 'My Team'
-    const teamId = metadata.team_id
+    const teamName =
+      typeof metadata.team_name === 'string' && metadata.team_name.trim().length > 0
+        ? metadata.team_name
+        : 'My Team'
+    const teamId = typeof metadata.team_id === 'string' ? metadata.team_id : undefined
 
     return await prisma.$transaction(async (tx) => {
       // 1. Ensure user exists
@@ -555,7 +563,10 @@ export class WebhookService {
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     const metadata = membership.metadata || {}
-    const businessName = metadata.business_name || 'My Business'
+    const businessName =
+      typeof metadata.business_name === 'string' && metadata.business_name.trim().length > 0
+        ? metadata.business_name
+        : 'My Business'
 
     return await prisma.$transaction(async (tx) => {
       // 1. Ensure user exists
@@ -772,9 +783,12 @@ export class WebhookService {
 
       const email = membership.user.email.toLowerCase().trim();
       const metadata = membership.metadata || {}
-      const type = metadata.type || 'individual'
+      const type = typeof metadata.type === 'string' ? metadata.type : 'individual'
       const userId = typeof metadata.user_id === 'string' ? metadata.user_id : undefined
-      const planName = metadata.plan || membership.product?.title || 'PLUS'
+      const planName =
+        typeof metadata.plan === 'string'
+          ? metadata.plan
+          : (membership.product?.title || 'PLUS')
 
       const interval = planName.toLowerCase().includes('monthly') ? 'month' :
         planName.toLowerCase().includes('quarterly') ? 'quarter' :
@@ -1108,7 +1122,16 @@ export class WebhookService {
         }
       }
 
-      const userId = invoice.membership.metadata?.user_id || invoice.user?.id
+      const metadataUserId = invoice.membership.metadata?.user_id
+      const userId = typeof metadataUserId === 'string' ? metadataUserId : invoice.user?.id
+      if (!userId) {
+        return {
+          success: false,
+          eventType: 'invoice.created',
+          processed: false,
+          error: 'Missing user identifier',
+        }
+      }
 
       await paymentService.createInvoice({
         userId,

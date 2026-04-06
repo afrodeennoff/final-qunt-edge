@@ -422,7 +422,7 @@ export async function signUpWithPasswordAction(
     const guard = await checkAuthGuard({
       email,
       ip: requestIp,
-      actionType: 'signup',
+      actionType: 'password_login',
     })
     if (!guard.allowed) {
       throw new Error(`${GENERIC_AUTH_ERROR}|RETRY_AFTER=${guard.retryAfterSeconds}`)
@@ -682,7 +682,7 @@ export async function ensureUserInDatabase(
   }
 }
 
-export async function verifyOtp(email: string, token: string, type: 'email' | 'signup' = 'email') {
+export async function verifyOtp(email: string, token: string, type: 'email' = 'email') {
   const requestIp = await getRequestIp()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL

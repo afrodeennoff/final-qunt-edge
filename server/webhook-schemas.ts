@@ -12,7 +12,7 @@ const whopProductSchema = z.object({
   title: z.string().optional(),
 }).passthrough().optional()
 
-const whopMetadataSchema = z.record(z.unknown()).optional()
+const whopMetadataSchema = z.object({}).catchall(z.unknown()).optional()
 
 const baseMembershipSchema = z.object({
   id: z.string(),
