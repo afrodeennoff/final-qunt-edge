@@ -7,73 +7,13 @@ const MAX_IN_MEMORY_CACHE_ENTRIES = 500
 const CACHE_SWEEP_INTERVAL_MS = 60_000
 const LOCAL_REDIS_TIMEOUT_MS = 2000
 
-// ── Unified TTL Cache ──────────────────────────────────────────────
+// In-memory caches for fallback and local development
+const inMemoryCache = new Map<string, { value: string; expiresAt: number }>()
+const inMemoryNamespaceVersions = new Map<string, number>()
+const versionCache = new Map<string, { version: number; expiresAt: number }>()
+const queryCache = new Map<string, { data: unknown; expiresAt: number }>()
 
-class TTLCache<T> {
-  private store = new Map<string, { value: T; expiresAt: number }>()
-  private maxSize: number
-
-  constructor(maxSize = 500) {
-    this.maxSize = maxSize
-  }
-
-  get(key: string): T | null {
-    const entry = this.store.get(key)
-    if (!entry) return null
-    if (entry.expiresAt <= Date.now()) {
-      this.store.delete(key)
-      return null
-    }
-    // LRU promotion
-    this.store.delete(key)
-    this.store.set(key, entry)
-    return entry.value
-  }
-
-  set(key: string, value: T, ttlMs: number): void {
-    if (this.store.size >= this.maxSize && !this.store.has(key)) {
-      // Evict oldest (first-inserted) entry
-      const oldestKey = this.store.keys().next().value as string | undefined
-      if (oldestKey) this.store.delete(oldestKey)
-    }
-    this.store.set(key, { value, expiresAt: Date.now() + ttlMs })
-  }
-
-  delete(key: string): void {
-    this.store.delete(key)
-  }
-
-  get size(): number {
-    return this.store.size
-  }
-
-  /** Sweep expired entries; returns count removed */
-  sweep(): number {
-    const now = Date.now()
-    let removed = 0
-    this.store.forEach((entry, key) => {
-      if (entry.expiresAt <= now) {
-        this.store.delete(key)
-        removed++
-      }
-    })
-    return removed
-  }
-
-  clear(): void {
-    this.store.clear()
-  }
-}
-
-// ── Single cache instance per logical concern ──────────────────────
-
-const dataCache = new TTLCache<string>(MAX_IN_MEMORY_CACHE_ENTRIES)        // general JSON cache
-const versionMetadata = new Map<string, number>()                          // namespace versions (never expire in-memory)
-const versionCache = new TTLCache<number>(100)                             // cached version lookups with short TTL
-const queryCache = new TTLCache<unknown>(MAX_IN_MEMORY_CACHE_ENTRIES)      // query optimizer cache
-
-// ── Environment configuration ───────────────────────────────────────
-
+// Environment configuration
 const localRedisUrl = process.env.REDIS_URL
 const upstashRedisUrl = process.env.UPSTASH_REDIS_REST_URL
 const upstashRedisToken = process.env.UPSTASH_REDIS_REST_TOKEN
@@ -81,29 +21,90 @@ const upstashRedisToken = process.env.UPSTASH_REDIS_REST_TOKEN
 const localRedisEnabled = Boolean(localRedisUrl)
 const upstashRedisEnabled = Boolean(upstashRedisUrl && upstashRedisToken)
 
+/**
+ * Check if Redis is configured (either local or Upstash)
+ */
 export function isRedisConfigured(): boolean {
   return localRedisEnabled || upstashRedisEnabled
 }
 
-// ── Key helpers ─────────────────────────────────────────────────────
-
+/**
+ * Generate namespaced version key for tracking cache versions
+ */
 function namespacedVersionKey(namespace: string): string {
   return `${KEY_PREFIX}:nsver:${namespace}`
 }
 
+/**
+ * Generate full cache key with namespace, version, and key
+ */
 function cacheKey(namespace: string, version: number, key: string): string {
   return `${KEY_PREFIX}:${namespace}:v${version}:${key}`
 }
 
-// ── Namespace version management ────────────────────────────────────
+/**
+ * Get current timestamp
+ */
+function getNow(): number {
+  return Date.now()
+}
 
-async function getNamespaceVersion(namespace: string): Promise<number> {
+/**
+ * Get value from in-memory cache with expiration check
+ */
+function getInMemoryValue(key: string): string | null {
+  const entry = inMemoryCache.get(key)
+  if (!entry) return null
+  if (entry.expiresAt <= getNow()) {
+    inMemoryCache.delete(key)
+    return null
+  }
+  return entry.value
+}
+
+/**
+ * Set value in in-memory cache with TTL
+ */
+function setInMemoryValue(key: string, value: string, ttlSeconds: number): void {
+  inMemoryCache.set(key, {
+    value,
+    expiresAt: getNow() + ttlSeconds * 1000,
+  })
+}
+
+/**
+ * Get cached namespace version with expiration check
+ */
+function getCachedNamespaceVersion(namespace: string): number | null {
   const cached = versionCache.get(namespace)
+  if (!cached) return null
+  if (cached.expiresAt <= getNow()) {
+    versionCache.delete(namespace)
+    return null
+  }
+  return cached.version
+}
+
+/**
+ * Set cached namespace version with TTL
+ */
+function setCachedNamespaceVersion(namespace: string, version: number): void {
+  versionCache.set(namespace, {
+    version,
+    expiresAt: getNow() + VERSION_CACHE_TTL_MS,
+  })
+}
+
+/**
+ * Get current version for a namespace, fetching from Redis if needed
+ */
+async function getNamespaceVersion(namespace: string): Promise<number> {
+  const cached = getCachedNamespaceVersion(namespace)
   if (cached !== null) return cached
 
   if (!isRedisConfigured()) {
-    const current = versionMetadata.get(namespace) ?? 1
-    versionCache.set(namespace, current, VERSION_CACHE_TTL_MS)
+    const current = inMemoryNamespaceVersions.get(namespace) ?? 1
+    setCachedNamespaceVersion(namespace, current)
     return current
   }
 
@@ -116,29 +117,33 @@ async function getNamespaceVersion(namespace: string): Promise<number> {
     await runRedisCommand(['SET', versionKey, '1']).catch(() => undefined)
   }
 
-  versionCache.set(namespace, version, VERSION_CACHE_TTL_MS)
+  setCachedNamespaceVersion(namespace, version)
   return version
 }
 
+/**
+ * Invalidate a cache namespace by incrementing its version
+ */
 export async function invalidateCacheNamespace(namespace: string): Promise<void> {
-  const next = (versionMetadata.get(namespace) ?? 1) + 1
-  versionMetadata.set(namespace, next)
+  const nextInMemory = (inMemoryNamespaceVersions.get(namespace) ?? 1) + 1
+  inMemoryNamespaceVersions.set(namespace, nextInMemory)
 
   if (isRedisConfigured()) {
     const versionKey = namespacedVersionKey(namespace)
     const raw = await runRedisCommand(['INCR', versionKey]).catch(() => null)
     const parsed = Number(raw)
     if (Number.isFinite(parsed) && parsed > 0) {
-      versionCache.set(namespace, parsed, VERSION_CACHE_TTL_MS)
+      setCachedNamespaceVersion(namespace, parsed)
       return
     }
   }
 
-  versionCache.set(namespace, next, VERSION_CACHE_TTL_MS)
+  setCachedNamespaceVersion(namespace, nextInMemory)
 }
 
-// ── JSON cache (namespaced) ─────────────────────────────────────────
-
+/**
+ * Get JSON value from cache with namespace versioning
+ */
 export async function getRedisJson<T>(namespace: string, key: string): Promise<T | null> {
   const version = await getNamespaceVersion(namespace)
   const scopedKey = cacheKey(namespace, version, key)
@@ -154,7 +159,7 @@ export async function getRedisJson<T>(namespace: string, key: string): Promise<T
     }
   }
 
-  const local = dataCache.get(scopedKey)
+  const local = getInMemoryValue(scopedKey)
   if (!local) return null
 
   try {
@@ -164,6 +169,9 @@ export async function getRedisJson<T>(namespace: string, key: string): Promise<T
   }
 }
 
+/**
+ * Set JSON value in cache with namespace versioning and TTL
+ */
 export async function setRedisJson<T>(
   namespace: string,
   key: string,
@@ -178,9 +186,12 @@ export async function setRedisJson<T>(
     await runRedisCommand(['SETEX', scopedKey, String(ttlSeconds), payload]).catch(() => undefined)
   }
 
-  dataCache.set(scopedKey, payload, ttlSeconds * 1000)
+  setInMemoryValue(scopedKey, payload, ttlSeconds)
 }
 
+/**
+ * Delete a key from cache
+ */
 export async function delRedisKey(namespace: string, key: string): Promise<void> {
   const version = await getNamespaceVersion(namespace)
   const scopedKey = cacheKey(namespace, version, key)
@@ -189,56 +200,87 @@ export async function delRedisKey(namespace: string, key: string): Promise<void>
     await runRedisCommand(['DEL', scopedKey]).catch(() => undefined)
   }
 
-  dataCache.delete(scopedKey)
+  inMemoryCache.delete(scopedKey)
 }
 
-// ── Direct key cache (query optimizer) ──────────────────────────────
-
+/**
+ * Simple string get from cache (without namespace versioning)
+ * Used by query optimizer for direct key access
+ */
 export async function getCachedResult<T>(key: string): Promise<T | null> {
+  // Check in-memory query cache first
   const cached = queryCache.get(key)
-  if (cached !== null) return cached as T
+  if (cached && cached.expiresAt > getNow()) {
+    // Promote hot keys (LRU-like behavior)
+    queryCache.delete(key)
+    queryCache.set(key, cached)
+    return cached.data as T
+  }
+  if (cached) {
+    queryCache.delete(key)
+  }
 
+  // Try local Redis
   if (localRedisEnabled) {
-    try {
-      const raw = await runLocalRedisCommand(['GET', key])
-      if (typeof raw === 'string') return JSON.parse(raw) as T
-    } catch (error) {
-      console.warn('[Cache] Local Redis GET failed', { key, error })
-    }
-  } else if (upstashRedisEnabled) {
-    try {
-      const raw = await runUpstashRedisCommand(['GET', key])
-      if (typeof raw === 'string') return JSON.parse(raw) as T
-    } catch (error) {
-      console.warn('[Cache] Upstash Redis GET failed', { key, error })
-    }
+    const fromLocalRedis = await getLocalRedisCachedResult<T>(key)
+    if (fromLocalRedis !== null) return fromLocalRedis
+  }
+
+  // Try Upstash Redis
+  if (upstashRedisEnabled) {
+    const fromUpstashRedis = await getUpstashRedisCachedResult<T>(key)
+    if (fromUpstashRedis !== null) return fromUpstashRedis
   }
 
   return null
 }
 
+/**
+ * Simple string set in cache (without namespace versioning)
+ * Used by query optimizer for direct key access
+ */
 export async function setCachedResult<T>(key: string, data: T, ttlSeconds: number): Promise<void> {
-  const payload = JSON.stringify(data)
-
+  // Set in local Redis if available
   if (localRedisEnabled) {
-    try {
-      await runLocalRedisCommand(['SETEX', key, String(ttlSeconds), payload])
-    } catch (error) {
-      console.warn('[Cache] Local Redis SETEX failed', { key, error })
-    }
-  } else if (upstashRedisEnabled) {
-    try {
-      await runUpstashRedisCommand(['SETEX', key, String(ttlSeconds), payload])
-    } catch (error) {
-      console.warn('[Cache] Upstash Redis SETEX failed', { key, error })
-    }
+    await setLocalRedisCachedResult(key, data, ttlSeconds)
+  } 
+  // Set in Upstash Redis if available and local not enabled
+  else if (upstashRedisEnabled) {
+    await setUpstashRedisCachedResult(key, data, ttlSeconds)
   }
 
-  queryCache.set(key, data, ttlSeconds * 1000)
+  // Always set in-memory query cache as fallback
+  queryCache.set(key, {
+    data,
+    expiresAt: getNow() + ttlSeconds * 1000
+  })
+  enforceLocalCacheBounds()
 }
 
-// ── Redis transport ─────────────────────────────────────────────────
+/**
+ * Enforce bounds on in-memory query cache (LRU-like eviction)
+ */
+function enforceLocalCacheBounds(): void {
+  const now = getNow()
 
+// Remove expired entries
+   queryCache.forEach((value, key) => {
+     if (value.expiresAt <= now) {
+       queryCache.delete(key);
+     }
+   });
+
+  // Evict oldest entries if over limit
+  while (queryCache.size > MAX_IN_MEMORY_CACHE_ENTRIES) {
+    const oldestKey = queryCache.keys().next().value as string | undefined
+    if (!oldestKey) break
+    queryCache.delete(oldestKey)
+  }
+}
+
+/**
+ * Run a Redis command with fallback logic (local -> Upstash -> null)
+ */
 async function runRedisCommand(command: string[]): Promise<string | number | null> {
   if (localRedisEnabled) {
     try {
@@ -259,6 +301,9 @@ async function runRedisCommand(command: string[]): Promise<string | number | nul
   return null
 }
 
+/**
+ * Run command against local Redis via TCP socket
+ */
 async function runLocalRedisCommand(command: string[]): Promise<string | number | null> {
   if (!localRedisUrl) return null
 
@@ -337,6 +382,9 @@ async function runLocalRedisCommand(command: string[]): Promise<string | number 
   })
 }
 
+/**
+ * Run command against Upstash Redis via HTTP REST API
+ */
 async function runUpstashRedisCommand(command: string[]): Promise<string | number | null> {
   if (!upstashRedisUrl || !upstashRedisToken) return null
 
@@ -361,8 +409,59 @@ async function runUpstashRedisCommand(command: string[]): Promise<string | numbe
   return payload.result ?? null
 }
 
-// ── RESP2 protocol helpers ──────────────────────────────────────────
+/**
+ * Get cached result from local Redis (used by query optimizer)
+ */
+async function getLocalRedisCachedResult<T>(key: string): Promise<T | null> {
+  try {
+    const raw = await runLocalRedisCommand(['GET', key])
+    if (typeof raw !== 'string') return null
+    return JSON.parse(raw) as T
+  } catch (error) {
+    console.warn('[Cache] Local Redis GET failed, falling back to other caches', { key, error })
+    return null
+  }
+}
 
+/**
+ * Set cached result in local Redis (used by query optimizer)
+ */
+async function setLocalRedisCachedResult<T>(key: string, data: T, ttlSeconds: number): Promise<void> {
+  try {
+    await runLocalRedisCommand(['SETEX', key, String(ttlSeconds), JSON.stringify(data)])
+  } catch (error) {
+    console.warn('[Cache] Local Redis SETEX failed, falling back to other caches', { key, error })
+  }
+}
+
+/**
+ * Get cached result from Upstash Redis (used by query optimizer)
+ */
+async function getUpstashRedisCachedResult<T>(key: string): Promise<T | null> {
+  try {
+    const raw = await runUpstashRedisCommand(['GET', key])
+    if (typeof raw !== 'string') return null
+    return JSON.parse(raw) as T
+  } catch (error) {
+    console.warn('[Cache] Upstash Redis GET failed, falling back to in-memory cache', { key, error })
+    return null
+  }
+}
+
+/**
+ * Set cached result in Upstash Redis (used by query optimizer)
+ */
+async function setUpstashRedisCachedResult<T>(key: string, data: T, ttlSeconds: number): Promise<void> {
+  try {
+    await runUpstashRedisCommand(['SETEX', key, String(ttlSeconds), JSON.stringify(data)])
+  } catch (error) {
+    console.warn('[Cache] Upstash Redis SETEX failed, falling back to in-memory cache', { key, error })
+  }
+}
+
+/**
+ * Encode Redis command in RESP2 format
+ */
 function encodeRedisCommand(parts: string[]): string {
   let output = `*${parts.length}\r\n`
   for (const part of parts) {
@@ -372,6 +471,9 @@ function encodeRedisCommand(parts: string[]): string {
   return output
 }
 
+/**
+ * Parse Redis RESP2 response
+ */
 function parseRedisResponse(
   buffer: Buffer,
   offset: number
@@ -413,27 +515,23 @@ function parseRedisResponse(
   throw new Error(`Unsupported Redis response type: ${type}`)
 }
 
-// ── Single unified sweep timer ──────────────────────────────────────
+// Cache cleanup sweeps
+const inMemorySweep = setInterval(() => {
+  const now = getNow()
+  inMemoryCache.forEach((entry, key) => {
+    if (entry.expiresAt <= now) {
+      inMemoryCache.delete(key)
+    }
+  });
+}, 60_000)
 
-const sweepTimer = setInterval(() => {
-  dataCache.sweep()
-  versionCache.sweep()
-  queryCache.sweep()
+inMemorySweep.unref?.()
+
+const cacheSweepTimer = setInterval(() => {
+  enforceLocalCacheBounds()
 }, CACHE_SWEEP_INTERVAL_MS)
 
-sweepTimer.unref?.()
+cacheSweepTimer.unref?.()
 
-// Graceful shutdown for serverless environments
-export function shutdownCache(): void {
-  clearInterval(sweepTimer)
-  dataCache.clear()
-  versionCache.clear()
-  queryCache.clear()
-  versionMetadata.clear()
-}
-
-if (typeof process !== 'undefined' && process.on) {
-  process.on('beforeExit', shutdownCache)
-}
-
+// Export runRedisCommand for use in other modules (backward compatibility)
 export { runRedisCommand }

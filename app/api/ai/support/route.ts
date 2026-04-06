@@ -10,7 +10,8 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getAiPolicy } from "@/lib/ai/policy";
 import { apiError } from "@/lib/api-response";
 import { guardAiRequest } from "@/lib/ai/route-guard";
-import { getAiLanguageModel } from "@/lib/ai/client";
+import { getAiLanguageModelById } from "@/lib/ai/client";
+import { isSupportModelId } from "@/lib/ai/support-models";
 import { categorizeAiError, extractUsage, logAiRequest } from "@/lib/ai/telemetry";
 import {
   estimateTokenCountFromMessages,
@@ -52,12 +53,15 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { messages } = requestSchema.parse(body);
+    const { messages, model, webSearch } = requestSchema.parse(body);
     if (messages.length > MAX_SUPPORT_MESSAGES) {
       return apiError("PAYLOAD_TOO_LARGE", `Too many messages. Maximum is ${MAX_SUPPORT_MESSAGES}.`, 413);
     }
 
-    if (!process.env.AI_API_KEY) {
+    selectedModel = model && isSupportModelId(model) ? model : policy.model;
+    const webSearchModel = process.env.AI_SUPPORT_WEBSEARCH_MODEL;
+    const webSearchFallback = webSearch && !webSearchModel;
+    if (!process.env.OPENROUTER_API_KEY) {
       return apiError("SERVICE_UNAVAILABLE", "Support AI service is not configured", 503);
     }
 
@@ -77,9 +81,9 @@ export async function POST(req: NextRequest) {
 
     const modelMessages = await convertToModelMessages(messages);
     const result = streamText({
-      model: getAiLanguageModel("support"),
+      model: webSearch && webSearchModel ? getAiLanguageModelById(webSearchModel) : getAiLanguageModelById(selectedModel),
       abortSignal: createAiTimeoutSignal(policy.timeoutMs),
-      system: `You are an AI chatbot support assistant for Qunt Edge, a trading journaling platform. Your role is to gather information and direct users to the appropriate support channels.
+      system: `${webSearchFallback ? "[WEB_SEARCH_FALLBACK_ACTIVE] Web search is unavailable for this environment; answer without external browsing.\n\n" : ""}You are an AI chatbot support assistant for Qunt Edge, a trading journaling platform. Your role is to gather information and direct users to the appropriate support channels.
 
 ## CRITICAL LIMITATIONS
 - **NO DOCUMENTATION ACCESS**: You do not have access to Qunt Edge documentation, user guides, or specific feature information

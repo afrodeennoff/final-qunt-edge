@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { Target, TrendingUp, ArrowRight } from 'lucide-react'
 import { GlassCard } from '@/components/ui/glass-card'
 import { BadgeV2 } from '@/components/ui/v2'

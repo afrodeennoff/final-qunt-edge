@@ -9,7 +9,7 @@ import { POST } from "@/app/api/ai/transcribe/route";
 describe("ai transcribe route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.AI_API_KEY = "test-key";
+    process.env.OPENAI_API_KEY = "test-key";
   });
 
   it("returns 413 on oversized content-length before parsing form-data", async () => {

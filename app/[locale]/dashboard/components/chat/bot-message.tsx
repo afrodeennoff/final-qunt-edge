@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import type React from "react"
 import { ButtonV2 } from "@/components/ui/v2"
 import { toast } from "sonner"

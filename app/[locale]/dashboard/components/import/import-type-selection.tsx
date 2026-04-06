@@ -11,7 +11,7 @@ import { PlatformCard } from './components/platform-card'
 import { PlatformTutorial } from './components/platform-tutorial'
 import { cn } from '@/lib/utils'
 import { useImportTypePreferenceStore } from '@/store/import-type-preference-store'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export type ImportType = string

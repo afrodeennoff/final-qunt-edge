@@ -374,32 +374,26 @@ export class PaymentService {
     error?: string
   }> {
     try {
-      const [aggregate, lastTransaction] = await Promise.all([
-        prisma.paymentTransaction.aggregate({
-          where: {
-            userId,
-            status: 'COMPLETED',
-          },
-          _sum: { amount: true },
-          _count: true,
-          _max: { createdAt: true },
-        }),
-        prisma.paymentTransaction.findFirst({
-          where: { userId, status: 'COMPLETED' },
-          orderBy: { createdAt: 'desc' },
-          select: { createdAt: true },
-        }),
-      ])
+      const transactions = await prisma.paymentTransaction.findMany({
+        where: {
+          userId,
+          status: 'COMPLETED',
+        },
+      })
+
+      const totalSpent = transactions.reduce((sum, t) => sum + Number(t.amount), 0)
 
       const subscription = await prisma.subscription.findUnique({
         where: { userId },
       })
 
+      const lastTransaction = transactions[0]
+
       return {
         success: true,
         summary: {
-          totalSpent: Number(aggregate._sum.amount ?? 0),
-          transactionCount: aggregate._count,
+          totalSpent,
+          transactionCount: transactions.length,
           activeSubscription: subscription?.status === 'ACTIVE',
           nextBillingDate: subscription?.endDate || undefined,
           lastPaymentDate: lastTransaction?.createdAt,

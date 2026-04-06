@@ -33,9 +33,17 @@ const envSchema = z.object({
   NEXT_PUBLIC_UI_V2_ENABLED: optionalString(),
   CRON_SECRET: optionalMinString(1),
   UNSUBSCRIBE_TOKEN_SECRET: optionalMinString(32),
-  AI_API_KEY: optionalMinString(1),
+  OPENAI_API_KEY: optionalMinString(1),
   AI_BASE_URL: optionalUrl(),
-  AI_MODEL: optionalModelId(),
+  AI_MODEL: optionalModelId(), // legacy alias
+  AI_MODEL_DEFAULT: optionalModelId(),
+  AI_MODEL_CHAT: optionalModelId(),
+  AI_MODEL_SUPPORT: optionalModelId(),
+  AI_MODEL_EDITOR: optionalModelId(),
+  AI_MODEL_MAPPINGS: optionalModelId(),
+  AI_MODEL_FORMAT_TRADES: optionalModelId(),
+  AI_MODEL_ANALYSIS: optionalModelId(),
+  AI_MODEL_SEARCH: optionalModelId(),
   AI_TIMEOUT_MS: optionalString(),
   AI_MAX_STEPS: optionalString(),
   AI_LOG_SAMPLE_RATE: optionalString(),
@@ -46,6 +54,7 @@ const envSchema = z.object({
   REDIS_URL: optionalString(),
   UPSTASH_REDIS_REST_URL: optionalUrl(),
   UPSTASH_REDIS_REST_TOKEN: optionalMinString(1),
+  OPENROUTER_API_KEY: optionalMinString(1),
 });
 
 type AppEnv = z.infer<typeof envSchema>;

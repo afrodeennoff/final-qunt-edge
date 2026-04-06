@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { Progress } from "@/components/ui/progress"
 import { BadgeV2 } from "@/components/ui/v2"
 import { useRithmicSyncStore } from '@/store/rithmic-sync-store'

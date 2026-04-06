@@ -225,9 +225,6 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
   if (data.url) {
     redirect(data.url)
   }
-  if (error) {
-    redirect(`/authentication?error=${encodeURIComponent(error.message)}`)
-  }
 }
 
 export async function signInWithGoogle(next: string | null = null, locale?: string) {
@@ -253,9 +250,6 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
   })
   if (data.url) {
     redirect(data.url)
-  }
-  if (error) {
-    redirect(`/authentication?error=${encodeURIComponent(error.message)}`)
   }
 }
 
@@ -461,7 +455,7 @@ export async function signUpWithPasswordAction(
     }
 
     return { success: true, next }
-  } catch (error: unknown) {
+  } catch (error: any) {
     handleAuthError(error)
   }
 }
@@ -484,7 +478,7 @@ export async function setPasswordAction(newPassword: string) {
       throw new Error(error.message)
     }
     return { success: true }
-  } catch (error: unknown) {
+  } catch (error: any) {
     handleAuthError(error)
   }
 }
@@ -596,13 +590,11 @@ export async function ensureUserInDatabase(
           console.error('[ensureUserInDatabase] ERROR: Failed to update user record:', updateError);
           throw new Error('Failed to update user');
         }
-      }
-
-      if (!options?.skipDefaultLayout) {
-        await ensureDashboardLayoutBackfill(user.id);
-      }
-      return existingUserByAuthId;
     }
+    if (!options?.skipDefaultLayout) {
+      await ensureDashboardLayoutBackfill(user.id);
+    }
+    return existingUserByAuthId;
 
     // If user doesn't exist by auth_user_id, check if email exists
     if (user.email) {
@@ -771,51 +763,8 @@ export async function getUserId(): Promise<string> {
   return user.id
 }
 
-// Hot-path cache for resolved user IDs to avoid repetitive DB lookups.
-// Entries are evicted after 5 minutes to prevent unbounded memory growth.
-const USER_ID_CACHE_TTL_MS = 5 * 60 * 1000
-const USER_ID_CACHE_MAX = 1000
-const userIdCache = new Map<string, { id: string; ts: number }>()
-
-// Periodic sweep to evict expired entries
-const userIdCacheSweep = setInterval(() => {
-  const now = Date.now()
-  for (const [key, entry] of userIdCache.entries()) {
-    if (now - entry.ts > USER_ID_CACHE_TTL_MS) {
-      userIdCache.delete(key)
-    }
-  }
-}, 60_000)
-userIdCacheSweep.unref?.()
-
-function setUserIdCache(key: string, id: string): void {
-  // Evict expired entries if at capacity
-  if (userIdCache.size >= USER_ID_CACHE_MAX && !userIdCache.has(key)) {
-    const now = Date.now()
-    for (const [k, entry] of userIdCache.entries()) {
-      if (now - entry.ts > USER_ID_CACHE_TTL_MS) {
-        userIdCache.delete(k)
-        break
-      }
-    }
-    // Still at capacity — evict oldest
-    if (userIdCache.size >= USER_ID_CACHE_MAX) {
-      const oldestKey = userIdCache.keys().next().value as string | undefined
-      if (oldestKey) userIdCache.delete(oldestKey)
-    }
-  }
-  userIdCache.set(key, { id, ts: Date.now() })
-}
-
-function getUserIdCache(key: string): string | null {
-  const entry = userIdCache.get(key)
-  if (!entry) return null
-  if (Date.now() - entry.ts > USER_ID_CACHE_TTL_MS) {
-    userIdCache.delete(key)
-    return null
-  }
-  return entry.id
-}
+// Hot-path cache for resolved user IDs to avoid repetitive DB lookups
+const userIdCache = new Map<string, string>()
 
 /**
  * Resolve the database user primary key (`User.id`) from an auth/middleware id.
@@ -826,7 +775,7 @@ export async function getDatabaseUserId(): Promise<string> {
   const rawUserId = user.id
 
   // Check in-memory cache first
-  const cachedId = getUserIdCache(rawUserId)
+  const cachedId = userIdCache.get(rawUserId)
   if (cachedId) return cachedId
 
   const byId = await prisma.user.findUnique({
@@ -857,13 +806,13 @@ export async function getDatabaseUserId(): Promise<string> {
       '[getDatabaseUserId] Divergent auth mapping detected; using auth_user_id row',
       { rawUserId, resolvedUserId: byAuthId.id }
     )
-    setUserIdCache(rawUserId, byAuthId.id)
+    userIdCache.set(rawUserId, byAuthId.id)
     return byAuthId.id
   }
 
   const finalId = byId?.id || byAuthId?.id
   if (finalId) {
-    setUserIdCache(rawUserId, finalId)
+    userIdCache.set(rawUserId, finalId)
     return finalId
   }
 

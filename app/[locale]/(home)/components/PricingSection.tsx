@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { ButtonV2 } from '@/components/ui/v2'
 import { MagneticButton } from '@/components/animation/interactive'

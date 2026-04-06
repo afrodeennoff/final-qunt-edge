@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { AlertTriangle, Brain, RotateCcw, ArrowRight } from 'lucide-react'
 import {
   MOTION_EASE,

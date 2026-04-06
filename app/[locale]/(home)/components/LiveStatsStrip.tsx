@@ -1,9 +1,7 @@
-import { useReducedMotionValue } from "@/context/reduced-motion-context"
-import { useReducedMotionValue } from "@/context/reduced-motion-context"
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView } from 'motion/react'
+import { motion, useReducedMotion, useInView } from 'framer-motion'
 
 const stats = [
   { value: 2400, prefix: '', suffix: '+', label: 'Traders' },
@@ -71,7 +69,7 @@ function StatItem({
 export default function LiveStatsStrip() {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const reducedMotion = useReducedMotionValue() ?? false
+  const reducedMotion = useReducedMotion() ?? false
 
   return (
     <section

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { ArrowLeft, LockKeyhole, ShieldCheck, Sparkles, Workflow, Gauge, CheckCircle2 } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { UserAuthForm } from "../components/user-auth-form"
