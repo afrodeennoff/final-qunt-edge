@@ -16,7 +16,7 @@ import { useDashboardActions } from "@/context/data-provider";
 import { useI18n } from "@/locales/client";
 import { useRithmicSyncStore, RithmicMessage } from "@/store/rithmic-sync-store";
 import { useTradesStore } from "@/store/trades-store";
-import { getUserId } from "@/server/auth";
+import { getDatabaseUserId } from "@/server/auth";
 import { useUserStore } from "@/store/user-store";
 
 interface RithmicCredentials {
@@ -617,7 +617,7 @@ export function RithmicSyncContextProvider({
       resetProcessingState();
       clearMessageHistory();
 
-      const userId = await getUserId();
+      const userId = await getDatabaseUserId();
       // Ensure we are not already syncing
       // Prevent multiple syncs at the same time
       if (!userId || isAutoSyncingRef.current || isAutoSyncing) return;
