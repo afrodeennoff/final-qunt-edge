@@ -5,8 +5,6 @@ import type { DashboardTheme } from "@/lib/constants/dashboard-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect } from "react";
-import { SmoothScrollProvider } from "@/components/motion/smooth-scroll-provider";
-import { GlobalMotionEffects } from "@/components/motion/global-motion-effects";
 import { AuthTimeout } from "@/components/auth/auth-timeout";
 
 const CHUNK_RECOVERY_SESSION_KEY = "chunk-reload-attempted";
@@ -189,10 +187,7 @@ export function PublicRootProviders({
     return (
         <RootProviders themeScope="fixed-blue">
             <SidebarProvider defaultOpen={true}>
-                <SmoothScrollProvider>
-                    <GlobalMotionEffects />
-                    {children}
-                </SmoothScrollProvider>
+                {children}
             </SidebarProvider>
         </RootProviders>
     );

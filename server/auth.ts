@@ -595,6 +595,7 @@ export async function ensureUserInDatabase(
       await ensureDashboardLayoutBackfill(user.id);
     }
     return existingUserByAuthId;
+    }
 
     // If user doesn't exist by auth_user_id, check if email exists
     if (user.email) {

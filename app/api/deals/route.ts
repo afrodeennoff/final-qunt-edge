@@ -7,6 +7,8 @@ import { z } from 'zod'
 
 const VALID_SORT_FIELDS = ['discountPercent', 'challengeFee', 'firmName', 'payoutModel', 'drawdownType', 'category', 'platform'] as const
 type SortField = (typeof VALID_SORT_FIELDS)[number]
+const DEFAULT_LIMIT = 50
+const DEFAULT_OFFSET = 0
 
 const dealsQuerySchema = z.object({
   search: z.string().optional(),
@@ -21,9 +23,6 @@ const dealsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(200).default(DEFAULT_LIMIT),
   offset: z.coerce.number().int().min(0).default(DEFAULT_OFFSET),
 })
-
-const DEFAULT_LIMIT = 50
-const DEFAULT_OFFSET = 0
 
 function isPrerenderInterruption(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false
