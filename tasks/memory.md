@@ -1029,3 +1029,40 @@
 
 ### Blockers
 - None
+
+## Current Session: Production Login Fix — auth redirect loop + env misconfiguration (2026-04-07)
+
+### Accomplishments
+- Fixed production login issue where users were redirected back to authentication page after attempting to log in:
+  - **Root Cause #1 (Code)**: `context/data-provider.tsx` and `context/rithmic-sync-context.tsx` used `getUserId()` which returns raw Supabase auth ID, instead of `getDatabaseUserId()` which properly resolves to Prisma `User.id` via the `auth_user_id` column mapping. This caused database lookups to fail for legacy users with divergent auth mappings.
+  - **Root Cause #2 (Environment)**: Vercel environment variables were misconfigured:
+    - `NEXT_PUBLIC_SITE_URL` was wrong (not pointing to actual production domain)
+    - `NEXT_PUBLIC_BASE_URL` and `NEXT_PUBLIC_APP_URL` were incorrect
+    - `REDIRECT_URL` was missing/incorrect (auth callback URL)
+    - `SUPABASE_SERVICE_KEY` was missing
+    - These caused Supabase OAuth redirect URLs to be incorrect, preventing session cookies from being set properly
+- Applied code fixes:
+  - `context/data-provider.tsx` (lines 62, 604, 924): changed `getUserId()` to `getDatabaseUserId()`
+  - `context/rithmic-sync-context.tsx` (lines 19, 620): changed `getUserId()` to `getDatabaseUserId()`
+- Applied environment fixes in Vercel project settings:
+  - `NEXT_PUBLIC_SITE_URL` → `https://qunt-edge.app`
+  - `NEXT_PUBLIC_BASE_URL` → `https://qunt-edge.app`
+  - `NEXT_PUBLIC_APP_URL` → `https://qunt-edge.app`
+  - `REDIRECT_URL` → `https://qunt-edge.app/api/auth/callback`
+  - Added `SUPABASE_SERVICE_KEY`
+- Successfully deployed to production (deployment ID: `dpl_2DzrSEJuuyy3g7VJjkf5RuwjwcAd`)
+- Verified site is live at `https://qunt-edge.vercel.app` with auth page returning status 200
+
+### Verification
+- Production URL accessible: `https://qunt-edge.vercel.app` returns 200 on auth page
+- Login flow should now work: users can authenticate and be properly redirected to dashboard
+
+### Blockers
+- None — login fix deployed and verified
+
+### Relevant Files
+- `/Users/timon/Downloads/qunt-edge/context/data-provider.tsx` — Fixed user ID resolution
+- `/Users/timon/Downloads/qunt-edge/context/rithmic-sync-context.tsx` — Fixed user ID resolution
+- `/Users/timon/Downloads/qunt-edge/server/auth.ts` — Contains getUserId() and getDatabaseUserId() functions
+- Vercel project: `prj_9GAURNDR5A6kW0rpk1H7TfLGd5Qt` (team: `team_5dxidRU5mXKS728pZZjbOlR5`)
+- Production URL: `https://qunt-edge.vercel.app`

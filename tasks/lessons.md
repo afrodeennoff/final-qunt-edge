@@ -1,6 +1,56 @@
 # Delivery Lessons
 
-**Last Updated:** 2026-04-03
+**Last Updated:** 2026-04-07
+
+---
+
+## NEW (2026-04-07): Always use getDatabaseUserId() for database lookups, not getUserId()
+
+### Mistake
+Production login was failing because `data-provider.tsx` and `rithmic-sync-context.tsx` used `getUserId()` which returns the raw Supabase auth ID, instead of `getDatabaseUserId()` which resolves to the Prisma `User.id` via the `auth_user_id` column mapping. This caused database lookups to fail for legacy users whose auth ID diverged from their database ID.
+
+### Root Cause
+When users authenticate via OAuth (Discord), Supabase creates an auth record with a specific ID. In some cases, the database `User` record has a different `id` but is linked via `auth_user_id`. Using the raw auth ID for database queries misses these mapped users.
+
+### Rule
+For any database lookup that needs to find a user record, always use `getDatabaseUserId()` (from `server/auth.ts`) which properly resolves the auth ID to the database user ID through the `auth_user_id` column mapping. Only use `getUserId()` for Supabase-specific operations that require the raw auth ID.
+
+### Example
+```typescript
+// BAD - returns raw Supabase auth ID
+const userId = getUserId()
+
+// GOOD - resolves to Prisma User.id via auth_user_id mapping
+const userId = await getDatabaseUserId()
+```
+
+---
+
+## NEW (2026-04-07): Production auth requires correct REDIRECT_URL + site URL configuration
+
+### Mistake
+Production login was failing because Supabase OAuth redirects were pointing to wrong URLs. The environment variables `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_BASE_URL`, `NEXT_PUBLIC_APP_URL`, and `REDIRECT_URL` were missing or incorrect in Vercel.
+
+### Root Cause
+When users authenticate via OAuth, Supabase redirects back to the application with an authorization code. If `REDIRECT_URL` is incorrect or missing, the redirect URL doesn't match the authorized callback URLs configured in Supabase, and the session cookie cannot be set properly.
+
+### Rule
+For production OAuth authentication to work, ensure these environment variables are correctly configured in Vercel:
+- `NEXT_PUBLIC_SITE_URL` - the production domain
+- `NEXT_PUBLIC_BASE_URL` - the production domain
+- `NEXT_PUBLIC_APP_URL` - the production domain
+- `REDIRECT_URL` - must be `https://your-domain.com/api/auth/callback`
+- `SUPABASE_SERVICE_KEY` - must be set for service role operations
+
+### Example
+```bash
+# Vercel environment variables
+NEXT_PUBLIC_SITE_URL=https://qunt-edge.app
+NEXT_PUBLIC_BASE_URL=https://qunt-edge.app
+NEXT_PUBLIC_APP_URL=https://qunt-edge.app
+REDIRECT_URL=https://qunt-edge.app/api/auth/callback
+SUPABASE_SERVICE_KEY=<your-service-key>
+```
 
 ---
 

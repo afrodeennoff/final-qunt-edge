@@ -65,6 +65,26 @@ function withLocalePrefix(path: string, locale: string): string {
     return `/${locale}${normalized}`
 }
 
+function getQueryErrorMessage(errorCode: string | null, authErrorCode: string | null): string | null {
+    if (errorCode === 'csrf') {
+        return 'Google or Discord sign-in could not be verified. Please try again.'
+    }
+
+    if (errorCode === 'service_unavailable') {
+        return 'Authentication is temporarily unavailable. Please try again in a few moments.'
+    }
+
+    if (errorCode === 'account_setup_failed') {
+        return 'We signed you in, but dashboard setup could not finish because the database is unavailable.'
+    }
+
+    if (authErrorCode === 'session_invalid') {
+        return 'Your session could not be restored. Please sign in again.'
+    }
+
+    return null
+}
+
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
@@ -89,6 +109,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         const urlParams = new URLSearchParams(window.location.search)
         const subscription = urlParams.get('subscription')
         const next = normalizeNextPath(urlParams.get('next'))
+        const errorCode = urlParams.get('error')
+        const authErrorCode = urlParams.get('auth_error')
         const referral = urlParams.get('referral')
         const promo_code = urlParams.get('promo_code')
         const lookup_key = urlParams.get('lookup_key')
@@ -114,7 +136,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 }
             })
         }
-    }, [])
+
+        const queryErrorMessage = getQueryErrorMessage(errorCode, authErrorCode)
+        if (queryErrorMessage) {
+            toast.error(t('error'), { description: queryErrorMessage })
+        }
+    }, [t])
 
     React.useEffect(() => {
         if (countdown > 0) {

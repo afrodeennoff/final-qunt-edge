@@ -66,6 +66,8 @@ function handleAuthError(error: unknown): never {
 }
 
 const GENERIC_AUTH_ERROR = 'Invalid credentials or verification required'
+const POST_AUTH_SETUP_ERROR_MESSAGE =
+  'Account setup is temporarily unavailable. Please try again in a few moments.'
 const USER_SYNC_SELECT = {
   id: true,
   email: true,
@@ -80,6 +82,13 @@ type UserSyncRecord = {
   id: string
   email: string
   language?: string | null
+}
+
+class PostAuthSetupError extends Error {
+  constructor(message = POST_AUTH_SETUP_ERROR_MESSAGE) {
+    super(message)
+    this.name = 'PostAuthSetupError'
+  }
 }
 
 async function findUserByIdCompat(userId: string): Promise<UserSyncRecord | null> {
@@ -216,7 +225,7 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
       redirectTo: `${websiteURL}api/auth/callback${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
@@ -239,7 +248,7 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
   const callbackParams = new URLSearchParams()
   if (next) callbackParams.set('next', next)
   if (locale) callbackParams.set('locale', locale)
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       queryParams: {
@@ -367,8 +376,8 @@ export async function signInWithPasswordAction(
         await ensureUserInDatabase(user, locale)
       }
     } catch (e) {
-      // Non-fatal; still proceed
       console.error('[signInWithPasswordAction] ensureUserInDatabase failed:', e)
+      throw new PostAuthSetupError()
     }
 
     // Optionally handle redirect on the client; return success and let client route
@@ -381,12 +390,19 @@ export async function signInWithPasswordAction(
     })
     return { success: true, next }
   } catch (error: unknown) {
-    await recordAuthFailure({
-      email,
-      ip: requestIp,
-      actionType: 'password_login',
-      userId: null,
-    })
+    if (!(error instanceof PostAuthSetupError)) {
+      await recordAuthFailure({
+        email,
+        ip: requestIp,
+        actionType: 'password_login',
+        userId: null,
+      })
+    }
+
+    if (error instanceof PostAuthSetupError) {
+      throw error
+    }
+
     if (error instanceof Error) {
       throw new Error(getExternalAuthErrorMessage(error.message))
     }
@@ -449,13 +465,16 @@ export async function signUpWithPasswordAction(
       try {
         await ensureUserInDatabase(data.user, locale)
       } catch (e) {
-        // Non-fatal; still proceed
         console.error('[signUpWithPasswordAction] ensureUserInDatabase failed:', e)
+        throw new PostAuthSetupError()
       }
     }
 
     return { success: true, next }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof PostAuthSetupError) {
+      throw error
+    }
     handleAuthError(error)
   }
 }
@@ -473,12 +492,12 @@ export async function setPasswordAction(newPassword: string) {
     if (!user) {
       throw new Error('User not authenticated')
     }
-    const { data, error } = await supabase.auth.updateUser({ password: newPassword })
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
     if (error) {
       throw new Error(error.message)
     }
     return { success: true }
-  } catch (error: any) {
+  } catch (error: unknown) {
     handleAuthError(error)
   }
 }
@@ -713,13 +732,18 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
       type
     })
 
-    if (data.user && data.session) {
-      const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en';
-      await ensureUserInDatabase(data.user, locale)
-    }
-
     if (error) {
       throw new Error(error.message)
+    }
+
+    if (data.user && data.session) {
+      try {
+        const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en'
+        await ensureUserInDatabase(data.user, locale)
+      } catch (setupError) {
+        console.error('[verifyOtp] ensureUserInDatabase failed:', setupError)
+        throw new PostAuthSetupError()
+      }
     }
 
     await recordAuthSuccess({
@@ -731,12 +755,19 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
 
     return { success: true, data }
   } catch (error: unknown) {
-    await recordAuthFailure({
-      email,
-      ip: requestIp,
-      actionType: 'otp_verify',
-      userId: null,
-    })
+    if (!(error instanceof PostAuthSetupError)) {
+      await recordAuthFailure({
+        email,
+        ip: requestIp,
+        actionType: 'otp_verify',
+        userId: null,
+      })
+    }
+
+    if (error instanceof PostAuthSetupError) {
+      throw error
+    }
+
     if (error instanceof Error) {
       throw new Error(getExternalAuthErrorMessage(error.message))
     }

@@ -17,8 +17,6 @@ function parseStateCookie(cookieHeader: string): string | undefined {
   return match ? decodeURIComponent(match[1]) : undefined
 }
 
-
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
@@ -63,11 +61,14 @@ export async function GET(request: Request) {
   const cookieHeader = request.headers.get('cookie') || ''
   const stateCookie = parseStateCookie(cookieHeader)
 
-  if (stateParam || stateCookie) {
+  if (stateCookie) {
+    const stateMatches =
+      !!stateParam &&
+      stateParam.length === stateCookie.length &&
+      timingSafeEqual(Buffer.from(stateParam), Buffer.from(stateCookie))
+
     if (
-      !stateParam ||
-      !stateCookie ||
-      !timingSafeEqual(Buffer.from(stateParam), Buffer.from(stateCookie))
+      !stateMatches
     ) {
       console.error('[Auth Callback] OAuth CSRF validation failed — state mismatch or missing')
       return NextResponse.redirect(
@@ -91,6 +92,7 @@ export async function GET(request: Request) {
           return NextResponse.redirect(new URL(withLocalePrefix('/dashboard/settings?linked=true'), websiteURL))
         }
 
+        let setupFailed = false
         try {
           const { data: { user } } = await supabase.auth.getUser()
           if (user) {
@@ -101,6 +103,13 @@ export async function GET(request: Request) {
             throw e
           }
           console.error('Auth callback ensureUserInDatabase error:', e)
+          setupFailed = true
+        }
+
+        if (setupFailed) {
+          return NextResponse.redirect(
+            new URL(withLocalePrefix('/authentication?error=account_setup_failed'), websiteURL)
+          )
         }
 
         if (normalizedNext) {

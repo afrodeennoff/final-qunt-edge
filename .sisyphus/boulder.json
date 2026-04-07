@@ -1,27 +1,13 @@
 {
   "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/minimax-public-pages.md",
-  "started_at": "2026-04-06T18:59:12.103Z",
+  "started_at": "2026-04-07T10:53:41.323Z",
   "session_ids": [
     "ses_29bfd064dffeRbcEpZxOuts32Y",
-    "ses_29bd57b4cffeiwwAvndhqO8yYL",
-    "ses_29bd0b1b0ffedPNueSN0QFpAYj",
-    "ses_29bcd3810ffejNjyLFztMQe1lQ",
-    "ses_29bc852e7ffe6DnfadEezEagGZ",
-    "ses_29bc51b17ffeFgmQWsFlHK7dVA",
-    "ses_2987424a1ffeiM0j7dN8wQW3GD",
-    "ses_298728960ffeWisaLRPW19UF4Y"
+    "ses_2986bf3c6ffeWyxGdWwxK5Jd4o",
+    "ses_2985e1ff9ffeUfMytMvuhcGPAo",
+    "ses_2984b786cffexaHmWjP2PQfGVc"
   ],
   "plan_name": "minimax-public-pages",
-  "agent": "atlas",
-  "task_sessions": {
-    "todo:1": {
-      "task_key": "todo:1",
-      "task_label": "1",
-      "task_title": "Light Theme Token Definitions",
-      "session_id": "ses_29bd57b4cffeiwwAvndhqO8yYL",
-      "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-04-06T19:00:19.624Z"
-    }
-  }
+  "agent": "Sisyphus (Ultraworker)",
+  "task_sessions": {}
 }

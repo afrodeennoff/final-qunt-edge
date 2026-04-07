@@ -113,6 +113,9 @@ const parseConnectionUrl = (connectionString: string): URL | null => {
   }
 }
 
+const isSupabaseManagedHost = (hostname: string): boolean =>
+  hostname.endsWith('.supabase.co') || hostname.endsWith('.pooler.supabase.com')
+
 const shouldEnableSsl = (connectionString: string): boolean => {
   const override = parseBooleanEnv(process.env.PGSSL_ENABLE)
   if (override !== undefined) return override
@@ -123,8 +126,8 @@ const shouldEnableSsl = (connectionString: string): boolean => {
   if (sslMode === 'disable') return false
   if (sslMode) return true
 
-  if (!url) {
-    // Fall back to production default.
+  if (url && isSupabaseManagedHost(url.hostname)) {
+    return true
   }
 
   return isProduction
