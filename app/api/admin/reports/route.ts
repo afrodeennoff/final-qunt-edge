@@ -5,6 +5,7 @@ import { assertAdminAccess } from '@/server/authz'
 import { apiError } from '@/lib/api-response'
 import { parseQuery, toValidationErrorResponse } from '@/app/api/_utils/validate'
 import { z } from 'zod'
+import { redactUserResponse } from '@/lib/redact-pii'
 
 type DateFilter = { gte?: Date; lte?: Date }
 
@@ -350,7 +351,7 @@ async function generateChurnReport(dateFilter: DateFilter) {
     activeSubscriptionsAtStart: activeSubsAtStart,
     churnByPlan,
     cancellationReasons: reasonCounts,
-    recentCancellations: cancelledSubs.slice(0, 20),
+    recentCancellations: redactUserResponse(cancelledSubs.slice(0, 20), ['email']),
   })
 }
 
@@ -392,7 +393,7 @@ async function generateSubscriptionReport(dateFilter: DateFilter) {
     subscriptionBreakdown: subscriptionCounts,
     trialConversions: conversions,
     conversionRate: conversionRate.toFixed(2) + '%',
-    recentSubscriptions: subscriptions.slice(0, 50),
+    recentSubscriptions: redactUserResponse(subscriptions.slice(0, 50), ['email']),
   })
 }
 
@@ -430,7 +431,7 @@ async function generateTransactionReport(dateFilter: DateFilter) {
   })
 
   return NextResponse.json({
-    transactions,
+    transactions: redactUserResponse(transactions, ['email']),
     stats: transactionStats,
     failedTransactions,
   })
