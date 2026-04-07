@@ -1,6 +1,5 @@
 'use server'
 import { createServerClient } from '@supabase/ssr'
-import type { UserIdentity } from '@supabase/auth-js'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { authSecurityConfig } from '@/lib/security/auth-config'
@@ -449,71 +448,7 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
 }
 
 
-// Identity linking functions
-export async function linkDiscordAccount() {
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
-  const { data, error } = await supabase.auth.linkIdentity({
-    provider: 'discord',
-    options: {
-      redirectTo: `${websiteURL}api/auth/callback?action=link`,
-    },
-  })
-  if (data.url) {
-    redirect(data.url)
-  }
-  if (error) {
-    throw new Error(error.message)
-  }
-}
-
-export async function linkGoogleAccount() {
-  const supabase = await createClient()
-  const websiteURL = await getWebsiteURL()
-  const { data, error } = await supabase.auth.linkIdentity({
-    provider: 'google',
-    options: {
-      redirectTo: `${websiteURL}api/auth/callback?action=link`,
-    },
-  })
-  if (data.url) {
-    redirect(data.url)
-  }
-  if (error) {
-    throw new Error(error.message)
-  }
-}
-
-export async function unlinkIdentity(identity: UserIdentity) {
-  const supabase = await createClient()
-  const { error } = await supabase.auth.unlinkIdentity(identity)
-  if (error) {
-    throw new Error(error.message)
-  }
-  return { success: true }
-}
-
-export async function getUserIdentities() {
-  try {
-    const supabase = await createClient()
-    const { data: { user }, error } = await supabase.auth.getUser()
-
-    if (error || !user) {
-      throw new Error('User not authenticated')
-    }
-
-    // Get user's identities using the proper method
-    const { data: identities, error: identitiesError } = await supabase.auth.getUserIdentities()
-
-    if (identitiesError) {
-      throw new Error(identitiesError.message)
-    }
-
-    return identities
-  } catch (error: unknown) {
-    handleAuthError(error)
-  }
-}
+export { getUserIdentities, linkDiscordAccount, linkGoogleAccount, unlinkIdentity } from './auth-identity'
 
 export {
   ensureUserInDatabase,
