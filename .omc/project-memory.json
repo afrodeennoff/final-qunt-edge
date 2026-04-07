@@ -1,12 +1,12 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1774646191864,
+  "lastScanned": 1775580395777,
   "projectRoot": "/Users/timon/Downloads/qunt-edge",
   "techStack": {
     "languages": [
       {
         "name": "JavaScript/TypeScript",
-        "version": ">=20.10.0",
+        "version": "20.x",
         "confidence": "high",
         "markers": [
           "package.json"
@@ -49,7 +49,7 @@
       }
     ],
     "packageManager": "npm",
-    "runtime": "Node.js 20.10.0"
+    "runtime": "Node.js 20.x"
   },
   "build": {
     "buildCommand": "npm run build",
@@ -58,15 +58,23 @@
     "devCommand": "npm run dev",
     "scripts": {
       "dev": "next dev",
+      "dev:bun": "bun run dev",
+      "dev:npm": "npm run dev",
       "clean:build-artifacts": "node scripts/clean-build-artifacts.mjs",
       "self-heal": "node scripts/self-heal.mjs",
-      "prebuild": "npm run clean:build-artifacts && tsx scripts/generate-routes.ts",
+      "prebuild": "node scripts/clean-build-artifacts.mjs && tsx scripts/generate-routes.ts",
       "db:sync": "node scripts/sync-stack.mjs",
-      "build": "npm run db:sync && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
+      "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
+      "build:bun": "bun run build",
+      "build:npm": "npm run build",
       "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
+      "start:bun": "bun run start",
+      "pack:bun": "bun pm pack",
+      "vps:deploy": "bash ./scripts/vps-deploy-bun.sh",
+      "vps:deploy:npm": "npm ci && npm run build",
       "start:standalone": "HOSTNAME=0.0.0.0 node .next/standalone/server.js",
       "lint": "eslint",
-      "typecheck": "npm run clean:build-artifacts && node scripts/robust-typecheck.mjs",
+      "typecheck": "node scripts/clean-build-artifacts.mjs && node scripts/robust-typecheck.mjs",
       "test": "vitest run --config vitest.config.ts",
       "test:smoke": "node scripts/smoke-http.mjs",
       "test:coverage": "vitest run --config vitest.config.ts --coverage",
@@ -119,7 +127,7 @@
       "path": "app",
       "purpose": "Application code",
       "fileCount": 13,
-      "lastAccessed": 1774646191847,
+      "lastAccessed": 1775580395756,
       "keyFiles": [
         "error.tsx",
         "global-error.tsx",
@@ -128,11 +136,22 @@
         "icon.svg"
       ]
     },
+    "awesome-design-md": {
+      "path": "awesome-design-md",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1775580395757,
+      "keyFiles": [
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "README.md"
+      ]
+    },
     "components": {
       "path": "components",
       "purpose": "UI components",
-      "fileCount": 19,
-      "lastAccessed": 1774646191848,
+      "fileCount": 21,
+      "lastAccessed": 1775580395761,
       "keyFiles": [
         "SparkChart.tsx",
         "ai-activated.tsx",
@@ -145,27 +164,27 @@
       "path": "content",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1774646191851,
+      "lastAccessed": 1775580395762,
       "keyFiles": []
     },
     "context": {
       "path": "context",
       "purpose": null,
-      "fileCount": 6,
-      "lastAccessed": 1774646191852,
+      "fileCount": 7,
+      "lastAccessed": 1775580395762,
       "keyFiles": [
+        "AGENTS.md",
         "data-provider-utils.ts",
         "data-provider.tsx",
         "rithmic-sync-context.tsx",
-        "sync-context.tsx",
-        "theme-provider.tsx"
+        "sync-context.tsx"
       ]
     },
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 61,
-      "lastAccessed": 1774646191852,
+      "fileCount": 62,
+      "lastAccessed": 1775580395763,
       "keyFiles": [
         "AI-Router-Complete-Report.md",
         "AI_AUTOFIX_QUICK_START.md",
@@ -178,14 +197,14 @@
       "path": "goose",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1774646191853,
+      "lastAccessed": 1775580395763,
       "keyFiles": []
     },
     "hooks": {
       "path": "hooks",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1774646191853,
+      "lastAccessed": 1775580395763,
       "keyFiles": [
         "use-auto-scroll.ts",
         "use-currency.ts",
@@ -197,21 +216,21 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 63,
-      "lastAccessed": 1774646191853,
+      "fileCount": 60,
+      "lastAccessed": 1775580395764,
       "keyFiles": [
+        "AGENTS.md",
         "account-metrics.ts",
         "advanced-metrics.ts",
         "api-auth.ts",
-        "api-response.ts",
-        "auto-save-service.ts"
+        "api-response.ts"
       ]
     },
     "locales": {
       "path": "locales",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1774646191853,
+      "lastAccessed": 1775580395764,
       "keyFiles": [
         "client.ts",
         "en.ts",
@@ -224,7 +243,7 @@
       "path": "mt5_import_service",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1774646191853,
+      "lastAccessed": 1775580395765,
       "keyFiles": [
         "Dockerfile",
         "config.py",
@@ -237,14 +256,14 @@
       "path": "output",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1774646191854,
+      "lastAccessed": 1775580395765,
       "keyFiles": []
     },
     "prisma": {
       "path": "prisma",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1774646191854,
+      "lastAccessed": 1775580395766,
       "keyFiles": [
         "schema-optimizations.prisma",
         "schema.prisma",
@@ -256,7 +275,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 23,
-      "lastAccessed": 1774646191855,
+      "lastAccessed": 1775580395766,
       "keyFiles": [
         "AGENTS.md",
         "android-chrome-192x192.png",
@@ -269,7 +288,7 @@
       "path": "ripgrep-14.1.1-aarch64-apple-darwin",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1774646191855,
+      "lastAccessed": 1775580395766,
       "keyFiles": [
         "COPYING",
         "LICENSE-MIT",
@@ -282,7 +301,7 @@
       "path": "schemas",
       "purpose": "Schema definitions",
       "fileCount": 4,
-      "lastAccessed": 1774646191855,
+      "lastAccessed": 1775580395766,
       "keyFiles": [
         "risk-register.schema.json",
         "widget-input.schema.json",
@@ -293,8 +312,8 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 27,
-      "lastAccessed": 1774646191855,
+      "fileCount": 29,
+      "lastAccessed": 1775580395766,
       "keyFiles": [
         "analyze-bundle.mjs",
         "analyze-components.js",
@@ -306,34 +325,34 @@
     "server": {
       "path": "server",
       "purpose": null,
-      "fileCount": 32,
-      "lastAccessed": 1774646191855,
+      "fileCount": 34,
+      "lastAccessed": 1775580395767,
       "keyFiles": [
+        "AGENTS.md",
         "accounts.ts",
         "auth.ts",
         "authz.ts",
-        "billing.ts",
-        "database.ts"
+        "billing.ts"
       ]
     },
     "store": {
       "path": "store",
       "purpose": null,
-      "fileCount": 26,
-      "lastAccessed": 1774646191856,
+      "fileCount": 27,
+      "lastAccessed": 1775580395767,
       "keyFiles": [
+        "AGENTS.md",
         "account-order-store.ts",
         "accounts-group-expansion-store.ts",
         "accounts-sorting-store.ts",
-        "accounts-view-preference-store.ts",
-        "analysis-store.ts"
+        "accounts-view-preference-store.ts"
       ]
     },
     "styles": {
       "path": "styles",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1774646191856,
+      "lastAccessed": 1775580395767,
       "keyFiles": [
         "tailwind-theme.ts",
         "themes.css",
@@ -344,7 +363,7 @@
       "path": "tasks",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1774646191856,
+      "lastAccessed": 1775580395767,
       "keyFiles": [
         "PERFORMANCE_FIX_CHECKLIST.md",
         "lessons.md",
@@ -357,27 +376,27 @@
       "path": "test-results",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1774646191856,
+      "lastAccessed": 1775580395767,
       "keyFiles": []
     },
     "tests": {
       "path": "tests",
       "purpose": "Test files",
-      "fileCount": 20,
-      "lastAccessed": 1774646191856,
+      "fileCount": 21,
+      "lastAccessed": 1775580395768,
       "keyFiles": [
+        "AGENTS.md",
         "account-metrics.test.ts",
         "auth-attempts.test.ts",
         "community-actions.test.ts",
-        "date-utils.test.ts",
-        "error-boundaries.test.tsx"
+        "date-utils.test.ts"
       ]
     },
     "types": {
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 1,
-      "lastAccessed": 1774646191856,
+      "lastAccessed": 1775580395768,
       "keyFiles": [
         "web-vitals.d.ts"
       ]
@@ -385,26 +404,28 @@
     "app/api": {
       "path": "app/api",
       "purpose": "API routes",
-      "fileCount": 0,
-      "lastAccessed": 1774646191856,
-      "keyFiles": []
+      "fileCount": 1,
+      "lastAccessed": 1775580395768,
+      "keyFiles": [
+        "AGENTS.md"
+      ]
     },
     "lib/__tests__": {
       "path": "lib/__tests__",
       "purpose": "Test files",
-      "fileCount": 14,
-      "lastAccessed": 1774646191857,
+      "fileCount": 20,
+      "lastAccessed": 1775580395770,
       "keyFiles": [
+        "admin-bypass.test.ts",
         "ai-policy.test.ts",
-        "ai-support-route.test.ts",
-        "ai-transcribe-route.test.ts"
+        "ai-support-route.test.ts"
       ]
     },
     "prisma/migrations": {
       "path": "prisma/migrations",
       "purpose": "Database migrations",
       "fileCount": 2,
-      "lastAccessed": 1774646191858,
+      "lastAccessed": 1775580395770,
       "keyFiles": [
         "README.md",
         "migration_lock.toml"
@@ -413,8 +434,8 @@
     "tests/api": {
       "path": "tests/api",
       "purpose": "API routes",
-      "fileCount": 22,
-      "lastAccessed": 1774646191858,
+      "fileCount": 23,
+      "lastAccessed": 1775580395771,
       "keyFiles": [
         "admin-reports-route.test.ts",
         "ai-budget-enforcement.test.ts",
@@ -425,15 +446,27 @@
       "path": "tests/app",
       "purpose": "Application code",
       "fileCount": 0,
-      "lastAccessed": 1774646191858,
+      "lastAccessed": 1775580395772,
       "keyFiles": []
     }
   },
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 3,
-      "lastAccessed": 1774648102081,
+      "accessCount": 4,
+      "lastAccessed": 1775579223242,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/(authentication)/components/user-auth-form.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775585481361,
+      "type": "directory"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-04-07-auth-security-hardening-design.md",
+      "accessCount": 1,
+      "lastAccessed": 1775587579371,
       "type": "directory"
     }
   ],

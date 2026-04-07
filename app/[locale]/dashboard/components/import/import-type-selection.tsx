@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter } from "lucide-react"
-import { InputV2, CardV2, CardV2Content } from "@/components/ui/v2"
+import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter, GitCompare, X } from "lucide-react"
+import { InputV2, CardV2, CardV2Content, ButtonV2, BadgeV2 } from "@/components/ui/v2"
+import Image from "next/image"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useI18n } from "@/locales/client"
@@ -37,10 +38,26 @@ function isWeekend() {
 
 export default function ImportTypeSelection({ selectedType, setSelectedType, setIsOpen }: ImportTypeSelectionProps) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [hoveredCategory, setHoveredCategory] = useState<PlatformConfig['category'] | null>(null)
   const [activeCategory, setActiveCategory] = useState<string>("all")
+  const [isCompareMode, setIsCompareMode] = useState(false)
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const t = useI18n()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
+
+  const handlePlatformCheck = (platformType: string, checked: boolean) => {
+    setSelectedPlatforms(prev => {
+      if (checked) {
+        if (prev.length >= 4) return prev
+        return [...prev, platformType]
+      } else {
+        return prev.filter(p => p !== platformType)
+      }
+    })
+  }
+
+  const clearSelection = () => {
+    setSelectedPlatforms([])
+  }
 
   // Set default selection from store preference
   useEffect(() => {
@@ -98,14 +115,28 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
         <div className="flex flex-col gap-4 h-full min-h-0 relative">
           {/* Header & Filter */}
           <div className="p-4 border-b border-v2-border bg-v2-bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-v2-bg-surface/60 sticky top-0 z-10">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
-              <InputV2
-                placeholder={t('import.type.search')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
-              />
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
+                <InputV2
+                  placeholder={t('import.type.search')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
+                />
+              </div>
+              <ButtonV2
+                variant={isCompareMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => setIsCompareMode(!isCompareMode)}
+                className={cn(
+                  "shrink-0 gap-2",
+                  isCompareMode && "bg-v2-accent text-v2-bg-base hover:bg-v2-accent/90"
+                )}
+              >
+                <GitCompare className="h-4 w-4" />
+                Compare
+              </ButtonV2>
             </div>
 
             <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="w-full">
@@ -137,7 +168,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           <ScrollArea className="flex-1 p-4 md:p-6">
             <motion.div
               layout
-              className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 pb-20"
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pb-20"
             >
               <AnimatePresence mode='popLayout'>
                 {filteredPlatforms.length > 0 ? (
@@ -147,12 +179,15 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                         platform={platform}
                         isSelected={selectedType === platform.type}
                         onSelect={(type) => {
-                          setSelectedType(type as ImportType)
-                          setLastSelectedType(type as ImportType)
+                          if (!isCompareMode) {
+                            setSelectedType(type as ImportType)
+                            setLastSelectedType(type as ImportType)
+                          }
                         }}
-                        onHover={(category) => setHoveredCategory(category as PlatformConfig['category'])}
-                        onLeave={() => setHoveredCategory(null)}
                         isWeekend={isWeekend()}
+                        isMultiSelectMode={isCompareMode}
+                        isChecked={selectedPlatforms.includes(platform.type)}
+                        onCheckChange={(checked) => handlePlatformCheck(platform.type, checked)}
                       />
                     </div>
                   ))
@@ -176,10 +211,125 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               </AnimatePresence>
             </motion.div>
           </ScrollArea>
+
+          {isCompareMode && selectedPlatforms.length >= 2 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="absolute bottom-4 left-4 right-4 z-20"
+            >
+              <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 backdrop-blur border border-v2-border shadow-lg shadow-v2-bg-base/50">
+                <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
+                  <span>{selectedPlatforms.length} platforms selected</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ButtonV2
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearSelection}
+                    className="text-v2-text-muted hover:text-v2-text-primary"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </ButtonV2>
+                  <ButtonV2
+                    variant="default"
+                    size="sm"
+                    onClick={() => setIsCompareMode(true)}
+                    className="bg-v2-accent text-v2-bg-base hover:bg-v2-accent/90 gap-2"
+                  >
+                    <GitCompare className="h-4 w-4" />
+                    Compare
+                  </ButtonV2>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         <div className="hidden lg:flex h-full bg-v2-bg-hover/30 border-l border-v2-border relative overflow-hidden">
-          {selectedType && selectedPlatform ? (
+          {isCompareMode && selectedPlatforms.length >= 2 ? (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="h-full flex flex-col w-full"
+            >
+              <div className="p-4 border-b border-v2-border flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-v2-text-primary">Compare Platforms</h3>
+                <ButtonV2 variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
+                  <X className="h-4 w-4" />
+                </ButtonV2>
+              </div>
+              <div className="h-full overflow-y-auto p-4">
+                <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(selectedPlatforms.length, 4)}, 1fr)` }}>
+                  {selectedPlatforms.slice(0, 4).map(platformType => {
+                    const platform = platforms.find(p => p.type === platformType)
+                    if (!platform) return null
+                    return (
+                      <motion.div
+                        key={platform.type}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col"
+                      >
+                        <CardV2 variant="default" size="sm" className="h-full">
+                          <CardV2Content className="p-4 flex flex-col gap-3">
+                            <div className="flex items-center gap-3">
+                              {platform.logo.path && (
+                                <div className="relative h-10 w-10 shrink-0">
+                                  <Image
+                                    src={platform.logo.path}
+                                    alt={platform.logo.alt || ""}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-semibold text-v2-text-primary truncate">
+                                  {t(platform.name as any, { count: 1 })}
+                                </h4>
+                                <p className="text-xs text-v2-text-secondary truncate">
+                                  {platform.category}
+                                </p>
+                              </div>
+                              <ButtonV2
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0"
+                                onClick={() => handlePlatformCheck(platform.type, false)}
+                              >
+                                <X className="h-3 w-3" />
+                              </ButtonV2>
+                            </div>
+                            <p className="text-xs text-v2-text-muted line-clamp-3">
+                              {t(platform.description as any, { count: 1 })}
+                            </p>
+                            <div className="flex flex-wrap gap-1.5 mt-auto">
+                              {!platform.isDisabled && !platform.isComingSoon && (
+                                <BadgeV2 variant="success" className="text-[10px]">Available</BadgeV2>
+                              )}
+                              {platform.isDisabled && (
+                                <BadgeV2 variant="warning" className="text-[10px]">Maintenance</BadgeV2>
+                              )}
+                              {platform.isComingSoon && (
+                                <BadgeV2 variant="secondary" className="text-[10px] bg-semantic-info-bg/10 text-semantic-info">Coming Soon</BadgeV2>
+                              )}
+                              {platform.isRithmic && (
+                                <BadgeV2 variant="outline" className="text-[10px]">Rithmic</BadgeV2>
+                              )}
+                            </div>
+                          </CardV2Content>
+                        </CardV2>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          ) : selectedType && selectedPlatform ? (
             <motion.div
               key={selectedType}
               initial={{ opacity: 0, x: 20 }}
@@ -216,13 +366,17 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
         {selectedType && selectedPlatform && (
           <Sheet open={!!selectedType} onOpenChange={() => setSelectedType('')}>
-            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border">
-              <SheetHeader className="mb-4">
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border p-0">
+              {/* Drag Handle */}
+              <div className="flex justify-center py-3">
+                <div className="h-1.5 w-12 rounded-full bg-v2-border" />
+              </div>
+              <SheetHeader className="px-4 pb-2">
                 <SheetTitle className="text-v2-text-primary">
                   {t(selectedPlatform.name as any, { count: 1 })}
                 </SheetTitle>
               </SheetHeader>
-              <div className="h-[calc(85vh-80px)] overflow-y-auto">
+              <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">
                 {selectedPlatform.customComponent ? (
                   <selectedPlatform.customComponent setIsOpen={setIsOpen} />
                 ) : (

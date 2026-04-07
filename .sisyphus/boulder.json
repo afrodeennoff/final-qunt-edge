@@ -1,13 +1,22 @@
 {
-  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/minimax-public-pages.md",
-  "started_at": "2026-04-07T10:53:41.323Z",
+  "active_plan": "/Users/timon/Downloads/qunt-edge/.sisyphus/plans/import-card-redesign.md",
+  "started_at": "2026-04-07T16:50:21.279Z",
   "session_ids": [
-    "ses_29bfd064dffeRbcEpZxOuts32Y",
-    "ses_2986bf3c6ffeWyxGdWwxK5Jd4o",
-    "ses_2985e1ff9ffeUfMytMvuhcGPAo",
-    "ses_2984b786cffexaHmWjP2PQfGVc"
+    "ses_297376528ffeYn57t9VWhQVYkn",
+    "ses_29724cf00ffeLl9yF0En6bY1lc"
   ],
-  "plan_name": "minimax-public-pages",
-  "agent": "Sisyphus (Ultraworker)",
-  "task_sessions": {}
+  "plan_name": "import-card-redesign",
+  "agent": "Atlas (Orchestrator)",
+  "task_sessions": {
+    "todo:8": {
+      "task_key": "todo:8",
+      "task_label": "8",
+      "task_title": "Add checkbox selection UI",
+      "session_id": "ses_2970e99a9ffelrjYnNrvb2ert7",
+      "agent": "Sisyphus-Junior",
+      "category": "visual-engineering",
+      "updated_at": "2026-04-07T17:45:44.683Z"
+    }
+  },
+  "session_origins": {}
 }
