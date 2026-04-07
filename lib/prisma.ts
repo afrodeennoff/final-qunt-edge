@@ -20,14 +20,16 @@ const DB_POOL_WARN_MIN_MAX_CONNECTIONS = 3
 const MISSING_CONNECTION_ERROR =
   '[Prisma] Database connection is not configured. Set POSTGRES_PRISMA_URL, POSTGRES_URL, DATABASE_URL, DIRECT_URL, or POSTGRES_URL_NON_POOLING.'
 
+const normalizeEnvValue = (value?: string): string => value?.trim() ?? ''
+
 const selectRuntimeConnectionString = (): string => {
   // Prefer provider-specific pooled URLs when available.
   return (
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL ||
-    process.env.DATABASE_URL ||
-    process.env.DIRECT_URL ||
-    process.env.POSTGRES_URL_NON_POOLING ||
+    normalizeEnvValue(process.env.POSTGRES_PRISMA_URL) ||
+    normalizeEnvValue(process.env.POSTGRES_URL) ||
+    normalizeEnvValue(process.env.DATABASE_URL) ||
+    normalizeEnvValue(process.env.DIRECT_URL) ||
+    normalizeEnvValue(process.env.POSTGRES_URL_NON_POOLING) ||
     ''
   )
 }

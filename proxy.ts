@@ -36,6 +36,10 @@ function parseCsvEnv(value?: string): string[] {
   return value?.split(',').map(s => s.trim()).filter(Boolean) ?? []
 }
 
+function normalizeEnvValue(value?: string): string {
+  return value?.trim() ?? ''
+}
+
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
   const timeoutPromise = new Promise<never>((_, reject) =>
     setTimeout(() => reject(new Error(message)), timeoutMs)
@@ -110,8 +114,8 @@ function handleCronAuth(request: NextRequest): NextResponse | null {
 }
 
 async function handleAdminAuth(request: NextRequest): Promise<{ error: NextResponse } | { user: User }> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseAnonKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return { error: NextResponse.json({ error: "Internal server error" }, { status: 500 }) }
@@ -307,8 +311,8 @@ function redirectWithPrivateNoStore(url: URL) {
 
 async function updateSession(request: NextRequest) {
   const response = NextResponse.next()
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseAnonKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.warn("[Proxy] Missing Supabase URL or anon key; skipping session refresh.")
@@ -373,8 +377,8 @@ async function handlePrivateApiAuth(request: NextRequest): Promise<NextResponse 
     return null
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseAnonKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
@@ -418,6 +422,20 @@ function setCspHeader(response: NextResponse, csp: string, reportOnly: boolean) 
     reportOnly ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy",
     csp
   )
+}
+
+function attachRequestHeaders(response: NextResponse, headers: Headers) {
+  const headerForwardingResponse = NextResponse.next({
+    request: {
+      headers,
+    },
+  })
+
+  headerForwardingResponse.headers.forEach((value, key) => {
+    if (key === "x-middleware-override-headers" || key.startsWith("x-middleware-request-")) {
+      response.headers.set(key, value)
+    }
+  })
 }
 
 export async function proxy(req: NextRequest) {
@@ -514,6 +532,9 @@ export async function proxy(req: NextRequest) {
   // This handles basic redirects for / to /en, etc.
   const response = I18nMiddleware(req)
   const nonce = createNonce()
+  const requestHeaders = new Headers(req.headers)
+  requestHeaders.set("x-nonce", nonce)
+  attachRequestHeaders(response, requestHeaders)
   response.headers.set("x-nonce", nonce)
 
   // Embed route check (public path, no auth/session roundtrip needed)

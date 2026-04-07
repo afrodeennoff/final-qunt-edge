@@ -15,6 +15,7 @@ import {
 
 const PASSWORD_MIN_LENGTH = 8
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
+const normalizeEnvValue = (value?: string): string => value?.trim() ?? ''
 
 function validatePasswordStrength(password: string): string | null {
   if (!password || password.length < PASSWORD_MIN_LENGTH) {
@@ -28,9 +29,9 @@ function validatePasswordStrength(password: string): string | null {
 
 export async function getWebsiteURL() {
   let url =
-    process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
-    process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Optional public override.
-    process?.env?.VERCEL_URL ?? // Automatically set by Vercel at runtime.
+    normalizeEnvValue(process?.env?.NEXT_PUBLIC_SITE_URL) || // Set this to your site URL in production env.
+    normalizeEnvValue(process?.env?.NEXT_PUBLIC_VERCEL_URL) || // Optional public override.
+    normalizeEnvValue(process?.env?.VERCEL_URL) || // Automatically set by Vercel at runtime.
     'http://localhost:3000/'
   // Make sure to include `https://` when not localhost.
   url = url.startsWith('http') ? url : `https://${url}`
@@ -182,8 +183,8 @@ async function getRequestIp(): Promise<string> {
 export async function createClient() {
   const cookieStore = await cookies()
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const url = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const key = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!url || !key) {
     throw new Error('Missing Supabase environment variables — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY')
@@ -214,8 +215,8 @@ export async function createClient() {
 }
 
 export async function signInWithDiscord(next: string | null = null, locale?: string) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
   if (!supabaseUrl || !supabaseKey) {
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
@@ -237,8 +238,8 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
 }
 
 export async function signInWithGoogle(next: string | null = null, locale?: string) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
   if (!supabaseUrl || !supabaseKey) {
     throw new Error('Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.')
   }
@@ -276,8 +277,8 @@ async function signOutSilently() {
 export async function signInWithEmail(email: string, next: string | null = null, locale?: string) {
   const requestIp = await getRequestIp()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseKey) {
     const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
@@ -341,8 +342,8 @@ export async function signInWithPasswordAction(
 ) {
   const requestIp = await getRequestIp()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseKey) {
     const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
@@ -424,8 +425,8 @@ export async function signUpWithPasswordAction(
 
   const requestIp = await getRequestIp()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
   if (!supabaseUrl || !supabaseKey) {
     const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'
     if (process.env.NODE_ENV !== 'production') {
@@ -704,8 +705,8 @@ export async function ensureUserInDatabase(
 export async function verifyOtp(email: string, token: string, type: 'email' = 'email') {
   const requestIp = await getRequestIp()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const supabaseUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)
+  const supabaseKey = normalizeEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
 
   if (!supabaseUrl || !supabaseKey) {
     const message = 'Authentication is not configured. Please add Supabase environment variables to .env.local (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY). See README.md for setup instructions.'

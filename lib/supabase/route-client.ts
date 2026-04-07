@@ -27,9 +27,9 @@ function parseCookieHeader(header: string | null): CookiePair[] {
  * so route handlers remain callable from unit tests without a Next request scope.
  */
 export function createRouteClient(request: Request) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').trim();
   const key =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+    (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
 
   // Fail closed in production; only allow local defaults in non-production.
   if (!url || !key) {

@@ -28,7 +28,7 @@ export default function MarketingLayoutShell({
       <div className="pointer-events-none fixed inset-0 hidden marketing-grid opacity-[0.18] sm:block" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
-        <div className="flex-1 min-h-0 bg-white">
+        <div className="flex-1 min-h-0 bg-background">
           <MiniMaxNavbarWrapper>
             <Navbar />
           </MiniMaxNavbarWrapper>

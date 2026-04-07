@@ -11,7 +11,6 @@ import {
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { headers } from "next/headers";
 import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
 import { getUiVariant } from "@/lib/ui-v2";
 import ThemeRouteInitializer from "@/lib/theme-client";
@@ -187,9 +186,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cspNonceEnabled = process.env.ENABLE_CSP_NONCE === "true";
-  const requestNonce = cspNonceEnabled ? (await headers()).get("x-nonce") : null;
-  const nonce = requestNonce && requestNonce.trim().length > 0 ? requestNonce : null;
   const isProduction = process.env.NODE_ENV === "production";
   const isVercelRuntime = process.env.VERCEL === "1";
   const enableVercelInsights = isProduction && isVercelRuntime;
@@ -217,39 +213,6 @@ export default async function RootLayout({
         {/* Accessibility & SEO */}
         <meta name="google" content="notranslate" />
         <meta name="robots" content="index, follow" />
-
-        {/* Theme bootstrap is now handled client-side by ThemeRouteInitializer and route-aware inline script below. */}
-        <script
-          id="init-theme"
-          nonce={nonce ?? undefined}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: `
-            // Route-aware bootstrap: don't force dark on public routes. This script only ensures a sensible
-            // initial theme before hydration if the client component hasn't run yet.
-            (function(){
-              try {
-                var root = document.documentElement;
-                var path = window.location.pathname || '';
-                // Locale-aware public routes after locale prefix, treat as public if path is root or starts with embed/shared/home/landing
-                var afterLocale = path.replace(/^\/(en|fr)/i, '') || '';
-                var isPublic = /^((\/)?$|(\/embed.*)|(\/shared.*)|(\/landing.*)|(\/home.*))/.test(afterLocale.toLowerCase());
-                if (isPublic) {
-                  root.classList.remove('dark');
-                  root.classList.add('light');
-                } else {
-                  root.classList.remove('light');
-                  root.classList.add('dark');
-                }
-              } catch (e) {
-                console.error('Theme bootstrap failed', e);
-              }
-            })();
-          `,
-          }}
-        />
-        
-        {/* Client-side route-aware theme initializer is provided by lib/theme-client. */}
 
         {/* PostHog Analytics */}
         {/*{process.env.NODE_ENV === "production" && (
