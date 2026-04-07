@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/input-otp"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BadgeV2 } from "@/components/ui/v2"
-// Link removed; unauthenticated users can't reach settings
+import Link from "next/link"
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
 import { useCurrentLocale } from "@/locales/client"
 
@@ -707,6 +707,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     </FormItem>
                                 )}
                             />
+                            <Link
+                                href="/authentication/forgot-password"
+                                className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
+                            >
+                                Forgot your password?
+                            </Link>
                             <ButtonV2 
                                 disabled={isLoading}
                                 type="submit"
