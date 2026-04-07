@@ -3,36 +3,35 @@ import Footer from './footer'
 import { cn } from '@/lib/utils'
 import { MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
-import { SidebarInset } from '@/components/ui/sidebar'
-import dynamic from 'next/dynamic'
+ 
 
-const LandingSidebar = dynamic(
-  () => import('@/components/sidebar/landing-sidebar').then((m) => m.LandingSidebar),
-  {
-    loading: () => <div className="hidden md:block w-14 lg:w-[72px] shrink-0" />,
-  }
-)
+ 
 
 type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
   contentClassName?: string
   className?: string
-  showSidebar?: boolean
 }>
+
+ 
+const MiniMaxNavbarWrapper: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  return <div className="w-full bg-white">{children}</div>
+}
 
 export default function MarketingLayoutShell({
   children,
   contentClassName = 'mx-auto w-full max-w-[1320px]',
   className,
-  showSidebar = true,
 }: MarketingLayoutShellProps) {
   return (
     <div className={cn('marketing-shell min-h-screen w-full overflow-x-hidden', className)}>
       <div className="pointer-events-none fixed inset-0 hidden marketing-grid opacity-[0.18] sm:block" />
       <div className="flex min-h-screen w-full">
-        {showSidebar ? <LandingSidebar /> : null}
-        <SidebarInset className="flex-1 min-h-0">
-          <Navbar />
+        {/* Full-width content: no sidebar column */}
+        <div className="flex-1 min-h-0 bg-white">
+          <MiniMaxNavbarWrapper>
+            <Navbar />
+          </MiniMaxNavbarWrapper>
           <div className="relative z-10 pt-16 sm:pt-20 lg:pt-24">
             <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
               <RollingAdBanner />
@@ -44,7 +43,7 @@ export default function MarketingLayoutShell({
             </div>
           </div>
           <Footer />
-        </SidebarInset>
+        </div>
       </div>
     </div>
   )

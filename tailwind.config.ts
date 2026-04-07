@@ -64,6 +64,11 @@ const config = {
 				// Premium Border Utilities
 				'4xl': '2rem',
 				'5xl': '2.5rem',
+				// MiniMax Border Radius Tokens
+				pill: '9999px',
+				comfortable: '13px',
+				generous: '20px',
+				large: '24px',
 			},
 			fontSize: {
 				'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem)',
@@ -152,6 +157,10 @@ const config = {
 			},
 			// Refined Shadow Utilities
 			boxShadow: {
+				// MiniMax Shadow Tokens
+				'minimax-brand-glow': 'rgba(44, 30, 116, 0.16) 0px 0px 15px',
+				'minimax-elevated': 'rgba(36, 36, 36, 0.08) 0px 12px 16px -4px',
+				'minimax-ambient': 'rgba(0, 0, 0, 0.08) 0px 0px 22.576px',
 				// Layered shadows - small
 				'sm-layered': '0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.1)',
 				// Layered shadows - medium
@@ -193,6 +202,12 @@ const config = {
 				xs: '2px',
 				'3xl': '64px',
 				'4xl': '96px',
+			},
+			// MiniMax Glassmorphism Utilities (Light Mode)
+			backgroundColor: {
+				'glass-minimax': 'hsla(0, 0%, 100%, 0.4)',
+				'glass-minimax-light': 'hsla(0, 0%, 100%, 0.6)',
+				'glass-minimax-border': 'rgba(255, 255, 255, 0.2)',
 			},
 			// Premium Border Utilities
 			borderColor: {
@@ -400,6 +415,13 @@ const config = {
 				'cyber-pink': 'hsl(222 68% 66%)',
 				'matte-black': '#050505',
 				'obsidian': '#0D0D0D',
+				// MiniMax Brand Colors
+				'minimax': {
+					brand: '#1456f0',
+					pink: '#ea5ec1',
+					sky: '#3daeff',
+					deep: '#17437d',
+				},
 				semantic: {
 					success: 'hsl(var(--semantic-success))',
 					'success-fg': 'hsl(var(--semantic-success-fg))',

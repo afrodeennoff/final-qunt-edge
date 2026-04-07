@@ -210,6 +210,41 @@
     --card-padding-lg: var(--space-md);
     --card-padding-xl: var(--space-lg);
   }
+
+  .light {
+    /* ===== MARKETING SURFACE TOKENS (MiniMax Light Theme) ===== */
+    --mk-bg-0: 0 0% 100%;
+    --mk-bg-1: 0 0% 98%;
+    --mk-bg-2: 0 0% 96%;
+    --mk-surface: 0 0% 100%;
+    --mk-surface-muted: 0 0% 96%;
+    --mk-border: 220 13% 91%;
+    --mk-text: 0 0% 13%;
+    --mk-text-muted: 214 15% 32%;
+    --mk-lime: 76 86% 59%;
+    --mk-lime-ink: 0 0% 100%;
+
+    /* ===== MINI MAX SHADOW TOKENS ===== */
+    --mk-shadow-standard: 0 4px 6px rgba(0, 0, 0, 0.08);
+    --mk-shadow-brand-glow: 0 0 15px rgba(44, 30, 116, 0.16);
+    --mk-shadow-elevated: 0 12px 16px -4px rgba(36, 36, 36, 0.08);
+    --mk-shadow-soft-glow: 0 0 22.576px rgba(0, 0, 0, 0.08);
+    --mk-shadow-direction: 6.5px 2px 17.5px rgba(44, 30, 116, 0.11);
+
+    /* ===== MINI MAX COLOR TOKENS ===== */
+    --mk-brand-blue: 222 89% 51%;
+    --mk-brand-pink: 309 73% 65%;
+    --mk-sky-blue: 203 100% 62%;
+
+    /* ===== LIGHT GLASSMORPHISM TOKENS ===== */
+    --glass-bg: 0 0% 100% / 0.65;
+    --glass-bg-strong: 0 0% 100% / 0.85;
+    --glass-bg-subtle: 0 0% 100% / 0.4;
+    --glass-blur: blur(20px);
+    --glass-blur-strong: blur(40px);
+    --glass-border: 220 13% 91% / 0.5;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  }
 }
 
 /* ===== TOKEN UTILITY CLASSES ===== */

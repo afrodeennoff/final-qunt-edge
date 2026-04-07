@@ -25,7 +25,7 @@ export default function HomeLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell className="home-borderless-shell" contentClassName="w-full" showSidebar={false}>
+      <MarketingLayoutShell className="home-borderless-shell" contentClassName="w-full">
         <div className="pb-safe">
           {children}
         </div>

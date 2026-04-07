@@ -1,11 +1,20 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Cormorant_Garamond, Geist, IBM_Plex_Mono } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Geist,
+  IBM_Plex_Mono,
+  DM_Sans,
+  Outfit,
+  Poppins,
+  Roboto,
+} from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { headers } from "next/headers";
 import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
 import { getUiVariant } from "@/lib/ui-v2";
+import ThemeRouteInitializer from "@/lib/theme-client";
 import { getSiteOrigin } from "@/lib/site-url";
 
 const siteOrigin = getSiteOrigin();
@@ -36,6 +45,42 @@ const fontMono = IBM_Plex_Mono({
   display: "swap",
   preload: true,
   fallback: ["Menlo", "monospace"],
+});
+
+const fontDmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+});
+
+const fontOutfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  weight: ["500", "600"],
+  display: "swap",
+  preload: true,
+  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+});
+
+const fontPoppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["500"],
+  display: "swap",
+  preload: true,
+  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+});
+
+const fontRoboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "500", "600"],
+  display: "swap",
+  preload: true,
+  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
 const siteMetadata: Metadata = {
@@ -153,7 +198,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-background dark`}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} ${fontOutfit.variable} ${fontPoppins.variable} ${fontRoboto.variable} bg-background`} 
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning
@@ -173,18 +218,29 @@ export default async function RootLayout({
         <meta name="google" content="notranslate" />
         <meta name="robots" content="index, follow" />
 
-        {/* Apply stored theme before paint to avoid blank flash */}
+        {/* Theme bootstrap is now handled client-side by ThemeRouteInitializer and route-aware inline script below. */}
         <script
           id="init-theme"
           nonce={nonce ?? undefined}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
-            (function() {
+            // Route-aware bootstrap: don't force dark on public routes. This script only ensures a sensible
+            // initial theme before hydration if the client component hasn't run yet.
+            (function(){
               try {
                 var root = document.documentElement;
-                root.classList.remove('light');
-                root.classList.add('dark');
+                var path = window.location.pathname || '';
+                // Locale-aware public routes after locale prefix, treat as public if path is root or starts with embed/shared/home/landing
+                var afterLocale = path.replace(/^\/(en|fr)/i, '') || '';
+                var isPublic = /^((\/)?$|(\/embed.*)|(\/shared.*)|(\/landing.*)|(\/home.*))/.test(afterLocale.toLowerCase());
+                if (isPublic) {
+                  root.classList.remove('dark');
+                  root.classList.add('light');
+                } else {
+                  root.classList.remove('light');
+                  root.classList.add('dark');
+                }
               } catch (e) {
                 console.error('Theme bootstrap failed', e);
               }
@@ -192,6 +248,8 @@ export default async function RootLayout({
           `,
           }}
         />
+        
+        {/* Client-side route-aware theme initializer is provided by lib/theme-client. */}
 
         {/* PostHog Analytics */}
         {/*{process.env.NODE_ENV === "production" && (
@@ -231,6 +289,7 @@ export default async function RootLayout({
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
+        <ThemeRouteInitializer />
         <main id="main-content">
           {children}
         </main>

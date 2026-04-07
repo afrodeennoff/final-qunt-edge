@@ -224,6 +224,122 @@
   /* mk-* tokens are defined in styles/tokens.css (extended token file) */
 }
 
+/* ===== MINI MAX LIGHT THEME ===== */
+.light {
+  --background: oklch(1 0 0);  /* #ffffff - Pure White */
+  --foreground: oklch(0.2 0.01 270);  /* #222222 - Near Black */
+  --card: oklch(1 0 0);  /* #ffffff - White Card */
+  --card-foreground: oklch(0.2 0.01 270);  /* #222222 */
+  --popover: oklch(1 0 0);  /* #ffffff */
+  --popover-foreground: oklch(0.2 0.01 270);  /* #222222 */
+  --primary: oklch(0.55 0.22 264);  /* #1456f0 - Brand Blue */
+  --primary-foreground: oklch(1 0 0);  /* #ffffff */
+  --secondary: oklch(0.95 0 0);  /* #f0f0f0 - Light Gray */
+  --secondary-foreground: oklch(0.2 0.01 270);  /* #222222 */
+  --muted: oklch(0.95 0 0);  /* #f0f0f0 */
+  --muted-foreground: oklch(0.4 0.02 250);  /* #45515e - Dark Gray */
+  --accent: oklch(0.92 0.01 260);  /* subtle blue tint */
+  --accent-foreground: oklch(0.2 0.01 270);  /* #222222 */
+  --success: oklch(0.55 0.15 166);  /* #089981 - Gain Green */
+  --success-foreground: oklch(1 0 0);  /* #ffffff */
+  --warning: oklch(0.65 0.2 45);  /* #FB8C00 - Caution Orange */
+  --warning-foreground: oklch(1 0 0);  /* #ffffff */
+  --destructive: oklch(0.6 0.2 15);  /* #F23645 - Loss Red */
+  --destructive-foreground: oklch(1 0 0);  /* #ffffff */
+  --border: oklch(0.92 0 0);  /* #e5e7eb - Border Gray */
+  --input: oklch(0.95 0 0);  /* #f0f0f0 */
+  --ring: oklch(0.55 0.22 264);  /* #1456f0 - Brand Blue */
+  --chart-1: 221 84% 62%;
+  --chart-2: 194 68% 66%;
+  --chart-3: 111 76% 82%;
+  --chart-4: 170 64% 60%;
+  --chart-5: 29 84% 60%;
+  --chart-6: 220 28% 74%;
+  --chart-7: 220 22% 64%;
+  --chart-8: 220 18% 54%;
+  --sidebar: oklch(0.97 0 0);
+  --sidebar-background: oklch(0.97 0 0);
+  --sidebar-foreground: oklch(0.2 0.01 270);
+  --sidebar-primary: oklch(0.55 0.22 264);  /* Brand Blue */
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.92 0.01 260);
+  --sidebar-accent-foreground: oklch(0.55 0.22 264);  /* Brand Blue */
+  --sidebar-border: oklch(0.92 0 0);  /* Match --border */
+  --sidebar-ring: oklch(0.55 0.22 264);  /* Brand Blue */
+  --font-sans: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Geist Mono, monospace;
+  --font-display: var(--font-outfit), "Outfit", sans-serif;
+  --font-mid: var(--font-poppins), "Poppins", sans-serif;
+  --font-data: var(--font-roboto), "Roboto", sans-serif;
+  --radius: 1.3rem;
+  --shadow-base: 222.7751 100% 59.0196%;
+  --shadow-2xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.06), 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 12px 16px rgba(0, 0, 0, 0.06), 0 8px 10px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 16px 24px rgba(0, 0, 0, 0.08);
+  --legacy-50: 240 4% 97%;
+  --legacy-100: 240 4% 93%;
+  --legacy-200: 240 5% 88%;
+  --legacy-300: 240 6% 82%;
+  --legacy-400: 240 7% 72%;
+  --legacy-500: 240 8% 60%;
+  --legacy-600: 240 10% 46%;
+  --legacy-700: 240 12% 32%;
+  --legacy-800: 240 14% 24%;
+  --legacy-900: 240 16% 18%;
+  --legacy-950: 240 18% 14%;
+  --legacy-white: 0 0% 100%;
+  --legacy-black: 0 0% 0%;
+
+  /* ===== V2 DESIGN SYSTEM TOKENS ===== */
+  --v2-bg-base: oklch(1 0 0);
+  --v2-bg-elevated: oklch(0.98 0 0);
+  --v2-bg-surface: oklch(1 0 0);
+  --v2-bg-hover: oklch(0.97 0 0);
+  --v2-bg-active: oklch(0.95 0 0);
+  --v2-text-primary: oklch(0.2 0.01 270);
+  --v2-text-secondary: oklch(0.4 0.02 250);
+  --v2-text-muted: oklch(0.55 0.02 250);
+  --v2-border: oklch(0.92 0 0);
+  --v2-border-subtle: oklch(0.95 0 0);
+  --v2-accent: oklch(0.55 0.22 264);
+  --v2-accent-foreground: oklch(1 0 0);
+  --v2-accent-hover: oklch(0.5 0.22 264);
+  --v2-accent-subtle: oklch(0.55 0.22 264 / 0.1);
+  --v2-success: oklch(0.55 0.15 166);
+  --v2-warning: oklch(0.65 0.2 45);
+  --v2-error: oklch(0.6 0.2 15);
+
+  /* ===== V2 PREMIUM EXTENSIONS ===== */
+  --v2-gradient-blue-purple: linear-gradient(135deg, oklch(0.55 0.22 264) 0%, oklch(0.55 0.18 290) 100%);
+  --v2-gradient-blue-cyan: linear-gradient(135deg, oklch(0.55 0.22 264) 0%, oklch(0.6 0.12 210) 100%);
+  --v2-gradient-subtle-mesh: radial-gradient(ellipse at 30% 20%, oklch(0.55 0.22 264 / 0.05) 0%, transparent 50%),
+                              radial-gradient(ellipse at 70% 80%, oklch(0.55 0.18 290 / 0.04) 0%, transparent 50%);
+  --v2-gradient-hero-mesh: radial-gradient(ellipse 1200px 800px at 20% 10%, oklch(0.55 0.22 264 / 0.08) 0%, transparent 60%),
+                            radial-gradient(ellipse 900px 600px at 80% 90%, oklch(0.55 0.18 290 / 0.05) 0%, transparent 60%);
+  --v2-glow-ambient: 0 0 40px -10px oklch(0.55 0.22 264 / 0.1);
+  --v2-glow-accent: 0 0 60px -15px oklch(0.55 0.22 264 / 0.15);
+  --v2-glow-success: 0 0 40px -10px oklch(0.55 0.15 166 / 0.12);
+  --v2-glow-error: 0 0 40px -10px oklch(0.6 0.2 15 / 0.12);
+
+  /* ===== V1 LEGACY TOKEN ALIASES → V2 TOKENS (V2 IS SINGLE SOURCE OF TRUTH) ===== */
+  --brand-primary: var(--primary);
+  --brand-primary-strong: var(--primary);
+  --brand-secondary: var(--secondary);
+  --brand-warm: var(--accent);
+  --brand-ink: var(--foreground);
+  --brand-soft-ink: var(--foreground);
+  --accent-luxury: var(--primary);
+  --accent-rose: var(--accent);
+  --accent-bronze: var(--accent);
+  /* mk-* tokens are defined in styles/tokens.css (extended token file) */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
