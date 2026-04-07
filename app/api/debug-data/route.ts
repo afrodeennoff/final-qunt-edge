@@ -4,6 +4,7 @@ import { apiError } from '@/lib/api-response'
 import logger, { withLogContext } from '@/lib/logger'
 import { prisma, hasConfiguredDatabaseConnection } from '@/lib/prisma'
 import { isAdminUser } from '@/server/authz'
+import { maskEmail, maskString } from '@/lib/redact-pii'
 
 export async function GET(request: Request) {
   const requestId = crypto.randomUUID()
@@ -77,8 +78,8 @@ export async function GET(request: Request) {
 
       const auth = {
         authenticated: true,
-        userId: user.id,
-        email: user.email,
+        userId: maskString(user.id, 4, 4),
+        email: maskEmail(user.email),
       }
 
       const response = {
