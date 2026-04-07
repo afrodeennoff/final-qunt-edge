@@ -13,20 +13,11 @@ import {
   markPrismaColumnUnavailable,
 } from '@/lib/prisma-guard'
 import { logger } from '@/lib/logger'
+import {
+  validatePasswordStrength,
+} from '@/lib/security/password-validation'
 
-const PASSWORD_MIN_LENGTH = 8
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
 const normalizeEnvValue = (value?: string): string => value?.trim() ?? ''
-
-function validatePasswordStrength(password: string): string | null {
-  if (!password || password.length < PASSWORD_MIN_LENGTH) {
-    return `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`
-  }
-  if (!PASSWORD_REGEX.test(password)) {
-    return 'Password must contain at least one uppercase letter, one lowercase letter, and one digit'
-  }
-  return null // valid
-}
 
 export async function getWebsiteURL() {
   let url =
@@ -426,8 +417,8 @@ export async function signUpWithPasswordAction(
   locale?: string
 ) {
   const passwordError = validatePasswordStrength(password)
-  if (passwordError) {
-    throw new Error(passwordError)
+  if (!passwordError.valid) {
+    throw new Error(passwordError.errors.join(', '))
   }
 
   const requestIp = await getRequestIp()
@@ -486,30 +477,6 @@ export async function signUpWithPasswordAction(
     handleAuthError(error)
   }
 }
-
-// Allow a logged-in user (e.g., magic link users) to set or change a password
-export async function setPasswordAction(newPassword: string) {
-  const passwordError = validatePasswordStrength(newPassword)
-  if (passwordError) {
-    throw new Error(passwordError)
-  }
-
-  try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      throw new Error('User not authenticated')
-    }
-    const { error } = await supabase.auth.updateUser({ password: newPassword })
-    if (error) {
-      throw new Error(error.message)
-    }
-    return { success: true }
-  } catch (error: unknown) {
-    handleAuthError(error)
-  }
-}
-
 /**
  * ensureUserInDatabase
  *
@@ -1034,3 +1001,5 @@ export async function getUserIdentities() {
     handleAuthError(error)
   }
 }
+
+export { setPasswordAction, resetPasswordForEmail, updatePassword } from './auth-password'

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { prisma } from "@/lib/prisma"
 import { authSecurityConfig, getLockoutDurationMs } from "@/lib/security/auth-config"
 
-export type AuthActionType = "password_login" | "otp_verify" | "magic_link_request"
+export type AuthActionType = "password_login" | "otp_verify" | "magic_link_request" | "password_reset_request"
 
 export type AuthGuardResult =
   | { allowed: true }
