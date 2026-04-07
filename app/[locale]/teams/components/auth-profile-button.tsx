@@ -16,6 +16,7 @@ import { getI18n } from "@/locales/server"
 import { getUserProfileAction } from "@/server/user-profile"
 import { TeamSubscriptionBadge } from './team-subscription-badge-client'
 import { LogoutButton } from './logout-button'
+import { maskEmail } from '@/lib/redact-pii'
 
 
 export async function AuthProfileButton() {
@@ -43,7 +44,7 @@ export async function AuthProfileButton() {
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>{t('dashboard.myAccount')}</DropdownMenuLabel>
         <div className="px-2 py-1.5 text-sm text-muted-foreground">
-          {user?.email}
+          {maskEmail(user?.email)}
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

@@ -37,6 +37,14 @@ interface ComputedStats {
   totalDays: number
 }
 
+/**
+ * Retrieves user data for weekly email summary generation.
+ *
+ * @security WARNING: This function returns raw PII (email, name, trade data).
+ * It is an INTERNAL server action only — MUST NEVER be exposed to client-side
+ * code or API responses. All consumers must ensure PII is stripped before
+ * sending to external services.
+ */
 export async function getUserData(userId: string): Promise<UserData> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
