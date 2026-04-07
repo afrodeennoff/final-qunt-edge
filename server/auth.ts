@@ -12,6 +12,7 @@ import {
   isPrismaSchemaMismatchError,
   markPrismaColumnUnavailable,
 } from '@/lib/prisma-guard'
+import { logger } from '@/lib/logger'
 
 const PASSWORD_MIN_LENGTH = 8
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
@@ -53,7 +54,7 @@ function handleAuthError(error: unknown): never {
     (error as { originalError?: { message?: string } })?.originalError?.message?.includes('Unexpected token') ||
     (error as { originalError?: { message?: string } })?.originalError?.message?.includes('is not valid JSON')
   ) {
-    console.error('[Auth] Supabase API returned non-JSON response:', {
+    logger.error('[Auth] Supabase API returned non-JSON response', {
       error: (error as { message?: string })?.message,
       originalError: (error as { originalError?: { message?: string } })?.originalError?.message,
     })
@@ -139,7 +140,7 @@ async function findUserByAuthIdCompat(authUserId: string): Promise<UserSyncRecor
     }
 
     markPrismaColumnUnavailable(USER_TABLE_NAME, AUTH_USER_ID_COLUMN)
-    console.warn(
+    logger.warn(
       '[ensureUserInDatabase] WARNING: auth_user_id lookup hit schema mismatch; falling back to id lookup',
       { authUserId }
     )
@@ -377,7 +378,7 @@ export async function signInWithPasswordAction(
         await ensureUserInDatabase(user, locale)
       }
     } catch (e) {
-      console.error('[signInWithPasswordAction] ensureUserInDatabase failed:', e)
+      logger.error('[signInWithPasswordAction] ensureUserInDatabase failed', { error: e })
       throw new PostAuthSetupError()
     }
 
@@ -466,7 +467,7 @@ export async function signUpWithPasswordAction(
       try {
         await ensureUserInDatabase(data.user, locale)
       } catch (e) {
-        console.error('[signUpWithPasswordAction] ensureUserInDatabase failed:', e)
+        logger.error('[signUpWithPasswordAction] ensureUserInDatabase failed', { error: e })
         throw new PostAuthSetupError()
       }
     }
@@ -569,9 +570,9 @@ export async function ensureUserInDatabase(
         await createDefaultDashboardLayout(targetUserId);
       }
     } catch (layoutError) {
-      console.error(
-        '[ensureUserInDatabase] WARNING: Failed to backfill default dashboard layout:',
-        layoutError
+      logger.error(
+        '[ensureUserInDatabase] WARNING: Failed to backfill default dashboard layout',
+        { error: layoutError }
       );
     }
   };
@@ -607,7 +608,7 @@ export async function ensureUserInDatabase(
           if (isPrismaSchemaMismatchError(updateError) && canUpdateLanguage) {
             markPrismaColumnUnavailable(USER_TABLE_NAME, LANGUAGE_COLUMN)
           }
-          console.error('[ensureUserInDatabase] ERROR: Failed to update user record:', updateError);
+          logger.error('[ensureUserInDatabase] ERROR: Failed to update user record', { error: updateError });
           throw new Error('Failed to update user');
         }
     }
@@ -663,7 +664,7 @@ export async function ensureUserInDatabase(
         await signOutSilently();
         throw new Error('Database integrity error: Duplicate user records found');
       }
-      console.error('[ensureUserInDatabase] ERROR: Failed to create user:', createError);
+      logger.error('[ensureUserInDatabase] ERROR: Failed to create user', { error: createError });
       await signOutSilently();
       throw new Error('Failed to create user account');
     }
@@ -676,7 +677,7 @@ export async function ensureUserInDatabase(
       throw error;
     }
 
-    console.error('[ensureUserInDatabase] ERROR: Unexpected error in main catch block:', error);
+    logger.error('[ensureUserInDatabase] ERROR: Unexpected error in main catch block', { error });
 
     // Handle Prisma validation errors
     if (error instanceof Error) {
@@ -742,7 +743,7 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
         const locale = email.includes('.fr') || email.startsWith('fr@') ? 'fr' : 'en'
         await ensureUserInDatabase(data.user, locale)
       } catch (setupError) {
-        console.error('[verifyOtp] ensureUserInDatabase failed:', setupError)
+        logger.error('[verifyOtp] ensureUserInDatabase failed', { error: setupError })
         throw new PostAuthSetupError()
       }
     }
@@ -835,7 +836,7 @@ export async function getDatabaseUserId(): Promise<string> {
   // Prefer legacy auth_user_id mapping if it points to a different row than raw auth id.
   // This avoids selecting an empty shadow user row while data (trades/accounts/layouts) lives on legacy id.
   if (byAuthId?.id && byAuthId.id !== rawUserId) {
-    console.warn(
+    logger.warn(
       '[getDatabaseUserId] Divergent auth mapping detected; using auth_user_id row',
       { rawUserId, resolvedUserId: byAuthId.id }
     )
