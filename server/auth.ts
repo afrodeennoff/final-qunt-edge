@@ -229,7 +229,7 @@ export async function signInWithDiscord(next: string | null = null, locale?: str
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${websiteURL}api/auth/callback${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
+      redirectTo: `${websiteURL}api/auth/callback/${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
     },
   })
   if (data.url) {
@@ -255,7 +255,7 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
       queryParams: {
         prompt: 'select_account',
       },
-      redirectTo: `${websiteURL}api/auth/callback${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
+      redirectTo: `${websiteURL}api/auth/callback/${callbackParams.toString() ? `?${callbackParams.toString()}` : ''}`,
     },
   })
   if (data.url) {
