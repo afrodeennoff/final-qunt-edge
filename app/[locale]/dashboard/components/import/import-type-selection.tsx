@@ -43,6 +43,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const t = useI18n()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
+  const translateKey = (key: string) => t(key as Parameters<typeof t>[0], { count: 1 })
 
   const handlePlatformCheck = (platformType: string, checked: boolean) => {
     setSelectedPlatforms(prev => {
@@ -94,8 +95,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
   const filteredPlatforms = platforms.filter(platform => {
     const matchesSearch =
-      t(platform.name as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t(platform.description as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      translateKey(platform.name).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      translateKey(platform.description).toLowerCase().includes(searchQuery.toLowerCase()) ||
       getTranslatedCategory(platform.category).toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesCategory = activeCategory === "all" || platform.category === activeCategory
@@ -107,10 +108,19 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const allCategories = Array.from(new Set(platforms.map(p => p.category)));
 
   const selectedPlatform = platforms.find(p => p.type === selectedType)
+  const showDesktopDetailPanel =
+    (isCompareMode && selectedPlatforms.length >= 2) || (!!selectedType && !!selectedPlatform)
 
   return (
     <div className="flex flex-col h-full bg-v2-bg-base/50 backdrop-blur-xl">
-      <div className="grid lg:grid-cols-[1fr_380px] h-full divide-x divide-v2-border overflow-hidden">
+      <div
+        className={cn(
+          "grid h-full overflow-hidden",
+          showDesktopDetailPanel
+            ? "lg:grid-cols-[minmax(0,1fr)_320px] lg:divide-x lg:divide-v2-border xl:grid-cols-[minmax(0,1fr)_340px]"
+            : "grid-cols-1",
+        )}
+      >
         {/* Left Side: Grid of options */}
         <div className="flex flex-col gap-4 h-full min-h-0 relative">
           {/* Header & Filter */}
@@ -169,7 +179,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
             <motion.div
               layout
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pb-20"
+              className="grid gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]"
             >
               <AnimatePresence mode='popLayout'>
                 {filteredPlatforms.length > 0 ? (
@@ -248,7 +258,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           )}
         </div>
 
-        <div className="hidden lg:flex h-full bg-v2-bg-hover/30 border-l border-v2-border relative overflow-hidden">
+        {showDesktopDetailPanel && (
+          <div className="relative hidden h-full overflow-hidden bg-v2-bg-hover/20 lg:flex">
           {isCompareMode && selectedPlatforms.length >= 2 ? (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -289,7 +300,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               )}
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-semibold text-v2-text-primary truncate">
-                                  {t(platform.name as any, { count: 1 })}
+                                  {translateKey(platform.name)}
                                 </h4>
                                 <p className="text-xs text-v2-text-secondary truncate">
                                   {platform.category}
@@ -305,7 +316,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               </ButtonV2>
                             </div>
                             <p className="text-xs text-v2-text-muted line-clamp-3">
-                              {t(platform.description as any, { count: 1 })}
+                              {translateKey(platform.description)}
                             </p>
                             <div className="flex flex-wrap gap-1.5 mt-auto">
                               {!platform.isDisabled && !platform.isComingSoon && (
@@ -345,24 +356,9 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                 )}
               </div>
             </motion.div>
-          ) : (
-            <div className="h-full flex items-center justify-center p-6">
-              <CardV2 variant="flat" className="w-full max-w-[260px]">
-                <CardV2Content className="flex flex-col items-center justify-center text-center py-8">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-4">
-                    <LayoutGrid className="h-7 w-7 text-v2-text-muted" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-v2-text-primary mb-1.5">
-                    Select a Platform
-                  </h3>
-                  <p className="text-xs text-v2-text-muted leading-relaxed">
-                    Choose a platform from the left to view details and start importing your trades.
-                  </p>
-                </CardV2Content>
-              </CardV2>
-            </div>
-          )}
-        </div>
+          ) : null}
+          </div>
+        )}
 
         {selectedType && selectedPlatform && (
           <Sheet open={!!selectedType} onOpenChange={() => setSelectedType('')}>
@@ -371,11 +367,11 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               <div className="flex justify-center py-3">
                 <div className="h-1.5 w-12 rounded-full bg-v2-border" />
               </div>
-              <SheetHeader className="px-4 pb-2">
-                <SheetTitle className="text-v2-text-primary">
-                  {t(selectedPlatform.name as any, { count: 1 })}
-                </SheetTitle>
-              </SheetHeader>
+                  <SheetHeader className="px-4 pb-2">
+                    <SheetTitle className="text-v2-text-primary">
+                      {translateKey(selectedPlatform.name)}
+                    </SheetTitle>
+                  </SheetHeader>
               <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">
                 {selectedPlatform.customComponent ? (
                   <selectedPlatform.customComponent setIsOpen={setIsOpen} />

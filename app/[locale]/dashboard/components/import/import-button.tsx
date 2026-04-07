@@ -496,7 +496,11 @@ export default function ImportButton() {
       </ButtonV2>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen} >
-        <DialogContent className="flex h-[90dvh] w-full max-w-[600px] flex-col border-v2-border bg-v2-bg-surface text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80dvh] sm:max-w-[600px] p-0">
+        <DialogContent
+          className={cn(
+            "flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80vh] sm:max-w-[80vw]",
+          )}
+        >
           <ImportDialogHeader step={step} importType={importType} />
 
           <div className="flex-1 overflow-hidden p-6">{renderStep()}</div>

@@ -468,6 +468,24 @@
       "accessCount": 1,
       "lastAccessed": 1775587579371,
       "type": "directory"
+    },
+    {
+      "path": "store",
+      "accessCount": 1,
+      "lastAccessed": 1775588316930,
+      "type": "directory"
+    },
+    {
+      "path": "store/user-store.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775588320546,
+      "type": "directory"
+    },
+    {
+      "path": "app",
+      "accessCount": 1,
+      "lastAccessed": 1775594097749,
+      "type": "directory"
     }
   ],
   "userDirectives": []
