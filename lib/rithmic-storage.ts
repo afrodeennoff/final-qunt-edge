@@ -5,6 +5,12 @@ const CREDENTIAL_KEY_NAME = 'rithmic_credential_encryption_key'
 const CREDENTIAL_KEY_ALGORITHM = 'AES-GCM'
 const CREDENTIAL_KEY_LENGTH = 256
 
+let cachedKey: CryptoKey | null = null
+
+export function invalidateEncryptionKeyCache() {
+  cachedKey = null
+}
+
 export interface RithmicCredentialSet {
   id: string
   credentials: {
@@ -26,33 +32,59 @@ interface EncryptedPayload {
 }
 
 async function getOrCreateEncryptionKey(): Promise<CryptoKey> {
-  const existingKeyBase64 = localStorage.getItem(CREDENTIAL_KEY_NAME)
+  if (cachedKey) return cachedKey
 
+  // Try to get session-derived key from API
+  try {
+    const response = await fetch('/api/rithmic/encryption-key')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.key) {
+        const keyBytes = Uint8Array.from(atob(data.key), (c) => c.charCodeAt(0))
+        cachedKey = await crypto.subtle.importKey(
+          'raw',
+          keyBytes,
+          { name: CREDENTIAL_KEY_ALGORITHM, length: CREDENTIAL_KEY_LENGTH },
+          false,
+          ['encrypt', 'decrypt']
+        )
+        return cachedKey
+      }
+    }
+  } catch {
+    logger.warn('[Rithmic] Failed to get session-derived key, falling back to localStorage')
+  }
+
+  // Fallback: try existing localStorage key (migration path)
+  const existingKeyBase64 = localStorage.getItem(CREDENTIAL_KEY_NAME)
   if (existingKeyBase64) {
     try {
-      const keyBytes = Uint8Array.from(atob(existingKeyBase64), c => c.charCodeAt(0))
-      return crypto.subtle.importKey(
+      const keyBytes = Uint8Array.from(atob(existingKeyBase64), (c) => c.charCodeAt(0))
+      cachedKey = await crypto.subtle.importKey(
         'raw',
         keyBytes,
         { name: CREDENTIAL_KEY_ALGORITHM, length: CREDENTIAL_KEY_LENGTH },
         false,
         ['encrypt', 'decrypt']
       )
+      return cachedKey
     } catch {
-      logger.warn('Existing Rithmic encryption key is invalid, generating new one')
+      logger.warn('[Rithmic] Existing localStorage key is invalid, generating new one')
     }
   }
 
+  // Last resort: generate a new key
   const key = await crypto.subtle.generateKey(
     { name: CREDENTIAL_KEY_ALGORITHM, length: CREDENTIAL_KEY_LENGTH },
     true,
     ['encrypt', 'decrypt']
   )
 
-  const exported = await crypto.subtle.exportKey('raw', await key)
-  const keyBase64 = btoa(Array.from(new Uint8Array(exported), b => String.fromCharCode(b)).join(''))
+  const exported = await crypto.subtle.exportKey('raw', key)
+  const keyBase64 = btoa(Array.from(new Uint8Array(exported), (b) => String.fromCharCode(b)).join(''))
   localStorage.setItem(CREDENTIAL_KEY_NAME, keyBase64)
 
+  cachedKey = key
   return key
 }
 
