@@ -72,7 +72,8 @@ type UserSyncRecord = {
 }
 
 
-export class PostAuthSetupError extends Error {
+// Note: PostAuthSetupError is now defined in server/auth.ts to avoid 'use server' export restrictions
+class PostAuthSetupError extends Error {
   constructor(message = POST_AUTH_SETUP_ERROR_MESSAGE) {
     super(message)
     this.name = 'PostAuthSetupError'

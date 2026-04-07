@@ -4,11 +4,19 @@ import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { authSecurityConfig } from '@/lib/security/auth-config'
 import { checkAuthGuard, recordAuthFailure, recordAuthSuccess } from '@/lib/security/auth-attempts'
-import { PostAuthSetupError, ensureUserInDatabase } from './auth-user'
 import { logger } from '@/lib/logger'
 import {
   validatePasswordStrength,
 } from '@/lib/security/password-validation'
+
+const POST_AUTH_SETUP_ERROR_MESSAGE = 'Failed to complete post-authentication setup. Please try again.'
+
+class PostAuthSetupError extends Error {
+  constructor(message = POST_AUTH_SETUP_ERROR_MESSAGE) {
+    super(message)
+    this.name = 'PostAuthSetupError'
+  }
+}
 
 const normalizeEnvValue = (value?: string): string => value?.trim() ?? ''
 
@@ -448,14 +456,65 @@ export async function verifyOtp(email: string, token: string, type: 'email' = 'e
 }
 
 
-export { getUserIdentities, linkDiscordAccount, linkGoogleAccount, unlinkIdentity } from './auth-identity'
+// Re-export from auth-user - must be explicitly async for 'use server' compliance
+export async function ensureUserInDatabase(...args: Parameters<typeof import('./auth-user')['ensureUserInDatabase']>) {
+  const { ensureUserInDatabase: fn } = await import('./auth-user')
+  return fn(...args)
+}
 
-export {
-  ensureUserInDatabase,
-  getDatabaseUserId,
-  getUserId,
-  getUserEmail,
-  updateUserLanguage,
-} from './auth-user'
+export async function getDatabaseUserId() {
+  const { getDatabaseUserId: fn } = await import('./auth-user')
+  return fn()
+}
 
-export { setPasswordAction, resetPasswordForEmail, updatePassword } from './auth-password'
+export async function getUserId() {
+  const { getUserId: fn } = await import('./auth-user')
+  return fn()
+}
+
+export async function getUserEmail() {
+  const { getUserEmail: fn } = await import('./auth-user')
+  return fn()
+}
+
+export async function updateUserLanguage(...args: Parameters<typeof import('./auth-user')['updateUserLanguage']>) {
+  const { updateUserLanguage: fn } = await import('./auth-user')
+  return fn(...args)
+}
+
+// Re-export from auth-password
+export async function setPasswordAction(...args: Parameters<typeof import('./auth-password')['setPasswordAction']>) {
+  const { setPasswordAction: fn } = await import('./auth-password')
+  return fn(...args)
+}
+
+export async function resetPasswordForEmail(...args: Parameters<typeof import('./auth-password')['resetPasswordForEmail']>) {
+  const { resetPasswordForEmail: fn } = await import('./auth-password')
+  return fn(...args)
+}
+
+export async function updatePassword(...args: Parameters<typeof import('./auth-password')['updatePassword']>) {
+  const { updatePassword: fn } = await import('./auth-password')
+  return fn(...args)
+}
+
+// Re-export identity functions - must be explicitly async for 'use server' compliance
+export async function getUserIdentities() {
+  const { getUserIdentities: fn } = await import('./auth-identity')
+  return fn()
+}
+
+export async function linkDiscordAccount() {
+  const { linkDiscordAccount: fn } = await import('./auth-identity')
+  return fn()
+}
+
+export async function linkGoogleAccount() {
+  const { linkGoogleAccount: fn } = await import('./auth-identity')
+  return fn()
+}
+
+export async function unlinkIdentity(identity: Parameters<typeof import('./auth-identity')['unlinkIdentity']>[0]) {
+  const { unlinkIdentity: fn } = await import('./auth-identity')
+  return fn(identity)
+}
