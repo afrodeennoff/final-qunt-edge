@@ -8,6 +8,7 @@ import { InputV2 } from "@/components/ui/v2"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Icons } from "@/components/icons"
 import { z } from 'zod';
+import { PASSWORD_MIN_LENGTH } from '@/lib/security/password-validation'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -36,7 +37,9 @@ import { useCurrentLocale } from "@/locales/client"
 const formSchema = z.object({
     email: z.string().email(),
     password: z.union([
-        z.string().min(6, 'Password must be at least 6 characters'),
+        z.string()
+            .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`)
+            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, 'Password must contain uppercase, lowercase, and a number'),
         z.literal('')
     ]).optional(),
 })
