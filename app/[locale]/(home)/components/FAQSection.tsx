@@ -56,18 +56,21 @@ function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boole
   return (
     <div className="relative group">
       {/* Left accent bar — visible when expanded */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-[oklch(0.55_0.22_264)] opacity-0 group-data-[state=open]:opacity-100 transition-opacity duration-200" />
-      <Card className="overflow-hidden rounded-xl border-[oklch(0.14_0_0/0.5)] bg-[oklch(0.07_0_0)]">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-[var(--accent-blue)] opacity-0 group-data-[state=open]:opacity-100 transition-opacity duration-200" />
+      <Card className={cn(
+        'overflow-hidden rounded-xl border bg-[var(--surface-card)]',
+        isOpen ? 'border-[var(--frost-border-strong)]' : 'border-[var(--frost-border)]'
+      )}>
         <button
           onClick={onToggle}
-          className="flex flex-1 w-full items-center justify-between gap-4 p-4 text-left rounded-xl transition-colors duration-200 hover:bg-[oklch(0.07_0_0/0.8)]"
+          className="flex flex-1 w-full items-center justify-between gap-4 p-4 text-left rounded-xl transition-colors duration-200 hover:bg-[oklch(0.08_0_0)]"
           aria-expanded={isOpen}
           data-state={isOpen ? 'open' : 'closed'}
         >
           <span className="pr-4 text-sm font-semibold [font-family:var(--home-display)]">{item.question}</span>
           <ChevronDown
             className={cn(
-              'h-4 w-4 shrink-0 text-[oklch(0.55_0.22_264)] transition-transform duration-200',
+              'h-4 w-4 shrink-0 text-[var(--text-tertiary)] transition-transform duration-200',
               isOpen && 'rotate-180'
             )}
           />
