@@ -74,7 +74,7 @@ export function UnifiedSidebar({
 
   const { isMobile, setOpenMobile } = useSidebar()
   const isActive = useActiveLink()
-  const { isLoading } = useNavigationLoading() // Need to import this
+  const { isLoading } = useNavigationLoading()
 
   const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
