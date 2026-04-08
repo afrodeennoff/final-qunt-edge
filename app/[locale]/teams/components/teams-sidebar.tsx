@@ -6,15 +6,21 @@ import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-side
 import { usePathname } from "next/navigation"
 import { NAV_ICON_SIZE } from "@/lib/constants/sidebar"
 import { SUPPORTED_TIMEZONES } from "@/lib/constants/timezones"
+import { stripLocalePrefix } from "@/components/ui/sidebar-primitives/use-sidebar-nav"
 
 function resolveTeamPathContext(pathname: string) {
-  const segments = pathname.split('/').filter(Boolean)
-  const teamsIndex = segments.indexOf('teams')
-  const hasLocalePrefix = teamsIndex === 1
-  const localePrefix = hasLocalePrefix ? `/${segments[0]}` : ''
+  const stripped = stripLocalePrefix(pathname)
+  const hasTeamsPrefix = stripped.startsWith('/teams')
+  const localePrefix = hasTeamsPrefix && pathname.length > stripped.length
+    ? pathname.slice(0, pathname.length - stripped.length)
+    : ''
   const teamsRoot = `${localePrefix}/teams`
   const dashboardRoot = `${teamsRoot}/dashboard`
+
+  const segments = stripped.split('/').filter(Boolean)
+  const teamsIndex = segments.indexOf('teams')
   const slug =
+    hasTeamsPrefix &&
     teamsIndex !== -1 &&
     segments[teamsIndex + 1] === 'dashboard' &&
     segments[teamsIndex + 2] &&
