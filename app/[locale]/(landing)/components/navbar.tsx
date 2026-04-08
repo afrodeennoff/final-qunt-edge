@@ -48,17 +48,17 @@ export default function Navbar() {
         <motion.div
           className={cn(
             'flex h-[58px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
-            'border-[hsl(var(--mk-border)/0.7)] bg-[hsl(var(--mk-surface)/0.84)] supports-[backdrop-filter]:bg-[hsl(var(--mk-surface)/0.78)] backdrop-blur-xl',
-            'shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.65)]'
+            'border-[var(--frost-border)] bg-[oklch(0.04_0_0)] supports-[backdrop-filter]:bg-[oklch(0.04_0_0)] backdrop-blur-sm',
+            'shadow-none'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[hsl(var(--primary)/0.25)] bg-[hsl(var(--mk-surface-muted)/0.92)]">
-              <Logo className="h-4.5 w-4.5 fill-[hsl(var(--mk-text))]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--frost-border)] bg-[oklch(0.08_0_0)]">
+              <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight text-[hsl(var(--mk-text))] sm:inline-flex">Qunt Edge</span>
+            <span className="hidden text-sm font-semibold tracking-tight text-[var(--text-secondary)] sm:inline-flex">Qunt Edge</span>
           </Link>
 
           <nav className="mx-auto hidden items-center gap-1 lg:flex">
@@ -74,8 +74,8 @@ export default function Navbar() {
                   className={cn(
                     'relative rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-[hsl(var(--mk-surface-muted)/0.95)] text-[hsl(var(--mk-text))] shadow-[0_0_0_1px_hsl(var(--primary)/0.2),0_12px_24px_-18px_hsl(var(--primary)/0.6)]'
-                      : 'text-foreground/78 hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:text-[hsl(var(--mk-text))]'
+                      ? 'bg-[oklch(0.08_0_0)] text-[var(--text-primary)] border border-[var(--frost-border)]'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[oklch(0.08_0_0)]'
                   )}
                 >
                   {link.title}
@@ -87,15 +87,14 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-foreground/75 transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.65)] hover:text-[hsl(var(--mk-text))] md:inline-flex"
+              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] hover:bg-[oklch(0.08_0_0)] md:inline-flex"
             >
               Login
             </Link>
             <ButtonV2
               asChild
-              variant="gradient-primary"
               size="sm"
-              className="hidden rounded-full px-5 text-[11px] font-semibold tracking-[0.03em] md:inline-flex"
+              className="hidden rounded-[var(--radius-pill)] bg-white px-5 text-[11px] font-semibold tracking-[0.03em] text-black md:inline-flex"
             >
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </ButtonV2>
@@ -105,7 +104,7 @@ export default function Navbar() {
               footer={
                 <ButtonV2
                   asChild
-                  className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="w-full rounded-[var(--radius-pill)] bg-white text-black hover:bg-white/90"
                 >
                   <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
                 </ButtonV2>
