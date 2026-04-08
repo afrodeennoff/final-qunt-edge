@@ -80,8 +80,8 @@ export function Sidebar07({
   styleVariant = "default",
 }: Sidebar07Props) {
   const t = useI18n()
-  // Type-safe i18n key helper — narrows the cast to just the key argument
-  const tKey = (key: string) => t(key as Parameters<typeof t>[0])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const translate = t as unknown as (key: string) => string
   const isActive = useActiveLink()
   const grouped = React.useMemo(() => computeGroupedItems(items), [items])
 
@@ -105,7 +105,7 @@ export function Sidebar07({
             <SidebarGroupContent>
               <SidebarMenu>
                 {grouped.groups[groupName].map((item) => {
-                  const label = item.i18nKey ? tKey(item.i18nKey) : item.label
+                  const label = item.i18nKey ? translate(item.i18nKey) : item.label
                   const itemIsActive = item.href ? isActive(item.href, item.exact) : false
 
                   return (

@@ -91,8 +91,8 @@ export function SidebarNavGroup({
   isActive,
 }: SidebarNavGroupProps) {
   const t = useI18n()
-  // Type-safe i18n key helper — narrows the cast to just the key argument
-  const tKey = (key: string) => t(key as Parameters<typeof t>[0])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const translate = t as unknown as (key: string) => string
 
   const groupedItems = React.useMemo(
     () => computeGroupedItems(items),
@@ -139,7 +139,7 @@ export function SidebarNavGroup({
               <SidebarGroupContent>
                 <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
                   {groupedItems.groups[groupName].map((item, index) => {
-                    const label = item.i18nKey ? tKey(item.i18nKey) : item.label
+                    const label = item.i18nKey ? translate(item.i18nKey) : item.label
                     const href = item.href
                     const isItemDisabled = Boolean(item.disabled)
                     const itemIsActive =
