@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
+import type { TooltipProps } from "recharts"
 import { ChartSurface } from "@/components/ui/chart-surface"
 import { useDashboardStats } from "@/context/data-provider"
 import { cn } from "@/lib/utils"
@@ -70,7 +71,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
     return { innerRadius: '61%', outerRadius: '90%', cy: '50%' }
   }, [size])
 
-  const renderTooltip = React.useCallback(({ active, payload }: TooltipProps) => {
+  const renderTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
     if (!active || !payload || payload.length === 0) return null
 
     const data = payload[0]?.payload
