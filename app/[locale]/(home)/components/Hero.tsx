@@ -85,7 +85,7 @@ export default function Hero({ locale }: { locale: string }) {
               <ButtonV2
                 asChild
                 size="lg"
-                className="h-12 w-full rounded-[var(--radius-pill)] bg-white px-8 text-[0.9rem] font-semibold text-black hover:bg-white/90 sm:w-auto"
+                className="h-12 w-full rounded-full bg-primary px-8 text-[0.9rem] font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto"
               >
                 <Link href={`/${locale}/authentication?next=dashboard`}>
                   Start Free Audit
@@ -96,7 +96,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="group h-12 w-full rounded-[var(--radius-pill)] border border-[var(--frost-border)] bg-transparent px-8 text-[0.9rem] text-[var(--text-primary)] transition-all duration-200 hover:bg-white/10 sm:w-auto"
+              className="group h-12 w-full rounded-full border border-[var(--frost-border)] bg-transparent px-8 text-[0.9rem] text-foreground transition-all duration-200 hover:bg-white/10 sm:w-auto"
             >
               <a href="#how-it-works">
                 Watch Demo

@@ -59,16 +59,16 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             <UnifiedSurface className="space-y-4">
                 <header className="mb-6">
-                    <h1 className="text-3xl font-semibold text-fg-primary">Frequently Asked Questions</h1>
-                    <p className="mt-1 text-fg-muted">Find answers to common questions about the platform and its features.</p>
+                    <h1 className="text-3xl font-semibold text-foreground">Frequently Asked Questions</h1>
+                    <p className="mt-1 text-muted-foreground">Find answers to common questions about the platform and its features.</p>
                 </header>
                 <Accordion type="single" collapsible className="w-full">
                     {faqs.map((faq, index) => (
-                        <AccordionItem key={index} value={`item-${index}`} className="mb-3 rounded-2xl border border-border/60 bg-card/40 px-4">
-                            <AccordionTrigger className="text-left font-semibold text-fg-primary hover:no-underline">
+                        <AccordionItem key={index} value={`item-${index}`} className="mb-3 rounded-2xl bg-surface-muted px-4">
+                            <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
                                 {faq.question}
                             </AccordionTrigger>
-                            <AccordionContent className="pb-6 pt-2 leading-relaxed text-fg-muted">
+                            <AccordionContent className="pb-6 pt-2 leading-relaxed text-muted-foreground">
                                 {faq.answer}
                             </AccordionContent>
                         </AccordionItem>
@@ -77,8 +77,8 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
             </UnifiedSurface>
 
             <UnifiedSurface className="mt-6 text-center">
-                <h2 className="mb-2 text-xl font-semibold text-fg-primary">Still have questions?</h2>
-                <p className="mb-5 text-fg-muted">We&apos;re here to help you elevate your trading execution.</p>
+                <h2 className="mb-2 text-xl font-semibold text-foreground">Still have questions?</h2>
+                <p className="mb-5 text-muted-foreground">We&apos;re here to help you elevate your trading execution.</p>
                 <a
                     href={`/${locale}/support`}
                     className="inline-flex items-center justify-center rounded-full border border-border/60 bg-card px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-card/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border/60 focus-visible:ring-offset-0"

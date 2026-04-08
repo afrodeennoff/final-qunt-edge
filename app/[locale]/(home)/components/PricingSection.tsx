@@ -102,14 +102,14 @@ export default function PricingSection() {
           </p>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 rounded-[var(--radius-pill)] bg-[oklch(0.08_0_0)] border border-[var(--frost-border)]">
+          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-[oklch(0.08_0_0)] border border-[var(--frost-border)]">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
               aria-pressed={!isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 !isAnnual
-                  ? 'bg-white text-black rounded-full'
+                  ? 'bg-primary text-primary-foreground rounded-full'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
@@ -121,7 +121,7 @@ export default function PricingSection() {
               aria-pressed={isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 isAnnual
-                  ? 'bg-white text-black rounded-full'
+                  ? 'bg-primary text-primary-foreground rounded-full'
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
@@ -154,7 +154,7 @@ export default function PricingSection() {
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="bg-white text-black rounded-[var(--radius-pill)] px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wider">
+                  <span className="bg-primary text-primary-foreground rounded-full px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wider">
                     {plan.badge}
                   </span>
                 </div>
@@ -200,7 +200,7 @@ export default function PricingSection() {
               {plan.variant === 'featured' ? (
                   <MagneticButton strength={6}>
                   <ButtonV2
-                    className="w-full rounded-[var(--radius-pill)] h-11 text-[0.9rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 bg-white text-black"
+                    className="w-full rounded-full h-11 text-[0.9rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 bg-primary text-primary-foreground"
                   >
                     {plan.cta}
                   </ButtonV2>

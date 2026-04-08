@@ -51,7 +51,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
                 <ButtonV2
                   asChild
                   size="lg"
-                  className="bg-white text-black rounded-[var(--radius-pill)] font-semibold"
+                  className="bg-primary text-primary-foreground rounded-full font-semibold"
                 >
                   <Link href={`/${locale}/authentication?next=dashboard`}>
                     Start Your Free Audit — No Credit Card
@@ -65,7 +65,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
               <ButtonV2
                 asChild
                 size="lg"
-                className="rounded-[var(--radius-pill)] border border-[var(--frost-border)] text-[var(--text-primary)] hover:border-[var(--frost-border-strong)]"
+                className="rounded-full border border-[var(--frost-border)] text-foreground hover:border-[var(--frost-border-strong)]"
               >
                 <Link href={`/${locale}/propfirms`}>
                   Browse Prop Firms

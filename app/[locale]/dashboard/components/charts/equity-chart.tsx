@@ -1000,6 +1000,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                       height={size === "small" ? 20 : 24}
                       tickMargin={size === "small" ? 4 : 8}
                       minTickGap={30}
+                      hide
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
                         fill: "hsl(var(--text-secondary))",
@@ -1013,6 +1014,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                       axisLine={false}
                       width={60}
                       tickMargin={4}
+                      hide
                       tick={{
                         fontSize: size === "small" ? 9 : 10,
                         fill: "hsl(var(--text-secondary))",

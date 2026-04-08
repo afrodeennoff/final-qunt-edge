@@ -453,8 +453,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 83,
-      "lastAccessed": 1775669300339,
+      "accessCount": 100,
+      "lastAccessed": 1775679148348,
       "type": "directory"
     },
     {
@@ -507,8 +507,8 @@
     },
     {
       "path": "components",
-      "accessCount": 2,
-      "lastAccessed": 1775636179837,
+      "accessCount": 3,
+      "lastAccessed": 1775678846882,
       "type": "directory"
     },
     {
