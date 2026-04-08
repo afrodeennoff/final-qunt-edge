@@ -110,6 +110,41 @@
   --qe-surface-1: 240 8% 7%;
   --qe-surface-2: 240 8% 10%;
   --qe-panel: 240 8% 8%;
+
+  /* === Frost Border System (Resend-inspired) === */
+  --frost-border: rgba(214, 235, 253, 0.19);
+  --frost-border-strong: rgba(214, 235, 253, 0.28);
+  --frost-border-alt: rgba(217, 237, 254, 0.12);
+  --frost-shadow: rgba(176, 199, 217, 0.145) 0px 0px 0px 1px;
+
+  /* === Multi-Color Accent System (Resend palette) === */
+  --accent-orange: #ff801f;
+  --accent-orange-subtle: rgba(255, 89, 0, 0.15);
+  --accent-orange-border: rgba(255, 129, 31, 0.3);
+  --accent-blue: #3b9eff;
+  --accent-blue-subtle: rgba(0, 117, 255, 0.12);
+  --accent-blue-border: rgba(59, 158, 255, 0.3);
+  --accent-green: #11ff99;
+  --accent-green-subtle: rgba(17, 255, 153, 0.12);
+  --accent-green-border: rgba(17, 255, 153, 0.3);
+  --accent-red: #ff2047;
+  --accent-red-subtle: rgba(255, 32, 71, 0.12);
+  --accent-yellow: #ffc53d;
+  --accent-yellow-subtle: rgba(255, 197, 61, 0.12);
+
+  /* === Text Hierarchy (Resend palette) === */
+  --text-primary: oklch(0.97 0 0);      /* #f0f0f0 near white */
+  --text-secondary: #a1a4a5;              /* silver */
+  --text-tertiary: #6a6a6a;               /* dark gray */
+  --text-disabled: #6a6c70;              /* brighter mid gray */
+
+  /* === Surface (dark void system) === */
+  --surface-card: oklch(0.04 0 0);       /* slightly lifted from void */
+  --surface-popover: oklch(0.06 0 0);
+
+  /* === Pill Radius === */
+  --radius-pill: 9999px;
+  --radius-card: 1rem;                   /* 16px for cards */
 }
 
 .dark {
@@ -222,6 +257,41 @@
   --accent-rose: var(--accent);
   --accent-bronze: var(--accent);
   /* mk-* tokens are defined in styles/tokens.css (extended token file) */
+
+  /* === Frost Border System === */
+  --frost-border: rgba(214, 235, 253, 0.15);
+  --frost-border-strong: rgba(214, 235, 253, 0.22);
+  --frost-border-alt: rgba(217, 237, 254, 0.08);
+  --frost-shadow: none;
+
+  /* === Accent Colors (brightened for dark mode) === */
+  --accent-orange: #ffa057;
+  --accent-orange-subtle: rgba(255, 160, 87, 0.12);
+  --accent-orange-border: rgba(255, 160, 87, 0.25);
+  --accent-blue: #64b5f6;
+  --accent-blue-subtle: rgba(100, 181, 246, 0.1);
+  --accent-blue-border: rgba(100, 181, 246, 0.25);
+  --accent-green: #4dcea6;
+  --accent-green-subtle: rgba(77, 206, 166, 0.1);
+  --accent-green-border: rgba(77, 206, 166, 0.25);
+  --accent-red: #ff5c5c;
+  --accent-red-subtle: rgba(255, 92, 92, 0.1);
+  --accent-yellow: #ffd666;
+  --accent-yellow-subtle: rgba(255, 214, 102, 0.1);
+
+  /* === Text Hierarchy === */
+  --text-primary: oklch(0.97 0 0);
+  --text-secondary: #d0d6e0;
+  --text-tertiary: #8a8f98;
+  --text-disabled: #62666d;
+
+  /* === Surface === */
+  --surface-card: oklch(0.08 0 0);
+  --surface-popover: oklch(0.10 0 0);
+
+  /* === Pill Radius === */
+  --radius-pill: 9999px;
+  --radius-card: 1rem;
 }
 
 /* ===== MINI MAX LIGHT THEME ===== */
