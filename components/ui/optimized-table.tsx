@@ -116,11 +116,11 @@ export function OptimizedVirtualTable<TData, TValue>({
     const itemHeight = getItemHeight(visibleStart + index)
     
     return (
-      <div
-        className={cn(
-          'flex items-center border-b transition-colors hover:bg-muted/50',
-          onRowClick && 'cursor-pointer'
-        )}
+        <div
+          className={cn(
+            'flex items-center border-b border-[var(--frost-border)] transition-colors hover:bg-[rgba(255,255,255,0.04)]',
+            onRowClick && 'cursor-pointer'
+          )}
         style={{
           height: `${itemHeight}px`,
           transform: `translateY(${offset}px)`
@@ -131,7 +131,7 @@ export function OptimizedVirtualTable<TData, TValue>({
         {row.getVisibleCells().map((cell) => (
           <div
             key={cell.id}
-            className='px-4 py-2'
+            className='px-4 py-2 border-r border-[var(--frost-border)] last:border-r-0'
             style={{ width: cell.column.getSize() }}
           >
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -160,7 +160,7 @@ export function OptimizedVirtualTable<TData, TValue>({
               {headerGroup.headers.map((header) => (
                 <div
                   key={header.id}
-                  className='px-4 py-3 font-medium text-sm'
+                  className='px-4 py-3 font-medium text-sm text-v2-text-muted border-r border-[var(--frost-border)] last:border-r-0'
                   style={{ width: header.getSize() }}
                 >
                   {header.isPlaceholder

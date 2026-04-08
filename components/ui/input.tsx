@@ -29,12 +29,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              "flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-all duration-200 outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              "focus-visible:shadow-lg focus-visible:shadow-v2-accent/10",
+              "flex h-10 w-full rounded-md border border-[var(--frost-border)] bg-transparent px-3 py-2 text-base shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] shadow-xs transition-all duration-200 outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-v2-text-muted disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              "focus-visible:shadow-[rgba(176,199,217,0.145)_0px_0px_0px_2px]",
               leftIcon && "pl-10",
               rightIcon && "pr-10",
-              "focus-visible:border-gradient-to-r focus-visible:from-v2-accent focus-visible:to-v2-accent-hover focus-visible:ring-2 focus-visible:ring-v2-accent/50",
-              error && "border-red-500 focus-visible:border-red-500 focus-visible:shadow-red-500/20 focus-visible:ring-red-500/50",
+              "focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
+              error && "border-v2-error focus-visible:border-v2-error focus-visible:ring-v2-error/50",
               !error && "focus-visible:border-v2-accent",
               label && "peer",
               className
@@ -70,14 +70,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "bg-v2-bg-base px-1",
               (isFocused || hasValue) ? "text-xs text-v2-accent -translate-y-7 left-2" : "text-v2-text-muted",
               leftIcon && (isFocused || hasValue) ? "left-10" : "",
-              error && "text-red-500"
+              error && "text-v2-error"
             )}
           >
             {label}
           </label>
         )}
         {error && (
-          <p id={`${inputId}-error`} className="mt-1 text-xs text-red-500">
+          <p id={`${inputId}-error`} className="mt-1 text-xs text-v2-error">
             {typeof error === "string" ? error : "This field has an error"}
           </p>
         )}

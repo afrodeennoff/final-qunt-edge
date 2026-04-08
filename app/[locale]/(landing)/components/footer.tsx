@@ -74,14 +74,14 @@ export default function Footer() {
               <Link
                 href={`/${locale}/support`}
                 prefetch={false}
-                className="rounded-[var(--radius-pill)] border border-[var(--frost-border)] px-4 py-2 text-[11px] font-medium text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
+                className="rounded-full border border-[var(--frost-border)] px-4 py-2 text-[11px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
               >
                 Contact Support
               </Link>
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
                 prefetch={false}
-                className="rounded-[var(--radius-pill)] bg-white px-4 py-2 text-[11px] font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
+                className="rounded-full bg-primary px-4 py-2 text-[11px] font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
               >
                 Start Free Audit
               </Link>

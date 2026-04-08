@@ -40,7 +40,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       data-slot="dialog-content"
       className={cn(
-        "fixed left-[50%] top-[50%] z-[60] grid w-[calc(100%-1.5rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-5 rounded-2xl border border-border/80 bg-gradient-to-b from-background via-background to-muted/30 p-6 shadow-[0_32px_96px_-30px_rgba(0,0,0,0.72)] backdrop-blur-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[46%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[46%] sm:w-full",
+        "fixed left-[50%] top-[50%] z-[60] grid w-[calc(100%-1.5rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-5 rounded-2xl border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl p-6 shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[46%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[46%] sm:w-full",
         className
       )}
       {...props}

@@ -20,9 +20,9 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     data-slot="select-trigger"
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-all duration-200 outline-none placeholder:text-muted-foreground focus-visible:shadow-lg focus-visible:shadow-v2-accent/10 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex h-10 w-full items-center justify-between rounded-md border border-[var(--frost-border)] bg-transparent px-3 py-2 text-sm shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] shadow-xs transition-all duration-200 outline-none placeholder:text-v2-text-muted focus-visible:shadow-[rgba(176,199,217,0.145)_0px_0px_0px_2px] disabled:cursor-not-allowed disabled:opacity-50",
       "focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
-      error && "border-red-500 focus-visible:border-red-500 focus-visible:shadow-red-500/20 focus-visible:ring-red-500/50",
+      error && "border-v2-error focus-visible:border-v2-error focus-visible:ring-v2-error/50",
       className
     )}
     aria-invalid={error ? "true" : undefined}
@@ -80,7 +80,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       data-slot="select-content"
       className={cn(
-        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border border-v2-border/50 bg-v2-bg-surface/95 backdrop-blur-xl text-v2-text-primary shadow-xl shadow-v2-accent/10 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl text-v2-text-primary shadow-[rgba(176,199,217,0.145)_0px_4px_16px_0px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className

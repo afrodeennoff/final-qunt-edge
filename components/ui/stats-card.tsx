@@ -87,7 +87,11 @@ function StatsCardSkeleton({ size = "md", className }: StatsCardSkeletonProps) {
   return (
     <Card
       variant="flat"
-      className={cn("border-border/40", config.padding, className)}
+      className={cn(
+        "border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
+        config.padding,
+        className
+      )}
     >
       <div className="flex flex-col gap-[var(--space-3)]">
         <div className="flex items-center justify-between">
@@ -270,9 +274,8 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
       return (
         <CardV2
           className={cn(
-            "relative overflow-hidden rounded-xl border",
-            "border-v2-border/16 bg-v2-bg-surface/88",
-            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
+            "relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
+            "bg-v2-bg-surface/88",
             config.padding,
             className
           )}
@@ -299,23 +302,19 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
     }
 
     return (
-      <CardV2
-        ref={ref}
-        data-widget-shell="v2"
-        className={cn(
-          "group relative overflow-hidden rounded-xl border transition-all duration-[180ms]",
-          "border-v2-border/16 bg-v2-bg-surface/88",
-          "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.035)]",
-          "hover:border-v2-border/24 hover:bg-v2-bg-surface/92",
-          glass && "bg-v2-bg-surface/60 backdrop-blur-md",
-          !!onClick && "cursor-pointer hover:shadow-md",
-          config.padding,
-          className
-        )}
-        onClick={onClick}
-        aria-label={title}
-        {...props}
-      >
+        <CardV2
+          ref={ref}
+          data-widget-shell="v2"
+          className={cn(
+            "group relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] transition-all duration-[180ms]",
+            "bg-v2-bg-surface/88",
+            "hover:border-[var(--frost-border)] hover:bg-v2-bg-surface/92",
+            glass && "bg-v2-bg-surface/60 backdrop-blur-md",
+            !!onClick && "cursor-pointer hover:shadow-md",
+            config.padding,
+            className
+          )}
+        >
         {(title || trend) && (
           <div className="flex items-center justify-between gap-[var(--space-3)]">
             <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">

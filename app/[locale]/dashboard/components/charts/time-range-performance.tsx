@@ -252,6 +252,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
                   axisLine={false}
                   height={size === 'small' ? 20 : 24}
                   tickMargin={size === 'small' ? 4 : 8}
+                  hide
                   tick={(props) => {
                     const { x, y, payload } = props;
                     const label = getTimeRangeLabel(payload.value);
@@ -278,6 +279,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
                   axisLine={false}
                   width={45}
                   tickMargin={4}
+                  hide
                   tick={{
                     fontSize: size === 'small' ? 9 : 10,
                     fill: 'hsl(var(--text-secondary))'

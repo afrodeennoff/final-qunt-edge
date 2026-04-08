@@ -15,6 +15,13 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground",
         outline: "text-foreground",
+        // Resend-inspired variants
+        pill: "border-[var(--frost-border)] bg-transparent text-v2-text-primary rounded-[9999px]",
+        "pill-accent": "border-[var(--frost-border)] bg-[oklch(0.55_0.22_264/0.15)] text-[oklch(0.55_0.22_264)] rounded-[9999px]",
+        "pill-success": "border-[var(--frost-border)] bg-[oklch(0.55_0.15_166/0.15)] text-[oklch(0.55_0.15_166)] rounded-[9999px]",
+        "pill-warning": "border-[var(--frost-border)] bg-[oklch(0.65_0.2_45/0.15)] text-[oklch(0.65_0.2_45)] rounded-[9999px]",
+        "pill-error": "border-[var(--frost-border)] bg-[oklch(0.6_0.2_15/0.15)] text-[oklch(0.6_0.2_15)] rounded-[9999px]",
+        "pill-info": "border-[var(--frost-border)] bg-[oklch(0.55_0.12_220/0.15)] text-[oklch(0.55_0.12_220)] rounded-[9999px]",
       },
     },
     defaultVariants: {

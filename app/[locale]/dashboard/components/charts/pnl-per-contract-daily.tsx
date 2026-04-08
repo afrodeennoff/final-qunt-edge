@@ -318,6 +318,7 @@ export default React.memo(function PnLPerContractDailyChart({
                         axisLine={false}
                         height={size === "small" ? 20 : 24}
                         tick={false}
+                        hide
                         minTickGap={size === "small" ? 30 : 50}
                       />
                       <YAxis
@@ -325,6 +326,7 @@ export default React.memo(function PnLPerContractDailyChart({
                         axisLine={false}
                         width={60}
                         tickMargin={4}
+                        hide
                         tick={false}
                         domain={[domainMin, domainMax]}
                       />
@@ -370,6 +372,7 @@ export default React.memo(function PnLPerContractDailyChart({
                   axisLine={false}
                   height={size === "small" ? 20 : 24}
                   tickMargin={size === "small" ? 4 : 8}
+                  hide
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
                     fill: "hsl(var(--text-secondary))",
@@ -387,6 +390,7 @@ export default React.memo(function PnLPerContractDailyChart({
                   axisLine={false}
                   width={60}
                   tickMargin={4}
+                  hide
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
                     fill: "hsl(var(--text-secondary))",

@@ -3,7 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "glass" | "elevated" | "outlined" | "flat" | "gradient-border"
+  variant?: "default" | "glass" | "elevated" | "outlined" | "flat" | "gradient-border" | "frost"
   hover?: boolean
   size?: "sm" | "md" | "lg"
   clickable?: boolean
@@ -52,6 +52,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           variant === "outlined" && "border-2 border-v2-border bg-transparent shadow-none",
           variant === "flat" && "border-0 bg-transparent shadow-none",
           variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg shadow-v2-accent/8",
+          variant === "frost" && "bg-transparent border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
           {
             "text-sm": size === "sm",
             "text-base": size === "md",

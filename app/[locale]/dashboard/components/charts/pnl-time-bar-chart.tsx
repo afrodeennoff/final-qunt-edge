@@ -218,6 +218,7 @@ export default React.memo(function TimeOfDayTradeChart({
                   axisLine={false}
                   height={size === "small" ? 20 : 24}
                   tickMargin={size === "small" ? 4 : 8}
+                  hide
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
                     fill: "hsl(var(--text-secondary))",
@@ -234,6 +235,7 @@ export default React.memo(function TimeOfDayTradeChart({
                   axisLine={false}
                   width={45}
                   tickMargin={4}
+                  hide
                   tick={{
                     fontSize: size === "small" ? 9 : 10,
                     fill: "hsl(var(--text-secondary))",
