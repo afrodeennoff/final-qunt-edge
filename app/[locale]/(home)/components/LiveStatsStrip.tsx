@@ -54,12 +54,12 @@ function StatItem({
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-3xl font-bold tabular-nums text-foreground [font-family:var(--home-display)]">
+      <span className="text-3xl font-bold tabular-nums font-mono text-[var(--text-primary)]">
         {stat.prefix}
         {stat.value >= 1000 ? count.toLocaleString() : count}
         {stat.suffix}
       </span>
-      <span className="text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/60 [font-family:var(--home-copy)]">
+      <span className="text-[0.68rem] uppercase tracking-[0.14em] text-[var(--text-secondary)] [font-family:var(--home-copy)]">
         {stat.label}
       </span>
     </div>
@@ -74,7 +74,7 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="relative w-full border-y border-border/50 bg-card/40 py-10"
+      className="relative w-full border-y border-[var(--frost-border)] bg-[var(--surface-card)] py-10"
     >
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
