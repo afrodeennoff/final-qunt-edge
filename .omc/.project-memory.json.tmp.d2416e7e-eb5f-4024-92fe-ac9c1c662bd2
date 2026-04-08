@@ -453,38 +453,26 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 41,
-      "lastAccessed": 1775638537480,
+      "accessCount": 37,
+      "lastAccessed": 1775635971271,
       "type": "directory"
     },
     {
       "path": "app/[locale]/(authentication)/components/user-auth-form.tsx",
-      "accessCount": 15,
-      "lastAccessed": 1775638469132,
-      "type": "directory"
-    },
-    {
-      "path": "server/auth.ts",
-      "accessCount": 13,
-      "lastAccessed": 1775638294738,
+      "accessCount": 11,
+      "lastAccessed": 1775636084595,
       "type": "directory"
     },
     {
       "path": "proxy.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775638717433,
+      "accessCount": 6,
+      "lastAccessed": 1775636259590,
       "type": "directory"
     },
     {
       "path": "app/api/auth/callback/route.ts",
       "accessCount": 3,
       "lastAccessed": 1775635919928,
-      "type": "directory"
-    },
-    {
-      "path": "context/data-provider.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1775638644825,
       "type": "directory"
     },
     {
@@ -533,6 +521,12 @@
       "path": "app/[locale]/layout-content.tsx",
       "accessCount": 1,
       "lastAccessed": 1775635945427,
+      "type": "directory"
+    },
+    {
+      "path": "server/auth.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775635958327,
       "type": "directory"
     },
     {
@@ -587,18 +581,6 @@
       "path": "components/providers/root-providers.tsx",
       "accessCount": 1,
       "lastAccessed": 1775636146148,
-      "type": "directory"
-    },
-    {
-      "path": "lib/supabase.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775638540608,
-      "type": "directory"
-    },
-    {
-      "path": "locales/client.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775638576100,
       "type": "directory"
     }
   ],

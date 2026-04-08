@@ -9,15 +9,16 @@ import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useCurrentLocale } from '@/locales/client'
 
-interface NavItem {
+export interface MobileNavItem {
   href: string
   icon: React.ElementType
   label: string
   exact?: boolean
   tab?: string
+  disabled?: boolean
 }
 
-function useNavItems(): NavItem[] {
+function useNavItems(): MobileNavItem[] {
   const locale = useCurrentLocale()
   return React.useMemo(
     () => [
@@ -56,27 +57,30 @@ function useNavItems(): NavItem[] {
   )
 }
 
-function useIsActive(item: NavItem): boolean {
+function useIsActive(item: MobileNavItem): boolean {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const locale = useCurrentLocale()
-  const basePath = `/${locale}/dashboard`
 
-  const isOnDashboard = pathname === basePath
+  // Derive basePath from item's href (strip query params)
+  const basePath = item.href.split('?')[0]
+
+  // Check if we're on the base path of this item
+  const isOnBasePath = pathname === basePath
 
   if (item.tab) {
     const activeTab = searchParams.get('tab') || 'widgets'
-    return isOnDashboard && activeTab === item.tab
+    return isOnBasePath && activeTab === item.tab
   }
 
   if (item.exact) {
-    return isOnDashboard && (!searchParams.get('tab') || searchParams.get('tab') === 'widgets')
+    return isOnBasePath && (!searchParams.get('tab') || searchParams.get('tab') === 'widgets')
   }
 
+  // For items without tab/exact, match exact pathname
   return pathname === item.href
 }
 
-function TabItem({ item }: { item: NavItem }) {
+function TabItem({ item }: { item: MobileNavItem }) {
   const active = useIsActive(item)
   const Icon = item.icon
 
@@ -110,9 +114,10 @@ function TabItem({ item }: { item: NavItem }) {
   )
 }
 
-function MobileBottomNav() {
+function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
   const isMobile = useIsMobile()
-  const items = useNavItems()
+  const defaultItems = useNavItems()
+  const navItems = (items ?? defaultItems).filter(item => !item.disabled)
 
   if (!isMobile) return null
 
@@ -126,7 +131,7 @@ function MobileBottomNav() {
       aria-label="Dashboard navigation"
     >
       <div className="flex h-14 items-center justify-around px-2">
-        {items.map((item) => (
+        {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}
       </div>

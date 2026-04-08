@@ -531,6 +531,14 @@ export async function proxy(req: NextRequest) {
   // Apply i18n middleware first
   // This handles basic redirects for / to /en, etc.
   const response = I18nMiddleware(req)
+
+  // If i18n middleware returned a redirect (e.g. / -> /en), respect it immediately
+  // to avoid running auth/session checks on the un-localized path
+  if (response.status >= 300 && response.status < 400) {
+    applySecurityHeaders(response)
+    return response
+  }
+
   const nonce = createNonce()
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set("x-nonce", nonce)

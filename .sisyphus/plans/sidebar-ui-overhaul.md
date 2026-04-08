@@ -196,7 +196,7 @@ Max Concurrent: 5 (Wave 1)
 
 ## TODOs
 
-- [ ] 1. Extract Layout Constants
+- [x] 1. Extract Layout Constants
 
   **What to do**:
   - Create `lib/constants/layout.ts` with all shared layout values currently hardcoded across files
@@ -270,7 +270,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `lib/constants/layout.ts`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 2. Extract BackgroundGlow Component
+- [x] 2. Extract BackgroundGlow Component
 
   **What to do**:
   - Create `components/ui/background-glow.tsx` — shared decorative background gradient component
@@ -343,7 +343,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `components/ui/background-glow.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 3. Extract SidebarLayoutShell Component
+- [x] 3. Extract SidebarLayoutShell Component
 
   **What to do**:
   - Create `components/ui/sidebar-layout-shell.tsx` — shared authenticated layout structure
@@ -425,7 +425,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `components/ui/sidebar-layout-shell.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 4. Refactor UnifiedSidebar into Composable Primitives
+- [x] 4. Refactor UnifiedSidebar into Composable Primitives
 
   **What to do**:
   - Break `components/ui/unified-sidebar.tsx` (535 lines) into smaller composable sub-components
@@ -530,7 +530,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `components/ui/sidebar-primitives/*.tsx`, `components/ui/sidebar-primitives/*.ts`, `components/ui/unified-sidebar.tsx`
   - Pre-commit: `npx tsc --noEmit && npx vitest run`
 
-- [ ] 5. Generalize MobileBottomNav
+- [x] 5. Generalize MobileBottomNav
 
   **What to do**:
   - Refactor `components/mobile-bottom-nav.tsx` to accept an `items` config instead of hardcoded Dashboard items
@@ -603,7 +603,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `components/mobile-bottom-nav.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 6. Update Dashboard Layout + Sidebar
+- [x] 6. Update Dashboard Layout + Sidebar
 
   **What to do**:
   - Update `app/[locale]/dashboard/layout.tsx` to use `SidebarLayoutShell` from Task 3
@@ -692,7 +692,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `app/[locale]/dashboard/layout.tsx`, `components/sidebar/dashboard-sidebar.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 7. Update Teams Layouts + Sidebar
+- [x] 7. Update Teams Layouts + Sidebar
 
   **What to do**:
   - Update `app/[locale]/teams/dashboard/layout.tsx` to use `SidebarRootProviders` instead of inline `SidebarProvider` + `AuthTimeout`
@@ -787,7 +787,7 @@ Max Concurrent: 5 (Wave 1)
   - Files: `app/[locale]/teams/dashboard/layout.tsx`, `app/[locale]/teams/manage/layout.tsx`, `app/[locale]/teams/components/teams-sidebar.tsx`
   - Pre-commit: `npx tsc --noEmit`
 
-- [ ] 8. Update Admin Layout + Sidebar
+- [x] 8. Update Admin Layout + Sidebar
 
   **What to do**:
   - Update `app/[locale]/admin/admin-client-layout.tsx`:

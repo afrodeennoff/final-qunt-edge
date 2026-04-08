@@ -338,7 +338,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             }
 
             toast.success(t('success'), { description: t('auth.signIn') })
-            router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+            window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
             setLastAuthPreference('password')
         } catch (error) {
             const parsedError = parseAuthError(error)
@@ -382,7 +382,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             toast.success("Successfully verified. Redirecting...", {
                 description: "Successfully verified. Redirecting...",
             })
-            router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)
+            window.location.href = nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`
         } catch (error) {
             toast.error("Error", {
                 description: error instanceof Error ? error.message : "Failed to verify code",

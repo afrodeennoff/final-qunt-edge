@@ -171,9 +171,20 @@ export async function signInWithGoogle(next: string | null = null, locale?: stri
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  redirect('/')
-}
 
+  let locale = 'en'
+  try {
+    const headerStore = await headers()
+    const referer = headerStore.get('referer') || ''
+    const match = referer.match(/\/([a-z]{2}(?:-[a-z]{2})?)(?:\/|$)/i)
+    if (match) locale = match[1].toLowerCase()
+  } catch {
+    // headers() not available in some contexts — fall back to default
+  }
+
+  redirect(`/${locale}/authentication`)
+
+}
 
 export async function signInWithEmail(email: string, next: string | null = null, locale?: string) {
   const requestIp = await getRequestIp()
