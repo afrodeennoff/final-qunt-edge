@@ -14,7 +14,6 @@ import {
   Sparkles,
   ShieldAlert,
 } from 'lucide-react'
-import { GlassCard } from '@/components/ui/glass-card'
 import { BadgeV2 } from '@/components/ui/v2'
 import {
   MotionSection,
@@ -185,14 +184,8 @@ type AIFeature = (typeof aiFeatures)[number]
 function ProblemCard({ problem }: { problem: Problem }) {
   const Icon = problem.icon
   return (
-    <GlassCard
-      variant="subtle"
-      hover
-      size="sm"
-      className="relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.8)] bg-[hsl(var(--mk-surface)/0.88)] shadow-[0_18px_34px_-26px_hsl(var(--foreground)/0.75)]"
-    >
-      <div className={`absolute inset-x-0 top-0 h-20 bg-gradient-to-b ${problem.tone}`} />
-      <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10">
+    <div className="relative h-full overflow-hidden rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)] transition-colors">
+      <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[oklch(0.08_0_0)] border border-[var(--frost-border-alt)]">
         <Icon className="h-4 w-4 text-primary" />
       </div>
       <BadgeV2
@@ -212,7 +205,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
         <ArrowRight className="w-3 h-3" />
         <span>{problem.solution}</span>
       </div>
-    </GlassCard>
+    </div>
   )
 }
 
@@ -220,16 +213,12 @@ function FeatureCard({ feature }: { feature: Feature }) {
   const Icon = feature.icon
 
   return (
-    <GlassCard
-      variant="strong"
-      hover
-      size="md"
-      className={`relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.8)] bg-[hsl(var(--mk-surface)/0.92)] ${feature.highlighted ? 'border-primary/35 shadow-[0_0_40px_-20px_hsl(var(--primary)/0.45)]' : 'shadow-[0_20px_38px_-30px_hsl(var(--foreground)/0.75)]'}`}
+    <div
+      className={`relative h-full overflow-hidden rounded-2xl border ${feature.highlighted ? 'border-[var(--frost-border-strong)] bg-[var(--surface-card)]' : 'border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)]'} transition-colors`}
     >
-      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.tone}`} />
-      <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl">
-        <div className="absolute inset-0 rounded-2xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/38 bg-primary/10">
+      <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
+        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-xl border border-primary/40 bg-primary/10">
           <Icon className="w-5 h-5 text-primary" />
         </div>
       </div>
@@ -250,7 +239,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       <p className="relative mt-1.5 text-[0.88rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
-    </GlassCard>
+    </div>
   )
 }
 
@@ -258,16 +247,10 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
   const Icon = feature.icon
 
   return (
-    <GlassCard
-      variant="subtle"
-      hover
-      size="sm"
-      className="relative h-full overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.78)] bg-[hsl(var(--mk-surface)/0.88)]"
-    >
-      <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.tone}`} />
-      <div className="relative mb-3 inline-flex h-10 w-10 items-center justify-center rounded-2xl">
-        <div className="absolute inset-0 rounded-2xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/40 bg-primary/10">
+    <div className="relative h-full overflow-hidden rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)] transition-colors">
+      <div className="relative mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl">
+        <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
+        <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-primary/40 bg-primary/10">
           <Icon className="w-4 h-4 text-primary" />
         </div>
       </div>
@@ -277,7 +260,7 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
       <p className="relative mt-1.5 text-[0.82rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
-    </GlassCard>
+    </div>
   )
 }
 
@@ -361,7 +344,7 @@ export default function FeaturesBento() {
             ))}
           </MotionStagger>
 
-          <div className="mt-5 rounded-3xl border border-primary/25 bg-[linear-gradient(135deg,hsl(var(--primary)/0.08),hsl(var(--accent)/0.06)_55%,hsl(var(--mk-surface-muted)/0.2))] p-6">
+          <div className="mt-5 rounded-2xl border border-[var(--frost-border)] bg-[oklch(0.05_0_0)] p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-[hsl(var(--muted-foreground)/0.85)] text-sm leading-[1.5]">
                 AI decisions stay auditable with a transparent reason trail, so
