@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
 const loadingState = {
@@ -13,8 +13,6 @@ export function useNavigationLoading() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const [lastRouteKey, setLastRouteKey] = useState(() => {
-    // Initialise with whatever the browser currently shows so the first render
-    // doesn't interpret a "route change" immediately.
     if (typeof window !== "undefined") {
       return `${window.location.pathname}${window.location.search}`
     }
@@ -40,13 +38,18 @@ export function useNavigationLoading() {
 }
 
 export function useNavigationListener() {
+  const listenerStateRef = useRef({
+    isLoading: false,
+    currentPath: "",
+  })
+
   useEffect(() => {
     const handleStart = () => {
-      loadingState.isLoading = true
+      listenerStateRef.current.isLoading = true
     }
 
     const handleComplete = () => {
-      loadingState.isLoading = false
+      listenerStateRef.current.isLoading = false
     }
 
     window.addEventListener("beforeunload", handleStart)
@@ -58,5 +61,8 @@ export function useNavigationListener() {
     }
   }, [])
 
-  return loadingState
+  return {
+    get isLoading() { return listenerStateRef.current.isLoading },
+    get currentPath() { return listenerStateRef.current.currentPath },
+  }
 }
