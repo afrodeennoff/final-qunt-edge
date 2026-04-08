@@ -16,14 +16,8 @@ import {
     CONTENT_PADDING,
     CONTENT_PADDING_Y,
 } from "@/lib/constants/layout"
-import { MobileBottomNav, MobileNavItem } from "@/components/mobile-bottom-nav"
-import { Suspense } from "react"
-import dynamic from "next/dynamic"
-
-const MobileBottomNavLoader = dynamic(
-    () => import("@/components/mobile-bottom-nav").then((m) => m.MobileBottomNav),
-    { ssr: false }
-)
+import { MobileBottomNav } from "@/components/mobile-bottom-nav"
+import type { MobileNavItem } from "@/components/mobile-bottom-nav"
 
 export const metadata: Metadata = {
     robots: {
@@ -136,7 +130,7 @@ export default async function DashboardLayout({
                             </div>
                         </main>
                     </div>
-                    <MobileBottomNavLoader items={teamsMobileItems} />
+                    <MobileBottomNav items={teamsMobileItems} />
                 </SidebarInset>
             </div>
         </SidebarRootProviders>
