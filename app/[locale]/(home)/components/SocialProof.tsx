@@ -57,7 +57,7 @@ function StatCard({ stat, index }: { stat: (typeof stats)[number]; index: number
   return (
     <motion.div
       key={stat.label}
-      className="marketing-panel rounded-2xl p-5"
+      className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-5"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -88,17 +88,18 @@ function TestimonialCard({
   return (
     <motion.article
       key={testimonial.name}
-      className="marketing-panel rounded-2xl p-6 flex flex-col justify-between h-full"
+      className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-6 flex flex-col justify-between h-full"
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1, ease }}
     >
+      <MessageSquare className="h-5 w-5 text-[var(--accent-blue)] opacity-40 mb-3" />
       <blockquote className="mb-5 text-[0.92rem] leading-relaxed text-muted-foreground/80 [font-family:var(--home-copy)]">
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-xs font-bold text-primary [font-family:var(--home-display)]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full ring-2 ring-[var(--frost-border)] ring-offset-2 ring-offset-[var(--surface-card)] text-xs font-bold text-primary [font-family:var(--home-display)]">
           {testimonial.initials}
         </div>
         <div>
@@ -125,13 +126,13 @@ function TrustPillarCard({
   return (
     <motion.article
       key={pillar.title}
-      className="marketing-panel rounded-2xl p-5"
+      className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-5"
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1, ease }}
     >
-      <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-foreground">
+      <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-[var(--accent-blue)]">
         <Icon className="h-5 w-5" />
       </div>
       <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">
