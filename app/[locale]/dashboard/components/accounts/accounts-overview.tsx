@@ -63,7 +63,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Account } from "@/lib/data-types"
 import { useUserStore } from '@/store/user-store'
-import { useTradesStore } from '@/store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useAccountOrderStore } from '@/store/account-order-store'
 import { useAccountsViewPreferenceStore } from '@/store/accounts-view-preference-store'
 import { useAccountsSortingStore } from '@/store/accounts-sorting-store'
@@ -714,7 +714,7 @@ function AccountsOverviewComponent({
   size: WidgetSize
   surface?: "card" | "embedded"
 }) {
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const user = useUserStore(state => state.user)
   const isLoading = useUserStore(state => state.isLoading)
   const groups = useUserStore(state => state.groups)
@@ -1361,8 +1361,7 @@ function AccountsOverviewComponent({
                           payouts: [],
                           balanceToDate: 0
                         }
-                        // Use type assertion to work around the type issues
-                        setSelectedAccountForTable(tempAccount as any)
+                        setSelectedAccountForTable(tempAccount as Account)
                       }}
                     >
                       <Settings className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors" />

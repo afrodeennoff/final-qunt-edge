@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
 import { useDashboardFilters, useDashboardActions } from '@/context/data-provider'
-import { Button } from '@/components/ui/button'
 import { ButtonV2, InputV2, TextareaV2 } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
 import { Plus, X, Edit2, Trash2, Search, Info } from 'lucide-react'
@@ -43,7 +42,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useTradesStore } from '../../../../../store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useUserStore } from '../../../../../store/user-store'
 
 interface TagType {
@@ -73,7 +72,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
   const t = useI18n()
   const { tagFilter, setTagFilter } = useDashboardFilters()
   const { updateTrades } = useDashboardActions()
-  const contextTrades = useTradesStore(state => state.trades)
+  const contextTrades = useTradingDomainStore(state => state.trades)
   const tags = useUserStore(state => state.tags)
   const setTags = useUserStore(state => state.setTags)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -232,13 +231,13 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
       // Remove the tag from all trades 
       await deleteTagFromAllTrades(tagToDelete.name)
 
-      const currentTrades = useTradesStore.getState().trades
+      const currentTrades = useTradingDomainStore.getState().trades
       const updatedTrades = currentTrades.map((trade: Trade) =>
         trade.tags.includes(tagToDelete.name)
           ? { ...trade, tags: trade.tags.filter((t: string) => t !== tagToDelete.name) }
           : trade
       )
-      useTradesStore.getState().setTrades(updatedTrades)
+      useTradingDomainStore.getState().setTrades(updatedTrades)
 
       // Also remove from tag filter if it's selected
       if (tagFilter.tags.includes(tagToDelete.name)) {

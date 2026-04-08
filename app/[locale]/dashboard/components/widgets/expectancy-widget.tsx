@@ -4,6 +4,7 @@ import React from "react"
 
 import { useDashboardStats } from "@/context/data-provider"
 import { calculateAdvancedMetrics } from "@/lib/advanced-metrics"
+import type { RiskTradeLike } from "@/lib/analytics/metrics-v1"
 import { Target } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
@@ -13,18 +14,18 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
     const { formattedTrades: trades } = useDashboardStats()
     const t = useI18n()
 
-    const { expectancy } = React.useMemo(() => calculateAdvancedMetrics(trades as any), [trades])
+    const { expectancy } = React.useMemo(() => calculateAdvancedMetrics(trades as RiskTradeLike[]), [trades])
     const hasData = (trades?.length ?? 0) > 0
 
     const formattedExpectancy = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(expectancy)
 
     return (
         <WidgetShell
-            title={(t as any)('widgets.expectancy.title')}
+            title={t('widgets.expectancy.title')}
             icon={<Target className="h-4 w-4" />}
-            info={<p className="text-xs">{(t as any)('widgets.expectancy.tooltip')}</p>}
+            info={<p className="text-xs">{t('widgets.expectancy.tooltip')}</p>}
             state={hasData ? "ready" : "empty"}
-            emptyMessage={(t as any)("widgets.emptyState") ?? "No trades yet."}
+            emptyMessage={t("widgets.emptyState") ?? "No trades yet."}
         >
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="flex flex-col items-center justify-center">

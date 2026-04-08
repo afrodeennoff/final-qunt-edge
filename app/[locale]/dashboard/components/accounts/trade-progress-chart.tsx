@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { useMemo } from "react"
 import { Account } from "@/lib/data-types"
-import { useTradesStore } from "@/store/trades-store"
+import { useTradingDomainStore } from "@/store/trading-domain-store"
 
 // Add interface for event type
 interface ChartEvent {
@@ -43,7 +43,7 @@ export function TradeProgressChart({
   const t = useI18n()
 
   // Prefer filtered trades from account (buffer-aware), fallback to store
-  const allTrades = useTradesStore(state => state.trades)
+  const allTrades = useTradingDomainStore(state => state.trades)
   const trades = useMemo(() => {
     if (account.trades && account.trades.length > 0) return account.trades
     return allTrades.filter(trade => trade.accountNumber === account.number)

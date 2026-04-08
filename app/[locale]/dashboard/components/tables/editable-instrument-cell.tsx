@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { ButtonV2, InputV2 } from "@/components/ui/v2"
-import { Button } from '@/components/ui/button'
 import { Edit3, Check, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'

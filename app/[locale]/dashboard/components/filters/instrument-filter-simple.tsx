@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Search } from "lucide-react"
-import { useTradesStore } from "../../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 
 interface InstrumentFilterSimpleProps {
   className?: string
@@ -18,7 +18,7 @@ interface InstrumentFilterSimpleProps {
 export function InstrumentFilterSimple({ className }: InstrumentFilterSimpleProps) {
   const t = useI18n()
   const { instruments, setInstruments } = useDashboardFilters()
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const [searchTerm, setSearchTerm] = useState("")
   const [availableInstruments, setAvailableInstruments] = useState<string[]>([])
 

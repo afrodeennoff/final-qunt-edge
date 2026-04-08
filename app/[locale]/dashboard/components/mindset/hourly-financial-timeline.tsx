@@ -55,7 +55,7 @@ interface HourlyFinancialTimelineProps {
     commission: number
   }>
   onEventClick?: (event: FinancialEvent) => void
-  onTradeClick?: (trade: any) => void
+  onTradeClick?: (trade: { id: string; entryDate: string; instrument: string; pnl: number; commission: number }) => void
   className?: string
   preventScrollPropagation?: boolean
   showOnlyTradedHours?: boolean

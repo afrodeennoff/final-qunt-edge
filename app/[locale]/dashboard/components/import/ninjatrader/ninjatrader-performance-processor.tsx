@@ -296,7 +296,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
               }
               break;
             default:
-              item[key] = cellValue as any;
+              (item as Record<string, unknown>)[key] = cellValue;
           }
         }
       });

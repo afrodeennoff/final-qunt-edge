@@ -26,7 +26,7 @@ import { Trade } from '@/lib/data-types'
 import ExportButton from '@/components/export-button'
 import { useI18n } from "@/locales/client"
 import { useUserStore } from '@/store/user-store'
-import { useTradesStore } from '@/store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { clearTradesCache } from '@/lib/indexeddb/trades-cache'
 
 type GroupedTrades = Record<string, Record<string, Trade[]>>
@@ -38,8 +38,8 @@ export function DataManagementCard() {
   const user = useUserStore((state) => state.user)
   const accounts = useUserStore((state) => state.accounts)
   const setAccounts = useUserStore((state) => state.setAccounts)
-  const trades = useTradesStore((state) => state.trades)
-  const setTradesStore = useTradesStore((state) => state.setTrades)
+  const trades = useTradingDomainStore((state) => state.trades)
+  const setTradesStore = useTradingDomainStore((state) => state.setTrades)
 
   const { refreshTradesOnly } = useDashboardActions()
   const [deleteLoading, setDeleteLoading] = useState(false)

@@ -16,7 +16,7 @@ import type { FinancialEvent } from "@/prisma/generated/prisma"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { useUserStore } from "@/store/user-store"
-import { useTradesStore } from "@/store/trades-store"
+import { useTradingDomainStore } from "@/store/trading-domain-store"
 import { useFinancialEventsStore } from "@/store/financial-events-store"
 import { useMoodStore } from "@/store/mood-store"
 import { sanitizeHtml } from "@/lib/sanitize"
@@ -60,7 +60,7 @@ export function MindsetSummary({
   const t = useI18n()
   const { locale } = useParams()
   const dateLocale = locale === 'fr' ? fr : enUS
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const financialEvents = useFinancialEventsStore(state => state.events)
   const moods = useMoodStore(state => state.moods)
   const timezone = useUserStore(state => state.timezone)

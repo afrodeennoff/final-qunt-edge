@@ -43,7 +43,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const t = useI18n()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
-  const tr = t as unknown as (key: string) => string
+  // useI18n() returns (key: string) => string directly — no cast needed
 
   const handlePlatformCheck = (platformType: string, checked: boolean) => {
     setSelectedPlatforms(prev => {
@@ -95,8 +95,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
   const filteredPlatforms = platforms.filter(platform => {
     const matchesSearch =
-      tr(platform.name).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tr(platform.description).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t(platform.name).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t(platform.description).toLowerCase().includes(searchQuery.toLowerCase()) ||
       getTranslatedCategory(platform.category).toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesCategory = activeCategory === "all" || platform.category === activeCategory
@@ -300,7 +300,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               )}
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-semibold text-v2-text-primary truncate">
-                                  {tr(platform.name)}
+                                  {t(platform.name)}
                                 </h4>
                                 <p className="text-xs text-v2-text-secondary truncate">
                                   {platform.category}
@@ -316,7 +316,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               </ButtonV2>
                             </div>
                             <p className="text-xs text-v2-text-muted line-clamp-3">
-                              {tr(platform.description)}
+                              {t(platform.description)}
                             </p>
                             <div className="flex flex-wrap gap-1.5 mt-auto">
                               {!platform.isDisabled && !platform.isComingSoon && (
@@ -369,7 +369,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               </div>
                   <SheetHeader className="px-4 pb-2">
                     <SheetTitle className="text-v2-text-primary">
-                      {tr(selectedPlatform.name)}
+                      {t(selectedPlatform.name)}
                     </SheetTitle>
                   </SheetHeader>
               <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { ButtonV2, InputV2 } from "@/components/ui/v2"
 import { Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts"
+import type { TooltipProps } from "recharts"
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
 import { ChartSurface } from "@/components/ui/chart-surface"
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider"
@@ -113,7 +114,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
     return "hsl(var(--foreground))"
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
     React.useEffect(() => {
       if (active && payload && payload.length) {
         setActiveRange(payload[0].payload.range)

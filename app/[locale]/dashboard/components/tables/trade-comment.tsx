@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { ButtonV2 } from '@/components/ui/v2'
 import { Tag } from '@/prisma/generated/prisma'
 import { Trade } from '@/lib/data-types'

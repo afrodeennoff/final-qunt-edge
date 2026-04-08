@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import type { ImportTradeDraft as Trade } from "@/lib/trade-types";
 import { useI18n } from "@/locales/client";
-import { useTradesStore } from "@/store/trades-store";
+import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { useUserStore } from "@/store/user-store";
 import { generateTradeHash } from "@/lib/utils";
 import { PlatformProcessorProps } from "../config/platforms";
@@ -193,7 +193,7 @@ export default function AtasProcessor({
   selectedAccountNumbers,
   setSelectedAccountNumbers,
 }: PlatformProcessorProps) {
-  const existingTrades = useTradesStore((state) => state.trades);
+  const existingTrades = useTradingDomainStore((state) => state.trades);
   const timezone = useUserStore((state) => state.timezone);
   const [allProcessedTrades, setAllProcessedTrades] = useState<Trade[]>([]);
   const [missingCommissions, setMissingCommissions] = useState<{
@@ -372,9 +372,9 @@ export default function AtasProcessor({
                 typeof cellValue === "string" ||
                 typeof cellValue === "number"
               ) {
-                (item as any)[key] = String(cellValue);
+                (item as Record<string, unknown>)[key] = String(cellValue);
               } else {
-                (item as any)[key] = cellValue;
+                (item as Record<string, unknown>)[key] = cellValue;
               }
           }
         }
@@ -786,7 +786,7 @@ export default function AtasProcessor({
               <TradeTableReview
                 tradesParam={filteredTrades.map((trade) =>
                   createTradeWithDefaults(trade)
-                ) as any}
+                ) as Trade[]}
                 config={{
                   style: {
                     height: "100%",

@@ -15,7 +15,7 @@ import { getRithmicData, updateLastSyncTime } from "@/lib/rithmic-storage";
 import { useDashboardActions } from "@/context/data-provider";
 import { useI18n } from "@/locales/client";
 import { useRithmicSyncStore, RithmicMessage } from "@/store/rithmic-sync-store";
-import { useTradesStore } from "@/store/trades-store";
+import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { getDatabaseUserId } from "@/server/auth";
 import { useUserStore } from "@/store/user-store";
 
@@ -114,7 +114,7 @@ export function RithmicSyncContextProvider({
   const { refreshTradesOnly } = useDashboardActions();
 
   const isLoading = useUserStore((state) => state.isLoading);
-  const trades = useTradesStore((state) => state.trades);
+  const trades = useTradingDomainStore((state) => state.trades);
   const tradesRef = useRef(trades);
 
   useEffect(() => {

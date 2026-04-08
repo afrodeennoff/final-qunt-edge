@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { BarChart, Bar, Cell, Tooltip, ResponsiveContainer, XAxis, YAxis, CartesianGrid, ComposedChart, ReferenceLine, Line } from "recharts"
+import type { TooltipProps } from "recharts"
 import { cn } from "@/lib/utils"
 import {
   CardV2,
@@ -149,7 +150,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
     'hsl(var(--foreground) / 0.35)'
   ]
 
-  const renderEquityTooltip = React.useCallback(({ active, payload }: any) => {
+  const renderEquityTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload as EquityChartPoint | undefined
       if (!data) return null
@@ -170,7 +171,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
     return null
   }, [isWeekly, t])
 
-  const renderDistributionTooltip = React.useCallback(({ active, payload }: any) => {
+  const renderDistributionTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload?.[0]) {
       const data = payload[0]?.payload as DistributionChartPoint | undefined
       if (!data) return null

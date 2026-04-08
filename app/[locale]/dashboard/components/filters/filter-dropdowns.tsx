@@ -14,7 +14,7 @@ import { useMemo, useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { PnlRangeFilter } from "./pnl-range-filter"
 import { AccountFilter } from "./account-filter"
-import { useTradesStore } from "../../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 
 interface FilterDropdownProps {
   type: 'instrument'
@@ -112,7 +112,7 @@ interface FilterDropdownsProps {
 
 export function FilterDropdowns({ showAccountNumbers }: FilterDropdownsProps) {
   const { instruments = [], setInstruments } = useDashboardFilters()
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const allItems = useMemo<FilterItem[]>(
     () =>
       Array.from(new Set((trades ?? []).map((trade) => trade.instrument).filter(Boolean))).map(

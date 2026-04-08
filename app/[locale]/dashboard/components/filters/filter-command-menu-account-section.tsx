@@ -7,7 +7,7 @@ import { CommandItem } from "@/components/ui/command"
 import { Settings, Trash2 } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { useDashboardFilters, useDashboardActions } from "@/context/data-provider"
-import { useTradesStore } from "../../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useUserStore } from "../../../../../store/user-store"
 import { useModalStateStore } from "../../../../../store/modal-state-store"
 import { toast } from "sonner"
@@ -30,7 +30,7 @@ export function AccountSection({ searchValue }: AccountSectionProps) {
   const { accountNumbers = [], setAccountNumbers } = useDashboardFilters()
   const { deleteGroup } = useDashboardActions()
   const groups = useUserStore(state => state.groups)
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const t = useI18n()
   const { setAccountGroupBoardOpen } = useModalStateStore()
   const [showAccountNumbers, setShowAccountNumbers] = useState(true)

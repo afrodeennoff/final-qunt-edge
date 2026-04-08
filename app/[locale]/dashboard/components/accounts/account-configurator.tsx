@@ -20,7 +20,7 @@ import { HIDDEN_GROUP_NAME } from "../filters/account-group-board"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Account } from "@/lib/data-types"
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardV2 as Card, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { useDashboardActions } from '@/context/data-provider'
 import { useUserStore } from '@/store/user-store'

@@ -13,6 +13,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
   sortingFns,
+  Updater,
   VisibilityState,
   getExpandedRowModel,
   ExpandedState,
@@ -263,6 +264,8 @@ interface ExtendedTrade extends Trade {
   trades: ExtendedTrade[];
 }
 
+type ColumnAccessor = { id?: string; accessorKey?: string };
+
 const supabase = createClient();
 
 interface TradeTableReviewConfig {
@@ -401,7 +404,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
     updateGroupingGranularity("trade-table", newGranularity);
   };
 
-  const handlePaginationChange = (updaterOrValue: any) => {
+  const handlePaginationChange = (updaterOrValue: Updater<{ pageIndex: number; pageSize: number }>) => {
     const newPagination =
       typeof updaterOrValue === "function"
         ? updaterOrValue({ pageIndex, pageSize })
@@ -554,9 +557,9 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           ...trade,
           trades: [],
         });
-        group.pnl = (Number(group.pnl || 0) + Number(trade.pnl || 0)) as any;
-        group.commission = (Number(group.commission || 0) + Number(trade.commission || 0)) as any;
-        group.quantity = (Number(group.quantity || 0) + Number(trade.quantity || 0)) as any;
+        group.pnl = Number(group.pnl || 0) + Number(trade.pnl || 0);
+        group.commission = Number(group.commission || 0) + Number(trade.commission || 0);
+        group.quantity = Number(group.quantity || 0) + Number(trade.quantity || 0);
         // Update closeDate to the latest one
         if (new Date(trade.closeDate) > new Date(group.closeDate)) {
           group.closeDate = trade.closeDate;
@@ -1198,7 +1201,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
       return allColumns;
     }
     return allColumns.filter((col) => {
-      const columnId = col.id || (col as any).accessorKey;
+      const columnId = col.id || (col as ColumnAccessor).accessorKey;
       return columnId && config.columns!.includes(columnId as string);
     });
   }, [allColumns, config?.columns]);
@@ -1555,12 +1558,12 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
             <tfoot className="sticky bottom-0 z-10 border-t border-border bg-background/90 shadow-md backdrop-blur-md">
               <tr className="border-b transition-colors">
                 {visibleColumns.map((column, index) => {
-                  const columnId = column.id || (column as any).accessorKey;
+                  const columnId = column.id || (column as ColumnAccessor).accessorKey;
 
                   // Find the first non-select/expand column for "Total" label
                   const firstDataColumnIndex = visibleColumns.findIndex(
                     (col) => {
-                      const id = col.id || (col as any).accessorKey;
+                      const id = col.id || (col as ColumnAccessor).accessorKey;
                       return id !== "select" && id !== "expand";
                     }
                   );

@@ -9,7 +9,7 @@ import { useI18n } from "@/locales/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from '@/lib/utils'
 import { WidgetType, WidgetSize } from '../types/dashboard'
-import { getWidgetsByCategory, WIDGET_REGISTRY, getWidgetPreview } from '../config/widget-registry'
+import { getWidgetsByCategory, WIDGET_REGISTRY, getWidgetPreview, WidgetConfig } from '../config/widget-registry'
 import { useDashboardIsMobile } from '@/context/data-provider'
 
 interface AddWidgetSheetProps {
@@ -26,7 +26,7 @@ interface PreviewCardProps {
 }
 
 interface LazyWidgetPreviewProps {
-  config: any
+  config: WidgetConfig
   index: number
   isLoaded: boolean
   onVisible: () => void

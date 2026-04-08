@@ -222,8 +222,7 @@ export default React.memo(function ContractQuantityChart({
                     content={({ active, payload, label }) => (
                       <CustomTooltip
                         active={active}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        payload={payload as any}
+                        payload={payload}
                         label={label}
                       />
                     )}

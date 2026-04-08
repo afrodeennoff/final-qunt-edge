@@ -28,7 +28,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
     const endDay = endOfDay(now)
 
     Object.entries(calendarData ?? {}).forEach(([dateStr, data]) => {
-      const dayData = data as unknown as { pnl?: number; trades?: Array<{ pnl?: number }> }
+      const dayData = data as { pnl?: number; trades?: Array<{ pnl?: number }> }
       const date = parseISO(dateStr)
       if (!isWithinInterval(date, { start: startDay, end: endDay })) return
 

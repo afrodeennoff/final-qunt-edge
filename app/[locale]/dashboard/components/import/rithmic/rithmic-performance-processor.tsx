@@ -52,7 +52,7 @@ export default function RithmicPerformanceProcessor({ headers, csvData, processe
                             item[key] = parseFloat(cellValue) || 0;
                             break;
                         default:
-                            item[key] = cellValue as any;
+                            (item as Record<string, unknown>)[key] = cellValue;
                     }
                 }
             });

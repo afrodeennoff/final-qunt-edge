@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { CommandItem } from "@/components/ui/command"
 import { useI18n } from "@/locales/client"
 import { useDashboardFilters } from "@/context/data-provider"
-import { useTradesStore } from "../../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 
 interface InstrumentSectionProps {
   searchValue: string
@@ -13,7 +13,7 @@ interface InstrumentSectionProps {
 
 export function InstrumentSection({ searchValue }: InstrumentSectionProps) {
   const { instruments = [], setInstruments } = useDashboardFilters()
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const t = useI18n()
   const availableInstruments = useMemo(
     () =>

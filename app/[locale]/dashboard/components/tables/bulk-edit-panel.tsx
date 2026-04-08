@@ -1,10 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { BadgeV2, ButtonV2, InputV2 } from "@/components/ui/v2"
+import { BadgeV2, ButtonV2, InputV2, CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from "@/components/ui/v2"
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Clock, Edit3, Plus, Minus, X } from 'lucide-react'
 import { useI18n } from '@/locales/client'

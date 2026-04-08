@@ -16,7 +16,7 @@ import { Check, Loader2, Pencil, Trash2, X, Search } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
-import { useTradesStore } from "@/store/trades-store"
+import { useTradingDomainStore } from "@/store/trading-domain-store"
 import { useUserStore } from "@/store/user-store"
 import { Account } from "@/lib/data-types"
 import { removeAccountsFromTradesAction } from "@/server/accounts"
@@ -60,8 +60,8 @@ export function AccountGroupBoard() {
   const t = useI18n()
   const user = useUserStore(state => state.user)
   const groups = useUserStore(state => state.groups)
-  const trades = useTradesStore(state => state.trades)
-  const setTradesStore = useTradesStore(state => state.setTrades)
+  const trades = useTradingDomainStore(state => state.trades)
+  const setTradesStore = useTradingDomainStore(state => state.setTrades)
   const existingAccounts = useUserStore(state => state.accounts)
   const setAccounts = useUserStore(state => state.setAccounts)
   const {

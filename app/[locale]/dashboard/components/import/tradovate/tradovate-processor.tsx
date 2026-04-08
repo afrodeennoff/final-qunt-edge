@@ -7,7 +7,7 @@ import { InputV2 } from "@/components/ui/v2"
 import { toast } from 'sonner'
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { useI18n } from '@/locales/client'
-import { useTradesStore } from '@/store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { generateTradeHash } from '@/lib/utils'
 import { PlatformProcessorProps } from '../config/platforms'
 
@@ -67,7 +67,7 @@ const newMappings: { [key: string]: string } = {
 
 
 export default function TradovateProcessor({ headers, csvData, processedTrades, setProcessedTrades, accountNumbers }: PlatformProcessorProps) {
-    const existingTrades = useTradesStore((state => state.trades))
+    const existingTrades = useTradingDomainStore((state => state.trades))
     const [missingCommissions, setMissingCommissions] = useState<{ [key: string]: number }>({})
     const [showCommissionPrompt, setShowCommissionPrompt] = useState(false)
     const t = useI18n()
@@ -165,7 +165,7 @@ export default function TradovateProcessor({ headers, csvData, processedTrades, 
                             }
                             break;
                         default:
-                            item[key] = cellValue as any;
+                            (item as Record<string, unknown>)[key] = cellValue;
                     }
                 }
             });

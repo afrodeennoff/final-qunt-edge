@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2';
 import { propFirms, AccountSize } from './config';
 
 export function ComparisonTable() {
@@ -36,7 +36,7 @@ export function ComparisonTable() {
     ? propFirms[secondSelection.propFirm].accountSizes[secondSelection.account]
     : null;
 
-  const renderValue = (value: any) => {
+  const renderValue = (value: string | number | boolean | null | undefined) => {
     if (value === null) return '-';
     if (typeof value === 'boolean') return value ? 'Yes' : 'No';
     if (typeof value === 'number') {
@@ -51,7 +51,7 @@ export function ComparisonTable() {
   const comparisonFields: {
     label: string;
     key: keyof AccountSize;
-    format?: (value: any) => string;
+    format?: (value: string | number | boolean | null | undefined) => string;
   }[] = [
     { label: 'Account Name', key: 'name' },
     { label: 'Price', key: 'price', format: (v) => `$${v}` },

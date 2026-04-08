@@ -92,7 +92,7 @@ export default function TopstepProcessor({ headers, csvData, processedTrades, se
                             item[key] = cellValue.slice(0, -2);
                             break;
                         default:
-                            item[key] = cellValue as any;
+                            (item as Record<string, unknown>)[key] = cellValue;
                     }
                 }
             });

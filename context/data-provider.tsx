@@ -63,7 +63,7 @@ import { signOut, getUserId, getDatabaseUserId, updateUserLanguage } from "@/ser
 import { DashboardLayoutWithWidgets, useUserStore } from "@/store/user-store";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 import { useFinancialEventsStore } from "@/store/financial-events-store";
-import { useTradesStore } from "@/store/trades-store";
+import { useTradingDomainStore } from "@/store/trading-domain-store";
 import { clearTradesCache, getTradesCache, setTradesCache, getUserDataCache, setUserDataCache } from "@/lib/indexeddb/trades-cache"
 import { deleteTagAction } from "@/server/tags";
 import { useCurrentLocale } from "@/locales/client";
@@ -303,8 +303,8 @@ export const DataProvider: React.FC<{
   const setTickDetails = useTickDetailsStore((state) => state.setTickDetails);
   const tickDetails = useTickDetailsStore((state) => state.tickDetails);
   const setEvents = useFinancialEventsStore((state) => state.setEvents);
-  const trades = useTradesStore((state) => state.trades);
-  const setTrades = useTradesStore((state) => state.setTrades);
+  const trades = useTradingDomainStore((state) => state.trades);
+  const setTrades = useTradingDomainStore((state) => state.setTrades);
   const dashboardLayout = useUserStore((state) => state.dashboardLayout);
   const locale = useCurrentLocale();
   const isLoading = useUserStore((state) => state.isLoading);

@@ -14,13 +14,13 @@ import { useCurrentLocale } from '@/locales/client'
 import OnboardingModal from './onboarding-modal'
 import { AccountGroupBoard } from '@/app/[locale]/dashboard/components/filters/account-group-board'
 import { useModalStateStore } from '@/store/modal-state-store'
-import { useTradesStore } from '@/store/trades-store'
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { toast } from 'sonner'
 
 export default function Modals() {
   const user = useUserStore((state) => state.user)
   const isLoading = useUserStore((state) => state.isLoading)
-  const trades = useTradesStore((state) => state.trades)
+  const trades = useTradingDomainStore((state) => state.trades)
   const [isPaywallOpen, setIsPaywallOpen] = useState(false)
   const [isAlreadySubscribedOpen, setIsAlreadySubscribedOpen] = useState(false)
   const [isTradesDialogOpen, setIsTradesDialogOpen] = useState(false)
@@ -78,7 +78,7 @@ export default function Modals() {
     // Use a slightly longer delay to ensure onboarding state has updated
     setTimeout(() => {
       // Check current trades state - trades is initialized as empty array []
-      const currentTrades = useTradesStore.getState().trades
+      const currentTrades = useTradingDomainStore.getState().trades
       const currentIsLoading = useUserStore.getState().isLoading
       const hasNoTrades = !currentTrades || currentTrades.length === 0
 

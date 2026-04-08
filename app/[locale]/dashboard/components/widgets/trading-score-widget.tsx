@@ -24,11 +24,11 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
 
     return (
         <WidgetShell
-            title={(t as any)('widgets.tradingScore.title')}
+            title={t('widgets.tradingScore.title')}
             icon={<Trophy className="h-4 w-4" />}
-            info={<p className="text-xs">{(t as any)('widgets.tradingScore.tooltip')}</p>}
+            info={<p className="text-xs">{t('widgets.tradingScore.tooltip')}</p>}
             state={hasData ? "ready" : "empty"}
-            emptyMessage={(t as any)("widgets.emptyState") ?? "No trades yet."}
+            emptyMessage={t("widgets.emptyState") ?? "No trades yet."}
         >
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="relative flex items-center justify-center">

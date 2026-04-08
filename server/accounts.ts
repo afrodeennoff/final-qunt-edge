@@ -12,11 +12,12 @@ import {
   invalidateDashboardDataCaches,
 } from '@/lib/cache/cache-invalidation'
 
-type GroupedTrades = Record<string, Record<string, Trade[]>>
+type GroupedTrade = Pick<Trade, 'id' | 'accountNumber' | 'instrument'>
+type GroupedTrades = Record<string, Record<string, GroupedTrade[]>>
 
 interface FetchTradesResult {
   groupedTrades: GroupedTrades;
-  flattenedTrades: Trade[];
+  flattenedTrades: Array<Pick<Trade, 'id' | 'accountNumber' | 'instrument'>>;
 }
 
 export async function fetchGroupedTradesAction(_userId?: string): Promise<FetchTradesResult> {
@@ -33,7 +34,12 @@ export async function fetchGroupedTradesAction(_userId?: string): Promise<FetchT
     orderBy: [
       { accountNumber: 'asc' },
       { instrument: 'asc' }
-    ]
+    ],
+    select: {
+      id: true,
+      accountNumber: true,
+      instrument: true,
+    }
   })
 
   const groupedTrades = trades.reduce<GroupedTrades>((acc, trade) => {

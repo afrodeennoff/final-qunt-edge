@@ -23,7 +23,7 @@ import { Widget, WidgetType, WidgetSize, LayoutItem } from '../types/dashboard'
 import { useUserStore, DashboardLayoutWithWidgets } from '../../../../store/user-store'
 import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
-import { Prisma, DashboardLayout } from "@/prisma/generated/prisma"
+import type { DashboardLayout } from "@/prisma/generated/prisma"
 import { useDashboard } from '../dashboard-context'
 import { motion, useReducedMotion } from 'framer-motion'
 import { WidgetShell } from "@/components/ui/widget-shell"
@@ -31,7 +31,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
 import { useSearchParams } from "next/navigation"
 import { logger } from "@/lib/logger"
-import { SkeletonV2 } from "@/components/ui/v2"
+import { SkeletonV2 as Skeleton } from "@/components/ui/v2"
 import {
   generateResponsiveLayouts,
   getEffectiveWidgetSize,
@@ -46,8 +46,8 @@ const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => 
     version: layout.version ?? 1,
     checksum: layout.checksum ?? null,
     deviceId: layout.deviceId ?? null,
-    desktop: layout.desktop as unknown as Prisma.JsonValue,
-    mobile: layout.mobile as unknown as Prisma.JsonValue,
+    desktop: layout.desktop as DashboardLayout['desktop'],
+    mobile: layout.mobile as DashboardLayout['mobile'],
   }
 }
 
@@ -60,7 +60,7 @@ const createLayoutSignature = (widgets: Widget[]) =>
     .join("|")
 
 function WidgetErrorFallback({ widgetId }: { widgetId: string }) {
-  const translate = useI18n() as unknown as (key: string) => string
+  const translate = useI18n()
   return (
     <WidgetShell
       title={translate("widgets.error.title") || "Widget Error"}
@@ -348,7 +348,7 @@ export default function WidgetCanvas() {
     setIsCustomizing,
   } = useDashboard()
   const t = useI18n()
-  const translate = t as unknown as (key: string) => string
+  const translate = t
   const shouldReduceMotion = useReducedMotion()
   const showDataDebug = searchParams.get("debugData") === "1"
   const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
@@ -500,8 +500,8 @@ export default function WidgetCanvas() {
     if (!user?.id || !layouts) return
     const newLayouts = {
       ...layouts,
-      desktop: defaultLayouts.desktop as unknown as Widget[],
-      mobile: defaultLayouts.mobile as unknown as Widget[],
+      desktop: defaultLayouts.desktop,
+      mobile: defaultLayouts.mobile,
       updatedAt: new Date()
     }
     setLayouts(newLayouts)
@@ -559,11 +559,11 @@ export default function WidgetCanvas() {
     return (
       <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
         <div className="rounded-xl border border-v2-border/12 bg-v2-bg-surface/40 p-5 space-y-3" aria-hidden="true">
-          <SkeletonV2 className="h-4 w-48" />
-          <SkeletonV2 className="h-3 w-80 max-w-full" />
+          <Skeleton className="h-4 w-48" />
+          <Skeleton className="h-3 w-80 max-w-full" />
           <div className="flex gap-2 pt-2">
-            <SkeletonV2 className="h-8 w-36 rounded-lg" />
-            <SkeletonV2 className="h-8 w-24 rounded-lg" />
+            <Skeleton className="h-8 w-36 rounded-lg" />
+            <Skeleton className="h-8 w-24 rounded-lg" />
           </div>
         </div>
         <span className="sr-only">Loading dashboard widgets...</span>

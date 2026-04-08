@@ -24,7 +24,7 @@ import { addTagsToTradesForDay } from "@/server/trades"
 import { isToday, format } from "date-fns"
 import { useMoodStore } from "@/store/mood-store"
 import { useFinancialEventsStore } from "@/store/financial-events-store"
-import { useTradesStore } from "@/store/trades-store"
+import { useTradingDomainStore } from "@/store/trading-domain-store"
 import { useCurrentLocale } from "@/locales/client"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { Trade } from "@/lib/data-types"
@@ -45,8 +45,8 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
   const moods = useMoodStore(state => state.moods)
   const setMoods = useMoodStore(state => state.setMoods)
   const financialEvents = useFinancialEventsStore(state => state.events)
-  const trades = useTradesStore(state => state.trades)
-  const setTrades = useTradesStore(state => state.setTrades)
+  const trades = useTradingDomainStore(state => state.trades)
+  const setTrades = useTradingDomainStore(state => state.setTrades)
   const locale = useCurrentLocale()
   const t = useI18n()
 

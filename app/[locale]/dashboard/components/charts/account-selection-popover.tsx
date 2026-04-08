@@ -12,20 +12,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Settings } from "lucide-react"
+import { useTranslation } from "next-international"
 
 interface AccountSelectionPopoverProps {
   accountNumbers: string[]
   selectedAccounts: string[]
   onToggleAccount: (accountNumber: string) => void
-  t: any
 }
 
-export const AccountSelectionPopover = React.memo(({ 
+export const AccountSelectionPopover = React.memo(({
   accountNumbers,
   selectedAccounts,
   onToggleAccount,
-  t
 }: AccountSelectionPopoverProps) => {
+  const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const [searchTerm, setSearchTerm] = React.useState('')
   

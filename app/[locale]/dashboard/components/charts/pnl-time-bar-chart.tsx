@@ -11,6 +11,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import type { TooltipProps } from "recharts";
 import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
@@ -99,7 +100,7 @@ export default React.memo(function TimeOfDayTradeChart({
     return `hsl(var(--chart-4) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
     React.useEffect(() => {
       if (active && payload && payload.length) {
         setActiveHour(payload[0].payload.hour);

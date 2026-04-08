@@ -13,7 +13,7 @@ import { HexColorPicker } from "react-colorful"
 import { useI18n } from "@/locales/client"
 import { useDashboardFilters, useDashboardActions } from "@/context/data-provider"
 import { useUserStore } from "../../../../../store/user-store"
-import { useTradesStore } from "../../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { createTagAction, deleteTagAction } from "@/server/tags"
 import { toast } from "sonner"
 import { Trade } from "@/lib/data-types"
@@ -36,7 +36,7 @@ export function TagSection({ searchValue }: TagSectionProps) {
   const { updateTrades } = useDashboardActions()
   const tags = useUserStore(state => state.tags)
   const setTags = useUserStore(state => state.setTags)
-  const trades = useTradesStore(state => state.trades)
+  const trades = useTradingDomainStore(state => state.trades)
   const t = useI18n()
   const [filteredTags, setFilteredTags] = useState<typeof tags>([])
   const [isAddPopoverOpen, setIsAddPopoverOpen] = useState(false)

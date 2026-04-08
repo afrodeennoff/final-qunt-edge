@@ -9,6 +9,7 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
+import type { Trade } from '@/lib/data-types'
 
 const chartConfig = {
   balance: {
@@ -42,7 +43,7 @@ interface ChartDataPoint {
 }
 
 interface AccountEquityChartProps {
-  trades: any[]
+  trades: Trade[]
   drawdownThreshold: number
   profitTarget: number
   startingBalance: number

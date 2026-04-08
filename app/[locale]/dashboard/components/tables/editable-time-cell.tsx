@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { ButtonV2, InputV2 } from "@/components/ui/v2"
-import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Label } from '@/components/ui/label'
 import { Clock, Plus, Minus, Check, X } from 'lucide-react'

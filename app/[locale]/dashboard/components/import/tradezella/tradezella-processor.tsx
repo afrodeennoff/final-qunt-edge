@@ -44,10 +44,10 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
           const cellValue = row[index];
           switch (key) {
             case 'entryTime':
-              entryTime = cellValue as any;
+              entryTime = String(cellValue);
               break;
             case 'closeTime':
-              closeTime = cellValue as any;
+              closeTime = String(cellValue);
               break;
             case 'pnl':
               item.pnl = parseFloat(cellValue)
@@ -62,7 +62,7 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
               item.timeInPosition = parseFloat(cellValue)
               break;
             default:
-              item[key as keyof Trade] = cellValue as any;
+              (item as Record<string, unknown>)[key] = cellValue;
           }
         }
       });

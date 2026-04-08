@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { defaultLayouts } from "@/lib/default-layouts"
 import { DashboardLayoutWithWidgets } from '@/store/user-store'
 import { useDashboardActions } from '@/context/data-provider'
-import { DashboardLayout as PrismaDashboardLayout, Prisma } from '@/prisma/generated/prisma'
+import type { DashboardLayout as PrismaDashboardLayout } from '@/prisma/generated/prisma'
 import { getNextWidgetPlacement, normalizeWidgetSize, sizeToGrid } from "@/lib/widget-layout"
 
 interface DashboardContextType {
@@ -57,8 +57,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         (layout: DashboardLayoutWithWidgets): PrismaDashboardLayout => ({
             id: layout.id || userId || '',
             userId: layout.userId || userId || '',
-            desktop: layout.desktop as unknown as Prisma.JsonValue,
-            mobile: layout.mobile as unknown as Prisma.JsonValue,
+            desktop: layout.desktop as PrismaDashboardLayout['desktop'],
+            mobile: layout.mobile as PrismaDashboardLayout['mobile'],
             version: layout.version ?? 1,
             checksum: layout.checksum ?? null,
             deviceId: layout.deviceId ?? null,
@@ -221,8 +221,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         if (!userId || !layouts) return
         const newLayouts = {
             ...layouts,
-            desktop: defaultLayouts.desktop as unknown as Widget[],
-            mobile: defaultLayouts.mobile as unknown as Widget[],
+            desktop: defaultLayouts.desktop,
+            mobile: defaultLayouts.mobile,
             updatedAt: new Date()
         }
         setLayouts(newLayouts)

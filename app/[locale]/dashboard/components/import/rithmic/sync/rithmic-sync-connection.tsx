@@ -250,7 +250,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
   useEffect(() => {
     if (shouldAutoConnect && credentials.username && credentials.password) {
       setShouldAutoConnect(false)
-      handleConnect(new Event('submit') as any, false)
+      handleConnect({ preventDefault: () => {} } as unknown as React.FormEvent, false)
     }
   }, [shouldAutoConnect, credentials, handleConnect])
 

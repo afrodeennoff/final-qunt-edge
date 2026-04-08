@@ -177,7 +177,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
                     </tspan>
                   </text>
                 </Pie>
-                <Tooltip content={renderTooltip as any} cursor={{ fill: 'transparent' }} />
+                <Tooltip content={renderTooltip} cursor={{ fill: 'transparent' }} />
               </PieChart>
             </ResponsiveContainer>
           ) : (

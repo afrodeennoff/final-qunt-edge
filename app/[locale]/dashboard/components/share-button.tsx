@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, forwardRef } from "react"
 import { ButtonV2 } from "@/components/ui/v2"
 import { Share, Check, ChevronsUpDown, Copy, Layout, ExternalLink } from "lucide-react"
+import type { Widget } from "../types/dashboard"
 import {
   Dialog,
   DialogContent,
@@ -40,15 +41,15 @@ import { cn } from "@/lib/utils"
 import confetti from 'canvas-confetti'
 import { fr } from 'date-fns/locale'
 import { Switch } from "@/components/ui/switch"
-import { useTradesStore } from "../../../../store/trades-store"
+import { useTradingDomainStore } from '@/store/trading-domain-store'
 import { useUserStore } from "../../../../store/user-store"
 
 interface ShareButtonProps {
   variant?: "ghost" | "outline" | "secondary"
   size?: "default" | "sm" | "lg" | "icon"
   currentLayout?: {
-    desktop: any[]
-    mobile: any[]
+    desktop: Widget[]
+    mobile: Widget[]
   }
 }
 
@@ -118,7 +119,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
     const dateLocale = locale === 'fr' ? fr : undefined
     const isMobile = useIsMobile()
     const user = useUserStore(state => state.user)
-    const trades = useTradesStore(state => state.trades)
+    const trades = useTradingDomainStore(state => state.trades)
     const [selectedAccounts, setSelectedAccounts] = useState<string[]>([])
     const [open, setOpen] = useState(false)
     const [comboboxOpen, setComboboxOpen] = useState(false)

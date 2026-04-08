@@ -154,7 +154,7 @@ export function AccountsAnalysis({ onStatusChange }: AccountsAnalysisProps) {
       accountPerformanceToolCall?.output &&
       accountPerformanceToolCall.state === "output-available"
     ) {
-      setAccountPerformanceData(accountPerformanceToolCall.output as any);
+      setAccountPerformanceData(accountPerformanceToolCall.output as getAccountPerformanceToolOutput);
     }
   }, [
     accountPerformanceToolCall?.output,

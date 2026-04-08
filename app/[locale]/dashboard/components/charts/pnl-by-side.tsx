@@ -8,6 +8,7 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import type { TooltipProps } from "recharts";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { useDashboardStats } from "@/context/data-provider";
 import { cn } from "@/lib/utils";
@@ -110,7 +111,7 @@ export default React.memo(function PnLBySideChart({
     const winner = (longPoint?.tradeCount ?? 0) >= (shortPoint?.tradeCount ?? 0) ? longPoint : shortPoint
     return { label: (winner?.side ?? "—").toUpperCase(), trades: winner?.tradeCount ?? 0 }
   }, [chartData])
-  const renderTooltip = React.useCallback(({ active, payload }: any) => {
+  const renderTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload as ChartDatum | undefined;
       if (!data) return null;

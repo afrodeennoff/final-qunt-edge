@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
+import type { TooltipProps } from "recharts";
 import { CardV2Title } from "@/components/ui/v2";
 import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartSurface } from "@/components/ui/chart-surface";
@@ -149,7 +150,7 @@ export default React.memo(function PnLPerContractDailyChart({
 
   const maxPnL = safeArrayMax(chartData.map((d) => d.averagePnl));
   const minPnL = safeArrayMin(chartData.map((d) => d.averagePnl));
-  const renderTooltip = React.useCallback(({ active, payload }: any) => {
+  const renderTooltip = React.useCallback(({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload as ChartDatum | undefined;
       if (!data) return null;

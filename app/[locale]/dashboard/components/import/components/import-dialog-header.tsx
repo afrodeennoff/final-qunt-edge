@@ -37,10 +37,10 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
         )}
         <div className="min-w-0">
           <DialogTitle className="text-base font-semibold leading-tight">
-            {t((currentStep?.title || 'import.title') as any, { count: 1 })}
+            {t(String(currentStep?.title || 'import.title'), { count: 1 })}
           </DialogTitle>
           <DialogDescription className="mt-1 text-sm text-v2-text-secondary leading-snug">
-            {t((currentStep?.description || 'import.description') as any, { count: 1 })}
+            {t(String(currentStep?.description || 'import.description'), { count: 1 })}
           </DialogDescription>
         </div>
       </div>
@@ -66,7 +66,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
                       : "text-v2-text-muted"
                 )}
               >
-                {t(s.title as any, { count: 1 })}
+                {t(String(s.title), { count: 1 })}
               </div>
             ))}
           </div>

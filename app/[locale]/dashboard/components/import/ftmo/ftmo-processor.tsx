@@ -117,8 +117,8 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
 
 
     const totalPnL = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0), [processedTrades]);
-    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as any).commissionOnly || 0), 0), [processedTrades]);
-    const totalSwap = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as any).swap || 0), 0), [processedTrades]);
+    const totalCommission = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as { commissionOnly?: number }).commissionOnly || 0), 0), [processedTrades]);
+    const totalSwap = useMemo(() => processedTrades.reduce((sum, trade) => sum + ((trade as { swap?: number }).swap || 0), 0), [processedTrades]);
     const totalCost = useMemo(() => processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0), [processedTrades]);
     const uniqueInstruments = useMemo(() => Array.from(new Set(processedTrades.map(trade => trade.instrument))), [processedTrades]);
 
@@ -167,9 +167,9 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                                             {trade.pnl?.toFixed(2)}
                                         </TableCell>
                                         <TableCell>{formatDuration(trade.timeInPosition || 0)}</TableCell>
-                                        <TableCell>${(trade as any).commissionOnly?.toFixed(2) || '0.00'}</TableCell>
-                                        <TableCell className={(trade as any).swap >= 0 ? 'text-foreground' : 'text-semantic-error'}>
-                                            ${(trade as any).swap?.toFixed(2) || '0.00'}
+                                        <TableCell>${(trade as { commissionOnly?: number }).commissionOnly?.toFixed(2) || '0.00'}</TableCell>
+                                        <TableCell className={(trade as { swap?: number }).swap >= 0 ? 'text-foreground' : 'text-semantic-error'}>
+                                            ${(trade as { swap?: number }).swap?.toFixed(2) || '0.00'}
                                         </TableCell>
                                         <TableCell className="font-semibold">${trade.commission?.toFixed(2) || '0.00'}</TableCell>
                                     </TableRow>

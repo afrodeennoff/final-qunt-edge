@@ -134,16 +134,16 @@ export function PlatformCard({
 
                 <CardV2Content size="sm" className="p-0 flex flex-col gap-2 flex-1">
                     <CardV2Title size="sm">
-                        {t(platform.name as any, { count: 1 })}
+                        {t(String(platform.name), { count: 1 })}
                     </CardV2Title>
                     <p className="text-xs text-v2-text-secondary line-clamp-2 min-h-[2.5em]">
-                        {t(platform.description as any, { count: 1 })}
+                        {t(String(platform.description), { count: 1 })}
                     </p>
                 </CardV2Content>
 
                 <div className="flex flex-wrap gap-2 w-full mt-auto pt-2">
                     <BadgeV2
-                        variant={categoryBadge.variant as any}
+                        variant={categoryBadge.variant as 'default' | 'secondary' | 'outline' | 'accent' | 'success' | 'warning' | 'error'}
                         className={cn("text-[10px]", categoryBadge.className)}
                     >
                         {getTranslatedCategory(platform.category)}

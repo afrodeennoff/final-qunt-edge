@@ -104,7 +104,7 @@ export default function AccountSelection({
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      handleAddAccount(e as any)
+                      handleAddAccount(e as React.MouseEvent)
                     }
                   }}
                 />
