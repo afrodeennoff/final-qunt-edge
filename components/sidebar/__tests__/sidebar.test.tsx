@@ -338,3 +338,38 @@ describe("Sidebar Performance", () => {
     expect(onRender.mock.calls.length).toBe(initialCount + 1)
   })
 })
+
+describe("useIsMobile SSR Safety", () => {
+  it("should return false during SSR (before hydration)", () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    })
+
+    const { result } = renderHook(() => useIsMobile())
+    
+    // During SSR/hydration, should return false (the safe default)
+    expect(result.current).toBe(false)
+  })
+
+  it("should update to true after mount on mobile", async () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    })
+
+    const { result } = renderHook(() => useIsMobile())
+    
+    await waitFor(() => {
+      expect(result.current).toBe(true)
+    })
+  })
+})

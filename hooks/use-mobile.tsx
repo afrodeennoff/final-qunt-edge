@@ -1,20 +1,23 @@
-import * as React from "react"
-import { MOBILE_BREAKPOINT } from "@/lib/config/breakpoints"
+import { useState, useEffect } from "react"
+
+const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState(false)
+  const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`)
-    const onChange = (event: MediaQueryListEvent) => {
-      setIsMobile(event.matches)
-    }
+  useEffect(() => {
+    const mobileQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`)
+    const checkMobile = (e: MediaQueryListEvent | MediaQueryList) =>
+      setIsMobile(e.matches)
 
-    setIsMobile(mql.matches)
-    mql.addEventListener("change", onChange)
+    // Set initial value
+    checkMobile(mobileQuery)
 
-    return () => mql.removeEventListener("change", onChange)
+    // Listen for changes
+    mobileQuery.addEventListener("change", checkMobile)
+    return () => mobileQuery.removeEventListener("change", checkMobile)
   }, [])
 
-  return isMobile
+  // Return false during SSR/hydration to avoid mismatch
+  return isMobile ?? false
 }

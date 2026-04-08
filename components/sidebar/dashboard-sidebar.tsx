@@ -104,7 +104,7 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         },
         {
             href: `/${locale}/deals`,
-            icon: <Globe className={NAV_ICON_SIZE} />,
+            icon: <TrendingUp className={NAV_ICON_SIZE} />,
             label: "Deals",
             group: "Community"
         },
