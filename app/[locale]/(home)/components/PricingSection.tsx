@@ -83,7 +83,7 @@ export default function PricingSection() {
   const billingCycle: BillingCycle = isAnnual ? 'annual' : 'monthly'
 
   return (
-    <section id="pricing" className="py-20 sm:py-28 lg:py-32 bg-background">
+    <section id="pricing" className="py-20 sm:py-28 lg:py-32">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -102,15 +102,15 @@ export default function PricingSection() {
           </p>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[hsl(var(--mk-surface)/0.6)] border border-[hsl(var(--mk-border)/0.3)]">
+          <div className="inline-flex items-center gap-1 p-1 rounded-[var(--radius-pill)] bg-[oklch(0.08_0_0)] border border-[var(--frost-border)]">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
               aria-pressed={!isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 !isAnnual
-                  ? 'bg-primary text-primary-foreground shadow-[0_2px_8px_-2px_hsl(var(--primary)/0.4)]'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-white text-black rounded-full'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               Monthly
@@ -121,8 +121,8 @@ export default function PricingSection() {
               aria-pressed={isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 isAnnual
-                  ? 'bg-primary text-primary-foreground shadow-[0_2px_8px_-2px_hsl(var(--primary)/0.4)]'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-white text-black rounded-full'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               Annual <span className="text-success font-semibold">-20%</span>
@@ -143,18 +143,18 @@ export default function PricingSection() {
                 relative rounded-2xl border p-7 lg:p-8 transition-all duration-300
                 ${
                   plan.variant === 'featured'
-                    ? 'border-primary/30 bg-[hsl(var(--card)/0.5)] backdrop-blur-xl shadow-[0_0_48px_-16px_hsl(var(--primary)/0.2)]'
-                    : 'border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--card)/0.5)] backdrop-blur-xl hover:border-[hsl(var(--mk-border)/0.5)]'
+                    ? 'border border-[var(--frost-border-strong)] bg-[var(--surface-card)]'
+                    : 'border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)]'
                 }
               `}
             >
               {plan.variant === 'featured' && (
-                <div className="absolute -inset-1 rounded-3xl bg-primary/10 blur-xl -z-10" />
+                <div className="absolute -inset-0.5 rounded-3xl border border-[var(--accent-blue)]/20 -z-10" />
               )}
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.08em] bg-primary text-primary-foreground rounded-full shadow-[0_4px_12px_-4px_hsl(var(--primary)/0.5)]">
+                  <span className="bg-white text-black rounded-[var(--radius-pill)] px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wider">
                     {plan.badge}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export default function PricingSection() {
 
               {/* Price */}
               <div className="mb-4">
-                <span className="text-5xl lg:text-[3.25rem] font-bold font-mono tabular-nums tracking-tight text-gradient-primary">
+                  <span className="text-5xl lg:text-[3.25rem] font-bold font-mono tabular-nums tracking-tight text-white">
                   {plan.pricing[billingCycle]}
                 </span>
                 <span className="text-muted-foreground/70 text-[0.9rem]">{plan.period[billingCycle]}</span>
@@ -187,8 +187,8 @@ export default function PricingSection() {
               <ul className="space-y-3 mb-7">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2.5">
-                    <div className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-success/10 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-success" />
+                    <div className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-[var(--accent-green-subtle)] flex items-center justify-center">
+                      <Check className="w-3 h-3 text-[var(--accent-green)]" />
                     </div>
                     <span className="text-[0.875rem] text-muted-foreground/80 [font-family:var(--home-copy)]">
                       {feature}
@@ -198,10 +198,9 @@ export default function PricingSection() {
               </ul>
 
               {plan.variant === 'featured' ? (
-                <MagneticButton strength={6}>
+                  <MagneticButton strength={6}>
                   <ButtonV2
-                    variant="gradient-primary"
-                    className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 shadow-glow-primary"
+                    className="w-full rounded-[var(--radius-pill)] h-11 text-[0.9rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 bg-white text-black"
                   >
                     {plan.cta}
                   </ButtonV2>
@@ -209,7 +208,7 @@ export default function PricingSection() {
               ) : (
                 <ButtonV2
                   variant="outline"
-                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border-[hsl(var(--mk-border)/0.3)] hover:border-[hsl(var(--mk-border)/0.6)]"
+                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border border-[var(--frost-border)] hover:border-[var(--frost-border-strong)]"
                 >
                   {plan.cta}
                 </ButtonV2>
