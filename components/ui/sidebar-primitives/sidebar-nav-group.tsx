@@ -91,7 +91,6 @@ export function SidebarNavGroup({
   isActive,
 }: SidebarNavGroupProps) {
   const t = useI18n()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const translate = t as unknown as (key: string) => string
 
   const groupedItems = React.useMemo(
