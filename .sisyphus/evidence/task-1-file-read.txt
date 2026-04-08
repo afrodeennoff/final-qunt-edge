@@ -1,0 +1,181 @@
+================================================================================
+TASK 1 - SIDEBAR SHADCN-07 REFACTOR: FILE READ EVIDENCE
+================================================================================
+
+STATUS: DONE
+
+================================================================================
+FILE 1: components/ui/sidebar.tsx
+================================================================================
+Line Count: 797 lines (CONFIRMED)
+
+Key Exports:
+- SidebarProvider (context provider for sidebar state)
+- Sidebar (main sidebar container)
+- SidebarTrigger (toggle button)
+- SidebarRail (edge rail)
+- SidebarInset (main content wrapper)
+- SidebarInput, SidebarHeader, SidebarFooter
+- SidebarSeparator, SidebarContent
+- SidebarGroup, SidebarGroupLabel, SidebarGroupAction, SidebarGroupContent
+- SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuAction, SidebarMenuBadge, SidebarMenuSkeleton
+- SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton
+- useSidebar (hook)
+
+Key Imports:
+- @radix-ui/react-slot (Slot)
+- class-variance-authority (cva, VariantProps)
+- lucide-react (PanelLeft)
+- @/hooks/use-mobile
+- @/lib/utils (cn)
+- @/components/ui/v2 (ButtonV2, InputV2)
+- @/components/ui/separator
+- @/components/ui/sheet
+- @/components/ui/skeleton
+- @/components/ui/tooltip
+- @/lib/config/z-index
+- @/lib/sidebar-state
+
+Notable Patterns:
+- Uses React Context (SidebarContext) for state management
+- Cookie-based persistence via SIDEBAR_STATE_COOKIE_NAME
+- Keyboard shortcut (Cmd/Ctrl+Shift+B) support
+- Mobile detection via useIsMobile hook
+- Collapsible variants: "offcanvas", "icon", "none"
+- Uses CSS custom properties for width calculations
+- TooltipProvider wraps content for tooltips
+- CVA for sidebarMenuButtonVariants (variant: default/outline, size: default/sm/lg)
+
+Issues/Observations:
+- Line 78: Internal state _open with controlled/uncontrolled pattern
+- Lines 102-110: Defers cookie write with requestAnimationFrame + setTimeout (non-blocking)
+- Uses isMobileRef to avoid stale closures in toggleSidebar
+- data-* attributes for state styling (data-state, data-collapsible, data-variant, data-side)
+
+================================================================================
+FILE 2: components/ui/unified-sidebar.tsx
+================================================================================
+Line Count: 213 lines (CONFIRMED)
+
+Key Exports:
+- UnifiedSidebar (main component)
+- UnifiedSidebarItem, UnifiedSidebarConfig, PendingNavigation (types, re-exported)
+- useActiveLink (hook, re-exported)
+
+Key Imports:
+- react (useCallback, useEffect, useMemo, useRef, useState)
+- next/navigation (usePathname, useSearchParams)
+- @/lib/utils (cn)
+- @/hooks/use-navigation-loading
+- @/components/ui/sidebar (Sidebar, SidebarContent, SidebarFooter, etc.)
+- ./sidebar-primitives/use-sidebar-nav (useActiveLink, stripLocalePrefix, NAVIGATION_STALL_TIMEOUT_MS, DEFAULT_OPEN_GROUPS)
+- ./sidebar-primitives/sidebar-logo-header
+- ./sidebar-primitives/sidebar-nav-group
+- ./sidebar-primitives/sidebar-user-menu
+- ./sidebar-primitives/types
+
+Notable Patterns:
+- Route-based conditional rendering (dashboard, teams, admin routes)
+- Navigation stall timeout fallback (NAVIGATION_STALL_TIMEOUT_MS)
+- Pending navigation state with loading indicators
+- Collapsible groups with open/close state persistence
+- Integrates with UnifiedSidebarConfig interface
+- Uses stripLocalePrefix for path normalization
+
+Issues/Observations:
+- Line 77: Imports useNavigationLoading but may not be fully utilized
+- Lines 89-101: Navigation fallback timer - navigates after timeout if navigation stalls
+- Lines 124-148: Dynamic group state initialization based on items
+- styleVariant prop for minimal vs default styling
+
+================================================================================
+FILE 3: components/ui/sidebar-primitives/sidebar-nav-group.tsx
+================================================================================
+Line Count: 250 lines (CONFIRMED)
+
+Key Exports:
+- SidebarNavGroup (main component)
+- SidebarNavGroupProps (interface)
+
+Key Imports:
+- react
+- next/link
+- lucide-react (ChevronRight, Loader2)
+- @/lib/utils (cn)
+- @/locales/client (useI18n)
+- @/components/ui/sidebar (SidebarGroup, SidebarGroupContent, etc.)
+- @/components/ui/collapsible (Collapsible, CollapsibleContent, CollapsibleTrigger)
+- ./use-sidebar-nav (DEFAULT_OPEN_GROUPS)
+- ./types (UnifiedSidebarItem, PendingNavigation)
+
+Notable Patterns:
+- Grouped navigation items with sorting (topGroups, bottomGroups ordering)
+- computeGroupedItems helper function for grouping
+- Collapsible group headers with rotation animation
+- Active item indicator (left border)
+- Pending navigation loading state
+- i18n label translation
+- Memoized classes for performance
+
+Issues/Observations:
+- Lines 102-107: Hardcoded class strings (could be constants or theme tokens)
+- Lines 153: Active indicator is a left border div
+- Lines 172-186: Conditional loading spinner for pending navigation
+- Group sorting logic with predefined top/bottom group arrays
+
+================================================================================
+FILE 4: components/sidebar/dashboard-sidebar.tsx
+================================================================================
+Line Count: 168 lines (CONF================
+
+Key Exports:
+- DashboardSidebar (main component)
+
+Key Imports:
+- react
+- @/lib/constants/timezones (SUPPORTED_TIMEZONES)
+- @/lib/constants/sidebar (NAV_ICON_SIZE)
+- lucide-react (many icons)
+- @/components/icons/svg-icons (LeaderboardIcon)
+- @/context/data-provider (useDashboardActions)
+- @/store/user-store (useUserStore)
+- @/locales/client (useCurrentLocale)
+- @/components/ui/unified-sidebar (UnifiedSidebar, UnifiedSidebarItem)
+
+Notable Patterns:
+- Navigation items defined as UnifiedSidebarItem array
+- Dynamic locale prefixes on all hrefs
+- Query parameter-based routing (tab=table, tab=chart, etc.)
+- isAdmin prop for conditional admin item
+- logout handler with signOut import
+- Timezone selector integration
+
+Issues/Observations:
+- Lines 43-147: Large useMemo block with all navigation items
+- Uses query params for sub-navigation (not ideal for deep linking)
+- Sync action triggers refreshAllData
+- Prop firm, deals, leaderboard in Community group
+
+================================================================================
+FILE 5: hooks/use-mobile.tsx
+================================================================================
+Line Count: 20 lines (CONFIRMED)
+
+Key Exports:
+- useIsMobile (hook)
+
+Key Imports:
+- react
+- @/lib/config/breakpoints (MOBILE_BREAKPOINT)
+
+Notable Patterns:
+- Uses window.matchMedia for responsive detection
+- MediaQueryListEvent listener for change events
+- Initial state set synchronously on mount
+- Cleanup on unmount
+
+Issues/Observations:
+- Simple hook, follows the requirement to use matchMedia (not window.innerWidth)
+- MOBILE_BREAKPOINT imported from config
+
+================================================================================
