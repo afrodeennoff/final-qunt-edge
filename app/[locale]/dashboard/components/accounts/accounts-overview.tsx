@@ -1361,7 +1361,7 @@ function AccountsOverviewComponent({
                           payouts: [],
                           balanceToDate: 0
                         }
-                        setSelectedAccountForTable(tempAccount as Account)
+                        setSelectedAccountForTable(tempAccount as unknown as Account)
                       }}
                     >
                       <Settings className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors" />
