@@ -91,7 +91,6 @@ export function SidebarNavGroup({
   isActive,
 }: SidebarNavGroupProps) {
   const t = useI18n()
-  const translate = t as unknown as (key: string) => string
 
   const groupedItems = React.useMemo(
     () => computeGroupedItems(items),
@@ -99,12 +98,21 @@ export function SidebarNavGroup({
   )
 
   // Memoized classes for item buttons
-  const itemButtonClass =
-    'pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!'
-  const inactiveItemClass =
-    'text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground'
-  const activeItemClass =
-    'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]'
+  const itemButtonClass = React.useMemo(
+    () =>
+      'pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!',
+    []
+  )
+  const inactiveItemClass = React.useMemo(
+    () =>
+      'text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground',
+    []
+  )
+  const activeItemClass = React.useMemo(
+    () =>
+      'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]',
+    []
+  )
 
   return (
     <>
@@ -129,9 +137,7 @@ export function SidebarNavGroup({
               <SidebarGroupContent>
                 <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
                   {groupedItems.groups[groupName].map((item, index) => {
-                    const label = item.i18nKey
-                      ? translate(item.i18nKey)
-                      : item.label
+                    const label = item.i18nKey ? t(item.i18nKey) : item.label
                     const href = item.href
                     const isItemDisabled = Boolean(item.disabled)
                     const itemIsActive =
