@@ -12,36 +12,36 @@ const differentiators = [
     title: 'Behavior Drift Detection',
     description: 'In-session alerts catch process slippage before it becomes habit, with intervention guidance ready.',
     iconColor: 'text-[oklch(0.55_0.22_264)]',
-    glowBg: 'bg-[oklch(0.55_0.22_264/0.2)]',
-    iconBorder: 'border-[oklch(0.55_0.22_264/0.35)]',
-    iconBg: 'bg-[oklch(0.55_0.22_264/0.1)]',
+    glowBg: 'bg-[var(--accent-blue-subtle)]',
+    iconBorder: 'border-[var(--accent-blue-border)]',
+    iconBg: 'bg-[var(--accent-blue-subtle)]',
   },
   {
     icon: Zap,
     title: 'Instant Diagnostics',
     description: 'Guided first-audit flow delivers actionable session signals in under seven minutes from first sync.',
     iconColor: 'text-[oklch(0.55_0.15_166)]',
-    glowBg: 'bg-[oklch(0.55_0.15_166/0.2)]',
-    iconBorder: 'border-[oklch(0.55_0.15_166/0.35)]',
-    iconBg: 'bg-[oklch(0.55_0.15_166/0.1)]',
+    glowBg: 'bg-[var(--accent-green-subtle)]',
+    iconBorder: 'border-[var(--accent-green-border)]',
+    iconBg: 'bg-[var(--accent-green-subtle)]',
   },
   {
     icon: Brain,
     title: 'Prioritized AI Playbook',
     description: 'Ranked coaching output converts raw observations into a concrete plan for your next session.',
     iconColor: 'text-[oklch(0.6_0.18_290)]',
-    glowBg: 'bg-[oklch(0.6_0.18_290/0.2)]',
-    iconBorder: 'border-[oklch(0.6_0.18_290/0.35)]',
-    iconBg: 'bg-[oklch(0.6_0.18_290/0.1)]',
+    glowBg: 'bg-[var(--accent-orange-subtle)]',
+    iconBorder: 'border-[var(--accent-orange-border)]',
+    iconBg: 'bg-[var(--accent-orange-subtle)]',
   },
   {
     icon: Link2,
     title: 'Unified Timeline',
     description: 'Journal entries, fills, and context events live in one stream &mdash; no manual stitching required.',
     iconColor: 'text-[oklch(0.65_0.2_45)]',
-    glowBg: 'bg-[oklch(0.65_0.2_45/0.2)]',
-    iconBorder: 'border-[oklch(0.65_0.2_45/0.35)]',
-    iconBg: 'bg-[oklch(0.65_0.2_45/0.1)]',
+    glowBg: 'bg-[var(--accent-yellow-subtle)]',
+    iconBorder: 'border-[rgba(255,197,61,0.3)]',
+    iconBg: 'bg-[var(--accent-yellow-subtle)]',
   },
 ] as const
 
@@ -60,9 +60,7 @@ const cardVariants = {
 
 export default function ComparisonSection() {
   return (
-    <section className="relative border-y border-border/30 bg-card/20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-mesh-animated opacity-25" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,hsl(var(--primary)/0.08),transparent_70%)]" />
+    <section className="relative border-y border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden" />
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div
@@ -72,7 +70,7 @@ export default function ComparisonSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: MOTION_EASE }}
         >
-          <BadgeV2 variant="outline" className="border-primary/35 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <BadgeV2 variant="outline" className="border border-[var(--frost-border)] bg-[oklch(0.08_0_0)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
           </BadgeV2>
           <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
@@ -96,7 +94,7 @@ export default function ComparisonSection() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <Card variant="glass" className="group h-full rounded-2xl border-[hsl(var(--mk-border)/0.35)] transition-colors duration-200 hover:border-[hsl(var(--mk-border)/0.5)]">
+                <Card variant="glass" className="group h-full rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] transition-colors duration-200 hover:border-[var(--frost-border-strong)]">
                   <CardContent className="flex flex-col gap-4 p-5">
                     <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl">
                       <div className={`absolute inset-0 rounded-xl blur-sm ${item.glowBg}`} />
