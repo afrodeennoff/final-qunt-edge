@@ -72,13 +72,13 @@ export default function AnalysisDemo() {
             </p>
         </div>
 
-        <div className="marketing-panel overflow-hidden rounded-2xl">
+        <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] overflow-hidden">
           <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
-            <div className="border-b border-[hsl(var(--mk-border)/0.3)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
+            <div className="border-b border-[var(--frost-border)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Execution Stream</p>
-                  <p className="mt-1 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
+                  <p className="mt-1 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
                 </div>
                 <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
                   +1.27%
@@ -87,44 +87,44 @@ export default function AnalysisDemo() {
 
               {isMobile ? (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Plan Adherence</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">87%</p>
+                    <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">87%</p>
                   </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Risk Drift</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">-22%</p>
+                    <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">-22%</p>
                   </div>
-                  <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.74)] p-4">
+                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Review SLA</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">9m</p>
+                    <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">9m</p>
                   </div>
                 </div>
               ) : (
-                <div className="glass-accent-border h-[300px] overflow-hidden rounded-2xl bg-[oklch(0.07_0_0/0.8)] backdrop-blur-md p-3">
+                <div className="h-[300px] overflow-hidden rounded-2xl bg-[oklch(0.05_0_0)] p-3">
                   <AnalysisDemoChart data={mockData} />
                 </div>
               )}
             </div>
 
-            <div className="bg-[hsl(var(--mk-surface-muted)/0.42)] p-5 sm:p-6">
+            <div className="rounded-xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-5 sm:p-6">
               <div className="flex items-center gap-3">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Journal Signals</p>
                 <div className="flex items-center gap-2">
                   <div className="relative flex items-center justify-center w-2 h-2">
-                    <div className="absolute w-2 h-2 rounded-full bg-[oklch(0.55_0.22_264)] animate-glow-pulse" />
-                    <div className="relative w-1.5 h-1.5 rounded-full bg-[oklch(0.55_0.22_264)]" />
+                    <div className="absolute w-2 h-2 rounded-full animate-glow-pulse" style={{ backgroundColor: 'var(--accent-green)' }} />
+                    <div className="relative w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--accent-green)' }} />
                   </div>
-                  <span className="text-sm font-mono text-[oklch(0.55_0.22_264)]">LIVE</span>
+                  <span className="text-sm font-mono" style={{ color: 'var(--accent-green)' }}>LIVE</span>
                 </div>
               </div>
               <div className={cn("mt-4 space-y-3", isMobile ? "min-h-0" : "min-h-[220px]")}>
-                <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4 text-sm font-mono leading-relaxed text-[oklch(0.65_0.01_275)] [font-family:var(--home-copy)]">
+                <div className="rounded-2xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4 text-sm font-mono leading-relaxed text-[oklch(0.65_0.01_275)] [font-family:var(--home-copy)]">
                   {activeLog}
                 </div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface)/0.72)] p-4">
+              <div className="mt-5 rounded-2xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Anomaly Probability</p>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.3)]">
                   <div

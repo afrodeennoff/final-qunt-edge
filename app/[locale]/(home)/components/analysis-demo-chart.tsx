@@ -69,12 +69,12 @@ function AnalysisChartTooltip({
     <div
       className="min-w-[148px] rounded-md border px-3 py-2 text-xs shadow-xl"
       style={{
-        background: 'hsl(var(--mk-surface)/0.96)',
-        borderColor: 'hsl(var(--mk-border)/0.72)',
+        background: 'oklch(0.05_0_0 / 0.96)',
+        borderColor: 'var(--frost-border)',
         color: 'hsl(var(--foreground))',
       }}
     >
-      <div className="mb-1 border-b pb-1 text-[11px] font-semibold" style={{ borderColor: 'hsl(var(--mk-border)/0.45)' }}>
+      <div className="mb-1 border-b pb-1 text-[11px] font-semibold" style={{ borderColor: 'var(--frost-border)' }}>
         {String(label ?? '')}
       </div>
       <div className="space-y-1">
@@ -106,12 +106,12 @@ export default function AnalysisDemoChart({ data }: AnalysisDemoChartProps) {
             <stop offset="100%" stopColor="oklch(0.55 0.22 264)" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.55 0.22 264 / 0.1)" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--frost-border-alt)" vertical={false} />
         <XAxis dataKey="time" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
         <YAxis yAxisId="price" axisLine={false} tickLine={false} fontSize={11} stroke="hsl(var(--foreground)/0.72)" />
         <YAxis yAxisId="volume" hide />
         <Tooltip
-          cursor={{ stroke: 'hsl(var(--mk-border)/0.78)' }}
+          cursor={{ stroke: 'var(--frost-border)' }}
           content={<AnalysisChartTooltip />}
         />
         <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--brand-secondary))" opacity={0.34} barSize={8} />
