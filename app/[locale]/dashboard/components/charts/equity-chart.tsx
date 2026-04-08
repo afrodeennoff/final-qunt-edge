@@ -501,7 +501,6 @@ const AccountsLegend = React.memo(
             accountNumbers={accountNumbers}
             selectedAccounts={Array.from(selectedAccounts)}
             onToggleAccount={onToggleAccount}
-            t={t}
           />
         </div>
         <div className="flex gap-3 overflow-x-auto max-w-full flex-1 scrollbar-hide">
