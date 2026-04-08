@@ -60,7 +60,7 @@ const cardVariants = {
 
 export default function ComparisonSection() {
   return (
-    <section className="relative border-y border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden" />
+    <section className="relative border-y border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden">
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div
