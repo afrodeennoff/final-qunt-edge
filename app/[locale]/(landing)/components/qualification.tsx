@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 export default function Qualification() {
   return (
     <section className="border-t border-border/70 bg-background px-6 py-32">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-2 bg-card/10 border border-border/60 p-2 rounded-sm overflow-hidden">
           <motion.div 
@@ -50,6 +51,7 @@ export default function Qualification() {
             </ul>
           </motion.div>
         </div>
+      </div>
       </div>
     </section>
   );

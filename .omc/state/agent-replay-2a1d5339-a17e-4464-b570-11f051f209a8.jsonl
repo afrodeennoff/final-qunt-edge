@@ -15,3 +15,5 @@
 {"t":0,"agent":"system","event":"skill_invoked","skill_name":"gsd-autonomous"}
 {"t":0,"agent":"ab3b77c","agent_type":"Explore","event":"agent_start","parent_mode":"none"}
 {"t":0,"agent":"ab3b77c","agent_type":"Explore","event":"agent_stop","success":true,"duration_ms":60564}
+{"t":0,"agent":"system","event":"keyword_detected","keyword":"autopilot"}
+{"t":0,"agent":"system","event":"mode_change","mode_from":"none","mode_to":"autopilot"}

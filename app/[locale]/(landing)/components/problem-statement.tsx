@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 export default function ProblemStatement() {
   return (
     <section id="problem" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border/75 relative">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -79,6 +80,7 @@ export default function ProblemStatement() {
             </motion.div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

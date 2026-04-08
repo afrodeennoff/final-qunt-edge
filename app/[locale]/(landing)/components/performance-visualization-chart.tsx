@@ -136,6 +136,7 @@ export function PerformanceVisualizationChart() {
           })}
         </svg>
       </div>
+      </div>
     </div>
   )
 }

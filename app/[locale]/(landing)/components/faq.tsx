@@ -7,6 +7,7 @@ export default function FAQ() {
 
   return (
     <section className="py-16">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">
           {t("faq.heading")}
@@ -61,6 +62,7 @@ export default function FAQ() {
             </p>
           </details>
         </div>
+      </div>
       </div>
     </section>
   );
