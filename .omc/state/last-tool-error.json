@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls -la /Users/timon/Downloads/qunt-edge/app/[locale]/dashboard/components/import/\",\"description\":\"List import components directory\"}",
-  "error": "Exit code 1\n(eval):1: no matches found: /Users/timon/Downloads/qunt-edge/app/[locale]/dashboard/components/import/",
-  "timestamp": "2026-04-08T17:28:23.016Z",
-  "retry_count": 3
+  "tool_input_preview": "{\"command\":\"rm -f /Users/timon/Downloads/qunt-edge/tsconfig.tsbuildinfo && npx tsc --noEmit 2>&1\",\"timeout\":120000,\"description\":\"Clear TS cache and recheck\"}",
+  "error": "Exit code 2\nserver/subscription-manager.ts(5,38): error TS2305: Module '\"@/prisma/generated/prisma\"' has no exported member 'InputJsonValue'.",
+  "timestamp": "2026-04-08T19:47:12.935Z",
+  "retry_count": 2
 }

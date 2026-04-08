@@ -28,7 +28,7 @@ function makeTrade(overrides: Record<string, unknown> = {}) {
     videoUrl: null,
     createdAt: now,
     ...overrides,
-  } as any;
+  } as unknown as Parameters<typeof computeBehaviorInsights>[0][number];
 }
 
 function makeMood(overrides: Record<string, unknown> = {}) {
@@ -49,7 +49,7 @@ function makeMood(overrides: Record<string, unknown> = {}) {
     emotionValue: 70,
     createdAt: now,
     ...overrides,
-  } as any;
+  } as unknown as Parameters<typeof computeBehaviorInsights>[1][number];
 }
 
 describe("computeBehaviorInsights confidence", () => {

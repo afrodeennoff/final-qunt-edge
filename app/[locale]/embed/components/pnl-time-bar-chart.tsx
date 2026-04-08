@@ -70,7 +70,7 @@ export default function TimeOfDayPerformanceChart({
     return `hsl(var(--chart-4) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; payload: { hour: number; avgPnl: number; tradeCount: number } }>; label?: number }) => {
     React.useEffect(() => {
       if (active && payload && payload.length)
         setActiveHour(payload[0].payload.hour);
@@ -93,7 +93,7 @@ export default function TimeOfDayPerformanceChart({
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 {t("embed.pnlTime.tooltip.time")}
               </span>
-              <span className="font-bold text-muted-foreground">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
+              <span className="font-bold text-muted-foreground">{label != null ? `${label}:00 - ${(label + 1) % 24}:00` : ''}</span>
             </div>
             <div className="flex flex-col">
               <span className="text-[0.70rem] uppercase text-muted-foreground">

@@ -79,7 +79,7 @@ export default function WeekdayPnLChartEmbed({
     return `hsl(var(${base}) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; payload: { day: number; pnl: number; tradeCount: number } }>; label?: number }) => {
     React.useEffect(() => {
       if (active && payload && payload.length)
         setActiveDay(payload[0].payload.day);
@@ -103,7 +103,7 @@ export default function WeekdayPnLChartEmbed({
                 {t("embed.weekdayPnl.tooltip.day")}
               </span>
               <span className="font-bold text-muted-foreground">
-                {dayAbbreviations[label]}
+                {dayAbbreviations[label ?? 0]}
               </span>
             </div>
             <div className="flex flex-col">

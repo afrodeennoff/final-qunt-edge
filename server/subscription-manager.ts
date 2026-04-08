@@ -3,6 +3,7 @@ import { logger } from '@/lib/logger'
 import { paymentService } from './payment-service'
 import { whop } from '@/lib/whop'
 import type { SubscriptionEventType } from '@/prisma/generated/prisma'
+import { Prisma } from '@/prisma/generated/prisma'
 
 export interface SubscriptionDetails {
   userId: string
@@ -47,7 +48,7 @@ export class SubscriptionManager {
     interval: 'month' | 'quarter' | 'year' | 'lifetime'
     whopMembershipId?: string
     trial?: boolean
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   }): Promise<{ success: boolean; subscriptionId?: string; error?: string }> {
     try {
       const now = new Date()
@@ -117,7 +118,7 @@ export class SubscriptionManager {
     interval?: 'month' | 'quarter' | 'year' | 'lifetime'
     status?: string
     endDate?: Date
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   }): Promise<{ success: boolean; error?: string }> {
     try {
       const subscription = await prisma.subscription.findUnique({
@@ -128,7 +129,7 @@ export class SubscriptionManager {
         return { success: false, error: 'Subscription not found' }
       }
 
-      const updateData: any = {}
+      const updateData: Record<string, unknown> = {}
       const eventLogs: Array<{ eventType: string; eventData: any }> = []
 
       if (data.plan && data.plan !== subscription.plan) {
@@ -347,7 +348,7 @@ export class SubscriptionManager {
     try {
       const membership = await whop.memberships.retrieve(data.whopMembershipId)
 
-      const metadata = membership.metadata as Record<string, any> || {}
+      const metadata = membership.metadata as Record<string, unknown> || {}
       const planName = (metadata.plan as string) || membership.product?.title || 'PLUS'
       const planNameLower = planName.toLowerCase()
 
@@ -539,7 +540,7 @@ export class SubscriptionManager {
     email: string
     subscriptionId: string
     eventType: string
-    eventData: Record<string, any>
+    eventData: Record<string, unknown>
   }): Promise<void> {
     try {
       await prisma.subscriptionEvent.create({
@@ -548,7 +549,7 @@ export class SubscriptionManager {
           email: data.email,
           subscriptionId: data.subscriptionId,
           eventType: data.eventType as SubscriptionEventType,
-          eventData: data.eventData,
+          eventData: data.eventData as Prisma.InputJsonValue,
         },
       })
     } catch (error) {
@@ -561,8 +562,8 @@ export class SubscriptionManager {
 
   async getUserSubscriptionHistory(userId: string): Promise<{
     success: boolean
-    subscription?: any
-    events?: any[]
+    subscription?: Record<string, unknown>
+    events?: Array<Record<string, unknown>>
     error?: string
   }> {
     try {
@@ -630,7 +631,7 @@ export class SubscriptionManager {
     metricValue: number
     periodStart: Date
     periodEnd: Date
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   }): Promise<{ success: boolean; error?: string }> {
     try {
       await prisma.usageMetric.upsert({
@@ -644,7 +645,7 @@ export class SubscriptionManager {
         update: {
           metricValue: data.metricValue,
           periodEnd: data.periodEnd,
-          metadata: data.metadata || {},
+          metadata: (data.metadata || {}) as Prisma.InputJsonValue,
         },
         create: {
           userId: data.userId,
@@ -653,7 +654,7 @@ export class SubscriptionManager {
           metricValue: data.metricValue,
           periodStart: data.periodStart,
           periodEnd: data.periodEnd,
-          metadata: data.metadata || {},
+          metadata: (data.metadata || {}) as Prisma.InputJsonValue,
         },
       })
 

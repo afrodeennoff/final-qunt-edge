@@ -65,7 +65,7 @@ describe("team accept invitation route", () => {
       team: { id: "team_1" },
     })
 
-    transactionMock.mockImplementation(async (fn: (tx: any) => Promise<void>) => {
+    transactionMock.mockImplementation(async (fn: (tx: Record<string, unknown>) => Promise<void>) => {
       await fn({
         teamInvitation: {
           update: vi.fn().mockResolvedValue({}),

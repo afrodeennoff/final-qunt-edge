@@ -38,8 +38,8 @@ function formatCurrency(value: number) {
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
-  t: any;
+  payload?: Array<{ value: number; name: string; payload: { date: string; pnl: number; longNumber: number; shortNumber: number } }>;
+  t: ReturnType<typeof useI18n>;
 }
 
 function CustomTooltip({ active, payload, t }: CustomTooltipProps) {

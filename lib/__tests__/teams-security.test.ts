@@ -120,7 +120,7 @@ describe('teams security', () => {
         email: 'different@example.com',
       })
 
-      prismaMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<void>) => {
+      prismaMock.$transaction.mockImplementation(async (fn: (tx: Record<string, unknown>) => Promise<void>) => {
         await fn({
           teamInvitation: {
             update: vi.fn().mockResolvedValue({}),
@@ -151,7 +151,7 @@ describe('teams security', () => {
         email: 'user@example.com',
       })
 
-      prismaMock.$transaction.mockImplementation(async (fn: (tx: any) => Promise<void>) => {
+      prismaMock.$transaction.mockImplementation(async (fn: (tx: Record<string, unknown>) => Promise<void>) => {
         await fn({
           teamInvitation: {
             update: vi.fn().mockResolvedValue({}),

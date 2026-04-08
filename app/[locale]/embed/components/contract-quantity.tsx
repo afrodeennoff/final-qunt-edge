@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ value: number; name: string; payload: { totalQuantity: number; tradeCount: number } }>;
   label?: number | string;
 }
 

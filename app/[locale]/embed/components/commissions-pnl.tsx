@@ -20,8 +20,8 @@ import { useI18n } from "@/locales/client";
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
-  t: any;
+  payload?: Array<{ value: number; name: string; payload?: { name?: string; value?: number; percentage?: number } }>;
+  t: ReturnType<typeof useI18n>;
 }
 
 function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
