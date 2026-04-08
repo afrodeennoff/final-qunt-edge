@@ -17,11 +17,11 @@ export default function SearchHero({
   filteredCount,
 }: SearchHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden rounded-3xl border border-border/60 bg-background/75 px-4 py-6 sm:px-6 sm:py-8">
+    <section className="relative isolate overflow-hidden rounded-3xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-6 sm:px-6 sm:py-8">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(75%_60%_at_50%_0%,hsl(var(--foreground)/0.06),transparent_70%)]" />
 
       <div className="max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--frost-border)] bg-[oklch(0.06_0_0)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           Explorer
         </div>
         <h2 className="mt-4 text-[clamp(1.8rem,4vw,3.4rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground [font-family:var(--home-display)]">
@@ -54,7 +54,7 @@ export default function SearchHero({
 
 function MetaCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/80 px-4 py-3">
+    <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p className="mt-1 text-lg font-semibold text-foreground">{value}</p>
     </div>

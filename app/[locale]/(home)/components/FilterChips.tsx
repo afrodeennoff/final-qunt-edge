@@ -27,7 +27,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
 
   return (
     <section className="py-5">
-      <div className="rounded-3xl border border-border/60 bg-background/70 p-4 sm:p-5">
+      <div className="rounded-3xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4 sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -101,8 +101,8 @@ function ChipRow({
             className={cn(
               'shrink-0 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors',
               selected === option
-                ? 'border-foreground/15 bg-foreground text-background'
-                : 'border-border/70 bg-card/80 text-muted-foreground hover:border-border hover:text-foreground'
+                ? 'border border-[var(--frost-border-strong)] bg-[var(--text-primary)] text-[var(--surface-card)]'
+                : 'border border-[var(--frost-border)] bg-[var(--surface-card)] text-muted-foreground hover:border-[var(--frost-border-strong)] hover:text-foreground'
             )}
           >
             {option}
