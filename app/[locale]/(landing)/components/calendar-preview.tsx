@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 import { format } from "date-fns"
+import { Calendar } from "lucide-react"
 
 import DesktopCalendarPnl from "@/app/[locale]/dashboard/components/calendar/desktop-calendar"
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
@@ -61,8 +62,18 @@ export function CalendarFeaturePreview() {
   const calendarData = useMemo(() => buildDemoCalendarData(), [])
 
   return (
-    <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-card shadow-sm pointer-events-none lg:min-h-[440px]">
-      <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Calendar className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          Daily Calendar
+        </p>
+      </div>
+      <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-card shadow-sm pointer-events-none lg:min-h-[440px]">
+        <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
+      </div>
     </div>
   )
 }

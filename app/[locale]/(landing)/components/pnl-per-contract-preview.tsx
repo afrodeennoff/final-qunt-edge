@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo } from "react"
+import { BarChart3 } from "lucide-react"
 import PnLPerContractChartEmbed from "@/app/[locale]/embed/components/pnl-per-contract"
 
 export function PnlPerContractPreview() {
@@ -27,8 +28,18 @@ export function PnlPerContractPreview() {
   )
 
   return (
-    <div className="h-full w-full rounded-xl border bg-card shadow-sm pointer-events-none">
-      <PnLPerContractChartEmbed trades={trades} />
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <BarChart3 className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          PnL Per Contract
+        </p>
+      </div>
+      <div className="h-full w-full rounded-xl border bg-card shadow-sm pointer-events-none border-t border-border-muted pt-5">
+        <PnLPerContractChartEmbed trades={trades} />
+      </div>
     </div>
   )
 }
