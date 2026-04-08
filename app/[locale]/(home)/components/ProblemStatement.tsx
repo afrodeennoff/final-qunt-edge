@@ -36,12 +36,12 @@ function ProblemCard({ problem }: { problem: Problem }) {
   const Icon = problem.icon
   return (
     <motion.div
-      className="rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface)/0.5)] p-4 backdrop-blur-sm"
-      whileHover={{ borderColor: 'hsl(var(--primary)/0.3)' }}
+      className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4"
+      whileHover={{ borderColor: 'var(--frost-border-strong)' }}
       transition={{ duration: 0.2 }}
     >
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-destructive/20 bg-destructive/[0.06]">
-        <Icon className="h-4 w-4 text-destructive/80" />
+        <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--accent-red)]/30 bg-[rgba(255,32,71,0.06)]">
+        <Icon className="h-4 w-4 text-[var(--accent-red)]" />
       </div>
       <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
         {problem.title}
