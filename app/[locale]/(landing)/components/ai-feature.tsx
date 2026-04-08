@@ -4,6 +4,7 @@ import React, { forwardRef, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import { Bot } from "lucide-react";
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -22,48 +23,6 @@ const Circle = forwardRef<
   );
 });
 Circle.displayName = "Circle"; 
-
-export function AnimatedBeamDemo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const div1Ref = useRef<HTMLDivElement>(null);
-  const div2Ref = useRef<HTMLDivElement>(null);
-
-  return (
-    <div
-      className="relative flex w-full max-w-md mx-auto justify-self-center items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
-      ref={containerRef}
-    >
-      <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
-        <div className="flex flex-row justify-between">
-          <Circle ref={div1Ref}>
-            <Icons.user />
-          </Circle>
-          <Circle ref={div2Ref}>
-            <Icons.openai />
-          </Circle>
-        </div>
-      </div>
-
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div1Ref}
-        toRef={div2Ref}
-        startYOffset={10}
-        endYOffset={10}
-        curvature={-20}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div1Ref}
-        toRef={div2Ref}
-        startYOffset={-10}
-        endYOffset={-10}
-        curvature={20}
-        reverse
-      />
-    </div>
-  );
-}
 
 const Icons = {
   openai: () => (
@@ -91,3 +50,55 @@ const Icons = {
     </svg>
   ),
 };
+
+export function AnimatedBeamDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const div1Ref = useRef<HTMLDivElement>(null);
+  const div2Ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Bot className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          AI Analysis
+        </p>
+      </div>
+      <div
+        className="relative flex w-full max-w-md mx-auto justify-self-center items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
+        ref={containerRef}
+      >
+        <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+          <div className="flex flex-row justify-between">
+            <Circle ref={div1Ref}>
+              <Icons.user />
+            </Circle>
+            <Circle ref={div2Ref}>
+              <Icons.openai />
+            </Circle>
+          </div>
+        </div>
+
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div1Ref}
+          toRef={div2Ref}
+          startYOffset={10}
+          endYOffset={10}
+          curvature={-20}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={div1Ref}
+          toRef={div2Ref}
+          startYOffset={-10}
+          endYOffset={-10}
+          curvature={20}
+          reverse
+        />
+      </div>
+    </div>
+  );
+}

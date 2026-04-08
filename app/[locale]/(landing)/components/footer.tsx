@@ -45,7 +45,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="relative mt-8 border-t border-[var(--frost-border)] bg-[#000] px-4 pb-8 pt-3 sm:px-6 sm:pb-10"
+      className="relative mt-8 border-t border-[var(--frost-border)] bg-card rounded-t-2xl px-4 pb-8 pt-6 sm:px-6 sm:pb-10"
     >
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
@@ -101,9 +101,9 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--frost-border)] text-[var(--text-tertiary)] transition-all duration-200 hover:text-[var(--accent-blue)] hover:bg-[var(--accent-blue-subtle)]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--frost-border)] text-text-tertiary transition-all duration-200 hover:text-primary hover:bg-[var(--accent-blue-subtle)]"
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="size-5" />
                 </motion.a>
               ))}
             </div>
@@ -129,8 +129,8 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
   const locale = useCurrentLocale()
   return (
     <div>
-      <h3 className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{title}</h3>
-      <ul className="mt-3 space-y-2.5">
+      <h3 className="text-[12px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">{title}</h3>
+      <ul className="mt-4 space-y-2.5">
         {links.map((item, idx) => (
           <motion.li
             key={item.name}
@@ -142,7 +142,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-full px-2 py-1 text-sm text-foreground transition-colors hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+              className="inline-flex rounded-full px-2 py-1 text-sm text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
             >
               {item.name}
             </Link>

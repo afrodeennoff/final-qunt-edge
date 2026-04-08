@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
-import { User, Bot, Target, AlertTriangle, CheckCircle } from "lucide-react"
+import { User, Bot, Target, AlertTriangle, CheckCircle, MessageSquare } from "lucide-react"
 import { useI18n } from "@/locales/client"
 
 interface AnalysisType {
@@ -250,6 +250,15 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
   }
 
   return (
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <MessageSquare className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          AI Chat
+        </p>
+      </div>
     <div
       ref={containerRef}
       className={`relative w-full h-full min-h-0 bg-card transition-colors duration-500 ${className}`}
@@ -356,6 +365,7 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
           animation: slideIn 0.4s ease-out forwards;
         }
       `}</style>
+    </div>
     </div>
   )
 }

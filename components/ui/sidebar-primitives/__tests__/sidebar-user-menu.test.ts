@@ -74,7 +74,7 @@ describe('SidebarUserMenu user types', () => {
   })
 
   it('should allow partial user properties', () => {
-    const userWithOnlyAvatar = { avatar_url: '/avatar.png' }
+    const userWithOnlyAvatar = { avatar_url: '/avatar.png' } as any
     expect(userWithOnlyAvatar.avatar_url).toBe('/avatar.png')
     expect(userWithOnlyAvatar.email).toBeUndefined()
   })

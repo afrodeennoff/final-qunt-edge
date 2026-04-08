@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-08T08:49:41.794Z",
+  "updatedAt": "2026-04-08T17:29:14.938Z",
   "missions": [
     {
       "id": "session:61da842a-9479-46d5-964e-cc45444a86aa:autopilot",
@@ -1010,6 +1010,120 @@
           "agent": "executor:ac0bea8",
           "detail": "completed",
           "sourceKey": "session-stop:ac0bea8"
+        }
+      ]
+    },
+    {
+      "id": "session:2a1d5339-a17e-4464-b570-11f051f209a8:none",
+      "source": "session",
+      "name": "none",
+      "objective": "Session mission",
+      "createdAt": "2026-04-08T16:29:00.758Z",
+      "updatedAt": "2026-04-08T17:29:14.938Z",
+      "status": "running",
+      "workerCount": 6,
+      "taskCounts": {
+        "total": 6,
+        "pending": 0,
+        "blocked": 0,
+        "inProgress": 1,
+        "completed": 5,
+        "failed": 0
+      },
+      "agents": [
+        {
+          "name": "gsd-codebase-mapper:a33b4da",
+          "role": "gsd-codebase-mapper",
+          "ownership": "a33b4da",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T16:31:41.995Z"
+        },
+        {
+          "name": "gsd-codebase-mapper:a99d826",
+          "role": "gsd-codebase-mapper",
+          "ownership": "a99d826",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T16:32:52.902Z"
+        },
+        {
+          "name": "gsd-codebase-mapper:a5bac79",
+          "role": "gsd-codebase-mapper",
+          "ownership": "a5bac79",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T16:32:05.461Z"
+        },
+        {
+          "name": "gsd-codebase-mapper:ad6421e",
+          "role": "gsd-codebase-mapper",
+          "ownership": "ad6421e",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T16:31:11.073Z"
+        },
+        {
+          "name": "executor:a7a26ae",
+          "role": "executor",
+          "ownership": "a7a26ae",
+          "status": "running",
+          "currentStep": null,
+          "latestUpdate": null,
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T16:54:52.787Z"
+        },
+        {
+          "name": "Explore:ab3b77c",
+          "role": "Explore",
+          "ownership": "ab3b77c",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-04-08T17:29:14.938Z"
+        }
+      ],
+      "timeline": [
+        {
+          "id": "session-stop:a99d826:2026-04-08T16:32:52.902Z",
+          "at": "2026-04-08T16:32:52.902Z",
+          "kind": "completion",
+          "agent": "gsd-codebase-mapper:a99d826",
+          "detail": "completed",
+          "sourceKey": "session-stop:a99d826"
+        },
+        {
+          "id": "session-start:a7a26ae:2026-04-08T16:54:52.787Z",
+          "at": "2026-04-08T16:54:52.787Z",
+          "kind": "update",
+          "agent": "executor:a7a26ae",
+          "detail": "started executor:a7a26ae",
+          "sourceKey": "session-start:a7a26ae"
+        },
+        {
+          "id": "session-start:ab3b77c:2026-04-08T17:28:14.374Z",
+          "at": "2026-04-08T17:28:14.374Z",
+          "kind": "update",
+          "agent": "Explore:ab3b77c",
+          "detail": "started Explore:ab3b77c",
+          "sourceKey": "session-start:ab3b77c"
+        },
+        {
+          "id": "session-stop:ab3b77c:2026-04-08T17:29:14.938Z",
+          "at": "2026-04-08T17:29:14.938Z",
+          "kind": "completion",
+          "agent": "Explore:ab3b77c",
+          "detail": "completed",
+          "sourceKey": "session-stop:ab3b77c"
         }
       ]
     }

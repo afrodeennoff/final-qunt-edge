@@ -1,0 +1,68 @@
+/* StyleSeed Base Styles */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  /* Typography defaults */
+  body {
+    /* Default: body=15px, base=14px */
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: oklch(0.55 0.22 264 / 0.2);
+    color: inherit;
+  }
+
+  /* Smooth scrolling */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    outline: 2px solid oklch(0.55 0.22 264 / 0.5);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E8E6E1;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9B9B9B;
+  }
+
+  /* Hide scrollbar utility class */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

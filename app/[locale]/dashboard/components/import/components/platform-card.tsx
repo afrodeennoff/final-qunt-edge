@@ -134,10 +134,10 @@ export function PlatformCard({
 
                 <CardV2Content size="sm" className="p-0 flex flex-col gap-2 flex-1">
                     <CardV2Title size="sm">
-                        {t(String(platform.name), { count: 1 })}
+                        {t(String(platform.name) as any, { count: 1 })}
                     </CardV2Title>
                     <p className="text-xs text-v2-text-secondary line-clamp-2 min-h-[2.5em]">
-                        {t(String(platform.description), { count: 1 })}
+                        {t(String(platform.description) as any, { count: 1 })}
                     </p>
                 </CardV2Content>
 

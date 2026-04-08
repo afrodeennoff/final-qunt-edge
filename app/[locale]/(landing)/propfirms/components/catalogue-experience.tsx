@@ -272,12 +272,12 @@ export function PropFirmCatalogueExperience({
           </div>
 
           {filteredFirms.length > 0 ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-6 px-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredFirms.map((firm) => (
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="group rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[linear-gradient(155deg,hsl(var(--mk-surface)/0.9),hsl(var(--mk-surface-muted)/0.68))] p-5 transition-all hover:-translate-y-0.5 hover:border-primary/25"
+                  className="group rounded-2xl p-4 bg-card shadow-card transition-all hover:-translate-y-0.5 hover:border-primary/25"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>

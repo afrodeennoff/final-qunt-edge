@@ -84,6 +84,11 @@ const config = {
 				'fluid-7xl': 'clamp(4.5rem, 3.75rem + 3.75vw, 7.5rem)',
 				'fluid-8xl': 'clamp(6rem, 5rem + 5vw, 10rem)',
 				'fluid-9xl': 'clamp(7.5rem, 6.25rem + 6.25vw, 12.5rem)',
+				// StyleSeed font size scale
+				'2xs': '0.625rem',
+				'caption': '0.8125rem',
+				'body': '0.9375rem',
+				'subhead': '1.0625rem',
 			},
 			spacing: {
 				'fluid-3xs': 'clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem)',

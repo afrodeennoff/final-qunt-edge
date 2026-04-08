@@ -46,8 +46,8 @@ const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => 
     version: layout.version ?? 1,
     checksum: layout.checksum ?? null,
     deviceId: layout.deviceId ?? null,
-    desktop: layout.desktop as DashboardLayout['desktop'],
-    mobile: layout.mobile as DashboardLayout['mobile'],
+    desktop: layout.desktop as unknown as DashboardLayout['desktop'],
+    mobile: layout.mobile as unknown as DashboardLayout['mobile'],
   }
 }
 
@@ -63,9 +63,9 @@ function WidgetErrorFallback({ widgetId }: { widgetId: string }) {
   const translate = useI18n()
   return (
     <WidgetShell
-      title={translate("widgets.error.title") || "Widget Error"}
+      title={translate("widgets.error.title" as any, { count: 1 }) || "Widget Error"}
       state="error"
-      errorMessage={translate("widgets.error.description") || "This widget encountered an error."}
+      errorMessage={translate("widgets.error.description" as any, { count: 1 }) || "This widget encountered an error."}
     />
   )
 }

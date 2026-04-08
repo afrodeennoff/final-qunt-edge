@@ -1,0 +1,66 @@
+/* StyleSeed Design Engine Tokens */
+/* Brand: Qunt Edge Precision Blue preserved */
+@property --brand {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(0.55 0.22 264);
+}
+
+:root {
+  /* Brand anchor (map StyleSeed brand to existing primary) */
+  --brand: var(--primary);
+
+  /* === MOTION TOKENS === */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  /* === EASING TOKENS === */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* === SHADOW TOKENS === */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 2px 4px rgba(0,0,0,0.08);
+  --shadow-elevated: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-modal: 0 8px 24px rgba(0,0,0,0.12);
+
+  /* === TEXT TOKENS (grayscale - no pure black) === */
+  /* Strongest text */
+  --text-strong: #2A2A2A;
+  /* Primary text / metrics */
+  --text-primary: #3C3C3C;
+  /* Secondary / labels */
+  --text-secondary: #6A6A6A;
+  /* Tertiary / subtitles */
+  --text-tertiary: #7A7A7A;
+  /* Disabled / inactive */
+  --text-disabled: #9B9B9B;
+
+  /* === SURFACE TOKENS === */
+  /* Page background */
+  --surface-page: #FAFAFA;
+  /* Card background */
+  --surface-card: #FFFFFF;
+  /* List rows / subtle warm */
+  --surface-subtle: #FAFAF9;
+  /* Dividers / progress track */
+  --surface-muted: #E8E6E1;
+  /* Brand tint (selected rows) */
+  --brand-tint: #F0E8FF;
+
+  /* === IMPACT COLORS (small areas only) === */
+  /* Success / Up trend */
+  --impact-success: #6B9B7A;
+  /* Urgent */
+  --impact-urgent: #C85A54;
+  /* Info / In Progress */
+  --impact-info: #3B82F6;
+  /* Pending / Warning */
+  --impact-warning: #F59E0B;
+  /* Notification dot */
+  --impact-notification: #FF4444;
+}

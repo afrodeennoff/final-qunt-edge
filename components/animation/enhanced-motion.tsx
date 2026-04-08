@@ -1,12 +1,43 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
-import { motion, useReducedMotion, useInView, useSpring } from "framer-motion"
+import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 20 }
 export const SPRING_BOUNCY = { type: "spring" as const, stiffness: 400, damping: 15 }
 const ENTRANCE_EASE = [0.22, 1, 0.36, 1] as const
+
+// ============================================================================
+// StyleSeed motion tokens
+// ============================================================================
+
+export const MOTION_DURATION = {
+  fast: 100, // --duration-fast: hover, color changes
+  normal: 200, // --duration-normal: enter animations, expand
+  slow: 350, // --duration-slow: page transitions, spring
+} as const
+
+export const MOTION_EASE = {
+  default: [0.4, 0, 0.2, 1] as const,
+  spring: [0.22, 1, 0.36, 1] as const,
+  entrance: [0.16, 1, 0.3, 1] as const,
+  bounce: [0.68, -0.55, 0.265, 1.55] as const,
+} as const
+
+// ============================================================================
+// BLUR_ENTRANCE variant
+// ============================================================================
+
+const BLUR_ENTRANCE: Variants = {
+  hidden: { opacity: 0, y: 24, filter: "blur(12px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: MOTION_EASE.spring }
+  }
+}
 
 // ============================================================================
 // MotionSection - Section wrapper with scroll-triggered entrance animation
@@ -42,7 +73,7 @@ export function MotionSection({
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{
-        duration: 0.6,
+        duration: MOTION_DURATION.normal / 1000,
         delay,
         ease: ENTRANCE_EASE,
         ...spring,
@@ -109,9 +140,10 @@ export function MotionStagger({
 interface MotionStaggerItemProps {
   children: React.ReactNode
   className?: string
+  blur?: boolean
 }
 
-export function MotionStaggerItem({ children, className }: MotionStaggerItemProps) {
+export function MotionStaggerItem({ children, className, blur = false }: MotionStaggerItemProps) {
   const prefersReducedMotion = useReducedMotion()
 
   if (prefersReducedMotion) {
@@ -121,21 +153,58 @@ export function MotionStaggerItem({ children, className }: MotionStaggerItemProp
   return (
     <motion.div
       className={className}
-      variants={{
-        hidden: { opacity: 0, y: 20, scale: 0.98 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: {
-            duration: 0.5,
-            ease: ENTRANCE_EASE,
-          },
-        },
-      }}
+      variants={
+        blur
+          ? BLUR_ENTRANCE
+          : {
+              hidden: { opacity: 0, y: 20, scale: 0.98 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: {
+                  duration: 0.5,
+                  ease: ENTRANCE_EASE,
+                },
+              },
+            }
+      }
     >
       {children}
     </motion.div>
+  )
+}
+
+// ============================================================================
+// MotionPhrase - Phrase-level text reveal animation
+// ============================================================================
+
+interface MotionPhraseProps {
+  children: React.ReactNode
+  className?: string
+  delay?: number
+}
+
+export function MotionPhrase({ children, className, delay = 0 }: MotionPhraseProps) {
+  const prefersReducedMotion = useReducedMotion()
+
+  if (prefersReducedMotion) {
+    return <span className={className}>{children}</span>
+  }
+
+  return (
+    <motion.span
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: MOTION_DURATION.slow / 1000,
+        delay: delay / 1000,
+        ease: MOTION_EASE.entrance
+      }}
+      className={className}
+    >
+      {children}
+    </motion.span>
   )
 }
 

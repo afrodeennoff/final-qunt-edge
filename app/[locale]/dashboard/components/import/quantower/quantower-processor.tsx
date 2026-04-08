@@ -394,8 +394,12 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
     const totalExitQuantity = exitOrders.reduce((sum, order) => sum + order.quantity, 0)
     const quantity = Math.min(totalEntryQuantity, totalExitQuantity)
 
-    const avgEntryPrice = entryOrders.reduce((sum, order) => sum + order.price * order.quantity, 0) / totalEntryQuantity
-    const avgExitPrice = exitOrders.reduce((sum, order) => sum + order.price * order.quantity, 0) / totalExitQuantity
+    const avgEntryPrice = totalEntryQuantity > 0
+      ? entryOrders.reduce((sum, order) => sum + order.price * order.quantity, 0) / totalEntryQuantity
+      : 0
+    const avgExitPrice = totalExitQuantity > 0
+      ? exitOrders.reduce((sum, order) => sum + order.price * order.quantity, 0) / totalExitQuantity
+      : 0
 
     const priceDifference = avgExitPrice - avgEntryPrice
     const ticks = priceDifference / contractSpec.tickSize

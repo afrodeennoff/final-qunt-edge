@@ -11,9 +11,9 @@ export default function HowItWorks() {
     { name: "Forced Adaptation", desc: "The system locks you out or mandates size reduction until stability is restored." }
   ];
 
-  return (
+return (
     <section id="how-it-works" className="relative overflow-hidden border-t border-border/70 bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
         <div className="text-center mb-16 sm:mb-20 relative z-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -38,13 +38,13 @@ export default function HowItWorks() {
 
           <div className="hidden lg:block absolute top-[28px] left-[10%] w-[80%] h-[2px] z-0">
              <div className="absolute inset-0 bg-[hsl(var(--mk-border)/0.34)]"></div>
-              <motion.div
-                initial={{ width: 0 }}
-                whileInView={{ width: '100%' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-primary/35 to-[hsl(var(--mk-border)/0.34)]"
-              />
+             <motion.div
+               initial={{ width: 0 }}
+               whileInView={{ width: '100%' }}
+               viewport={{ once: true }}
+               transition={{ duration: 1.5, ease: "easeInOut" }}
+               className="h-full bg-gradient-to-r from-[hsl(var(--mk-border)/0.34)] via-primary/35 to-[hsl(var(--mk-border)/0.34)]"
+             />
           </div>
 
           {steps.map((step, i) => (
@@ -71,5 +71,5 @@ export default function HowItWorks() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -109,8 +109,8 @@ function formatPlanAmount(
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'marketing-panel relative flex w-full flex-col rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:border-border/70 hover:-translate-y-1 hover:shadow-xl overflow-hidden',
-    popular && 'border-primary/30 shadow-lg shadow-primary/10 before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/10 before:via-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
+    'marketing-panel relative flex w-full flex-col rounded-2xl border border-border/50 bg-card backdrop-blur-sm transition-all duration-300 hover:border-border/70 hover:-translate-y-1 hover:shadow-xl overflow-hidden',
+    popular && 'border-2 border-primary shadow-card before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/10 before:via-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
   )
 }
 

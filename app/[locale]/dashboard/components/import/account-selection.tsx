@@ -28,8 +28,8 @@ export default function AccountSelection({
   const [isAddingNewAccount, setIsAddingNewAccount] = useState(false)
   const t = useI18n()
 
-  const handleAddAccount = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleAddAccount = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation()
     if (newAccountNumber.trim()) {
       if (accounts.includes(newAccountNumber.trim())) {
         toast.error(t('import.error.accountExists'))
@@ -104,7 +104,8 @@ export default function AccountSelection({
                   autoFocus
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      handleAddAccount(e as React.MouseEvent)
+                      e.stopPropagation()
+                      handleAddAccount()
                     }
                   }}
                 />

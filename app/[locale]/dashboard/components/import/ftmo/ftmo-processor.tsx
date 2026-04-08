@@ -168,7 +168,7 @@ export default function FtmoProcessor({ headers, csvData, processedTrades, setPr
                                         </TableCell>
                                         <TableCell>{formatDuration(trade.timeInPosition || 0)}</TableCell>
                                         <TableCell>${(trade as { commissionOnly?: number }).commissionOnly?.toFixed(2) || '0.00'}</TableCell>
-                                        <TableCell className={(trade as { swap?: number }).swap >= 0 ? 'text-foreground' : 'text-semantic-error'}>
+                                        <TableCell className={(trade as { swap?: number }).swap !== undefined && (trade as { swap?: number }).swap! >= 0 ? 'text-foreground' : 'text-semantic-error'}>
                                             ${(trade as { swap?: number }).swap?.toFixed(2) || '0.00'}
                                         </TableCell>
                                         <TableCell className="font-semibold">${trade.commission?.toFixed(2) || '0.00'}</TableCell>

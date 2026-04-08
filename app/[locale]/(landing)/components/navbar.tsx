@@ -48,7 +48,7 @@ export default function Navbar() {
         <motion.div
           className={cn(
             'flex h-[58px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
-            'border-[var(--frost-border)] bg-[oklch(0.04_0_0)] supports-[backdrop-filter]:bg-[oklch(0.04_0_0)] backdrop-blur-sm',
+            'border-[var(--frost-border)] bg-background/80 supports-[backdrop-filter]:bg-background/80 backdrop-blur-sm',
             'shadow-none'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
@@ -94,7 +94,8 @@ export default function Navbar() {
             <ButtonV2
               asChild
               size="sm"
-              className="hidden rounded-[var(--radius-pill)] bg-white px-5 text-[11px] font-semibold tracking-[0.03em] text-black md:inline-flex"
+              variant="default"
+              className="hidden rounded-pill px-5 text-[11px] font-semibold tracking-[0.03em] md:inline-flex"
             >
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </ButtonV2>
@@ -104,7 +105,8 @@ export default function Navbar() {
               footer={
                 <ButtonV2
                   asChild
-                  className="w-full rounded-[var(--radius-pill)] bg-white text-black hover:bg-white/90"
+                  variant="default"
+                  className="w-full rounded-pill"
                 >
                   <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
                 </ButtonV2>

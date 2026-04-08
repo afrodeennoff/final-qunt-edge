@@ -57,8 +57,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         (layout: DashboardLayoutWithWidgets): PrismaDashboardLayout => ({
             id: layout.id || userId || '',
             userId: layout.userId || userId || '',
-            desktop: layout.desktop as PrismaDashboardLayout['desktop'],
-            mobile: layout.mobile as PrismaDashboardLayout['mobile'],
+            desktop: layout.desktop as unknown as PrismaDashboardLayout['desktop'],
+            mobile: layout.mobile as unknown as PrismaDashboardLayout['mobile'],
             version: layout.version ?? 1,
             checksum: layout.checksum ?? null,
             deviceId: layout.deviceId ?? null,

@@ -3,6 +3,7 @@
 import React, { forwardRef, useRef } from "react";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
+import { Database } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
@@ -37,10 +38,19 @@ export function ImportFeature() {
   const div7Ref = useRef<HTMLDivElement>(null);
 
   return (
-    <div
-      className="relative flex h-[300px] w-full items-center justify-center overflow-hidden p-10"
-      ref={containerRef}
-    >
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Database className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          Data Import
+        </p>
+      </div>
+      <div
+        className="relative flex h-[300px] w-full items-center justify-center overflow-hidden p-10"
+        ref={containerRef}
+      >
       <div className="flex size-full max-h-[200px] max-w-lg flex-col items-stretch justify-between gap-10">
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div1Ref}>
@@ -112,6 +122,7 @@ export function ImportFeature() {
         endYOffset={10}
         reverse
       />
+    </div>
     </div>
   );
 }

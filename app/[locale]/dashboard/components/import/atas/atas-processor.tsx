@@ -781,12 +781,14 @@ export default function AtasProcessor({
               </div>
             )}
 
-          {filteredTrades.length > 0 && (
+          {(() => {
+            const tradesForTable = filteredTrades.map((trade) =>
+              createTradeWithDefaults(trade)
+            ) as any as Trade[];
+            return (
             <div className="px-2">
               <TradeTableReview
-                tradesParam={filteredTrades.map((trade) =>
-                  createTradeWithDefaults(trade)
-                ) as Trade[]}
+                tradesParam={tradesForTable as any}
                 config={{
                   style: {
                     height: "100%",
@@ -811,7 +813,8 @@ export default function AtasProcessor({
                 }}
               />
             </div>
-          )}
+            );
+          })()}
         </div>
       </div>
     </div>

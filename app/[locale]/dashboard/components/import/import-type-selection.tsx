@@ -95,8 +95,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
   const filteredPlatforms = platforms.filter(platform => {
     const matchesSearch =
-      t(platform.name).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t(platform.description).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t(platform.name as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t(platform.description as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
       getTranslatedCategory(platform.category).toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesCategory = activeCategory === "all" || platform.category === activeCategory
@@ -300,7 +300,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               )}
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-semibold text-v2-text-primary truncate">
-                                  {t(platform.name)}
+                                  {t(platform.name as any, { count: 1 })}
                                 </h4>
                                 <p className="text-xs text-v2-text-secondary truncate">
                                   {platform.category}
@@ -316,7 +316,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               </ButtonV2>
                             </div>
                             <p className="text-xs text-v2-text-muted line-clamp-3">
-                              {t(platform.description)}
+                              {t(platform.description as any, { count: 1 })}
                             </p>
                             <div className="flex flex-wrap gap-1.5 mt-auto">
                               {!platform.isDisabled && !platform.isComingSoon && (
@@ -369,7 +369,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               </div>
                   <SheetHeader className="px-4 pb-2">
                     <SheetTitle className="text-v2-text-primary">
-                      {t(selectedPlatform.name)}
+                      {t(selectedPlatform.name as any, { count: 1 })}
                     </SheetTitle>
                   </SheetHeader>
               <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">

@@ -33,10 +33,10 @@ export default function MarketingLayoutShell({
             <Navbar />
           </MiniMaxNavbarWrapper>
           <div className="relative z-10 pt-16 sm:pt-20 lg:pt-24">
-            <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6">
+            <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <RollingAdBanner />
             </div>
-            <div className={cn('pt-4 sm:pt-5', contentClassName)}>
+            <div className={cn('pt-4 sm:pt-5 pb-24', contentClassName)}>
               <MotionStagger>
                 <MotionStaggerItem>{children}</MotionStaggerItem>
               </MotionStagger>

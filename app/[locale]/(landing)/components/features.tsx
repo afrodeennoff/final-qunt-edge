@@ -186,14 +186,14 @@ export default function Features() {
     <section 
       id="features" 
       ref={sectionRef}
-      className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative px-6 py-16 sm:py-20"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       </div>
       
-      <div className="mx-auto max-w-6xl relative">
+      <div className="mx-auto max-w-6xl relative space-y-6">
         <div className={cn(
           "mb-10 text-center sm:mb-14 transition-all duration-700",
           "opacity-0 translate-y-4",
@@ -208,14 +208,27 @@ export default function Features() {
           </p>
         </div>
         <div className="mb-6 h-px bg-border/40 sm:mb-8" />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6 sm:gap-5 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {features.map((feature, index) => (
-            <FeatureCard
+            <div
               key={feature.id}
-              feature={feature}
-              index={index}
-              isVisible={isVisible}
-            />
+              className={cn(
+                "rounded-2xl p-6 bg-card shadow-card transition-all duration-500",
+                "hover:-translate-y-1",
+                "opacity-0",
+                isVisible && "opacity-100"
+              )}
+              style={{
+                transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
+              }}
+            >
+              <div className="size-7 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                {feature.icon}
+              </div>
+              <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+                {feature.title}
+              </p>
+            </div>
           ))}
         </div>
       </div>

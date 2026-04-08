@@ -24,7 +24,7 @@
       "Bash(python3:*)",
       "Bash(claude:*)",
       "Bash(which:*)",
-      "Bash(vercel:*)"
+      "Bash(wc:*)"
     ]
   },
   "enabledPlugins": {

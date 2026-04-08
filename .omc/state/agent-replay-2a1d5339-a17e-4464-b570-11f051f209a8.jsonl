@@ -1,0 +1,17 @@
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"gsd-map-codebase"}
+{"t":0,"agent":"a33b4da","agent_type":"gsd-codebase-mapper","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a99d826","agent_type":"gsd-codebase-mapper","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a5bac79","agent_type":"gsd-codebase-mapper","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"ad6421e","agent_type":"gsd-codebase-mapper","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"ad6421e","agent_type":"gsd-codebase-mapper","event":"agent_stop","success":true,"duration_ms":130181}
+{"t":0,"agent":"a33b4da","agent_type":"gsd-codebase-mapper","event":"agent_stop","success":true,"duration_ms":161237}
+{"t":0,"agent":"a5bac79","agent_type":"gsd-codebase-mapper","event":"agent_stop","success":true,"duration_ms":184636}
+{"t":0,"agent":"a99d826","agent_type":"gsd-codebase-mapper","event":"agent_stop","success":true,"duration_ms":232127}
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"gsd-progress"}
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"gsd-new-project"}
+{"t":0,"agent":"a7a26ae","agent_type":"executor","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"system","event":"keyword_detected","keyword":"autopilot"}
+{"t":0,"agent":"system","event":"mode_change","mode_from":"none","mode_to":"autopilot"}
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"gsd-autonomous"}
+{"t":0,"agent":"ab3b77c","agent_type":"Explore","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"ab3b77c","agent_type":"Explore","event":"agent_stop","success":true,"duration_ms":60564}
