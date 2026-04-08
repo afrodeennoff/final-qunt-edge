@@ -45,7 +45,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="relative mt-8 border-t border-[oklch(0.14_0_0/0.35)] bg-[oklch(0.07_0_0/0.72)] px-4 pb-8 pt-3 backdrop-blur-md sm:px-6 sm:pb-10"
+      className="relative mt-8 border-t border-[var(--frost-border)] bg-[#000] px-4 pb-8 pt-3 sm:px-6 sm:pb-10"
     >
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
@@ -54,12 +54,12 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1240px] rounded-3xl border border-border/70 bg-[hsl(var(--card)/0.85)] p-6 shadow-[0_30px_60px_-42px_hsl(var(--foreground)/0.88)] sm:p-8 lg:p-10"
+        className="mx-auto w-full max-w-[1240px] rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-6 sm:p-8 lg:p-10"
       >
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1.8fr]">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/25 bg-[hsl(var(--mk-surface-muted)/0.84)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--frost-border)] bg-[oklch(0.08_0_0)]">
                 <Logo className="h-5 w-5 fill-foreground" />
               </div>
               <div className="leading-none">
@@ -74,20 +74,20 @@ export default function Footer() {
               <Link
                 href={`/${locale}/support`}
                 prefetch={false}
-                className="rounded-full border border-border/70 px-4 py-2 text-[11px] font-medium text-foreground transition-colors hover:border-primary/70 hover:bg-primary/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
+                className="rounded-[var(--radius-pill)] border border-[var(--frost-border)] px-4 py-2 text-[11px] font-medium text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
               >
                 Contact Support
               </Link>
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
                 prefetch={false}
-                className="rounded-full bg-primary px-4 py-2 text-[11px] font-medium text-primary-foreground shadow-[0_16px_26px_-16px_hsl(var(--primary)/0.7)] transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
+                className="rounded-[var(--radius-pill)] bg-white px-4 py-2 text-[11px] font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
               >
                 Start Free Audit
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/40" />
+            <div className="h-px w-full max-w-md bg-[var(--frost-border)]" />
 
             <div className="flex items-center gap-2">
               {socialLinks.map((item, idx) => (
@@ -101,7 +101,7 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/70 text-[oklch(0.65_0.01_275)] transition-all duration-200 hover:border-[oklch(0.55_0.22_264)/70] hover:bg-primary/10 hover:text-[oklch(0.55_0.22_264)] hover:drop-shadow-[0_0_8px_oklch(0.55_0.22_264/0.5)]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--frost-border)] text-[var(--text-tertiary)] transition-all duration-200 hover:text-[var(--accent-blue)] hover:bg-[var(--accent-blue-subtle)]"
                 >
                   <item.icon className="h-4 w-4" />
                 </motion.a>
@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/40 pt-5 text-muted-foreground/90">
+        <div className="mt-8 border-t border-[var(--frost-border)] pt-5 text-muted-foreground/90">
           <p className="text-xs text-foreground">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/70">{t('disclaimer.risk.content')}</p>
         </div>
@@ -142,7 +142,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-full px-2 py-1 text-sm text-foreground transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+              className="inline-flex rounded-full px-2 py-1 text-sm text-foreground transition-colors hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
             >
               {item.name}
             </Link>
