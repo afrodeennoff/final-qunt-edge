@@ -28,7 +28,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative border-y border-border/30 bg-card/20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32"
+      className="relative border-y border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center sm:mb-14">
@@ -57,15 +57,15 @@ export default function HowItWorks() {
           {steps.map((step, i) => (
             <InteractiveWrapper key={step.name} hover="scale">
               <motion.article
-                className="marketing-panel relative rounded-2xl p-5"
+                className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-5 hover:border-[var(--frost-border-strong)] transition-colors"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
-                    <span className="text-sm font-bold font-mono text-primary">
+                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--accent-blue)]/30 bg-[oklch(0.08_0_0)]">
+                    <span className="text-sm font-bold font-mono text-[var(--accent-blue)]">
                       0{i + 1}
                     </span>
                   </div>
@@ -97,15 +97,15 @@ export default function HowItWorks() {
           {steps.map((step, i) => (
             <InteractiveWrapper key={`mobile-${step.name}`} hover="scale">
               <motion.article
-                className="marketing-panel relative rounded-2xl p-5"
+                className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-5 hover:border-[var(--frost-border-strong)] transition-colors"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease, delay: i * 0.1 }}
               >
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
-                    <span className="text-sm font-bold font-mono text-primary">
+                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--accent-blue)]/30 bg-[oklch(0.08_0_0)]">
+                    <span className="text-sm font-bold font-mono text-[var(--accent-blue)]">
                       0{i + 1}
                     </span>
                   </div>
