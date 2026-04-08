@@ -34,9 +34,9 @@ const audiences = [
       'Multi-account review in a single unified view',
     ],
     cta: 'Start Protecting Your Edge',
-    gradient: 'from-primary/10 via-primary/[0.04] to-transparent',
-    iconBorder: 'border-primary/40 bg-primary/10',
-    iconColor: 'text-primary',
+    gradient: 'bg-[oklch(0.05_0_0)]',
+    iconBorder: 'border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)]',
+    iconColor: 'text-[var(--accent-blue)]',
   },
   {
     badge: 'Independent',
@@ -52,9 +52,9 @@ const audiences = [
       'Automated weekly briefs for structured self-review',
     ],
     cta: 'Build Your Edge',
-    gradient: 'from-primary/[0.06] via-transparent to-primary/[0.04]',
-    iconBorder: 'border-primary/40 bg-primary/10',
-    iconColor: 'text-primary',
+    gradient: 'bg-[oklch(0.05_0_0)]',
+    iconBorder: 'border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)]',
+    iconColor: 'text-[var(--accent-blue)]',
   },
 ] as const
 
@@ -74,10 +74,13 @@ function AudienceCard({
       variant="strong"
       hover
       size="lg"
-      className="relative overflow-hidden h-full"
+      className={`relative overflow-hidden h-full rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)]`}
     >
+      {index === 0 && (
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--accent-blue)]" />
+      )}
       <div
-        className={`pointer-events-none absolute inset-0 rounded-[var(--radius)] bg-gradient-to-br ${audience.gradient}`}
+        className={`pointer-events-none absolute inset-0 rounded-[var(--radius)] ${audience.gradient}`}
       />
 
       <div className="relative z-10">
@@ -86,7 +89,7 @@ function AudienceCard({
             <BadgeV2
               variant="outline"
               size="sm"
-              className="mb-3 border-primary/35 bg-primary/10 text-primary"
+              className="mb-3 border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
             >
               {audience.badge}
             </BadgeV2>
@@ -94,8 +97,8 @@ function AudienceCard({
               {audience.title}
             </h3>
           </div>
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/40 bg-primary/10">
-            <Icon className="h-5 w-5 text-primary" />
+          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${audience.iconBorder}`}>
+            <Icon className={`h-5 w-5 ${audience.iconColor}`} />
           </div>
         </div>
 
