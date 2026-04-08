@@ -3,10 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
-const loadingState = {
-  isLoading: false,
-  currentPath: "",
-}
 
 export function useNavigationLoading() {
   const pathname = usePathname()
