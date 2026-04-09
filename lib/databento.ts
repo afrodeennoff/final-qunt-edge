@@ -130,8 +130,17 @@ export async function fetchDatabentoBars(
 
   const data = await response.json();
   
+  interface DatabentoRawBar {
+    ts_event: number
+    open: number
+    high: number
+    low: number
+    close: number
+    volume: number
+  }
+  
   // Transform Databento response to our format
-  return data.map((bar: any) => ({
+  return (data as DatabentoRawBar[]).map((bar) => ({
     symbol: databentSymbol,
     timestamp: new Date(bar.ts_event / 1000000).toISOString(), // Convert nanoseconds to milliseconds
     open: bar.open / 1000000000, // Convert from fixed-point

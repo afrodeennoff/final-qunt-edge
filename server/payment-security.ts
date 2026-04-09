@@ -278,12 +278,16 @@ class SecurityManager {
     return `${username.slice(0, 2)}${'*'.repeat(username.length - 2)}@${domain}`
   }
 
-  redactSensitiveData(data: any): any {
+  redactSensitiveData(data: unknown): unknown {
     if (typeof data !== 'object' || data === null) {
       return data
     }
 
-    const redacted: any = Array.isArray(data) ? [] : {}
+    if (Array.isArray(data)) {
+      return data.map(item => this.redactSensitiveData(item))
+    }
+
+    const redacted: Record<string, unknown> = {}
 
     for (const [key, value] of Object.entries(data)) {
       const lowerKey = key.toLowerCase()
@@ -363,7 +367,7 @@ class SecurityManager {
   logSecurityEvent(event: {
     type: string
     severity: 'low' | 'medium' | 'high' | 'critical'
-    details: Record<string, any>
+    details: Record<string, unknown>
   }): void {
     const redactedDetails = this.redactSensitiveData(event.details)
 
@@ -371,13 +375,13 @@ class SecurityManager {
       logger.error('[SecurityEvent]', {
         type: event.type,
         severity: event.severity,
-        ...redactedDetails,
+        ...(typeof redactedDetails === 'object' && redactedDetails !== null ? redactedDetails : {}),
       })
     } else {
       logger.warn('[SecurityEvent]', {
         type: event.type,
         severity: event.severity,
-        ...redactedDetails,
+        ...(typeof redactedDetails === 'object' && redactedDetails !== null ? redactedDetails : {}),
       })
     }
   }

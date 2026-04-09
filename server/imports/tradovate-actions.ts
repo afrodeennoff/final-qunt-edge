@@ -148,6 +148,7 @@ interface TradovateFillPair {
 
 // Combined fill data with details and commission
 interface Fill {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details: any
   commission: number
 }
@@ -308,6 +309,7 @@ async function getFillPairs(accessToken: string): Promise<TradovateFillPair[]> {
 }
 
 // Helper function to fetch multiple fills by IDs in batch with fallback
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<any[]> {
   console.warn('getFillsByIds')
   try {
@@ -316,6 +318,7 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
     const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fills: any[] = []
 
     // Process in batches of 5 IDs
@@ -385,6 +388,7 @@ async function getFillsByIds(accessToken: string, fillIds: number[]): Promise<an
 }
 
 // Helper function to fetch individual fill details (kept for backward compatibility)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getFillById(accessToken: string, fillId: number): Promise<any | null> {
   try {
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
@@ -409,6 +413,7 @@ async function getFillById(accessToken: string, fillId: number): Promise<any | n
 }
 
 // Helper function to fetch multiple orders by IDs in batch with fallback
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<any[]> {
   try {
     if (orderIds.length === 0) return []
@@ -417,6 +422,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
     console.warn('getOrdersByIds', JSON.stringify(orderIds))
     const BATCH_SIZE = 5 // Limit batch size to 5 IDs at a time
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orders: any[] = []
 
     // Process in batches of 5 IDs
@@ -487,6 +493,7 @@ async function getOrdersByIds(accessToken: string, orderIds: number[]): Promise<
 }
 
 // Helper function to fetch order details by orderId (kept for backward compatibility)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getOrderById(accessToken: string, orderId: number): Promise<any | null> {
   try {
     const apiBaseUrl = TRADOVATE_ENVIRONMENTS.demo.api
@@ -945,6 +952,7 @@ async function buildTradesFromFillPairs(
   fillPairs: TradovateFillPair[],
   contracts: Map<number, TradovateContract>,
   fillsById: Map<number, Fill>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ordersById: Map<number, any>,
   accountsById: Map<number, TradovateAccount>,
   userId: string,
@@ -969,7 +977,7 @@ async function buildTradesFromFillPairs(
       const sellFill = sellFillData.details
 
       // Get order details to determine account (we only have sell order details)
-      const sellOrder = ordersById.get(sellFill.orderId)
+      const sellOrder = ordersById.get(sellFill.orderId as number)
 
       if (!sellOrder) {
         logger.warn(`Missing sell order details for pair ${fillPair.id}`)
@@ -1290,6 +1298,7 @@ export async function removeTradovateToken(accountId?: string) {
     }
     const { databaseUserId } = identity
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
       userId: databaseUserId,
       service: 'tradovate'
@@ -1584,6 +1593,7 @@ export async function getTradovateTrades(
 
     // Fetch only sell order details in batch
     const sellOrders = await getOrdersByIds(accessToken, Array.from(sellOrderIds))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ordersById = new Map<number, any>()
     sellOrders.forEach(order => {
       ordersById.set(order.id, order)

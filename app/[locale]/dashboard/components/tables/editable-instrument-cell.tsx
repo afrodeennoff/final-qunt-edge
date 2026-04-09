@@ -9,7 +9,7 @@ import { useI18n } from '@/locales/client'
 interface EditableInstrumentCellProps {
   value: string
   tradeIds: string[]
-  onUpdate: (tradeIds: string[], updates: any) => Promise<void>
+  onUpdate: (tradeIds: string[], updates: Record<string, unknown>) => Promise<void>
   className?: string
 }
 

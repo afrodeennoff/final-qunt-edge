@@ -44,22 +44,35 @@ function toNumber(value: unknown): number | null {
   return null;
 }
 
-export function extractUsage(usage: any): AiUsage {
+interface UsageObject {
+  promptTokens?: number;
+  inputTokens?: number;
+  prompt_tokens?: number;
+  completionTokens?: number;
+  outputTokens?: number;
+  completion_tokens?: number;
+  totalTokens?: number;
+  total_tokens?: number;
+}
+
+export function extractUsage(usage: unknown): AiUsage {
   if (!usage || typeof usage !== "object") return {};
 
+  const usageObj = usage as UsageObject;
+
   const promptTokens =
-    toNumber(usage.promptTokens) ??
-    toNumber(usage.inputTokens) ??
-    toNumber(usage.prompt_tokens) ??
+    toNumber(usageObj.promptTokens) ??
+    toNumber(usageObj.inputTokens) ??
+    toNumber(usageObj.prompt_tokens) ??
     undefined;
 
   const completionTokens =
-    toNumber(usage.completionTokens) ??
-    toNumber(usage.outputTokens) ??
-    toNumber(usage.completion_tokens) ??
+    toNumber(usageObj.completionTokens) ??
+    toNumber(usageObj.outputTokens) ??
+    toNumber(usageObj.completion_tokens) ??
     undefined;
 
-  const totalTokens = toNumber(usage.totalTokens) ?? toNumber(usage.total_tokens) ?? undefined;
+  const totalTokens = toNumber(usageObj.totalTokens) ?? toNumber(usageObj.total_tokens) ?? undefined;
 
   return {
     promptTokens,
@@ -70,7 +83,7 @@ export function extractUsage(usage: any): AiUsage {
 
 export function categorizeAiError(error: unknown): AiErrorCategory {
   if (isTimeoutError(error)) return "model_timeout";
-  const maybeError = error as any;
+  const maybeError = error as { code?: string; type?: string; message?: string; status?: number; statusCode?: number };
   const code = String(maybeError?.code || maybeError?.type || "").toLowerCase();
   const message = String(maybeError?.message || "").toLowerCase();
   const status = Number(maybeError?.status || maybeError?.statusCode || 0);

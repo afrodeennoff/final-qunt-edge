@@ -72,7 +72,7 @@ export function calculateTicksAndPointsForTrades(
 }
 
 export function calculateTicksAndPointsForGroupedTrade(
-  groupedTrade: any,
+  groupedTrade: { trades?: Trade[]; instrument: string; pnl: number; quantity: number },
   tickDetails: Record<string, TickDetails>
 ): TickCalculation {
   // If it's a grouped trade with multiple trades, sum them up

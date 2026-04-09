@@ -147,7 +147,7 @@ describe('AutoSaveService', () => {
             await new Promise(resolve => setTimeout(resolve, 3000))
 
             const delays = timestamps.slice(1).map((t, i) => t - timestamps[i])
-            console.log('Delays between retries:', delays)
+            // console.log('Delays between retries:', delays)
 
             for (let i = 1; i < delays.length; i++) {
                 expect(delays[i]).toBeGreaterThanOrEqual(delays[i - 1])

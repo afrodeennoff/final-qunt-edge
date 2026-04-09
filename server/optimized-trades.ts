@@ -14,7 +14,7 @@ export async function getOptimizedTradesForUser(userId: string, filters?: {
   return executeOptimizedQuery(
     'getTradesForUser',
     async () => {
-      const where: any = { userId }
+      const where: Record<string, unknown> = { userId }
       
       if (filters?.accountNumbers?.length) {
         where.accountNumber = { in: filters.accountNumbers }
@@ -26,8 +26,8 @@ export async function getOptimizedTradesForUser(userId: string, filters?: {
       
       if (filters?.dateRange?.from || filters?.dateRange?.to) {
         where.entryDate = {}
-        if (filters.dateRange.from) where.entryDate.gte = filters.dateRange.from
-        if (filters.dateRange.to) where.entryDate.lte = filters.dateRange.to
+        if (filters.dateRange.from) (where.entryDate as Record<string, unknown>).gte = filters.dateRange.from
+        if (filters.dateRange.to) (where.entryDate as Record<string, unknown>).lte = filters.dateRange.to
       }
       
       return prisma.trade.findMany({

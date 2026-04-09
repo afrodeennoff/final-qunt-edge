@@ -46,7 +46,7 @@ export default function WeekdayPnLChartEmbed({
 
   const weekdayData = React.useMemo(() => {
     const totals: Record<number, { total: number; count: number }> =
-      Object.fromEntries(days.map((d) => [d, { total: 0, count: 0 }])) as any;
+      Object.fromEntries(days.map((d) => [d, { total: 0, count: 0 }])) as Record<number, { total: number; count: number }>;
     trades.forEach((t) => {
       if (!t.entryDate) return;
       const d =

@@ -90,8 +90,9 @@ class PerformanceMeasurement {
   }
 
   getMemoryUsage(): number {
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
-      return (performance as any).memory.usedJSHeapSize / 1048576
+    const perf = performance as Performance & { memory?: { usedJSHeapSize: number } }
+    if (typeof performance !== 'undefined' && perf.memory) {
+      return perf.memory.usedJSHeapSize / 1048576
     }
     return 0
   }

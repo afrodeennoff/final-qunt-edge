@@ -453,8 +453,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 100,
-      "lastAccessed": 1775679148348,
+      "accessCount": 101,
+      "lastAccessed": 1775710230266,
       "type": "directory"
     },
     {
@@ -477,8 +477,14 @@
     },
     {
       "path": "app/api",
+      "accessCount": 8,
+      "lastAccessed": 1775710195536,
+      "type": "directory"
+    },
+    {
+      "path": "app",
       "accessCount": 6,
-      "lastAccessed": 1775665864074,
+      "lastAccessed": 1775710142018,
       "type": "directory"
     },
     {
@@ -491,12 +497,6 @@
       "path": "app/api/auth/callback/route.ts",
       "accessCount": 4,
       "lastAccessed": 1775665813417,
-      "type": "directory"
-    },
-    {
-      "path": "app",
-      "accessCount": 4,
-      "lastAccessed": 1775669297180,
       "type": "directory"
     },
     {

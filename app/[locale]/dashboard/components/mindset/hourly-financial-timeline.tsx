@@ -237,7 +237,9 @@ export function HourlyFinancialTimeline({
 
   // Group events and trades by hour and sort by importance
   const eventsByHour = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const hourMap = new Map<number, Array<FinancialEvent | any>>()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tradesByHour = new Map<number, Array<any>>()
 
     // Initialize all hours with empty arrays
@@ -269,7 +271,7 @@ export function HourlyFinancialTimeline({
     // Add aggregated trades to the hour map
     tradesByHour.forEach((hourTrades, hour) => {
       if (hourTrades.length > 0) {
-        const totalPnL = hourTrades.reduce((sum, trade) => sum + (trade.pnl - trade.commission), 0)
+        const totalPnL = hourTrades.reduce((sum: number, trade) => sum + (trade.pnl - trade.commission), 0)
         const uniqueSymbols = new Set(hourTrades.map(trade => trade.instrument))
         
         hourMap.get(hour)?.push({
@@ -363,7 +365,7 @@ export function HourlyFinancialTimeline({
                       <FinancialEventCard
                         key={item.id}
                         event={item}
-                        onClick={(e?: any) => {
+                        onClick={(e?: React.MouseEvent) => {
                           // Prevent outer popover from thinking this is outside
                           if (e && typeof e.stopPropagation === 'function') e.stopPropagation()
                           onEventClick?.(item)

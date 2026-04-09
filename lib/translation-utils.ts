@@ -3,19 +3,14 @@
  * This prevents TypeScript "Expression produces a union type that is too complex to represent" errors
  */
 
-/**
- * Safely translates a key by using a type assertion that bypasses complex union type issues
- * Use this when you have a variable that contains a translation key and TypeScript complains
- * about complex union types.
- */
-export function safeTranslate(t: any, key: string): string {
-  return t(key as any)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TranslateFunction = (...args: any[]) => string
+
+export function safeTranslate(t: TranslateFunction, key: string): string {
+  return t(key)
 }
 
-/**
- * Translates weekday keys safely
- */
-export function translateWeekday(t: any, day: string): string {
+export function translateWeekday(t: TranslateFunction, day: string): string {
   switch (day) {
     case 'calendar.weekdays.sun': return t('calendar.weekdays.sun')
     case 'calendar.weekdays.mon': return t('calendar.weekdays.mon')
@@ -28,10 +23,7 @@ export function translateWeekday(t: any, day: string): string {
   }
 }
 
-/**
- * Translates weekday PnL keys safely
- */
-export function translateWeekdayPnL(t: any, day: number): string {
+export function translateWeekdayPnL(t: TranslateFunction, day: number): string {
   switch (day) {
     case 0: return t('weekdayPnl.days.sunday')
     case 1: return t('weekdayPnl.days.monday')

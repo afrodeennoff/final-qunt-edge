@@ -55,15 +55,20 @@ export function createDynamicComponent<T extends object>(
   }) as ComponentType<T>
 }
 
-class ComponentRegistry {
-  private registry: Map<string, () => Promise<any>> = new Map()
-  private loadedComponents: Map<string, ComponentType<any>> = new Map()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyComponent = ComponentType<any>
 
-  register(key: string, importFn: () => Promise<any>) {
+class ComponentRegistry {
+   
+  private registry: Map<string, () => Promise<{ default: AnyComponent }>> = new Map()
+  private loadedComponents: Map<string, AnyComponent> = new Map()
+
+   
+  register(key: string, importFn: () => Promise<{ default: AnyComponent }>) {
     this.registry.set(key, importFn)
   }
 
-  async preload(key: string): Promise<ComponentType<any> | null> {
+  async preload(key: string): Promise<AnyComponent | null> {
     if (this.loadedComponents.has(key)) {
       return this.loadedComponents.get(key)!
     }
@@ -106,7 +111,7 @@ class ComponentRegistry {
 
 export const componentRegistry = new ComponentRegistry()
 
-export function preloadComponent(key: string): Promise<ComponentType<any> | null> {
+export function preloadComponent(key: string): Promise<AnyComponent | null> {
   return componentRegistry.preload(key)
 }
 
@@ -118,20 +123,21 @@ export function usePreloadComponents(keys: string[]) {
 }
 
 export function createChunkPreloader() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const preload = (importFn: () => Promise<any>, priority: 'high' | 'low' = 'low') => {
     if (priority === 'high') {
-      return importFn()
-    }
-
-    if (typeof requestIdleCallback !== 'undefined') {
-      return requestIdleCallback(() => importFn())
+      void importFn()
+    } else if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => { void importFn() })
     } else {
-      return setTimeout(() => importFn(), 0)
+      setTimeout(() => { void importFn() }, 0)
     }
+    return importFn()
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const preloadAll = (importFns: Array<() => Promise<any>>) => {
-    return Promise.allSettled(importFns.map(fn => preload(fn)))
+    return Promise.allSettled(importFns.map(fn => fn()))
   }
 
   return { preload, preloadAll }

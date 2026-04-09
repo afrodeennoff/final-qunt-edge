@@ -157,7 +157,10 @@ describe('calculateTicksAndPointsForGroupedTrade', () => {
     const trade2 = { ...baseTrade, pnl: 40 } as any // 8 ticks, 2 points
 
     const groupedTrade = {
-      trades: [trade1, trade2]
+      trades: [trade1, trade2] as Trade[],
+      instrument: 'ES',
+      pnl: 100,
+      quantity: 2,
     }
 
     const result = calculateTicksAndPointsForGroupedTrade(groupedTrade, mockTickDetails)

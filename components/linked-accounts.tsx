@@ -38,7 +38,7 @@ interface UserIdentity {
   id: string
   identity_id: string
   user_id: string
-  identity_data?: { [key: string]: any }
+  identity_data?: Record<string, unknown>
   provider: string
   created_at?: string
   last_sign_in_at?: string
@@ -188,7 +188,7 @@ export function LinkedAccounts() {
                     {getProviderIcon(identity.provider)}
                     <div>
                       <p className="font-medium">
-                        {identity.identity_data?.email || getProviderName(identity.provider)}
+                        {(identity.identity_data?.email as string | undefined) || getProviderName(identity.provider)}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {getProviderName(identity.provider)}

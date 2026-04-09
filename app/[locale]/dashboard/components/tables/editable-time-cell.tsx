@@ -14,7 +14,7 @@ interface EditableTimeCellProps {
   value: string
   tradeIds: string[]
   fieldType: 'entryDate' | 'closeDate'
-  onUpdate: (tradeIds: string[], updates: any) => Promise<void>
+  onUpdate: (tradeIds: string[], updates: Record<string, unknown>) => Promise<void>
   className?: string
 }
 

@@ -74,7 +74,7 @@ export class AutoSaveService {
   ): void {
     const handler = this.eventHandlers[event]
     if (handler) {
-      (handler as any)(...args)
+      (handler as (...args: Parameters<NonNullable<AutoSaveEvents[EventName]>>) => void)(...args)
     }
   }
 

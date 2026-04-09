@@ -55,7 +55,7 @@ const resolveValidTimeZone = (timezone: string | undefined): string => {
   }
 };
 
-const parseAtasDate = (dateValue: any, timezone: string): string | undefined => {
+const parseAtasDate = (dateValue: string | number | Date | null | undefined, timezone: string): string | undefined => {
   if (!dateValue || String(dateValue).trim() === "") {
     return undefined;
   }
@@ -784,11 +784,11 @@ export default function AtasProcessor({
           {(() => {
             const tradesForTable = filteredTrades.map((trade) =>
               createTradeWithDefaults(trade)
-            ) as any as Trade[];
+            ) as unknown as Trade[];
             return (
             <div className="px-2">
               <TradeTableReview
-                tradesParam={tradesForTable as any}
+                tradesParam={tradesForTable as unknown as Parameters<typeof TradeTableReview>[0]['tradesParam']}
                 config={{
                   style: {
                     height: "100%",

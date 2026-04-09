@@ -3,3 +3,7 @@
 {"t":0,"agent":"system","event":"skill_invoked","skill_name":"superpowers:systematic-debugging"}
 {"t":0,"agent":"acba9c5","agent_type":"Explore","event":"agent_start","parent_mode":"none"}
 {"t":0,"agent":"acba9c5","agent_type":"Explore","event":"agent_stop","success":true,"duration_ms":5913}
+{"t":0,"agent":"afa005d","agent_type":"executor","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"afa005d","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":1558}
+{"t":0,"agent":"a68b7f7","agent_type":"executor","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a68b7f7","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":99420}

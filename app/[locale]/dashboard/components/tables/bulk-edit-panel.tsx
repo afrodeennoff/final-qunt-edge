@@ -8,9 +8,18 @@ import { Clock, Edit3, Plus, Minus, X } from 'lucide-react'
 import { useI18n } from '@/locales/client'
 import { cn } from '@/lib/utils'
 
+interface BulkEditUpdates {
+  entryDateOffset?: number
+  closeDateOffset?: number
+  instrument?: string
+  instrumentTrim?: { fromStart: number; fromEnd: number }
+  instrumentPrefix?: string
+  instrumentSuffix?: string
+}
+
 interface BulkEditPanelProps {
   selectedTrades: string[]
-  onUpdate: (tradeIds: string[], updates: any) => Promise<void>
+  onUpdate: (tradeIds: string[], updates: BulkEditUpdates) => Promise<void>
   onClose: () => void
   onFinish: () => void
   className?: string
@@ -47,7 +56,7 @@ export function BulkEditPanel({
 
     setIsSaving(true)
     try {
-      const updates: any = {}
+      const updates: BulkEditUpdates = {}
       
       if (entryHourOffset !== 0) {
         // This is a special marker that tells the backend to apply hour offset
@@ -74,7 +83,7 @@ export function BulkEditPanel({
 
     setIsSaving(true)
     try {
-      const updates: any = {}
+      const updates: BulkEditUpdates = {}
       
       switch (instrumentAction) {
         case 'replace':

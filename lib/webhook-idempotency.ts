@@ -16,7 +16,7 @@ export async function isWebhookProcessed(webhookId: string, webhookType: string)
 export async function markWebhookProcessed(
   webhookId: string,
   webhookType: string,
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   await prisma.processedWebhook.create({
     data: {

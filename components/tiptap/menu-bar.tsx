@@ -74,7 +74,7 @@ export function ResponsiveMenuBar({
           ctx.editor.can().toggleList("bulletList", "listItem") ?? false,
         canOrderedList:
           ctx.editor.can().toggleList("orderedList", "listItem") ?? false,
-        canBlockquote: (ctx.editor.can() as any).toggleBlockquote() ?? false,
+        canBlockquote: (ctx.editor.can() as { toggleBlockquote: () => boolean }).toggleBlockquote?.() ?? false,
         // Table
         isTable: ctx.editor.isActive("table") ?? false,
         canInsertTable: ctx.editor.can().insertTable() ?? false,
@@ -87,8 +87,8 @@ export function ResponsiveMenuBar({
         canSetAlignment: ctx.editor.can().setTextAlign('left') ?? false,
         // History
         // Only enable if commands are registered
-        canUndo: Boolean((ctx.editor as any).commands?.undo),
-        canRedo: Boolean((ctx.editor as any).commands?.redo),
+        canUndo: Boolean((ctx.editor as { commands?: { undo?: () => boolean } }).commands?.undo),
+        canRedo: Boolean((ctx.editor as { commands?: { redo?: () => boolean } }).commands?.redo),
       };
     },
   });

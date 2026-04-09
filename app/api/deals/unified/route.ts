@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     const allFirms = await getUnifiedFirms()
     
     // Apply filters
-    let filteredFirms = allFirms.filter(firm => {
+    const filteredFirms = allFirms.filter(firm => {
       // Search filter
       if (search && 
           !firm.name.toLowerCase().includes(search.toLowerCase()) && 

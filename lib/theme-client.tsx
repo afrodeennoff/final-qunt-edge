@@ -14,7 +14,7 @@ export default function ThemeRouteInitializer() {
       root.classList.add(cls);
     } catch (e) {
       // Best-effort: do not fail rendering
-      // eslint-disable-next-line no-console
+       
       console.error("ThemeRouteInitializer failed", e);
     }
   }, []);

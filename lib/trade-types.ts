@@ -40,21 +40,21 @@ export function decimalToNumber<T extends number | null | undefined>(
   value: DecimalLike,
   fallback: T = 0 as T
 ): T extends number ? number : number | T {
-  if (value === null || value === undefined) return fallback as any
-  if (typeof value === "number") return (Number.isFinite(value) ? value : fallback) as any
+  if (value === null || value === undefined) return fallback as T extends number ? number : number | T
+  if (typeof value === "number") return (Number.isFinite(value) ? value : fallback) as T extends number ? number : number | T
   if (typeof value === "string") {
     const parsed = Number(value)
-    return (Number.isFinite(parsed) ? parsed : fallback) as any
+    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
   }
   if (typeof value === "object" && typeof value.toNumber === "function") {
     const parsed = value.toNumber()
-    return (Number.isFinite(parsed) ? parsed : fallback) as any
+    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
   }
   if (typeof value === "object" && typeof value.toString === "function") {
     const parsed = Number(value.toString())
-    return (Number.isFinite(parsed) ? parsed : fallback) as any
+    return (Number.isFinite(parsed) ? parsed : fallback) as T extends number ? number : number | T
   }
-  return fallback as any
+  return fallback as T extends number ? number : number | T
 }
 
 export function toUtcDate(value: string | Date | null | undefined): Date | null {

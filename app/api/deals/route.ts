@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     const allDeals = await getActiveDeals()
     
     // Apply filters
-    let filteredDeals = allDeals.filter(deal => {
+    const filteredDeals = allDeals.filter(deal => {
       // Search filter
       if (search && !deal.firmName.toLowerCase().includes(search.toLowerCase())) {
         return false
