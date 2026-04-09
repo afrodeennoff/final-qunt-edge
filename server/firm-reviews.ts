@@ -100,6 +100,19 @@ async function loadFirmReviews(
       orderBy: getReviewOrderBy(sort),
       skip,
       take: REVIEWS_PAGE_SIZE,
+      select: {
+        id: true,
+        propFirmId: true,
+        userId: true,
+        rating: true,
+        title: true,
+        content: true,
+        isVerified: true,
+        helpfulVotes: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     }),
     prisma.propFirmReview.count({ where }),
   ])
@@ -332,7 +345,18 @@ export async function getReviewById(reviewId: string) {
 
   return prisma.propFirmReview.findFirst({
     where,
-    include: {
+    select: {
+      id: true,
+      propFirmId: true,
+      userId: true,
+      rating: true,
+      title: true,
+      content: true,
+      isVerified: true,
+      helpfulVotes: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
       propFirm: {
         select: { name: true, slug: true },
       },

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { connection } from 'next/server'
 import { getFirmDeals } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from '../../../_auth'
@@ -7,6 +8,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await connection()
   try {
     const access = await requireDealsApiAuth(request)
     if (!access.ok) {

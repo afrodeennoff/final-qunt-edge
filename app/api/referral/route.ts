@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { connection } from 'next/server'
 import { getDatabaseUserId } from '@/server/auth'
 import {
   getOrCreateReferral,
@@ -25,11 +26,14 @@ function isUnauthenticatedError(error: unknown): boolean {
   )
 }
 
-const cacheHeaders = {
-  'Cache-Control': 'private, max-age=20, stale-while-revalidate=60',
+function noStoreHeaders(): HeadersInit {
+  return {
+    'Cache-Control': 'private, no-store, max-age=0, must-revalidate',
+  }
 }
 
 export async function GET() {
+  await connection()
   try {
     const userId = await getDatabaseUserId()
 
@@ -61,7 +65,7 @@ export async function GET() {
           },
         },
       },
-      { headers: cacheHeaders }
+      { headers: noStoreHeaders() }
     )
   } catch (error) {
     if (isUnauthenticatedError(error)) {
@@ -73,6 +77,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  await connection()
   try {
     const { slug } = await parseJson(req, ApplyReferralSchema)
 
@@ -96,10 +101,13 @@ export async function POST(req: NextRequest) {
 
     await addReferredUser(referral.id, userId)
 
-    return NextResponse.json({
-      success: true,
-      message: 'Referral code applied successfully',
-    })
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Referral code applied successfully',
+      },
+      { headers: noStoreHeaders() }
+    )
   } catch (error) {
     if (isUnauthenticatedError(error)) {
       return apiError('UNAUTHORIZED', 'Unauthorized', 401)

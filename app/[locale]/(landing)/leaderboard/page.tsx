@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { getLeaderboardData, type LeaderboardSort } from './data/leaderboard-query'
 import { LeaderboardContent } from './components/leaderboard-content'
+import { LeaderboardTableSkeleton } from './components/leaderboard-table'
 import { buildPublicMetadata } from '@/lib/seo'
 
 const VALID_SORTS: LeaderboardSort[] = ['monthly_pnl', 'winrate', 'totalTrades']
@@ -34,7 +36,9 @@ export default async function LeaderboardPage({
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-        <LeaderboardContent initialEntries={entries} locale={locale} />
+        <Suspense fallback={<LeaderboardTableSkeleton />}>
+          <LeaderboardContent initialEntries={entries} locale={locale} />
+        </Suspense>
       </div>
     </div>
   )

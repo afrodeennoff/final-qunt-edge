@@ -1,4 +1,5 @@
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { cacheLife, cacheTag } from 'next/cache'
 import { isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
 
 export type LeaderboardEntry = {
@@ -122,6 +123,9 @@ function isLeaderboardUnavailableError(error: unknown): boolean {
 export async function getLeaderboardData(
   sort: LeaderboardSort = 'monthly_pnl'
 ): Promise<LeaderboardEntry[]> {
+  'use cache'
+  cacheLife({ stale: 300, revalidate: 300, expire: 600 })
+  cacheTag('leaderboard')
   if (!hasConfiguredDatabaseConnection) {
     console.warn('[Leaderboard] Database connection is missing; returning demo leaderboard entries.')
     return getFallbackLeaderboardEntries(sort)

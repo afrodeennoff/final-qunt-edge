@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { connection } from 'next/server'
 import { getUnifiedFirms, type UnifiedFirm } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from '../_auth'
@@ -20,6 +21,7 @@ function getSearchParams(request: Request): URLSearchParams {
 }
 
 export async function GET(request: Request) {
+  await connection()
   try {
     const access = await requireDealsApiAuth(request)
     if (!access.ok) {

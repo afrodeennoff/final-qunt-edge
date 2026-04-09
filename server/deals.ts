@@ -572,16 +572,9 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   }
 
   const now = new Date()
-  const catalogue = await getPropfirmCatalogueData('allTime')
-  const catalogueMap = new Map(
-    catalogue.stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
-  )
-  const spotlightMap = new Map(
-    PROP_FIRM_MATCH_SPOTLIGHTS.map((entry) => [normalizeFirmName(entry.name), entry])
-  )
-
-  try {
-    const firms = await prisma.propFirm.findMany({
+  const [catalogue, firms] = await Promise.all([
+    getPropfirmCatalogueData('allTime'),
+    prisma.propFirm.findMany({
       where: { isActive: true },
       include: {
         coupons: {
@@ -601,8 +594,16 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
         _count: { select: { reviews: true, coupons: true } },
       },
       orderBy: { name: 'asc' },
-    })
+    }),
+  ])
+  const catalogueMap = new Map(
+    catalogue.stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
+  )
+  const spotlightMap = new Map(
+    PROP_FIRM_MATCH_SPOTLIGHTS.map((entry) => [normalizeFirmName(entry.name), entry])
+  )
 
+  try {
     return firms.map((firm) => {
       const normalizedName = normalizeFirmName(firm.name)
       return buildUnifiedFirm(

@@ -1,6 +1,7 @@
 'use server'
 
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
+import { cacheLife, cacheTag } from 'next/cache'
 import type { PropfirmCatalogueData, PropfirmCatalogueStats, PropfirmPayoutStats } from './types'
 import type { Timeframe } from './timeframe-utils'
 import { getTimeframeDateRange } from './timeframe-utils'
@@ -55,6 +56,9 @@ function formatSizeBreakdown(
 }
 
 export async function getPropfirmCatalogueData(timeframe: Timeframe = 'currentMonth'): Promise<PropfirmCatalogueData> {
+  'use cache'
+  cacheLife({ stale: 3_600, revalidate: 3_600, expire: 7_200 })
+  cacheTag('prop-firms-catalogue')
   if (!hasConfiguredDatabaseConnection) {
     return { stats: [] }
   }

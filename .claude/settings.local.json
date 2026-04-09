@@ -8,7 +8,12 @@
       "Bash(rm:*)",
       "Bash(npm:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run typecheck:*)"
+      "Bash(npm run typecheck:*)",
+      "Bash(find /Users/timon/Downloads/qunt-edge/app/[locale] -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.jsx\" -o -name \"*.js\" -o -name \"*.css\" -o -name \"*.scss\" -o -name \"*.module.css\" \\\\\\))",
+      "Bash(head:*)",
+      "Bash(cat \"/Users/timon/Downloads/qunt-edge/app/[locale]/\\(home\\)/components/Footer.tsx\")",
+      "Bash(cat:*)",
+      "Bash(find:*)"
     ]
   },
   "hooks": {

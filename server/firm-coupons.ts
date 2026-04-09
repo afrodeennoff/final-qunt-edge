@@ -25,6 +25,14 @@ function loadFirmCoupons(propfirmId: string) {
       { discountPercent: 'desc' },
       { createdAt: 'desc' },
     ],
+    select: {
+      id: true,
+      code: true,
+      discountPercent: true,
+      challengeFee: true,
+      expiresAt: true,
+      claimUrl: true,
+    },
   })
 }
 

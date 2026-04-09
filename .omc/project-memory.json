@@ -487,6 +487,12 @@
       "type": "directory"
     },
     {
+      "path": "app/[locale]/dashboard/components/",
+      "accessCount": 8,
+      "lastAccessed": 1775767832659,
+      "type": "directory"
+    },
+    {
       "path": "app",
       "accessCount": 6,
       "lastAccessed": 1775763290520,
