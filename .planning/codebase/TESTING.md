@@ -1,381 +1,537 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-04-08
+**Analysis Date:** 2026-04-09
 
 ## Test Framework
 
-**Primary Runner:**
-- Vitest 2.1.9
-- Config: `vitest.config.ts` (main), `vitest.payment.config.ts` (payment/integration)
+**Unit/Integration Runner:**
+- Vitest v2.1.9
+- Config: `vitest.config.ts` (primary), `vitest.payment.config.ts` (payment-specific)
+- Globals: enabled (`globals: true`) -- `describe`, `it`, `expect`, `vi` available without imports (though most files still import them explicitly)
 
-**Assertion Library:**
-- Built-in Vitest assertions (`expect`)
-
-**Environment:**
-- Default: `node` (for server/utility tests)
-- `jsdom` via `@vitest-environment jsdom` pragma for React component tests
-- Payment config includes `@vitejs/plugin-react` for JSX support
-
-**E2E Framework:**
-- Playwright 1.58.2
+**E2E Runner:**
+- Playwright v1.58+ (`@playwright/test`)
 - Config: `playwright.config.ts`
-- `@axe-core/playwright` for accessibility testing
+- A11y plugin: `@axe-core/playwright`
+
+**Assertion Libraries:**
+- Vitest built-in `expect` for unit/integration tests
+- Playwright `expect` for E2E tests
 
 **Run Commands:**
 ```bash
-npm test                        # Run all tests (vitest run)
-npm run test:coverage           # Run with coverage
-npm run test:payment            # Run payment/integration tests
-npm run test:payment:ui         # Payment tests with Vitest UI
-npm run test:payment:coverage   # Payment tests with coverage
-npm run test:smoke              # Smoke tests (HTTP)
-npx playwright test             # E2E tests
-```
-
-## Test File Organization
-
-**Location Pattern:**
-- Most tests live in `tests/` directory, mirroring the source structure
-- Some tests co-located in `lib/__tests__/` (older pattern, 20 files)
-- E2E tests in `tests/e2e/`
-- Sidebar tests in `components/sidebar/__tests__/` (excluded from main vitest config)
-
-**Naming:**
-- Unit/integration: `*.test.ts` or `*.test.tsx`
-- E2E: `*.spec.ts`
-
-**Directory Structure:**
-```
-tests/
-├── setup.ts                    # Global test setup (vitest)
-├── lib/                        # Library/utility tests
-│   ├── api-response.test.ts
-│   ├── feature-flags.test.ts
-│   ├── password-validation.test.ts
-│   ├── prisma-fallback.test.ts
-│   ├── redact-pii.test.ts
-│   ├── unsubscribe-token.test.ts
-│   └── ...
-├── server/                     # Server action tests
-│   ├── accounts-isolation.test.ts
-│   ├── delete-ownership-regression.test.ts
-│   ├── shared.test.ts
-│   ├── team-analytics.test.ts
-│   └── ...
-├── api/                        # API route handler tests
-│   ├── deals-unified.test.ts
-│   ├── ai-router-comprehensive.test.ts
-│   ├── auth-callback-route.test.ts
-│   └── ...
-├── cache/                      # Cache tests
-│   └── cache-invalidation.test.ts
-├── context/                    # React context tests
-│   ├── provider-boundary-regression.test.tsx
-│   └── data-provider-utils.test.ts
-├── smoke/                      # Smoke tests
-│   └── env.test.ts
-├── performance/                # Performance tests (excluded from main suite)
-│   └── performance-regression.test.ts
-├── e2e/                        # Playwright E2E tests
-│   ├── auth.spec.ts
-│   ├── a11y/
-│   │   └── a11y.spec.ts
-│   └── performance/
-├── date-utils.test.ts          # Standalone utility tests
-├── sanitize.test.ts
-├── error-boundaries.test.tsx
-├── theme-provider.test.tsx
-├── rate-limit.test.ts
-└── ...
-
-lib/__tests__/                  # Co-located lib tests (older pattern)
-├── setup.ts                    # DB setup for payment tests
-├── ai-policy.test.ts
-├── cache-invalidation.test.ts
-├── payment-flows.test.ts
-├── get-all-trades.test.ts
-└── ...
+bun run test              # Run all unit/integration tests (vitest)
+bun run test:coverage     # Run tests with coverage report
+bun run test:payment      # Run payment integration tests (separate config)
+bun run test:payment:ui   # Run payment tests with Vitest UI
+bun run test:payment:coverage  # Payment tests with coverage
+bun run test:smoke        # Run HTTP smoke test (scripts/smoke-http.mjs)
+bun run perf:ci           # Full performance CI gate
 ```
 
 ## Test Configuration
 
-**Main Vitest Config (`vitest.config.ts`):**
-- `globals: true` -- `describe`, `it`, `expect` available globally (though imports are still used)
-- `environment: "node"`
-- Setup file: `tests/setup.ts`
-- Includes: `tests/**/*.test.ts`, `tests/**/*.test.tsx`, `**/__tests__/**/*.test.ts`, `**/*.test.ts`
-- Excludes: `node_modules`, `dist`, `.next`, `.opencode/**`, `components/sidebar/__tests__/**`, `tests/performance/performance-regression.test.ts`
+**Primary Config (`vitest.config.ts`):**
+- Environment: `"node"` (not jsdom -- server-focused testing)
+- Setup file: `./tests/setup.ts`
+- Coverage provider: v8
+- Path alias: `@` maps to project root
 
-**Payment Vitest Config (`vitest.payment.config.ts`):**
-- Adds `@vitejs/plugin-react` plugin
-- Additional setup: `lib/__tests__/setup.ts` (DB connection setup)
-- Includes only: `**/__tests__/**/*.test.ts`
+**Payment Config (`vitest.payment.config.ts`):**
+- Environment: `"node"`
+- Setup files: `./tests/setup.ts` AND `./lib/__tests__/setup.ts` (DB-backed setup)
+- Vite plugin: `@vitejs/plugin-react` (React support for JSX tests)
 
 **Playwright Config (`playwright.config.ts`):**
-- Test dir: `./tests/e2e`
-- Chromium only
-- `baseURL: 'http://localhost:3000'`
-- Web server auto-starts with `npm run dev`
-- CI: retries=2, workers=1, forbidOnly=true
+- Test directory: `./tests/e2e`
+- Base URL: `http://localhost:3000`
+- Single project: Chromium Desktop Chrome
+- Fully parallel execution
+- CI: 2 retries, 1 worker
+- Dev: 0 retries, auto workers
+- Web server: `npm run dev` with reuseExistingServer
+- Trace on first retry, screenshot on failure, video on first retry
 
-**Coverage Thresholds:**
-- Lines: 30%
-- Functions: 40%
-- Statements: 30%
-- Branches: 20%
-- Per-file enforcement: true
-- Provider: v8
+**Coverage Thresholds (vitest.config.ts):**
+```json
+{
+  "lines": 30,
+  "functions": 40,
+  "statements": 30,
+  "branches": 20,
+  "perFile": true
+}
+```
 
-## Global Test Setup
+**CI Coverage Thresholds (ci.yml):**
+- Lines: >= 80%
+- Branches: >= 60%
+- Note: CI thresholds are significantly higher than local config thresholds
 
-**`tests/setup.ts`:**
-- Mocks `server-only` module (prevents import errors in test env)
-- Sets `IS_REACT_ACT_ENVIRONMENT = true` (React testing)
-- Provides `window` shim with event listeners (for non-jsdom environments)
-- Provides `localStorage` shim using `Map<string, string>`
-- Sets `navigator.onLine = true`
-- Provides `matchMedia` mock (prefers dark mode)
+## Test File Organization
 
-**`lib/__tests__/setup.ts` (payment/integration):**
-- Creates real Prisma client with `pg.Pool` adapter
-- Connects to `DATABASE_URL_TEST` or `DATABASE_URL`
-- Sets up `global.prisma` and `global.pool`
-- Non-fatal when DB absent (tests skip gracefully)
+**Location:**
+- Two primary patterns:
+  1. Centralized in `tests/` directory, mirroring source structure
+  2. Co-located in `lib/__tests__/` for library-internal tests
+
+**Directory Structure:**
+```
+tests/
+  setup.ts                    # Global test setup (window, localStorage, matchMedia shims)
+  var.test.ts                 # Root-level test
+  smoke/
+    env.test.ts               # Smoke tests
+  api/
+    tradovate-sync-route.test.ts
+    ai-full-history-ux.test.ts
+    ai-budget-enforcement.test.ts
+    auth-callback-route.test.ts
+    deals-active.test.ts
+    deals-unified.test.ts
+    whop-checkout-security.test.ts
+    ...
+  app/
+    api/
+      _utils/
+        validate.test.ts      # Mirrors app/api/_utils/
+  cache/
+    cache-invalidation.test.ts
+  context/
+    data-provider-utils.test.ts
+    provider-boundary-regression.test.tsx
+  lib/
+    api-response.test.ts
+    unsubscribe-url.test.ts
+    feature-flags.test.ts
+    password-validation.test.ts
+    redact-pii.test.ts
+    chat-retention.test.ts
+    prisma-fallback.test.ts
+    ...
+  server/
+    shared-access.test.ts
+    groups-delete.test.ts
+    accounts-isolation.test.ts
+    layout-isolation.test.ts
+    team-analytics.test.ts
+    ...
+  performance/
+    rendering-performance.test.tsx
+    performance-regression.test.ts
+    trades-mutation-batch.test.ts
+  e2e/
+    auth.spec.ts              # Playwright E2E
+    a11y/                     # Accessibility tests
+    performance/              # Performance E2E tests
+
+lib/__tests__/
+  setup.ts                    # DB-backed test setup (Prisma + pg)
+  payment-flows.test.ts
+  webhook-service-retry.test.ts
+  whop-webhook-route.test.ts
+  ai-policy.test.ts
+  teams-security.test.ts
+  ...
+```
+
+**Naming:**
+- Test files: `<feature>.test.ts` or `<feature>.test.tsx`
+- E2E files: `<feature>.spec.ts` (Playwright convention)
+- Descriptive names: `ai-budget-enforcement.test.ts`, `whop-checkout-security.test.ts`, `password-validation.test.ts`
 
 ## Test Structure
 
 **Suite Organization:**
 ```typescript
-import { describe, expect, it, beforeEach, vi } from 'vitest'
-
-// Mocks hoisted above imports (required by vi.mock)
-const { someMock } = vi.hoisted(() => ({
-  someMock: vi.fn(),
-}))
-
-vi.mock('@/lib/module', () => ({
-  exportedName: someMock,
-}))
-
+import { describe, expect, it } from 'vitest'
 import { functionUnderTest } from '@/lib/module'
 
-describe('functionUnderTest', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    // Reset default mock return values
-    someMock.mockResolvedValue('default')
-  })
-
-  it('does something expected', async () => {
-    someMock.mockResolvedValue('test-value')
-    const result = await functionUnderTest({ input: 'data' })
-    expect(result).toBe('expected')
-    expect(someMock).toHaveBeenCalledWith('expected-args')
-  })
-
-  it('handles errors', async () => {
-    someMock.mockRejectedValue(new Error('fail'))
-    await expect(functionUnderTest()).rejects.toThrow('fail')
+describe('module-name', () => {
+  describe('SubModule or specific function', () => {
+    it('should do expected behavior', () => {
+      // Arrange
+      const input = ...
+      // Act
+      const result = functionUnderTest(input)
+      // Assert
+      expect(result).toBe(expected)
+    })
   })
 })
 ```
 
-**Key patterns:**
-- `vi.hoisted()` to declare mock functions before module imports
-- `vi.mock()` with factory functions for module mocking
-- `vi.clearAllMocks()` in `beforeEach`
-- `vi.resetAllMocks()` used in some API tests
-- Tests for async functions use `async/await` with `expect().resolves` / `expect().rejects`
+**Import Pattern:**
+- All test files explicitly import from vitest: `import { describe, expect, it } from 'vitest'`
+- Source imports use `@/` alias: `import { apiError } from '@/lib/api-response'`
+
+**Test Descriptions:**
+- Use `should` phrasing: `'should reject strings without uppercase'`
+- Use descriptive names: `'returns errors for too-short password'`
+- E2E tests use emoji prefixes: `'Unauthorized users are redirected from protected routes'`
+
+## Setup and Teardown
+
+**Global Setup (`tests/setup.ts`):**
+- Mocks `server-only` module: `vi.mock('server-only', () => ({}))`
+- Sets `IS_REACT_ACT_ENVIRONMENT = true`
+- Shims `window` with EventTarget methods (addEventListener, removeEventListener, dispatchEvent)
+- Shims `localStorage` with in-memory Map-based implementation
+- Shims `navigator.onLine = true`
+- Shims `window.matchMedia` with dark-mode-aware mock
+
+**DB Setup (`lib/__tests__/setup.ts`):**
+- Connects to PostgreSQL via `pg.Pool` and `@prisma/adapter-pg`
+- Declares `globalThis.prisma` and `globalThis.pool`
+- Non-fatal when DATABASE_URL is absent (tests skip gracefully)
+- Truncates 8 payment-related tables before each test: PaymentTransaction, Invoice, Refund, SubscriptionEvent, PaymentMethod, Promotion, UsageMetric, Subscription
+- Cleans up connections in `afterAll`
+
+**E2E Setup:**
+- `beforeEach` clears cookies: `await context.clearCookies()`
+- Route mocking for Supabase Auth endpoints
+- No global setup file (Playwright default)
 
 ## Mocking
 
-**Framework:** Vitest built-in mocking (`vi.fn()`, `vi.mock()`, `vi.hoisted()`)
+**Framework:** Vitest built-in (`vi`)
 
-**Module Mocking Pattern:**
+**Patterns:**
 ```typescript
-// Hoist mock declarations
-const { getDatabaseUserIdMock, prismaMock } = vi.hoisted(() => ({
-  getDatabaseUserIdMock: vi.fn(),
-  prismaMock: { user: { findUnique: vi.fn() } },
+// Module mocking
+vi.mock('server-only', () => ({}))
+
+// Function mocking
+const mockFn = vi.fn().mockImplementation((query: string) => ({
+  matches: query.includes('dark'),
+  media: query,
+  // ...
 }))
 
-vi.mock('@/server/auth', () => ({
-  getDatabaseUserId: getDatabaseUserIdMock,
-}))
-
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
+// Route mocking in E2E
+await page.route('**/auth/v1/token?grant_type=password', async route => {
+  await route.fulfill({
+    status: 400,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: 'invalid_grant' }),
+  })
+})
 ```
 
 **What to Mock:**
-- `@/server/auth` -- authentication functions (`getDatabaseUserId`, `getUserId`)
-- `@/lib/prisma` -- database client (prisma instance)
-- `@/lib/supabase/*` -- Supabase clients (`createRouteClient`)
-- `next/cache` -- cache revalidation (`updateTag`)
-- `@/lib/security/*` -- security utilities
-- External API clients in route tests
+- `server-only` module (prevents server-side code from failing in test env)
+- Browser APIs: `window`, `localStorage`, `navigator`, `matchMedia`
+- Supabase Auth endpoints in E2E tests
+- External API endpoints in E2E tests
 
 **What NOT to Mock:**
-- Pure utility functions (tested directly)
-- Zod schemas (tested through validation functions)
-- The functions under test
+- Business logic functions (tested directly)
+- Zod validation schemas (tested with real data)
+- Pure utility functions
 
-**Dynamic Imports for Route Handlers:**
+## Unit Tests
+
+**Scope:**
+- Pure functions in `lib/`: date formatting, financial math, password validation, URL generation
+- Security utilities: shared-access guards, PII redaction, token generation
+- API response helpers
+- Feature flag logic
+
+**Patterns from codebase:**
+
+**Pure Function Testing (`tests/lib/password-validation.test.ts`):**
 ```typescript
-const { GET } = await import("@/app/api/deals/unified/route")
-const response = await GET(request)
-```
-This pattern is used for API route tests to avoid module caching issues with mocks.
-
-## Test Types
-
-**Unit Tests:**
-- Pure utility functions: `date-utils.test.ts`, `sanitize.test.ts`, `var.test.ts`
-- Library modules: `lib/api-response.test.ts`, `lib/feature-flags.test.ts`, `lib/password-validation.test.ts`
-- Cache logic: `cache/cache-invalidation.test.ts`
-- Pattern: No mocking needed for pure functions, direct assertion
-
-**Integration Tests (Server Actions):**
-- Server action tests in `tests/server/`: `shared.test.ts`, `team-analytics.test.ts`, `accounts-isolation.test.ts`
-- Mock auth + prisma, test business logic
-- Pattern: Mock external dependencies, test orchestration and error handling
-
-**Integration Tests (API Routes):**
-- API route tests in `tests/api/`: `deals-unified.test.ts`, `ai-router-comprehensive.test.ts`, `auth-callback-route.test.ts`
-- Create `Request` objects, call route handlers directly
-- Mock auth and data layer, test response shape and status codes
-- Pattern:
-```typescript
-const request = new Request("http://localhost/api/deals/unified?search=test")
-const { GET } = await import("@/app/api/deals/unified/route")
-const response = await GET(request)
-const data = await response.json()
-expect(response.status).toBe(200)
+describe('password-validation', () => {
+  describe('PASSWORD_REGEX', () => {
+    it('should reject strings without uppercase', () => {
+      expect(PASSWORD_REGEX.test('abcdefgh1')).toBe(false)
+    })
+    it('should accept valid passwords', () => {
+      expect(PASSWORD_REGEX.test('Abcdefgh1')).toBe(true)
+    })
+  })
+})
 ```
 
-**Payment/Integration Tests:**
-- Located in `lib/__tests__/`: `payment-flows.test.ts`, `webhook-service-retry.test.ts`
-- Use real database via `lib/__tests__/setup.ts`
-- Run separately: `npm run test:payment`
-
-**React Component Tests:**
-- `error-boundaries.test.tsx` -- tests error boundary components
-- `theme-provider.test.tsx` -- tests theme switching
-- `context/provider-boundary-regression.test.tsx` -- tests React context
-- Uses `jsdom` environment, `react-dom/client` for rendering
-
-**E2E Tests (Playwright):**
-- `tests/e2e/auth.spec.ts` -- authentication flow
-- `tests/e2e/a11y/a11y.spec.ts` -- accessibility audit
-- `tests/e2e/performance/` -- performance benchmarks
-- Mock Supabase Auth endpoints for deterministic tests
-- Pattern: `test.describe` blocks, `page.route()` for mocking, `page.goto()` for navigation
-
-**Smoke Tests:**
-- `tests/smoke/env.test.ts` -- environment validation
-- `scripts/smoke-http.mjs` -- HTTP smoke test
-
-## Test Data Patterns
-
-**Inline Mock Data:**
-- Mock objects defined directly in test files:
+**API Helper Testing (`tests/lib/api-response.test.ts`):**
 ```typescript
-const mockFirms = [{ id: '1', slug: 'test-firm', name: 'Test Firm', ... }]
+describe("apiError helper", () => {
+  it("builds a structured envelope and sets the cache-control header", async () => {
+    const response = apiError("BAD_REQUEST", "Bad payload", 400, { reason: "malformed" });
+    expect(response.status).toBe(400);
+    expect(response.headers.get("cache-control")).toBe("no-store, max-age=0");
+    const body = await response.json();
+    expect(body).toEqual({
+      error: { code: "BAD_REQUEST", message: "Bad payload", details: { reason: "malformed" } },
+    });
+  });
+});
 ```
 
-**Environment Manipulation:**
-- Tests that check feature flags save/restore `process.env`:
+**Security Testing (`tests/server/shared-access.test.ts`):**
 ```typescript
-const originalEnv = { ...process.env }
-beforeAll(() => { process.env.NEXT_PUBLIC_PERF_ROLLOUT_PCT = '50' })
-afterAll(() => { process.env = originalEnv })
+describe('shared visibility guard', () => {
+  const now = new Date('2026-02-25T12:00:00.000Z')
+  it('denies missing or private shares', () => {
+    expect(isSharedAccessible(null, now)).toBe(false)
+  })
+  it('allows active public shares', () => {
+    expect(isSharedAccessible({ isPublic: true, expiresAt: null }, now)).toBe(true)
+  })
+})
 ```
 
-**Prisma Error Simulation:**
+## Integration Tests
+
+**Scope:**
+- API route testing: auth, AI, deals, teams, webhooks
+- Server action testing: trade operations, account management, group operations
+- Cache invalidation
+- Auth flow testing
+- Provider boundary regression
+
+**API Route Tests:**
+- Located in `tests/api/`
+- Test server-side route handlers directly (not via HTTP)
+- Mock authentication and external services
+- Validate response status, headers, and JSON body shape
+
+**Server Tests:**
+- Located in `tests/server/`
+- Test server actions and data access layers
+- Ownership and isolation verification
+- Database interaction testing
+
+**Payment Integration Tests:**
+- Located in `lib/__tests__/`
+- Separate Vitest config with DB setup
+- Requires real database (PostgreSQL)
+- Truncates tables between tests
+- Run in CI only when secrets are available
+- Tests: payment flows, webhook retry, Whop webhook handling, team invitations, AI policy
+
+## E2E Tests
+
+**Framework:** Playwright with Chromium
+
+**Location:** `tests/e2e/`
+
+**Test Files:**
+- `auth.spec.ts` -- Authentication flow (login, logout, session persistence, redirects)
+- `a11y/` -- Accessibility audits
+- `performance/` -- Performance-focused E2E tests
+
+**E2E Patterns:**
+
+**Auth Flow Testing:**
 ```typescript
-const uniqueError = new Error('duplicate') as Error & { code?: string }
-uniqueError.code = 'P2002'
-sharedCreateMock.mockRejectedValueOnce(uniqueError)
+test.describe('Authentication Flow', () => {
+  test.beforeEach(async ({ context }) => {
+    await context.clearCookies()
+  })
+
+  test('Unauthorized users are redirected from protected routes', async ({ page }) => {
+    await page.goto(`/${LOCALE}/dashboard`)
+    await page.waitForURL(url => url.pathname.includes('/authentication'))
+    expect(page.url()).toContain('next=')
+    await expect(page.locator('form')).toBeVisible()
+  })
+})
 ```
 
-## Current Test Coverage Assessment
+**Route Mocking in E2E:**
+```typescript
+await page.route('**/auth/v1/token?grant_type=password', async route => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      access_token: 'valid.session.token',
+      refresh_token: 'valid.refresh.token',
+      expires_in: 3600,
+      user: { id: 'user_123', email: TEST_EMAIL }
+    }),
+  })
+})
+```
 
-**Overall Metrics:**
-- Total test files: 186 (excluding `node_modules` and `.opencode`)
-- Total source files (TS/TSX): 2,136
-- Test-to-source ratio: ~8.7% of files have corresponding tests
-- API routes: 69 route files
-- Pages: 59 page files
-- Components: 152 component files
+**Page Object-like Patterns:**
+- Locale-aware navigation: `/${LOCALE}/dashboard`
+- Form interaction: `page.fill('input[id="email_password"]', email)`
+- Role-based selectors: `page.getByRole('button', { name: /Log out/i })`
+- Visibility assertions: `await expect(page.locator('header')).toBeVisible()`
 
-**Files with Tests (by area):**
-| Area | Source Files | Test Files | Coverage |
-|------|-------------|------------|----------|
-| `lib/` utilities | ~70 | ~30 (incl. `__tests__/`) | Moderate |
-| `server/` actions | ~35 | ~10 | Low |
-| `app/api/` routes | ~69 | ~25 | Low-Moderate |
-| `components/` | ~152 | ~3 | Very Low |
-| `store/` (Zustand) | ~25 | 0 | None |
-| `hooks/` | ~8 | 0 | None |
+## Performance Tests
 
-## Test Coverage Gaps
+**Rendering Performance (`tests/performance/rendering-performance.test.tsx`):**
+- React component rendering benchmarks
+- Uses `.tsx` extension
 
-**Critical Gaps (High Priority):**
+**Performance Regression (`tests/performance/performance-regression.test.ts`):**
+- Excluded from main test runs (listed in tsconfig excludes and vitest excludes)
+- Monitors performance over time
 
-1. **No Zustand store tests** -- All 25+ stores in `@/store/` are untested. Stores like `user-store.ts`, `chat-store.ts`, `analysis-store.ts` contain complex state logic with persistence that could break silently.
+**CI Performance Gates (`perf:ci` script):**
+- Dead code check: `check:dead-code`
+- Route security: `check:route-security`
+- Route budgets: `check:route-budgets`
+- Bundle analysis: `analyze:bundle`
+- Header cache policy: `perf:headers`
+- Baseline snapshot: `perf:baseline`
+- Dashboard runtime: `perf:dashboard-runtime`
+- Lighthouse: `perf:lighthouse`
 
-2. **No React hook tests** -- All 8 hooks in `@/hooks/` are untested (`useDebounce`, `useMediaQuery`, `useAutoScroll`, etc.).
+## Coverage
 
-3. **Component tests nearly absent** -- Only 3 component test files exist (`error-boundaries.test.tsx`, `theme-provider.test.tsx`, `context/provider-boundary-regression.test.tsx`). 149+ components have no tests.
+**Configuration:**
+- Provider: v8 (`@vitest/coverage-v8`)
+- Reporters: text, json, html
+- Per-file threshold enforcement: enabled
 
-4. **Server action coverage is thin** -- Only ~10 of 35 server action files have tests. Missing tests for critical paths like billing, subscription management, trades CRUD, imports.
+**Local Thresholds (vitest.config.ts):**
+- Lines: 30%
+- Functions: 40%
+- Statements: 30%
+- Branches: 20%
 
-**Moderate Gaps (Medium Priority):**
+**CI Thresholds (ci.yml):**
+- Lines: >= 80%
+- Branches: >= 60%
 
-5. **E2E test suite is minimal** -- Only 3 E2E spec files (auth, a11y, performance). No coverage for: dashboard navigation, trade entry flow, deal browsing, team management, import workflows.
-
-6. **AI route tests are extensive but isolated** -- Many AI route tests exist (`ai-router-comprehensive.test.ts`, `ai-error-contracts.test.ts`, etc.) but they mock heavily and don't test real AI integration.
-
-7. **No visual regression tests** -- No screenshot comparison or visual diff testing despite extensive custom UI components.
-
-8. **No middleware tests** -- No tests for Next.js middleware (auth guards, locale routing).
-
-**Low Priority Gaps:**
-
-9. **Payment tests require real DB** -- Payment test suite (`lib/__tests__/`) requires a database connection and is run separately, reducing likelihood of being caught in CI.
-
-10. **No load/performance testing in CI** -- `loadtest:k6` exists but is not part of any CI pipeline script.
-
-## CI/CD Testing Integration
-
-**Test Scripts Available:**
+**View Coverage:**
 ```bash
-npm test                    # Main test suite
-npm run test:coverage       # Coverage report
-npm run test:payment        # Payment tests (separate)
-npm run test:smoke          # HTTP smoke test
-npm run lint                # ESLint
-npm run typecheck           # TypeScript checking
-npm run perf:ci             # Full performance CI suite
+bun run test:coverage    # Runs coverage with text + html output
 ```
 
-**CI Performance Checks (`perf:ci`):**
-- Dead code check
-- Route security check
-- Route budget check
-- Bundle analysis
-- Performance headers check
-- Performance baseline
-- Dashboard runtime performance
-- Lighthouse audit
+**CI Artifact Upload:**
+- Coverage report uploaded as GitHub Actions artifact: `coverage-report`
+- Coverage summary JSON: `coverage/coverage-summary.json`
 
-**Known CI Gaps:**
-- No GitHub Actions or CI config files detected in the repository
-- `perf:ci` script exists but integration into a CI pipeline is unclear
-- Playwright tests have CI-aware config (retries, workers) but no CI trigger detected
-- Coverage thresholds are low (30% lines) suggesting coverage is not strictly enforced
+## CI Integration
+
+**CI Pipeline (`.github/workflows/ci.yml`):**
+- Triggers: pull requests and pushes to `main`
+- Node.js 20 + Bun 1.3.11
+- PostgreSQL 16 service container
+
+**Test Steps in CI:**
+1. Lint (`bun run lint`)
+2. Warning budget check (`bun run check:warning-budget`)
+3. Typecheck (`bun run typecheck`)
+4. Prisma schema validation (`bunx prisma validate`)
+5. Unit tests with coverage (`bun run test:coverage`)
+6. Coverage threshold enforcement (>= 80% lines, >= 60% branches)
+7. Build (`bun run build`)
+8. Route budget check
+9. Bundle analysis
+10. Performance gates (baseline, headers, lighthouse)
+
+**Payment Integration Job:**
+- Depends on `validate` job
+- Only runs on non-fork PRs (secrets unavailable on forks)
+- Requires: `WHOP_API_KEY`, `WHOP_WEBHOOK_SECRET`, `ENCRYPTION_KEY`
+- Runs: `bunx prisma db push` then `bun run test:payment`
+
+## Test Data
+
+**No Dedicated Fixtures/Factory System:**
+- Test data is defined inline within test files
+- Constants defined at suite level: `const now = new Date('2026-02-25T12:00:00.000Z')`
+- Test inputs constructed per test case
+
+**Typical Pattern:**
+```typescript
+const TEST_EMAIL = 'test@example.com'
+const TEST_PASSWORD = 'Password123!'
+const LOCALE = 'en'
+```
+
+**Database Seeding (payment tests):**
+- Tables truncated between tests via `beforeEach`
+- No seed data files; tests create their own data
+
+**Mock Data:**
+- Supabase Auth mock responses defined inline in E2E tests
+- API mock responses use realistic shapes matching production schemas
+
+## Common Test Patterns
+
+**Error Testing:**
+```typescript
+it('should return errors for missing uppercase', () => {
+  const result = validatePasswordStrength('abcdefgh1')
+  expect(result.valid).toBe(false)
+  expect(result.errors).toContain('Password must contain at least one uppercase letter')
+})
+```
+
+**Boundary/Edge Case Testing:**
+```typescript
+it('denies expired shares', () => {
+  expect(
+    isSharedAccessible(
+      { isPublic: true, expiresAt: new Date('2026-02-25T11:59:59.000Z') },
+      now
+    )
+  ).toBe(false)
+})
+```
+
+**Array/Collection Testing:**
+```typescript
+it('should return all requirements unmet for empty string', () => {
+  const reqs = getPasswordRequirements('')
+  expect(reqs).toHaveLength(4)
+  expect(reqs.every(r => !r.met)).toBe(true)
+})
+```
+
+**Async Response Testing:**
+```typescript
+it('builds a structured envelope', async () => {
+  const response = apiError("BAD_REQUEST", "Bad payload", 400)
+  expect(response.status).toBe(400)
+  const body = await response.json()
+  expect(body).toEqual({ error: { code: "BAD_REQUEST", message: "Bad payload" } })
+})
+```
+
+## Test Gaps
+
+**Areas with Minimal or No Test Coverage:**
+- **UI Components**: No unit tests for React components in `components/` (testing done via E2E only)
+- **Zustand Stores**: Store logic in `store/` directory lacks dedicated test files
+- **Custom Hooks**: Hooks in `hooks/` have no test files
+- **Pages/Layouts**: Next.js pages and layouts not unit tested
+- **Styling/Theme**: No tests for CSS tokens, theme switching, or visual regression
+- **Client-Side Integration**: React Query hooks, TanStack Table configurations untested
+- **Middleware**: Next.js middleware (auth redirects, locale routing) not tested
+- **WebSocket/Real-time**: Any real-time features lack test coverage
+- **File Upload/Processing**: Upload and file handling not tested
+
+**Partially Tested Areas:**
+- Server actions tested via API route tests but not all server files have tests
+- AI routes have security and budget tests but limited functional coverage
+- Cache invalidation has tests but cache hit/miss behavior is undertested
+
+## Test Utilities
+
+**Custom Utilities:**
+- No dedicated test utility library or custom matchers
+- Tests use Vitest/Playwright built-in assertions only
+- `cn()` function tested indirectly through component rendering
+
+**Shim Utilities (in `tests/setup.ts`):**
+- `window` shim with event methods
+- `localStorage` shim with Map backing
+- `matchMedia` shim for dark mode queries
+- `navigator.onLine` shim
+
+**DB Utilities (in `lib/__tests__/setup.ts`):**
+- `globalThis.prisma` for Prisma client access in tests
+- `globalThis.pool` for raw pg Pool access
+- Table truncation helper pattern
 
 ---
 
-*Testing analysis: 2026-04-08*
+*Testing analysis: 2026-04-09*

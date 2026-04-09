@@ -1,279 +1,312 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-04-08
+**Analysis Date:** 2026-04-09
 
 ## Security Concerns
 
-### CRITICAL: Blog Content Rendered Without Sanitization (XSS)
+### Unsantitized HTML in Blog Post Rendering
+- **Severity:** High
+- **Files:** `app/[locale]/(landing)/blogs/[slug]/page.tsx` (line 113)
+- **Issue:** Blog post content is rendered directly via `dangerouslySetInnerHTML={{ __html: post.content }}` without DOMPurify sanitization. While a `lib/sanitize.ts` utility exists with DOMPurify integration, it is not used here.
+- **Impact:** Stored XSS attack vector if blog content is ever composed from untrusted input (admin-authored content is assumed safe, but this is a defense-in-depth gap).
+- **Fix approach:** Wrap `post.content` with `DOMPurify.sanitize()` from `lib/sanitize.ts` before rendering.
 
-- Issue: Blog post HTML content is rendered directly via `dangerouslySetInnerHTML` without any DOMPurify sanitization. While other parts of the codebase use `DOMPurify` (18 files reference it), the blog detail page does not.
-- Files: `app/[locale]/(landing)/blogs/[slug]/page.tsx` (line 113)
-- Impact: If blog content stored in the database contains malicious scripts (e.g., from a compromised admin account or database injection), it will execute in every visitor's browser. Stored XSS can steal session tokens, redirect users, or perform actions on their behalf.
-- Fix approach: Pass `post.content` through `DOMPurify.sanitize()` before rendering, consistent with patterns in `lib/sanitize.ts`.
+### XSS Risk in Dashboard Theme Script Injection
+- **Severity:** Medium
+- **Files:** `app/[locale]/dashboard/layout.tsx` (line 68-69)
+- **Issue:** Theme script is injected via `dangerouslySetInnerHTML` in a `<script>` tag. The `userTheme` value originates from user data and is interpolated directly into JavaScript without escaping.
+- **Impact:** If userTheme contains malicious characters, it could break out of the string context.
+- **Fix approach:** JSON-encode or whitelist-validate the `userTheme` value before interpolation.
 
-### CRITICAL: Known Vulnerable Dependencies (78 total)
+### Unbounded `$queryRaw` / `$executeRaw` Usage
+- **Severity:** Medium
+- **Files:** `server/optimized-trades.ts`, `server/trades.ts`, `server/layouts.ts`, `server/auth-user.ts`, `server/equity-chart.ts`, `app/api/trader-profile/benchmark/route.ts`, `app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue.ts`, `lib/prisma-guard.ts`, `lib/ai/telemetry.ts`
+- **Issue:** Multiple files use `$queryRaw` and `$executeRaw` for database queries. While most use template literals (which are parameterized), the raw SQL pattern increases risk of future SQL injection if string interpolation is introduced.
+- **Fix approach:** Migrate queries to Prisma's typed query API where possible. Add lint rule to forbid `$executeRawUnsafe` outside tests.
 
-- Issue: `npm audit` reports **1 critical, 44 high, 32 moderate, 1 low** vulnerable packages.
-- Files: `package.json`
-- Key direct dependency vulnerabilities:
-  - **`jspdf` (CRITICAL)**: PDF Object Injection via FreeText color, HTML Injection in New Window paths
-  - **`dompurify` (MODERATE)**: Mutation-XSS via Re-Contextualization, Cross-site Scripting vulnerability, ADD_ATTR predicate skips URI validation, USE_PROFILES prototype pollution allows event handlers
-  - **`next` (MODERATE)**: HTTP request smuggling in rewrites, unbounded disk cache growth, unbounded postponed resume buffering (DoS), null origin CSRF bypass on Server Actions and dev HMR
-  - **`eslint`, `eslint-config-next`, `eslint-plugin-react` (HIGH)**: Path traversal in `@remix-run/node` transitive dep
-  - **`prisma` (HIGH)**: Via `@hono/node-server` authorization bypass and middleware bypass
-  - **`vercel` (HIGH)**: Via transitive dependencies
-- Impact: The DOMPurify vulnerabilities undermine the XSS protection it provides. The Next.js CSRF bypass could allow unauthorized Server Action invocations. The jsPDF vulnerabilities could allow code execution when generating PDFs.
-- Fix approach: Run `npm audit fix` for auto-fixable issues. For jsPDF, evaluate upgrading or sandboxing PDF generation. For DOMPurify, upgrade to latest patched version immediately.
+### `$executeRawUnsafe` in Test Setup
+- **Severity:** Low (test-only)
+- **Files:** `lib/__tests__/setup.ts` (line 67)
+- **Issue:** Uses `$executeRawUnsafe` with string interpolation for table truncation. The table name comes from a hardcoded list, so risk is contained.
+- **Fix approach:** Keep as-is but ensure table names list is never dynamically generated.
 
-### HIGH: Vercel CLI Env Files Contain Real Credentials on Disk
+### 79 Known Dependency Vulnerabilities (1 Critical, 45 High)
+- **Severity:** Critical (1), High (45)
+- **Issue:** `npm audit` reports 79 vulnerabilities including 1 critical, 45 high, 32 moderate, 1 low. Notable: `@hono/node-server` has high-severity authorization bypass (GHSA-wc8h) and path traversal (GHSA-92pp). `yaml` has stack overflow vulnerability.
+- **Impact:** Supply chain attack surface. The `@hono/node-server` issue (affecting `@prisma/dev`) is dev-only but `yaml` may be transitively used at runtime.
+- **Fix approach:** Run `npm audit fix` immediately. Review the 1 critical and 45 high advisories. For `yargs-parser` (no fix available), evaluate if an alternative exists.
 
-- Issue: `.env.vercel`, `.env.vercel.current`, `.env.vercel.development`, `.env.vercel.preview` exist on disk with real values including admin user IDs, OIDC tokens (`.env.vercel.current`), and API configuration. While they are not tracked by git (confirmed via `git ls-files`), their presence on disk is a risk for local credential leakage, IDE indexing, and accidental commits.
-- Files: `.env.vercel`, `.env.vercel.current`, `.env.vercel.development`, `.env.vercel.preview`
-- Impact: The OIDC token in `.env.vercel.current` is especially sensitive - it grants access to the Vercel project environment. Local development machines with these files are a credential exposure vector.
-- Fix approach: Consider adding these to a global `.gitignore` pattern. Ensure these files are never committed. Rotate the OIDC token in `.env.vercel.current` as a precaution.
+### Excessive Number of Environment Secrets
+- **Severity:** Medium
+- **Files:** `.env.example` documents ~80+ environment variables
+- **Issue:** Large surface area of secrets including `ENCRYPTION_KEY`, `TOKEN_CRYPTO_KEY`, multiple API keys, database credentials. Multiple `.env` variant files exist: `.env`, `.env.local`, `.env.production.local`, `.env.vercel`, `.env.vercel.development`, `.env.vercel.preview`, `.env.vercel-check`, `.env.vercel.current`.
+- **Impact:** Risk of secret leakage if `.env.local` or `.env.production.local` are accidentally committed. Legacy duplicate keys (e.g., both `SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL`) increase confusion.
+- **Fix approach:** Audit all `.env*` files are in `.gitignore`. Consolidate legacy duplicate keys. Consider a secrets manager for production.
 
-### MEDIUM: Whop SDK Dummy Key Pattern
+### Rate Limiting Coverage Gap
+- **Severity:** Medium
+- **Files:** `app/api/` (58 total route files, only 23 have rate limiting)
+- **Issue:** 35 out of 58 API routes lack rate limiting. Public-facing mutation routes like `app/api/email/format-name/route.ts`, `app/api/referral/route.ts`, and `app/api/deals/route.ts` may be vulnerable to abuse.
+- **Impact:** Unprotected routes can be brute-forced or spammed.
+- **Fix approach:** Audit all 35 unratelimited routes and apply `rateLimit()` from `lib/rate-limit.ts` to all public mutation endpoints.
 
-- Issue: The Whop SDK is initialized with a fallback `"dummy_key_for_build"` when `WHOP_API_KEY` is not set, which occurs during build time.
-- Files: `lib/whop.ts` (line 14)
-- Impact: Low direct risk since the build-time client should not make real API calls, but this pattern could mask configuration errors in non-production environments where the key is expected to work.
-- Fix approach: Use a build-time environment variable check script instead of a runtime fallback, or gate all Whop API calls behind a key-presence check.
-
-### MEDIUM: Supabase Service Role Key Used in Server Actions
-
-- Issue: Server Actions in the admin section create Supabase clients with the service role key, which bypasses Row Level Security. While these are protected by `assertAdminAccess()`, the service role key is the highest-privilege credential.
-- Files: `app/[locale]/admin/actions/send-email.ts` (line 14), `app/[locale]/admin/actions/weekly-recap.ts` (line 20), `app/[locale]/admin/actions/stats.ts` (line 13), `app/[locale]/teams/actions/stats.ts` (line 12)
-- Impact: If the admin check is bypassed or an admin account is compromised, the service role key provides full database access.
-- Fix approach: Use the minimum-privilege Supabase client (anon key with RLS) where possible. Only use service role key for operations that genuinely require admin-level access (like `listUsers`).
-
-### LOW: Legacy Auth Env Variable Typo
-
-- Issue: `UTH_MFA_ENFORCEMENT=false` exists in `.env.example` as a documented "legacy typo key currently present in Vercel envs."
-- Files: `.env.example` (referenced)
-- Impact: Minimal, but creates confusion about which env var controls MFA enforcement.
-- Fix approach: Migrate all references to `AUTH_MFA_ENFORCEMENT` and remove the typo key.
-
----
-
-## Technical Debt
-
-### HIGH: Excessive `any` Usage
-
-- Issue: Approximately 80+ instances of `as any` and `: any` type assertions across the codebase, including production server code.
-- Files:
-  - `server/optimized-trades.ts` (lines 17, 165) - `where` clause and update data use `any`
-  - `server/webhook-service.ts` (lines 465, 562) - `interval: any`
-  - `server/imports/tradovate-actions.ts` (lines 151, 319, 420, 1293) - `details: any`, `fills: any[]`, `orders: any[]`, `whereClause: any`
-  - `server/payment-security.ts` (lines 281, 286, 448, 457) - `redactSensitiveData(data: any): any`, `withSecurityChecks<T extends (...args: any[]) => Promise<any>>`
-  - `server/teams.ts` (line 519) - `recentActivity: any[]`
-  - `server/subscription-manager.ts` (lines 131, 132, 564) - `updateData: any`, `eventData: any`, `subscription?: any`
-  - `lib/trade-types.ts` (lines 43-57) - Multiple fallback casts to `any`
-  - `lib/translation-utils.ts` (lines 11, 12, 18, 34) - `t: any` parameters
-  - `lib/ai/telemetry.ts` (lines 47, 73) - `usage: any`
-  - `context/rithmic-sync-context.tsx` (lines 676, 678) - `(acc: any)`
-  - `components/tiptap/menu-bar.tsx` (lines 77, 90, 91) - editor API casts
-- Impact: Type safety is the primary benefit of TypeScript. These `any` usages defeat the type checker, allowing runtime errors that should be caught at compile time.
-- Fix approach: Prioritize the server files (especially `payment-security.ts` and `webhook-service.ts`) since they handle sensitive operations. For `trade-types.ts`, use a generic `safeNumber()` function. For translation utils, define a proper translator type.
-
-### MEDIUM: 2481-Line Configuration File
-
-- Issue: `app/[locale]/dashboard/components/accounts/config.ts` is 2481 lines, likely containing static configuration data that could be externalized.
-- Files: `app/[locale]/dashboard/components/accounts/config.ts`
-- Impact: Extremely difficult to navigate, maintain, or review. Any change requires scrolling through a massive file.
-- Fix approach: Split into separate config files by category (e.g., `account-fields.ts`, `account-validators.ts`, `account-options.ts`) or move static data to JSON/TypeScript data files.
-
-### MEDIUM: Supabase Client Creation Repetition
-
-- Issue: `server/auth.ts` contains 6+ nearly identical Supabase client creation functions (`createClient`, `createBrowserClient`, `createMiddlewareClient`, etc.), each with the same environment variable fallback logic for `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
-- Files: `server/auth.ts` (lines 85, 123, 146, 192, 257, 340, 398)
-- Impact: Code duplication makes it easy for configuration inconsistencies to creep in. If the env var resolution logic changes, it must be updated in 6+ places.
-- Fix approach: Extract a single `getSupabaseConfig()` helper that resolves the URL and key, then pass it to each client factory.
-
-### MEDIUM: ESLint Suppression of Complexity Rules
-
-- Issue: Two files use `eslint-disable complexity` to suppress cyclomatic complexity warnings, indicating the functions are too complex.
-- Files: `app/[locale]/admin/propfirms/[id]/page.tsx` (line 121), `app/[locale]/dashboard/components/import/components/format-preview.tsx` (line 84)
-- Impact: High complexity functions are hard to test, debug, and maintain.
-- Fix approach: Refactor into smaller, focused functions.
-
-### LOW: `@deprecated` Component Still Present
-
-- Issue: `components/ui/v2/button-v2.tsx` is marked `@deprecated` as an alias for the unified Button.
-- Files: `components/ui/v2/button-v2.tsx` (line 2)
-- Impact: Dead code that should be migrated and removed.
-- Fix approach: Find all usages, migrate to `Button`, and remove the deprecated component.
+### Legacy Auth Environment Key Typo
+- **Severity:** Low
+- **Files:** `.env.example` (line with `UTH_MFA_ENFORCEMENT=false`)
+- **Issue:** Comment says "Legacy typo key currently present in Vercel envs; keep until migrated". The key `UTH_MFA_ENFORCEMENT` is missing the leading `A` (should be `AUTH_MFA_ENFORCEMENT`).
+- **Impact:** MFA enforcement may not work correctly if code reads the typo key.
+- **Fix approach:** Complete migration to correct key name and remove the typo variant.
 
 ---
 
 ## Performance Concerns
 
-### HIGH: 20 Files Over 1000 Lines
+### Giant Component Files (2000+ Lines)
+- **Severity:** High
+- **Files:**
+  - `app/[locale]/dashboard/components/accounts/config.ts` (2,481 lines)
+  - `app/[locale]/dashboard/components/tables/trade-table-review.tsx` (1,745 lines)
+  - `app/[locale]/dashboard/components/accounts/accounts-overview.tsx` (1,671 lines)
+  - `app/[locale]/(landing)/firm/[slug]/page-client.tsx` (1,418 lines)
+  - `server/webhook-service.ts` (1,314 lines)
+  - `app/[locale]/(landing)/deals/components/deals-experience.tsx` (1,309 lines)
+  - `app/[locale]/teams/components/team-management.tsx` (1,189 lines)
+- **Impact:** Slow initial render, poor code splitting, difficult to maintain. These files likely import many dependencies, increasing bundle size.
+- **Fix approach:** Break into smaller focused components. Extract config data into separate modules. Use dynamic imports for rarely-used subcomponents.
 
-- Issue: The codebase has 20 source files exceeding 1000 lines, with the largest at 2481 lines. Large files increase parse time, reduce code splitting effectiveness, and make tree-shaking less efficient.
-- Files (top offenders):
-  - `app/[locale]/dashboard/components/accounts/config.ts` (2481 lines)
-  - `app/[locale]/dashboard/components/tables/trade-table-review.tsx` (1745 lines)
-  - `server/imports/tradovate-actions.ts` (1678 lines)
-  - `app/[locale]/dashboard/components/accounts/accounts-overview.tsx` (1671 lines)
-  - `app/[locale]/(landing)/firm/[slug]/page-client.tsx` (1418 lines)
-  - `server/webhook-service.ts` (1314 lines)
-  - `app/[locale]/(landing)/deals/components/deals-experience.tsx` (1309 lines)
-  - `app/[locale]/teams/components/team-management.tsx` (1189 lines)
-  - `app/[locale]/dashboard/components/charts/equity-chart.tsx` (1076 lines)
-  - `app/[locale]/dashboard/settings/actions.ts` (1071 lines)
-- Impact: Large client components cannot be effectively code-split, increasing initial bundle size. Large server files are harder to maintain and test.
-- Fix approach: Split components into smaller sub-components. Extract utility functions from large server files. Use dynamic imports for heavy components (e.g., `equity-chart.tsx` with recharts).
+### Unbounded Database Queries Without Pagination
+- **Severity:** High
+- **Files:** `server/tags.ts`, `server/journal.ts`, `server/deals.ts`, `server/firm-coupons.ts`, `app/api/cron/route.ts`, `app/api/behavior/insights/route.ts`, `app/api/mt5/store/route.ts`, `app/api/mt5/accounts/route.ts`
+- **Issue:** Multiple `findMany()` calls without `take()` or `skip()` parameters. As the database grows, these queries will return unbounded result sets.
+- **Example:** `server/tags.ts` line 9: `const tags = await prisma.tag.findMany()` - fetches all tags with no limit.
+- **Impact:** Memory exhaustion, slow response times, potential OOM crashes as data volume grows.
+- **Fix approach:** Add pagination (cursor or offset) to all findMany queries. Set reasonable default limits (e.g., 100).
 
-### MEDIUM: Heavy Client-Side Dependencies in Bundle
+### Excessive console.error Usage
+- **Severity:** Low
+- **Files:** 799 occurrences across the codebase (excluding node_modules and tests)
+- **Issue:** Pervasive use of `console.error` for error handling instead of structured logging. The project includes `pino` as a dependency for structured logging.
+- **Impact:** Production logging is noisy, hard to filter, and lacks structured fields for observability tools.
+- **Fix approach:** Migrate to `pino` logger consistently. Use log levels appropriately. Remove or gate debug-level `console.log` calls behind a feature flag.
 
-- Issue: Several large libraries are imported client-side:
-  - `d3` (~500KB) for charting
-  - `recharts` (~400KB) for charting
-  - `framer-motion` / `motion` (~150KB) for animations
-  - `exceljs` (~1MB) for Excel export
-  - `jspdf` (~300KB) for PDF generation
-  - `html2canvas` (~200KB) for screenshot capture
-  - `canvas` for image processing
-- Files: `package.json` (dependencies)
-- Impact: Combined, these can add several MB to the client bundle if not properly code-split.
-- Fix approach: Verify these are only loaded via `dynamic()` imports or in separate chunks. Run `npm run analyze:bundle` to verify.
+### 33 console.log Calls in App Code
+- **Severity:** Low
+- **Issue:** 33 `console.log` calls remain in app code (production bundles).
+- **Impact:** Information leakage and performance overhead from serialization.
+- **Fix approach:** Remove all `console.log` from production code or gate behind `process.env.NODE_ENV === 'development'`.
 
-### LOW: `data-provider.tsx` Context at 2405 Lines
+### No AbortController Usage in Most API Calls
+- **Severity:** Medium
+- **Issue:** Only 2 components use `AbortController` for fetch cancellation (`app/[locale]/dashboard/behavior/page-client.tsx`, `lib/rate-limit.ts`). All other client-side fetches lack cancellation support.
+- **Impact:** Stale requests accumulate during navigation, causing state updates on unmounted components and wasted bandwidth.
+- **Fix approach:** Implement AbortController pattern in a shared fetch hook. Cancel in-flight requests on unmount or navigation.
 
-- Issue: The main data provider context file is massive, potentially causing unnecessary re-renders for any consumer.
-- Files: `context/data-provider.tsx` (2405 lines)
-- Impact: Any state change in this context triggers re-renders for all consumers, even if they only need a small piece of data.
-- Fix approach: Split into multiple smaller contexts (e.g., `TradeDataProvider`, `AccountDataProvider`, `FilterProvider`). Use `useSyncExternalStore` or Zustand stores for frequently-accessed data.
+### Raw `<img>` Tags Instead of Next.js Image
+- **Severity:** Low
+- **Files:** `app/[locale]/dashboard/components/chat/chat.tsx` (lines 547, 603), `app/[locale]/dashboard/components/chat/input.tsx` (line 323), `app/[locale]/dashboard/components/import/components/import-dialog-header.tsx` (line 32)
+- **Issue:** 4 raw `<img>` tags used instead of Next.js `<Image>` component. No automatic optimization (no lazy loading, no responsive srcsets, no blur placeholder).
+- **Impact:** Larger payloads, no automatic format negotiation (WebP/AVIF), slower LCP.
+- **Fix approach:** Replace with `<Image>` from `next/image`.
 
 ---
 
 ## Maintainability Concerns
 
-### HIGH: Zero Test Coverage for Server Files
+### Pervasive `any` Type Usage (~80 Instances)
+- **Severity:** High
+- **Files:** `locales/client.ts`, `server/optimized-trades.ts`, `server/webhook-service.ts`, `server/teams.ts`, `server/payment-security.ts`, `server/subscription-manager.ts`, `components/lazy/charts.tsx`, `components/animation/interactive.tsx`, `lib/performance/code-splitting.tsx`, `lib/translation-utils.ts`, `app/[locale]/embed/components/` (multiple), `app/[locale]/teams/components/` (multiple), `app/[locale]/dashboard/components/import/ibkr-pdf/pdf-processing.tsx`, `app/[locale]/dashboard/components/widget-canvas.tsx`
+- **Issue:** ~80 explicit `any` casts in production code. Notable patterns: function parameters typed as `any`, chart tooltip components with untyped props, trade data passed as `any[]`.
+- **Impact:** Defeats TypeScript's type safety, allows runtime errors that should be compile-time errors. Makes refactoring risky.
+- **Fix approach:** Create proper interface definitions. Replace chart tooltip `any` types with Recharts tooltip prop types. Type all server function parameters.
 
-- Issue: 20 server files have no corresponding test files, representing the core business logic layer.
-- Files (untested server modules):
-  - `server/webhook-service.ts` (1314 lines) - Payment webhook processing
-  - `server/subscription-manager.ts` (668 lines) - Subscription lifecycle
-  - `server/auth-user.ts` (553 lines) - User authentication
-  - `server/user-data.ts` (521 lines) - User data operations
-  - `server/layouts.ts` (497 lines) - Dashboard layout persistence
-  - `server/payment-security.ts` (487 lines) - Payment security
-  - `server/equity-chart.ts` (480 lines) - Equity chart data
-  - `server/payment-service.ts` (409 lines) - Payment operations
-  - `server/prop-firms.ts` (374 lines) - Prop firm data
-  - `server/firm-reviews.ts` (362 lines) - Firm reviews
-  - `server/journal.ts` (355 lines) - Journal/mood operations
-  - `server/billing.ts` (292 lines) - Billing logic
-  - `server/authz.ts` (285 lines) - Authorization
-  - `server/referral.ts` (235 lines) - Referral system
-  - `server/tags.ts` (230 lines) - Tag CRUD
-  - `server/auth-password.ts` (184 lines) - Password auth
-  - `server/user-profile.ts` (169 lines) - User profile
-  - `server/auth-identity.ts` (96 lines) - Identity management
-  - `server/subscription.ts` (85 lines) - Subscription queries
-  - `server/webhook-schemas.ts` (81 lines) - Webhook validation
-- Impact: Payment, authentication, and subscription logic - the most critical business domains - have zero automated test coverage. Regressions in these areas directly affect revenue and security.
-- Fix approach: Prioritize testing `payment-security.ts`, `authz.ts`, `subscription-manager.ts`, and `webhook-service.ts`. These handle money and access control.
+### Silent Error Swallowing
+- **Severity:** High
+- **Files:**
+  - `app/[locale]/embed/page.tsx` (line 230): `catch (e) {}` - completely empty catch block
+  - `app/[locale]/(landing)/propfirms/page.tsx` (line 98): `.catch(() => [])` - silently returns empty array
+  - `app/[locale]/(landing)/firm/[slug]/components/firm-coupons-section.tsx` (line 27): `.catch(() => setCoupons([]))`
+  - `app/[locale]/dashboard/trader-profile/page-client.tsx` (line 168): `.catch(() => { ... })`
+- **Issue:** Errors are silently swallowed with empty catch blocks or `.catch(() => [])` patterns. No error reporting, no logging, no user feedback.
+- **Impact:** Bugs become invisible. Failed data loads appear as "empty states" to users. Impossible to debug production issues.
+- **Fix approach:** Add error logging to all catch blocks. Show user-facing error states where appropriate. Use error boundaries for component-level failures.
 
-### MEDIUM: No Test Files in `app/` or `server/` Directories
+### Monolithic Server Files
+- **Severity:** Medium
+- **Files:** `server/webhook-service.ts` (1,314 lines), `server/trades.ts` (1,007 lines), `server/accounts.ts` (799 lines)
+- **Issue:** Server-side business logic concentrated in single large files mixing multiple concerns (validation, DB operations, external API calls, error handling).
+- **Impact:** High cognitive load, difficult to test individual features, merge conflicts likely.
+- **Fix approach:** Split into domain-specific modules. Extract validation into `schemas/`, external calls into service layers.
 
-- Issue: All 71 test files are in the `tests/` directory. Zero tests are co-located with source code in `app/` or `server/`. Tests in `lib/__tests__/` exist but are limited to 2 files.
-- Impact: Co-located tests make it easier to discover what is and isn't tested. The separated structure creates a discoverability gap.
-- Fix approach: This is an organizational preference, not necessarily wrong. But consider co-locating at least integration tests for API routes.
+### Inconsistent Error Handling Patterns
+- **Severity:** Medium
+- **Issue:** Three different error handling patterns coexist:
+  1. `try/catch` with `console.error` (most common)
+  2. `.catch(() => [])` silent swallowing (API calls)
+  3. No error handling at all (some server functions)
+- **Impact:** Unpredictable failure behavior. Some errors surface to users, some are silently lost.
+- **Fix approach:** Establish a single error handling pattern. Create a shared error handler utility. Ensure all async operations handle errors.
 
-### MEDIUM: Error Boundary Coverage Gaps
-
-- Issue: Error boundaries are only applied in two places: the dashboard layout and the widget canvas. Landing pages, team pages, deal pages, and other public-facing routes have no error boundaries.
-- Files: `app/[locale]/dashboard/layout.tsx` (line 88), `app/[locale]/dashboard/components/widget-canvas.tsx` (line 663)
-- Impact: An unhandled error on any public page will crash the entire application for the user.
-- Fix approach: Add error boundaries at the layout level for each route group: `(landing)`, `(authentication)`, `teams`, and `dashboard`.
-
-### MEDIUM: Console Logging in Production Server Code
-
-- Issue: Server-side code uses raw `console.error`, `console.warn`, and `console.log` in multiple places instead of the structured `logger` that exists in `lib/logger.ts`.
-- Files:
-  - `server/tags.ts` (lines 49, 117, 177, 227)
-  - `server/journal.ts` (lines 91, 151, 194, 260, 292, 352)
-  - `server/deals.ts` (line 327)
-  - `server/subscription.ts` (lines 31, 79)
-  - `store/user-store.ts` (lines 141, 156, 169)
-  - `check-db.ts` (throughout - utility script)
-  - `test-validation-fix.ts` (throughout - appears to be a one-off test script left in the repo)
-- Impact: Raw console output lacks structured context (request ID, correlation ID, user ID) making production debugging difficult.
-- Fix approach: Replace `console.error`/`console.warn` with `logger.error`/`logger.warn` in all server files. Delete or move `test-validation-fix.ts` out of the repo root.
-
-### LOW: Utility Scripts in Project Root
-
-- Issue: `check-db.ts`, `test-validation-fix.ts`, and `standalone-check-db.js` are loose scripts in the project root that appear to be one-off debugging tools.
-- Files: `check-db.ts`, `test-validation-fix.ts`, `standalone-check-db.js`
-- Impact: Clutters the project root and may confuse new developers about what is production code.
-- Fix approach: Move to `scripts/` directory or delete if no longer needed.
+### Translation Type Safety Bypasses
+- **Severity:** Low
+- **Files:** `app/[locale]/dashboard/components/import/components/platform-card.tsx` (lines 138, 141), `app/[locale]/dashboard/components/import/components/import-dialog-header.tsx` (lines 41, 44, 70), `app/[locale]/dashboard/components/widget-canvas.tsx` (lines 67, 69), `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx` (line 345)
+- **Issue:** Translation keys are cast with `as any` to bypass type checking: `t(String(platform.name) as any, { count: 1 })`. This is a hack to pass dynamic keys to the translation function.
+- **Impact:** Misspelled translation keys are not caught at compile time. The `count: 1` parameter is suspicious - appears to be a workaround for some type constraint.
+- **Fix approach:** Create a typed `tDynamic()` function that accepts string keys. Remove all `as any` casts from translation calls.
 
 ---
 
-## Dependency Risks
+## Scalability Concerns
 
-### HIGH: jsPDF with Critical Vulnerability
+### N+1 Query Risk in Trade Processing
+- **Severity:** Medium
+- **Files:** `server/optimized-trades.ts`, `app/api/cron/compute-trade-data/route.ts`
+- **Issue:** Trade processing iterates over accounts and queries trades per account in separate queries (`server/optimized-trades.ts` line 125). While batch fetching is used in some places, the pattern risks N+1 queries with many accounts.
+- **Impact:** Linear increase in DB queries with account count. At scale (100+ accounts per user), this becomes a bottleneck.
+- **Fix approach:** Batch all trade queries into a single DB call using `WHERE account_number IN (...)`. Preload all required data upfront.
 
-- Issue: `jspdf@^4.2.0` has a **critical** vulnerability: PDF Object Injection via FreeText color and HTML Injection in New Window paths.
-- Files: `package.json`
-- Impact: If user-controlled data flows into PDF generation, it could lead to arbitrary code execution.
-- Fix approach: Evaluate `@react-pdf/renderer` as a safer alternative, or upgrade jsPDF immediately when a patch is available. Ensure no user-controlled input reaches PDF generation without sanitization.
+### Missing Pagination on Admin Endpoints
+- **Severity:** Medium
+- **Files:** `app/api/admin/reports/route.ts`, `app/api/admin/subscriptions/route.ts`
+- **Issue:** Admin endpoints fetch all records without pagination. These are used by admin dashboards that will grow over time.
+- **Impact:** Admin pages slow down as user base grows. Potential timeout for dashboard loads.
+- **Fix approach:** Implement cursor-based pagination with a configurable page size. Add `load more` or infinite scroll to admin tables.
 
-### MEDIUM: DOMPurify Vulnerabilities Undermine XSS Protection
-
-- Issue: `dompurify@^3.3.1` has 4 known vulnerabilities including mutation-XSS and prototype pollution. Since DOMPurify is the primary XSS defense in 18 files, its compromise undermines the entire sanitization strategy.
-- Files: `package.json`, used in `lib/sanitize.ts`, `tests/sanitize.test.ts`, and 16 other files
-- Impact: XSS attacks could bypass sanitization, allowing script injection even in "sanitized" content.
-- Fix approach: Upgrade DOMPurify to the latest version immediately. If no patched version is available, consider `sanitize-html` as an alternative.
-
-### MEDIUM: Dual Charting Libraries (d3 + recharts)
-
-- Issue: Both `d3@^7.9.0` and `recharts@^2.15.4` are direct dependencies, providing overlapping charting functionality.
-- Files: `package.json`
-- Impact: Increased bundle size and maintenance burden. Two charting paradigms in the codebase create inconsistency.
-- Fix approach: Standardize on one library. If recharts covers all use cases, remove d3. If d3 is needed for advanced visualizations, consider loading it dynamically only where needed.
-
-### MEDIUM: Duplicate PDF Libraries
-
-- Issue: `jspdf@^4.2.0` and `pdf2json@^3.2.2` are both present. `jspdf` generates PDFs while `pdf2json` parses them. Different purposes but related domain.
-- Files: `package.json`
-- Impact: Both are large dependencies. Verify both are actively used.
-- Fix approach: Audit usage. If `pdf2json` is only used for IBKR PDF import, consider moving it to a lazy-loaded worker.
-
-### LOW: `playwright-core` in Production Dependencies
-
-- Issue: `playwright-core@^1.56.1` is listed in `dependencies` rather than `devDependencies`. It is also listed as `@playwright/test` in devDependencies.
-- Files: `package.json`
-- Impact: Adds ~20MB to production node_modules and deployment bundle.
-- Fix approach: Move to `devDependencies` unless it is genuinely needed at runtime (e.g., for server-side PDF generation via `browser-sandbox.ts`).
-
-### LOW: `dotenv` in Production Dependencies
-
-- Issue: `dotenv@^17.2.3` is listed in `dependencies`. Next.js handles environment variables natively via `.env*` files.
-- Files: `package.json`
-- Impact: Unnecessary in production since Next.js loads env vars automatically.
-- Fix approach: Move to `devDependencies` unless explicitly required by a non-Next.js script.
+### In-Memory Caching Without Size Limits
+- **Severity:** Medium
+- **Files:** `lib/rate-limit.ts` (line 222 - cleanup timer), `lib/query-optimizer.ts` (line 93 - cache sweep), `lib/redis-client.ts` (lines 519, 530 - in-memory sweep), `lib/ai/cache.ts` (line 37 - setInterval)
+- **Issue:** Multiple in-memory caches exist with periodic cleanup timers but no hard memory limits. Cache entries can grow unbounded between cleanup intervals.
+- **Impact:** Memory leaks under high traffic. Each cache uses its own sweep interval, potentially conflicting.
+- **Fix approach:** Implement LRU eviction with max-size limits. Consolidate cache implementations into a single utility.
 
 ---
 
-## Scaling Limits
+## Reliability Concerns
 
-### MEDIUM: In-Memory Webhook Processing Queue
+### Missing Timeout on Most External API Calls
+- **Severity:** High
+- **Issue:** Only AI routes use timeout signals (`lib/ai/timeout.ts`). All other external API calls (Resend emails, Whop API, Tradovate sync, MT5 API, Thor API, ETP API) lack explicit timeouts.
+- **Impact:** A slow or unresponsive external service will hang the request indefinitely, consuming server resources and potentially causing cascading failures.
+- **Fix approach:** Wrap all external API calls with `AbortSignal.timeout()` (already available via `lib/ai/timeout.ts` pattern). Set reasonable timeouts per service (5-30s).
 
-- Issue: `server/webhook-service.ts` uses in-memory `Map` structures for processing queues, retry tracking, and statistics. These are lost on serverless function cold starts and not shared across instances.
-- Files: `server/webhook-service.ts` (lines 40-52)
-- Impact: On Vercel serverless, webhook deduplication and retry tracking will not work correctly across function invocations. A webhook could be processed multiple times.
-- Fix approach: Use a database-backed queue (e.g., a `WebhookEvent` table with unique constraint on event ID) for deduplication. Store retry state in the database.
+### Race Conditions in Import/Upload Workflows
+- **Severity:** Medium
+- **Files:** `app/[locale]/dashboard/components/import/import-button.tsx`, `app/[locale]/dashboard/components/import/file-upload.tsx`, `app/[locale]/dashboard/components/import/rithmic/sync/` (multiple)
+- **Issue:** Import workflows allow multiple concurrent operations. No deduplication or mutex locking on import state. The sync countdown (`rithmic-sync-connection.tsx`) uses `setInterval` for UI updates but doesn't guard against stale state.
+- **Impact:** Duplicate imports, corrupted data, inconsistent UI state during rapid user interactions.
+- **Fix approach:** Add operation mutex (disable UI during import). Use optimistic locking on import state. Implement idempotent import operations.
 
-### MEDIUM: Supabase Admin API Pagination in Send Email
+### setInterval Without Cleanup in Some Components
+- **Severity:** Low
+- **Files:** `app/[locale]/(home)/components/AnalysisDemo.tsx` (line 45), `app/[locale]/dashboard/components/chart-the-future-panel.tsx` (line 91 - name collision with setInterval), `app/[locale]/admin/components/weekly-stats/email-preview-loading.tsx` (line 14)
+- **Issue:** Some components set up `setInterval` timers that may not be properly cleaned up on unmount. Note: `chart-the-future-panel.tsx` shadows the global `setInterval` with a state setter, which is a naming collision bug.
+- **Impact:** Memory leaks in single-page navigation. Timers firing on unmounted components cause warnings and wasted computation.
+- **Fix approach:** Audit all setInterval usage for cleanup in useEffect return. Rename the `setInterval` state in `chart-the-future-panel.tsx` to `setTimeframe`.
 
-- Issue: `app/[locale]/admin/actions/send-email.ts` fetches all users via paginated Supabase admin API calls, loading them all into memory before sending emails.
-- Files: `app/[locale]/admin/actions/send-email.ts` (lines 131-160)
-- Impact: Will fail or time out for large user bases. The `while (hasMore)` loop with 1000 users per page is unbounded.
-- Fix approach: Process users in a streaming fashion - fetch a batch, send emails, then fetch the next batch. Add a maximum user count guard.
+### Empty Catch Block Silently Swallowing Errors
+- **Severity:** High
+- **Files:** `app/[locale]/embed/page.tsx` (line 230): `catch (e) {}`
+- **Issue:** An entirely empty catch block. Any error in the try block is silently discarded with no logging, no error boundary, no user feedback.
+- **Impact:** Any failure in the embed page initialization is completely invisible. Critical for an embeddable widget.
+- **Fix approach:** At minimum, add `console.error('[embed]', e)`. Ideally, show an error state to the embed user.
 
 ---
 
-*Concerns audit: 2026-04-08*
+## Type Safety Concerns
+
+### Pervasive Unsafe Type Assertions
+- **Severity:** High
+- **Issue:** ~80 explicit `any` usages across production code. Key hotspots:
+  - Chart tooltip components: `(active, payload, label) =>` with no types (repeated in 5+ chart files)
+  - Server functions: `updates: Array<{ id: string; data: any }>` in `server/optimized-trades.ts` (line 165)
+  - Payment security: `type AnyFunction = (...args: any[]) => Promise<any>` in `server/payment-security.ts` (line 453)
+  - Team equity grid: `trades: any[]` in `app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx` (line 23)
+- **Impact:** Runtime type errors that should be compile-time catches. Payment and trade data are financial data where type safety is critical.
+- **Fix approach:** Define `Trade`, `Account`, `Payout` interfaces in `types/` and use them consistently. Create typed chart component wrappers.
+
+### Missing Generic Type Parameters
+- **Severity:** Low
+- **Files:** `lib/performance/code-splitting.tsx` (lines 59, 127, 139)
+- **Issue:** `type AnyComponent = ComponentType<any>` used for code-splitting lazy components. Loses the ability to type-check component props.
+- **Impact:** Props passed to lazy-loaded components are not validated.
+- **Fix approach:** Make `lazyComponent()` generic: `function lazyComponent<P>(importFn: () => Promise<{default: ComponentType<P>}>)`.
+
+---
+
+## Accessibility Concerns
+
+### Low ARIA Coverage
+- **Severity:** High
+- **Issue:** Only 47 out of 406 `.tsx` files in `app/` contain any `aria-label`, `aria-labelledby`, or `role` attributes (11.6% coverage).
+- **Impact:** The application is largely inaccessible to screen reader users. Interactive elements (charts, tables, filters, modals) lack accessible names.
+- **Fix approach:** Audit all interactive components for ARIA labels. Run axe-core audits (already a dev dependency: `@axe-core/playwright`). Set up accessibility lint rules.
+
+### Missing Alt Text on Images
+- **Severity:** Medium
+- **Issue:** Only 3 files in `app/` contain `alt=` attributes on images. Several components use raw `<img>` tags without alt text (e.g., `app/[locale]/dashboard/components/chat/chat.tsx` lines 547, 603).
+- **Impact:** Screen readers cannot describe images. Violates WCAG 1.1.1 (Non-text Content).
+- **Fix approach:** Add descriptive `alt` attributes to all `<img>` and `<Image>` tags. Use empty `alt=""` for purely decorative images.
+
+### Complex Interactive Widgets Without Keyboard Support Verification
+- **Severity:** Medium
+- **Files:** `app/[locale]/dashboard/components/charts/` (equity-chart, pnl charts), `app/[locale]/dashboard/components/calendar/`, `app/[locale]/dashboard/components/filters/`, `app/[locale]/dashboard/components/import/` (multiple platform processors)
+- **Issue:** Complex interactive components (charts with tooltips, drag-and-drop layouts, multi-step import wizards) likely have poor keyboard navigation. No evidence of keyboard event handlers in chart or calendar components.
+- **Impact:** Keyboard-only users cannot interact with core dashboard features (viewing charts, filtering trades, importing data).
+- **Fix approach:** Add keyboard event handlers to interactive components. Ensure all custom widgets support Tab/Enter/Escape. Test with keyboard-only navigation.
+
+---
+
+## Dependency Concerns
+
+### 79 Vulnerabilities (1 Critical, 45 High)
+- **Severity:** Critical
+- **Issue:** As documented above under Security. `npm audit` reports significant vulnerabilities.
+- **Impact:** Supply chain attacks, DoS via malformed YAML input, authorization bypass in development tooling.
+- **Fix approach:** Run `npm audit fix`. For unfixable vulnerabilities (`yargs-parser`), evaluate alternatives or accept risk with documentation.
+
+### Heavy Dependencies Increasing Bundle Size
+- **Severity:** Medium
+- **Issue:** Several large libraries are direct dependencies:
+  - `d3` (full bundle) - ~500KB unminified
+  - `canvas` - native dependency, increases Docker image size significantly
+  - `pdf2json` - large native dependency for PDF parsing
+  - `exceljs` - large library for Excel export
+  - `jspdf` - PDF generation
+  - `html2canvas` - screenshot capability
+  - `playwright-core` - listed as a production dependency (should be dev-only)
+  - `sharp` - image processing
+- **Impact:** Large Docker images, slow cold starts, increased attack surface from native modules.
+- **Fix approach:** Move `playwright-core` to devDependencies (it is only used in tests and `lib/browser-sandbox.ts`). Use dynamic imports for `d3`, `exceljs`, `jspdf`, `html2canvas`, `pdf2json` to enable code splitting.
+
+### `playwright-core` as Production Dependency
+- **Severity:** Medium
+- **Files:** `package.json` (dependencies)
+- **Issue:** `playwright-core@^1.56.1` is listed under `dependencies` (not `devDependencies`). It is a large package (~20MB) that downloads browser binaries.
+- **Impact:** Significantly inflates production Docker images and deployment packages. Only used in `lib/browser-sandbox.ts` for server-side rendering of OG images.
+- **Fix approach:** Move to `devDependencies` and use a dynamic import with `optionalDependencies` for the browser sandbox. Alternatively, extract OG image generation to a separate serverless function.
+
+### Dual Lockfiles (bun.lock + package-lock.json)
+- **Severity:** Low
+- **Issue:** Both `bun.lock` and `package-lock.json` exist in the repository. Build scripts reference both `bun` and `npm` run commands.
+- **Impact:** Dependency resolution may differ between lockfiles, leading to "works on my machine" issues. Inconsistent installs across environments.
+- **Fix approach:** Choose one package manager (bun, given it is specified in `packageManager`) and remove the other lockfile. Update CI/CD accordingly.
+
+---
+
+## Architecture Concerns
+
+### Flat Server Module Organization
+- **Severity:** Medium
+- **Files:** `server/` directory contains 20+ files at root level (`trades.ts`, `accounts.ts`, `webhook-service.ts`, `teams.ts`, `equity-chart.ts`, `billing.ts`, `tags.ts`, `journal.ts`, `deals.ts`, `prop-firms.ts`, `firm-coupons.ts`, `payment-security.ts`, `subscription-manager.ts`, `optimized-trades.ts`, `auth.ts`, `auth-user.ts`, `layouts.ts`)
+- **Impact:** No logical grouping. Difficult to find related code. Naming conflicts possible as the project grows.
+- **Fix approach:** Organize into subdirectories: `server/trading/`, `server/billing/`, `server/auth/`, `server/admin/`, `server/integrations/`.
+
+### Multiple Global setInterval Timers at Module Level
+- **Severity:** Medium
+- **Files:** `lib/rate-limit.ts` (line 222), `lib/query-optimizer.ts` (line 93), `lib/redis-client.ts` (lines 519, 530), `lib/ai/cache.ts` (line 37)
+- **Issue:** At least 5 module-level `setInterval` timers that start when the module is imported. These create background processing that runs continuously, even if the feature is unused.
+- **Impact:** Wasted CPU cycles, potential memory leaks, difficult to reason about application lifecycle, problematic in serverless environments (Vercel).
+- **Fix approach:** Lazy-initialize timers only when the feature is first used. Ensure all timers have `.unref()` calls. Consider consolidating into a single scheduler.
+
+---
+
+*Concerns audit: 2026-04-09*

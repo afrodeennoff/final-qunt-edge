@@ -1,193 +1,341 @@
 # Architecture
 
-**Analysis Date:** 2026-04-08
+**Analysis Date:** 2026-04-09
 
 ## Pattern Overview
 
-**Overall:** Next.js 16 App Router monolith with server actions, REST API routes, and a rich client-side state layer.
+**Overall:** Next.js 16 App Router monolith with server/client boundary separation, Supabase Auth, Prisma ORM, and Zustand client state management.
 
 **Key Characteristics:**
-- Next.js 16 App Router with React 19, using the file-system based routing model
-- Server Actions (`'use server'`) as the primary data-mutation layer for the dashboard
-- REST API routes (`route.ts`) for external integrations, webhooks, AI, and cron jobs
-- Supabase Auth for authentication (email/password + OAuth), with RLS and a custom authorization module
-- Prisma 7 with `@prisma/adapter-pg` (connection pooling via `pg.Pool`) for database access
-- Zustand stores for granular client-side state (accounts, trades, chat, filters, UI preferences)
-- React Context (via `DataProvider` / `DashboardProviders`) for cross-cutting dashboard state
-- next-international for i18n with `en` and `fr` locales
-- Vercel as primary deployment target with Docker as secondary
-- Feature flag system for gradual performance rollout
+- Locale-prefixed routing (`/en/...`, `/fr/...`) via `next-international`
+- Server Actions for all mutations; Route Handlers for API endpoints
+- Supabase for auth + storage; PostgreSQL via Prisma for relational data
+- Dashboard data flows through a multi-layer context provider tree
+- Tiered authorization: public pages, authenticated users, admin-only
 
 ## Layers
 
-### Presentation Layer (Client Components)
-- Purpose: Renders UI, manages user interactions, holds ephemeral UI state
-- Location: `app/[locale]/dashboard/components/`, `components/ui/`, `components/sidebar/`
-- Contains: React components, dashboard widgets, charts, import dialogs, filters, modals
-- Depends on: Context providers, Zustand stores, server actions
-- Used by: Next.js page components
+**Presentation Layer (React Components):**
+- Purpose: UI rendering, user interaction, layout composition
+- Location: `app/[locale]/`, `components/`
+- Contains: Page components, UI primitives (shadcn/ui), domain widgets, AI chat UI
+- Depends on: Context providers, Zustand stores, React Query, Tailwind CSS
+- Used by: Next.js rendering engine (SSR + CSR)
 
-### Data Provider Layer (React Context)
-- Purpose: Orchestrates data fetching, derived state computation, and action dispatching for the dashboard
-- Location: `context/data-provider.tsx`, `context/providers/`
-- Contains: `DataProvider`, `DataStateProvider`, `DataDerivedProvider`, `DataActionsProvider`, `SyncContextProvider`
-- Depends on: Server actions, Zustand stores (`user-store`), Supabase auth
-- Used by: Dashboard page components and all dashboard sub-components
+**Client State Layer:**
+- Purpose: Manage ephemeral UI state and cached domain data on the client
+- Location: `store/`, `context/`
+- Contains: Zustand stores (26 stores), React Context providers (DataStateProvider, DataDerivedProvider, DataActionsProvider, SyncContextProvider)
+- Depends on: Server Actions (for mutations), lib utilities
+- Used by: Dashboard page components, widget components
 
-### Client State Layer (Zustand)
-- Purpose: Persistent and ephemeral client-side state management
-- Location: `store/`
-- Contains: 20+ Zustand stores for user data, accounts, chat, financial events, filters, modals, sync status, table configs
-- Pattern: `create()` from `zustand` with optional `persist` middleware and `createJSONStorage`
-- Key stores: `store/user-store.ts` (central, persisted), `store/chat-store.ts`, `store/analysis-store.ts`
-- Used by: Context providers, individual components
+**Server Action Layer:**
+- Purpose: Business logic executed on the server, callable from client components
+- Location: `server/`
+- Contains: Auth actions, account management, trade CRUD, billing, teams, webhooks, imports
+- Depends on: Prisma client, Supabase admin client, external service SDKs
+- Used by: Client components via `useActionState` or direct invocation
 
-### Server Action Layer
-- Purpose: Server-side data mutations and authenticated queries invoked directly from client components
-- Location: `server/` (all files marked `'use server'`)
-- Contains: `server/trades.ts`, `server/accounts.ts`, `server/groups.ts`, `server/layouts.ts`, `server/database.ts`, `server/auth.ts`, `server/subscription.ts`, `server/payment-service.ts`, `server/referral.ts`, `server/teams.ts`
-- Pattern: Functions exported from `'use server'` modules, callable from client via React's server action protocol
-- Validation: Zod schemas for input validation (see `importTradeSchema` in `server/trades.ts`)
-- Depends on: Prisma client, Supabase auth, Redis for cache invalidation
-- Used by: Client components via `import { action } from '@/server/module'`
-
-### API Route Layer (REST)
-- Purpose: External-facing endpoints for webhooks, AI, cron jobs, and third-party integrations
+**API Route Layer:**
+- Purpose: HTTP endpoints for external integrations, cron jobs, webhooks, and AI services
 - Location: `app/api/`
-- Contains: ~50 route handlers across AI, auth, cron, deals, email, imports, MT5, payments, teams, tradovate, rithmic, whop
-- Pattern: `export async function POST/GET(req: NextRequest)` returning `NextResponse.json()`
-- Auth: `requireUser()`, `requireAdmin()`, `requireCronAuth()`, `requireServiceAuth()` from `server/authz.ts`
-- Error responses: `apiError()` from `lib/api-response.ts` with structured `{ code, message }` format
-- Used by: External services (Whop webhooks, Tradovate, Rithmic, Vercel Cron)
+- Contains: 53 route handlers across admin, AI, auth, cron, deals, email, imports, teams, etc.
+- Depends on: Server action layer (shared logic), rate limiter, authorization module
+- Used by: External services (Whop, Tradovate, Rithmic), Vercel cron scheduler, client-side fetch
 
-### Data Access Layer (Prisma)
-- Purpose: Type-safe database access with connection pooling
-- Location: `lib/prisma.ts` (singleton), `prisma/schema.prisma`
-- Contains: PrismaClient with `@prisma/adapter-pg` over a `pg.Pool`
-- Features: Supabase pooler auto-detection, SSL configuration, pool utilization monitoring, IPv4 forcing
-- Models: 50+ models including User, Account, Trade, Group, Subscription, PaymentTransaction, Team, Business, PropFirm, BlogPost, etc.
+**Data Access Layer:**
+- Purpose: Database interactions, query optimization, data mapping
+- Location: `lib/prisma.ts`, `server/database.ts`, `server/optimized-trades.ts`
+- Contains: Prisma client singleton, optimized trade queries with aggregation
+- Depends on: PostgreSQL (via Supabase hosted), Prisma generated client
 - Used by: Server actions, API routes
 
-### Domain / Utility Layer
-- Purpose: Pure business logic, calculations, and utilities
+**Utility / Shared Library Layer:**
+- Purpose: Pure functions, constants, validation, formatting, feature flags
 - Location: `lib/`
-- Contains: `lib/financial-math.ts`, `lib/score-calculator.ts`, `lib/account-metrics.ts`, `lib/tick-calculations.ts`, `lib/analytics/`, `lib/formatting/`, `lib/date-utils.ts`
-- Used by: Server actions, context providers, components
+- Contains: AI client, analytics, cache, config, security, performance utilities
+- Depends on: External packages (zod, date-fns, decimal.js)
+- Used by: All layers
 
 ## Data Flow
 
-### Dashboard Data Flow
+**Dashboard Load Flow:**
 
-1. **Layout** (`app/[locale]/dashboard/layout.tsx`) authenticates user via `createClient()` from `server/auth.ts`, redirects if unauthenticated
-2. **DashboardProviders** wraps children with: `DataProvider` -> `DataStateProvider` -> `DataDerivedProvider` -> `DataActionsProvider` -> `SyncContextProvider`
-3. **DataProvider** (`context/data-provider.tsx`) is the central orchestrator (~2000 lines). On mount it:
-   - Calls `getUserId()` from `server/auth.ts` to get the Supabase user
-   - Calls `getDatabaseUserId()` to resolve the Prisma User record
-   - Calls `getUserData()` to load user profile, accounts, trades, tags, groups, subscription
-   - Calls `loadDashboardLayoutAction()` from `server/layouts.ts` for widget layout
-   - Populates `useUserStore` (Zustand) with loaded data
-4. **Derived state** (statistics, formatted trades, calendar data) is computed in `DataDerivedProvider` via `useDashboardStats()`
-5. **Server actions** (CRUD operations) update Prisma, then trigger Zustand store updates and React Query cache invalidation
-6. **Cache invalidation** flows through `lib/cache/cache-invalidation.ts` and `lib/redis-client.ts`
+1. User navigates to `/[locale]/dashboard`
+2. Dashboard layout (`app/[locale]/dashboard/layout.tsx`) verifies auth via `server/auth.ts` (`createClient()` + `supabase.auth.getUser()`)
+3. If unauthenticated, redirect to `/[locale]/authentication?next=...`
+4. If authenticated, layout renders `SidebarRootProviders` > `DashboardProviders` > `DashboardProvider`
+5. `DataProvider` (in `context/data-provider.tsx`) calls server actions to load user data (trades, accounts, groups, subscription)
+6. Data flows down through `DataStateProvider` > `DataDerivedProvider` > `DataActionsProvider` > `SyncContextProvider`
+7. Child pages/components consume data via context hooks (`useDataTradeItems()`, `useDataAccountsList()`, etc.)
+8. Zustand stores (`store/trading-domain-store.ts`, etc.) provide additional client-side cached state
 
-### Authentication Flow
+**Trade Mutation Flow:**
 
-1. User signs up/in on `app/[locale]/(authentication)/authentication/page.tsx`
-2. Supabase Auth handles credential exchange
-3. OAuth callback: `app/api/auth/callback/route.ts` exchanges code for session, ensures user exists in database via `ensureUserInDatabase()`, sets session cookies
-4. Auth state is maintained via Supabase session cookies (httpOnly, secure, sameSite=lax)
-5. Protected layouts (`dashboard/layout.tsx`, `admin/layout.tsx`) call `supabase.auth.getUser()` server-side and redirect if null
-6. Admin authorization: `isAdminUser()` in `server/authz.ts` checks user ID against `ALLOWED_ADMIN_USER_ID` env and `ADMIN_EMAIL_DOMAINS`
+1. User edits a trade in the dashboard UI
+2. Component calls a server action (e.g., `updateTradesAction` from `server/database.ts`)
+3. Server action validates auth, checks ownership, updates Prisma DB
+4. Response triggers React Query cache invalidation and context state refresh
+5. UI re-renders with updated data
 
-### Payment Flow
+**AI Chat Flow:**
 
-1. Checkout initiated via `app/api/whop/checkout/route.ts` using `@whop/sdk`
-2. Whop webhook: `app/api/whop/webhook/route.ts` receives events, validates signature, processes via `webhookService` (`server/webhook-service.ts`)
-3. Subscription data stored in Prisma `Subscription`, `PaymentTransaction`, `Invoice` models
-4. Subscription status checked via `server/subscription.ts` and exposed to client via `DataProvider`
-5. Teams and businesses have separate subscription flows (`TeamSubscription`, `BusinessSubscription`)
+1. User sends a message in the AI chat component (`components/ai-elements/conversation.tsx`)
+2. Client calls `POST /api/ai/chat` (route handler at `app/api/ai/chat/route.ts`)
+3. Route handler validates auth + AI usage budget, streams response via Vercel AI SDK
+4. OpenAI API generates analysis based on user's trade data (fetched server-side)
+5. Streamed response renders token-by-token in the chat UI
 
-### AI Chat Flow
+**State Management:**
 
-1. User interacts with AI chat component in dashboard
-2. Messages sent to `app/api/ai/chat/route.ts`
-3. Uses Vercel AI SDK (`ai` package, `@ai-sdk/openai`) with OpenAI-compatible API
-4. Context provided: trade history, performance metrics, behavioral insights
-5. Usage tracked in `AiRequestLog` and `AiUsageLedger` Prisma models
-6. Rate limiting and policy enforcement via `lib/ai/policy.ts`, `lib/ai/route-guard.ts`, `lib/ai/usage-budget.ts`
+- **Global server state:** Supabase Auth session (cookie-based), PostgreSQL via Prisma
+- **Global client state:** React Context tree under `DashboardProviders` (trades, accounts, filters, user)
+- **Component state:** Zustand stores for granular persistence (26 stores in `store/`) -- some use `localStorage` via `persist` middleware
+- **Form state:** `react-hook-form` with `@hookform/resolvers` (zod)
+- **Server state:** React Query (`@tanstack/react-query`) with 30s stale time, used for API data fetching
+- **URL state:** Next.js search params for filters, locale, shared view tokens
 
 ## Key Abstractions
 
-### DataProvider (`context/data-provider.tsx`)
-- Purpose: Single source of truth for the authenticated dashboard state
-- Pattern: React Context + hooks (`useDashboardAccountsList`, `useDashboardTradeItems`, `useDashboardFilters`, `useDashboardActions`, etc.)
-- Wraps: Zustand `useUserStore`, server action calls, Supabase auth state
-- Consumer hook: `useDataActions()`, `useDataTradeItems()`, `useDataAccountsList()`, `useDataFilters()`, `useDataIsLoading()`
+**Server Auth Client:**
+- Purpose: Creates Supabase server client with cookie-based session management
+- Implementation: `server/auth.ts` -- `createClient()` using `@supabase/ssr` `createServerClient`
+- Pattern: Server-side only (`'use server'` directive), cookie read/write via `next/headers`
 
-### Zustand Stores
-- Purpose: Granular, composable state slices
-- Pattern: `create<StateType>()((set, get) => ({ ... }))`
-- Persistence: `persist(createJSONStorage(() => localStorage))` for stores that need it (e.g., `user-store`)
-- Key stores: `store/user-store.ts` (user, accounts, groups, tags, subscription, layout), `store/chat-store.ts`, `store/analysis-store.ts`, `store/filters/`
+**Authorization:**
+- Purpose: Role-based access control (user, admin, service/cron)
+- Implementation: `server/authz.ts` -- `requireUser()`, `requireAdmin()`, `assertAdminAccess()`, `requireCronAuth()`
+- Pattern: Throws typed `AuthzError` with status codes; admin determined by `ALLOWED_ADMIN_USER_ID` env or `ADMIN_EMAIL_DOMAINS`
 
-### DashboardContext (`app/[locale]/dashboard/dashboard-context.tsx`)
-- Purpose: Widget layout management (add, remove, resize, reorder widgets)
-- Pattern: React Context with `DashboardProvider`
-- Features: Auto-save via debounced server action calls, mobile/desktop layout variants
+**API Response Contract:**
+- Purpose: Standardized JSON error responses across all API routes
+- Implementation: `lib/api-response.ts` -- `apiError(code, message, status, details)`
+- Pattern: All API routes return `{ error: { code, message, details? } }` shape
+
+**Rate Limiting:**
+- Purpose: Protect API endpoints from abuse
+- Implementation: `lib/rate-limit.ts` -- in-memory (dev) or Upstash Redis (production)
+- Pattern: `rateLimit()` returns `{ success, limit, remaining, resetTime }`; production requires Upstash or fails closed
+
+**Feature Flags:**
+- Purpose: Gradual rollout of performance optimizations
+- Implementation: `lib/feature-flags.ts` -- env-var-driven flags with deterministic hash-based user assignment
+- Pattern: `FEATURE_FLAGS.ENABLE_*` booleans + `shouldShowOptimizations(userId)` for percentage rollouts
+
+**Structured Logging:**
+- Purpose: Production-grade JSON logging with PII redaction
+- Implementation: `lib/logger.ts` -- `logger.info()`, `logger.error()`, etc.
+- Pattern: Auto-redacts sensitive keys (token, password, secret); supports child loggers with bound context
 
 ## Entry Points
 
-### Root Layout (`app/layout.tsx`)
+**Root Layout:**
+- Location: `app/layout.tsx`
 - Triggers: Every request
-- Responsibilities: Font loading (Geist, Cormorant Garamond, IBM Plex Mono, DM Sans, Outfit, Poppins, Roboto), global metadata, Vercel Analytics/SpeedInsights, skip-to-content link
+- Responsibilities: HTML shell, Google Fonts (7 families), Vercel Analytics/SpeedInsights (production), theme initializer, skip-to-content link
 
-### Locale Layout (`app/[locale]/layout.tsx`)
+**Locale Layout:**
+- Location: `app/[locale]/layout.tsx` + `app/[locale]/layout-content.tsx`
 - Triggers: Every locale-prefixed route
-- Responsibilities: Suspense boundary, `I18nProviderClient` from `next-international`, consent banner
+- Responsibilities: Sets `next-international` locale via `I18nProviderClient`, consent banner, Suspense boundary
 
-### Route Group Layouts
-- `(landing)/layout.tsx` -- Public marketing pages with `MarketingLayoutShell` and `PublicRootProviders`
-- `(home)/layout.tsx` -- Homepage (same shell as landing, dark variant)
-- `(authentication)/layout.tsx` -- Auth pages with `AuthenticationLayoutShell`
-- `dashboard/layout.tsx` -- Protected dashboard with auth gate, sidebar, header, `DashboardProviders`
-- `admin/layout.tsx` -- Admin panel with admin auth gate and sidebar
+**Route Group Layouts:**
+- `(home)/layout.tsx` -- Landing page with `MarketingLayoutShell` + `PublicRootProviders`
+- `(landing)/layout.tsx` -- Public marketing pages with `MarketingLayoutShell` + `PublicRootProviders`
+- `(authentication)/layout.tsx` -- Auth pages with `AuthenticationLayoutShell` (client-only, no SSR)
+- `dashboard/layout.tsx` -- Protected dashboard with auth guard, sidebar, header, error boundary
+- `admin/layout.tsx` -- Admin-only pages with auth + admin role guard
 - `teams/layout.tsx` -- Teams pages with `PublicRootProviders`
-- `teams/dashboard/layout.tsx` -- Protected team dashboard
 
-### API Routes
-- `app/api/auth/callback/route.ts` -- OAuth callback handler
-- `app/api/whop/webhook/route.ts` -- Payment webhook receiver
-- `app/api/ai/chat/route.ts` -- AI chat endpoint (Vercel AI SDK)
-- `app/api/cron/*/route.ts` -- Scheduled tasks (investing data, renewal notices, chat retention, tradovate token refresh)
+**API Entry Points:**
+- Location: `app/api/*/route.ts` (53 route handlers)
+- Triggers: HTTP requests from client, webhooks, cron jobs
+- Authentication: Session-based (Supabase cookies) for user routes; Bearer token or Vercel cron header for service routes
+
+## Rendering Strategy
+
+**Server-Side Rendering (SSR):**
+- Default for all pages under `app/[locale]/`
+- Dashboard layout verifies auth server-side before rendering
+- Locale layout sets i18n context server-side via `setStaticParamsLocale()`
+
+**Client-Side Rendering (CSR):**
+- Authentication layout: explicitly `ssr: false` via `dynamic(() => import("./client-layout"), { ssr: false })`
+- All `'use client'` components: interactive widgets, AI chat, forms, sidebar
+
+**Static Site Generation (SSG):**
+- Not explicitly used; all pages are dynamically rendered
+
+**Incremental Static Regeneration (ISR):**
+- Not detected
+
+**Dynamic Imports:**
+- `next/dynamic` used for code splitting heavy components (e.g., `DashboardHeader`, `DashboardClientOverlays`, `AuthenticationClientLayout`)
+- `components/lazy/` directory contains lazy-loaded wrappers for scroll-lock fix and consent banner
+
+## Authentication Flow
+
+**Login Methods:**
+- Email magic link (OTP): `signInWithEmail()` in `server/auth.ts` -- sends Supabase magic link
+- Email + password: `signInWithPasswordAction()` -- sign up auto-creates account if missing
+- Google OAuth: `signInWithGoogle()` -- redirects to Google, callback at `app/api/auth/callback/route.ts`
+- Discord OAuth: `signInWithDiscord()` -- same pattern as Google
+
+**Session Management:**
+- Supabase Auth with server-side cookies (httpOnly, secure, sameSite: lax)
+- Server client: `server/auth.ts` `createClient()` reads/writes cookies via `next/headers`
+- Browser client: `lib/supabase.ts` `createClient()` using `@supabase/ssr` `createBrowserClient`
+- Token refresh: handled by Supabase SDK; Vercel cron job renews Tradovate tokens
+
+**Protected Routes:**
+- Dashboard: `dashboard/layout.tsx` checks `supabase.auth.getUser()`, redirects if null
+- Admin: `admin/layout.tsx` checks `isAdminUser()`, redirects non-admin to dashboard
+- API routes: `requireUser()` or `requireAdmin()` from `server/authz.ts`
+
+**Auth Security:**
+- Rate limiting on login attempts (`lib/security/auth-attempts.ts`)
+- Password strength validation (`lib/security/password-validation.ts`)
+- Error obfuscation in production (`lib/security/auth-config.ts`)
+- PII redaction in logs (`lib/redact-pii.ts`)
+- OAuth state management with HMAC (`lib/security/oauth-state.ts`)
+- MFA recovery codes support (`lib/security/mfa-recovery.ts`)
 
 ## Error Handling
 
-**Strategy:** Layered approach with structured logging
+**Strategy:** Multi-layer error boundaries with graceful degradation
 
-**Patterns:**
-- **API routes:** `apiError()` from `lib/api-response.ts` returns `{ error: { code, message } }` with appropriate HTTP status
-- **Auth errors:** `AuthzError` class in `server/authz.ts` with status, code, requestId; converted via `toErrorResponse()`
-- **Server actions:** Return typed result objects (e.g., `{ error: TradeError | false, numberOfTradesAdded }`)
-- **Client boundary:** `app/error.tsx` catches render errors with reset button; `react-error-boundary` wraps dashboard content
-- **Chunk load recovery:** `RootProviders` in `components/providers/root-providers.tsx` auto-reloads on `ChunkLoadError`
-- **Logging:** Structured JSON logger in `lib/logger.ts` with log levels, PII redaction, request correlation IDs, and error threshold alerting
+**App Level:**
+- `app/error.tsx` -- Client error boundary for route segment errors; shows "Try again" + "Go home"
+- `app/global-error.tsx` -- Catches errors in root layout; renders own `<html>` shell
+- `app/not-found.tsx` -- Custom 404 page
+
+**Dashboard Level:**
+- `components/error-boundary.tsx` -- Class-based `ErrorBoundary` wrapping dashboard children in `SidebarLayoutShell`
+- Shows "Reload Dashboard" button on error
+
+**API Level:**
+- `server/authz.ts` `toErrorResponse()` -- Converts `AuthzError` to standardized JSON response
+- `lib/api-response.ts` `apiError()` -- Creates typed error responses with status codes
+- All API routes use consistent `{ error: { code, message } }` shape
+
+**Production Resilience:**
+- Chunk load error recovery in `components/providers/root-providers.tsx` -- auto-reloads page on `ChunkLoadError`
+- Service worker cleanup logic for cache invalidation
+
+**Logging:**
+- `lib/logger.ts` -- Structured JSON logging in production; auto-generates request/correlation IDs
+- Error threshold alerting: warns when >20 errors occur in same route within 5 minutes
+
+## Internationalization
+
+**Library:** `next-international` (v1.3.1)
+
+**Supported Locales:**
+- Fully translated: `en` (English), `fr` (French)
+- Fallback to English: `hi`, `ja`, `es`, `it`, `de`, `pt`, `vi`, `zh`, `yo`
+
+**Server Setup:**
+- `locales/server.ts` -- `createI18nServer()` with locale imports
+- `app/[locale]/layout-content.tsx` -- Calls `setStaticParamsLocale(locale)` for static params
+
+**Client Setup:**
+- `locales/client.ts` -- `createI18nClient()` with lazy-loaded locale imports
+- `I18nProviderClient` wraps all locale pages in the layout
+
+**Translation Files:**
+- `locales/en/` -- English translations (directory structure)
+- `locales/fr/` -- French translations (directory structure)
+
+**Usage Pattern:**
+- Server components: `const t = await getI18n()` from `locales/server.ts`
+- Client components: `const t = useI18n()` from `locales/client.ts`
+- Scoped translations: `const t = useScopedI18n('namespace')`
 
 ## Cross-Cutting Concerns
 
-**Logging:** Custom logger (`lib/logger.ts`) with structured JSON in production, human-readable in dev, automatic PII redaction, request ID correlation, and error threshold alerting.
+**Logging:** Structured JSON via `lib/logger.ts`; PII auto-redaction; child loggers with bound context; production vs dev formatting
 
-**Validation:** Zod schemas for server action inputs (e.g., `importTradeSchema` in `server/trades.ts`). Custom password validation in `lib/security/password-validation.ts`. Auth attempt tracking in `lib/security/auth-attempts.ts`.
+**Validation:** Zod schemas (`zod` v4) for API input, form validation, env validation; integrated with `react-hook-form` via `@hookform/resolvers`
 
-**Authentication:** Supabase Auth for session management. Server-side auth via `createClient()` from `server/auth.ts` (creates `@supabase/ssr` server client). Authorization via `server/authz.ts` with admin/user/service/cron access levels. OAuth state CSRF protection via `timingSafeEqual`.
+**Authentication:** Supabase Auth with cookie-based sessions; server and browser clients; rate-limited login attempts; multiple OAuth providers
 
-**Internationalization:** `next-international` with `en` and `fr` locales. Translation files in `locales/en/` and `locales/fr/`. `I18nProviderClient` wraps the app. `useI18n()` hook in client components, `setStaticParamsLocale()` in server components.
+**Rate Limiting:** In-memory (dev) or Upstash Redis (production); per-IP and per-subject limits; production fails closed if Redis unavailable
 
-**Feature Flags:** Environment-variable-driven system in `lib/feature-flags.ts`. Supports gradual rollout by user ID hash, emergency rollback, and deterministic assignment.
+**CSP:** Content Security Policy defined in `lib/security/csp.ts`; CSP report endpoint at `app/api/csp-report/route.ts`
 
-**Caching:** Next.js `cacheLife`/`cacheTag`/`updateTag` for server-side caching. Redis (`lib/redis-client.ts`) for cross-request cache invalidation. `lib/cache/cache-invalidation.ts` for coordinated invalidation on trade/account mutations.
+**Performance:** Feature flags for gradual rollout; bundle optimization via `optimizePackageImports`; code splitting with `next/dynamic`; lazy component loading in `components/lazy/`
 
-**Security:** CSP headers, OAuth state validation, timing-safe comparison for auth tokens, PII redaction in logs, secure token storage with SHA-256 hashing, rate limiting (`lib/rate-limit.ts`), slug validation (`lib/security/slug.ts`).
+**Analytics:** Vercel Analytics + Speed Insights (production only); PostHog integration exists but commented out
+
+## Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        CLIENT (Browser)                            │
+│                                                                     │
+│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
+│  │ React Pages  │  │ Zustand      │  │ React Context Providers   │  │
+│  │ (SSR + CSR)  │  │ Stores (26)  │  │ ┌──────────────────────┐ │  │
+│  │              │  │ ┌──────────┐ │  │ │ DataProvider         │ │  │
+│  │ app/[locale]/│  │ │ trading- │ │  │ │  ├ DataStateProvider │ │  │
+│  │  (home)/     │  │ │ domain   │ │  │ │  ├ DataDerived       │ │  │
+│  │  (landing)/  │  │ │ chat     │ │  │ │  ├ DataActions       │ │  │
+│  │  (auth)/     │  │ │ mood     │ │  │ │  └ SyncContext       │ │  │
+│  │  dashboard/  │  │ │ ...      │ │  │ └──────────────────────┘ │  │
+│  │  admin/      │  │ └──────────┘ │  │                          │  │
+│  │  teams/      │  │              │  │ RootProviders            │  │
+│  └──────┬───────┘  └──────┬───────┘  │  ├ ThemeProvider        │  │
+│         │                 │           │  ├ TooltipProvider      │  │
+│         │                 │           │  └ SidebarProvider      │  │
+│         │                 │           └────────────┬─────────────┘  │
+└─────────┼─────────────────┼────────────────────────┼────────────────┘
+          │                 │                        │
+          │ Server Actions  │ (localStorage)         │
+          │ (POST)          │                        │
+          ▼                 │                        │
+┌─────────────────────────────────────────────────────┼────────────────┐
+│                    NEXT.JS SERVER                    │                │
+│                                                     │                │
+│  ┌──────────────────┐  ┌────────────────────────┐   │                │
+│  │ Server Actions   │  │ API Route Handlers     │   │                │
+│  │ server/*.ts      │  │ app/api/*/route.ts     │   │                │
+│  │ ┌──────────────┐ │  │ ┌──────────────────┐   │   │                │
+│  │ │ auth.ts      │ │  │ │ /ai/chat         │   │   │                │
+│  │ │ accounts.ts  │ │  │ │ /ai/analyze      │   │   │                │
+│  │ │ database.ts  │ │  │ │ /whop/webhook    │   │   │                │
+│  │ │ trades.ts    │ │  │ │ /cron/*          │   │   │                │
+│  │ │ teams.ts     │ │  │ │ /deals/*         │   │   │                │
+│  │ │ billing.ts   │ │  │ └──────────────────┘   │   │                │
+│  │ └──────────────┘ │  └────────────┬───────────┘   │                │
+│  └────────┬─────────┘               │               │                │
+│           │                         │               │                │
+│  ┌────────┴─────────────────────────┴───────────────┴────────────┐   │
+│  │                    Shared Services                             │   │
+│  │  ┌──────────┐ ┌────────────┐ ┌───────────┐ ┌───────────────┐ │   │
+│  │  │ authz.ts │ │ rate-limit │ │ logger.ts │ │ feature-flags │ │   │
+│  │  └──────────┘ └────────────┘ └───────────┘ └───────────────┘ │   │
+│  └────────────────────────┬──────────────────────────────────────┘   │
+│                           │                                          │
+└───────────────────────────┼──────────────────────────────────────────┘
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ▼             ▼             ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│  Supabase    │  │  PostgreSQL  │  │  External    │
+│  Auth +      │  │  (Prisma)   │  │  Services    │
+│  Storage     │  │             │  │              │
+│              │  │  User       │  │  OpenAI AI   │
+│  Sessions    │  │  Trade      │  │  Stripe      │
+│  OAuth       │  │  Account    │  │  Whop        │
+│  Files       │  │  Group      │  │  Tradovate   │
+│              │  │  Team       │  │  Rithmic     │
+│              │  │  Payment    │  │  Resend      │
+│              │  │  ...        │  │  Upstash     │
+│              │  │             │  │  (Redis)     │
+└──────────────┘  └──────────────┘  └──────────────┘
+```
 
 ---
 
-*Architecture analysis: 2026-04-08*
+*Architecture analysis: 2026-04-09*
