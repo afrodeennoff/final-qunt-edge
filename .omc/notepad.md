@@ -3,7 +3,7 @@
 
 ## Priority Context
 <!-- ALWAYS loaded. Keep under 500 chars. Critical discoveries only. -->
-Qunt Edge v2 — Full-app audit completed 2026-04-10. Fixed 13 issues (3 P0, 6 P1, 1 P2). Key: password validation was completely broken (truthiness check on always-truthy object). Remaining risks: domain-based admin elevation, static Rithmic encryption salt, auth rate limiting gaps, 158 dependency CVEs.
+Qunt Edge v2 — Full-app audit completed 2026-04-10. Fixed 13 issues in session 1 (3 P0, 6 P1, 1 P2) + 4 test files (9 tests) in session 2. Test baseline: 172/184 files pass, 850/960 tests pass. 4 pre-existing failures (ibkr-ocr 3, deals-active 1). Key remaining risks: domain-based admin elevation, static Rithmic encryption salt, profit factor inconsistency across 7 files, 158 dependency CVEs. Auth-callback test now correctly mocks @supabase/ssr instead of @/server/auth.
 
 ## Working Memory
 <!-- Session notes. Auto-pruned after 7 days. -->

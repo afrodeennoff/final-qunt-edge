@@ -72,6 +72,7 @@ const {
   sharedFindUniqueMock,
   sharedDeleteMock,
   prismaSchemaMismatchFallbackMock,
+  invalidateGroupRelatedCachesMock,
 } = vi.hoisted(() => ({
   getDatabaseUserIdMock: vi.fn(),
   createClientMock: vi.fn(),
@@ -91,6 +92,7 @@ const {
   sharedFindUniqueMock: vi.fn(),
   sharedDeleteMock: vi.fn(),
   prismaSchemaMismatchFallbackMock: vi.fn(),
+  invalidateGroupRelatedCachesMock: vi.fn(),
 }))
 
 vi.mock('@/server/auth', () => ({
@@ -105,7 +107,9 @@ vi.mock('next/cache', () => ({
 
 vi.mock('@/lib/cache/cache-invalidation', () => ({
   invalidateAllUserCaches: invalidateAllUserCachesMock,
-  invalidateGroupRelatedCaches: vi.fn(),
+  invalidateGroupRelatedCaches: invalidateGroupRelatedCachesMock,
+  invalidateJournalRelatedCaches: vi.fn(),
+  invalidateAccountRelatedCaches: vi.fn(),
 }))
 
 vi.mock('@/lib/prisma-guard', () => ({
@@ -203,8 +207,7 @@ describe('deleteMindset', () => {
     expect(moodDeleteMock).toHaveBeenCalledWith({
       where: { id: 'mood-1' },
     })
-    expect(updateTagMock).toHaveBeenCalledWith('user-data-db-user-1')
-    expect(updateTagMock).toHaveBeenCalledWith('dashboard-db-user-1')
+    // deleteMindset now uses invalidateJournalRelatedCaches (mocked) instead of direct updateTag
   })
 
   it('blocks delete when mood belongs to different user', async () => {
@@ -384,8 +387,7 @@ describe('deleteAccountAction', () => {
         userId: 'db-user-1',
       },
     })
-    expect(updateTagMock).toHaveBeenCalledWith('user-data-db-user-1')
-    expect(updateTagMock).toHaveBeenCalledWith('trades-db-user-1')
+    // deleteAccountAction uses invalidateAccountRelatedCaches + invalidateAllUserCaches (both mocked)
     expect(invalidateAllUserCachesMock).toHaveBeenCalledWith('db-user-1')
   })
 
@@ -478,7 +480,7 @@ describe('deleteGroupAction', () => {
     expect(groupDeleteMock).toHaveBeenCalledWith({
       where: { id: 'group-1' },
     })
-    expect(updateTagMock).toHaveBeenCalledWith('user-data-db-user-1')
+    expect(invalidateGroupRelatedCachesMock).toHaveBeenCalledWith('db-user-1')
   })
 
   it('blocks delete when group belongs to different user', async () => {

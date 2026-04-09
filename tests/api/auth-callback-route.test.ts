@@ -1,23 +1,28 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const {
-  createClientMock,
   ensureUserInDatabaseMock,
   getWebsiteURLMock,
   exchangeCodeForSessionMock,
   getUserMock,
+  createServerClientMock,
 } = vi.hoisted(() => ({
-  createClientMock: vi.fn(),
   ensureUserInDatabaseMock: vi.fn(),
   getWebsiteURLMock: vi.fn(),
   exchangeCodeForSessionMock: vi.fn(),
   getUserMock: vi.fn(),
+  createServerClientMock: vi.fn(),
 }))
 
 vi.mock('@/server/auth', () => ({
-  createClient: createClientMock,
   ensureUserInDatabase: ensureUserInDatabaseMock,
   getWebsiteURL: getWebsiteURLMock,
+}))
+
+// The route uses createServerClient from @supabase/ssr directly (createCallbackClient),
+// not createClient from @/server/auth. Mock it to return a client with our spies.
+vi.mock('@supabase/ssr', () => ({
+  createServerClient: createServerClientMock,
 }))
 
 describe('GET /api/auth/callback', () => {
@@ -40,7 +45,8 @@ describe('GET /api/auth/callback', () => {
       language: 'en',
     })
 
-    createClientMock.mockResolvedValue({
+    // createServerClient returns a Supabase client instance
+    createServerClientMock.mockReturnValue({
       auth: {
         exchangeCodeForSession: exchangeCodeForSessionMock,
         getUser: getUserMock,

@@ -29,6 +29,7 @@ vi.mock("next/cache", () => ({
 vi.mock("@/lib/cache/cache-invalidation", () => ({
   invalidateAllUserCaches: invalidateAllUserCachesMock,
   invalidateAccountRelatedCaches: vi.fn(),
+  invalidateDashboardDataCaches: vi.fn(),
 }))
 
 vi.mock("@/lib/prisma", () => ({
@@ -128,8 +129,7 @@ describe("accounts multi-user isolation", () => {
 
     await createAccountAction("ACC-1")
 
-    expect(updateTagMock).toHaveBeenCalledWith("user-data-db-user-1")
-    expect(updateTagMock).toHaveBeenCalledWith("trades-db-user-1")
+    // createAccountAction uses named cache invalidation functions, not direct updateTag
     expect(invalidateAllUserCachesMock).toHaveBeenCalledWith("db-user-1")
   })
 })

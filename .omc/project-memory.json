@@ -511,6 +511,12 @@
       "type": "directory"
     },
     {
+      "path": "server/accounts.ts",
+      "accessCount": 4,
+      "lastAccessed": 1775763560636,
+      "type": "directory"
+    },
+    {
       "path": "server",
       "accessCount": 3,
       "lastAccessed": 1775759111352,
@@ -577,9 +583,9 @@
       "type": "directory"
     },
     {
-      "path": "server/accounts.ts",
+      "path": "server/groups.ts",
       "accessCount": 2,
-      "lastAccessed": 1775763476204,
+      "lastAccessed": 1775763797989,
       "type": "directory"
     },
     {
@@ -664,6 +670,24 @@
       "path": "lib/security/password-validation.ts",
       "accessCount": 1,
       "lastAccessed": 1775760852980,
+      "type": "directory"
+    },
+    {
+      "path": "server/journal.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775763489118,
+      "type": "directory"
+    },
+    {
+      "path": "tests/server",
+      "accessCount": 1,
+      "lastAccessed": 1775763702596,
+      "type": "directory"
+    },
+    {
+      "path": "tests/server/delete-ownership-regression.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775763766141,
       "type": "directory"
     }
   ],
