@@ -4,7 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { createClient, getDatabaseUserId } from '@/server/auth'
 import { PostType, PostStatus, VoteType } from '@/prisma/generated/prisma'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import sharp from 'sharp'
 import { Resend } from 'resend'
 import { formatDistanceToNow } from 'date-fns'
@@ -86,6 +87,56 @@ async function requireCommunityActor() {
   return { authUser: user, databaseUserId }
 }
 
+// Cached internal function for posts list
+async function getPostsCached() {
+  'use cache'
+  cacheLife({ stale: 300, revalidate: 300, expire: 600 })
+  cacheTag('community-posts')
+
+  const posts = await prisma.post.findMany({
+    include: {
+      user: {
+        select: {
+          email: true,
+          id: true,
+        }
+      },
+      votes: true,
+      comments: {
+        select: {
+          id: true,
+          parentId: true,
+          _count: {
+            select: {
+              replies: true
+            }
+          }
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+
+  return posts.map((post: typeof posts[number]) => {
+    const totalComments = post.comments.reduce((acc: number, comment: typeof post.comments[number]) => {
+      return acc + 1 + (comment._count?.replies || 0)
+    }, 0)
+
+    const { comments, user, ...postWithoutComments } = post
+    void comments
+    return {
+      ...postWithoutComments,
+      user: sanitizeCommunityUser(user),
+      _count: {
+        comments: totalComments
+      },
+      isAuthor: false
+    }
+  })
+}
+
 // Get all posts with votes and user information
 export async function getPosts() {
   try {
@@ -97,53 +148,13 @@ export async function getPosts() {
       currentUserId = null
     }
 
-    const posts = await prisma.post.findMany({
-      include: {
-        user: {
-          select: {
-            email: true,
-            id: true,
-          }
-        },
-        votes: true,
-        comments: {
-          select: {
-            id: true,
-            parentId: true,
-            _count: {
-              select: {
-                replies: true
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
+    const posts = await getPostsCached()
 
-    // Calculate total comments for each post and add isAuthor flag
-    const postsWithCommentCount = posts.map((post: typeof posts[number]) => {
-      const totalComments = post.comments.reduce((acc: number, comment: typeof post.comments[number]) => {
-        // Add 1 for the comment itself and the number of its replies
-        return acc + 1 + (comment._count?.replies || 0)
-      }, 0)
-
-      // Remove the comments array from the post object since we only need the count
-      const { comments, user, ...postWithoutComments } = post
-      void comments
-      return {
-        ...postWithoutComments,
-        user: sanitizeCommunityUser(user),
-        _count: {
-          comments: totalComments
-        },
-        isAuthor: currentUserId ? (post.userId === currentUserId || process.env.NODE_ENV === 'development') : false
-      }
-    })
-
-    return postsWithCommentCount
+    // Add isAuthor flag for authenticated user
+    return posts.map(post => ({
+      ...post,
+      isAuthor: currentUserId ? (post.userId === currentUserId || process.env.NODE_ENV === 'development') : false
+    }))
   } catch (error) {
     console.warn('Failed to fetch posts:', error)
     throw new Error('Failed to fetch posts')
@@ -323,6 +334,34 @@ export async function votePost(postId: string, voteType: VoteType) {
   }
 }
 
+// Cached internal function for single post
+async function getPostCached(id: string) {
+  'use cache'
+  cacheLife({ stale: 300, revalidate: 300, expire: 600 })
+  cacheTag('community-posts', `community-post-${id}`)
+
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      user: {
+        select: {
+          email: true,
+          id: true,
+        }
+      },
+      votes: true,
+    },
+  })
+
+  if (!post) return null
+
+  return {
+    ...post,
+    user: sanitizeCommunityUser(post.user),
+    isAuthor: false
+  }
+}
+
 // Get post by ID with votes and user information
 export async function getPost(id: string) {
   try {
@@ -334,24 +373,12 @@ export async function getPost(id: string) {
       currentUserId = null
     }
 
-    const post = await prisma.post.findUnique({
-      where: { id },
-      include: {
-        user: {
-          select: {
-            email: true,
-            id: true,
-          }
-        },
-        votes: true,
-      },
-    })
+    const post = await getPostCached(id)
 
     if (!post) throw new Error(POST_NOT_FOUND_SENTINEL)
 
     return {
       ...post,
-      user: sanitizeCommunityUser(post.user),
       isAuthor: currentUserId ? (post.userId === currentUserId || process.env.NODE_ENV === 'development') : false
     }
   } catch (error) {
@@ -363,44 +390,46 @@ export async function getPost(id: string) {
   }
 }
 
-// Get comments for a post
-export async function getComments(postId: string) {
-  try {
-    const comments = await prisma.comment.findMany({
-      where: {
-        postId,
-        parentId: null // Get only top-level comments
+// Cached internal function for comments
+async function getCommentsCached(postId: string) {
+  'use cache'
+  cacheLife({ stale: 300, revalidate: 300, expire: 600 })
+  cacheTag('community-comments', `community-post-${postId}-comments`)
+
+  const comments = await prisma.comment.findMany({
+    where: {
+      postId,
+      parentId: null // Get only top-level comments
+    },
+    include: {
+      user: {
+        select: {
+          email: true,
+          id: true,
+        }
       },
-      include: {
-        user: {
-          select: {
-            email: true,
-            id: true,
-          }
-        },
-        replies: {
-          include: {
-            user: {
-              select: {
-                email: true,
-                id: true,
-              }
-            },
-            replies: {
-              include: {
-                user: {
-                  select: {
-                    email: true,
-                    id: true,
-                  }
-                },
-                replies: {
-                  include: {
-                    user: {
-                      select: {
-                        email: true,
-                        id: true,
-                      }
+      replies: {
+        include: {
+          user: {
+            select: {
+              email: true,
+              id: true,
+            }
+          },
+          replies: {
+            include: {
+              user: {
+                select: {
+                  email: true,
+                  id: true,
+                }
+              },
+              replies: {
+                include: {
+                  user: {
+                    select: {
+                      email: true,
+                      id: true,
                     }
                   }
                 }
@@ -408,13 +437,20 @@ export async function getComments(postId: string) {
             }
           }
         }
-      },
-      orderBy: {
-        createdAt: 'desc'
       }
-    })
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
 
-    return comments.map(sanitizeComment)
+  return comments.map(sanitizeComment)
+}
+
+// Get comments for a post
+export async function getComments(postId: string) {
+  try {
+    return await getCommentsCached(postId)
   } catch (error) {
     console.warn('Failed to fetch comments:', error)
     throw new Error('Failed to fetch comments')

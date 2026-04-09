@@ -257,7 +257,7 @@ export async function createLayoutVersionAction(
 ): Promise<void> {
   try {
     // Verify ownership before creating version
-    await assertLayoutOwnership(layoutId)
+    const layout = await assertLayoutOwnership(layoutId)
 
     await prisma.layoutVersion.create({
       data: {
@@ -281,6 +281,8 @@ export async function createLayoutVersionAction(
       }
     })
 
+    invalidateDashboardLayout(layout.userId)
+    invalidateEquityChart(layout.userId)
     logger.info('[createLayoutVersion] Success', { layoutId, version: versionData.version })
   } catch (error) {
     logger.error('[createLayoutVersion] Error', { error, layoutId })

@@ -637,6 +637,10 @@ export async function checkAndResetAccountsAction() {
       }
     })
   }
+  if (accountsToReset.length > 0) {
+    invalidateAccountRelatedCaches(userId)
+    invalidateAllUserCaches(userId)
+  }
 }
 
 

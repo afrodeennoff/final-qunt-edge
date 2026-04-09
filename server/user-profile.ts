@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import type { User } from '@supabase/supabase-js'
 import type { Subscription } from '@/prisma/generated/prisma'
 import { isPrismaColumnAvailable, isPrismaSchemaMismatchError } from '@/lib/prisma-guard'
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
 const PROFILE_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
 const USER_TABLE_CANDIDATES = ['User', 'user'] as const
@@ -120,6 +120,8 @@ export async function toggleLeaderboardVisibility(): Promise<{ success: boolean;
       where: { id: userId },
       data: { showOnLeaderboard: newValue },
     })
+    await updateTag(`profile-${userId}`)
+    await updateTag('leaderboard')
   } catch (error) {
     if (!isUserProfileUnavailableError(error)) {
       throw error

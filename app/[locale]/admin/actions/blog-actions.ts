@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { createClient, getDatabaseUserId } from '@/server/auth'
 import { assertAdminAccess } from '@/server/authz'
 import { revalidatePath } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { BlogCategory } from '@/prisma/generated/prisma'
 function slugify(text: string): string {
   return text
@@ -36,6 +37,9 @@ type CreateBlogPostData = {
 type UpdateBlogPostData = Partial<CreateBlogPostData>
 
 export async function getBlogPosts(publishedOnly = true) {
+  'use cache'
+  cacheLife({ stale: 600, revalidate: 600, expire: 3600 })
+  cacheTag('blog-posts')
   try {
     const posts = await prisma.blogPost.findMany({
       where: publishedOnly ? { published: true } : undefined,
@@ -78,6 +82,9 @@ export async function getAllBlogPostsForAdmin() {
 }
 
 export async function getBlogPostBySlug(slug: string) {
+  'use cache'
+  cacheLife({ stale: 600, revalidate: 600, expire: 3600 })
+  cacheTag('blog-posts', `blog-post-${slug}`)
   try {
     const post = await prisma.blogPost.findUnique({
       where: { slug },

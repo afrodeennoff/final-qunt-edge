@@ -508,6 +508,8 @@ export async function setUserDashboardTheme(theme: string): Promise<DashboardThe
       data: { dashboardTheme: theme },
       select: { dashboardTheme: true }
     })
+    await updateTag(`user-data-core-${userId}`)
+    await updateTag(`user-data-supplemental-${userId}`)
     logger.info('[setUserDashboardTheme] Theme updated', { userId, theme })
     return updatedUser.dashboardTheme as DashboardTheme
   } catch (error) {

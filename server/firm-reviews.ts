@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { getDatabaseUserId } from '@/server/auth'
 import { assertAdminAccess, isAdmin } from '@/server/authz'
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
 export type ReviewSortOption = 'newest' | 'oldest' | 'highest' | 'lowest'
 
@@ -69,7 +69,7 @@ export async function createFirmReview(data: { propfirmId: string; rating: numbe
     throw new Error('You have already reviewed this firm')
   }
   
-  return prisma.propFirmReview.create({
+  const review = await prisma.propFirmReview.create({
     data: {
       propFirmId: data.propfirmId,
       rating: data.rating,
@@ -80,6 +80,8 @@ export async function createFirmReview(data: { propfirmId: string; rating: numbe
       status: 'approved', // Auto-approve for now, could be 'pending' for moderation
     },
   })
+  await updateTag(`firm-reviews-${data.propfirmId}`)
+  return review
 }
 
 async function loadFirmReviews(
@@ -228,6 +230,7 @@ export async function flagReview(data: { reviewId: string; reason: string; descr
       flaggedAt: new Date(),
     },
   })
+  await updateTag(`firm-reviews-${review.propFirmId}`)
 }
 
 export async function getReviewModerationQueue(page = 1, status?: string) {
@@ -308,6 +311,7 @@ export async function moderateReview(data: {
   }
   // If 'warning_issued', keep the review flagged but mark as reviewed
   
+  await updateTag(`firm-reviews-${moderation.review.propFirmId}`)
   return { success: true }
 }
 
@@ -380,7 +384,10 @@ export async function deleteReview(reviewId: string) {
     throw new Error('You can only delete your own reviews')
   }
   
-  return prisma.propFirmReview.delete({
+  const propFirmId = review.propFirmId
+  const deleted = await prisma.propFirmReview.delete({
     where: { id: reviewId },
   })
+  await updateTag(`firm-reviews-${propFirmId}`)
+  return deleted
 }
