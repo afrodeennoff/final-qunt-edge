@@ -1,36 +1,129 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)",
-      "Bash(find:*)",
-      "Bash(cat:*)",
-      "Bash(npx:*)",
-      "Bash(bun:*)",
-      "Bash(npm:*)",
-      "Bash(curl:*)",
-      "Bash(lsof:*)",
-      "Bash(ls:*)",
-      "Bash(omc:*)",
-      "Bash(mkdir:*)",
-      "Bash(CONFIG_FILE=\"${CLAUDE_CONFIG_DIR:-$HOME}/.claude/.omc-config.json\":*)",
-      "Bash(bash:*)",
-      "Bash(grep:*)",
       "Bash(git:*)",
-      "Bash(if:*)",
       "Bash(node:*)",
-      "Bash(command:*)",
-      "Bash(head:*)",
-      "Bash(sed:*)",
-      "Bash(python3:*)",
-      "Bash(claude:*)",
-      "Bash(which:*)",
-      "Bash(wc:*)"
+      "Bash(ls:*)",
+      "Bash(for:*)",
+      "Bash(rm:*)",
+      "mcp__acp__Write"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/timon/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/timon/.claude/hooks/gsd-session-state.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/timon/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/timon/.claude/hooks/gsd-phase-boundary.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/timon/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/timon/.claude/hooks/gsd-read-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/timon/.claude/hooks/gsd-workflow-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/timon/.claude/hooks/gsd-validate-commit.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node \"/Users/timon/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "oh-my-claudecode@omc": true,
+    "supabase@claude-plugins-official": true
   },
-  "outputStyle": "Explanatory"
+  "outputStyle": "Explanatory",
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "vercel": {
+      "type": "url",
+      "url": "https://mcp.vercel.com/sse"
+    }
+  }
 }

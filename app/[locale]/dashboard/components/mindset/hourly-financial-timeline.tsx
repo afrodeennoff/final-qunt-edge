@@ -62,6 +62,8 @@ interface HourlyFinancialTimelineProps {
   selectedEventIds?: string[]
 }
 
+type TradeAggregate = { type: 'trade'; id: string; hour: number; totalPnL: number; tradeCount: number; symbols: string[]; trades: Array<{ id: string; entryDate: string; pnl: number; commission: number; instrument: string }> }
+
 function SessionIndicator({ session, hourElements, containerRef }: { 
   session: Session; 
   hourElements: HTMLDivElement[];
@@ -237,8 +239,8 @@ export function HourlyFinancialTimeline({
 
   // Group events and trades by hour and sort by importance
   const eventsByHour = useMemo(() => {
-    const hourMap = new Map<number, Array<FinancialEvent | unknown>>()
-    const tradesByHour = new Map<number, Array<unknown>>()
+    const hourMap = new Map<number, Array<FinancialEvent | TradeAggregate>>()
+    const tradesByHour = new Map<number, Array<{ id: string; entryDate: string; pnl: number; commission: number; instrument: string }>>()
 
     // Initialize all hours with empty arrays
     hours.forEach((hour) => {
@@ -289,8 +291,8 @@ export function HourlyFinancialTimeline({
       const sortedEvents = [...hourEvents].sort((a, b) => {
         if (a.type === 'trade') return -1 // Trades come first
         if (b.type === 'trade') return 1
-        const weightA = getImpactWeight(a.importance)
-        const weightB = getImpactWeight(b.importance)
+        const weightA = getImpactWeight((a as FinancialEvent).importance)
+        const weightB = getImpactWeight((b as FinancialEvent).importance)
         return weightB - weightA // Sort in descending order (HIGH to LOW)
       })
       hourMap.set(hour, sortedEvents)
@@ -353,8 +355,8 @@ export function HourlyFinancialTimeline({
                     item.type === 'trade' ? (
                       <TradeCard
                         key={item.id}
-                        trade={item}
-                        onClick={() => onTradeClick?.(item)}
+                        trade={item as TradeAggregate}
+                        onClick={() => onTradeClick?.(item as unknown as Parameters<NonNullable<typeof onTradeClick>>[0])}
                         timezone={timezone}
                         dateLocale={dateLocale}
                         date={date}
@@ -362,11 +364,11 @@ export function HourlyFinancialTimeline({
                     ) : (
                       <FinancialEventCard
                         key={item.id}
-                        event={item}
+                        event={item as FinancialEvent}
                         onClick={(e?: React.MouseEvent) => {
                           // Prevent outer popover from thinking this is outside
                           if (e && typeof e.stopPropagation === 'function') e.stopPropagation()
-                          onEventClick?.(item)
+                          onEventClick?.(item as FinancialEvent)
                         }}
                         timezone={timezone}
                         dateLocale={dateLocale}
@@ -396,8 +398,8 @@ export function HourlyFinancialTimeline({
                               item.type === 'trade' ? (
                                 <TradeCard
                                   key={item.id}
-                                  trade={item}
-                                  onClick={() => onTradeClick?.(item)}
+                                  trade={item as TradeAggregate}
+                                  onClick={() => onTradeClick?.(item as unknown as Parameters<NonNullable<typeof onTradeClick>>[0])}
                                   timezone={timezone}
                                   dateLocale={dateLocale}
                                   expanded
@@ -406,8 +408,8 @@ export function HourlyFinancialTimeline({
                               ) : (
                                 <FinancialEventCard
                                   key={item.id}
-                                  event={item}
-                                  onClick={() => onEventClick?.(item)}
+                                  event={item as FinancialEvent}
+                                  onClick={() => onEventClick?.(item as FinancialEvent)}
                                   timezone={timezone}
                                   dateLocale={dateLocale}
                                   expanded

@@ -453,8 +453,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 101,
-      "lastAccessed": 1775710230266,
+      "accessCount": 134,
+      "lastAccessed": 1775751878514,
       "type": "directory"
     },
     {
@@ -470,21 +470,21 @@
       "type": "directory"
     },
     {
-      "path": "proxy.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775638717433,
+      "path": "app",
+      "accessCount": 14,
+      "lastAccessed": 1775739807993,
       "type": "directory"
     },
     {
       "path": "app/api",
-      "accessCount": 8,
-      "lastAccessed": 1775710195536,
+      "accessCount": 11,
+      "lastAccessed": 1775739688136,
       "type": "directory"
     },
     {
-      "path": "app",
-      "accessCount": 6,
-      "lastAccessed": 1775710142018,
+      "path": "proxy.ts",
+      "accessCount": 10,
+      "lastAccessed": 1775638717433,
       "type": "directory"
     },
     {

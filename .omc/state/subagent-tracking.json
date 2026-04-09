@@ -105,10 +105,109 @@
       "status": "completed",
       "completed_at": "2026-04-09T04:30:52.714Z",
       "duration_ms": 99420
+    },
+    {
+      "agent_id": "a0cb564",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:00:01.978Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:00:25.757Z",
+      "duration_ms": 23779
+    },
+    {
+      "agent_id": "a8152af",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:00:02.033Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:00:35.723Z",
+      "duration_ms": 33690
+    },
+    {
+      "agent_id": "a104ade",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:00:02.090Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:02:17.492Z",
+      "duration_ms": 135402
+    },
+    {
+      "agent_id": "a26f468",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:00:02.154Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:03:01.780Z",
+      "duration_ms": 179626
+    },
+    {
+      "agent_id": "ab79b69",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:03:13.513Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:05:18.271Z",
+      "duration_ms": 124758
+    },
+    {
+      "agent_id": "ab799b7",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:03:13.572Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:03:18.634Z",
+      "duration_ms": 5062
+    },
+    {
+      "agent_id": "a69cbe5",
+      "agent_type": "Explore",
+      "started_at": "2026-04-09T13:04:40.726Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:06:09.287Z",
+      "duration_ms": 88561
+    },
+    {
+      "agent_id": "ab8c1fd",
+      "agent_type": "gsd-codebase-mapper",
+      "started_at": "2026-04-09T13:05:23.749Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T13:08:24.229Z",
+      "duration_ms": 180480
+    },
+    {
+      "agent_id": "aac3f83",
+      "agent_type": "gsd-phase-researcher",
+      "started_at": "2026-04-09T16:20:55.618Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T16:21:03.698Z",
+      "duration_ms": 8080
+    },
+    {
+      "agent_id": "af0d473",
+      "agent_type": "gsd-phase-researcher",
+      "started_at": "2026-04-09T16:21:09.037Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T16:21:17.606Z",
+      "duration_ms": 8569
+    },
+    {
+      "agent_id": "a05b943",
+      "agent_type": "gsd-phase-researcher",
+      "started_at": "2026-04-09T16:22:18.431Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-09T16:26:43.340Z",
+      "duration_ms": 264909
     }
   ],
-  "total_spawned": 10,
-  "total_completed": 11,
+  "total_spawned": 18,
+  "total_completed": 22,
   "total_failed": 0,
-  "last_updated": "2026-04-09T04:30:52.817Z"
+  "last_updated": "2026-04-09T16:26:43.443Z"
 }
