@@ -16,7 +16,7 @@ interface FinalCTAProps {
 export default function FinalCTA({ locale }: FinalCTAProps) {
   return (
     <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[#000]" />
+      <div className="pointer-events-none absolute inset-0 bg-background" />
 
       <motion.div
         className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center"

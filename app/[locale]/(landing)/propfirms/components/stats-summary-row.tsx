@@ -77,7 +77,7 @@ export function StatsSummaryRow() {
       {items.map((item) => (
         <div
           key={item.label}
-          className={`rounded-xl border ${item.border} ${item.bg} p-4 shadow-[0_16px_60px_-54px_rgba(0,0,0,0.95)] ${loading ? 'animate-pulse' : ''}`}
+          className={`rounded-xl border ${item.border} ${item.bg} p-4 shadow-[0_16px_60px_-54px_hsl(0_0%_0%_/0.95)] ${loading ? 'animate-pulse' : ''}`}
         >
           <div className="flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${item.dot}`} />

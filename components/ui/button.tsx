@@ -25,9 +25,9 @@ const buttonVariants = cva(
         mono: "font-mono rounded-sm border border-v2-border bg-v2-bg-base text-v2-text-primary hover:border-v2-border/70 hover:bg-v2-bg-hover focus-visible:ring-offset-0",
 
         // Resend-inspired pill variants
-        pill: "bg-transparent text-v2-text-primary border border-[var(--frost-border)] rounded-[9999px] hover:bg-[rgba(255,255,255,0.08)] active:bg-[rgba(255,255,255,0.14)] active:scale-[0.98] transition-all duration-150",
-        "pill-solid": "bg-v2-text-primary text-void border-none rounded-[9999px] hover:bg-[oklch(0.85_0_0)] active:scale-[0.98] transition-all duration-150",
-        "pill-ghost": "bg-transparent text-v2-text-secondary border-none rounded-[9999px] hover:bg-[rgba(255,255,255,0.06)] hover:text-v2-text-primary active:bg-[rgba(255,255,255,0.10)] transition-all duration-150",
+        pill: "bg-transparent text-v2-text-primary border border-[var(--frost-border)] rounded-[9999px] hover:bg-v2-bg-hover active:bg-v2-bg-active active:scale-[0.98] transition-all duration-150",
+        "pill-solid": "bg-v2-text-primary text-v2-bg-base border-none rounded-[9999px] hover:bg-v2-text-secondary active:scale-[0.98] transition-all duration-150",
+        "pill-ghost": "bg-transparent text-v2-text-secondary border-none rounded-[9999px] hover:bg-v2-bg-hover hover:text-v2-text-primary active:bg-v2-bg-active transition-all duration-150",
       },
       size: {
         sm: "h-8 min-h-[32px] min-w-[32px] px-3 text-xs",

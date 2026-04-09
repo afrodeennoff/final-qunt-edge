@@ -74,7 +74,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     data-slot="table-row"
     className={cn(
-      "border-b border-[var(--frost-border)] transition-colors hover:bg-[rgba(255,255,255,0.04)] data-[state=selected]:bg-[rgba(255,255,255,0.04)]",
+      "border-b border-[var(--frost-border)] transition-colors hover:bg-v2-bg-hover data-[state=selected]:bg-v2-bg-hover",
       className
     )}
     {...props}

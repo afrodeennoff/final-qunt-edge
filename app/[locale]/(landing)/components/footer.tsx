@@ -59,7 +59,7 @@ export default function Footer() {
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1.8fr]">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--frost-border)] bg-[oklch(0.08_0_0)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--frost-border)] bg-card">
                 <Logo className="h-5 w-5 fill-foreground" />
               </div>
               <div className="leading-none">
@@ -101,7 +101,7 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--frost-border)] text-text-tertiary transition-all duration-200 hover:text-primary hover:bg-[var(--accent-blue-subtle)]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--frost-border)] text-muted-foreground transition-all duration-200 hover:text-primary hover:bg-accent/10"
                 >
                   <item.icon className="size-5" />
                 </motion.a>

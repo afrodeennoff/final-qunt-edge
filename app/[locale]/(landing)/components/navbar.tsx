@@ -55,7 +55,7 @@ export default function Navbar() {
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--frost-border)] bg-[oklch(0.08_0_0)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--frost-border)] bg-card">
               <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight text-[var(--text-secondary)] sm:inline-flex">Qunt Edge</span>
@@ -74,8 +74,8 @@ export default function Navbar() {
                   className={cn(
                     'relative rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-[oklch(0.08_0_0)] text-[var(--text-primary)] border border-[var(--frost-border)]'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[oklch(0.08_0_0)]'
+                      ? 'bg-card text-[var(--text-primary)] border border-[var(--frost-border)]'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-card'
                   )}
                 >
                   {link.title}
@@ -87,7 +87,7 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] hover:bg-[oklch(0.08_0_0)] md:inline-flex"
+              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] hover:bg-card md:inline-flex"
             >
               Login
             </Link>

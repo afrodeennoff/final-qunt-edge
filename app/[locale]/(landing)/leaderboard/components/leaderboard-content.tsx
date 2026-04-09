@@ -46,7 +46,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
 
   if (initialEntries.length === 0) {
     return (
-      <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-8 text-center shadow-[0_24px_90px_-70px_rgba(0,0,0,0.95)]">
+      <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-8 text-center shadow-[0_24px_90px_-70px_hsl(0_0%_0%_/0.95)]">
         <div className="mx-auto max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <Trophy className="h-3.5 w-3.5 text-primary" />
@@ -63,7 +63,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
 
   return (
     <div className="space-y-6">
-      <section className="grid gap-6 rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-5 shadow-[0_34px_110px_-72px_rgba(0,0,0,0.95)] sm:p-6 lg:grid-cols-[1.05fr_0.95fr] lg:p-7">
+      <section className="grid gap-6 rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-5 shadow-[0_34px_110px_-72px_hsl(0_0%_0%_/0.95)] sm:p-6 lg:grid-cols-[1.05fr_0.95fr] lg:p-7">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <Trophy className="h-3.5 w-3.5 text-primary" />

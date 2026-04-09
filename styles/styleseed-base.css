@@ -39,11 +39,11 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #E8E6E1;
+    background: hsl(var(--muted-foreground) / 0.35);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #9B9B9B;
+    background: hsl(var(--muted-foreground) / 0.55);
   }
 
   /* Hide scrollbar utility class */

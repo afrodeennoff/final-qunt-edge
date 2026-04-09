@@ -83,10 +83,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             <div
               className={cn(
                 "status-dot size-2 rounded-full",
-                status === "live" && "bg-emerald-500 animate-pulse shadow-lg shadow-emerald-500/50",
-                status === "synced" && "bg-blue-500 shadow-lg shadow-blue-500/50",
+                status === "live" && "bg-v2-success animate-pulse shadow-lg shadow-v2-success/50",
+                status === "synced" && "bg-v2-accent shadow-lg shadow-v2-accent/50",
                 status === "idle" && "bg-v2-text-muted",
-                status === "error" && "bg-red-500 shadow-lg shadow-red-500/50"
+                status === "error" && "bg-v2-error shadow-lg shadow-v2-error/50"
               )}
             />
             <span className="text-[10px] font-semibold uppercase leading-none tracking-widest text-v2-text-muted">
@@ -141,10 +141,10 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
         ref={ref}
         className={cn(
           "status-dot",
-          tone === "live" && "bg-emerald-500 animate-pulse",
-          tone === "synced" && "bg-blue-500",
+          tone === "live" && "bg-v2-success animate-pulse",
+          tone === "synced" && "bg-v2-accent",
           tone === "idle" && "bg-v2-text-muted",
-          tone === "error" && "bg-red-500",
+          tone === "error" && "bg-v2-error",
           className
         )}
         aria-hidden
