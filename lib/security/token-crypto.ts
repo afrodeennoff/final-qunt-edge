@@ -19,6 +19,12 @@ function getTokenKeyMaterial(): Buffer {
     throw new Error("Missing TOKEN_CRYPTO_KEY")
   }
   const normalized = raw.trim()
+  if (normalized.length < 32) {
+    throw new Error(
+      "TOKEN_CRYPTO_KEY must be at least 32 characters. " +
+      "Generate one with: openssl rand -base64 32"
+    )
+  }
   const looksBase64 = /^[A-Za-z0-9+/=]+$/.test(normalized) && normalized.length >= 43
   const keyBuffer = looksBase64 ? Buffer.from(normalized, "base64") : Buffer.from(normalized, "utf8")
 

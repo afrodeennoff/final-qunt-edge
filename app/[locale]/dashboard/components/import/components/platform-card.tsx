@@ -4,7 +4,7 @@
 import { BadgeV2, CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useI18n } from "@/locales/client";
+import { useTypedI18n } from "@/locales/client";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { PlatformConfig } from "../config/platforms";
@@ -33,7 +33,7 @@ export function PlatformCard({
     isChecked = false,
     onCheckChange,
 }: PlatformCardProps) {
-    const t = useI18n();
+    const t = useTypedI18n();
     const shouldReduceMotion = useReducedMotion();
 
     const isInteractive = !platform.isDisabled && !platform.isComingSoon;
@@ -135,10 +135,10 @@ export function PlatformCard({
 
                 <CardV2Content size="sm" className="p-0 flex flex-col gap-2 flex-1">
                     <CardV2Title size="sm">
-                        {t(String(platform.name) as any, { count: 1 })}
+                        {t(String(platform.name), { count: 1 })}
                     </CardV2Title>
                     <p className="text-xs text-v2-text-secondary line-clamp-2 min-h-[2.5em]">
-                        {t(String(platform.description) as any, { count: 1 })}
+                        {t(String(platform.description), { count: 1 })}
                     </p>
                 </CardV2Content>
 

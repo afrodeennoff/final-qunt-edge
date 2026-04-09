@@ -259,7 +259,7 @@ export default function TickDistributionChartEmbed({
                   height={24}
                   tickMargin={8}
                   tick={(props) => {
-                    const { x, y, payload } = props as any;
+                    const { x, y, payload } = props as { x: number; y: number; payload: { value: string | number } };
                     return (
                       <g transform={`translate(${x},${y})`}>
                         <text

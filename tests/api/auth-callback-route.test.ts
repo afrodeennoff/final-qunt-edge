@@ -50,21 +50,19 @@ describe('GET /api/auth/callback', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  it('allows Supabase OAuth callbacks when state param exists without a custom cookie', async () => {
+  it('rejects OAuth callbacks when state param exists without a matching cookie (CSRF protection)', async () => {
     const { GET } = await import('@/app/api/auth/callback/route')
 
     const response = await GET(
       new Request('http://localhost/api/auth/callback?code=test-code&state=supabase-state&locale=en')
     )
 
-    expect(exchangeCodeForSessionMock).toHaveBeenCalledWith('test-code')
-    expect(ensureUserInDatabaseMock).toHaveBeenCalledWith(
-      expect.objectContaining({ id: 'user_123' }),
-      'en',
-      { skipDefaultLayout: true }
-    )
+    // State param present without oauth_state cookie → CSRF validation failure
+    expect(exchangeCodeForSessionMock).not.toHaveBeenCalled()
     expect(response.status).toBe(307)
-    expect(response.headers.get('location')).toBe('http://localhost:3000/en/dashboard')
+    expect(response.headers.get('location')).toBe(
+      'http://localhost:3000/en/authentication?error=csrf'
+    )
   })
 
   it('redirects to csrf error when a custom oauth_state cookie does not match', async () => {
@@ -85,13 +83,39 @@ describe('GET /api/auth/callback', () => {
     )
   })
 
+  it('allows OAuth callbacks when state param matches oauth_state cookie', async () => {
+    const { GET } = await import('@/app/api/auth/callback/route')
+
+    const response = await GET(
+      new Request('http://localhost/api/auth/callback?code=test-code&state=supabase-state&locale=en', {
+        headers: {
+          cookie: 'oauth_state=supabase-state',
+        },
+      })
+    )
+
+    expect(exchangeCodeForSessionMock).toHaveBeenCalledWith('test-code')
+    expect(ensureUserInDatabaseMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'user_123' }),
+      'en',
+      { skipDefaultLayout: true }
+    )
+    expect(response.status).toBe(307)
+    expect(response.headers.get('location')).toBe('http://localhost:3000/en/dashboard')
+  })
+
   it('redirects to an explicit auth error when user setup fails after session exchange', async () => {
     const { GET } = await import('@/app/api/auth/callback/route')
 
     ensureUserInDatabaseMock.mockRejectedValueOnce(new Error('database offline'))
 
+    // Include matching oauth_state cookie so CSRF validation passes
     const response = await GET(
-      new Request('http://localhost/api/auth/callback?code=test-code&state=supabase-state&locale=en')
+      new Request('http://localhost/api/auth/callback?code=test-code&state=supabase-state&locale=en', {
+        headers: {
+          cookie: 'oauth_state=supabase-state',
+        },
+      })
     )
 
     expect(exchangeCodeForSessionMock).toHaveBeenCalledWith('test-code')

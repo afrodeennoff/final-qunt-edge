@@ -10,10 +10,9 @@ interface NavigationProps {
 
 export default function Navigation({ locale }: NavigationProps) {
   const navLinks = [
-    { href: `/${locale}/features`, label: 'Features' },
     { href: `/${locale}/pricing`, label: 'Pricing' },
     { href: `/${locale}/docs`, label: 'Docs' },
-    { href: `/${locale}/blog`, label: 'Blog' },
+    { href: `/${locale}/blogs`, label: 'Blog' },
   ]
 
   return (

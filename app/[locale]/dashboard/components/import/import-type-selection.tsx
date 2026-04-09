@@ -6,7 +6,7 @@ import { InputV2, CardV2, CardV2Content, ButtonV2, BadgeV2 } from "@/components/
 import Image from "next/image"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { useI18n } from "@/locales/client"
+import { useTypedI18n } from "@/locales/client"
 import { platforms, PlatformConfig } from './config/platforms'
 import { PlatformCard } from './components/platform-card'
 import { PlatformTutorial } from './components/platform-tutorial'
@@ -41,7 +41,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const [activeCategory, setActiveCategory] = useState<string>("all")
   const [isCompareMode, setIsCompareMode] = useState(false)
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
-  const t = useI18n()
+  const t = useTypedI18n()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
   // useI18n() returns (key: string) => string directly — no cast needed
 
@@ -95,9 +95,9 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
   const filteredPlatforms = platforms.filter(platform => {
     const matchesSearch =
-      t(platform.name as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t(platform.description as any, { count: 1 }).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      getTranslatedCategory(platform.category).toLowerCase().includes(searchQuery.toLowerCase())
+      String(t(platform.name, { count: 1 })).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(t(platform.description, { count: 1 })).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(getTranslatedCategory(platform.category)).toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesCategory = activeCategory === "all" || platform.category === activeCategory
 
@@ -129,7 +129,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
                 <InputV2
-                  placeholder={t('import.type.search')}
+                  placeholder={String(t('import.type.search'))}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
@@ -300,7 +300,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               )}
                               <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-semibold text-v2-text-primary truncate">
-                                  {t(platform.name as any, { count: 1 })}
+                                  {t(platform.name, { count: 1 })}
                                 </h4>
                                 <p className="text-xs text-v2-text-secondary truncate">
                                   {platform.category}
@@ -316,7 +316,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                               </ButtonV2>
                             </div>
                             <p className="text-xs text-v2-text-muted line-clamp-3">
-                              {t(platform.description as any, { count: 1 })}
+                              {t(platform.description, { count: 1 })}
                             </p>
                             <div className="flex flex-wrap gap-1.5 mt-auto">
                               {!platform.isDisabled && !platform.isComingSoon && (
@@ -369,7 +369,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               </div>
                   <SheetHeader className="px-4 pb-2">
                     <SheetTitle className="text-v2-text-primary">
-                      {t(selectedPlatform.name as any, { count: 1 })}
+                      {t(selectedPlatform.name, { count: 1 })}
                     </SheetTitle>
                   </SheetHeader>
               <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">

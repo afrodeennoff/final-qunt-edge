@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1775666871478,
+  "lastScanned": 1775756108171,
   "projectRoot": "/Users/timon/Downloads/qunt-edge",
   "techStack": {
     "languages": [
@@ -121,13 +121,32 @@
       "branchingStrategy": null
     }
   },
-  "customNotes": [],
+  "customNotes": [
+    {
+      "timestamp": 1775762761419,
+      "source": "manual",
+      "category": "security",
+      "content": "Full security audit 2026-04-10 — Fixed: P0 password validation (auth-password.ts truthiness bug), P0 admin header PII leakage (proxy.ts), P0 OAuth CSRF bypass (auth callback). Remaining: ADMIN_EMAIL_DOMAINS allows domain-based admin elevation (authz.ts:55-67), static Rithmic PBKDF2 salt (rithmic/encryption-key/route.ts), no app-level rate limit on auth endpoints, TOKEN_CRYPTO_KEY now enforces min 32 chars, userIdCache now has 5min TTL + 10K cap."
+    },
+    {
+      "timestamp": 1775762761636,
+      "source": "manual",
+      "category": "bugs",
+      "content": "Fixed bugs 2026-04-10: (1) server/auth-password.ts lines 138,164 — validatePasswordStrength() returns always-truthy object, password changes were silently broken for ALL users. Fixed to check .valid property. (2) server/auth-user.ts line 504 — updateUserLanguage only allowed en/fr but app supports 11 locales. Expanded to full locale set. (3) app/[locale]/(home)/components/Navigation.tsx — linked to /features (non-existent) and /blog (should be /blogs)."
+    },
+    {
+      "timestamp": 1775762761830,
+      "source": "manual",
+      "category": "test",
+      "content": "Pre-existing test failures confirmed 2026-04-10: (1) tests/api/auth-callback-route.test.ts — 2 tests fail because mock setup doesn't match route's createCallbackClient pattern. Not a regression. (2) .worktrees/ contains stale test copies that also fail. (3) Total: 168 passed, 14 failed (pre-existing), 92 skipped across 184 test files."
+    }
+  ],
   "directoryMap": {
     "app": {
       "path": "app",
       "purpose": "Application code",
       "fileCount": 13,
-      "lastAccessed": 1775666871452,
+      "lastAccessed": 1775756108117,
       "keyFiles": [
         "error.tsx",
         "global-error.tsx",
@@ -139,19 +158,18 @@
     "awesome-design-md": {
       "path": "awesome-design-md",
       "purpose": null,
-      "fileCount": 4,
-      "lastAccessed": 1775666871453,
+      "fileCount": 3,
+      "lastAccessed": 1775756108119,
       "keyFiles": [
         "CONTRIBUTING.md",
-        "LICENSE",
-        "README.md"
+        "LICENSE"
       ]
     },
     "components": {
       "path": "components",
       "purpose": "UI components",
       "fileCount": 21,
-      "lastAccessed": 1775666871459,
+      "lastAccessed": 1775756108141,
       "keyFiles": [
         "SparkChart.tsx",
         "ai-activated.tsx",
@@ -164,14 +182,14 @@
       "path": "content",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775666871460,
+      "lastAccessed": 1775756108143,
       "keyFiles": []
     },
     "context": {
       "path": "context",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1775666871461,
+      "lastAccessed": 1775756108144,
       "keyFiles": [
         "AGENTS.md",
         "data-provider-utils.ts",
@@ -184,7 +202,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 62,
-      "lastAccessed": 1775666871461,
+      "lastAccessed": 1775756108145,
       "keyFiles": [
         "AI-Router-Complete-Report.md",
         "AI_AUTOFIX_QUICK_START.md",
@@ -197,14 +215,14 @@
       "path": "goose",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775666871462,
+      "lastAccessed": 1775756108145,
       "keyFiles": []
     },
     "hooks": {
       "path": "hooks",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1775666871463,
+      "lastAccessed": 1775756108149,
       "keyFiles": [
         "use-auto-scroll.ts",
         "use-currency.ts",
@@ -216,8 +234,8 @@
     "lib": {
       "path": "lib",
       "purpose": "Library code",
-      "fileCount": 62,
-      "lastAccessed": 1775666871465,
+      "fileCount": 61,
+      "lastAccessed": 1775756108154,
       "keyFiles": [
         "AGENTS.md",
         "account-metrics.ts",
@@ -230,7 +248,7 @@
       "path": "locales",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1775666871466,
+      "lastAccessed": 1775756108158,
       "keyFiles": [
         "client.ts",
         "en.ts",
@@ -243,7 +261,7 @@
       "path": "mt5_import_service",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1775666871466,
+      "lastAccessed": 1775756108159,
       "keyFiles": [
         "Dockerfile",
         "config.py",
@@ -256,14 +274,14 @@
       "path": "output",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775666871467,
+      "lastAccessed": 1775756108160,
       "keyFiles": []
     },
     "prisma": {
       "path": "prisma",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1775666871467,
+      "lastAccessed": 1775756108161,
       "keyFiles": [
         "schema-optimizations.prisma",
         "schema.prisma",
@@ -275,7 +293,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 23,
-      "lastAccessed": 1775666871467,
+      "lastAccessed": 1775756108161,
       "keyFiles": [
         "AGENTS.md",
         "android-chrome-192x192.png",
@@ -288,7 +306,7 @@
       "path": "ripgrep-14.1.1-aarch64-apple-darwin",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1775666871469,
+      "lastAccessed": 1775756108161,
       "keyFiles": [
         "COPYING",
         "LICENSE-MIT",
@@ -301,7 +319,7 @@
       "path": "schemas",
       "purpose": "Schema definitions",
       "fileCount": 4,
-      "lastAccessed": 1775666871469,
+      "lastAccessed": 1775756108161,
       "keyFiles": [
         "risk-register.schema.json",
         "widget-input.schema.json",
@@ -313,7 +331,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 29,
-      "lastAccessed": 1775666871470,
+      "lastAccessed": 1775756108162,
       "keyFiles": [
         "analyze-bundle.mjs",
         "analyze-components.js",
@@ -326,7 +344,7 @@
       "path": "server",
       "purpose": null,
       "fileCount": 37,
-      "lastAccessed": 1775666871470,
+      "lastAccessed": 1775756108162,
       "keyFiles": [
         "AGENTS.md",
         "accounts.ts",
@@ -335,11 +353,20 @@
         "auth-user.ts"
       ]
     },
+    "state": {
+      "path": "state",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775756108162,
+      "keyFiles": [
+        "cancel-signal-state.json"
+      ]
+    },
     "store": {
       "path": "store",
       "purpose": null,
       "fileCount": 26,
-      "lastAccessed": 1775666871470,
+      "lastAccessed": 1775756108163,
       "keyFiles": [
         "AGENTS.md",
         "account-order-store.ts",
@@ -351,19 +378,21 @@
     "styles": {
       "path": "styles",
       "purpose": null,
-      "fileCount": 3,
-      "lastAccessed": 1775666871471,
+      "fileCount": 6,
+      "lastAccessed": 1775756108163,
       "keyFiles": [
+        "styleseed-base.css",
+        "styleseed-fonts.css",
+        "styleseed-tokens.css",
         "tailwind-theme.ts",
-        "themes.css",
-        "tokens.css"
+        "themes.css"
       ]
     },
     "tasks": {
       "path": "tasks",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1775666871471,
+      "lastAccessed": 1775756108163,
       "keyFiles": [
         "PERFORMANCE_FIX_CHECKLIST.md",
         "lessons.md",
@@ -376,14 +405,14 @@
       "path": "test-results",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775666871471,
+      "lastAccessed": 1775756108163,
       "keyFiles": []
     },
     "tests": {
       "path": "tests",
       "purpose": "Test files",
-      "fileCount": 21,
-      "lastAccessed": 1775666871471,
+      "fileCount": 20,
+      "lastAccessed": 1775756108163,
       "keyFiles": [
         "AGENTS.md",
         "account-metrics.test.ts",
@@ -396,7 +425,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 1,
-      "lastAccessed": 1775666871472,
+      "lastAccessed": 1775756108164,
       "keyFiles": [
         "web-vitals.d.ts"
       ]
@@ -405,7 +434,7 @@
       "path": "app/api",
       "purpose": "API routes",
       "fileCount": 1,
-      "lastAccessed": 1775666871472,
+      "lastAccessed": 1775756108164,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -414,7 +443,7 @@
       "path": "lib/__tests__",
       "purpose": "Test files",
       "fileCount": 20,
-      "lastAccessed": 1775666871473,
+      "lastAccessed": 1775756108166,
       "keyFiles": [
         "admin-bypass.test.ts",
         "ai-policy.test.ts",
@@ -425,7 +454,7 @@
       "path": "prisma/migrations",
       "purpose": "Database migrations",
       "fileCount": 2,
-      "lastAccessed": 1775666871474,
+      "lastAccessed": 1775756108168,
       "keyFiles": [
         "README.md",
         "migration_lock.toml"
@@ -435,7 +464,7 @@
       "path": "tests/api",
       "purpose": "API routes",
       "fileCount": 23,
-      "lastAccessed": 1775666871476,
+      "lastAccessed": 1775756108170,
       "keyFiles": [
         "admin-reports-route.test.ts",
         "ai-budget-enforcement.test.ts",
@@ -446,309 +475,195 @@
       "path": "tests/app",
       "purpose": "Application code",
       "fileCount": 0,
-      "lastAccessed": 1775666871476,
+      "lastAccessed": 1775756108171,
       "keyFiles": []
     }
   },
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 134,
-      "lastAccessed": 1775751878514,
-      "type": "directory"
-    },
-    {
-      "path": "app/[locale]/(authentication)/components/user-auth-form.tsx",
-      "accessCount": 15,
-      "lastAccessed": 1775638469132,
-      "type": "directory"
-    },
-    {
-      "path": "server/auth.ts",
-      "accessCount": 14,
-      "lastAccessed": 1775665799721,
+      "accessCount": 58,
+      "lastAccessed": 1775763429611,
       "type": "directory"
     },
     {
       "path": "app",
-      "accessCount": 14,
-      "lastAccessed": 1775739807993,
+      "accessCount": 6,
+      "lastAccessed": 1775763290520,
       "type": "directory"
     },
     {
-      "path": "app/api",
-      "accessCount": 11,
-      "lastAccessed": 1775739688136,
+      "path": "app/[locale]/dashboard/components/widget-canvas.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1775759230182,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/dashboard/components/import/import-type-selection.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1775759395994,
       "type": "directory"
     },
     {
       "path": "proxy.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775638717433,
-      "type": "directory"
-    },
-    {
-      "path": "context/data-provider.tsx",
       "accessCount": 4,
-      "lastAccessed": 1775665806189,
+      "lastAccessed": 1775762266525,
       "type": "directory"
     },
     {
-      "path": "app/api/auth/callback/route.ts",
-      "accessCount": 4,
-      "lastAccessed": 1775665813417,
-      "type": "directory"
-    },
-    {
-      "path": "store/user-store.ts",
+      "path": "server",
       "accessCount": 3,
-      "lastAccessed": 1775665826765,
+      "lastAccessed": 1775759111352,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/dashboard/components/import/components/import-dialog-header.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1775759201612,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/teams/components/user-equity/team-equity-grid-client.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1775759201669,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/dashboard/components/import/components/platform-card.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1775759201774,
+      "type": "directory"
+    },
+    {
+      "path": "server/auth-user.ts",
+      "accessCount": 3,
+      "lastAccessed": 1775763385756,
+      "type": "directory"
+    },
+    {
+      "path": "app/api",
+      "accessCount": 2,
+      "lastAccessed": 1775758935529,
       "type": "directory"
     },
     {
       "path": "components",
-      "accessCount": 3,
-      "lastAccessed": 1775678846882,
-      "type": "directory"
-    },
-    {
-      "path": "app/[locale]/dashboard/layout.tsx",
       "accessCount": 2,
-      "lastAccessed": 1775665785391,
-      "type": "directory"
-    },
-    {
-      "path": "app/[locale]/layout.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1775665785443,
-      "type": "directory"
-    },
-    {
-      "path": "app/layout.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1775665785497,
-      "type": "directory"
-    },
-    {
-      "path": "lib/supabase.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775665799951,
-      "type": "directory"
-    },
-    {
-      "path": "next.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775665800030,
-      "type": "directory"
-    },
-    {
-      "path": "components/providers/root-providers.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1775665800170,
-      "type": "directory"
-    },
-    {
-      "path": "app/[locale]/layout-content.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1775665806169,
+      "lastAccessed": 1775759070826,
       "type": "directory"
     },
     {
       "path": "locales/client.ts",
       "accessCount": 2,
-      "lastAccessed": 1775668198454,
+      "lastAccessed": 1775759992543,
       "type": "directory"
     },
     {
-      "path": "docs/superpowers/specs/2026-04-07-auth-security-hardening-design.md",
-      "accessCount": 1,
-      "lastAccessed": 1775587579371,
+      "path": "app/api/cron",
+      "accessCount": 2,
+      "lastAccessed": 1775760796221,
       "type": "directory"
     },
     {
-      "path": "store",
-      "accessCount": 1,
-      "lastAccessed": 1775588316930,
+      "path": "lib",
+      "accessCount": 2,
+      "lastAccessed": 1775760834690,
       "type": "directory"
     },
     {
-      "path": "server/auth-user.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775635987426,
+      "path": "server/auth.ts",
+      "accessCount": 2,
+      "lastAccessed": 1775763379238,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/teams/dashboard/layout.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775636008633,
+      "path": "server/accounts.ts",
+      "accessCount": 2,
+      "lastAccessed": 1775763476204,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/(home)/page.tsx",
+      "path": "app/api/ai",
       "accessCount": 1,
-      "lastAccessed": 1775636041587,
+      "lastAccessed": 1775758924734,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/(authentication)/authentication/page.tsx",
+      "path": "locales",
       "accessCount": 1,
-      "lastAccessed": 1775636088709,
+      "lastAccessed": 1775758991763,
       "type": "directory"
     },
     {
-      "path": "components/providers",
+      "path": "components/ui",
       "accessCount": 1,
-      "lastAccessed": 1775636106505,
+      "lastAccessed": 1775759082800,
       "type": "directory"
     },
     {
-      "path": "components/auth/auth-timeout.tsx",
+      "path": "lib/__tests__/payment-flows.test.ts",
       "accessCount": 1,
-      "lastAccessed": 1775636130496,
+      "lastAccessed": 1775759099048,
       "type": "directory"
     },
     {
-      "path": "app/[locale]",
+      "path": "app/api/admin",
       "accessCount": 1,
-      "lastAccessed": 1775665778158,
+      "lastAccessed": 1775760796102,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/admin/layout.tsx",
+      "path": "app/api/thor",
       "accessCount": 1,
-      "lastAccessed": 1775665785356,
+      "lastAccessed": 1775760796148,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/(authentication)/layout.tsx",
+      "path": "app/api/etp",
       "accessCount": 1,
-      "lastAccessed": 1775665785430,
+      "lastAccessed": 1775760796203,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/(landing)/layout.tsx",
+      "path": "app/api/mt5",
       "accessCount": 1,
-      "lastAccessed": 1775665785480,
+      "lastAccessed": 1775760796257,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/(home)/layout.tsx",
+      "path": "app/api/rithmic",
       "accessCount": 1,
-      "lastAccessed": 1775665785535,
+      "lastAccessed": 1775760834588,
       "type": "directory"
     },
     {
-      "path": "app/[locale]/teams/layout.tsx",
+      "path": "app/api/tradovate",
       "accessCount": 1,
-      "lastAccessed": 1775665785550,
+      "lastAccessed": 1775760834633,
       "type": "directory"
     },
     {
-      "path": "app/api/debug-data",
+      "path": "app/api/whop",
       "accessCount": 1,
-      "lastAccessed": 1775665793591,
+      "lastAccessed": 1775760834653,
       "type": "directory"
     },
     {
-      "path": "components/providers/dashboard-providers.tsx",
+      "path": "app/api/email/weekly-summary",
       "accessCount": 1,
-      "lastAccessed": 1775665799784,
+      "lastAccessed": 1775760834709,
       "type": "directory"
     },
     {
-      "path": "components/providers/query-provider.tsx",
+      "path": "server/auth-password.ts",
       "accessCount": 1,
-      "lastAccessed": 1775665799820,
+      "lastAccessed": 1775760852944,
       "type": "directory"
     },
     {
-      "path": "server/database.ts",
+      "path": "lib/security/password-validation.ts",
       "accessCount": 1,
-      "lastAccessed": 1775665799846,
-      "type": "directory"
-    },
-    {
-      "path": "lib/prisma.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665799892,
-      "type": "directory"
-    },
-    {
-      "path": "context/providers/data-state-provider.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775665806106,
-      "type": "directory"
-    },
-    {
-      "path": "context/providers/ui-provider.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775665806136,
-      "type": "directory"
-    },
-    {
-      "path": "context/providers/data-actions-provider.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775665806155,
-      "type": "directory"
-    },
-    {
-      "path": "context/providers/data-derived-provider.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775665806206,
-      "type": "directory"
-    },
-    {
-      "path": "server/authz.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813231,
-      "type": "directory"
-    },
-    {
-      "path": "server/subscription.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813257,
-      "type": "directory"
-    },
-    {
-      "path": "server/trades.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813274,
-      "type": "directory"
-    },
-    {
-      "path": "server/payment-service.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813290,
-      "type": "directory"
-    },
-    {
-      "path": "lib/feature-flags.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813312,
-      "type": "directory"
-    },
-    {
-      "path": "prisma",
-      "accessCount": 1,
-      "lastAccessed": 1775665813365,
-      "type": "directory"
-    },
-    {
-      "path": "app/api/whop/webhook/route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665813377,
-      "type": "directory"
-    },
-    {
-      "path": "prisma/schema.prisma",
-      "accessCount": 1,
-      "lastAccessed": 1775665820019,
-      "type": "directory"
-    },
-    {
-      "path": "lib/api-auth.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775665826704,
+      "lastAccessed": 1775760852980,
       "type": "directory"
     }
   ],

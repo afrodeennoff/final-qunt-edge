@@ -13,7 +13,7 @@ import { ButtonV2, InputV2 } from "@/components/ui/v2"
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Filter, X } from 'lucide-react'
-import { useI18n } from '@/locales/client'
+import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
 
 interface UserEquityData {
@@ -51,7 +51,7 @@ interface Filters {
 }
 
 export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
-  const t = useI18n()
+  const t = useTypedI18n()
   const params = useParams<{ locale?: string }>()
   const localePrefix = params?.locale ? `/${params.locale}` : ''
   const [users, setUsers] = useState<UserEquityData[]>([])
@@ -342,9 +342,9 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {(t as any)('teams.equity.tradeStats', { 
-                        days: tradedDays, 
-                        trades: user.statistics.totalTrades 
+                      {t('teams.equity.tradeStats', {
+                        days: tradedDays,
+                        trades: user.statistics.totalTrades
                       })}
                     </p>
                   </div>
@@ -361,7 +361,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-1 rounded transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary/30"
-                      title={t('teams.equity.viewTraderDetails')}
+                      title={String(t('teams.equity.viewTraderDetails'))}
                     >
                       <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                     </Link>

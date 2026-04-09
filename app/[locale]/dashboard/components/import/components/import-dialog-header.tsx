@@ -3,7 +3,7 @@
 
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
-import { useI18n } from "@/locales/client"
+import { useTypedI18n } from "@/locales/client"
 import { platforms } from "../config/platforms"
 import { ImportType } from "../import-type-selection"
 import { Step } from "../import-button"
@@ -14,7 +14,7 @@ interface ImportDialogHeaderProps {
 }
 
 export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps) {
-  const t = useI18n()
+  const t = useTypedI18n()
   const platform = platforms.find(p => p.type === importType) || platforms.find(p => p.platformName === 'csv-ai')
   if (!platform) return null
 
@@ -38,10 +38,10 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
         )}
         <div className="min-w-0">
           <DialogTitle className="text-base font-semibold leading-tight">
-            {t(String(currentStep?.title || 'import.title') as any, { count: 1 })}
+            {t(String(currentStep?.title || 'import.title'), { count: 1 })}
           </DialogTitle>
           <DialogDescription className="mt-1 text-sm text-v2-text-secondary leading-snug">
-            {t(String(currentStep?.description || 'import.description') as any, { count: 1 })}
+            {t(String(currentStep?.description || 'import.description'), { count: 1 })}
           </DialogDescription>
         </div>
       </div>
@@ -67,7 +67,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
                       : "text-v2-text-muted"
                 )}
               >
-                {t(String(s.title) as any, { count: 1 })}
+                {t(String(s.title), { count: 1 })}
               </div>
             ))}
           </div>

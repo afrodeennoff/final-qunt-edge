@@ -104,16 +104,23 @@ export async function GET(request: Request) {
   const cookieHeader = request.headers.get('cookie') || ''
   const stateCookie = parseStateCookie(cookieHeader)
 
-  if (stateCookie) {
+  if (!stateCookie || !stateParam) {
+    // Both state cookie and state param must be present for OAuth flows.
+    // If either is missing, the CSRF protection cannot be validated.
+    if (stateParam || stateCookie) {
+      console.error('[Auth Callback] OAuth CSRF validation failed — missing state cookie or param')
+      return NextResponse.redirect(
+        new URL(withLocalePrefix('/authentication?error=csrf'), websiteURL)
+      )
+    }
+    // Neither present: non-OAuth flow (e.g. magic link), skip CSRF check
+  } else {
     const stateMatches =
-      !!stateParam &&
       stateParam.length === stateCookie.length &&
       timingSafeEqual(Buffer.from(stateParam), Buffer.from(stateCookie))
 
-    if (
-      !stateMatches
-    ) {
-      console.error('[Auth Callback] OAuth CSRF validation failed — state mismatch or missing')
+    if (!stateMatches) {
+      console.error('[Auth Callback] OAuth CSRF validation failed — state mismatch')
       return NextResponse.redirect(
         new URL(withLocalePrefix('/authentication?error=csrf'), websiteURL)
       )

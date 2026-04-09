@@ -374,6 +374,16 @@ async function updateSession(request: NextRequest) {
 async function handlePrivateApiAuth(request: NextRequest): Promise<NextResponse | null> {
   const pathname = request.nextUrl.pathname
   if (isCustomTokenApiRoute(pathname)) {
+    // Custom token routes use their own auth (Bearer token or session).
+    // Enforce baseline: at least one credential must be present.
+    const authHeader = request.headers.get("authorization")
+    const hasCookie = hasSupabaseAuthCookie(request)
+    if (!authHeader && !hasCookie) {
+      return NextResponse.json(
+        { error: "Unauthorized", code: "AUTH_REQUIRED" },
+        { status: 401 }
+      )
+    }
     return null
   }
 
@@ -460,8 +470,6 @@ export async function proxy(req: NextRequest) {
     : process.env.NODE_ENV !== "production"
   const cspStrictMode = process.env.CSP_STRICT_MODE === "true"
 
-  let adminRouteUser: User | null = null
-
   // More specific static asset exclusions - must be first!
   if (routeClass === "static-asset") {
     return NextResponse.next()
@@ -497,7 +505,7 @@ export async function proxy(req: NextRequest) {
       } else if (pathname.startsWith("/api/admin/")) {
         const adminResult = await handleAdminAuth(req)
         if ("error" in adminResult) return adminResult.error
-        adminRouteUser = adminResult.user
+        // Admin auth validated — identity is resolved downstream from session
       } else {
         const authError = await handlePrivateApiAuth(req)
         if (authError) return authError
@@ -506,10 +514,8 @@ export async function proxy(req: NextRequest) {
 
     // Let API routes pass through with security headers + optional CORS
     const apiResponse = NextResponse.next()
-    if (adminRouteUser) {
-      apiResponse.headers.set("x-user-id", adminRouteUser.id)
-      apiResponse.headers.set("x-user-email", adminRouteUser.email || "")
-    }
+    // Do not forward admin user identity via response headers — downstream code
+    // must derive identity from the Supabase session server-side to avoid leakage.
     applySecurityHeaders(apiResponse)
     if (req.method === "GET" && isPublicReadApiRoute(pathname)) {
       apiResponse.headers.set(
@@ -568,13 +574,10 @@ export async function proxy(req: NextRequest) {
     }
 
     // Production CSP - more restrictive
-    // Allow localhost for testing (remove in final production)
     const allowedOrigins = [
       "'self'",
       "https://*.deltalytix.app", // Main domain
       "https://*.beta.deltalytix.app", // Beta subdomain
-      "http://localhost:*", // For local testing
-      "http://127.0.0.1:*", // For local testing
       "file:", // For local HTML file testing (may be ignored by some browsers)
       "https://thortradecopier.com",
       "https://app.thortradecopier.com",

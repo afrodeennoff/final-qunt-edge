@@ -6,7 +6,9 @@
       "Bash(ls:*)",
       "Bash(for:*)",
       "Bash(rm:*)",
-      "mcp__acp__Write"
+      "Bash(npm:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run typecheck:*)"
     ]
   },
   "hooks": {

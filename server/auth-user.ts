@@ -383,8 +383,11 @@ export async function getUserId(): Promise<string> {
 }
 
 
-// Hot-path cache for resolved user IDs to avoid repetitive DB lookups
-const userIdCache = new Map<string, string>()
+// Hot-path cache for resolved user IDs to avoid repetitive DB lookups.
+// Entries expire after 5 minutes to prevent stale mappings in serverless.
+const USER_ID_CACHE_TTL_MS = 5 * 60 * 1000
+const USER_ID_CACHE_MAX_SIZE = 10_000
+const userIdCache = new Map<string, { id: string; expiresAt: number }>()
 
 
 /**
@@ -395,9 +398,16 @@ export async function getDatabaseUserId(): Promise<string> {
   const user = await requireAuthenticatedUser()
   const rawUserId = user.id
 
-  // Check in-memory cache first
-  const cachedId = userIdCache.get(rawUserId)
-  if (cachedId) return cachedId
+  // Check in-memory cache first (with TTL eviction)
+  const cached = userIdCache.get(rawUserId)
+  if (cached && cached.expiresAt > Date.now()) return cached.id
+  if (cached) userIdCache.delete(rawUserId) // expired
+
+  // Evict oldest entries if cache is at capacity
+  if (userIdCache.size >= USER_ID_CACHE_MAX_SIZE) {
+    const oldestKey = userIdCache.keys().next().value
+    if (oldestKey) userIdCache.delete(oldestKey)
+  }
 
   const byId = await prisma.user.findUnique({
     where: { id: rawUserId },
@@ -427,13 +437,13 @@ export async function getDatabaseUserId(): Promise<string> {
       '[getDatabaseUserId] Divergent auth mapping detected; using auth_user_id row',
       { rawUserId, resolvedUserId: byAuthId.id }
     )
-    userIdCache.set(rawUserId, byAuthId.id)
+    userIdCache.set(rawUserId, { id: byAuthId.id, expiresAt: Date.now() + USER_ID_CACHE_TTL_MS })
     return byAuthId.id
   }
 
   const finalId = byId?.id || byAuthId?.id
   if (finalId) {
-    userIdCache.set(rawUserId, finalId)
+    userIdCache.set(rawUserId, { id: finalId, expiresAt: Date.now() + USER_ID_CACHE_TTL_MS })
     return finalId
   }
 
@@ -475,7 +485,7 @@ export async function getDatabaseUserId(): Promise<string> {
           : null
 
         if (existingByEmail?.id) {
-          userIdCache.set(rawUserId, existingByEmail.id)
+          userIdCache.set(rawUserId, { id: existingByEmail.id, expiresAt: Date.now() + USER_ID_CACHE_TTL_MS })
           return { id: existingByEmail.id }
         }
       }
@@ -502,7 +512,8 @@ export async function getUserEmail(): Promise<string> {
 
 // Lightweight updater for user language without full ensure logic
 export async function updateUserLanguage(locale: string): Promise<{ updated: boolean }> {
-  const allowedLocales = new Set(['en', 'fr'])
+  const LOCALE_SET = new Set(['en', 'fr', 'de', 'es', 'it', 'pt', 'vi', 'hi', 'ja', 'zh', 'yo'])
+  const allowedLocales = LOCALE_SET
   if (!allowedLocales.has(locale)) {
     return { updated: false }
   }

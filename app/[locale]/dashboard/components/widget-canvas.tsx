@@ -16,7 +16,7 @@ import 'react-resizable/css/styles.css'
 import { useDataActions } from '@/context/providers/data-actions-provider'
 import { useDataFormattedTrades } from '@/context/providers/data-derived-provider'
 import { useDataFilters, useDataIsMobile, useDataTradeItems } from '@/context/providers/data-state-provider'
-import { useI18n } from "@/locales/client"
+import { useI18n, useTypedI18n } from "@/locales/client"
 import { WIDGET_REGISTRY, getWidgetComponent } from '../config/widget-registry'
 import { useAutoScroll } from '../../../../hooks/use-auto-scroll'
 import { cn } from '@/lib/utils'
@@ -61,12 +61,12 @@ const createLayoutSignature = (widgets: Widget[]) =>
     .join("|")
 
 function WidgetErrorFallback({ widgetId }: { widgetId: string }) {
-  const translate = useI18n()
+  const translate = useTypedI18n()
   return (
     <WidgetShell
-      title={translate("widgets.error.title" as any, { count: 1 }) || "Widget Error"}
+      title={translate("widgets.error.title") || "Widget Error"}
       state="error"
-      errorMessage={translate("widgets.error.description" as any, { count: 1 }) || "This widget encountered an error."}
+      errorMessage={translate("widgets.error.description") || "This widget encountered an error."}
     />
   )
 }

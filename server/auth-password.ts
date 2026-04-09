@@ -135,9 +135,9 @@ export async function resetPasswordForEmail(email: string) {
  * Used after Supabase redirect-based password reset or for password changes.
  */
 export async function updatePassword(newPassword: string) {
-  const passwordError = validatePasswordStrength(newPassword)
-  if (passwordError) {
-    throw new Error(passwordError.errors.join(', '))
+  const passwordResult = validatePasswordStrength(newPassword)
+  if (!passwordResult.valid) {
+    throw new Error(passwordResult.errors.join(', '))
   }
 
   try {
@@ -161,9 +161,9 @@ export async function updatePassword(newPassword: string) {
  * Allow a logged-in user to set or change their password.
  */
 export async function setPasswordAction(newPassword: string) {
-  const passwordError = validatePasswordStrength(newPassword)
-  if (passwordError) {
-    throw new Error(passwordError.errors.join(', '))
+  const passwordResult = validatePasswordStrength(newPassword)
+  if (!passwordResult.valid) {
+    throw new Error(passwordResult.errors.join(', '))
   }
 
   try {
