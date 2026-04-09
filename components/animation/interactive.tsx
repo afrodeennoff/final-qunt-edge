@@ -213,7 +213,7 @@ export function DraggableCard({
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const handleDragEnd = useCallback((_: any, info: PanInfo) => {
+  const handleDragEnd = useCallback((_event: unknown, info: PanInfo) => {
     if (prefersReducedMotion) return
 
     onDragEnd?.({ x: info.offset.x, y: info.offset.y })

@@ -449,7 +449,10 @@ const securityCleanupTimer = setInterval(() => {
 
 securityCleanupTimer.unref?.()
 
-export function withSecurityChecks<T extends (...args: any[]) => Promise<any>>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyFunction = (...args: any[]) => Promise<any>
+
+export async function withSecurityChecks<T extends AnyFunction>(
   handler: T,
   options?: {
     requireAuth?: boolean
@@ -457,7 +460,8 @@ export function withSecurityChecks<T extends (...args: any[]) => Promise<any>>(
     feature?: string
     rateLimit?: boolean
   }
-): T {
+): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (async (...args: any[]) => {
     const clientInfo = await securityManager.getClientInfo()
 

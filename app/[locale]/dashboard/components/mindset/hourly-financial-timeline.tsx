@@ -237,10 +237,8 @@ export function HourlyFinancialTimeline({
 
   // Group events and trades by hour and sort by importance
   const eventsByHour = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const hourMap = new Map<number, Array<FinancialEvent | any>>()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tradesByHour = new Map<number, Array<any>>()
+    const hourMap = new Map<number, Array<FinancialEvent | unknown>>()
+    const tradesByHour = new Map<number, Array<unknown>>()
 
     // Initialize all hours with empty arrays
     hours.forEach((hour) => {

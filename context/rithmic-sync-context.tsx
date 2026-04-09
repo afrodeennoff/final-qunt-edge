@@ -673,9 +673,9 @@ export function RithmicSyncContextProvider({
 
         // If allAccounts is true, use all available accounts else use selected accounts (which exist in the data.accounts array)
         const accountsToSync = savedData.allAccounts
-          ? data.accounts.map((acc: any) => acc.account_id)
+          ? data.accounts.map((acc: { account_id: string }) => acc.account_id)
           : savedData.selectedAccounts.filter((account: string) =>
-            data.accounts.some((acc: any) => acc.account_id === account)
+            data.accounts.some((acc: { account_id: string }) => acc.account_id === account)
           );
 
         setAvailableAccounts(data.accounts);

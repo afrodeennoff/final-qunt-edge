@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { BadgeV2, CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";

@@ -151,6 +151,7 @@ describe('Performance Load Tests', () => {
 /**
  * Helper Functions
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function gotoAndWaitForMetrics(page: any, url: string) {
   await page.goto(url);
   await page.waitForLoadState('networkidle');
@@ -158,6 +159,7 @@ async function gotoAndWaitForMetrics(page: any, url: string) {
   return getWebVitals(page);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getWebVitals(page: any) {
   return await page.evaluate(() => {
     return new Promise((resolve) => {
@@ -175,8 +177,9 @@ async function getWebVitals(page: any) {
       let clsValue = 0;
       new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
+          const layoutEntry = entry as { hadRecentInput?: boolean; value?: number }
+          if (!layoutEntry.hadRecentInput) {
+            clsValue += layoutEntry.value ?? 0;
             cls = clsValue;
           }
         }
@@ -190,10 +193,12 @@ async function getWebVitals(page: any) {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getMemoryUsage(page: any): Promise<number> {
   return await page.evaluate(() => {
-    if ('memory' in performance) {
-      return (performance as any).memory.usedJSHeapSize;
+    const perf = performance as Performance & { memory?: { usedJSHeapSize: number } }
+    if ('memory' in perf && perf.memory) {
+      return perf.memory.usedJSHeapSize;
     }
     return 0;
   });
