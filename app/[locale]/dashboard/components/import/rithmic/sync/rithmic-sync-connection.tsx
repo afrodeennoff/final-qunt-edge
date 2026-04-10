@@ -74,7 +74,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
         throw new Error(data.message)
       }
     } catch (error) {
-      console.error('Failed to fetch server configurations:', error)
+      console.warn('Failed to fetch server configurations:', error)
     }
   }, [])
   
@@ -147,9 +147,8 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
         message: `Retrieved ${result.accounts.length} accounts. Please select accounts and click "Start Processing"`
       })
     } catch (error: unknown) {
-      // Only show console error for non-rate-limit errors
       if (!(error instanceof Error && error.message.includes('Rate limit exceeded'))) {
-        console.error('Connection error:', error)
+        console.warn('Connection error:', error)
       }
       
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
@@ -415,7 +414,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
         tokenExpiresAt: null
       })
     } catch (error) {
-      console.error('Failed to save synchronization data:', error)
+      console.warn('Failed to save synchronization data:', error)
       toast.error(t('rithmic.error.syncDataSaveFailed'), {
         description: t('rithmic.error.syncDataSaveFailedDescription'),
       })

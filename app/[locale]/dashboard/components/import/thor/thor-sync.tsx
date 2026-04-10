@@ -25,7 +25,8 @@ import { useUserStore } from "../../../../../../store/user-store"
 export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isRevealed, setIsRevealed] = useState(false)
-  const { user, setUser } = useUserStore.getState()
+  const user = useUserStore(state => state.user)
+  const setUser = useUserStore(state => state.setUser)
   const t = useI18n()
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -40,8 +41,8 @@ export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }
 
     // Play video when component mounts
     const playVideo = () => {
-      video.play().catch((error) => {
-        console.error('Video playback error:', error)
+      video.play().catch(() => {
+        console.warn('Video playback failed — user interaction may be required')
       })
     }
 

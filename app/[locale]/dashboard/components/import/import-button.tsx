@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, Component } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -30,6 +30,47 @@ import PdfProcessing from "./ibkr-pdf/pdf-processing";
 import AtasFileUpload from "./atas/atas-file-upload";
 import { createTradeWithDefaults } from "@/lib/trade-factory";
 import type { ImportTradeDraft } from "@/lib/trade-types";
+
+type ImportErrorBoundaryState = { hasError: boolean; error: Error | null };
+
+class ImportErrorBoundary extends Component<
+  { children: React.ReactNode; onReset: () => void },
+  ImportErrorBoundaryState
+> {
+  constructor(props: { children: React.ReactNode; onReset: () => void }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ImportErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    logger.error({ error, componentStack: info.componentStack }, "Import dialog error");
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+          <p className="text-sm text-v2-text-muted">Something went wrong loading this import.</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              this.props.onReset();
+            }}
+          >
+            Try again
+          </Button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 type ColumnConfig = {
   [key: string]: {
@@ -198,7 +239,11 @@ export default function ImportButton() {
 
       // Close dialog and reset state immediately so the UI doesn't freeze
       setIsOpen(false);
-      resetImportState();
+
+      // Defer state reset to after dialog animation completes
+      requestAnimationFrame(() => {
+        resetImportState();
+      });
 
       // Refresh data in the background — do not await to avoid blocking the dialog close
       Promise.all([
@@ -499,15 +544,41 @@ export default function ImportButton() {
         <span className="hidden md:block text-[10px] font-semibold uppercase tracking-[0.18em]">{t("import.button")}</span>
       </Button>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen} >
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            resetImportState();
+            setIsOpen(false);
+          } else {
+            setIsOpen(true);
+          }
+        }}
+      >
         <DialogContent
           className={cn(
             "flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80vh] sm:max-w-[80vw]",
           )}
+          onPointerDownOutside={(e) => {
+            // Prevent accidental closes during import flow
+            if (step !== 'select-import-type') {
+              e.preventDefault();
+            }
+          }}
+          onEscapeKeyDown={(e) => {
+            // Only allow escape on first step
+            if (step !== 'select-import-type') {
+              e.preventDefault();
+            }
+          }}
         >
           <ImportDialogHeader step={step} importType={importType} />
 
-          <div className="flex-1 overflow-hidden p-6">{renderStep()}</div>
+          <div className="flex-1 overflow-hidden p-6">
+            <ImportErrorBoundary onReset={resetImportState}>
+              {renderStep()}
+            </ImportErrorBoundary>
+          </div>
 
           <ImportDialogFooter
             step={step}

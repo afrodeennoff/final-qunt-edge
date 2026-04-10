@@ -22,7 +22,7 @@ const DialogOverlay = React.forwardRef<
       ref={ref}
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-v2-bg-base/65 backdrop-blur-[1px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "fixed inset-0 z-50 bg-v2-bg-base/65 backdrop-blur-[1px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:duration-200 data-[state=open]:duration-200",
         className
       )}
       {...props}
@@ -40,7 +40,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       data-slot="dialog-content"
       className={cn(
-        "fixed left-[50%] top-[50%] z-[60] grid w-[calc(100%-1.5rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-5 rounded-2xl border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl p-6 shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[46%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[46%] sm:w-full",
+        "fixed left-[50%] top-[50%] z-[60] grid w-[calc(100%-1.5rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-5 rounded-2xl border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl p-6 shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[46%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[46%] data-[state=closed]:duration-200 data-[state=open]:duration-200 sm:w-full",
         className
       )}
       {...props}

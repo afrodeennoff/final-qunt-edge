@@ -18,6 +18,7 @@ import {
 } from "@/lib/constants/layout"
 import { MobileBottomNav } from "@/components/mobile-bottom-nav"
 import type { MobileNavItem } from "@/components/mobile-bottom-nav"
+import { DashboardProviders } from "@/components/providers/dashboard-providers"
 
 export const metadata: Metadata = {
     robots: {
@@ -99,38 +100,40 @@ export default async function DashboardLayout({
 
     return (
         <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
-            <TeamsSidebar />
+            <DashboardProviders>
+                <TeamsSidebar />
 
-            <SidebarInset className="relative overflow-hidden selection:bg-muted selection:text-foreground">
-                <BackgroundGlow variant="default" />
+                <SidebarInset className="relative overflow-hidden selection:bg-muted selection:text-foreground">
+                    <BackgroundGlow variant="default" />
 
-                <div className="relative z-0 flex min-h-screen flex-col">
-                    <header
-                        className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
-                    >
-                        <div className="flex h-full w-full items-center px-4 sm:px-6 lg:px-8">
-                            <div className="flex items-center gap-3">
-                                <SidebarTrigger className="-ml-1" />
-                                <div className="flex flex-col">
-                                    <h1 className="text-sm font-bold tracking-wide text-foreground">
-                                        Teams Dashboard
-                                    </h1>
-                                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                                        Unified Workspace
-                                    </span>
+                    <div className="relative z-0 flex min-h-screen flex-col">
+                        <header
+                            className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+                        >
+                            <div className="flex h-full w-full items-center px-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center gap-3">
+                                    <SidebarTrigger className="-ml-1" />
+                                    <div className="flex flex-col">
+                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
+                                            Teams Dashboard
+                                        </h1>
+                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                                            Unified Workspace
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </header>
+                        </header>
 
-                    <main className="flex-1 overflow-y-auto">
-                        <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
-                            {children}
-                        </div>
-                    </main>
-                </div>
-                <MobileBottomNav items={teamsMobileItems} />
-            </SidebarInset>
+                        <main className="flex-1 overflow-y-auto">
+                            <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+                                {children}
+                            </div>
+                        </main>
+                    </div>
+                    <MobileBottomNav items={teamsMobileItems} />
+                </SidebarInset>
+            </DashboardProviders>
         </SidebarRootProviders>
     )
 }
