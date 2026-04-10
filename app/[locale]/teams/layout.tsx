@@ -1,6 +1,5 @@
-
 import { Metadata } from 'next';
-import { PublicRootProviders } from "@/components/providers/root-providers";
+import { RootProviders } from "@/components/providers/root-providers";
 
 type Locale = 'en' | 'fr';
 
@@ -25,10 +24,10 @@ export default async function TeamLayout({
   children: React.ReactNode,
 }) {
   return (
-    <PublicRootProviders>
+    <RootProviders themeScope="dashboard">
       <div className="pb-safe">
         {children}
       </div>
-    </PublicRootProviders>
+    </RootProviders>
   );
 }

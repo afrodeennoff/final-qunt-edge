@@ -29,9 +29,9 @@ export function SidebarLayoutShell({
   return (
     <>
       {sidebar}
-      <SidebarInset className={cn('relative overflow-hidden', className)}>
+      <SidebarInset className={cn('relative overflow-hidden h-dvh', className)}>
         <BackgroundGlow variant={backgroundVariant} />
-        <div className="relative z-0 flex min-h-screen flex-col">
+        <div className="relative z-0 flex h-full flex-col">
           {header}
           <main className="flex-1 overflow-y-auto overscroll-y-contain">
             <div className={cn('w-full', CONTENT_PADDING, CONTENT_PADDING_Y)}>

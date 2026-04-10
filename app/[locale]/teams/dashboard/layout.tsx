@@ -103,10 +103,10 @@ export default async function DashboardLayout({
             <DashboardProviders>
                 <TeamsSidebar />
 
-                <SidebarInset className="relative overflow-hidden selection:bg-muted selection:text-foreground">
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-muted selection:text-foreground">
                     <BackgroundGlow variant="default" />
 
-                    <div className="relative z-0 flex min-h-screen flex-col">
+                    <div className="relative z-0 flex h-full flex-col">
                         <header
                             className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
                         >

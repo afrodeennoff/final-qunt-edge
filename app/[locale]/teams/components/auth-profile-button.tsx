@@ -1,4 +1,4 @@
-'use server'
+'use client'
 
 import { Avatar as Avatar, AvatarFallback as AvatarFallback, AvatarImage as AvatarImage } from "@/components/ui/avatar"
 import { LifeBuoy, CreditCard, Database, LayoutDashboard, Settings } from "lucide-react"
@@ -12,18 +12,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from 'next/link'
-import { getI18n } from "@/locales/server"
-import { getUserProfileAction } from "@/server/user-profile"
+import { useCurrentLocale, useI18n } from "@/locales/client"
+import { useUserStore } from "@/store/user-store"
 import { TeamSubscriptionBadge } from './team-subscription-badge-client'
+import type { Subscription } from '@/prisma/generated/prisma'
 import { LogoutButton } from './logout-button'
 import { maskEmail } from '@/lib/redact-pii'
 
 
-export async function AuthProfileButton() {
-  const  t = await getI18n()
-  const profileData = await getUserProfileAction()
-  const user = profileData.supabaseUser
-  const subscription = profileData.subscription
+export function AuthProfileButton() {
+  const t = useI18n()
+  const locale = useCurrentLocale()
+  const user = useUserStore(state => state.supabaseUser)
+  const subscriptionData = useUserStore(state => state.subscription)
+  // Map store subscription to Prisma Subscription shape for TeamSubscriptionBadge
+  const subscription = subscriptionData as unknown as Subscription | null
 
   return (
     <DropdownMenu>
@@ -48,7 +51,7 @@ export async function AuthProfileButton() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard">
+          <Link href={`/${locale}/dashboard`}>
             <div className="flex items-center w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>{t('landing.navbar.dashboard')}</span>
@@ -57,7 +60,7 @@ export async function AuthProfileButton() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/settings">
+          <Link href={`/${locale}/dashboard/settings`}>
             <div className="flex items-center w-full">
               <Settings className="mr-2 h-4 w-4" />
               <span>{t('dashboard.settings')}</span>
@@ -66,7 +69,7 @@ export async function AuthProfileButton() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/billing">
+          <Link href={`/${locale}/dashboard/billing`}>
             <div className="flex items-center w-full">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>{t('dashboard.billing')}</span>
@@ -74,7 +77,7 @@ export async function AuthProfileButton() {
             </div>
           </Link>
         </DropdownMenuItem>
-        <Link href="/dashboard/data">
+        <Link href={`/${locale}/dashboard/data`}>
           <DropdownMenuItem className="flex items-center">
             <Database className="mr-2 h-4 w-4" />
             <span>{t('dashboard.data')}</span>
@@ -82,7 +85,7 @@ export async function AuthProfileButton() {
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <Link href="/support">
+        <Link href={`/${locale}/support`}>
           <DropdownMenuItem className="flex items-center">
             <LifeBuoy className="mr-2 h-4 w-4" />
             <span>{t('dashboard.support')}</span>

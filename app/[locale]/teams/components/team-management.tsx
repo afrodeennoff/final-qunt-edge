@@ -149,6 +149,10 @@ export function TeamManagement({
   useEffect(() => {
     if (firstTeamId && pathname.endsWith('/teams/dashboard')) {
       router.replace(`${dashboardRoot}/${firstTeamId}`)
+      // Mark redirect as done — the route change will trigger a re-render
+      // and the first useEffect will set isRedirecting(false when the path changes)
+      const timeout = setTimeout(() => setIsRedirecting(false), 3000)
+      return () => clearTimeout(timeout)
     } else if (!firstTeamId) {
       setIsRedirecting(false);
     }
@@ -178,7 +182,7 @@ export function TeamManagement({
   const [renameTeamName, setRenameTeamName] = useState('')
   const [newTraderEmail, setNewTraderEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [pendingInvitations, setPendingInvitations] = useState<any[]>([])
+  const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string }>>([])
 
   // Load data on component mount
   useEffect(() => {
@@ -640,7 +644,7 @@ export function TeamManagement({
     }
   }
 
-  const formatDate = (date: any) => {
+  const formatDate = (date: Date | string | unknown) => {
     if (date instanceof Date) {
       return date.toLocaleDateString()
     }

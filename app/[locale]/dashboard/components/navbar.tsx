@@ -15,6 +15,7 @@ import { useKeyboardShortcuts } from '../../../../hooks/use-keyboard-shortcuts'
 import { ActiveFilterTags } from './filters/active-filter-tags'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FilterCommandMenu } from './filters/filter-command-menu'
+import { useCurrentLocale } from "@/locales/client"
 import { useDashboard } from '../dashboard-context'
 import { AddWidgetSheet } from './add-widget-sheet'
 import { ShareButton } from './share-button'
@@ -26,6 +27,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { PnLSummary } from './pnl-summary'
 
 export default function Navbar() {
+  const locale = useCurrentLocale()
   const {
     isCustomizing,
     toggleCustomizing,
@@ -127,7 +129,7 @@ export default function Navbar() {
                 <ImportButton />
 
                 {!isPlusUser() && (
-                  <Link href="/dashboard/billing">
+                  <Link href={`/${locale}/dashboard/billing`}>
                     <Button  
                       variant="ghost" 
                       size="sm" 

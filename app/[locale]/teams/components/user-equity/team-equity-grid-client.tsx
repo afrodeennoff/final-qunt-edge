@@ -20,7 +20,7 @@ interface UserEquityData {
   userId: string
   email: string
   createdAt: string
-  trades: any[]
+  trades: Array<{ id: string; [key: string]: unknown }>
   equityCurve: {
     date: string
     pnl: number

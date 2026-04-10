@@ -226,7 +226,9 @@ export default function ImportButton() {
             description: details,
           });
         }
-        // Don't proceed further if there's an error
+        // Don't proceed further if there's an error - close dialog to prevent freezing
+        setIsOpen(false);
+        setTimeout(() => resetImportState(), 100);
         return;
       }
 
@@ -237,21 +239,22 @@ export default function ImportButton() {
         }),
       });
 
-      // Close dialog and reset state immediately so the UI doesn't freeze
+      // Close dialog immediately to prevent UI freezing
       setIsOpen(false);
-
-      // Defer state reset to after dialog animation completes
-      requestAnimationFrame(() => {
+      
+      // Reset state with a small delay to allow UI to update
+      setTimeout(() => {
         resetImportState();
-      });
+      }, 200);
 
-      // Refresh data in the background — do not await to avoid blocking the dialog close
-      Promise.all([
-        refreshTradesOnly({ force: true }),
-        refreshUserDataOnly({ force: true }),
-      ]).catch((refreshError) => {
+      // Refresh data in the background without blocking UI
+      refreshTradesOnly({ force: true }).catch((refreshError) => {
         logger.error({ error: refreshError }, "Background data refresh failed after import");
       });
+      refreshUserDataOnly({ force: true }).catch((refreshError) => {
+        logger.error({ error: refreshError }, "Background user refresh failed after import");
+      });
+      
     } catch (error) {
       const message =
         error instanceof Error ? error.message : t("import.error.failedDescription");
@@ -259,6 +262,10 @@ export default function ImportButton() {
       toast.error(t("import.error.failed"), {
         description: message,
       });
+      
+      // Ensure dialog closes on error to prevent freezing
+      setIsOpen(false);
+      setTimeout(() => resetImportState(), 100);
     } finally {
       setIsSaving(false);
     }
@@ -548,8 +555,12 @@ export default function ImportButton() {
         open={isOpen}
         onOpenChange={(open) => {
           if (!open) {
-            resetImportState();
             setIsOpen(false);
+            // Defer state reset to after dialog close animation completes
+            // to prevent heavy re-renders during animation that freeze the UI
+            requestAnimationFrame(() => {
+              resetImportState();
+            });
           } else {
             setIsOpen(true);
           }

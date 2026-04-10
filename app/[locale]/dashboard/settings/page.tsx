@@ -96,9 +96,11 @@ function getErrorMessage(error: unknown, fallback: string): string {
 function TeamSettingsCard({
   userTeams,
   onLeaveTeam,
+  locale,
 }: {
   userTeams: UserTeamsState
   onLeaveTeam: (teamId: string) => Promise<void>
+  locale: string
 }) {
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
@@ -173,7 +175,7 @@ function TeamSettingsCard({
             <p>No team linked</p>
             <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
             <div className="mt-4">
-              <Link href="/teams/dashboard">
+              <Link href={`/${locale}/teams/dashboard`}>
                 <Button >
                   <Building2 className="mr-2 h-4 w-4" />
                   Manage Teams
@@ -185,7 +187,7 @@ function TeamSettingsCard({
 
         {hasTeams && (
           <div className="mt-4">
-            <Link href="/teams/dashboard">
+            <Link href={`/${locale}/teams/dashboard`}>
               <Button  variant="outline" className="w-full">
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Teams
@@ -637,7 +639,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} />
+        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} locale={currentLocale} />
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
@@ -668,19 +670,19 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">
-              <Link href="/dashboard/billing">
+              <Link href={`/${currentLocale}/dashboard/billing`}>
                 <Button  variant="outline" className="w-full justify-start">
                   <CreditCard className="mr-2 h-4 w-4" />
                   Billing & Subscription
                 </Button>
               </Link>
-              <Link href="/dashboard/data">
+              <Link href={`/${currentLocale}/dashboard/data`}>
                 <Button  variant="outline" className="w-full justify-start">
                   <Database className="mr-2 h-4 w-4" />
                   Data Management
                 </Button>
               </Link>
-              <Link href="/support">
+              <Link href={`/${currentLocale}/support`}>
                 <Button  variant="outline" className="w-full justify-start">
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   Support & Help
