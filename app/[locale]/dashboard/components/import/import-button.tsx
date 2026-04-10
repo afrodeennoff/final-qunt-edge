@@ -206,7 +206,7 @@ export default function ImportButton() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : t("import.error.failedDescription");
-      console.error("Error saving trades:", error);
+      logger.error({ error }, "Error saving trades:");
       toast.error(t("import.error.failed"), {
         description: message,
       });

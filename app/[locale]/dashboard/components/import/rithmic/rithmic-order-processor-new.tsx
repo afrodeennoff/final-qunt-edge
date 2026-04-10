@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { getTickDetails } from '@/server/tick-details'
 import { PlatformProcessorProps } from '../config/platforms'
+import { logger } from '@/lib/logger'
 
 interface ContractSpec {
   tickSize: number;
@@ -68,8 +69,8 @@ function parseDate(dateString: string): Date {
     return parsedDate
   }
 
-  console.warn(`Unable to parse date: ${dateString}`)
-  return new Date()
+  logger.warn({ dateString }, `Unable to parse date, skipping row`)
+  return new Date(NaN) // Return invalid date so callers can detect failure
 }
 
 function cleanCsvData(csvData: string[][], headers: string[]): [string[][], string[]] {
@@ -113,7 +114,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
 
   const parsePrice = (priceString: string): number => {
     if (!priceString || typeof priceString !== 'string') {
-      console.warn(`Invalid price string: ${priceString}`)
+      logger.warn({ priceString }, 'Invalid price string')
       return 0
     }
     
@@ -174,7 +175,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
 
       sortedAccountOrders.forEach((row) => {
         if (row.length !== cleanHeaders.length) {
-          console.warn('Row length mismatch:', row);
+          logger.warn({ rowLength: row.length, expectedLength: cleanHeaders.length }, 'Row length mismatch, skipping');
           return; // Skip invalid rows
         }
 
@@ -188,7 +189,7 @@ export default function RithmicOrderProcessor({ csvData, headers, processedTrade
         const missingFields = requiredFields.filter(field => !order[field]);
         
         if (missingFields.length > 0) {
-          console.warn(`Missing required fields: ${missingFields.join(', ')}`, order);
+          logger.warn({ missingFields, order }, 'Missing required fields, skipping row');
           return; // Skip this row
         }
 
