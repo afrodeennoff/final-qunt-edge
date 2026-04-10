@@ -43,14 +43,6 @@ function getLocaleFromGeolocation(): 'en' | 'fr' {
   return frenchCountries.includes(country || '') ? 'fr' : 'en'
 }
 
-function applyThemeToDocument(intensity: number) {
-  if (typeof window === 'undefined') return
-
-  const root = document.documentElement
-  root.classList.remove('light', 'dark')
-  root.classList.add('dark')
-  root.style.setProperty('--theme-intensity', `${intensity}%`)
-}
 
 function detectLocaleFromBrowser(): 'en' | 'fr' {
   if (typeof window === 'undefined') return 'fr'
@@ -91,9 +83,6 @@ function NotFoundContent() {
     // Set page title
     document.title = 'Qunt Edge | ' + translations[detectedLocale].title
 
-    // Apply theme from localStorage
-    const savedIntensity = parseInt(localStorage.getItem('intensity') || '100')
-    applyThemeToDocument(savedIntensity)
   }, [])
 
   // Fetch routes from public/routes.json (generated at build time)

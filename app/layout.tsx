@@ -13,7 +13,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
 import { getUiVariant } from "@/lib/ui-v2";
-import ThemeRouteInitializer from "@/lib/theme-client";
 import { getSiteOrigin } from "@/lib/site-url";
 
 const siteOrigin = getSiteOrigin();
@@ -252,7 +251,6 @@ export default async function RootLayout({
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        <ThemeRouteInitializer />
         <main id="main-content">
           {children}
         </main>

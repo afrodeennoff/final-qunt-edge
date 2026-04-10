@@ -75,7 +75,6 @@ export default function EmbedPage() {
     // Dark-only theme with optional presets/overrides.
     React.useEffect(() => {
         const root = document.documentElement
-        root.classList.remove('light', 'dark')
         root.classList.add('dark')
 
         // Apply optional preset (ocean, sunset, etc.) on top of light/dark
@@ -117,8 +116,7 @@ export default function EmbedPage() {
                 } else if (data.type === 'SET_THEME') {
                     const root = document.documentElement
                     const { preset: p, vars } = data
-                    root.classList.remove('light', 'dark')
-                    root.classList.add('dark')
+                                root.classList.add('dark')
                     if (p && THEME_PRESETS[p as keyof typeof THEME_PRESETS]) {
                         applyEmbedTheme(THEME_PRESETS[p as keyof typeof THEME_PRESETS], root)
                     }
