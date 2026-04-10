@@ -51,25 +51,23 @@ export function AdminClientLayout({
 
   return (
     <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
-      <div className="flex min-h-screen w-full bg-background text-foreground">
-        <SidebarNav />
-        <SidebarInset className="flex-1 relative overflow-hidden bg-transparent">
-          <header
-            className={`${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG} flex items-center justify-between px-4 md:px-8 sticky top-0`}
-          >
-            <div className="flex items-center gap-4 flex-shrink-0">
-              <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-              <h1 className="text-sm font-bold text-foreground tracking-wide uppercase whitespace-nowrap">
-                Admin Panel
-              </h1>
-            </div>
-          </header>
-          <main className={`flex-1 overflow-y-auto ${CONTENT_PADDING_Y} ${CONTENT_PADDING} relative z-0`}>
-            {children}
-          </main>
-          <MobileBottomNav items={mobileItems} />
-        </SidebarInset>
-      </div>
+      <SidebarNav />
+      <SidebarInset className="relative overflow-hidden">
+        <header
+          className={`${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG} flex items-center justify-between px-4 md:px-8 sticky top-0`}
+        >
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
+            <h1 className="text-sm font-bold text-foreground tracking-wide uppercase whitespace-nowrap">
+              Admin Panel
+            </h1>
+          </div>
+        </header>
+        <main className={`flex-1 overflow-y-auto ${CONTENT_PADDING_Y} ${CONTENT_PADDING} relative z-0`}>
+          {children}
+        </main>
+        <MobileBottomNav items={mobileItems} />
+      </SidebarInset>
     </SidebarRootProviders>
   )
 }
