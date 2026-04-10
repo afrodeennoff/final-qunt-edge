@@ -15,6 +15,8 @@ import { cookies } from "next/headers";
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state";
 import { SidebarLayoutShell } from "@/components/ui/sidebar-layout-shell";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { shouldUseServerBootstrap } from "@/lib/feature-flags";
+import type { DashboardBootstrapPayload } from "@/lib/types/bootstrap";
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
@@ -53,6 +55,20 @@ export default async function DashboardLayout({
   }
 
   const isAdmin = isAdminUser(user);
+
+  // Server dashboard bootstrap — loads all data for first paint when flag is enabled.
+  // Falls back to client-side loadData() when flag is disabled or bootstrap fails.
+  let initialBootstrap: DashboardBootstrapPayload | null = null;
+  if (shouldUseServerBootstrap(user.id)) {
+    try {
+      // Dynamic import to avoid issues when bootstrap module is not yet stable
+      const { getDashboardBootstrap } = await import("@/server/dashboard-bootstrap");
+      initialBootstrap = await getDashboardBootstrap();
+    } catch (err) {
+      console.warn("[Dashboard] Bootstrap failed, falling back to client loadData:", err);
+    }
+  }
+
   const userTheme = await getUserDashboardTheme() ?? undefined;
   const themeScript = serializeThemeVars(userTheme ?? 'blue');
   const cookieStore = await cookies();
@@ -70,7 +86,7 @@ export default async function DashboardLayout({
         }}
       />
       <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout initialTheme={userTheme}>
-        <DashboardProviders isAdmin={isAdmin}>
+        <DashboardProviders isAdmin={isAdmin} initialBootstrap={initialBootstrap}>
           <DashboardClientOverlays />
           <DashboardProvider>
             <DashboardScrollReset />
