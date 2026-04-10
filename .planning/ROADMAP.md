@@ -9,7 +9,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ## Phases
 
-### 01 — Visual Refresh: Resend/Expo Quality
+### Phase 01: Visual Refresh — Resend/Expo Quality
 
 **Goal**: Apply StyleSeed design engine across the entire app (landing + dashboard + auth) to achieve Resend/Expo-quality visual polish.
 
@@ -25,7 +25,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 02 — Server Dashboard Bootstrap
+### Phase 02: Server Dashboard Bootstrap
 
 **Goal**: Rebuild the dashboard as server-first. First render includes authenticated user state, sidebar state, layout, first trade snapshot, accounts, tags, groups, and headline analytics from cached server loaders. Hydrate into a thinner client runtime instead of loading the whole dashboard after mount.
 
@@ -48,7 +48,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 03 — Widget Server Shells & Client Islands
+### Phase 03: Widget Server Shells & Client Islands
 
 **Goal**: Refactor widget rendering into server shells plus client islands. Widget titles, summaries, counts, empty states, and shell chrome render on the server. Charts, drag/drop, editors, chat, and upload interactions stay client-side and load lazily. Remove blanket `ssr: false` usage.
 
@@ -70,7 +70,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 04 — Import Flow Polish
+### Phase 04: Import Flow Polish
 
 **Goal**: Fix the import flow comprehensively. Import type selector becomes stable with no layout jumping, predictable card heights, fast filtering/search. Parser-heavy code (exceljs) lazy-loaded only when needed. Import cards use lightweight view model decoupled from parser/runtime.
 
@@ -92,7 +92,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 05 — Dark-Only Theme Enforcement
+### Phase 05: Dark-Only Theme Enforcement
 
 **Goal**: Enforce true dark-only application. Remove route-based light-theme branching. All surfaces (public, auth, dashboard, admin, team, shared, embed, error, fallback) use dark theme contract. Delete remaining client bootstrap logic that toggles light/dark classes.
 
@@ -113,7 +113,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 06 — Navigation & Sidebar Standardization
+### Phase 06: Navigation & Sidebar Standardization
 
 **Goal**: Standardize admin and teams sidebars with clear dashboard back-link pattern. Admin gets visible Main Dashboard link, teams keeps the same system link with consistent labeling/grouping. Mobile navigation mirrors desktop contract.
 
@@ -135,7 +135,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 07 — Dashboard Polish Pass
+### Phase 07: Dashboard Polish Pass
 
 **Goal**: Refine dashboard design as a polish pass — unify header actions into one subdued pill system, tighten spacing rhythm, remove inconsistent widget chrome, improve section hierarchy, clean empty/loading/error states, make cards/tables/filters/side panels visually related.
 
@@ -158,7 +158,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 08 — Font & Bundle Optimization
+### Phase 08: Font & Bundle Optimization
 
 **Goal**: Reduce global font cost — keep only primary sans and mono globally preloaded, move decorative fonts to landing-only. Remove heavyweight libraries from default browser bundles. Convert public marketing routes to server-first rendering.
 
@@ -180,7 +180,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 09 — Auth Flow Simplification
+### Phase 09: Auth Flow Simplification
 
 **Goal**: Simplify protected-route auth work. Proxy owns routing and coarse access control. One shared request-scoped auth helper resolves identity for server components and handlers. Remove duplicated Supabase getUser() work. Preserve current redirect behavior.
 
@@ -202,7 +202,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 10 — Observability & Reliability Hardening
+### Phase 10: Observability & Reliability Hardening
 
 **Goal**: Add production-grade observability. Instrument server actions, route handlers, cron jobs, broker syncs, billing/webhooks, and AI routes with structured timing, error, and retry metadata. Centralized error reporting. Strict timeouts, retry policies, idempotency keys for external integrations. Explicit degraded-state UX.
 
@@ -225,7 +225,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 11 — Security Hardening
+### Phase 11: Security Hardening
 
 **Goal**: Add rate limits for auth, AI, upload, and webhook-adjacent routes. Verify CSP and security headers enforced. Verify route auth coverage. Centralize admin/service auth checks.
 
@@ -247,7 +247,7 @@ Qunt Edge — One-Shot Production Hardening: server-first dashboard, visual poli
 
 ---
 
-### 12 — Dependency Cleanup & CI Strengthening
+### Phase 12: Dependency Cleanup & CI Strengthening
 
 **Goal**: Remove unused runtime packages, keep one motion strategy, ensure .env.example matches live env. Strengthen CI with enforced typecheck, lint, route-budget, dead-code, selected E2E, and production build as required merge gates. Update bundle analysis for Next 16.
 
