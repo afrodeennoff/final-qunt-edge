@@ -120,13 +120,10 @@ export function GlobalSyncButton() {
                             : "border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
                     )}
                 >
-                    <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-v2-bg-base/25 transition-colors group-hover:bg-v2-bg-base/45">
-                        <RefreshCw className={cn(
-                            "h-4 w-4 transition-transform duration-700",
-                            isAnySyncing ? "animate-spin" : "group-hover:rotate-180"
-                        )} />
-                        {isAnySyncing && <div className="absolute inset-0 bg-primary/15 blur-sm rounded-full" />}
-                    </div>
+                    <RefreshCw className={cn(
+                        "h-4 w-4 shrink-0 transition-transform duration-700",
+                        isAnySyncing ? "animate-spin" : "group-hover:rotate-180"
+                    )} />
 
                     <div className="hidden items-center gap-1 xl:flex">
                         <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">

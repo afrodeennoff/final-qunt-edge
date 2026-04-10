@@ -49,7 +49,7 @@ export function DashboardHeaderWidgetControls({ isMobile }: DashboardHeaderWidge
   const customizeButtonText = getCustomizeButtonText(t, isCustomizing);
 
   return (
-    <div className={getHeaderWrapperClass(isMobile)}>
+    <div className={getHeaderWrapperClass()}>
       <button
         type="button"
         id="customize-mode"
@@ -77,10 +77,7 @@ export function DashboardHeaderWidgetControls({ isMobile }: DashboardHeaderWidge
       )}
 
       {!isMobile && (
-        <>
-          <div className="mx-1 h-4 w-px bg-v2-border/15" />
-          <ShareButton currentLayout={currentLayout} />
-        </>
+        <ShareButton currentLayout={currentLayout} />
       )}
     </div>
   );
@@ -106,8 +103,7 @@ function CustomizingControls({
   restoreDefaultLayout,
 }: CustomizingControlsProps) {
   return (
-    <div className="flex items-center gap-1.5">
-      <div className="mx-0.5 h-4 w-px bg-v2-border/15" />
+    <div className="flex items-center gap-1">
       <AddWidgetSheet onAddWidget={addWidget} isCustomizing={isCustomizing} />
 
       {!isMobile && (
@@ -116,7 +112,7 @@ function CustomizingControls({
             <button
               type="button"
               aria-label={t("widgets.restoreDefaults")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-v2-text-secondary transition-colors hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
               title={t("widgets.restoreDefaults")}
             >
               <RotateCcw className="h-4 w-4" />
@@ -143,7 +139,7 @@ function CustomizingControls({
             <button
               type="button"
               aria-label={t("widgets.deleteAll")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-v2-text-secondary transition-colors hover:border-v2-border/20 hover:bg-v2-bg-hover hover:text-v2-text-primary"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
               title={t("widgets.deleteAll")}
             >
               <Trash2 className="h-4 w-4" />
@@ -173,8 +169,8 @@ function CustomizingControls({
           onClick={flushPendingSaves}
           aria-label="Save pending dashboard changes"
           className={cn(
-            "flex items-center justify-center rounded-full border border-v2-accent/20 bg-v2-accent/10 text-v2-text-primary transition-colors animate-pulse",
-            isMobile ? "h-11 w-11" : "h-8 w-8"
+            "flex items-center justify-center rounded-full border border-transparent bg-v2-accent/10 text-v2-text-primary transition-colors animate-pulse",
+            isMobile ? "h-11 w-11" : "h-9 w-9"
           )}
           title="Save Changes"
         >
@@ -185,8 +181,8 @@ function CustomizingControls({
           role="status"
           aria-label="All changes saved"
           className={cn(
-            "flex items-center justify-center rounded-full border border-v2-border/15 bg-v2-bg-base/55 text-v2-text-secondary",
-            isMobile ? "h-11 w-11" : "h-8 w-8"
+            "flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary",
+            isMobile ? "h-11 w-11" : "h-9 w-9"
           )}
           title="All changes saved"
         >
@@ -197,13 +193,8 @@ function CustomizingControls({
   );
 }
 
-function getHeaderWrapperClass(isMobile: boolean) {
-  return cn(
-    "ml-0.5 flex shrink-0 items-center gap-1",
-    isMobile
-      ? "rounded-full border border-v2-border/15 bg-v2-bg-base/70 p-1"
-      : "pl-0.5"
-  );
+function getHeaderWrapperClass() {
+  return cn("ml-0.5 flex shrink-0 items-center gap-1");
 }
 
 function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
@@ -211,7 +202,7 @@ function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
     "relative group flex items-center gap-2 rounded-lg transition-all duration-200",
     isMobile ? "h-11 w-11 justify-center px-0" : "h-9 px-3.5",
     isCustomizing
-      ? "bg-v2-accent text-v2-accent-foreground shadow-sm"
+      ? "border border-transparent bg-v2-accent/12 text-v2-text-primary ring-1 ring-v2-accent/15"
       : "rounded-full border border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
   );
 }

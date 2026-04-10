@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -38,6 +38,7 @@ const DashboardHeaderWidgetControls = dynamic(
 export function DashboardHeader() {
     const pathname = usePathname();
     const isMobile = useIsMobile();
+    const { state: sidebarState } = useSidebar();
     const { isPlusUser } = useDashboardActions();
     const {
         accountNumbers,
@@ -52,6 +53,7 @@ export function DashboardHeader() {
     const normalizedPathname = pathname.replace(/\/+$/, '') || '/';
     const isDashboardRoot = /^\/(?:[a-z]{2}(?:-[A-Za-z]{2})?)?\/dashboard$/i.test(normalizedPathname);
     const isWidgetsTab = activeTab === 'widgets';
+    const isSidebarCollapsed = !isMobile && sidebarState === 'collapsed';
     const localeMatch = pathname.match(/^\/([a-z]{2}(?:-[A-Za-z]{2})?)(?=\/|$)/i);
     const billingHref = localeMatch?.[1] ? `/${localeMatch[1]}/dashboard/billing` : '/dashboard/billing';
 
@@ -107,11 +109,11 @@ export function DashboardHeader() {
         >
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.02),transparent_25%,transparent_75%,hsl(var(--foreground)_/_0.02))]" />
             <div className="relative flex min-h-14 items-center justify-between gap-3 px-3 sm:gap-4 sm:px-6">
-                <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 pointer-events-auto">
+                <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
                     <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-7 md:w-7 md:rounded-lg" />
                     <div className="flex min-w-0 items-center gap-3">
                         <div className="hidden h-7 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/40 to-v2-border/0 sm:block" />
-                        <div className="min-w-0">
+                        <div className="min-w-0 max-w-[min(28rem,42vw)]">
                             <div className="flex items-center gap-2.5">
                                 {showSectionLabel && (
                                     <span className={cn(
@@ -134,28 +136,21 @@ export function DashboardHeader() {
                 </div>
 
                 <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
-                    <div className={cn(
-                        "flex min-w-0 max-w-full items-center gap-1.5",
-                        isMobile
-                            ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5"
-                            : cn(
-                                "rounded-full border p-1.5 backdrop-blur-xl",
-                                "border-v2-border/12 bg-v2-bg-surface/40",
-                                "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02)]"
-                            )
-                    )}>
-                    <div className={cn(
-                        "flex min-w-0 items-center gap-1",
-                        !isMobile && "pr-0.5"
-                    )}>
-                        <FilterCommandMenu variant="navbar" />
+                    <div className="flex min-w-0 w-full items-center justify-end gap-1">
+                    <div className="flex min-w-0 items-center gap-1">
+                        <FilterCommandMenu
+                            variant="navbar"
+                            className={cn(
+                                isSidebarCollapsed
+                                    ? "w-[clamp(280px,34vw,460px)]"
+                                    : "w-[clamp(220px,24vw,360px)]"
+                            )}
+                        />
 
                         {!isMobile && <GlobalSyncButton />}
 
                         {!isMobile && <DailySummaryModal />}
                     </div>
-
-                    <div className="mx-0.5 hidden h-5 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/20 to-v2-border/0 sm:block" />
 
                     <div className="hidden sm:flex items-center gap-1">
                         <ImportButton />
@@ -192,12 +187,7 @@ export function DashboardHeader() {
                         "relative px-3 pb-2.5 pt-1",
                         !isMobile && "px-4 sm:px-6"
                     )}>
-                        <div className={cn(
-                            "rounded-lg border px-2.5 py-1.5 backdrop-blur-sm transition-all duration-200",
-                            "border-v2-border/12 bg-v2-bg-surface/35"
-                        )}>
-                            <ActiveFilterTags showAccountNumbers={true} />
-                        </div>
+                        <ActiveFilterTags showAccountNumbers={true} />
                     </div>
                 ) : null
             }
