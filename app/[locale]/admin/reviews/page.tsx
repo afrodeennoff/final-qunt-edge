@@ -2,8 +2,8 @@ import { getReviewModerationQueue, moderateReview, getFlaggedReviewCount } from 
 import { assertAdminAccess } from '@/server/authz'
 import { redirect } from 'next/navigation'
 import { CheckCircle2, XCircle, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 
 interface PageProps {
@@ -96,12 +96,12 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                 <div className="flex-1">
                   {/* Review Info */}
                   <div className="flex items-center gap-3 mb-3">
-                    <BadgeV2 
+                    <Badge 
                       variant={item.status === 'pending' ? 'warning' : 'success'}
                       size="sm"
                     >
                       {item.status}
-                    </BadgeV2>
+                    </Badge>
                     <span className="text-sm text-muted-foreground">
                       Reported {new Date(item.createdAt).toLocaleDateString()}
                     </span>
@@ -145,19 +145,19 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                   {item.status === 'resolved' && (
                     <div className="flex items-center gap-2 text-sm">
                       {item.resolution === 'upheld' ? (
-                        <BadgeV2 variant="error" size="sm">
+                        <Badge variant="error" size="sm">
                           <XCircle className="h-3 w-3 mr-1" />
                           Removed
-                        </BadgeV2>
+                        </Badge>
                       ) : item.resolution === 'dismissed' ? (
-                        <BadgeV2 variant="success" size="sm">
+                        <Badge variant="success" size="sm">
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Dismissed
-                        </BadgeV2>
+                        </Badge>
                       ) : (
-                        <BadgeV2 variant="warning" size="sm">
+                        <Badge variant="warning" size="sm">
                           Warning Issued
-                        </BadgeV2>
+                        </Badge>
                       )}
                       <span className="text-muted-foreground">
                         {item.reviewedAt && `on ${new Date(item.reviewedAt).toLocaleDateString()}`}
@@ -170,7 +170,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                 {item.status === 'pending' && (
                   <form action={moderateAction} className="flex flex-col gap-2 shrink-0">
                     <input type="hidden" name="moderationId" value={item.id} />
-                    <ButtonV2
+                    <Button
                       type="submit"
                       name="action"
                       value="upheld"
@@ -180,8 +180,8 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                     >
                       <XCircle className="h-4 w-4 mr-1" />
                       Remove
-                    </ButtonV2>
-                    <ButtonV2
+                    </Button>
+                    <Button
                       type="submit"
                       name="action"
                       value="dismissed"
@@ -191,8 +191,8 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                     >
                       <CheckCircle2 className="h-4 w-4 mr-1" />
                       Keep
-                    </ButtonV2>
-                    <ButtonV2
+                    </Button>
+                    <Button
                       type="submit"
                       name="action"
                       value="warning_issued"
@@ -201,7 +201,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       className="w-32"
                     >
                       Warn
-                    </ButtonV2>
+                    </Button>
                   </form>
                 )}
               </div>

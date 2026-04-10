@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, CheckCircle2, CalendarDays, Clock, CreditCard, History, Receipt, FileText } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { updateSubscription, collectSubscriptionFeedback } from "../../../../../server/billing"
 import { toast } from "sonner"
@@ -88,9 +88,9 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
-      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardV2Header className="px-0">
-          <CardV2Title>{t('billing.currentPlan')}</CardV2Title>
+      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardHeader className="px-0">
+          <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
             {isLoading ? (
               <>
@@ -141,8 +141,8 @@ export default function BillingManagement() {
               </>
             )}
           </div>
-        </CardV2Header>
-        <CardV2Content className="px-0">
+        </CardHeader>
+        <CardContent className="px-0">
           <div className="space-y-6 rounded-2xl border border-border/70 bg-background/70 p-4 sm:p-6">
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -183,13 +183,13 @@ export default function BillingManagement() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <BadgeV2 variant="secondary" className="bg-secondary/25 text-foreground">
+                          <Badge variant="secondary" className="bg-secondary/25 text-foreground">
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
                               : subscription.promotion.amount_off 
                                 ? `${formatAmount(subscription.promotion.amount_off)} OFF`
                                 : "Discount Applied"}
-                          </BadgeV2>
+                          </Badge>
                           <span className="text-sm text-muted-foreground">
                             {subscription.promotion.duration.duration === 'forever' && (
                               <span className="ml-1">({t('billing.promotionDuration.forever')})</span>
@@ -317,24 +317,24 @@ export default function BillingManagement() {
               </div>
             </div>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
 
       {/* Subscription Management */}
       {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
-        <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-          <CardV2Content className="px-0">
+        <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+          <CardContent className="px-0">
             <div className="flex flex-col gap-4">
               {!subscription.cancel_at_period_end && (
                 <div className="flex flex-wrap items-center gap-4">
                   <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
                     <DialogTrigger asChild>
-                      <ButtonV2  
+                      <Button  
                         variant="error" 
                         className="sm:w-auto"
                       >
                         {t('billing.cancelSubscription')}
-                      </ButtonV2>
+                      </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -393,13 +393,13 @@ export default function BillingManagement() {
                         </div>
                       </div>
                       <DialogFooter>
-                        <ButtonV2 
+                        <Button 
                           variant="outline"
                           onClick={() => setIsCancelDialogOpen(false)}
                         >
                           {t('pricing.cancelSubscription.cancel')}
-                        </ButtonV2>
-                        <ButtonV2 
+                        </Button>
+                        <Button 
                           variant="error"
                           onClick={() => {
                             handleSubscriptionAction('cancel')
@@ -407,11 +407,11 @@ export default function BillingManagement() {
                           }}
                         >
                           {t('pricing.cancelSubscription.confirm')}
-                        </ButtonV2>
+                        </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
-                  <ButtonV2 
+                  <Button 
                     variant="outline"
                     className="sm:w-auto"
                     asChild
@@ -420,12 +420,12 @@ export default function BillingManagement() {
                           <CreditCard className="h-4 w-4 mr-2" />
                           {t('billing.managePaymentMethod')}
                         </Link>
-                      </ButtonV2>
+                      </Button>
                     </div>
                   )}
                   {subscription.cancel_at_period_end && (
                     <div className="flex flex-wrap items-center gap-4">
-                      <ButtonV2  
+                      <Button  
                         variant="outline"
                         className="sm:w-auto"
                         asChild
@@ -434,32 +434,32 @@ export default function BillingManagement() {
                           <CreditCard className="h-4 w-4 mr-2" />
                           {t('billing.managePaymentMethod')}
                         </Link>
-                      </ButtonV2>
+                      </Button>
                     </div>
                   )}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       )}
 
       {/* Available Plans */}
-      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardV2Header className="px-0">
-          <CardV2Title>{t('billing.availablePlans')}</CardV2Title>
-          <CardV2Description>{t('billing.choosePlan')}</CardV2Description>
-        </CardV2Header>
-        <CardV2Content className="px-0">
+      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardHeader className="px-0">
+          <CardTitle>{t('billing.availablePlans')}</CardTitle>
+          <CardDescription>{t('billing.choosePlan')}</CardDescription>
+        </CardHeader>
+        <CardContent className="px-0">
           <PricingPlans currentSubscription={subscription} onSuccess={refreshSubscription} />
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
 
       {/* Payment History */}
-      <CardV2 className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
-        <CardV2Header className="px-0">
-          <CardV2Title>{t('billing.paymentHistory')}</CardV2Title>
-          <CardV2Description>{t('billing.paymentHistoryDesc')}</CardV2Description>
-        </CardV2Header>
-        <CardV2Content className="px-0">
+      <Card className="rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm">
+        <CardHeader className="px-0">
+          <CardTitle>{t('billing.paymentHistory')}</CardTitle>
+          <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
+        </CardHeader>
+        <CardContent className="px-0">
           <div className="rounded-2xl border border-border/70 bg-background/70">
             {isLoading ? (
               <div className="p-4 space-y-4">
@@ -491,13 +491,13 @@ export default function BillingManagement() {
                     </div>
                     <div className="flex items-center gap-2">
                       {invoice.status === 'paid' && (
-                        <BadgeV2 variant="secondary" className="bg-secondary/25 text-foreground">
+                        <Badge variant="secondary" className="bg-secondary/25 text-foreground">
                           {t('billing.paymentStatus.succeeded')}
-                        </BadgeV2>
+                        </Badge>
                       )}
                       <div className="flex items-center gap-2">
                         {invoice.hosted_invoice_url && (
-                          <ButtonV2 
+                          <Button 
                             variant="outline"
                             size="sm"
                             className="h-8"
@@ -505,10 +505,10 @@ export default function BillingManagement() {
                           >
                             <Receipt className="h-4 w-4 mr-2" />
                             {t('billing.viewInvoice')}
-                          </ButtonV2>
+                          </Button>
                         )}
                         {invoice.invoice_pdf && (
-                          <ButtonV2 
+                          <Button 
                             variant="outline"
                             size="sm"
                             className="h-8"
@@ -516,7 +516,7 @@ export default function BillingManagement() {
                           >
                             <FileText className="h-4 w-4 mr-2" />
                             {t('billing.downloadPdf')}
-                          </ButtonV2>
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -529,8 +529,8 @@ export default function BillingManagement() {
               </div>
             )}
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 } 

@@ -18,7 +18,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Switch } from "@/components/ui/switch"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 
 export function GlobalSyncButton() {
     const t = useScopedI18n('dashboard')
@@ -148,9 +148,9 @@ export function GlobalSyncButton() {
                 <DropdownMenuLabel className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
                     {isAnySyncing ? (
-                        <BadgeV2 variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</BadgeV2>
+                        <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
                     ) : (
-                        <BadgeV2 variant="outline" className="bg-muted text-muted-foreground border-border text-[8px]">Standby</BadgeV2>
+                        <Badge variant="outline" className="bg-muted text-muted-foreground border-border text-[8px]">Standby</Badge>
                     )}
                 </DropdownMenuLabel>
 

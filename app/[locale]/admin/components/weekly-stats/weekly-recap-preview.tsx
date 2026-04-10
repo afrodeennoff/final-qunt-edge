@@ -1,13 +1,13 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { ZoomIn, ZoomOut, Smartphone, Monitor } from "lucide-react"
 import { useWeeklyRecap } from "./weekly-recap-context"
 import { useDebounce } from "@/hooks/use-debounce"
 import { generateAnalysis, renderEmail, WeeklyRecapContent, listUsers } from "../../actions/weekly-recap"
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { EmailPreviewLoading } from "./email-preview-loading"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
@@ -141,40 +141,40 @@ export function WeeklyRecapPreview() {
 
   return (
     <div className="h-screen flex flex-col">
-      <CardV2 className="flex-1 flex flex-col">
-        <CardV2Header>
+      <Card className="flex-1 flex flex-col">
+        <CardHeader>
           <div className="flex items-center justify-between">
-            <CardV2Title>Email Preview</CardV2Title>
+            <CardTitle>Email Preview</CardTitle>
             <div className="flex items-center gap-2">
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => setViewMode(viewMode === "desktop" ? "mobile" : "desktop")}
                 title={`Switch to ${viewMode === "desktop" ? "mobile" : "desktop"} view`}
               >
                 {viewMode === "desktop" ? <Smartphone className="h-4 w-4" /> : <Monitor className="h-4 w-4" />}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom((prev: number) => Math.max(0.5, prev - 0.1))}
                 disabled={zoom <= 0.5}
               >
                 <ZoomOut className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
               <span className="text-sm text-muted-foreground">{Math.round(zoom * 100)}%</span>
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom((prev: number) => Math.min(2, prev + 0.1))}
                 disabled={zoom >= 2}
               >
                 <ZoomIn className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
             </div>
           </div>
-        </CardV2Header>
-        <CardV2Content className="flex-1 p-0">
+        </CardHeader>
+        <CardContent className="flex-1 p-0">
           <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             {/* Edit Form - Always visible */}
             <div className="p-6 space-y-6 overflow-y-auto">
@@ -230,7 +230,7 @@ export function WeeklyRecapPreview() {
               </div>
               <div className="space-y-2">
                 <Label>Trader Name</Label>
-                <InputV2
+                <Input
                   value={content.firstName}
                   onChange={(e) => setContent((prev: WeeklyRecapContent) => ({ ...prev, firstName: e.target.value }))}
                   placeholder="Trader's name"
@@ -241,7 +241,7 @@ export function WeeklyRecapPreview() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-sm">Wins</Label>
-                    <InputV2
+                    <Input
                       type="number"
                       value={content.winLossStats.wins}
                       onChange={(e) =>
@@ -257,7 +257,7 @@ export function WeeklyRecapPreview() {
                   </div>
                   <div>
                     <Label className="text-sm">Losses</Label>
-                    <InputV2
+                    <Input
                       type="number"
                       value={content.winLossStats.losses}
                       onChange={(e) =>
@@ -280,7 +280,7 @@ export function WeeklyRecapPreview() {
                     <div key={index} className="space-y-1">
                       <Label className="text-sm">Day {index + 1}</Label>
                       <div className="flex gap-2">
-                        <InputV2
+                        <Input
                           value={day.date.toLocaleDateString('fr-FR', {
                             day: '2-digit',
                             month: '2-digit'
@@ -296,7 +296,7 @@ export function WeeklyRecapPreview() {
                           placeholder="Date"
                           className="w-1/2"
                         />
-                        <InputV2
+                        <Input
                           type="number"
                           value={day.pnl}
                           onChange={(e) =>
@@ -362,8 +362,8 @@ export function WeeklyRecapPreview() {
               )}
             </div>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 }

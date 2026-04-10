@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Settings, RotateCcw } from "lucide-react"
 import { useI18n } from '@/locales/client'
@@ -56,10 +56,10 @@ export function ColumnConfigDialog({ tableId, trigger }: ColumnConfigDialogProps
   }
 
   const defaultTrigger = (
-    <ButtonV2  variant="outline" className="w-[180px] h-10 font-normal">
+    <Button  variant="outline" className="w-[180px] h-10 font-normal">
       <Settings className="h-4 w-4 mr-2" />
       Configuration
-    </ButtonV2>
+    </Button>
   )
 
   return (
@@ -98,10 +98,10 @@ export function ColumnConfigDialog({ tableId, trigger }: ColumnConfigDialogProps
         <div className="flex justify-between">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <ButtonV2  variant="outline" className="w-[180px] h-10">
+              <Button  variant="outline" className="w-[180px] h-10">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 {t('trade-table.resetConfig')}
-              </ButtonV2>
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

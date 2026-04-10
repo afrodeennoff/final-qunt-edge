@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -49,13 +49,13 @@ export function DeleteTradeConfirmation({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <ButtonV2 
+        <Button 
           variant="ghost"
           size="sm"
           disabled={disabled || isDeleting}
         >
           Delete
-        </ButtonV2>
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

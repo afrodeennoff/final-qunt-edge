@@ -14,7 +14,7 @@ import {
   Sparkles,
   ShieldAlert,
 } from 'lucide-react'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
 import {
   MotionSection,
   MotionStagger,
@@ -188,13 +188,13 @@ function ProblemCard({ problem }: { problem: Problem }) {
       <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[oklch(0.08_0_0)] border border-[var(--frost-border-alt)]">
         <Icon className="h-4 w-4 text-primary" />
       </div>
-      <BadgeV2
+      <Badge
         variant="outline"
         size="sm"
         className="mb-3 rounded-full border-primary/30 bg-primary/10 text-primary"
       >
         {problem.badge}
-      </BadgeV2>
+      </Badge>
       <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
         {problem.title}
       </h3>
@@ -224,13 +224,13 @@ function FeatureCard({ feature }: { feature: Feature }) {
       </div>
 
       {feature.highlighted && (
-        <BadgeV2
+        <Badge
           variant="outline"
           size="sm"
           className="mb-2 rounded-full border-primary/38 bg-primary/10 text-primary"
         >
           AI-Powered
-        </BadgeV2>
+        </Badge>
       )}
 
       <h3 className="relative text-lg font-medium text-gradient-primary [font-family:var(--home-display)]">
@@ -307,9 +307,9 @@ export default function FeaturesBento() {
           </MotionStagger>
 
           <div className="mb-8">
-            <BadgeV2 variant="accent" size="sm" className="rounded-full px-3">
+            <Badge variant="secondary" size="sm" className="rounded-full px-3">
               Features
-            </BadgeV2>
+            </Badge>
           </div>
 
           <MotionStagger
@@ -324,13 +324,13 @@ export default function FeaturesBento() {
           </MotionStagger>
 
           <div className="mt-16 mb-8">
-            <BadgeV2
+            <Badge
               variant="outline"
               size="sm"
               className="rounded-full border-primary/35 bg-primary/10 px-3 text-primary"
             >
               AI-Powered
-            </BadgeV2>
+            </Badge>
           </div>
 
           <MotionStagger
@@ -350,12 +350,12 @@ export default function FeaturesBento() {
                 AI decisions stay auditable with a transparent reason trail, so
                 every recommendation can be reviewed.
               </p>
-              <BadgeV2
+              <Badge
                 variant="outline"
                 className="w-fit shrink-0 rounded-full border-primary/35 bg-primary/10 text-primary"
               >
                 Explainable AI
-              </BadgeV2>
+              </Badge>
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, LogOut, User } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import {
   Sheet,
   SheetContent,
@@ -103,7 +103,7 @@ export function UnifiedMobileNav({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <ButtonV2
+        <Button
           type="button"
           variant="ghost"
           className={cn(
@@ -113,7 +113,7 @@ export function UnifiedMobileNav({
           aria-label="Open navigation menu"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
-        </ButtonV2>
+        </Button>
       </SheetTrigger>
       <SheetContent
         side="right"

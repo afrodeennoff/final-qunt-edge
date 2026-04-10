@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
 import { MOTION_EASE } from './_constants'
 
@@ -48,7 +48,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
               transition={{ duration: 0.5, ease, delay: 0.2 }}
             >
               <MagneticButton strength={8}>
-                <ButtonV2
+                <Button
                   asChild
                   size="lg"
                   className="bg-primary text-primary-foreground rounded-full font-semibold"
@@ -57,20 +57,20 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
                     Start Your Free Audit — No Credit Card
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
-                </ButtonV2>
+                </Button>
               </MagneticButton>
             </motion.div>
 
             <div className="mt-4">
-              <ButtonV2
-                asChild
-                size="lg"
-                className="rounded-full border border-[var(--frost-border)] text-foreground hover:border-[var(--frost-border-strong)]"
-              >
-                <Link href={`/${locale}/propfirms`}>
-                  Browse Prop Firms
-                </Link>
-              </ButtonV2>
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full border border-[var(--frost-border)] text-foreground hover:border-[var(--frost-border-strong)]"
+            >
+              <Link href={`/${locale}/propfirms`}>
+                Browse Prop Firms
+              </Link>
+            </Button>
             </div>
 
             <motion.p

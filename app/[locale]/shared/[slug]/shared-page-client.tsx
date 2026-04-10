@@ -1,6 +1,7 @@
 'use client'
 
-import { ButtonV2, CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
 import { useData } from "@/context/data-provider"
 import { SharedWidgetCanvas } from "./shared-widget-canvas"
@@ -39,7 +40,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
         <p className="text-sm font-medium">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
@@ -52,16 +53,16 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
                 "h-3 w-3 transition-transform shrink-0",
                 isExpanded ? "rotate-180" : ""
               )} />
-            </ButtonV2>
+            </Button>
           )}
-          <ButtonV2  
+          <Button  
             variant="ghost" 
             size="sm"
             onClick={toggleAll}
             className="h-7 text-xs whitespace-nowrap min-w-0"
           >
             {accountNumbers.length === accounts.length ? t('shared.deselectAll') : t('shared.selectAll')}
-          </ButtonV2>
+          </Button>
         </div>
       </div>
       <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 xs:gap-2">
@@ -108,14 +109,14 @@ export function SharedPageClient() {
   if (!sharedParams) {
     return (
       <div className="flex flex-col items-center justify-center pt-28 sm:pt-32">
-        <CardV2 className="max-w-lg w-full">
-          <CardV2Header>
-            <CardV2Title>{t('shared.notFound')}</CardV2Title>
-            <CardV2Description>
+        <Card className="max-w-lg w-full">
+          <CardHeader>
+            <CardTitle>{t('shared.notFound')}</CardTitle>
+            <CardDescription>
               {t('shared.notFoundDescription')}
-            </CardV2Description>
-          </CardV2Header>
-        </CardV2>
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     )
   }
@@ -125,26 +126,26 @@ export function SharedPageClient() {
   return (
     <div className="container-fluid flex-1 pt-28 sm:pt-32">
       <main className="w-full py-6 lg:py-8">
-        <CardV2 className="mb-6 w-full">
-          <CardV2Header className="space-y-3">
+        <Card className="mb-6 w-full">
+          <CardHeader className="space-y-3">
             <div className="flex flex-col gap-2">
-              <CardV2Title className="text-xl sm:text-2xl">
+              <CardTitle className="text-xl sm:text-2xl">
                 {sharedParams.title || t('shared.title')}
-              </CardV2Title>
-              <CardV2Description className="text-sm sm:text-base">
+              </CardTitle>
+              <CardDescription className="text-sm sm:text-base">
                 {sharedParams.description || t('shared.description')}
-              </CardV2Description>
+              </CardDescription>
             </div>
-          </CardV2Header>
-          <CardV2Content className="space-y-6">
+          </CardHeader>
+          <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <CardV2 className="p-4 border-none shadow-none bg-muted/50">
+              <Card className="p-4 border-none shadow-none bg-muted/50">
                 <p className="text-sm font-medium mb-1">{t('shared.sharedOn')}</p>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(sharedParams.createdAt || new Date()), "PPP")}
                 </p>
-              </CardV2>
-              <CardV2 className="p-4 border-none shadow-none bg-muted/50">
+              </Card>
+              <Card className="p-4 border-none shadow-none bg-muted/50">
                 <p className="text-sm font-medium mb-1">
                   {dateRange.to ? t('shared.period') : t('shared.since')}
                 </p>
@@ -159,14 +160,14 @@ export function SharedPageClient() {
                     format(new Date(dateRange.from), "PPP")
                   )}
                 </p>
-              </CardV2>
+              </Card>
             </div>
             
-            <CardV2 className="p-4 border-none shadow-none bg-muted/50">
+            <Card className="p-4 border-none shadow-none bg-muted/50">
               <AccountsSelector accounts={sharedParams.accountNumbers} />
-            </CardV2>
-          </CardV2Content>
-        </CardV2>
+            </Card>
+          </CardContent>
+        </Card>
 
         <SharedWidgetCanvas />
       </main>

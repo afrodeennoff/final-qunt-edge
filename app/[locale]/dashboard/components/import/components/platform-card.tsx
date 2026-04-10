@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { BadgeV2, CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useTypedI18n } from "@/locales/client";
@@ -67,7 +68,7 @@ export function PlatformCard({
             onMouseLeave={() => { if (onLeave) onLeave() }}
             className="h-full"
         >
-            <CardV2
+            <Card
                 clickable={isInteractive}
                 variant={isSelected ? "elevated" : "default"}
                 hover={isInteractive}
@@ -117,7 +118,7 @@ export function PlatformCard({
                     )}
                 </div>
 
-                <CardV2Header size="sm" className="p-0 gap-3">
+                <CardHeader size="sm" className="p-0 gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-v2-border/50 bg-v2-bg-base/80 p-2 shadow-sm transition-transform group-hover:scale-110">
                         {platform.logo.path && (
                             <div className="relative h-full w-full">
@@ -131,51 +132,51 @@ export function PlatformCard({
                         )}
                         {platform.logo.component && <platform.logo.component />}
                     </div>
-                </CardV2Header>
+                </CardHeader>
 
-                <CardV2Content size="sm" className="p-0 flex flex-col gap-2 flex-1">
-                    <CardV2Title size="sm">
+                <CardContent size="sm" className="p-0 flex flex-col gap-2 flex-1">
+                    <CardTitle size="sm">
                         {t(String(platform.name), { count: 1 })}
-                    </CardV2Title>
+                    </CardTitle>
                     <p className="text-xs text-v2-text-secondary line-clamp-2 min-h-[2.5em]">
                         {t(String(platform.description), { count: 1 })}
                     </p>
-                </CardV2Content>
+                </CardContent>
 
                 <div className="flex flex-wrap gap-2 w-full mt-auto pt-2">
-                    <BadgeV2
+                    <Badge
                         variant={categoryBadge.variant as 'default' | 'secondary' | 'outline' | 'accent' | 'success' | 'warning' | 'error'}
                         className={cn("text-[10px]", categoryBadge.className)}
                     >
                         {getTranslatedCategory(platform.category)}
-                    </BadgeV2>
+                    </Badge>
                     {platform.isDisabled && (
-                        <BadgeV2
+                        <Badge
                             variant="secondary"
                             className="bg-semantic-warning-bg/10 text-semantic-warning hover:bg-semantic-warning-bg/20"
                         >
                             {t("import.type.badge.maintenance")}
-                        </BadgeV2>
+                        </Badge>
                     )}
                     {platform.isComingSoon && !platform.isDisabled && (
-                        <BadgeV2
+                        <Badge
                             variant="secondary"
                             className="bg-semantic-info-bg/10 text-semantic-info hover:bg-semantic-info-bg/20"
                         >
                             {t("import.type.badge.comingSoon")}
-                        </BadgeV2>
+                        </Badge>
                     )}
                     {!platform.isDisabled && platform.isRithmic && isWeekend && (
-                        <BadgeV2
+                        <Badge
                             variant="outline"
                             className="border-semantic-warning-border/30 bg-semantic-warning-bg/5 text-semantic-warning"
                         >
                             <AlertTriangle className="mr-1 h-3 w-3" />
                             Weekend
-                        </BadgeV2>
+                        </Badge>
                     )}
                 </div>
-            </CardV2>
+            </Card>
         </motion.div>
     );
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { Tag } from '@/prisma/generated/prisma'
 import { Trade } from '@/lib/data-types'
 import { Label } from '@/components/ui/label'
@@ -87,7 +87,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div>
-            <ButtonV2 
+            <Button 
               variant="ghost"
               className={cn(
                 "h-8 w-full justify-start px-2 gap-2 truncate",
@@ -99,7 +99,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
                   {localComment}
                 </div>
               ) : t('trade-table.addComment')}
-            </ButtonV2>
+            </Button>
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-4" align="start" forceMount sideOffset={5}>
@@ -146,7 +146,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
               </div>
             </div>
             <div className="flex justify-between">
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="sm"
                 disabled={isUpdating || !localComment}
@@ -155,15 +155,15 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 {t('common.clear')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 size="sm"
                 disabled={isUpdating}
                 onClick={handleSave}
               >
                 <Save className="h-4 w-4 mr-2" />
                 {t('common.save')}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
         </PopoverContent>

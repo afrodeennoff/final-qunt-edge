@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { toast } from "sonner"
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
-import { Label } from "@/components/ui/label"
-import { InputV2 } from "@/components/ui/v2"
-import { TextareaV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -213,7 +213,7 @@ function StringArrayPropField({
     <div className="space-y-2">
       {value.map((item, index) => (
         <div key={`${propKey}-${index}`} className="flex gap-2">
-          <InputV2
+          <Input
             value={item}
             onChange={(event) => {
               const next = [...value]
@@ -221,24 +221,24 @@ function StringArrayPropField({
               onChange(propKey, next)
             }}
           />
-          <ButtonV2 
+          <Button 
             type="button"
             variant="outline"
             size="sm"
             onClick={() => onChange(propKey, value.filter((_, itemIndex) => itemIndex !== index))}
           >
             {t("admin.sendEmail.props.array.remove")}
-          </ButtonV2>
+          </Button>
         </div>
       ))}
-      <ButtonV2 
+      <Button 
         type="button"
         variant="outline"
         size="sm"
         onClick={() => onChange(propKey, [...value, ""])}
       >
         {t("admin.sendEmail.props.array.add")}
-      </ButtonV2>
+      </Button>
     </div>
   )
 }
@@ -280,7 +280,7 @@ function NumberPropField({
   onChange: (key: string, value: unknown) => void
 }) {
   return (
-    <InputV2
+    <Input
       type="number"
       id={propKey}
       value={String(value)}
@@ -301,7 +301,7 @@ function JsonPropField({
   const stringValue = JSON.stringify(value, null, 2)
 
   return (
-    <TextareaV2
+    <Textarea
       id={propKey}
       value={stringValue}
       onChange={(event) => {
@@ -326,7 +326,7 @@ function TextPropField({
   onChange: (key: string, value: unknown) => void
 }) {
   return (
-    <InputV2
+    <Input
       id={propKey}
       value={value === undefined || value === null ? "" : String(value)}
       onChange={(event) => onChange(propKey, event.target.value)}
@@ -384,15 +384,15 @@ function TemplatePropsCard({
   const t = useI18n()
 
   return (
-    <CardV2>
-      <CardV2Header>
-        <CardV2Title>{t("admin.sendEmail.props.title")}</CardV2Title>
-        <CardV2Description>{t("admin.sendEmail.props.description")}</CardV2Description>
-      </CardV2Header>
-      <CardV2Content className="space-y-4">
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("admin.sendEmail.props.title")}</CardTitle>
+        <CardDescription>{t("admin.sendEmail.props.description")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="subject">{t("admin.sendEmail.subject.label")}</Label>
-          <InputV2
+          <Input
             id="subject"
             placeholder={t("admin.sendEmail.subject.placeholder")}
             value={customSubject}
@@ -411,9 +411,9 @@ function TemplatePropsCard({
                       {key}
                     </Label>
                     {requiredProps.includes(key) && (
-                      <BadgeV2 variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs">
                         {t("admin.sendEmail.props.requiredBadge")}
-                      </BadgeV2>
+                      </Badge>
                     )}
                   </div>
                   <TemplatePropField propKey={key} value={value} onChange={onPropChange} />
@@ -424,8 +424,8 @@ function TemplatePropsCard({
             )}
           </div>
         </ScrollArea>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -443,12 +443,12 @@ function RecipientsCard({
   const t = useI18n()
 
   return (
-    <CardV2>
-      <CardV2Header>
-        <CardV2Title>{t("admin.sendEmail.recipients.title")}</CardV2Title>
-        <CardV2Description>{t("admin.sendEmail.recipients.description")}</CardV2Description>
-      </CardV2Header>
-      <CardV2Content>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("admin.sendEmail.recipients.title")}</CardTitle>
+        <CardDescription>{t("admin.sendEmail.recipients.description")}</CardDescription>
+      </CardHeader>
+      <CardContent>
         {loadingUsers ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -456,8 +456,8 @@ function RecipientsCard({
         ) : (
           <UserSelector users={users} selectedUsers={selectedUsers} onSelectionChange={onSelectionChange} />
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -475,39 +475,39 @@ function PreviewCard({
   const t = useI18n()
 
   return (
-    <CardV2 className="flex h-full flex-col">
-      <CardV2Header className="space-y-1">
+    <Card className="flex h-full flex-col">
+      <CardHeader className="space-y-1">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <CardV2Title>{t("admin.sendEmail.preview.title")}</CardV2Title>
-            <CardV2Description>{t("admin.sendEmail.preview.description")}</CardV2Description>
+            <CardTitle>{t("admin.sendEmail.preview.title")}</CardTitle>
+            <CardDescription>{t("admin.sendEmail.preview.description")}</CardDescription>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground">
               {t("admin.sendEmail.preview.device.label")}
             </span>
             <div className="inline-flex rounded-md border bg-muted/50 p-1 text-sm">
-              <ButtonV2 
+              <Button 
                 type="button"
                 variant={previewDevice === "desktop" ? "secondary" : "ghost"}
                 size="sm"
                 onClick={() => onPreviewDeviceChange("desktop")}
               >
                 {t("admin.sendEmail.preview.device.desktop")}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 type="button"
                 variant={previewDevice === "mobile" ? "secondary" : "ghost"}
                 size="sm"
                 onClick={() => onPreviewDeviceChange("mobile")}
               >
                 {t("admin.sendEmail.preview.device.mobile")}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
         </div>
-      </CardV2Header>
-      <CardV2Content className="flex-1 gap-4 flex flex-col">
+      </CardHeader>
+      <CardContent className="flex-1 gap-4 flex flex-col">
         {loadingPreview ? (
           <div className="flex h-full items-center justify-center py-12 text-sm text-muted-foreground">
             <Loader2 className="h-6 w-6 animate-spin" />
@@ -530,8 +530,8 @@ function PreviewCard({
             {t("admin.sendEmail.preview.empty")}
           </div>
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -710,7 +710,7 @@ export function SendEmailPageClient() {
             <Users className="h-4 w-4" />
             <span>{format("admin.sendEmail.recipients.selected", { count: selectedUsers.length })}</span>
           </div>
-          <ButtonV2  size="lg" onClick={handleSend} disabled={!selectedTemplate || selectedUsers.length === 0 || sending}>
+          <Button  size="lg" onClick={handleSend} disabled={!selectedTemplate || selectedUsers.length === 0 || sending}>
             {sending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -722,7 +722,7 @@ export function SendEmailPageClient() {
                 {format("admin.sendEmail.actions.send", { count: selectedUsers.length })}
               </>
             )}
-          </ButtonV2>
+          </Button>
         </div>
       </div>
     </div>

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
 import { useParams } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import {
   Building2,
@@ -114,13 +114,13 @@ export default function TeamJoinPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <BadgeV2 variant="secondary">{t('teams.management.pending')}</BadgeV2>
+        return <Badge variant="secondary">{t('teams.management.pending')}</Badge>
       case 'accepted':
-        return <BadgeV2 variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</BadgeV2>
+        return <Badge variant="default" className="bg-card/60 text-foreground">{t('teams.invitations.accepted')}</Badge>
       case 'expired':
-        return <BadgeV2 variant="error">{t('teams.invitations.expired')}</BadgeV2>
+        return <Badge variant="error">{t('teams.invitations.expired')}</Badge>
       default:
-        return <BadgeV2 variant="outline">{status}</BadgeV2>
+        return <Badge variant="outline">{status}</Badge>
     }
   }
 
@@ -154,22 +154,22 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <CardV2>
-            <CardV2Header className="text-center">
+          <Card>
+            <CardHeader className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
-              <CardV2Title className="text-xl">{t('teams.join.invalid.title')}</CardV2Title>
-              <CardV2Description>
+              <CardTitle className="text-xl">{t('teams.join.invalid.title')}</CardTitle>
+              <CardDescription>
                 {error}
-              </CardV2Description>
-            </CardV2Header>
-            <CardV2Content className="text-center">
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
               <Link href={dashboardRoot}>
-                <ButtonV2  variant="outline" className="w-full">
+                <Button  variant="outline" className="w-full">
                   {t('teams.join.goToManage')}
-                </ButtonV2>
+                </Button>
               </Link>
-            </CardV2Content>
-          </CardV2>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
@@ -179,25 +179,25 @@ export default function TeamJoinPage() {
     return (
       <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
-          <CardV2>
-            <CardV2Header className="text-center">
+          <Card>
+            <CardHeader className="text-center">
               <XCircle className="h-12 w-12 text-semantic-error mx-auto mb-4" />
-              <CardV2Title className="text-xl">{t('teams.join.notFound.title')}</CardV2Title>
-              <CardV2Description>
+              <CardTitle className="text-xl">{t('teams.join.notFound.title')}</CardTitle>
+              <CardDescription>
                 {t('teams.join.notFound.description')}
-              </CardV2Description>
-            </CardV2Header>
-            <CardV2Content className="text-center">
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
               <Link href={dashboardRoot}>
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   className="w-full"
                 >
                   {t('teams.join.goToManage')}
-                </ButtonV2>
+                </Button>
               </Link>
-            </CardV2Content>
-          </CardV2>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
@@ -216,20 +216,20 @@ export default function TeamJoinPage() {
           </p>
         </div>
 
-        <CardV2>
-          <CardV2Header>
+        <Card>
+          <CardHeader>
             <div className="flex items-center gap-3">
               <Building2 className="h-8 w-8 text-primary" />
               <div>
-                <CardV2Title className="text-xl">{invitation.teamName}</CardV2Title>
-                <CardV2Description>
+                <CardTitle className="text-xl">{invitation.teamName}</CardTitle>
+                <CardDescription>
                   {t('teams.join.details.title')}
-                </CardV2Description>
+                </CardDescription>
               </div>
             </div>
-          </CardV2Header>
+          </CardHeader>
 
-          <CardV2Content className="space-y-6">
+          <CardContent className="space-y-6">
             {/* Invitation Status */}
             <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
               <div className="flex items-center gap-3">
@@ -289,7 +289,7 @@ export default function TeamJoinPage() {
                   <p className="text-muted-foreground">
                     {t('teams.join.action.description')}
                   </p>
-                  <ButtonV2 
+                  <Button 
                     onClick={handleJoinTeam}
                     disabled={isJoining}
                     size="lg"
@@ -306,7 +306,7 @@ export default function TeamJoinPage() {
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </>
                     )}
-                  </ButtonV2>
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -322,18 +322,18 @@ export default function TeamJoinPage() {
                     </span>
                   </div>
                   <Link href={dashboardRoot}>
-                    <ButtonV2 
+                    <Button 
                       variant="outline"
                       className="w-full"
                     >
                       {t('teams.join.goToManage')}
-                    </ButtonV2>
+                    </Button>
                   </Link>
                 </div>
               )}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

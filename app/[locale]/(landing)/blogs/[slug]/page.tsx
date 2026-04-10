@@ -1,7 +1,7 @@
 import { getBlogPostBySlug } from '@/app/[locale]/admin/actions/blog-actions'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
-import { BadgeV2 } from '@/components/ui/v2/badge-v2'
-import { ButtonV2 } from '@/components/ui/v2/button-v2'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -72,9 +72,9 @@ export default async function BlogDetailPage(props: Props) {
     <UnifiedPageShell widthClassName="max-w-[800px]">
       <div className="space-y-8">
         <Link href={`/${params.locale}/blogs`}>
-          <ButtonV2 variant="ghost" size="sm">
+          <Button variant="ghost" size="sm">
             ← Back to Blogs
-          </ButtonV2>
+          </Button>
         </Link>
 
         {post.coverImage && (
@@ -91,9 +91,9 @@ export default async function BlogDetailPage(props: Props) {
         )}
 
         <div className="space-y-4">
-          <BadgeV2 variant="accent" size="md">
+          <Badge variant="accent" size="md">
             {categoryLabel}
-          </BadgeV2>
+          </Badge>
 
           <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
             {post.title}

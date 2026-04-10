@@ -5,11 +5,11 @@ import { format, addMonths, subMonths, getDay, addDays } from "date-fns"
 import { formatInTimeZone, toDate } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { CalendarModal } from "./daily-modal"
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
-import { CardV2, CardV2Title } from "@/components/ui/v2"
+import { Card, CardTitle } from "@/components/ui/card"
 import { useI18n, useCurrentLocale } from "@/locales/client"
 import { useUserStore } from "../../../../../store/user-store"
 
@@ -153,13 +153,13 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
   }, [calendarData])
 
   return (
-    <CardV2 className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
+    <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
       <div className="shrink-0 border-b border-border/60 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <CardV2Title className="truncate text-base font-semibold capitalize">
+            <CardTitle className="truncate text-base font-semibold capitalize">
               {formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })}
-            </CardV2Title>
+            </CardTitle>
             <div className={cn(
               "mt-1 text-lg font-black tracking-tight",
               monthlyTotal >= 0 ? "text-semantic-success" : "text-semantic-error"
@@ -168,12 +168,12 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <ButtonV2  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Previous month">
+            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Previous month">
               <ChevronLeft className="h-4 w-4" />
-            </ButtonV2>
-            <ButtonV2  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Next month">
+            </Button>
+            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Next month">
               <ChevronRight className="h-4 w-4" />
-            </ButtonV2>
+            </Button>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -286,7 +286,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
         dayData={selectedDate ? calendarData[formatInTimeZone(selectedDate, timezone, 'yyyy-MM-dd')] : undefined}
         isLoading={isLoading}
       />
-    </CardV2>
+    </Card>
   )
 }
 

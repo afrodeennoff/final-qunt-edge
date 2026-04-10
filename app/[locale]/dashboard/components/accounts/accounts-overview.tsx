@@ -1,9 +1,9 @@
 'use client'
 
 import { memo, useState, useMemo, useEffect, useRef } from 'react'
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet"
@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   ArrowDown,
@@ -225,7 +225,7 @@ function SortRuleItem({
         <GripVertical className="h-4 w-4" />
       </button>
       <span className="flex-1 truncate">{label}</span>
-      <ButtonV2 
+      <Button 
         type="button"
         variant="ghost"
         size="icon"
@@ -238,8 +238,8 @@ function SortRuleItem({
         ) : (
           <ArrowUp className="h-4 w-4" />
         )}
-      </ButtonV2>
-      <ButtonV2 
+      </Button>
+      <Button 
         type="button"
         variant="ghost"
         size="icon"
@@ -248,7 +248,7 @@ function SortRuleItem({
         aria-label={removeLabel}
       >
         <X className="h-4 w-4" />
-      </ButtonV2>
+      </Button>
     </div>
   )
 }
@@ -405,7 +405,7 @@ function PayoutDialog({
             <Label htmlFor="amount">{t('propFirm.payout.amount')}</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-              <InputV2
+              <Input
                 id="amount"
                 type="number"
                 className="pl-9"
@@ -423,7 +423,7 @@ function PayoutDialog({
 
             {/* Quick Date Selection */}
             <div className="flex flex-wrap gap-2">
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="sm"
                 onClick={() => {
@@ -436,8 +436,8 @@ function PayoutDialog({
                 disabled={isProcessing}
               >
                 {t('propFirm.payout.today')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 variant="outline"
                 size="sm"
                 onClick={() => {
@@ -451,8 +451,8 @@ function PayoutDialog({
                 disabled={isProcessing}
               >
                 {t('propFirm.payout.yesterday')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 variant="outline"
                 size="sm"
                 onClick={() => {
@@ -466,7 +466,7 @@ function PayoutDialog({
                 disabled={isProcessing}
               >
                 {t('propFirm.payout.lastWeek')}
-              </ButtonV2>
+              </Button>
             </div>
 
             {/* Selected Date Display */}
@@ -488,7 +488,7 @@ function PayoutDialog({
               <div className="p-3 border-b bg-muted/20 shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       onClick={() => {
@@ -500,13 +500,13 @@ function PayoutDialog({
                       disabled={isProcessing}
                     >
                       <ChevronLeft className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                     <div className="text-center">
                       <h3 className="text-base font-semibold">
                         {format(date, 'MMMM', { locale: localeMap[params.locale as string] })}
                       </h3>
                     </div>
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       onClick={() => {
@@ -518,12 +518,12 @@ function PayoutDialog({
                       disabled={isProcessing}
                     >
                       <ChevronRight className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </div>
 
                   {/* Year Navigation */}
                   <div className="flex items-center gap-1">
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       onClick={() => {
@@ -541,11 +541,11 @@ function PayoutDialog({
                       disabled={isProcessing}
                     >
                       <ChevronLeft className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                     <span className="text-base font-semibold min-w-12 text-center">
                       {date.getFullYear()}
                     </span>
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       onClick={() => {
@@ -563,7 +563,7 @@ function PayoutDialog({
                       disabled={isProcessing}
                     >
                       <ChevronRight className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -609,7 +609,7 @@ function PayoutDialog({
             <Label htmlFor="status">{t('propFirm.payout.status')}</Label>
             <div className="grid grid-cols-2 gap-2">
               {statusOptions.map((option) => (
-                <ButtonV2
+                <Button
                   key={option.value}
                   type="button"
                   variant={status === option.value ? "solid" : "outline"}
@@ -619,7 +619,7 @@ function PayoutDialog({
                 >
                   {option.icon}
                   <span className="ml-2 truncate">{option.label}</span>
-                </ButtonV2>
+                </Button>
               ))}
             </div>
           </div>
@@ -629,7 +629,7 @@ function PayoutDialog({
           {existingPayout && onDelete && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="error"
                   size="sm"
                   className="w-full sm:w-auto"
@@ -646,7 +646,7 @@ function PayoutDialog({
                       {t('propFirm.payout.delete')}
                     </>
                   )}
-                </ButtonV2>
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -678,7 +678,7 @@ function PayoutDialog({
               </AlertDialogContent>
             </AlertDialog>
           )}
-          <ButtonV2 
+          <Button 
             onClick={() => onSubmit({ date, amount, status })}
             disabled={amount <= 0 || isProcessing}
             size="sm"
@@ -700,7 +700,7 @@ function PayoutDialog({
                 {t('propFirm.payout.save')}
               </>
             )}
-          </ButtonV2>
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -1104,13 +1104,13 @@ function AccountsOverviewComponent({
 
 
   return (
-    <CardV2
+    <Card
       className={cn(
         "w-full h-full flex flex-col",
         surface === "embedded" && "border-transparent bg-transparent shadow-none"
       )}
     >
-      <CardV2Header
+      <CardHeader
         className={cn(
           "flex flex-row items-center justify-between gap-0 border-b shrink-0",
           size === 'small' ? "p-2 h-10" : "p-3 sm:p-4 h-14"
@@ -1118,14 +1118,14 @@ function AccountsOverviewComponent({
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardV2Title
+            <CardTitle
               className={cn(
                 "line-clamp-1",
                 size === 'small' ? "text-sm" : "text-base"
               )}
             >
               {t('propFirm.title')}
-            </CardV2Title>
+            </CardTitle>
             <TooltipProvider>
               <UITooltip>
                 <TooltipTrigger asChild>
@@ -1141,7 +1141,7 @@ function AccountsOverviewComponent({
             </TooltipProvider>
           </div>
           <div className="flex items-center gap-2">
-            <ButtonV2 
+            <Button 
               variant="outline"
               size="sm"
               onClick={() => setAccountGroupBoardOpen(true)}
@@ -1154,10 +1154,10 @@ function AccountsOverviewComponent({
               <span className={cn(size === "small" && "sr-only")}>
                 {t("filters.manageAccounts")}
               </span>
-            </ButtonV2>
+            </Button>
             <Popover open={sortingMenuOpen} onOpenChange={setSortingMenuOpen}>
               <PopoverTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="sm"
                   className={cn(
@@ -1171,7 +1171,7 @@ function AccountsOverviewComponent({
                       ? t("table.sortingRules", { count: sorting.length })
                       : t("table.sorting")}
                   </span>
-                </ButtonV2>
+                </Button>
               </PopoverTrigger>
               <PopoverContent align="end" className="w-80 p-3">
                 <div className="space-y-3">
@@ -1273,14 +1273,14 @@ function AccountsOverviewComponent({
                     </Select>
                   </div>
                   <div className="flex items-center justify-between">
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       onClick={clearSorting}
                       disabled={sorting.length === 0}
                     >
                       {t("table.clearSorting")}
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
               </PopoverContent>
@@ -1320,7 +1320,7 @@ function AccountsOverviewComponent({
             </Tabs>
           </div>
         </div>
-      </CardV2Header>
+      </CardHeader>
 
       {/* Unconfigured accounts banner */}
       {(unconfiguredAccounts.length > 0 && !isLoading) && (
@@ -1342,7 +1342,7 @@ function AccountsOverviewComponent({
                     <span className="text-[10px] font-bold text-foreground">
                       {accountNumber}
                     </span>
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="sm"
                       className="h-5 w-5 p-0 hover:bg-muted"
@@ -1365,7 +1365,7 @@ function AccountsOverviewComponent({
                       }}
                     >
                       <Settings className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 ))}
               </div>
@@ -1374,7 +1374,7 @@ function AccountsOverviewComponent({
         </div>
       )}
 
-      <CardV2Content
+      <CardContent
         className={cn(
           "flex-1 overflow-hidden",
           view === "table" && "p-0"
@@ -1537,14 +1537,14 @@ function AccountsOverviewComponent({
                 </div>
                 <div className="flex items-center gap-2 pr-4">
 
-                  <ButtonV2
+                  <Button
                     variant="solid"
                     onClick={handleSave}
                     disabled={pendingChanges === null}
                   >
                     {isSaving ? t('common.saving') : t('common.save')}
-                  </ButtonV2>
-                  <ButtonV2 
+                  </Button>
+                  <Button 
                     variant="outline"
                     onClick={() => {
                       setSelectedPayout(undefined)
@@ -1553,17 +1553,17 @@ function AccountsOverviewComponent({
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     {t('propFirm.payout.add')}
-                  </ButtonV2>
+                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <ButtonV2 
+                      <Button 
                         variant="error"
                         size="sm"
                         disabled={isDeleting || !canDeleteAccount}
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         {t('propFirm.common.delete')}
-                      </ButtonV2>
+                      </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
@@ -1645,7 +1645,7 @@ function AccountsOverviewComponent({
             </div>
           </DialogContent>
         </Dialog>
-      </CardV2Content>
+      </CardContent>
 
       <PayoutDialog
         key={`${selectedPayout?.id ?? "new"}-${payoutDialogOpen ? "open" : "closed"}`}
@@ -1663,7 +1663,7 @@ function AccountsOverviewComponent({
         isLoading={isSavingPayout}
         isDeleting={isDeletingPayout}
       />
-    </CardV2>
+    </Card>
   )
 }
 

@@ -3,15 +3,15 @@
 import * as React from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import type { BadgeV2Props } from "@/components/ui/v2"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import type { BadgeProps } from "@/components/ui/badge"
 
 export interface MediaCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
   image: string
   title: string
   subtitle?: string
   description?: string
-  badges?: Array<{ label: string; variant?: BadgeV2Props["variant"] }>
+  badges?: Array<{ label: string; variant?: BadgeProps["variant"] }>
   actions?: React.ReactNode
   imageAspect?: "video" | "square" | "portrait"
   onClick?: () => void
@@ -47,7 +47,7 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
     const currentSize = sizeClasses[size]
 
     return (
-      <CardV2
+      <Card
         ref={ref}
         hover={!!onClick}
         clickable={!!onClick}
@@ -72,25 +72,25 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
             </div>
           )}
         </div>
-        <CardV2Header className={cn("gap-1", size === "sm" ? "p-3" : size === "lg" ? "p-5" : "p-4")}>
-          <CardV2Title className={cn(currentSize.title, "line-clamp-2")}>
+        <CardHeader className={cn("gap-1", size === "sm" ? "p-3" : size === "lg" ? "p-5" : "p-4")}>
+          <CardTitle className={cn(currentSize.title, "line-clamp-2")}>
             {title}
-          </CardV2Title>
+          </CardTitle>
           {subtitle && (
             <p className="text-sm text-muted-foreground">{subtitle}</p>
           )}
-        </CardV2Header>
+        </CardHeader>
         {description && (
-          <CardV2Content className={cn(currentSize.description, "text-muted-foreground line-clamp-3", size === "sm" ? "p-3 pt-0" : size === "lg" ? "p-5 pt-0" : "p-4 pt-0")}>
+          <CardContent className={cn(currentSize.description, "text-muted-foreground line-clamp-3", size === "sm" ? "p-3 pt-0" : size === "lg" ? "p-5 pt-0" : "p-4 pt-0")}>
             <p>{description}</p>
-          </CardV2Content>
+          </CardContent>
         )}
         {actions && (
-          <CardV2Footer className={cn("w-full gap-2", size === "sm" ? "p-3 pt-0" : size === "lg" ? "p-5 pt-0" : "p-4 pt-0")}>
+          <CardFooter className={cn("w-full gap-2", size === "sm" ? "p-3 pt-0" : size === "lg" ? "p-5 pt-0" : "p-4 pt-0")}>
             {actions}
-          </CardV2Footer>
+          </CardFooter>
         )}
-      </CardV2>
+      </Card>
     )
   }
 )

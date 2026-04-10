@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { ButtonV2 as Button } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { Plus, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
@@ -24,7 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
+import { Badge } from '@/components/ui/badge'
 import { Trade } from "@/lib/data-types"
 import { useUserStore } from '@/store/user-store'
 import { createTagAction } from '@/server/tags'
@@ -133,7 +133,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
         {/* Add new tag button - still available even with no trades */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <ButtonV2  
+            <Button  
               variant="outline" 
               size="sm" 
               className="h-7 px-2 w-fit"
@@ -141,7 +141,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             >
               <Plus className="h-4 w-4 mr-1" />
               {t('mindset.tags.addNew')}
-            </ButtonV2>
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
             <Command shouldFilter={false}>
@@ -232,7 +232,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             <TooltipProvider key={tag}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <BadgeV2
+                  <Badge
                     variant="secondary"
                     className={cn(
                       "cursor-pointer transition-all hover:scale-105",
@@ -252,7 +252,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
                         <div className="animate-spin rounded-full h-3 w-3 border-2 border-current border-t-transparent ml-1" />
                       )}
                     </span>
-                  </BadgeV2>
+                  </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
@@ -270,7 +270,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
         {/* Add new tag button */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <ButtonV2  
+            <Button  
               variant="outline" 
               size="sm" 
               className="h-7 px-2"
@@ -278,7 +278,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
             >
               <Plus className="h-4 w-4 mr-1" />
               {t('mindset.tags.addNew')}
-            </ButtonV2>
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" side="right" align="start">
             <Command shouldFilter={false}>

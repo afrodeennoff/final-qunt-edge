@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Globe } from "lucide-react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { useChangeLocale, useCurrentLocale } from '@/locales/client'
@@ -49,7 +49,7 @@ export function LanguageSelector({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <ButtonV2 
+        <Button 
           variant="ghost"
           className={cn(
             "inline-flex h-9 w-9 px-0",
@@ -64,7 +64,7 @@ export function LanguageSelector({
               <span className="ml-2">{t('landing.navbar.changeLanguage')}</span>
             </>
           )}
-        </ButtonV2>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className={`w-[200px] p-0 ${className}`} align={align}>
         <Command>

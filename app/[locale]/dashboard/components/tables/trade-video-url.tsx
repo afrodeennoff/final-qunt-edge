@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ButtonV2, InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
@@ -117,7 +118,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
 
   return (
     <div className="max-w-[200px]">
-      <ButtonV2 
+      <Button 
         variant="ghost"
         className={cn(
           "h-8 w-full justify-start px-2 gap-2 truncate",
@@ -136,7 +137,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
             })()}
           </div>
         ) : t('trade-table.addVideoUrl')}
-      </ButtonV2>
+      </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -146,7 +147,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
             <div className="space-y-4">
               <div className="flex items-center gap-x-2">
                 <div className="relative flex-1">
-                  <InputV2
+                  <Input
                     placeholder="https://"
                     value={draftUrl}
                     onChange={(e) => handleUrlChange(e.target.value)}
@@ -197,7 +198,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                     )}
                   </div>
                 </div>
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="icon"
                   disabled={isUpdating || !draftUrl}
@@ -205,7 +206,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                   className="shrink-0 text-muted-foreground hover:text-foreground"
                 >
                   <Trash2 className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </div>
               {!isValid && draftUrl && (
                 <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
@@ -230,19 +231,19 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
             </div>
           </div>
           <DialogFooter>
-            <ButtonV2 
+            <Button 
               variant="secondary"
               onClick={() => setIsOpen(false)}
               disabled={isUpdating}
             >
               {t('common.cancel')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               onClick={handleSave}
               disabled={!isValid || isUpdating}
             >
               {t('common.save')}
-            </ButtonV2>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

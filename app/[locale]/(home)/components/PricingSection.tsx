@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
 import { MOTION_EASE } from './_constants'
 
@@ -199,19 +199,19 @@ export default function PricingSection() {
 
               {plan.variant === 'featured' ? (
                   <MagneticButton strength={6}>
-                  <ButtonV2
+                  <Button
                     className="w-full rounded-full h-11 text-[0.9rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 bg-primary text-primary-foreground"
                   >
                     {plan.cta}
-                  </ButtonV2>
+                  </Button>
                 </MagneticButton>
               ) : (
-                <ButtonV2
+                <Button
                   variant="outline"
                   className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border border-[var(--frost-border)] hover:border-[var(--frost-border-strong)]"
                 >
                   {plan.cta}
-                </ButtonV2>
+                </Button>
               )}
             </motion.div>
           ))}

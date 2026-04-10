@@ -6,7 +6,7 @@ import { useI18n, useChangeLocale, useCurrentLocale } from '@/locales/client'
 import { useDashboardActions } from '@/context/data-provider'
 import { useUserStore } from '@/store/user-store'
 import { useTradovateSyncStore } from '@/store/tradovate-sync-store'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {  Avatar as Avatar, AvatarFallback as AvatarFallback, AvatarImage as AvatarImage  } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,

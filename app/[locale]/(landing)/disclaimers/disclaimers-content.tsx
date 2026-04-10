@@ -1,7 +1,7 @@
 'use client'
 
 import { useI18n } from '@/locales/client'
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from '@/components/ui/v2'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
 export function DisclaimersContent() {
@@ -13,36 +13,36 @@ DISCLAIMER: Futures and forex trading contain substantial risk and is not for ev
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <div className="space-y-6">
-        <CardV2 className="border-border/30 bg-card/90">
-          <CardV2Header>
-            <CardV2Title>{t('disclaimer.risk.title')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="border-border/30 bg-card/90">
+          <CardHeader>
+            <CardTitle>{t('disclaimer.risk.title')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <p className="text-muted-foreground whitespace-pre-line">
               {t('disclaimer.risk.content')}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="border-border/30 bg-card/90">
-          <CardV2Header>
-            <CardV2Title>{t('disclaimer.hypothetical.title')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="border-border/30 bg-card/90">
+          <CardHeader>
+            <CardTitle>{t('disclaimer.hypothetical.title')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <p className="text-muted-foreground whitespace-pre-line">
               {t('disclaimer.hypothetical.content')}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="border-border/30 bg-card/90">
-          <CardV2Header>
-            <CardV2Title>Extended Risk Disclosure</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="border-border/30 bg-card/90">
+          <CardHeader>
+            <CardTitle>Extended Risk Disclosure</CardTitle>
+          </CardHeader>
+          <CardContent>
             <p className="text-muted-foreground whitespace-pre-line">{extendedDisclaimer}</p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </div>
     </UnifiedPageShell>
   )

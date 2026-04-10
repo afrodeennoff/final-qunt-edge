@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -126,7 +126,7 @@ export default function NavbarFilters() {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <ButtonV2 
+          <Button 
             variant="outline"
             role="combobox"
             aria-expanded={open}
@@ -135,7 +135,7 @@ export default function NavbarFilters() {
           >
             {label}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </ButtonV2>
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] max-w-[90vw] p-0">
           <Command>

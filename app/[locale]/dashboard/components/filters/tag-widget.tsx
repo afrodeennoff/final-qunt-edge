@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/locales/client'
 import { useDashboardFilters, useDashboardActions } from '@/context/data-provider'
-import { ButtonV2, InputV2, TextareaV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from '@/components/ui/label'
 import { Plus, X, Edit2, Trash2, Search, Info } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -287,7 +289,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
         actions={
           <div className="flex items-center gap-2">
             {tagFilter.tags.length > 0 && (
-              <ButtonV2 
+              <Button 
                 variant="ghost"
                 size="sm"
                 className={cn(
@@ -297,11 +299,11 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                 onClick={() => setTagFilter({ tags: [] })}
               >
                 {t('widgets.tags.clearFilter')}
-              </ButtonV2>
+              </Button>
             )}
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   size="icon"
                   className={cn(
@@ -313,7 +315,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                   <Plus className={cn(
                     size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
                   )} />
-                </ButtonV2>
+                </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -328,7 +330,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">{t('widgets.tags.name')}</Label>
-                      <InputV2
+                      <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -339,7 +341,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="description">{t('widgets.tags.description')}</Label>
-                      <TextareaV2
+                      <Textarea
                         id="description"
                         value={formData.description || ''}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -365,7 +367,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                     </div>
                   </div>
                   <DialogFooter>
-                    <ButtonV2  type="submit" disabled={isLoading}>
+                    <Button  type="submit" disabled={isLoading}>
                       {isLoading ? (
                         <div className="flex items-center gap-2">
                           <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
@@ -374,7 +376,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                       ) : (
                         editingTag ? t('widgets.tags.save') : t('widgets.tags.create')
                       )}
-                    </ButtonV2>
+                    </Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
@@ -394,7 +396,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                 "text-muted-foreground",
                 size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
               )} />
-              <InputV2
+              <Input
                 placeholder={t('widgets.tags.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -475,7 +477,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                         </label>
                       </div>
                       <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ButtonV2 
+                        <Button 
                           variant="ghost"
                           size="icon"
                           className={cn(
@@ -488,8 +490,8 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                           <Edit2 className={cn(
                             size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
                           )} />
-                        </ButtonV2>
-                        <ButtonV2 
+                        </Button>
+                        <Button 
                           variant="ghost"
                           size="icon"
                           className={cn(
@@ -502,7 +504,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                           <Trash2 className={cn(
                             size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
                           )} />
-                        </ButtonV2>
+                        </Button>
                       </div>
                     </div>
                   ))}

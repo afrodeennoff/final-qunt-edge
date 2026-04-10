@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useMemo } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Plus, Upload, Send, StopCircle, X, Image as ImageIcon, Link, FileText, Table } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -275,7 +275,7 @@ export function ChatInput({
       {showUrlInput && (
         <div className="mb-3 p-3 border border-border rounded-lg bg-background/50">
           <div className="flex items-center gap-2">
-            <InputV2
+            <Input
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               placeholder="Paste image URL here..."
@@ -290,15 +290,15 @@ export function ChatInput({
                 }
               }}
             />
-            <ButtonV2 
+            <Button 
               type="button"
               size="sm"
               onClick={handleUrlSubmit}
               disabled={!urlInput.trim()}
             >
               Add
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               type="button"
               size="sm"
               variant="outline"
@@ -308,7 +308,7 @@ export function ChatInput({
               }}
             >
               Cancel
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       )}
@@ -335,7 +335,7 @@ export function ChatInput({
                   </div>
                 )}
               </div>
-              <ButtonV2 
+              <Button 
                 type="button"
                 size="icon"
                 variant="error"
@@ -344,7 +344,7 @@ export function ChatInput({
                 aria-label={`Remove attachment ${index + 1}`}
               >
                 <X className="h-3 w-3" />
-              </ButtonV2>
+              </Button>
             </div>
           ))}
         </div>
@@ -361,12 +361,12 @@ export function ChatInput({
       >
         <Popover>
           <PopoverTrigger asChild>
-            <ButtonV2  type="button" variant="outline" size="icon" className="shrink-0" disabled={status === "streaming"} aria-label="Add attachment">
+            <Button  type="button" variant="outline" size="icon" className="shrink-0" disabled={status === "streaming"} aria-label="Add attachment">
               <Plus className="h-4 w-4" />
-            </ButtonV2>
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="w-40 p-0">
-            <ButtonV2 
+            <Button 
               variant="ghost"
               className="w-full justify-start"
               onClick={handleFileUpload}
@@ -374,8 +374,8 @@ export function ChatInput({
             >
               <Upload className="mr-2 h-4 w-4" />
               {t('chat.file')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               variant="ghost"
               className="w-full justify-start"
               onClick={() => setShowUrlInput(true)}
@@ -383,23 +383,23 @@ export function ChatInput({
             >
               <Link className="mr-2 h-4 w-4" />
               {t('chat.url')}
-            </ButtonV2>
+            </Button>
           </PopoverContent>
         </Popover>
-        <InputV2
+        <Input
           value={input}
           onChange={handleInputChangeWithUrlDetection}
           placeholder={status === 'streaming' ? t('chat.aiThinking') : t('chat.writeMessage')}
           className="grow bg-background/50"
           disabled={status === "streaming"}
         />
-        <ButtonV2  type="submit" size="icon" className="shrink-0" disabled={status === "streaming" || (!input.trim() && files.length === 0)} aria-label="Send message">
+        <Button  type="submit" size="icon" className="shrink-0" disabled={status === "streaming" || (!input.trim() && files.length === 0)} aria-label="Send message">
           <Send className={cn("h-4 w-4", status === "streaming" && "animate-pulse")} />
-        </ButtonV2>
+        </Button>
         {status === "streaming" && (
-          <ButtonV2  type="button" size="icon" variant="outline" className="shrink-0" onClick={stop} aria-label="Stop generation">
+          <Button  type="button" size="icon" variant="outline" className="shrink-0" onClick={stop} aria-label="Stop generation">
             <StopCircle className="h-4 w-4" />
-          </ButtonV2>
+          </Button>
         )}
         <input 
           type="file" 

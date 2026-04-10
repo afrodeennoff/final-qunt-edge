@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { InputV2 } from '@/components/ui/v2'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { updatePassword } from '@/server/auth-password'
 import { getPasswordRequirements } from '@/lib/security/password-validation'
 import Link from 'next/link'
@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="relative">
-          <InputV2
+          <Input
             type={showPassword ? 'text' : 'password'}
             placeholder="New password"
             value={password}
@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
           </button>
         </div>
 
-        <InputV2
+        <Input
           type={showPassword ? 'text' : 'password'}
           placeholder="Confirm new password"
           value={confirmPassword}
@@ -125,9 +125,9 @@ export default function ResetPasswordPage() {
           <p className="text-sm text-red-500">{error}</p>
         )}
 
-        <ButtonV2 type="submit" disabled={isLoading || !allMet}>
+        <Button type="submit" disabled={isLoading || !allMet}>
           {isLoading ? 'Updating...' : 'Update password'}
-        </ButtonV2>
+        </Button>
       </form>
     </div>
   )

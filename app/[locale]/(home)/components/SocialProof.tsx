@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Lock, Server, ShieldCheck, LifeBuoy, Clock, Trophy, Globe, MessageSquare } from 'lucide-react'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
 import { AnimatedCounter } from '@/components/animation/enhanced-motion'
 import {
   MOTION_EASE,
@@ -157,12 +157,12 @@ export default function SocialProof() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease }}
         >
-          <BadgeV2
+          <Badge
             variant="outline"
             className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
           >
             Trusted By Serious Traders
-          </BadgeV2>
+          </Badge>
           <h2 className="mt-4 text-[clamp(1.8rem,4.2vw,3rem)] font-semibold leading-tight tracking-[-0.02em] [font-family:var(--home-display)]">
             Why high-standard traders{' '}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">

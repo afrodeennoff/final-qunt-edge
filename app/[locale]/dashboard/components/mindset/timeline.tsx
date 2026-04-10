@@ -5,7 +5,7 @@ import { useI18n } from "@/locales/client"
 import { format, isToday, compareDesc } from "date-fns"
 import { fr, enUS } from "date-fns/locale"
 import { useParams } from "next/navigation"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Calendar, Trash2, Plus } from "lucide-react"
 import {
   AlertDialog,
@@ -105,7 +105,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
             {/* Always show Today entry if no entry exists for today */}
             {!todayEntry && (
               <div className="group relative">
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   className={cn(
                     "w-full justify-start gap-2 h-auto p-2",
@@ -122,7 +122,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
                       {t('mindset.today')}
                     </p>
                   </div>
-                </ButtonV2>
+                </Button>
               </div>
             )}
 
@@ -146,7 +146,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
                     key={moodDate.toISOString()}
                     className="group relative"
                   >
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       className={cn(
                         "w-full justify-start gap-2 h-auto p-2",
@@ -167,8 +167,8 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
                           {isCurrentDay ? t('mindset.today') : `${format(moodDate, 'EEE', { locale: dateLocale }).slice(0, 3)} ${format(moodDate, 'd', { locale: dateLocale })} ${format(moodDate, 'MMM', { locale: dateLocale }).slice(0, 3)}`}
                         </p>
                       </div>
-                    </ButtonV2>
-                    <ButtonV2 
+                    </Button>
+                    <Button 
                       variant="ghost"
                       size="icon"
                       className={cn(
@@ -179,7 +179,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
                       onClick={(e) => handleDeleteClick(e, moodDate)}
                     >
                       <Trash2 className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 )
               })
@@ -190,14 +190,14 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
         <div className="p-2 border-t">
           <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
             <PopoverTrigger asChild>
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 className="w-full justify-start gap-2 text-xs"
                 size="sm"
               >
                 <Plus className="h-4 w-4 shrink-0" />
                 {t('mindset.addEntry')}
-              </ButtonV2>
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <CalendarComponent

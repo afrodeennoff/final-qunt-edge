@@ -3,11 +3,11 @@
 import { BlogCategory } from '@/prisma/generated/prisma'
 import { formatDistanceToNow } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
 import { useCurrentLocale } from '@/locales/client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
+import { Card, CardContent } from '@/components/ui/card'
 
 type BlogPost = {
   id: string
@@ -63,9 +63,9 @@ export function BlogCard({ post }: Props) {
         )}
         <CardContent className="p-4 space-y-3">
           <div>
-            <BadgeV2 variant="outline" className={categoryColors[post.category]}>
+            <Badge variant="outline" className={categoryColors[post.category]}>
               {categoryLabels[post.category]}
-            </BadgeV2>
+            </Badge>
           </div>
           <h3 className="font-semibold line-clamp-2 text-lg leading-snug text-foreground group-hover:text-primary transition-colors">
             {post.title}

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import { softDeletePropFirm } from '@/server/prop-firms'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Trash2 } from 'lucide-react'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
@@ -53,9 +53,9 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Prop Firms</h1>
-        <ButtonV2  asChild>
+        <Button  asChild>
           <Link href={`/${locale}/admin/propfirms/new`}>Add Firm</Link>
-        </ButtonV2>
+        </Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -102,14 +102,14 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                       </td>
                       <td className="py-3">
                         <div className="flex items-center gap-2">
-                          <ButtonV2  variant="ghost" size="sm" asChild>
+                          <Button  variant="ghost" size="sm" asChild>
                             <Link href={`/${locale}/admin/propfirms/${f.id}`}>Edit</Link>
-                          </ButtonV2>
+                          </Button>
                           <form action={handleDelete}>
                             <input type="hidden" name="id" value={f.id} />
-                            <ButtonV2  variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                            <Button  variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                               <Trash2 className="w-4 h-4" />
-                            </ButtonV2>
+                            </Button>
                           </form>
                         </div>
                       </td>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns'
@@ -94,9 +94,9 @@ export function UserGrowthChart({ dailyData, allUsers }: UserGrowthChartProps) {
 
   return (
     <div className="space-y-6">
-      <CardV2 data-chart-surface="modern">
-        <CardV2Header className="flex flex-row items-center justify-between">
-          <CardV2Title>User Growth Analysis</CardV2Title>
+      <Card data-chart-surface="modern">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>User Growth Analysis</CardTitle>
           <Select value={timePeriod} onValueChange={(value: 'daily' | 'weekly' | 'monthly' | 'yearly') => setTimePeriod(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select time period" />
@@ -108,8 +108,8 @@ export function UserGrowthChart({ dailyData, allUsers }: UserGrowthChartProps) {
               <SelectItem value="yearly">Yearly</SelectItem>
             </SelectContent>
           </Select>
-        </CardV2Header>
-        <CardV2Content>
+        </CardHeader>
+        <CardContent>
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
@@ -172,8 +172,8 @@ export function UserGrowthChart({ dailyData, allUsers }: UserGrowthChartProps) {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-3xl">

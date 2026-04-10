@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check, X, AlertCircle, Sparkles } from 'lucide-react'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -229,13 +229,13 @@ function FreePlanCard({
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           {isModal ? (
-            <ButtonV2 onClick={onClose} className={getPlanCtaClassName()}>
+            <Button onClick={onClose} className={getPlanCtaClassName()}>
               {t('pricing.keepBasic')}
-            </ButtonV2>
+            </Button>
           ) : (
-            <ButtonV2 asChild className={getPlanCtaClassName()}>
+            <Button asChild className={getPlanCtaClassName()}>
               <Link href={href}>{t('pricing.startBasic')}</Link>
-            </ButtonV2>
+            </Button>
           )}
 
           <p className="text-center text-xs text-muted-foreground">
@@ -395,12 +395,12 @@ function PlusPlanCard({
                 onClick={() => setBillingPeriod('lifetime')}
               >
                 {t('pricing.lifetimeAccess')}
-                <BadgeV2
+                <Badge
                   variant="secondary"
                   className="border border-warning bg-warning/10 px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-warning"
                 >
                   {t('pricing.limitedTimeOffer')}
-                </BadgeV2>
+                </Badge>
               </button>
             </div>
           </div>
@@ -485,14 +485,14 @@ function PlusPlanCard({
           )}
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
-          <ButtonV2 
+          <Button 
             onClick={handlePrimaryClick}
             disabled={isLoading || current || blocked}
             variant={current || blocked ? 'outline' : 'default'}
             className={`w-full ${getPlanCtaClassName()}`}
           >
             {primaryButtonText}
-          </ButtonV2>
+          </Button>
 
           <p className="text-center text-xs text-muted-foreground">
             {t('terms.pricing.disclaimer')}
@@ -638,19 +638,19 @@ function PricingPlansContent({
             )}
           </div>
           <DialogFooter>
-            <ButtonV2 
+            <Button 
               variant="outline"
               onClick={() => setShowLifetimeConfirm(false)}
               disabled={isLoading}
             >
               {t('pricing.lifetimeUpgrade.cancel')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               onClick={handleLifetimeConfirm}
               disabled={isLoading}
             >
               {isLoading ? t('billing.lifetimeUpgrade') : t('pricing.lifetimeUpgrade.confirm')}
-            </ButtonV2>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

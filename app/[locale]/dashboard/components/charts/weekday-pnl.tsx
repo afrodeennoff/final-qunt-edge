@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartConfig } from "@/components/ui/chart";
@@ -28,7 +28,7 @@ import {
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { translateWeekdayPnL } from "@/lib/translation-utils";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 
 const daysOfWeek = [0, 1, 2, 3, 4, 5, 6]; // Sunday = 0, Saturday = 6
 
@@ -204,14 +204,14 @@ export default React.memo(function WeekdayPNLChart({
             </TooltipProvider>
           </div>
           {weekdayFilter.days && weekdayFilter.days.length > 0 && (
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
               onClick={() => setWeekdayFilter({ days: [] })}
             >
               {t("weekdayPnl.clearFilter")}
-            </ButtonV2>
+            </Button>
           )}
         </div>
       </div>

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useI18n } from "@/locales/client"
 import { FinancialEvent } from "@/prisma/generated/prisma"
@@ -60,7 +60,7 @@ export function NewsSubMenu({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <ButtonV2 
+        <Button 
           variant="ghost"
           size="sm"
           className={cn(
@@ -83,7 +83,7 @@ export function NewsSubMenu({
           ) : (
             <span>{t('mindset.editor.news.title')}</span>
           )}
-        </ButtonV2>
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         className="w-[500px] p-0 z-50"
@@ -107,14 +107,14 @@ export function NewsSubMenu({
             <h3 className="text-sm font-medium">{t('mindset.editor.news.selectNews')}</h3>
             {selectedNews.length > 0 && (
               <div className="flex items-center gap-2">
-                <BadgeV2 
+                <Badge 
                   variant="secondary" 
                   className="text-xs cursor-pointer flex items-center gap-1"
                   onClick={clearSelection}
                 >
                   {t('mindset.editor.news.selectedCount', { count: selectedNews.length })}
                   <X className="h-3 w-3 opacity-50 hover:opacity-100 transition-opacity" />
-                </BadgeV2>
+                </Badge>
               </div>
             )}
           </div>

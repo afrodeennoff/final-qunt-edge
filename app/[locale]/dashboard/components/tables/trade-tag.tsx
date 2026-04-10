@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { Plus, Search, Trash2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
@@ -129,14 +129,14 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
         onOpenChange={setIsOpen}
       >
         <PopoverTrigger asChild>
-          <ButtonV2 
+          <Button 
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0"
             disabled={isUpdating}
           >
             <Plus className="h-4 w-4" />
-          </ButtonV2>
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0" side="right" align="start">
           <Command shouldFilter={false}>

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Target, HelpCircle, Plus, Minus, ArrowUp, ArrowDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { WidgetSize } from '@/app/[locale]/dashboard/types/dashboard'
@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
 import { useI18n } from "@/locales/client"
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider"
 import { useDailyTickTargetStore } from "@/store/daily-tick-target-store"
@@ -239,33 +239,33 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
 
           {/* Target controls */}
           <div className="flex items-center gap-1">
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(-1)}
               className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Minus className="h-3 w-3" />
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               variant="ghost"
               size="sm"
               onClick={() => handleQuickIncrement(1)}
               className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
             >
               <Plus className="h-3 w-3" />
-            </ButtonV2>
+            </Button>
 
             {/* Target setting dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   size="sm"
                   className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground rounded-full transition-colors"
                 >
                   <Target className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
               </DialogTrigger>
               <DialogContent className="border-border/55 bg-background/95 backdrop-blur-xl">
                 <DialogHeader>
@@ -283,7 +283,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                         : t("widgets.dailyTickTarget.displayMode.ticks")}
                       )
                     </label>
-                    <InputV2
+                    <Input
                       type="number"
                       value={targetValue}
                       onChange={(e) => setTargetValue(e.target.value)}
@@ -292,12 +292,12 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
                     />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ButtonV2  variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
+                    <Button  variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
                       {t("common.cancel")}
-                    </ButtonV2>
-                    <ButtonV2  onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
+                    </Button>
+                    <Button  onClick={handleSaveTarget} className="bg-card hover:bg-card/90 text-foreground font-bold">
                       {t("common.save")}
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
               </DialogContent>

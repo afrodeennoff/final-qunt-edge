@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
-import { Label } from "@/components/ui/label"
-import { TextareaV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { toast } from "sonner"
 import { sendNewsletter } from "@/app/[locale]/admin/actions/newsletter"
 import { useNewsletter } from "./newsletter-context"
@@ -126,15 +126,15 @@ export function NewsletterEditor() {
   }
 
   return (
-    <CardV2 className="border-border bg-card">
-      <CardV2Header>
-        <CardV2Title className="text-foreground">Composer une Newsletter</CardV2Title>
-      </CardV2Header>
-      <CardV2Content>
+    <Card className="border-border bg-card">
+      <CardHeader>
+        <CardTitle className="text-foreground">Composer une Newsletter</CardTitle>
+      </CardHeader>
+      <CardContent>
         <div className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="youtubeUrl" className="text-muted-foreground">URL de la vidéo YouTube</Label>
-            <InputV2
+            <Input
               id="youtubeUrl"
               value={youtubeUrl}
               onChange={e => setYoutubeUrl(e.target.value)}
@@ -164,7 +164,7 @@ export function NewsletterEditor() {
               Sur quoi as-tu travaillé ?
               {isLoadingTranscript && " (Chargement de la transcription...)"}
             </Label>
-            <TextareaV2
+            <Textarea
               id="description"
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -176,7 +176,7 @@ export function NewsletterEditor() {
           </div>
 
           <div className="flex gap-2">
-            <ButtonV2 
+            <Button 
               type="button"
               className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={handleGenerate}
@@ -193,9 +193,9 @@ export function NewsletterEditor() {
                   Générer & Prévisualiser
                 </>
               )}
-            </ButtonV2>
+            </Button>
 
-            <ButtonV2  
+            <Button  
               type="button"
                variant="outline"
                className="flex-1 border-border bg-muted/40 text-foreground hover:bg-muted"
@@ -203,10 +203,10 @@ export function NewsletterEditor() {
                disabled={loading || generating || !content.subject}
              >
               {loading ? "Envoi..." : "Envoyer la Newsletter"}
-            </ButtonV2>
+            </Button>
           </div>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 } 

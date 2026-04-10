@@ -7,7 +7,7 @@ import { Slot } from "@radix-ui/react-slot"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
-import { ButtonV2 as Button } from "@/components/ui/v2"
+import { Button as Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
@@ -174,9 +174,31 @@ function Sidebar({
     )
   }
 
+  return <SidebarDesktop side={side} variant={variant} collapsible={collapsible} state={state} className={className} {...props}>{children}</SidebarDesktop>
+}
+
+function SidebarDesktop({
+  side,
+  variant,
+  collapsible,
+  state,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  side: "left" | "right"
+  variant: "sidebar" | "floating" | "inset"
+  collapsible: "offcanvas" | "icon" | "none"
+  state: "expanded" | "collapsed"
+}) {
+  const isFloating = variant === "floating" || variant === "inset"
+  const iconWidth = isFloating
+    ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
+    : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
+
   return (
     <div
-      className="group peer hidden text-sidebar-foreground md:block"
+      className="group-peer hidden text-sidebar-foreground md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
@@ -189,9 +211,7 @@ function Sidebar({
           "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
-          variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
-            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
+          iconWidth
         )}
       />
       <div
@@ -201,7 +221,7 @@ function Sidebar({
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-          variant === "floating" || variant === "inset"
+          isFloating
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
           className

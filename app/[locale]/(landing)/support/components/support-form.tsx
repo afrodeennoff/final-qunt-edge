@@ -2,10 +2,10 @@ import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DialogDescription } from "@/components/ui/dialog";
 import { DialogContent } from "@/components/ui/dialog";
 import { Dialog } from "@/components/ui/dialog";
-import { ButtonV2 } from "@/components/ui/v2";
-import { InputV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TextareaV2 } from "@/components/ui/v2";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useI18n } from "@/locales/client";
 import { useCallback, useEffect, useState } from "react";
@@ -107,7 +107,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div>
                         <Label htmlFor="summary">{t('support.form.summary')}</Label>
-                        <TextareaV2
+                        <Textarea
                             id="summary"
                             value={summary}
                             readOnly
@@ -116,7 +116,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                     </div>
                     <div>
                         <Label htmlFor="name">{t('support.form.name')}</Label>
-                        <InputV2
+                        <Input
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -125,7 +125,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                     </div>
                     <div>
                         <Label htmlFor="email">{t('support.form.email')}</Label>
-                        <InputV2
+                        <Input
                             id="email"
                             type="email"
                             value={email}
@@ -135,7 +135,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                     </div>
                     <div>
                         <Label htmlFor="additionalInfo">{t('support.form.additionalInfo')}</Label>
-                        <TextareaV2
+                        <Textarea
                             id="additionalInfo"
                             value={additionalInfo}
                             onChange={(e) => setAdditionalInfo(e.target.value)}
@@ -143,7 +143,7 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                         />
                     </div>
                     <div className="flex justify-end gap-2">
-                        <ButtonV2  type="button" variant="outline" onClick={() => {
+                        <Button  type="button" variant="outline" onClick={() => {
                             setIsContactFormOpen(false);
                             sendMessage(
                                 {
@@ -152,10 +152,10 @@ export default function SupportForm({ summary, locale, messages, setMessages, se
                             );
                         }}>
                             {t('support.form.cancel')}
-                        </ButtonV2>
-                        <ButtonV2  type="submit" disabled={isSendingEmail}>
+                        </Button>
+                        <Button  type="submit" disabled={isSendingEmail}>
                             {isSendingEmail ? t('support.form.sending') : t('support.form.submit')}
-                        </ButtonV2>
+                        </Button>
                     </div>
                 </form>
             </DialogContent>

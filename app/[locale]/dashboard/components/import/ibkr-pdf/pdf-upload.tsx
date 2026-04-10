@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useI18n } from '@/locales/client'
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, FileText, Upload, X } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -173,14 +173,14 @@ export default function PdfUpload({
                       ({(file.size / 1024 / 1024).toFixed(2)} MB)
                     </span>
                   </div>
-                  <ButtonV2 
+                  <Button 
                     variant="ghost"
                     size="icon"
                     onClick={() => removeFile(index)}
                     className="h-6 w-6 flex-none"
                   >
                     <X className="h-3 w-3" />
-                  </ButtonV2>
+                  </Button>
                 </div>
               ))}
             </div>

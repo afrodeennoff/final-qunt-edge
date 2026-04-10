@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Loader2, ZoomIn, ZoomOut } from "lucide-react"
 import { useWelcomeEmail } from "./welcome-email-context"
 import { useDebounce } from "@/hooks/use-debounce"
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { renderWelcomeEmailPreview } from "../../actions/welcome"
@@ -45,38 +45,38 @@ export function WelcomeEmailPreview() {
 
   return (
     <div className="h-screen flex flex-col">
-      <CardV2 className="flex-1 flex flex-col">
-        <CardV2Header>
+      <Card className="flex-1 flex flex-col">
+        <CardHeader>
           <div className="flex items-center justify-between">
-            <CardV2Title>Email Preview</CardV2Title>
+            <CardTitle>Email Preview</CardTitle>
             <div className="flex items-center gap-2">
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom(prev => Math.max(0.5, prev - 0.1))}
                 disabled={zoom <= 0.5}
               >
                 <ZoomOut className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
               <span className="text-sm text-muted-foreground">{Math.round(zoom * 100)}%</span>
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => setZoom(prev => Math.min(2, prev + 0.1))}
                 disabled={zoom >= 2}
               >
                 <ZoomIn className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
             </div>
           </div>
-        </CardV2Header>
-        <CardV2Content className="flex-1 p-0">
+        </CardHeader>
+        <CardContent className="flex-1 p-0">
           <div className="grid grid-cols-1 md:grid-cols-2 h-full">
             {/* Edit Form */}
             <div className="p-6 space-y-6 overflow-y-auto">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <InputV2
+                <Input
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
@@ -85,7 +85,7 @@ export function WelcomeEmailPreview() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <InputV2
+                <Input
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -134,8 +134,8 @@ export function WelcomeEmailPreview() {
               )}
             </div>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 }

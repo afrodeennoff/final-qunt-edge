@@ -9,8 +9,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { refundTransactionAction } from '../../actions/payment-actions'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
@@ -69,21 +69,21 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                             <TableCell>{txn.user.email}</TableCell>
                             <TableCell>${(txn.amount / 100).toFixed(2)}</TableCell>
                             <TableCell>
-                                <BadgeV2 variant="outline">{txn.type}</BadgeV2>
+                                <Badge variant="outline">{txn.type}</Badge>
                             </TableCell>
                             <TableCell>
-                                <BadgeV2
+                                <Badge
                                     variant={
                                         txn.status === 'COMPLETED' ? 'default' :
                                             txn.status === 'PENDING' ? 'secondary' : 'error'
                                     }
                                 >
                                     {txn.status}
-                                </BadgeV2>
+                                </Badge>
                             </TableCell>
                             <TableCell>
                                 {txn.status === 'COMPLETED' && (
-                                    <ButtonV2 
+                                    <Button 
                                         variant="ghost"
                                         size="sm"
                                         className="text-semantic-error hover:text-semantic-error hover:bg-semantic-error-bg"
@@ -95,7 +95,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                                         ) : (
                                             'Refund'
                                         )}
-                                    </ButtonV2>
+                                    </Button>
                                 )}
                             </TableCell>
                         </TableRow>

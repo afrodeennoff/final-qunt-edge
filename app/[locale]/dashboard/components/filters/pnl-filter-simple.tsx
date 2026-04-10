@@ -1,12 +1,12 @@
 "use client"
 
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState } from "react"
 import { Label } from "@/components/ui/label"
-import { CardV2, CardV2Content } from "@/components/ui/v2"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface PnlFilterSimpleProps {
   className?: string
@@ -36,48 +36,48 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium">{t('filters.pnl')}</Label>
-      <CardV2>
-        <CardV2Content className="p-3 space-y-3">
+      <Card>
+        <CardContent className="p-3 space-y-3">
           {/* Preset buttons */}
           <div className="space-y-2">
-            <ButtonV2
+            <Button
               variant={isPresetActive(undefined, undefined) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, undefined)}
             >
               {t('filters.allTrades')}
-            </ButtonV2>
-            <ButtonV2
+            </Button>
+            <Button
               variant={isPresetActive(0, undefined) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(0, undefined)}
             >
               {t('filters.profitableTrades')}
-            </ButtonV2>
-            <ButtonV2
+            </Button>
+            <Button
               variant={isPresetActive(undefined, 0) ? "solid" : "outline"}
               size="sm"
               className="w-full justify-start"
               onClick={() => handlePresetSelect(undefined, 0)}
             >
               {t('filters.losingTrades')}
-            </ButtonV2>
+            </Button>
           </div>
 
           {/* Custom range */}
           <div className="space-y-2 pt-2 border-t">
             <div className="text-xs text-muted-foreground">{t('filters.customRange')}</div>
             <div className="flex gap-2">
-              <InputV2
+              <Input
                 type="number"
                 placeholder={t('filters.min')}
                 value={customMin}
                 onChange={(e) => setCustomMin(e.target.value)}
                 className="h-8 text-xs"
               />
-              <InputV2
+              <Input
                 type="number"
                 placeholder={t('filters.max')}
                 value={customMax}
@@ -85,17 +85,17 @@ export function PnlFilterSimple({ className }: PnlFilterSimpleProps) {
                 className="h-8 text-xs"
               />
             </div>
-            <ButtonV2
+            <Button
               onClick={handleCustomRangeApply}
               size="sm"
               className="w-full"
               variant="ghost"
             >
               {t('filters.apply')}
-            </ButtonV2>
+            </Button>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 } 

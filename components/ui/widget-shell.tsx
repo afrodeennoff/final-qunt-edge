@@ -5,7 +5,7 @@ import { AlertCircle, Info } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -84,7 +84,7 @@ export function WidgetShell({
   }
 
   return (
-    <CardV2
+    <Card
       data-widget-shell="v2"
       className={cn(
         "relative overflow-hidden rounded-xl border",
@@ -101,14 +101,14 @@ export function WidgetShell({
       )}
     >
       {(title || actions || icon || description) && (
-        <CardV2Header className="border-b border-border/18 px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+        <CardHeader className="border-b border-border/18 px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
             <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (
                 <div className="flex items-center gap-[var(--space-2)]">
                   {icon ? <span className="text-fg-muted">{icon}</span> : null}
                   {title ? (
-                    <CardV2Title className="line-clamp-1 text-sm font-semibold text-fg-primary sm:text-[15px]">{title}</CardV2Title>
+                    <CardTitle className="line-clamp-1 text-sm font-semibold text-fg-primary sm:text-[15px]">{title}</CardTitle>
                   ) : null}
                   {info ? (
                     <TooltipProvider>
@@ -134,19 +134,19 @@ export function WidgetShell({
             </div>
             {actions ? <div className="shrink-0">{actions}</div> : null}
           </div>
-        </CardV2Header>
+        </CardHeader>
       )}
 
-      <CardV2Content className={cn("flex-1 min-h-0 p-0", contentClassName)}>
+      <CardContent className={cn("flex-1 min-h-0 p-0", contentClassName)}>
         {renderContent()}
-      </CardV2Content>
+      </CardContent>
 
       {footer ? (
-        <CardV2Footer className="flex flex-col p-0">
+        <CardFooter className="flex flex-col p-0">
           <Separator className="-mx-[var(--space-4)] mb-0" />
           <div className="p-[var(--space-4)]">{footer}</div>
-        </CardV2Footer>
+        </CardFooter>
       ) : null}
-    </CardV2>
+    </Card>
   )
 }

@@ -4,8 +4,8 @@ import { signInWithDiscord, signInWithEmail, verifyOtp, signInWithGoogle, signIn
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { InputV2 } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { z } from 'zod';
 import { PASSWORD_MIN_LENGTH } from '@/lib/security/password-validation'
@@ -29,7 +29,7 @@ import {
     InputOTPSeparator
 } from "@/components/ui/input-otp"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useAuthPreferenceStore } from "@/store/auth-preference-store"
 import { useCurrentLocale } from "@/locales/client"
@@ -512,13 +512,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             <p className="text-xs text-muted-foreground">Redirecting you to your dashboard...</p>
                         </div>
                     </div>
-                    <ButtonV2
+                    <Button
                         size="sm"
                         className="shrink-0 bg-success/20 text-success hover:bg-success/30 border-success/30"
                         onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
                     >
                         Go to Dashboard
-                    </ButtonV2>
+                    </Button>
                 </div>
             )}
             <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
@@ -534,12 +534,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         className="relative h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                         <span className="truncate">{t('auth.tabs.password')}</span>
-                        <BadgeV2
+                        <Badge
                             variant="secondary"
                             className="absolute -right-1.5 -top-1.5 border border-border/70 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
                         >
                             {t('auth.new')}
-                        </BadgeV2>
+                        </Badge>
                     </TabsTrigger>
                 </TabsList>
 
@@ -553,7 +553,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Email</FormLabel>
                                         <FormControl>
-                                            <InputV2
+                                            <Input
                                                 id="email"
                                                 placeholder={t('auth.emailPlaceholder')}
                                                 type="email"
@@ -570,7 +570,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 )}
                             />
                             {!isEmailSent ? (
-                                <ButtonV2 
+                                <Button 
                                     disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
                                     type="submit"
                                     className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
@@ -579,10 +579,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
                                     {t('auth.signInWithEmail')}
-                                </ButtonV2>
+                                </Button>
                             ) : (
                                 <div className="space-y-2">
-                                    <ButtonV2 
+                                    <Button 
                                         type="button"
                                         variant="outline"
                                         className="h-11 w-full rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
@@ -591,8 +591,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     >
                                         <Icons.envelope className="mr-2 h-4 w-4" />
                                         {t('auth.openMailbox')}
-                                    </ButtonV2>
-                                    <ButtonV2 
+                                    </Button>
+                                    <Button 
                                         type="submit"
                                         variant="ghost"
                                         className="h-10 w-full rounded-xl text-muted-foreground hover:bg-accent/60 hover:text-foreground"
@@ -603,7 +603,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         ) : (
                                             t('auth.resendEmail')
                                         )}
-                                    </ButtonV2>
+                                    </Button>
                                 </div>
                             )}
                         </form>
@@ -645,7 +645,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         </FormItem>
                                     )}
                                 />
-                                <ButtonV2 
+                                <Button 
                                     type="submit"
                                     className="h-11 w-full rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
                                     disabled={isLoading}
@@ -654,7 +654,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     ) : null}
                                     {t('auth.verifyCode')}
-                                </ButtonV2>
+                                </Button>
                             </form>
                         </Form>
                     )}
@@ -670,7 +670,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Email</FormLabel>
                                         <FormControl>
-                                            <InputV2
+                                            <Input
                                                 id="email_password"
                                                 placeholder={t('auth.emailPlaceholder')}
                                                 type="email"
@@ -693,7 +693,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <FormItem>
                                         <FormLabel className="sr-only">Password</FormLabel>
                                         <FormControl>
-                                            <InputV2
+                                            <Input
                                                 id="password_login"
                                                 placeholder={t('auth.passwordPlaceholder')}
                                                 type="password"
@@ -713,7 +713,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                             >
                                 Forgot your password?
                             </Link>
-                            <ButtonV2 
+                            <Button 
                                 disabled={isLoading}
                                 type="submit"
                                 className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
@@ -722,7 +722,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                 )}
                                 {t('auth.signInWithPassword')}
-                            </ButtonV2>
+                            </Button>
                         </form>
                     </Form>
                 </TabsContent>
@@ -739,7 +739,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </div>
             </div>
 
-            <ButtonV2 
+            <Button 
                 variant="outline"
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
@@ -752,8 +752,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     <Icons.discord className="mr-2 h-4 w-4" />
                 )}{" "}
                 {t('auth.signInWithDiscord')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
                 variant="outline"
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
@@ -766,7 +766,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     <Icons.google className="mr-2 h-4 w-4" />
                 )}{" "}
                 {t('auth.signInWithGoogle')}
-            </ButtonV2>
+            </Button>
         </div>
     )
 }

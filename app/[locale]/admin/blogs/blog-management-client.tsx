@@ -3,7 +3,9 @@
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { Search, Edit, Trash2, Power } from 'lucide-react'
-import { ButtonV2, BadgeV2, InputV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { BlogCategory, BlogPost } from '@/prisma/generated/prisma'
 
@@ -69,7 +71,7 @@ export function BlogManagementClient({
         <div className="border-b border-border/60 p-4">
           <div className="flex items-center gap-3">
             <Search className="h-4 w-4 text-muted-foreground" />
-            <InputV2
+            <Input
               type="search"
               placeholder="Search by title or slug..."
               value={searchQuery}
@@ -118,15 +120,15 @@ export function BlogManagementClient({
                       </code>
                     </td>
                     <td className="p-4">
-                      <BadgeV2 variant={categoryBadgeVariants[post.category]} size="sm">
+                      <Badge variant={categoryBadgeVariants[post.category]} size="sm">
                         {categoryLabels[post.category]}
-                      </BadgeV2>
+                      </Badge>
                     </td>
                     <td className="p-4 text-sm text-muted-foreground">{post.author.email}</td>
                     <td className="p-4">
-                      <BadgeV2 variant={post.published ? 'success' : 'secondary'} size="sm">
+                      <Badge variant={post.published ? 'success' : 'secondary'} size="sm">
                         {post.published ? 'Published' : 'Draft'}
-                      </BadgeV2>
+                      </Badge>
                     </td>
                     <td className="p-4 text-sm text-muted-foreground">
                       {new Date(post.createdAt).toLocaleDateString()}
@@ -134,7 +136,7 @@ export function BlogManagementClient({
                     <td className="p-4 text-right">
                       <div className="flex justify-end gap-2">
                         <form action={() => handleTogglePublish(post.id)}>
-                          <ButtonV2
+                          <Button
                             type="submit"
                             variant="ghost"
                             size="sm"
@@ -142,14 +144,14 @@ export function BlogManagementClient({
                             disabled={isPending}
                           >
                             <Power className="h-4 w-4" />
-                          </ButtonV2>
+                          </Button>
                         </form>
-                        <ButtonV2 variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="sm" asChild>
                           <Link href={`/${locale}/admin/blogs/${post.id}/edit`} title="Edit">
                             <Edit className="h-4 w-4" />
                           </Link>
-                        </ButtonV2>
-                        <ButtonV2
+                        </Button>
+                        <Button
                           variant="ghost"
                           size="sm"
                           title="Delete"
@@ -158,7 +160,7 @@ export function BlogManagementClient({
                           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
-                        </ButtonV2>
+                        </Button>
                       </div>
                     </td>
                   </tr>

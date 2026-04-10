@@ -1,7 +1,7 @@
 'use client'
 
 import { SlidersHorizontal, X } from 'lucide-react'
-import { ButtonV2 as Button } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export interface FilterState {

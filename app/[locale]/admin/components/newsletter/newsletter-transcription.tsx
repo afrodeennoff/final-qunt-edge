@@ -3,7 +3,8 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BadgeV2, ButtonV2 } from "@/components/ui/v2"
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Loader2, Mic, FileText, Download, Copy, Check } from 'lucide-react'
 import { toast } from 'sonner'
@@ -196,15 +197,15 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
         {/* Service Status */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BadgeV2 variant="default">
+            <Badge variant="default">
               Prêt
-            </BadgeV2>
+            </Badge>
             <span className="text-sm text-muted-foreground">
               {segments.length} segments disponibles
             </span>
           </div>
           
-          <ButtonV2 
+          <Button 
             onClick={handleTranscribeAllSegments}
             disabled={isTranscribing}
             className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground"
@@ -220,7 +221,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                 Transcrire tous les segments
               </>
             )}
-          </ButtonV2>
+          </Button>
         </div>
 
         {/* Progress */}
@@ -246,10 +247,10 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                 Résultats de transcription
               </h3>
               <div className="flex items-center gap-2">
-                <BadgeV2 variant="outline">
+                <Badge variant="outline">
                   {getTotalDuration().toFixed(1)}s total
-                </BadgeV2>
-                <ButtonV2 
+                </Badge>
+                <Button 
                   onClick={downloadTranscription}
                   variant="outline"
                   size="sm"
@@ -257,7 +258,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Télécharger
-                </ButtonV2>
+                </Button>
               </div>
             </div>
 
@@ -272,9 +273,9 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <BadgeV2 variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             Segment {result.segmentIndex}
-                          </BadgeV2>
+                          </Badge>
                           <span className="text-xs text-muted-foreground dark:text-muted-foreground">
                             {result.duration.toFixed(1)}s
                           </span>
@@ -283,7 +284,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                           {result.text || "Aucune transcription disponible"}
                         </p>
                       </div>
-                      <ButtonV2 
+                      <Button 
                         onClick={() => copyToClipboard(result.text, result.segmentIndex)}
                         variant="ghost"
                         size="sm"
@@ -294,7 +295,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
-                      </ButtonV2>
+                      </Button>
                     </div>
                   </div>
                 ))}

@@ -1,7 +1,7 @@
 "use client";
 
+
 import { Button } from "@/components/ui/button";
-import { ButtonV2 } from "@/components/ui/v2";
 import { cn } from "@/lib/utils";
 import type { UIMessage } from "ai";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -144,7 +144,7 @@ export const BranchPrevious = ({
   const { goToPrevious, totalBranches } = useBranch();
 
   return (
-    <ButtonV2 
+    <Button 
       aria-label="Previous branch"
       className={cn(
         "size-7 shrink-0 rounded-full text-muted-foreground transition-colors",
@@ -160,7 +160,7 @@ export const BranchPrevious = ({
       {...props}
     >
       {children ?? <ChevronLeftIcon size={14} />}
-    </ButtonV2>
+    </Button>
   );
 };
 
@@ -174,7 +174,7 @@ export const BranchNext = ({
   const { goToNext, totalBranches } = useBranch();
 
   return (
-    <ButtonV2 
+    <Button 
       aria-label="Next branch"
       className={cn(
         "size-7 shrink-0 rounded-full text-muted-foreground transition-colors",
@@ -190,7 +190,7 @@ export const BranchNext = ({
       {...props}
     >
       {children ?? <ChevronRightIcon size={14} />}
-    </ButtonV2>
+    </Button>
   );
 };
 

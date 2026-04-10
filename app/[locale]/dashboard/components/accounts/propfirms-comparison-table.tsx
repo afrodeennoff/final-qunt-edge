@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { propFirms, AccountSize } from './config';
 
 export function ComparisonTable() {

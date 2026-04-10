@@ -21,6 +21,57 @@ import {
 import { DEFAULT_OPEN_GROUPS } from './use-sidebar-nav'
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
+const ITEM_BUTTON_CLASS = 'pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!'
+const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground'
+const ACTIVE_ITEM_CLASS = 'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]'
+
+function isItemPending(
+  item: UnifiedSidebarItem,
+  pendingNavigation: PendingNavigation | null,
+  currentRouteKey: string,
+  isItemActive: boolean
+) {
+  if (!item.href || !pendingNavigation) return false
+  return (
+    pendingNavigation.href === item.href &&
+    pendingNavigation.routeKeyAtSchedule === currentRouteKey &&
+    !isItemActive
+  )
+}
+
+function renderItemIcon(
+  item: UnifiedSidebarItem,
+  isItemActive: boolean,
+  isPending: boolean,
+  isLoading: boolean
+) {
+  const isPendingItem = isPending || (isLoading && isItemActive)
+  if (isPendingItem) {
+    return <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
+  }
+  return (
+    <span
+      className={cn(
+        'shrink-0 transition-colors duration-200',
+        isItemActive
+          ? 'text-sidebar-primary'
+          : 'text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80'
+      )}
+    >
+      {item.icon}
+    </span>
+  )
+}
+
+function getItemTextClass(isItemActive: boolean) {
+  return cn(
+    'ml-3 truncate group-data-[collapsible=icon]:hidden',
+    isItemActive
+      ? 'font-semibold text-sidebar-foreground'
+      : 'text-sidebar-foreground'
+  )
+}
+
 export interface SidebarNavGroupProps {
   items: UnifiedSidebarItem[]
   openGroups: Record<string, boolean>
@@ -98,23 +149,6 @@ export function SidebarNavGroup({
     [items]
   )
 
-  // Memoized classes for item buttons
-  const itemButtonClass = React.useMemo(
-    () =>
-      'pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!',
-    []
-  )
-  const inactiveItemClass = React.useMemo(
-    () =>
-      'text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground',
-    []
-  )
-  const activeItemClass = React.useMemo(
-    () =>
-      'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]',
-    []
-  )
-
   return (
     <>
       {groupedItems.order.map((groupName, groupIndex) => (
@@ -143,13 +177,7 @@ export function SidebarNavGroup({
                     const isItemDisabled = Boolean(item.disabled)
                     const itemIsActive =
                       !isItemDisabled && !!href && isActive(href, item.exact)
-
-                    const isPendingItem = Boolean(
-                      href &&
-                        pendingNavigation?.href === href &&
-                        pendingNavigation.routeKeyAtSchedule === currentRouteKey &&
-                        !itemIsActive
-                    )
+                    const isPendingItem = isItemPending(item, pendingNavigation, currentRouteKey, itemIsActive)
 
                     return (
                       <SidebarMenuItem
@@ -166,8 +194,8 @@ export function SidebarNavGroup({
                             tooltip={label}
                             disabled={isItemDisabled}
                             className={cn(
-                              itemButtonClass,
-                              itemIsActive ? activeItemClass : inactiveItemClass
+                              ITEM_BUTTON_CLASS,
+                              itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
                             )}
                           >
                             <Link
@@ -177,28 +205,8 @@ export function SidebarNavGroup({
                               className="flex w-full items-center"
                               aria-busy={isPendingItem}
                             >
-                              {isPendingItem || (isLoading && itemIsActive) ? (
-                                <Loader2 className="h-4 w-4 animate-spin shrink-0 text-sidebar-primary" />
-                              ) : (
-                                <span
-                                  className={cn(
-                                    'shrink-0 transition-colors duration-200',
-                                    itemIsActive
-                                      ? 'text-sidebar-primary'
-                                      : 'text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80'
-                                  )}
-                                >
-                                  {item.icon}
-                                </span>
-                              )}
-                              <span
-                                className={cn(
-                                  'ml-3 truncate group-data-[collapsible=icon]:hidden',
-                                  itemIsActive
-                                    ? 'font-semibold text-sidebar-foreground'
-                                    : 'text-sidebar-foreground'
-                                )}
-                              >
+                              {renderItemIcon(item, itemIsActive, isPendingItem, isLoading)}
+                              <span className={getItemTextClass(itemIsActive)}>
                                 {label}
                               </span>
                             </Link>
@@ -210,29 +218,13 @@ export function SidebarNavGroup({
                             disabled={isItemDisabled}
                             onClick={() => item.action?.()}
                             className={cn(
-                              itemButtonClass,
-                              itemIsActive ? activeItemClass : inactiveItemClass
+                              ITEM_BUTTON_CLASS,
+                              itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
                             )}
                           >
                             <div className="flex w-full items-center">
-                              <span
-                                className={cn(
-                                  'shrink-0 transition-colors duration-200',
-                                  itemIsActive
-                                    ? 'text-sidebar-primary'
-                                    : 'text-sidebar-foreground/60 group-hover/btn:text-sidebar-foreground/80'
-                                )}
-                              >
-                                {item.icon}
-                              </span>
-                              <span
-                                className={cn(
-                                  'ml-3 truncate group-data-[collapsible=icon]:hidden',
-                                  itemIsActive
-                                    ? 'font-semibold text-sidebar-foreground'
-                                    : 'text-sidebar-foreground'
-                                )}
-                              >
+                              {renderItemIcon(item, itemIsActive, false, false)}
+                              <span className={getItemTextClass(itemIsActive)}>
                                 {label}
                               </span>
                             </div>

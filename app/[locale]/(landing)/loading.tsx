@@ -1,7 +1,7 @@
 'use client'
 
 import { Skeleton } from '@/components/ui/skeleton'
-import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
+import { Card, CardContent } from '@/components/ui/card'
 
 function NavbarSkeleton() {
   return (

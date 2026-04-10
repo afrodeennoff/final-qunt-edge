@@ -1,7 +1,7 @@
 'use client'
 
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { CopyIcon, RefreshCwIcon, EyeIcon } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { generateEtpToken } from "./action"
@@ -105,7 +105,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
         {isGenerating ? (
           <Skeleton className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background" />
         ) : (
-          <InputV2
+          <Input
             value={isRevealed ? (user?.etpToken || '') : getMaskedToken()}
             readOnly
             placeholder={t('etp.noToken')}
@@ -114,13 +114,13 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
         )}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <ButtonV2 
+            <Button 
               variant="outline"
               size="icon"
               disabled={!user?.etpToken || isGenerating}
             >
               <EyeIcon className="h-4 w-4" />
-            </ButtonV2>
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -135,15 +135,15 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <ButtonV2 
+        <Button 
           variant="outline"
           size="icon"
           onClick={handleCopyToken}
           disabled={!user?.etpToken || isGenerating}
         >
           <CopyIcon className="h-4 w-4" />
-        </ButtonV2>
-        <ButtonV2 
+        </Button>
+        <Button 
           variant="outline"
           size="icon"
           onClick={handleGenerateToken}
@@ -152,7 +152,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
           <RefreshCwIcon className={cn("h-4 w-4", {
             "animate-spin": isGenerating
           })} />
-        </ButtonV2>
+        </Button>
       </div>
 
       <div className="text-sm text-muted-foreground">

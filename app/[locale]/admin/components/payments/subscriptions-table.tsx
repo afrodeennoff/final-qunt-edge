@@ -7,8 +7,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { cancelSubscriptionAction } from '../../actions/payment-actions'
 import { toast } from 'sonner'
 
@@ -63,11 +63,11 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
                             <TableCell>{sub.user.email}</TableCell>
                             <TableCell className="font-medium">{sub.plan}</TableCell>
                             <TableCell>
-                                <BadgeV2
+                                <Badge
                                     variant={sub.status === 'ACTIVE' ? 'default' : 'secondary'}
                                 >
                                     {sub.status}
-                                </BadgeV2>
+                                </Badge>
                             </TableCell>
                             <TableCell className="capitalize">{sub.interval || '-'}</TableCell>
                             <TableCell>
@@ -75,14 +75,14 @@ export function SubscriptionsTable({ subscriptions }: SubscriptionsTableProps) {
                             </TableCell>
                             <TableCell>
                                 {sub.status === 'ACTIVE' && (
-                                    <ButtonV2 
+                                    <Button 
                                         variant="ghost"
                                         size="sm"
                                         className="text-semantic-error hover:text-semantic-error hover:bg-semantic-error-bg"
                                         onClick={() => handleCancel(sub.userId)}
                                     >
                                         Cancel
-                                    </ButtonV2>
+                                    </Button>
                                 )}
                             </TableCell>
                         </TableRow>

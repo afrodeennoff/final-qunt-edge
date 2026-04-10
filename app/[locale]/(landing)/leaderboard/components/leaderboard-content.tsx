@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useMemo, useTransition } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { Activity, Shield, Trophy, Wallet } from 'lucide-react'
 import { LeaderboardTable, LeaderboardTableSkeleton } from './leaderboard-table'
 import type { LeaderboardEntry, LeaderboardSort } from '../data/leaderboard-query'
@@ -76,13 +76,13 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
             The board highlights opted-in traders using live production metrics, with enough depth to understand how they are actually performing, not just who had one lucky day.
           </p>
           {isDemoBoard ? (
-            <BadgeV2
+            <Badge
               variant="secondary"
               className="mt-5 border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary"
             >
               <Shield className="mr-1.5 h-3.5 w-3.5" />
               Demo rankings shown until live accounts connect
-            </BadgeV2>
+            </Badge>
           ) : null}
           <div className="mt-6 flex flex-wrap gap-3">
             {([

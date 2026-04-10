@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Logo } from '@/components/logo'
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { ArrowLeft, Home, Search, Moon } from "lucide-react"
 import { useDebounce } from '@/hooks/use-debounce'
 
@@ -238,12 +238,12 @@ function NotFoundContent() {
           La page que vous recherchez n&apos;existe pas ou a été déplacée.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-          <ButtonV2  asChild variant="default" className="flex-1">
+          <Button  asChild variant="default" className="flex-1">
             <Link href={`/${locale}`}>
               <Home className="w-4 h-4 mr-2" />
               Retour à l&apos;accueil
             </Link>
-          </ButtonV2>
+          </Button>
         </div>
       </div>
     )
@@ -273,21 +273,21 @@ function NotFoundContent() {
 
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-        <ButtonV2 asChild variant="default" className="flex-1">
+        <Button asChild variant="default" className="flex-1">
           <Link href={`/${locale}`}>
             <Home className="w-4 h-4 mr-2" />
             {t.goHome}
           </Link>
-        </ButtonV2>
+        </Button>
 
-        <ButtonV2
+        <Button
           variant="outline"
           onClick={handleGoBack}
           className="flex-1"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           {t.goBack}
-        </ButtonV2>
+        </Button>
       </div>
 
       {/* Search box */}

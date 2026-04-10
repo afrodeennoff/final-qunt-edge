@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
 import { useTheme } from "@/context/theme-provider"
@@ -103,17 +103,17 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-      <CardV2Header>
-        <CardV2Title className="flex items-center gap-2">
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
           Team
-        </CardV2Title>
-        <CardV2Description>
+        </CardTitle>
+        <CardDescription>
           Manage your team connections
-        </CardV2Description>
-      </CardV2Header>
-      <CardV2Content className="space-y-6">
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
         {hasTeams && (
           <div>
             <Label className="text-base font-medium">Current Teams</Label>
@@ -126,7 +126,7 @@ function TeamSettingsCard({
                       {team.traderIds.length} traders
                     </p>
                   </div>
-                  <BadgeV2 variant="secondary">Owner</BadgeV2>
+                  <Badge variant="secondary">Owner</Badge>
                 </div>
               ))}
 
@@ -140,9 +140,9 @@ function TeamSettingsCard({
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <ButtonV2  variant="outline" size="sm">
+                      <Button  variant="outline" size="sm">
                         Leave Team
-                      </ButtonV2>
+                      </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
@@ -174,10 +174,10 @@ function TeamSettingsCard({
             <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
             <div className="mt-4">
               <Link href="/teams/dashboard">
-                <ButtonV2 >
+                <Button >
                   <Building2 className="mr-2 h-4 w-4" />
                   Manage Teams
-                </ButtonV2>
+                </Button>
               </Link>
             </div>
           </div>
@@ -186,15 +186,15 @@ function TeamSettingsCard({
         {hasTeams && (
           <div className="mt-4">
             <Link href="/teams/dashboard">
-              <ButtonV2  variant="outline" className="w-full">
+              <Button  variant="outline" className="w-full">
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Teams
-              </ButtonV2>
+              </Button>
             </Link>
           </div>
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -222,22 +222,22 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-      <CardV2Header>
-        <CardV2Title className="flex items-center gap-2">
+    <Card className="border-border/12 bg-popover/45 shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
           {t('auth.setPassword')}
-        </CardV2Title>
-        <CardV2Description>
+        </CardTitle>
+        <CardDescription>
           {t('auth.setPasswordDescription')}
-        </CardV2Description>
-      </CardV2Header>
-      <CardV2Content className="space-y-4">
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div className="grid gap-4">
           <div>
             <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
             <div className="relative">
-              <InputV2
+              <Input
                 id="newPassword"
                 type={showNewPassword ? 'text' : 'password'}
                 placeholder="••••••••"
@@ -245,7 +245,7 @@ function PasswordSettingsCard({
                 onChange={(e) => onNewPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <ButtonV2 
+              <Button 
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -259,13 +259,13 @@ function PasswordSettingsCard({
                 ) : (
                   <Eye className="h-4 w-4" />
                 )}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
           <div>
             <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
             <div className="relative">
-              <InputV2
+              <Input
                 id="confirmPassword"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="••••••••"
@@ -273,7 +273,7 @@ function PasswordSettingsCard({
                 onChange={(e) => onConfirmPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <ButtonV2 
+              <Button 
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -287,13 +287,13 @@ function PasswordSettingsCard({
                 ) : (
                   <Eye className="h-4 w-4" />
                 )}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
-          <ButtonV2  onClick={onUpdatePassword}>{t('auth.setPassword')}</ButtonV2>
+          <Button  onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -391,17 +391,17 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-          <CardV2Header>
-            <CardV2Title className="flex items-center gap-2">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {t('dashboard.profile')}
-            </CardV2Title>
-            <CardV2Description>
+            </CardTitle>
+            <CardDescription>
               Manage your personal information and account details
-            </CardV2Description>
-          </CardV2Header>
-          <CardV2Content className="space-y-4">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={user?.user_metadata.avatar_url} />
@@ -412,7 +412,7 @@ export default function SettingsPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{user?.email}</h3>
-                  <BadgeV2 variant="secondary">Active</BadgeV2>
+                  <Badge variant="secondary">Active</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Member since {new Date(user?.created_at || '').toLocaleDateString()}
@@ -424,34 +424,34 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <InputV2 id="firstName" placeholder="Enter your first name" />
+                  <Input id="firstName" placeholder="Enter your first name" />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <InputV2 id="lastName" placeholder="Enter your last name" />
+                  <Input id="lastName" placeholder="Enter your last name" />
                 </div>
               </div>
               <div>
                 <Label htmlFor="email">Email</Label>
-                <InputV2 id="email" type="email" value={user?.email || ''} disabled />
+                <Input id="email" type="email" value={user?.email || ''} disabled />
               </div>
-              <ButtonV2 >Update Profile</ButtonV2>
+              <Button >Update Profile</Button>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         {/* Preferences Section */}
-        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-          <CardV2Header>
-            <CardV2Title className="flex items-center gap-2">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
               Preferences
-            </CardV2Title>
-            <CardV2Description>
+            </CardTitle>
+            <CardDescription>
               Customize your dashboard appearance and behavior
-            </CardV2Description>
-          </CardV2Header>
-          <CardV2Content className="space-y-6">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
             {/* Accent Color Settings */}
             <div>
               <Label className="text-base font-medium flex items-center gap-2">
@@ -502,10 +502,10 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <ButtonV2  variant="outline" className="w-[200px] justify-start">
+                    <Button  variant="outline" className="w-[200px] justify-start">
                       <Globe className="mr-2 h-4 w-4" />
                       {languages.find(lang => lang.value === currentLocale)?.label}
-                    </ButtonV2>
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuRadioGroup value={currentLocale} aria-label="Language selection">
@@ -536,10 +536,10 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <ButtonV2  variant="outline" className="w-[200px] justify-start">
+                    <Button  variant="outline" className="w-[200px] justify-start">
                       <Clock className="mr-2 h-4 w-4" />
                       {timezone}
-                    </ButtonV2>
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <ScrollArea className="h-[200px]">
@@ -564,21 +564,21 @@ export default function SettingsPage() {
                 </DropdownMenu>
               </div>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         {/* Notifications Section */}
-        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-          <CardV2Header>
-            <CardV2Title className="flex items-center gap-2">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               Notifications
-            </CardV2Title>
-            <CardV2Description>
+            </CardTitle>
+            <CardDescription>
               Configure how you receive notifications and alerts
-            </CardV2Description>
-          </CardV2Header>
-          <CardV2Content className="space-y-4">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="email-notifications">Email Notifications</Label>
@@ -634,8 +634,8 @@ export default function SettingsPage() {
                 onCheckedChange={setWeeklyReports}
               />
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} />
 
@@ -656,38 +656,38 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <CardV2 className="border-border/12 bg-popover/45 shadow-sm">
-          <CardV2Header>
-            <CardV2Title className="flex items-center gap-2">
+        <Card className="border-border/12 bg-popover/45 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
               Account Management
-            </CardV2Title>
-            <CardV2Description>
+            </CardTitle>
+            <CardDescription>
               Manage your account settings and data
-            </CardV2Description>
-          </CardV2Header>
-          <CardV2Content className="space-y-4">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="grid gap-4">
               <Link href="/dashboard/billing">
-                <ButtonV2  variant="outline" className="w-full justify-start">
+                <Button  variant="outline" className="w-full justify-start">
                   <CreditCard className="mr-2 h-4 w-4" />
                   Billing & Subscription
-                </ButtonV2>
+                </Button>
               </Link>
               <Link href="/dashboard/data">
-                <ButtonV2  variant="outline" className="w-full justify-start">
+                <Button  variant="outline" className="w-full justify-start">
                   <Database className="mr-2 h-4 w-4" />
                   Data Management
-                </ButtonV2>
+                </Button>
               </Link>
               <Link href="/support">
-                <ButtonV2  variant="outline" className="w-full justify-start">
+                <Button  variant="outline" className="w-full justify-start">
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   Support & Help
-                </ButtonV2>
+                </Button>
               </Link>
               <Separator />
-              <ButtonV2 
+              <Button 
                 variant="error"
                 className="w-full justify-start"
                 onClick={async () => {
@@ -698,10 +698,10 @@ export default function SettingsPage() {
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
-              </ButtonV2>
+              </Button>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </div>
     </UnifiedPageShell>
   )

@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Progress } from "@/components/ui/progress"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { useRithmicSyncStore } from '@/store/rithmic-sync-store'
 import { cn } from "@/lib/utils"
 import { useI18n } from '@/locales/client'
@@ -93,12 +93,12 @@ export function RithmicSyncFeedback({ totalAccounts }: RithmicSyncFeedbackProps)
               >
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">{accountId}</p>
-                  <BadgeV2 
+                  <Badge 
                     variant={getAccountStatus(accountId, progress).variant}
                     className="ml-2"
                   >
                     {getAccountStatus(accountId, progress).label}
-                  </BadgeV2>
+                  </Badge>
                 </div>
                 
                 <Progress 

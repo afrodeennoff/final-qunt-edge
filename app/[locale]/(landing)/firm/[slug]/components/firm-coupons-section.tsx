@@ -2,7 +2,9 @@
 import React from 'react'
 import Link from 'next/link'
 import { listFirmCoupons } from '@/server/firm-coupons'
-import { CardV2, CardV2Description, BadgeV2, SkeletonV2 } from '@/components/ui/v2'
+import { Card, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { DealsIcon } from '@/components/icons/svg-icons'
 import { formatCompactCurrency } from '@/lib/formatting/currency'
 
@@ -29,20 +31,20 @@ export function FirmCouponsSection({
   }, [firmId])
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5 p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5 p-6">
       <div className="mb-2 flex items-center gap-2">
         <DealsIcon size={18} className="text-v2-accent" />
         <span className="text-lg font-semibold text-foreground">Current coupons</span>
         <span className="text-xs text-muted-foreground">({coupons.length})</span>
       </div>
-      <CardV2Description className="mb-4 text-sm leading-6 text-muted-foreground">
+      <CardDescription className="mb-4 text-sm leading-6 text-muted-foreground">
         Active codes tied to this firm record in the current snapshot.
-      </CardV2Description>
+      </CardDescription>
 
       {loading ? (
         <div className="space-y-3">
-          <SkeletonV2 className="h-16" />
-          <SkeletonV2 className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border/60 bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
@@ -77,7 +79,7 @@ export function FirmCouponsSection({
                 <span className="font-mono text-sm font-bold text-v2-accent bg-v2-accent-subtle px-2 py-1 rounded">
                   {coupon.code}
                 </span>
-                <BadgeV2 variant="accent">{coupon.discountPercent}% off</BadgeV2>
+                <Badge variant="accent">{coupon.discountPercent}% off</Badge>
               </div>
               {coupon.challengeFee !== null && (
                 <div className="mt-1 text-xs text-muted-foreground">
@@ -103,6 +105,6 @@ export function FirmCouponsSection({
           ))}
         </div>
       )}
-    </CardV2>
+    </Card>
   )
 }

@@ -6,7 +6,7 @@ import { format } from "date-fns"
 import { formatInTimeZone } from "date-fns-tz"
 import { fr, enUS } from "date-fns/locale"
 import { useParams } from "next/navigation"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { HourlyFinancialTimeline } from "./hourly-financial-timeline"
@@ -130,9 +130,9 @@ export function MindsetSummary({
                 <p className="text-sm text-muted-foreground">
                   {t('mindset.emotion.title')}
                 </p>
-                <ButtonV2  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('emotion')}>
+                <Button  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('emotion')}>
                   <Pencil className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
               </div>
               <p className={cn("text-sm", emotion.color)}>
                 {emotion.label}
@@ -147,9 +147,9 @@ export function MindsetSummary({
             <p className="text-sm text-muted-foreground">
               {t('mindset.journaling.title')}
             </p>
-            <ButtonV2  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('journal')}>
+            <Button  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('journal')}>
               <Pencil className="h-3 w-3" />
-            </ButtonV2>
+            </Button>
           </div>
           {!journalContent ? (
             <p className="text-sm text-muted-foreground">{t('mindset.noData')}</p>
@@ -168,9 +168,9 @@ export function MindsetSummary({
               <p className="text-sm text-muted-foreground">
                 {t('mindset.newsImpact.title')}
               </p>
-              <ButtonV2  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('news')}>
+              <Button  variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit('news')}>
                 <Pencil className="h-3 w-3" />
-              </ButtonV2>
+              </Button>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">

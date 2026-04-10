@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
 import { PlatformProcessorProps } from '../config/platforms'
 
@@ -147,12 +147,12 @@ export default function TradezellaProcessor({ headers, csvData, setProcessedTrad
         <h3 className="text-lg font-semibold mb-2">Instruments Traded</h3>
         <div className="flex flex-wrap gap-2">
           {uniqueInstruments.map((instrument) => (
-            <ButtonV2 
+            <Button 
               key={instrument}
               variant="outline"
             >
               {instrument}
-            </ButtonV2>
+            </Button>
           ))}
         </div>
       </div>

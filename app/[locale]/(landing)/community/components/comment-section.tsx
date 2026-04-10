@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ButtonV2 as Button } from '@/components/ui/v2'
-import { TextareaV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { formatDistanceToNow } from 'date-fns'
 import { useUserStore } from '@/store/user-store'
@@ -138,7 +138,7 @@ function CommentComponent({
           </div>
           {isEditing ? (
             <div className="space-y-2">
-              <TextareaV2
+              <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="min-h-[100px] w-full resize-none"
@@ -184,7 +184,7 @@ function CommentComponent({
           </div>
           {isReplying && (
             <div className="mt-4 space-y-2">
-              <TextareaV2
+              <Textarea
                 placeholder={t('community.comments.writeReply')}
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
@@ -280,7 +280,7 @@ export function CommentSection({
             <AvatarFallback>{user?.email?.[0].toUpperCase() || ''}</AvatarFallback>
           </Avatar>
           <div className="flex-1 gap-y-2">
-            <TextareaV2
+            <Textarea
               placeholder={t('community.comments.writeComment')}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}

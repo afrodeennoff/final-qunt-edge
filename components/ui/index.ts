@@ -1,10 +1,10 @@
-export { Button, buttonVariants } from "./button"
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardAction, CardStatusDot } from "./card"
-export { Badge, badgeVariants } from "./badge"
-export { Input } from "./input"
-export { Textarea } from "./textarea"
+export { Button, Button as ButtonV2, buttonVariants } from "./button"
+export { Card, Card as CardV2, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardAction, CardStatusDot } from "./card"
+export { Badge, Badge as BadgeV2, badgeVariants } from "./badge"
+export { Input, Input as InputV2 } from "./input"
+export { Textarea, Textarea as TextareaV2 } from "./textarea"
 export { Label } from "./label"
-export { Skeleton } from "./skeleton"
+export { Skeleton, Skeleton as SkeletonV2, SpinnerV2 } from "./skeleton"
 
 export {
   Sidebar,
@@ -197,5 +197,3 @@ export {
   PulseGlow,
   StaggerContainer,
 } from "./micro-interactions"
-
-export * from "./v2"

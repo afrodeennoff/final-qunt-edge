@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowRight, Settings, Users } from "lucide-react"
-import { CardV2, CardV2Content } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { TeamManagement } from "../../../components/team-management"
 
 export default function TeamMembersPage() {
@@ -29,27 +29,27 @@ export default function TeamMembersPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <ButtonV2  asChild variant="outline" className="h-10 rounded-xl border-border/70 text-[11px] font-black uppercase tracking-[0.15em]">
+            <Button  asChild variant="outline" className="h-10 rounded-xl border-border/70 text-[11px] font-black uppercase tracking-[0.15em]">
               <Link href={analyticsHref}>
                 Team Analytics
                 <ArrowRight className="h-4 w-4" />
               </Link>
-            </ButtonV2>
-            <ButtonV2  asChild className="h-10 rounded-xl text-[11px] font-black uppercase tracking-[0.15em]">
+            </Button>
+            <Button  asChild className="h-10 rounded-xl text-[11px] font-black uppercase tracking-[0.15em]">
               <Link href={teamManageHref}>
                 <Settings className="h-4 w-4" />
                 Manage Team
               </Link>
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       </header>
 
-      <CardV2 className="border-border/70 bg-card/75">
-        <CardV2Content className="p-2 sm:p-3">
+      <Card className="border-border/70 bg-card/75">
+        <CardContent className="p-2 sm:p-3">
           <TeamManagement />
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </section>
   )
 }

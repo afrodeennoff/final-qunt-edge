@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
@@ -32,7 +32,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { isUiV2Enabled } from "@/lib/ui-v2"
 import { useSearchParams } from "next/navigation"
 import { logger } from "@/lib/logger"
-import { SkeletonV2 as Skeleton } from "@/components/ui/v2"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   generateResponsiveLayouts,
   getEffectiveWidgetSize,
@@ -80,9 +80,9 @@ function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
       state="error"
       errorMessage={t('widgets.deprecated.description')}
       actions={(
-        <ButtonV2  variant="error" size="sm" onClick={onRemove}>
+        <Button  variant="error" size="sm" onClick={onRemove}>
           {t('widgets.deprecated.remove')}
-        </ButtonV2>
+        </Button>
       )}
     />
   )
@@ -146,20 +146,20 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
           <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
             <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
               <PopoverTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="icon"
                   className="h-8 w-8 rounded-full border-v2-border/20 bg-v2-bg-surface/70 text-v2-text-primary hover:bg-v2-bg-hover hover:border-v2-border/35 backdrop-blur-md"
                   aria-label="Change widget size"
                 >
                   <Maximize2 className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </PopoverTrigger>
               <PopoverContent className="w-56 border-v2-border/15 bg-v2-bg-surface/90 p-2 text-v2-text-primary backdrop-blur-xl">
                 <div className="flex flex-col gap-1">
                   {isMobile ? (
                     <>
-                      <ButtonV2 
+                      <Button 
                         variant={size === 'tiny' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('tiny')}
@@ -172,8 +172,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.small')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'medium' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('medium')}
@@ -186,8 +186,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.medium')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('large')}
@@ -200,11 +200,11 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.mobile.large')}</span>
                         </div>
-                      </ButtonV2>
+                      </Button>
                     </>
                   ) : (
                     <>
-                      <ButtonV2 
+                      <Button 
                         variant={size === 'tiny' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('tiny')}
@@ -217,8 +217,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.tiny')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'small' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('small')}
@@ -231,8 +231,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.small')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'medium' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('medium')}
@@ -245,8 +245,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.medium')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('large')}
@@ -259,8 +259,8 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.large')}</span>
                         </div>
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         variant={size === 'extra-large' ? "secondary" : "ghost"}
                         className="w-full justify-start"
                         onClick={() => handleSizeChange('extra-large')}
@@ -273,7 +273,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
                           )} />
                           <span>{t('widgets.size.extra-large')}</span>
                         </div>
-                      </ButtonV2>
+                      </Button>
                     </>
                   )}
                 </div>
@@ -281,14 +281,14 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
             </Popover>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <ButtonV2 
+                <Button 
                   variant="error"
                   size="icon"
                   className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-v2-text-primary hover:bg-v2-error/20"
                   aria-label="Remove widget"
                 >
                   <Minus className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
@@ -586,19 +586,19 @@ export default function WidgetCanvas() {
             {translate("widgets.emptyLayoutDescription") || "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
           </div>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            <ButtonV2 
+            <Button 
               onClick={restoreDefaultLayout}
               className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"
             >
               {translate("widgets.restoreDefaults") || "Restore default layout"}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               variant="outline"
               onClick={() => setIsCustomizing(true)}
               className="border-v2-border/15 bg-transparent text-v2-text-primary hover:bg-v2-bg-hover hover:text-v2-text-primary rounded-lg"
             >
               {translate("widgets.edit") || "Edit"}
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       </div>

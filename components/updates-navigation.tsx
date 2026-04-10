@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ButtonV2 } from '@/components/ui/v2'
 
 interface UpdatesNavigationProps {
   previous: { slug: string; title: string } | null
@@ -29,7 +28,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
       <div className="flex-1 min-w-0">
         {next ? (
           <Link href={`/${locale}/updates/${next.slug}`} className="group block">
-            <ButtonV2  variant="ghost" className="h-auto p-4 w-full justify-start text-left">
+            <Button  variant="ghost" className="h-auto p-4 w-full justify-start text-left">
               <div className="flex items-center gap-3 min-w-0">
                 <ChevronLeft className="h-5 w-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
                 <div className="min-w-0">
@@ -39,7 +38,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
                   </span>
                 </div>
               </div>
-            </ButtonV2>
+            </Button>
           </Link>
         ) : (
           <div />
@@ -49,7 +48,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
       <div className="flex-1 min-w-0">
         {previous ? (
           <Link href={`/${locale}/updates/${previous.slug}`} className="group block">
-            <ButtonV2  variant="ghost" className="h-auto p-4 w-full justify-end text-right">
+            <Button  variant="ghost" className="h-auto p-4 w-full justify-end text-right">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="min-w-0">
                   <span className="text-xs text-muted-foreground block">{t.older}</span>
@@ -59,7 +58,7 @@ export function UpdatesNavigation({ previous, next, locale, position = 'bottom' 
                 </div>
                 <ChevronRight className="h-5 w-5 flex-shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
               </div>
-            </ButtonV2>
+            </Button>
           </Link>
         ) : (
           <div />

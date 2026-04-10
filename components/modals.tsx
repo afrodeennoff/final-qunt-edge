@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useUserStore } from '@/store/user-store'
 import ImportButton from '../app/[locale]/dashboard/components/import/import-button'
 import { useI18n } from "@/locales/client"
@@ -121,7 +121,7 @@ export default function Modals() {
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-center">
-            <ButtonV2 
+            <Button 
               onClick={() => {
                 setTimeout(() => {
                   router.push(`/${locale}/dashboard/billing`)
@@ -130,7 +130,7 @@ export default function Modals() {
               }}
             >
               {t('modals.subscription.manage')}
-            </ButtonV2>
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -167,9 +167,9 @@ export default function Modals() {
           />
 
           <div className="mt-4 text-center">
-            <ButtonV2  variant='link' onClick={async () => await signOut()}>
+            <Button  variant='link' onClick={async () => await signOut()}>
               {t('modals.changeAccount')}
-            </ButtonV2>
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

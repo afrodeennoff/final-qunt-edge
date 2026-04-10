@@ -2,7 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
@@ -152,13 +152,13 @@ export function DailyComment({ selectedDate }: DailyCommentProps) {
           </div>
         )}
         {saveError && <p className="text-sm text-destructive">{saveError}</p>}
-        <ButtonV2 
+        <Button 
           onClick={handleSaveComment}
           disabled={isLoading || isSavingComment || !comment.trim()}
           size="sm"
         >
           {t("calendar.charts.saveComment")}
-        </ButtonV2>
+        </Button>
       </div>
     </div>
   );

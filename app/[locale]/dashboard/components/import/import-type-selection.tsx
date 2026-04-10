@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter, GitCompare, X } from "lucide-react"
-import { InputV2, CardV2, CardV2Content, ButtonV2, BadgeV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -128,14 +131,14 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
             <div className="flex items-center gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
-                <InputV2
+                <Input
                   placeholder={String(t('import.type.search'))}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
                 />
               </div>
-              <ButtonV2
+              <Button
                 variant={isCompareMode ? "default" : "outline"}
                 size="sm"
                 onClick={() => setIsCompareMode(!isCompareMode)}
@@ -146,7 +149,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               >
                 <GitCompare className="h-4 w-4" />
                 Compare
-              </ButtonV2>
+              </Button>
             </div>
 
             <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="w-full">
@@ -234,7 +237,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   <span>{selectedPlatforms.length} platforms selected</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ButtonV2
+                  <Button
                     variant="ghost"
                     size="sm"
                     onClick={clearSelection}
@@ -242,8 +245,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   >
                     <X className="h-4 w-4 mr-1" />
                     Clear
-                  </ButtonV2>
-                  <ButtonV2
+                  </Button>
+                  <Button
                     variant="default"
                     size="sm"
                     onClick={() => setIsCompareMode(true)}
@@ -251,7 +254,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   >
                     <GitCompare className="h-4 w-4" />
                     Compare
-                  </ButtonV2>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -269,9 +272,9 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
             >
               <div className="p-4 border-b border-v2-border flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-v2-text-primary">Compare Platforms</h3>
-                <ButtonV2 variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
+                <Button variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
                   <X className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </div>
               <div className="h-full overflow-y-auto p-4">
                 <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(selectedPlatforms.length, 4)}, 1fr)` }}>
@@ -285,8 +288,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                         animate={{ opacity: 1, y: 0 }}
                         className="flex flex-col"
                       >
-                        <CardV2 variant="default" size="sm" className="h-full">
-                          <CardV2Content className="p-4 flex flex-col gap-3">
+                        <Card variant="default" size="sm" className="h-full">
+                          <CardContent className="p-4 flex flex-col gap-3">
                             <div className="flex items-center gap-3">
                               {platform.logo.path && (
                                 <div className="relative h-10 w-10 shrink-0">
@@ -306,34 +309,34 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                                   {platform.category}
                                 </p>
                               </div>
-                              <ButtonV2
+                              <Button
                                 variant="ghost"
                                 size="sm"
                                 className="h-7 w-7 p-0"
                                 onClick={() => handlePlatformCheck(platform.type, false)}
                               >
                                 <X className="h-3 w-3" />
-                              </ButtonV2>
+                              </Button>
                             </div>
                             <p className="text-xs text-v2-text-muted line-clamp-3">
                               {t(platform.description, { count: 1 })}
                             </p>
                             <div className="flex flex-wrap gap-1.5 mt-auto">
                               {!platform.isDisabled && !platform.isComingSoon && (
-                                <BadgeV2 variant="success" className="text-[10px]">Available</BadgeV2>
+                                <Badge variant="success" className="text-[10px]">Available</Badge>
                               )}
                               {platform.isDisabled && (
-                                <BadgeV2 variant="warning" className="text-[10px]">Maintenance</BadgeV2>
+                                <Badge variant="warning" className="text-[10px]">Maintenance</Badge>
                               )}
                               {platform.isComingSoon && (
-                                <BadgeV2 variant="secondary" className="text-[10px] bg-semantic-info-bg/10 text-semantic-info">Coming Soon</BadgeV2>
+                                <Badge variant="secondary" className="text-[10px] bg-semantic-info-bg/10 text-semantic-info">Coming Soon</Badge>
                               )}
                               {platform.isRithmic && (
-                                <BadgeV2 variant="outline" className="text-[10px]">Rithmic</BadgeV2>
+                                <Badge variant="outline" className="text-[10px]">Rithmic</Badge>
                               )}
                             </div>
-                          </CardV2Content>
-                        </CardV2>
+                          </CardContent>
+                        </Card>
                       </motion.div>
                     )
                   })}

@@ -2,8 +2,8 @@
 
 import React, { useState, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -162,19 +162,19 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
         <div className="space-y-4 p-6">
           <div className="flex justify-between items-center px-2">
             <h3 className="text-lg font-semibold">{t('import.manual.title')}</h3>
-            <ButtonV2  onClick={handleAddRow} className="flex items-center gap-2">
+            <Button  onClick={handleAddRow} className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               {t('import.manual.addTrade')}
-            </ButtonV2>
+            </Button>
           </div>
 
           {processedTrades.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-2">
               <p className="text-muted-foreground mb-4">{t('import.manual.noTrades')}</p>
-              <ButtonV2  onClick={handleAddRow} variant="outline">
+              <Button  onClick={handleAddRow} variant="outline">
                 <Plus className="h-4 w-4 mr-2" />
                 {t('import.manual.addFirstTrade')}
-              </ButtonV2>
+              </Button>
             </div>
           ) : (
             <>
@@ -216,20 +216,20 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
                         <TableCell>{trade.commission?.toFixed(2) || '-'}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <ButtonV2 
+                            <Button 
                               variant="ghost"
                               size="sm"
                               onClick={() => handleEdit(index)}
                             >
                               <Edit2 className="h-4 w-4" />
-                            </ButtonV2>
-                            <ButtonV2 
+                            </Button>
+                            <Button 
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDelete(index)}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </ButtonV2>
+                            </Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -257,12 +257,12 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
                 <h3 className="text-lg font-semibold mb-2">{t('import.manual.instrumentsTraded')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {uniqueInstruments.map((instrument) => (
-                    <ButtonV2 
+                    <Button 
                       key={instrument}
                       variant="outline"
                     >
                       {instrument}
-                    </ButtonV2>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -281,7 +281,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
           <div className="grid grid-cols-2 gap-4 py-4">
             <div className="">
               <Label htmlFor="instrument">{t('import.manual.instrument')} *</Label>
-              <InputV2
+              <Input
                 id="instrument"
                 value={formData.instrument}
                 onChange={(e) => setFormData({ ...formData, instrument: e.target.value.toUpperCase() })}
@@ -305,7 +305,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="quantity">{t('import.manual.quantity')} *</Label>
-              <InputV2
+              <Input
                 id="quantity"
                 type="number"
                 step="1"
@@ -315,7 +315,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="entryPrice">{t('import.manual.entryPrice')} *</Label>
-              <InputV2
+              <Input
                 id="entryPrice"
                 type="number"
                 step="0.01"
@@ -325,7 +325,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="closePrice">{t('import.manual.closePrice')}</Label>
-              <InputV2
+              <Input
                 id="closePrice"
                 type="number"
                 step="0.01"
@@ -335,7 +335,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="pnl">{t('import.manual.pnl')}</Label>
-              <InputV2
+              <Input
                 id="pnl"
                 type="number"
                 step="0.01"
@@ -345,7 +345,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="entryDate">{t('import.manual.entryDate')} *</Label>
-              <InputV2
+              <Input
                 id="entryDate"
                 type="datetime-local"
                 value={formData.entryDate}
@@ -354,7 +354,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="closeDate">{t('import.manual.closeDate')}</Label>
-              <InputV2
+              <Input
                 id="closeDate"
                 type="datetime-local"
                 value={formData.closeDate || ''}
@@ -363,7 +363,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="timeInPosition">{t('import.manual.timeInPosition')} (seconds)</Label>
-              <InputV2
+              <Input
                 id="timeInPosition"
                 type="number"
                 step="1"
@@ -373,7 +373,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
             <div className="">
               <Label htmlFor="commission">{t('import.manual.commission')}</Label>
-              <InputV2
+              <Input
                 id="commission"
                 type="number"
                 step="0.01"
@@ -383,12 +383,12 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
             </div>
           </div>
           <DialogFooter>
-            <ButtonV2  variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button  variant="outline" onClick={() => setIsDialogOpen(false)}>
               {t('common.cancel')}
-            </ButtonV2>
-            <ButtonV2  onClick={handleSave}>
+            </Button>
+            <Button  onClick={handleSave}>
               {editingIndex !== null ? t('common.update') : t('common.add')}
-            </ButtonV2>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

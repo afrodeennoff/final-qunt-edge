@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { assertAdminAccess } from '@/server/authz'
 import { BlogForm } from '@/app/[locale]/admin/blogs/components/blog-form'
 import { ArrowLeft } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -28,12 +28,12 @@ export default async function NewBlogPostPage({ params }: PageProps) {
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-4">
-        <ButtonV2 variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild>
           <Link href={`/${locale}/admin/blogs`}>
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Blogs
           </Link>
-        </ButtonV2>
+        </Button>
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">New Blog Post</h1>
           <p className="text-sm text-muted-foreground">

@@ -5,9 +5,9 @@ import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterv
 import { formatInTimeZone } from 'date-fns-tz'
 import { fr, enUS } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Newspaper, Calendar, CalendarDays } from "lucide-react"
-import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { CalendarModal } from "./daily-modal"
@@ -138,7 +138,7 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <BadgeV2
+        <Badge
           variant="outline"
           className={cn(
             "h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1",
@@ -151,7 +151,7 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
         >
           <Newspaper className="h-2.5 w-2.5" />
           {filteredEvents.length}
-        </BadgeV2>
+        </Badge>
       </PopoverTrigger>
       <PopoverContent
         className="w-[400px] p-0 z-50"
@@ -180,7 +180,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <BadgeV2
+        <Badge
           variant="outline"
           className={cn(
             "h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1",
@@ -193,7 +193,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
         >
           <Calendar className="h-2.5 w-2.5" />
           {renewals.length}
-        </BadgeV2>
+        </Badge>
       </PopoverTrigger>
       <PopoverContent
         className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-lg bg-card/96 backdrop-blur-xl border-border/55"
@@ -534,18 +534,18 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
   }, [calendarData, currentDate, viewMode])
 
   return (
-    <CardV2 className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
-      <CardV2Header
+    <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
+      <CardHeader
         className="shrink-0 border-b border-border/60 px-4 py-3 sm:px-5 sm:py-4"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 space-y-1">
             <div className="flex items-center gap-2">
-              <CardV2Title className="truncate text-base font-semibold capitalize sm:text-lg">
+              <CardTitle className="truncate text-base font-semibold capitalize sm:text-lg">
                 {viewMode === 'daily'
                   ? formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })
                   : formatInTimeZone(currentDate, timezone, 'yyyy', { locale: dateLocale })}
-              </CardV2Title>
+              </CardTitle>
               <span className="rounded-md border border-border/60 bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {viewMode === 'daily' ? 'PnL Month' : 'PnL Year'}
               </span>
@@ -578,7 +578,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="flex items-center gap-1.5">
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => viewMode === 'daily' ? handlePrevMonth() : setCurrentDate(new Date(getYear(currentDate) - 1, 0, 1))}
@@ -586,8 +586,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                 aria-label={viewMode === 'daily' ? "Previous month" : "Previous year"}
               >
                 <ChevronLeft className="h-4 w-4" />
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 variant="outline"
                 size="icon"
                 onClick={() => viewMode === 'daily' ? handleNextMonth() : setCurrentDate(new Date(getYear(currentDate) + 1, 0, 1))}
@@ -595,7 +595,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
                 aria-label={viewMode === 'daily' ? "Next month" : "Next year"}
               >
                 <ChevronRight className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
             </div>
             <div className={cn("flex items-center gap-2", hideFiltersOnMobile && "max-sm:hidden")}>
               <ImportanceFilter
@@ -612,8 +612,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
             </div>
           </div>
         </div>
-      </CardV2Header>
-      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-3">
+      </CardHeader>
+      <CardContent className="flex-1 min-h-0 p-2 sm:p-3">
         {viewMode === 'daily' ? (
           <>
             <div className="mb-2 grid grid-cols-8 gap-1">
@@ -768,7 +768,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
             year={getYear(currentDate)}
           />
         )}
-      </CardV2Content>
+      </CardContent>
       <CalendarModal
         isOpen={selectedDate !== null && selectedDate !== undefined}
         onOpenChange={(open) => {
@@ -787,10 +787,10 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
         calendarData={calendarData}
         isLoading={isLoading}
       />
-      <CardV2Footer className="flex justify-end border-t border-border/60 bg-background/30 px-3 py-2">
+      <CardFooter className="flex justify-end border-t border-border/60 bg-background/30 px-3 py-2">
         {/* View Mode Toggle */}
         <div className="flex items-center gap-1 rounded-lg border border-border/60 bg-secondary/30 p-1">
-          <ButtonV2 
+          <Button 
             variant={viewMode === 'daily' ? 'default' : 'ghost'}
             size="sm"
             className={cn(
@@ -801,8 +801,8 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           >
             <Calendar className="h-4 w-4 mr-1" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.daily')}</span>
-          </ButtonV2>
-          <ButtonV2 
+          </Button>
+          <Button 
             variant={viewMode === 'weekly' ? 'default' : 'ghost'}
             size="sm"
             className={cn(
@@ -813,9 +813,9 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
           >
             <CalendarDays className="h-4 w-4 mr-1" />
             <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.weekly')}</span>
-          </ButtonV2>
+          </Button>
         </div>
-      </CardV2Footer>
-    </CardV2>
+      </CardFooter>
+    </Card>
   )
 }

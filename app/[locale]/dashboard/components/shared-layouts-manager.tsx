@@ -1,21 +1,14 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useCurrentLocale, useI18n } from "@/locales/client"
 import { getUserShared, deleteShared } from "@/server/shared"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { Trash2, Link, Calendar, Users, ArrowLeft, ExternalLink } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-import {
-  CardV2,
-  CardV2Content,
-  CardV2Description,
-  CardV2Footer,
-  CardV2Header,
-  CardV2Title,
-} from "@/components/ui/v2"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -48,28 +41,28 @@ interface SharedLayoutsManagerProps {
 
 function SkeletonCard() {
   return (
-    <CardV2 className="flex flex-col min-h-[280px]">
-      <CardV2Header className="p-4 pb-2">
+    <Card className="flex flex-col min-h-[280px]">
+      <CardHeader className="p-4 pb-2">
         <div className="space-y-2">
           <Skeleton className="h-5 w-3/4" />
           <Skeleton className="h-4 w-full" />
         </div>
-      </CardV2Header>
-      <CardV2Content className="flex-1 p-4 pt-2">
+      </CardHeader>
+      <CardContent className="flex-1 p-4 pt-2">
         <div className="space-y-2">
           <Skeleton className="h-4 w-4/5" />
           <Skeleton className="h-4 w-2/3" />
           <Skeleton className="h-4 w-1/2" />
         </div>
-      </CardV2Content>
-      <CardV2Footer className="p-4 pt-3 border-t flex flex-col gap-2">
+      </CardContent>
+      <CardFooter className="p-4 pt-3 border-t flex flex-col gap-2">
         <div className="flex gap-2 w-full">
           <Skeleton className="h-8 w-24" />
           <Skeleton className="h-8 w-24" />
         </div>
         <Skeleton className="h-8 w-full" />
-      </CardV2Footer>
-    </CardV2>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -167,7 +160,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
     <div className="flex flex-col h-full">
       <div className="shrink-0 px-3 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60 sticky top-0 z-10">
         <div className="flex items-center justify-between w-full">
-          <ButtonV2 
+          <Button 
             variant="ghost"
             size="sm"
             onClick={onBack}
@@ -175,15 +168,15 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('share.backToShare')}
-          </ButtonV2>
+          </Button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6">
         {sharedLayouts.length === 0 ? (
           <div className="max-w-2xl mx-auto">
-            <CardV2 className="border-dashed">
-              <CardV2Content className="flex flex-col items-center justify-center p-8 sm:p-12 text-center">
+            <Card className="border-dashed">
+              <CardContent className="flex flex-col items-center justify-center p-8 sm:p-12 text-center">
                 <Users className="h-12 w-12 text-muted-foreground/50 mb-4" />
                 <p className="text-lg sm:text-xl font-medium text-muted-foreground mb-2">
                   {t('share.noLayouts')}
@@ -191,24 +184,24 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                 <p className="text-sm text-muted-foreground/80 max-w-md mx-auto">
                   {t('share.startSharing')}
                 </p>
-              </CardV2Content>
-            </CardV2>
+              </CardContent>
+            </Card>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
             {sharedLayouts.map((layout) => (
-              <CardV2 key={layout.slug} className="flex flex-col min-h-[280px]">
-                <CardV2Header className="p-4 pb-2">
+              <Card key={layout.slug} className="flex flex-col min-h-[280px]">
+                <CardHeader className="p-4 pb-2">
                   <div>
-                    <CardV2Title className="text-base font-medium line-clamp-1 mb-1">
+                    <CardTitle className="text-base font-medium line-clamp-1 mb-1">
                       {layout.title || t('share.untitledLayout')}
-                    </CardV2Title>
-                    <CardV2Description className="line-clamp-2 text-xs text-muted-foreground/80">
+                    </CardTitle>
+                    <CardDescription className="line-clamp-2 text-xs text-muted-foreground/80">
                       {layout.description || t('share.noDescription')}
-                    </CardV2Description>
+                    </CardDescription>
                   </div>
-                </CardV2Header>
-                <CardV2Content className="flex-1 p-4 pt-2">
+                </CardHeader>
+                <CardContent className="flex-1 p-4 pt-2">
                   <div className="space-y-2.5">
                     <div className="flex items-center gap-2 text-muted-foreground/90">
                       <Calendar className="h-3.5 w-3.5 shrink-0" />
@@ -237,10 +230,10 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                       </div>
                     )}
                   </div>
-                </CardV2Content>
-                <CardV2Footer className="p-4 pt-3 border-t flex flex-col gap-2">
+                </CardContent>
+                <CardFooter className="p-4 pt-3 border-t flex flex-col gap-2">
                   <div className="flex gap-2 justify-center w-full">
-                    <ButtonV2 
+                    <Button 
                       variant="outline"
                       size="sm"
                       onClick={() => visitSharedLayout(layout.slug)}
@@ -248,8 +241,8 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                     >
                       <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                       <span className="text-xs">{t('share.visit')}</span>
-                    </ButtonV2>
-                    <ButtonV2 
+                    </Button>
+                    <Button 
                       variant="outline"
                       size="sm"
                       onClick={() => copyShareLink(layout.slug)}
@@ -257,9 +250,9 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                     >
                       <Link className="h-3.5 w-3.5 mr-1.5" />
                       <span className="text-xs">{t('share.copyUrl')}</span>
-                    </ButtonV2>
+                    </Button>
                   </div>
-                  <ButtonV2 
+                  <Button 
                     variant="ghost"
                     size="sm"
                     onClick={() => {
@@ -270,9 +263,9 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
                   >
                     <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                     <span className="text-xs">{t('share.delete')}</span>
-                  </ButtonV2>
-                </CardV2Footer>
-              </CardV2>
+                  </Button>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         )}
@@ -287,20 +280,20 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex-col sm:flex-row gap-2">
-            <ButtonV2 
+            <Button 
               variant="outline"
               onClick={() => setDeleteDialogOpen(false)}
               className="sm:flex-1"
             >
               {t('share.cancel')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               variant="error"
               onClick={handleDelete}
               className="sm:flex-1"
             >
               {t('share.confirmDelete')}
-            </ButtonV2>
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -2,7 +2,12 @@
 import React from 'react'
 import Link from 'next/link'
 import { createFirmReview, listFirmReviews, getFirmReviewStats, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
-import { CardV2, CardV2Content, CardV2Description, CardV2Title, ButtonV2, InputV2, TextareaV2, SkeletonV2, BadgeV2, SpinnerV2 } from '@/components/ui/v2'
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Skeleton, Spinner } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
 import { ReviewsIcon } from '@/components/icons/svg-icons'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase'
@@ -149,10 +154,10 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
                 {review.userId ? 'Verified Trader' : 'Anonymous Trader'}
               </span>
               {review.isVerified && (
-                <BadgeV2 variant="success" size="sm" className="shrink-0 gap-1">
+                <Badge variant="success" size="sm" className="shrink-0 gap-1">
                   <ShieldCheck className="h-3 w-3" />
                   Verified
-                </BadgeV2>
+                </Badge>
               )}
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -196,16 +201,16 @@ function ReviewSkeleton() {
   return (
     <div className="rounded-2xl border border-border/70 bg-card/60 p-5">
       <div className="flex items-start gap-4">
-        <SkeletonV2 className="h-10 w-10 rounded-full" />
+        <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
           <div className="flex items-center justify-between">
-            <SkeletonV2 className="h-4 w-24" />
-            <SkeletonV2 className="h-3 w-16" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-16" />
           </div>
-          <SkeletonV2 className="h-3 w-20" />
-          <SkeletonV2 className="h-4 w-3/4" />
-          <SkeletonV2 className="h-3 w-full" />
-          <SkeletonV2 className="h-3 w-2/3" />
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-2/3" />
         </div>
       </div>
     </div>
@@ -400,15 +405,15 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">User reviews & ratings</CardV2Title>
+            <CardTitle className="text-2xl text-foreground">User reviews & ratings</CardTitle>
           </div>
-          <CardV2Description className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
+          <CardDescription className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
             Approved trader submissions from Qunt Edge users. Review counts, averages, and moderation states stay visible in one place.
-          </CardV2Description>
+          </CardDescription>
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
@@ -437,8 +442,8 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               ))}
             </div>
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
       
       {/* Success Message */}
       {submitSuccess && (
@@ -463,18 +468,18 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <CardV2 className="rounded-2xl border-border/70 bg-card/80">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/70 bg-card/80">
+        <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
             {!showForm && isAuthenticated && !hasUserReviewed && (
-              <ButtonV2
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowForm(true)}
               >
                 Write Review
-              </ButtonV2>
+              </Button>
             )}
           </div>
           
@@ -526,7 +531,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">
                   Review Title <span className="text-v2-error">*</span>
                 </label>
-                <InputV2
+                <Input
                   placeholder="Summarize your experience..."
                   value={title}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -552,7 +557,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">
                   Your Review <span className="text-muted-foreground">(optional)</span>
                 </label>
-                <TextareaV2
+                <Textarea
                   placeholder="Share details about your experience with this firm..."
                   value={body}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBody(e.target.value)}
@@ -565,21 +570,21 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               
               {/* Form Actions */}
               <div className="flex items-center gap-3 pt-2">
-                <ButtonV2
+                <Button
                   type="submit"
                   disabled={submitting}
                   className="min-w-[140px]"
                 >
                   {submitting ? (
                     <>
-                      <SpinnerV2 size={16} />
+                      <Spinner size={16} />
                       Submitting...
                     </>
                   ) : (
                     'Submit Review'
                   )}
-                </ButtonV2>
-                <ButtonV2
+                </Button>
+                <Button
                   type="button"
                   variant="ghost"
                   onClick={() => {
@@ -593,7 +598,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   disabled={submitting}
                 >
                   Cancel
-                </ButtonV2>
+                </Button>
               </div>
             </form>
           )}
@@ -601,11 +606,11 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {/* Loading state for auth check */}
           {isAuthenticated === null && (
             <div className="flex items-center justify-center py-8">
-              <SpinnerV2 size={24} className="text-v2-accent" />
+              <Spinner size={24} className="text-v2-accent" />
             </div>
           )}
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
       
       {/* Success Message for flag */}
       {flagSuccess && (
@@ -644,7 +649,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-muted-foreground">Additional Details (optional)</label>
-                <TextareaV2
+                <Textarea
                   placeholder="Provide more context about your report..."
                   value={flagDescription}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFlagDescription(e.target.value)}
@@ -652,12 +657,12 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 />
               </div>
               <div className="flex gap-3 pt-2">
-                <ButtonV2 type="submit" disabled={flagSubmitting || !flagReason.trim()}>
+                <Button type="submit" disabled={flagSubmitting || !flagReason.trim()}>
                   {flagSubmitting ? 'Submitting...' : 'Submit Report'}
-                </ButtonV2>
-                <ButtonV2 type="button" variant="ghost" onClick={() => setShowFlagDialog(false)}>
+                </Button>
+                <Button type="button" variant="ghost" onClick={() => setShowFlagDialog(false)}>
                   Cancel
-                </ButtonV2>
+                </Button>
               </div>
             </form>
           </div>
@@ -665,8 +670,8 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <CardV2 className="rounded-2xl border-border/70 bg-card/80">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/70 bg-card/80">
+        <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-foreground">
               All Reviews
@@ -713,14 +718,14 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   Be the first to share your experience with this firm
                 </p>
                 {isAuthenticated && !hasUserReviewed && !showForm && (
-                  <ButtonV2
+                  <Button
                     variant="outline"
                     size="sm"
                     className="mt-4"
                     onClick={() => setShowForm(true)}
                   >
                     Write the first review
-                  </ButtonV2>
+                  </Button>
                 )}
               </div>
             ) : (
@@ -739,29 +744,29 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/70 pt-4">
-              <ButtonV2
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
               <span className="text-sm text-muted-foreground">
                 Page {currentPage} of {totalPages}
               </span>
-              <ButtonV2
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
               >
                 <ChevronRight className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
             </div>
           )}
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 }

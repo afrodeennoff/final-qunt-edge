@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect, forwardRef } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Share, Check, ChevronsUpDown, Copy, Layout, ExternalLink } from "lucide-react"
 import type { Widget } from "../types/dashboard"
 import {
@@ -35,7 +35,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DateRange } from "react-day-picker"
 import { Calendar } from "@/components/ui/calendar"
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
 import { SharedLayoutsManager } from "./shared-layouts-manager"
 import { cn } from "@/lib/utils"
 import confetti from 'canvas-confetti'
@@ -382,7 +382,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
         }
       }}>
         <DialogTrigger asChild>
-          <ButtonV2 
+          <Button 
             ref={ref}
             variant={variant}
             className={cn(
@@ -396,7 +396,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                 {t("share.button")}
               </span>
             )}
-          </ButtonV2>
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-4xl h-[90vh] sm:h-[85vh] w-[95vw]">
           <div className="h-full flex flex-col overflow-y-hidden">
@@ -420,13 +420,13 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                       <div className="space-y-2">
                         <Label className="text-center block">{t("share.shareUrl")}</Label>
                         <div className="relative">
-                          <InputV2
+                          <Input
                             readOnly
                             value={shareUrl}
                             className="pr-24 font-mono text-sm bg-muted text-center"
                           />
                           <div className="absolute right-0 top-0 h-full flex items-center gap-1 pr-2">
-                            <ButtonV2 
+                            <Button 
                               variant="ghost"
                               size="icon"
                               onClick={handleCopyUrl}
@@ -434,8 +434,8 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                             >
                               <Copy className="h-4 w-4" />
                               <span className="sr-only">{t("share.copyUrl")}</span>
-                            </ButtonV2>
-                            <ButtonV2 
+                            </Button>
+                            <Button 
                               variant="ghost"
                               size="icon"
                               onClick={() => window.open(shareUrl, '_blank')}
@@ -443,7 +443,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                             >
                               <ExternalLink className="h-4 w-4" />
                               <span className="sr-only">{t("share.openInNewTab")}</span>
-                            </ButtonV2>
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -453,7 +453,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                   <div className="max-w-7xl mx-auto space-y-4">
                     <div className="space-y-2">
                       <Label>{t("share.titleLabel")}</Label>
-                      <InputV2
+                      <Input
                         placeholder={t("share.titlePlaceholder")}
                         value={shareTitle}
                         onChange={(e) => setShareTitle(e.target.value)}
@@ -471,7 +471,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                       <div className="space-y-2 relative">
                         <Popover open={comboboxOpen} onOpenChange={setComboboxOpen} modal>
                           <PopoverTrigger asChild>
-                            <ButtonV2 
+                            <Button 
                               variant="outline"
                               role="combobox"
                               aria-expanded={comboboxOpen}
@@ -486,7 +486,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
                                 )}
                               </span>
                               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-                            </ButtonV2>
+                            </Button>
                           </PopoverTrigger>
                           <PopoverContent 
                             className="w-(--radix-popover-trigger-width) p-0" 
@@ -604,23 +604,23 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
               <DialogFooter>
                 {showManager ? null : !shareUrl ? (
                   <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end">
-                    <ButtonV2 
+                    <Button 
                       variant="outline"
                       onClick={() => setShowManager(true)}
                     >
                       <Layout className="h-4 w-4 mr-2" />
                       {t("share.manageLayouts")}
-                    </ButtonV2>
-                    <ButtonV2  onClick={handleShare}>{t("share.shareButton")}</ButtonV2>
+                    </Button>
+                    <Button  onClick={handleShare}>{t("share.shareButton")}</Button>
                   </div>
                 ) : (
-                  <ButtonV2  onClick={() => {
+                  <Button  onClick={() => {
                     setShareUrl("")
                     setShareTitle("")
                     setOpen(false)
                   }} className="w-full sm:w-auto">
                     {t("share.quit")}
-                  </ButtonV2>
+                  </Button>
                 )}
               </DialogFooter>
             </div>

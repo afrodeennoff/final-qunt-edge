@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { getAllBlogPostsForAdmin, deleteBlogPost, togglePublish } from '@/app/[locale]/admin/actions/blog-actions'
 import { assertAdminAccess } from '@/server/authz'
 import { BlogManagementClient } from './blog-management-client'
@@ -58,12 +58,12 @@ export default async function AdminBlogsPage({ params }: PageProps) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <ButtonV2 variant="solid" asChild>
+          <Button variant="solid" asChild>
             <Link href={`/${locale}/admin/blogs/new`}>
               <Plus className="h-4 w-4" />
               New Post
             </Link>
-          </ButtonV2>
+          </Button>
         </div>
       </div>
 

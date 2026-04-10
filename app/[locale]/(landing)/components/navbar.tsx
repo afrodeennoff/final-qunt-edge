@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
@@ -91,25 +91,25 @@ export default function Navbar() {
             >
               Login
             </Link>
-            <ButtonV2
+            <Button
               asChild
               size="sm"
               variant="default"
               className="hidden rounded-pill px-5 text-[11px] font-semibold tracking-[0.03em] md:inline-flex"
             >
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
-            </ButtonV2>
+            </Button>
 
             <UnifiedMobileNav
               groups={[{ links: LINKS.map((l) => ({ href: l.href, label: l.title })) }]}
               footer={
-                <ButtonV2
-                  asChild
-                  variant="default"
-                  className="w-full rounded-pill"
-                >
-                  <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
-                </ButtonV2>
+              <Button
+                asChild
+                variant="default"
+                className="w-full rounded-pill"
+              >
+                <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
+              </Button>
               }
             />
           </div>

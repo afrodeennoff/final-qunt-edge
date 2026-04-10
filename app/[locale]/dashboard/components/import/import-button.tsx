@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
@@ -481,7 +481,7 @@ export default function ImportButton() {
 
   return (
     <div>
-      <ButtonV2 
+      <Button 
         onClick={() => setIsOpen(true)}
         variant="outline"
         className={cn(
@@ -493,7 +493,7 @@ export default function ImportButton() {
       >
         <UploadIcon ref={uploadIconRef} className="h-4 w-4" />
         <span className="hidden md:block">{t("import.button")}</span>
-      </ButtonV2>
+      </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen} >
         <DialogContent

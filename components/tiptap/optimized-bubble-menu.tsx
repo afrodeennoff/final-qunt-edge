@@ -4,7 +4,7 @@ import { useEditorState } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
 import { Bold, Italic, UnderlineIcon, Strikethrough, Highlighter, Loader2, Sparkles, Table2, Trash2, Plus } from "lucide-react";
 import { useState } from "react";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -53,7 +53,7 @@ export function OptimizedBubbleMenu({
       editor={editor}
       className="flex items-center flex-wrap gap-1 p-2 bg-background border rounded-lg shadow-lg max-w-[90vw] overflow-visible"
     >
-      <ButtonV2 
+      <Button 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -62,8 +62,8 @@ export function OptimizedBubbleMenu({
         title="Bold"
       >
         <Bold className="h-4 w-4" />
-      </ButtonV2>
-      <ButtonV2 
+      </Button>
+      <Button 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -72,8 +72,8 @@ export function OptimizedBubbleMenu({
         title="Italic"
       >
         <Italic className="h-4 w-4" />
-      </ButtonV2>
-      <ButtonV2 
+      </Button>
+      <Button 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -82,8 +82,8 @@ export function OptimizedBubbleMenu({
         title="Underline"
       >
         <UnderlineIcon className="h-4 w-4" />
-      </ButtonV2>
-      <ButtonV2 
+      </Button>
+      <Button 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -92,8 +92,8 @@ export function OptimizedBubbleMenu({
         title="Strikethrough"
       >
         <Strikethrough className="h-4 w-4" />
-      </ButtonV2>
-      <ButtonV2 
+      </Button>
+      <Button 
         variant="ghost"
         size="sm"
         onClick={() => editor.chain().focus().toggleHighlight().run()}
@@ -102,7 +102,7 @@ export function OptimizedBubbleMenu({
         title="Highlight"
       >
         <Highlighter className="h-4 w-4" />
-      </ButtonV2>
+      </Button>
 
       {/* Table Menu - Show when inside a table */}
       {editorState.isTable && (
@@ -110,14 +110,14 @@ export function OptimizedBubbleMenu({
           <div className="w-px h-6 bg-border mx-1" />
           <Popover open={isTableMenuOpen} onOpenChange={setIsTableMenuOpen}>
             <PopoverTrigger asChild>
-              <ButtonV2 
+              <Button 
                 variant="ghost"
                 size="sm"
                 className="h-8 w-8 p-0"
                 title="Table Options"
               >
                 <Table2 className="h-4 w-4" />
-              </ButtonV2>
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="w-56 p-1" align="start">
               <button
@@ -207,7 +207,7 @@ export function OptimizedBubbleMenu({
       <div className="w-px h-6 bg-border mx-1" />
       <Popover open={isAIOpen} onOpenChange={setIsAIOpen}>
         <PopoverTrigger asChild>
-          <ButtonV2 
+          <Button 
             variant="ghost"
             size="sm"
             disabled={status === "streaming"}
@@ -222,7 +222,7 @@ export function OptimizedBubbleMenu({
             ) : (
               <Sparkles className="h-4 w-4" />
             )}
-          </ButtonV2>
+          </Button>
         </PopoverTrigger>
         <PopoverContent className="w-56 p-1" align="start">
           <button

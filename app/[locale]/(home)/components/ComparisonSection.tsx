@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { MOTION_EASE } from './_constants'
 import { Activity, Zap, Brain, Link2 } from 'lucide-react'
 
@@ -70,9 +70,9 @@ export default function ComparisonSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: MOTION_EASE }}
         >
-          <BadgeV2 variant="outline" className="border border-[var(--frost-border)] bg-[oklch(0.08_0_0)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="border border-[var(--frost-border)] bg-[oklch(0.08_0_0)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
             Difference From Others
-          </BadgeV2>
+          </Badge>
           <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
             Why we&apos;re different
             <span className="block text-foreground">from standard trading analytics tools</span>

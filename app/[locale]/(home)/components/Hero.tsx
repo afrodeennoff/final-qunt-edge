@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { BadgeV2, ButtonV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
 import DashboardPreview from './DashboardPreview'
 
@@ -42,7 +43,7 @@ export default function Hero({ locale }: { locale: string }) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0, ease }}
           >
-            <BadgeV2
+            <Badge
               variant="outline"
               className="mb-8 rounded-full border border-[var(--frost-border)] bg-[oklch(0.06_0_0)] px-4 py-1.5 backdrop-blur-sm"
             >
@@ -50,7 +51,7 @@ export default function Hero({ locale }: { locale: string }) {
               <span className="text-[0.75rem] tracking-[0.08em] text-muted-foreground">
                 Precision Trading Intelligence
               </span>
-            </BadgeV2>
+            </Badge>
           </motion.div>
 
           <motion.h1
@@ -82,7 +83,7 @@ export default function Hero({ locale }: { locale: string }) {
             transition={{ duration: 0.5, delay: 0.4, ease }}
           >
             <MagneticButton strength={6}>
-              <ButtonV2
+              <Button
                 asChild
                 size="lg"
                 className="h-12 w-full rounded-full bg-primary px-8 text-[0.9rem] font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto"
@@ -90,9 +91,9 @@ export default function Hero({ locale }: { locale: string }) {
                 <Link href={`/${locale}/authentication?next=dashboard`}>
                   Start Free Audit
                 </Link>
-              </ButtonV2>
+              </Button>
             </MagneticButton>
-            <ButtonV2
+            <Button
               asChild
               size="lg"
               variant="outline"
@@ -102,7 +103,7 @@ export default function Hero({ locale }: { locale: string }) {
                 Watch Demo
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </a>
-            </ButtonV2>
+            </Button>
           </motion.div>
 
           <motion.p

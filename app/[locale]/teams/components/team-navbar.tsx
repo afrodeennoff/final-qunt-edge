@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from "next/link"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Logo } from "@/components/logo"
@@ -18,7 +18,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useI18n } from "@/locales/client"
 import { LanguageSelector } from "@/components/ui/language-selector"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { UnifiedMobileNav, type MobileNavGroup } from '@/components/mobile-nav'
 
 const ListItem = React.forwardRef<
@@ -92,9 +92,9 @@ function MobileNavContent({
                 </AccordionItem>
 
             </Accordion>
-            <ButtonV2  asChild variant="outline" className="w-full" onClick={onLinkClick}>
+            <Button  asChild variant="outline" className="w-full" onClick={onLinkClick}>
                 <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
-            </ButtonV2>
+            </Button>
             <div className="py-4 border-t space-y-4">
                 <div className="flex items-center gap-2 rounded-md border border-border/50 px-3 py-2 text-sm text-muted-foreground">
                     <Moon className="h-4 w-4 text-primary" />
@@ -146,9 +146,9 @@ export default function TeamNavbar() {
                 <Link href="/teams" className="flex items-center gap-2">
                     <Logo className='w-6 h-6 fill-black dark:fill-white' />
                     <span className="font-bold text-xl">Qunt Edge</span>
-                    <BadgeV2 variant="secondary" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                         {t('teams.badge')}
-                    </BadgeV2>
+                    </Badge>
                 </Link>
                 <div className="hidden lg:block">
                     <NavigationMenu>
@@ -209,18 +209,18 @@ export default function TeamNavbar() {
 
                         </NavigationMenuList>
                         <Separator orientation="vertical" className="h-6 mx-4" />
-                        <ButtonV2  variant="ghost" className="text-sm font-medium hover:text-accent-foreground" asChild>
+                        <Button  variant="ghost" className="text-sm font-medium hover:text-accent-foreground" asChild>
                             <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
-                        </ButtonV2>
+                        </Button>
                     </NavigationMenu>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <LanguageSelector />
-                    <ButtonV2  variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
+                    <Button  variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
                         <Moon className="h-4 w-4 text-primary" />
                         <span className="text-xs uppercase tracking-[0.14em]">Dark</span>
-                    </ButtonV2>
+                    </Button>
                     <UnifiedMobileNav
                         groups={[]}
                         footer={

@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button as Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
+import type { ButtonProps } from "@/components/ui/button";
 
 export type ActionsProps = ComponentProps<"div">;
 
@@ -19,7 +19,7 @@ export const Actions = ({ className, children, ...props }: ActionsProps) => (
   </div>
 );
 
-export type ActionProps = ComponentProps<typeof Button> & {
+export type ActionProps = ButtonProps & {
   tooltip?: string;
   label?: string;
 };
@@ -34,7 +34,7 @@ export const Action = ({
   ...props
 }: ActionProps) => {
   const button = (
-    <ButtonV2 
+    <Button 
       className={cn(
         "relative size-9 p-1.5 text-muted-foreground hover:text-foreground",
         className
@@ -46,7 +46,7 @@ export const Action = ({
     >
       {children}
       <span className="sr-only">{label || tooltip}</span>
-    </ButtonV2>
+    </Button>
   );
 
   if (tooltip) {

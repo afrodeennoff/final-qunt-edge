@@ -4,18 +4,18 @@ import { PostStatus, PostType, Vote, VoteType } from '@/prisma/generated/prisma'
 import { formatDistanceToNow } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import { ArrowBigDown, ArrowBigUp, MessageSquare, ImageIcon, Pencil, ExternalLink, Copy, Check, MoreHorizontal, Settings2 } from 'lucide-react'
-import { ButtonV2 as Button } from '@/components/ui/v2'
-import { BadgeV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { useI18n, useCurrentLocale } from '@/locales/client'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { ExtendedPost } from '../types'
 import {
-  CardV2 as Card,
-  CardV2Content as CardContent,
-  CardV2Footer as CardFooter,
-  CardV2Header as CardHeader,
-} from '@/components/ui/v2'
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +35,7 @@ import { toast } from 'sonner'
 import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { CommentSection } from './comment-section'
-import { TextareaV2 } from "@/components/ui/v2"
+import { Textarea } from "@/components/ui/textarea"
 import { AuthPrompt } from './auth-prompt'
 import { CopyNotification } from './copy-notification'
 import { useUserStore } from '@/store/user-store'
@@ -226,12 +226,12 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
         <CardHeader className="flex-row items-start justify-between gap-0">
            <div className="space-y-1">
              <div className="flex items-center gap-x-2">
-               <BadgeV2 variant="secondary" className={typeColors[post.type as PostType]}>
+               <Badge variant="secondary" className={typeColors[post.type as PostType]}>
                 {(post.type as string).replace('_', ' ')}
-              </BadgeV2>
-              <BadgeV2 variant="outline" className={statusColors[post.status as PostStatus]}>
+              </Badge>
+              <Badge variant="outline" className={statusColors[post.status as PostStatus]}>
                 {(post.status as string).replace('_', ' ')}
-              </BadgeV2>
+              </Badge>
             </div>
             <h3 className="font-semibold">{post.title}</h3>
             <p className="text-sm text-muted-foreground">
@@ -304,7 +304,7 @@ export function PostCard({ post, isExpanded = false, isAuthor }: Props) {
         <CardContent className="space-y-4">
           {isEditing ? (
             <div className="space-y-2">
-              <TextareaV2
+              <Textarea
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 className="min-h-[100px]"

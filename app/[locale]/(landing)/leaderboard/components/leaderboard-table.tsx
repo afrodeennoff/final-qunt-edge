@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import React from 'react'
 import { ArrowRight } from 'lucide-react'
-import { SkeletonV2 } from '@/components/ui/v2'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 interface LeaderboardTableProps {
@@ -35,8 +35,8 @@ export function LeaderboardTableSkeleton() {
   return (
     <section className="overflow-hidden rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] shadow-[0_24px_90px_-70px_hsl(0_0%_0%_/0.95)]">
       <div className="border-b border-border/60 px-5 py-5 sm:px-6">
-        <SkeletonV2 className="h-3.5 w-28" />
-        <SkeletonV2 className="mt-3 h-8 w-56" />
+        <Skeleton className="h-3.5 w-28" />
+        <Skeleton className="mt-3 h-8 w-56" />
       </div>
 
       <div className="grid gap-3 p-4 lg:hidden">
@@ -44,21 +44,21 @@ export function LeaderboardTableSkeleton() {
           <div key={index} className="rounded-2xl border border-border/60 bg-background/60 p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <SkeletonV2 className="h-9 w-9 rounded-full" />
+                <Skeleton className="h-9 w-9 rounded-full" />
                 <div>
-                  <SkeletonV2 className="h-5 w-32" />
-                  <SkeletonV2 className="mt-2 h-3.5 w-20" />
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="mt-2 h-3.5 w-20" />
                 </div>
               </div>
-              <SkeletonV2 className="h-5 w-16" />
+              <Skeleton className="h-5 w-16" />
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <SkeletonV2 className="h-11 rounded-lg" />
-              <SkeletonV2 className="h-11 rounded-lg" />
-              <SkeletonV2 className="h-11 rounded-lg" />
-              <SkeletonV2 className="h-11 rounded-lg" />
+              <Skeleton className="h-11 rounded-lg" />
+              <Skeleton className="h-11 rounded-lg" />
+              <Skeleton className="h-11 rounded-lg" />
+              <Skeleton className="h-11 rounded-lg" />
             </div>
-            <SkeletonV2 className="mt-4 h-10 w-full rounded-full" />
+            <Skeleton className="mt-4 h-10 w-full rounded-full" />
           </div>
         ))}
       </div>
@@ -81,29 +81,29 @@ export function LeaderboardTableSkeleton() {
             {Array.from({ length: 5 }, (_, index) => (
               <tr key={index} className="group">
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-9 w-9 rounded-full" />
+                  <Skeleton className="h-9 w-9 rounded-full" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-32" />
-                  <SkeletonV2 className="mt-2 h-3.5 w-20" />
+                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="mt-2 h-3.5 w-20" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-24" />
+                  <Skeleton className="h-5 w-24" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-16" />
+                  <Skeleton className="h-5 w-16" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-16" />
+                  <Skeleton className="h-5 w-16" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-14" />
+                  <Skeleton className="h-5 w-14" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-5 w-12" />
+                  <Skeleton className="h-5 w-12" />
                 </td>
                 <td className="border-b border-border/60 px-5 py-4">
-                  <SkeletonV2 className="h-9 w-32 rounded-full" />
+                  <Skeleton className="h-9 w-32 rounded-full" />
                 </td>
               </tr>
             ))}

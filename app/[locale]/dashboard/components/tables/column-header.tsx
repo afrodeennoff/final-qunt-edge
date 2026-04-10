@@ -5,8 +5,8 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff, Filter, X } from "lucide-re
 import { useState, useEffect } from "react"
 
 import { cn } from "@/lib/utils"
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   DropdownMenu,
@@ -97,7 +97,7 @@ export function DataTableColumnHeader<TData, TValue>({
     <div className={cn("flex items-center gap-x-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <ButtonV2 
+          <Button 
             variant="ghost"
             size="sm"
             className={cn(
@@ -116,7 +116,7 @@ export function DataTableColumnHeader<TData, TValue>({
             {isFiltered && (
               <Filter className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
             )}
-          </ButtonV2>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
@@ -162,7 +162,7 @@ export function DataTableColumnHeader<TData, TValue>({
                       <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-1">
                           <Label htmlFor="min-value">{t('table.min')}</Label>
-                          <InputV2
+                          <Input
                             id="min-value"
                             type="number"
                             placeholder={t('table.min')}
@@ -172,7 +172,7 @@ export function DataTableColumnHeader<TData, TValue>({
                         </div>
                         <div className="space-y-1">
                           <Label htmlFor="max-value">{t('table.max')}</Label>
-                          <InputV2
+                          <Input
                             id="max-value"
                             type="number"
                             placeholder={t('table.max')}
@@ -183,21 +183,21 @@ export function DataTableColumnHeader<TData, TValue>({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <ButtonV2 
+                      <Button 
                         variant="outline"
                         size="sm"
                         onClick={handleClearFilter}
                         className="flex-1"
                       >
                         {t('table.clear')}
-                      </ButtonV2>
-                      <ButtonV2 
+                      </Button>
+                      <Button 
                         size="sm"
                         onClick={handleApplyFilter}
                         className="flex-1"
                       >
                         {t('table.apply')}
-                      </ButtonV2>
+                      </Button>
                     </div>
                   </div>
                 </DropdownMenuSubContent>

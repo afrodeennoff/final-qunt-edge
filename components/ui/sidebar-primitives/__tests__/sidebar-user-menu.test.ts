@@ -23,7 +23,7 @@ describe('SidebarUserMenu props validation', () => {
     const timezone = {
       value: 'America/New_York',
       options: ['America/New_York', 'Europe/London', 'Asia/Tokyo'],
-      onChange: (value: string) => {},
+      onChange: () => {},
     }
 
     expect(timezone.value).toBe('America/New_York')
@@ -74,7 +74,8 @@ describe('SidebarUserMenu user types', () => {
   })
 
   it('should allow partial user properties', () => {
-    const userWithOnlyAvatar = { avatar_url: '/avatar.png' } as any
+    interface PartialUser { avatar_url?: string; email?: string; full_name?: string }
+    const userWithOnlyAvatar: PartialUser = { avatar_url: '/avatar.png' }
     expect(userWithOnlyAvatar.avatar_url).toBe('/avatar.png')
     expect(userWithOnlyAvatar.email).toBeUndefined()
   })

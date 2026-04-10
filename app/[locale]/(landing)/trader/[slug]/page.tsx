@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import React from 'react'
 import type { Metadata } from 'next'
-import { CardV2 } from '@/components/ui/v2'
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Card } from '@/components/ui/card'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
 import { Zap, Lock } from 'lucide-react'
@@ -114,7 +114,7 @@ export default async function TraderProfilePage({
     return (
       <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
         <div className="relative mx-auto w-full max-w-[1600px]">
-          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.18em] text-fg-muted">Trader profile</p>
@@ -138,7 +138,7 @@ export default async function TraderProfilePage({
                 </Link>
               </div>
             </div>
-          </CardV2>
+          </Card>
         </div>
       </div>
     )
@@ -155,7 +155,7 @@ export default async function TraderProfilePage({
       />
       <div className="relative mx-auto grid w-full max-w-[1600px] gap-3 sm:gap-4 xl:grid-cols-[1.35fr_1fr]">
         <section className="space-y-3 sm:space-y-4">
-          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="flex items-start gap-4">
               <Avatar className="h-20 w-20 border border-border/10 bg-card/5 shadow-xl ring-2 ring-border/5 transition-transform duration-500 hover:scale-105 hover:ring-primary/30">
                 <AvatarFallback className="bg-card/10 text-xl font-semibold text-fg-primary">
@@ -200,26 +200,26 @@ export default async function TraderProfilePage({
                 </p>
               </div>
             </div>
-          </CardV2>
+          </Card>
 
           <div className="grid gap-1.5 sm:grid-cols-2">
-            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Profit</p>
               <p className={`mt-1 text-2xl font-semibold ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-fg-primary'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
               <p className="mt-2 text-xs text-fg-muted">Current public performance snapshot</p>
-            </CardV2>
+            </Card>
 
-            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
               <p className="mt-1 text-2xl font-semibold text-fg-primary">{snapshot.totalTrades.toLocaleString()}</p>
               <p className="mt-2 text-xs text-fg-muted">Visible public trades</p>
-            </CardV2>
+            </Card>
           </div>
 
           {snapshot.demo && snapshot.winRate !== undefined ? (
-            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <div className="mb-2.5 flex items-center justify-between">
                 <p className="text-sm font-semibold text-fg-primary">Demo Leaderboard Stats</p>
                 <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
@@ -261,7 +261,7 @@ export default async function TraderProfilePage({
                   </div>
                 )}
               </div>
-            </CardV2>
+            </Card>
           ) : null}
 
           <div className="flex flex-wrap gap-2">
@@ -281,17 +281,17 @@ export default async function TraderProfilePage({
         </section>
 
         <aside className="mx-auto w-full max-w-[430px] space-y-2 xl:max-w-none">
-          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="grid gap-2">
               <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
                 <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Capital</p>
                 <p className="mt-1 text-3xl font-semibold text-fg-primary">{formatCapitalCompact(snapshot.totalPnl)}</p>
               </div>
             </div>
-          </CardV2>
+          </Card>
 
           {snapshot.demo && snapshot.winRate !== undefined && (
-            <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
               <p className="mt-1 text-4xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -302,10 +302,10 @@ export default async function TraderProfilePage({
                   <div className="h-full rounded-full bg-card/20" style={{ width: `${Math.min(100, Math.max(8, 100 - snapshot.winRate))}%` }} />
                 </div>
               </div>
-            </CardV2>
+            </Card>
           )}
 
-          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="flex items-center justify-between">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
               <span className="inline-flex items-center rounded-md border border-border/20 bg-card/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-fg-primary">
@@ -316,9 +316,9 @@ export default async function TraderProfilePage({
             <div className="mt-3 h-2 rounded-full bg-card/10">
               <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
             </div>
-          </CardV2>
+          </Card>
 
-          <CardV2 className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
             <div className="flex items-center justify-between">
               <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Status</p>
               <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
@@ -331,7 +331,7 @@ export default async function TraderProfilePage({
                 ? 'This is a demo profile with preview data from the leaderboard.'
                 : 'Live trading profile with verified performance data.'}
             </p>
-          </CardV2>
+          </Card>
         </aside>
       </div>
     </div>

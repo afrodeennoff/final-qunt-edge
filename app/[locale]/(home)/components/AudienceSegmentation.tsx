@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { Target, TrendingUp, ArrowRight } from 'lucide-react'
 import { GlassCard } from '@/components/ui/glass-card'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
 import {
   MotionSection,
   MotionStagger,
@@ -86,13 +86,13 @@ function AudienceCard({
       <div className="relative z-10">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
-            <BadgeV2
+            <Badge
               variant="outline"
               size="sm"
               className="mb-3 border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
             >
               {audience.badge}
-            </BadgeV2>
+            </Badge>
             <h3 className="text-[clamp(1.1rem,2.2vw,1.4rem)] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
               {audience.title}
             </h3>

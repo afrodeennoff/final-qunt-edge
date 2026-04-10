@@ -1,6 +1,6 @@
 'use server'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar as Avatar, AvatarFallback as AvatarFallback, AvatarImage as AvatarImage } from "@/components/ui/avatar"
 import { LifeBuoy, CreditCard, Database, LayoutDashboard, Settings } from "lucide-react"
 import {
   DropdownMenu,

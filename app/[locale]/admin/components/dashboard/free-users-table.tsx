@@ -12,7 +12,7 @@ import {
 import { getFreeUsers } from '../../actions/stats'
 import { format } from 'date-fns'
 import { ArrowUpDown } from 'lucide-react'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { Trade } from "@/lib/data-types"
 
 interface FreeUser {
@@ -105,52 +105,52 @@ export function FreeUsersTable() {
 
   return (
     <div className="space-y-4">
-      <ButtonV2  onClick={fetchUsers} variant="outline">
+      <Button  onClick={fetchUsers} variant="outline">
         Refresh
-      </ButtonV2>
+      </Button>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   onClick={() => handleSort('email')}
                   className="flex items-center gap-1"
                 >
                   Email
                   <ArrowUpDown className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </TableHead>
               <TableHead>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   onClick={() => handleSort('tradeCount')}
                   className="flex items-center gap-1"
                 >
                   Trades
                   <ArrowUpDown className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </TableHead>
               <TableHead>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   onClick={() => handleSort('tradeStart')}
                   className="flex items-center gap-1"
                 >
                   startDate
                   <ArrowUpDown className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </TableHead>
               <TableHead>
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   onClick={() => handleSort('tradeLast')}
                   className="flex items-center gap-1"
                 >
                   lastDate
                   <ArrowUpDown className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </TableHead>
             </TableRow>
           </TableHeader>

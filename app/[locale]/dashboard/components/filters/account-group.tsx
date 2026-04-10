@@ -3,9 +3,9 @@
 import type React from "react"
 import { useState } from "react"
 import { AccountCoin, type Account } from "./account-coin"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { MoreHorizontal, Edit2, Trash2, EyeOff } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
@@ -76,7 +76,7 @@ export function AccountGroup({
   }
 
   return (
-    <CardV2
+    <Card
       className={cn(
         "transition-all duration-300 ease-out",
         isDragOver && "ring-2 ring-primary shadow-lg scale-[1.02]",
@@ -87,10 +87,10 @@ export function AccountGroup({
       onDragOver={handleDragOver}
       onDragLeave={onDragLeave}
     >
-      <CardV2Header className="pb-3">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           {isEditing ? (
-            <InputV2
+            <Input
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               onBlur={handleRename}
@@ -99,18 +99,18 @@ export function AccountGroup({
               autoFocus
             />
           ) : (
-            <CardV2Title className="text-lg flex items-center gap-2">
+            <CardTitle className="text-lg flex items-center gap-2">
               {isHiddenGroup && <EyeOff className="h-4 w-4 text-destructive" />}
               {isHiddenGroup ? t("filters.hiddenAccounts") : group.name}
-            </CardV2Title>
+            </CardTitle>
           )}
 
           {!isHiddenGroup && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <ButtonV2  variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button  variant="ghost" size="sm" className="h-8 w-8 p-0">
                   <MoreHorizontal className="w-4 h-4" />
-                </ButtonV2>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setIsEditing(true)}>
@@ -128,9 +128,9 @@ export function AccountGroup({
         <p className="text-sm text-muted-foreground">
           {group.accounts.length} {group.accounts.length !== 1 ? t("filters.accounts") : t("filters.account")}
         </p>
-      </CardV2Header>
+      </CardHeader>
 
-      <CardV2Content>
+      <CardContent>
         {group.accounts.length === 0 ? (
           <div className="flex items-center justify-center h-16 border-2 border-dashed border-border rounded-lg">
             <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
@@ -151,7 +151,7 @@ export function AccountGroup({
             ))}
           </div>
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 import { ArrowLeft, ArrowRight, Save } from "lucide-react"
@@ -46,7 +46,7 @@ export function ImportDialogFooter({
         </span>
         <div className="flex items-center gap-3">
           {currentStepIndex > 0 && (
-            <ButtonV2
+            <Button
               variant="outline"
               size="sm"
               onClick={onBack}
@@ -54,9 +54,9 @@ export function ImportDialogFooter({
               disabled={isSaving}
             >
               {t('import.button.back')}
-            </ButtonV2>
+            </Button>
           )}
-          <ButtonV2
+          <Button
             variant="solid"
             size="sm"
             onClick={onNext}
@@ -70,7 +70,7 @@ export function ImportDialogFooter({
             disabled={isNextDisabled || isSaving}
           >
             {isLastStep ? t('import.button.save') : t('import.button.next')}
-          </ButtonV2>
+          </Button>
         </div>
       </div>
     </div>

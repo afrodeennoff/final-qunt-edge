@@ -1,7 +1,7 @@
 "use client";
 
+
 import { Button } from "@/components/ui/button";
-import { ButtonV2 } from "@/components/ui/v2";
 import {
   Tooltip,
   TooltipContent,
@@ -48,7 +48,7 @@ export const ArtifactClose = ({
   variant = "ghost",
   ...props
 }: ArtifactCloseProps) => (
-  <ButtonV2 
+  <Button 
     className={cn(
       "size-8 p-0 text-muted-foreground hover:text-foreground",
       className
@@ -60,7 +60,7 @@ export const ArtifactClose = ({
   >
     {children ?? <XIcon className="size-4" />}
     <span className="sr-only">Close</span>
-  </ButtonV2>
+  </Button>
 );
 
 export type ArtifactTitleProps = HTMLAttributes<HTMLParagraphElement>;
@@ -107,7 +107,7 @@ export const ArtifactAction = ({
   ...props
 }: ArtifactActionProps) => {
   const button = (
-    <ButtonV2 
+    <Button 
       className={cn(
         "size-8 p-0 text-muted-foreground hover:text-foreground",
         className
@@ -119,7 +119,7 @@ export const ArtifactAction = ({
     >
       {Icon ? <Icon className="size-4" /> : children}
       <span className="sr-only">{label || tooltip}</span>
-    </ButtonV2>
+    </Button>
   );
 
   if (tooltip) {

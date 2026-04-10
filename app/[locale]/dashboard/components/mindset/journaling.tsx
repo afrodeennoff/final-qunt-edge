@@ -1,7 +1,7 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useI18n } from "@/locales/client"
 import { EmotionSelector } from "./emotion-selector"
 import { EmotionGauge } from "./emotion-gauge"
@@ -82,12 +82,12 @@ export function Journaling({
       </div>
 
       <div className="flex-none flex gap-4 mt-6">
-        <ButtonV2 
+        <Button 
           onClick={onSave}
           className="w-full"
         >
           {t('mindset.journaling.save')}
-        </ButtonV2>
+        </Button>
       </div>
     </div>
   )

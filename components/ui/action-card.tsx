@@ -11,7 +11,6 @@ import {
   CardProps,
 } from "./card"
 import { Button } from "./button"
-import { ButtonV2 } from "@/components/ui/v2"
 import { LucideIcon } from "lucide-react"
 
 export interface ActionCardProps extends CardProps {
@@ -109,22 +108,22 @@ const ActionCard = React.forwardRef<HTMLDivElement, ActionCardProps>(
         {(primaryAction || secondaryAction) && (
           <CardFooter size={size} className="gap-2">
             {secondaryAction && (
-              <ButtonV2 
+              <Button 
                 variant="outline"
                 className={cn("flex-1", currentSize.button)}
                 onClick={secondaryAction.onClick}
               >
                 {secondaryAction.label}
-              </ButtonV2>
+              </Button>
             )}
             {primaryAction && (
-              <ButtonV2 
+              <Button 
                 variant={primaryAction.variant || "default"}
                 className={cn("flex-1", currentSize.button)}
                 onClick={primaryAction.onClick}
               >
                 {primaryAction.label}
-              </ButtonV2>
+              </Button>
             )}
           </CardFooter>
         )}

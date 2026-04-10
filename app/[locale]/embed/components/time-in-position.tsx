@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Info } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useI18n } from '@/locales/client'
@@ -84,11 +84,11 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
   const getColor = (count: number) => `hsl(var(--chart-2) / ${Math.max(0.2, count / maxTradeCount)})`
 
   return (
-    <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col">
-      <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+    <Card data-chart-surface="modern" className="h-[500px] flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardV2Title className="line-clamp-1 text-base">{t('embed.timeInPosition.title')}</CardV2Title>
+            <CardTitle className="line-clamp-1 text-base">{t('embed.timeInPosition.title')}</CardTitle>
             <Popover>
               <PopoverTrigger asChild>
                 <Info className="text-muted-foreground hover:text-foreground transition-colors cursor-help h-4 w-4" />
@@ -99,8 +99,8 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
             </Popover>
           </div>
         </div>
-      </CardV2Header>
-      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-4">
+      </CardHeader>
+      <CardContent className="flex-1 min-h-0 p-2 sm:p-4">
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ left: 0, right: 8, top: 8, bottom: 24 }}>
@@ -132,7 +132,7 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }

@@ -1,14 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ButtonV2 } from "@/components/ui/v2";
-import { TextareaV2 } from "@/components/ui/v2";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+import { Button as Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -16,7 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { ChatStatus, FileUIPart } from "ai";
 import {
@@ -105,7 +104,7 @@ export function PromptInputAttachment({
           <PaperclipIcon className="size-4" />
         </div>
       )}
-      <ButtonV2 
+      <Button 
         aria-label="Remove attachment"
         className="-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100"
         onClick={() => attachments.remove(data.id)}
@@ -114,7 +113,7 @@ export function PromptInputAttachment({
         variant="outline"
       >
         <XIcon className="h-3 w-3" />
-      </ButtonV2>
+      </Button>
     </div>
   );
 }
@@ -513,7 +512,7 @@ export const PromptInputTextarea = ({
   };
 
   return (
-    <TextareaV2
+    <Textarea
       className={cn(
         "text-lg sm:text-sm",
         "w-full resize-none rounded-none border-none p-3 shadow-none outline-hidden ring-0",
@@ -574,7 +573,7 @@ export const PromptInputButton = ({
     (size ?? Children.count(props.children) > 1) ? "default" : "icon";
 
   return (
-    <ButtonV2 
+    <Button 
       className={cn(
         "shrink-0 gap-1.5 rounded-lg",
         variant === "ghost" && "text-muted-foreground",
@@ -655,7 +654,7 @@ export const PromptInputSubmit = ({
   }
 
   return (
-    <ButtonV2 
+    <Button 
       className={cn("gap-1.5 rounded-lg", className)}
       size={size}
       type="submit"
@@ -663,7 +662,7 @@ export const PromptInputSubmit = ({
       {...props}
     >
       {children ?? Icon}
-    </ButtonV2>
+    </Button>
   );
 };
 

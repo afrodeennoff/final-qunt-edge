@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from '@/components/ui/badge'
 import { MOTION_EASE } from './_constants'
-import { CardV2 as Card, CardV2Content as CardContent } from '@/components/ui/v2'
+import { Card, CardContent } from '@/components/ui/card'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -105,10 +105,10 @@ export default function FAQSection(_props: FAQSectionProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             <HelpCircle className="mr-1.5 h-3 w-3" />
             FAQ
-          </BadgeV2>
+          </Badge>
           <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
             Common
             <span className="block text-foreground">questions answered</span>

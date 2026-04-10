@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useI18n } from "@/locales/client"
 import { FinancialEvent } from "@/prisma/generated/prisma"
 import { useCurrentLocale } from "@/locales/client"
 import { X } from "lucide-react"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { HourlyFinancialTimeline } from "@/app/[locale]/dashboard/components/mindset/hourly-financial-timeline"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImportanceFilter } from "@/app/[locale]/dashboard/components/importance-filter"
@@ -74,14 +74,14 @@ export function NewsImpact({ onNext, onBack, selectedNews, onNewsSelection, date
         <h2 className="text-lg font-semibold">{t('mindset.newsImpact.selectImportantNews')}</h2>
         <div className="flex items-center gap-2">
           {selectedNews.length > 0 && (
-            <BadgeV2 
+            <Badge 
               variant="secondary" 
               className="text-xs cursor-pointer flex items-center gap-1"
               onClick={() => onNewsSelection([])}
             >
               {selectedNews.length} selected
               <X className="h-3 w-3 opacity-50 hover:opacity-100 transition-opacity" />
-            </BadgeV2>
+            </Badge>
           )}
           <ImportanceFilter
             value={impactLevels}
@@ -116,19 +116,19 @@ export function NewsImpact({ onNext, onBack, selectedNews, onNewsSelection, date
       </div>
 
       <div className="flex gap-4 border-t pt-4">
-        <ButtonV2 
+        <Button 
           variant="outline"
           onClick={onBack}
           className="flex-1 sm:flex-none"
         >
           {t('mindset.back')}
-        </ButtonV2>
-        <ButtonV2 
+        </Button>
+        <Button 
           onClick={onNext}
           className="flex-1 sm:flex-none"
         >
           {t('mindset.next')}
-        </ButtonV2>
+        </Button>
       </div>
     </div>
   )

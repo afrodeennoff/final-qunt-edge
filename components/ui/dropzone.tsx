@@ -3,7 +3,6 @@
 import { cn } from '@/lib/utils'
 import { type UseSupabaseUploadReturn } from '@/hooks/use-hash-upload'
 import { Button } from '@/components/ui/button'
-import { ButtonV2 } from '@/components/ui/v2'
 import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react'
 import { createContext, type PropsWithChildren, useCallback, useContext } from 'react'
 import Image from 'next/image'
@@ -154,14 +153,14 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             </div>
 
             {!loading && !isSuccessfullyUploaded && (
-              <ButtonV2 
+              <Button 
                 size="icon"
                 variant="link"
                 className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground"
                 onClick={() => handleRemoveFile(file.name)}
               >
                 <X />
-              </ButtonV2>
+              </Button>
             )}
           </div>
         )
@@ -173,7 +172,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
       )}
       {files.length > 0 && !exceedMaxFiles && (
         <div className="mt-2">
-          <ButtonV2 
+            <Button 
             variant="outline"
             onClick={onUpload}
             disabled={files.some((file) => file.errors.length !== 0) || loading}
@@ -186,7 +185,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             ) : (
               <>{t('dropzone.uploadFiles')}</>
             )}
-          </ButtonV2>
+              </Button>
         </div>
       )}
     </div>

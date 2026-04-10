@@ -5,13 +5,13 @@ import dynamic from "next/dynamic";
 import { clearReferralCode } from "@/lib/referral-storage";
 import { DashboardSkeleton } from "./skeletons/dashboard-skeleton";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { SpinnerV2 } from "@/components/ui/v2";
+import { Spinner } from "@/components/ui/skeleton";
 
 type DashboardTab = "widgets" | "table" | "accounts" | "chart";
 
 const tabLoadingFallback = (
   <div className="flex items-center justify-center h-64">
-    <SpinnerV2 size={24} />
+    <Spinner size={24} />
   </div>
 );
 

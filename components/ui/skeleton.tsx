@@ -84,3 +84,28 @@ export function AccountsSkeleton() {
 }
 
 export { Skeleton }
+
+// For backward compatibility: SkeletonV2 is an alias
+export { Skeleton as SkeletonV2 }
+
+export { SpinnerV2 as Spinner }
+
+export function SpinnerV2({ size = 24, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 50 50"
+      className={cn("animate-spin", className)}
+    >
+      <circle
+        cx="25" cy="25" r="20"
+        strokeWidth="4"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeDasharray="80, 200"
+      />
+    </svg>
+  )
+}

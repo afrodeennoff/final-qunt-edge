@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
-import { CardV2, CardV2Content, CardV2Description, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { 
   Link, 
@@ -146,37 +146,37 @@ export function LinkedAccounts() {
 
   if (loading) {
     return (
-      <CardV2>
-        <CardV2Header>
-          <CardV2Title className="flex items-center gap-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             <Link className="h-5 w-5" />
             {t('auth.linkedAccounts')}
-          </CardV2Title>
-          <CardV2Description>
+          </CardTitle>
+          <CardDescription>
             {t('auth.linkedAccountsDescription')}
-          </CardV2Description>
-        </CardV2Header>
-        <CardV2Content>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             Loading...
           </div>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <CardV2>
-      <CardV2Header>
-        <CardV2Title className="flex items-center gap-2">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
           <Link className="h-5 w-5" />
           {t('auth.linkedAccounts')}
-        </CardV2Title>
-        <CardV2Description>
+        </CardTitle>
+        <CardDescription>
           {t('auth.linkedAccountsDescription')}
-        </CardV2Description>
-      </CardV2Header>
-      <CardV2Content className="gap-6">
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="gap-6">
         {/* Current Linked Accounts */}
         {identities.length > 0 && (
           <div>
@@ -202,15 +202,15 @@ export function LinkedAccounts() {
                   </div>
                   <div className="flex items-center gap-2">
                     {identity.provider === 'email' && (
-                      <BadgeV2 variant="secondary">{t('auth.primary')}</BadgeV2>
+                      <Badge variant="secondary">{t('auth.primary')}</Badge>
                     )}
                     {identity.provider !== 'email' && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <ButtonV2  variant="outline" size="sm">
+                          <Button  variant="outline" size="sm">
                             <Unlink className="mr-2 h-4 w-4" />
                             {t('auth.unlinkAccount')}
-                          </ButtonV2>
+                          </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -248,7 +248,7 @@ export function LinkedAccounts() {
           </p>
           <div className="gap-2">
             {!isDiscordLinked && (
-              <ButtonV2  
+              <Button  
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={handleLinkDiscord}
@@ -256,10 +256,10 @@ export function LinkedAccounts() {
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 {t('auth.linkDiscord')}
-              </ButtonV2>
+              </Button>
             )}
             {!isGoogleLinked && (
-              <ButtonV2  
+              <Button  
                 variant="outline" 
                 className="w-full justify-start"
                 onClick={handleLinkGoogle}
@@ -267,7 +267,7 @@ export function LinkedAccounts() {
               >
                 <Chrome className="mr-2 h-4 w-4" />
                 {t('auth.linkGoogle')}
-              </ButtonV2>
+              </Button>
             )}
             {!isDiscordLinked && !isGoogleLinked && (
               <p className="text-sm text-muted-foreground text-center py-4">
@@ -276,7 +276,7 @@ export function LinkedAccounts() {
             )}
           </div>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 } 

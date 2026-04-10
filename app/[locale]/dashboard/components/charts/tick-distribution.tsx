@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { ChartConfig } from "@/components/ui/chart";
 import { useDashboardFilters, useDashboardStats } from "@/context/data-provider";
@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useI18n } from "@/locales/client";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 
 interface TickDistributionProps {
@@ -171,14 +171,14 @@ export default React.memo(function TickDistributionChart({
             </TooltipProvider>
           </div>
           {tickFilter.value && (
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setTickFilter({ value: null })}
             >
               {t("tickDistribution.clearFilter")}
-            </ButtonV2>
+            </Button>
           )}
         </div>
       </div>

@@ -1,12 +1,7 @@
 "use client"
 
 import React from 'react'
-import {
-  CardV2,
-  CardV2Content,
-  CardV2Header,
-  CardV2Title,
-} from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CalendarEntry } from "@/app/[locale]/dashboard/types/calendar"
 import { useI18n } from '@/locales/client'
 import Decimal from 'decimal.js'
@@ -102,13 +97,13 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <CardV2 className="flex flex-col">
-          <CardV2Header className="pb-1 flex-1">
-            <CardV2Title className="text-base md:text-lg">
+        <Card className="flex flex-col">
+          <CardHeader className="pb-1 flex-1">
+            <CardTitle className="text-base md:text-lg">
               {isWeekly ? t('calendar.charts.weeklyPnlAfterComm') : t('calendar.charts.dailyPnlAfterComm')}
-            </CardV2Title>
-          </CardV2Header>
-          <CardV2Content className="pt-2 mt-auto">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-2 mt-auto">
             <p className={`text-xl md:text-2xl font-bold ${totalPnL >= 0 ? 'text-[hsl(var(--success))]' : 'text-[hsl(var(--destructive))]'}`}>
               {formatCurrency(totalPnL)}
             </p>
@@ -117,16 +112,16 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
                 ? t('calendar.charts.accounts')
                 : t('calendar.charts.account')}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="flex flex-col">
-          <CardV2Header className="pb-1 flex-1">
-            <CardV2Title className="text-base md:text-lg">
+        <Card className="flex flex-col">
+          <CardHeader className="pb-1 flex-1">
+            <CardTitle className="text-base md:text-lg">
               {isWeekly ? t('calendar.charts.weeklyAvgTimeInPosition') : t('calendar.charts.avgTimeInPosition')}
-            </CardV2Title>
-          </CardV2Header>
-          <CardV2Content className="pt-2 mt-auto">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-2 mt-auto">
             <p className="text-xl md:text-2xl font-bold">
               {formatDuration(avgTimeInPosition)}
             </p>
@@ -135,34 +130,34 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
                 ? t('calendar.charts.trades')
                 : t('calendar.charts.trade')}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="flex flex-col">
-          <CardV2Header className="pb-1 flex-1">
-            <CardV2Title className="text-base md:text-lg">
+        <Card className="flex flex-col">
+          <CardHeader className="pb-1 flex-1">
+            <CardTitle className="text-base md:text-lg">
               {isWeekly ? t('calendar.charts.weeklyMaxDrawdown') : t('calendar.charts.dailyMaxDrawdown')}
-            </CardV2Title>
-          </CardV2Header>
-          <CardV2Content className="pt-2 mt-auto">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-2 mt-auto">
             <p className={`text-xl md:text-2xl font-bold ${maxDrawdown > 0 ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
               -{formatCurrency(maxDrawdown)}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="flex flex-col">
-          <CardV2Header className="pb-1 flex-1">
-            <CardV2Title className="text-base md:text-lg">
+        <Card className="flex flex-col">
+          <CardHeader className="pb-1 flex-1">
+            <CardTitle className="text-base md:text-lg">
               {isWeekly ? t('calendar.charts.weeklyMaxProfit') : t('calendar.charts.dailyMaxProfit')}
-            </CardV2Title>
-          </CardV2Header>
-          <CardV2Content className="pt-2 mt-auto">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-2 mt-auto">
             <p className={`text-xl md:text-2xl font-bold ${maxProfit > 0 ? 'text-foreground' : 'text-muted-foreground'}`}>
               {formatCurrency(maxProfit)}
             </p>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

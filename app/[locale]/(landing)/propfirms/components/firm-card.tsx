@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import type { PropfirmCatalogueStats } from "../actions/types"
 
 interface FirmCardProps {
@@ -51,9 +51,9 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
                 {name}
               </h3>
               <div className="flex items-center gap-2 mt-1.5">
-                <BadgeV2 variant="outline" className="rounded-full border-border/50 bg-muted/30 text-[10px] font-medium tracking-wide text-muted-foreground">
+                <Badge variant="outline" className="rounded-full border-border/50 bg-muted/30 text-[10px] font-medium tracking-wide text-muted-foreground">
                   {accountSizesCount} {accountSizesCount === 1 ? "Size" : "Sizes"}
-                </BadgeV2>
+                </Badge>
                 <span className="text-[10px] text-muted-foreground/60">•</span>
                 <span className="text-[10px] text-muted-foreground/80 font-medium">
                   {sizeBreakdown}

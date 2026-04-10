@@ -1,6 +1,6 @@
 "use client"
 
-import { CardV2 } from "@/components/ui/v2"
+import { Card } from '@/components/ui/card'
 import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { EmailTemplate } from "../../actions/send-email"
@@ -26,7 +26,7 @@ export function EmailTemplateSelector({ selectedTemplate, onSelect }: EmailTempl
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {templates.map((template) => (
-        <CardV2
+        <Card
           key={template.value}
           className={cn(
             "cursor-pointer transition-all hover:border-primary",
@@ -41,7 +41,7 @@ export function EmailTemplateSelector({ selectedTemplate, onSelect }: EmailTempl
             </div>
             {selectedTemplate === template.value && <Check className="h-5 w-5 text-primary" />}
           </div>
-        </CardV2>
+        </Card>
       ))}
     </div>
   )

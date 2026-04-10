@@ -4,8 +4,10 @@ import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { ButtonV2, InputV2, TextareaV2 } from '@/components/ui/v2'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { createBlogPost, updateBlogPost } from '../../actions/blog-actions'
 import { BlogCategory } from '@/prisma/generated/prisma'
@@ -112,7 +114,7 @@ export function BlogForm({ post, locale }: Props) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="title">Title *</Label>
-        <InputV2
+        <Input
           id="title"
           {...register('title', { required: 'Title is required' })}
           placeholder="Enter blog post title"
@@ -129,7 +131,7 @@ export function BlogForm({ post, locale }: Props) {
 
       <div className="space-y-2">
         <Label htmlFor="slug">Slug *</Label>
-        <InputV2
+        <Input
           id="slug"
           {...register('slug', { required: 'Slug is required' })}
           placeholder="blog-post-slug"
@@ -143,11 +145,11 @@ export function BlogForm({ post, locale }: Props) {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="excerpt">Excerpt *</Label>
-          <BadgeV2 variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs">
             {excerptValue.length} / {EXCERPT_MAX_LENGTH}
-          </BadgeV2>
+          </Badge>
         </div>
-        <TextareaV2
+        <Textarea
           id="excerpt"
           {...register('excerpt', {
             required: 'Excerpt is required',
@@ -167,7 +169,7 @@ export function BlogForm({ post, locale }: Props) {
 
       <div className="space-y-2">
         <Label htmlFor="coverImage">Cover Image URL</Label>
-        <InputV2
+        <Input
           id="coverImage"
           {...register('coverImage')}
           type="url"
@@ -195,7 +197,7 @@ export function BlogForm({ post, locale }: Props) {
 
       <div className="space-y-2">
         <Label htmlFor="content">Content *</Label>
-        <TextareaV2
+        <Textarea
           id="content"
           {...register('content', { required: 'Content is required' })}
           rows={15}
@@ -219,24 +221,24 @@ export function BlogForm({ post, locale }: Props) {
           Published
         </Label>
         {isPublished && (
-          <BadgeV2 variant="default" className="ml-2">
+          <Badge variant="default" className="ml-2">
             Visible
-          </BadgeV2>
+          </Badge>
         )}
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
-        <ButtonV2
+        <Button
           type="button"
           variant="outline"
           onClick={handleCancel}
           disabled={isPending}
         >
           Cancel
-        </ButtonV2>
-        <ButtonV2 type="submit" disabled={isPending}>
+        </Button>
+        <Button type="submit" disabled={isPending}>
           {isPending ? 'Saving...' : isEditMode ? 'Save Changes' : 'Create Post'}
-        </ButtonV2>
+        </Button>
       </div>
     </form>
   )

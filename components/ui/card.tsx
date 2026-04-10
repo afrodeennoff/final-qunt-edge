@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -253,6 +252,7 @@ CardFooter.displayName = "CardFooter"
 
 export {
   Card,
+  Card as CardV2,
   CardHeader,
   CardFooter,
   CardTitle,

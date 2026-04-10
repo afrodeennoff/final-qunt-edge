@@ -1,7 +1,5 @@
 import { LogOut, MoreHorizontal } from 'lucide-react'
-
-import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar as Avatar, AvatarFallback as AvatarFallback, AvatarImage as AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +8,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -51,7 +56,7 @@ export function SidebarUserMenu({
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-success" />
+                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-500" />
                 </div>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold text-sidebar-foreground">
@@ -95,40 +100,18 @@ export function SidebarUserMenu({
                 <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/40 px-1 mb-2">
                   Timezone
                 </p>
-                <div className="relative">
-                  <select
-                    value={timezone.value}
-                    onChange={(e) => timezone.onChange(e.target.value)}
-                    className={cn(
-                      'w-full bg-sidebar-accent/30 text-sm p-2 focus:outline-none cursor-pointer border rounded-lg border-sidebar-border/40 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/30 transition-all duration-200 appearance-none pr-8 text-sidebar-foreground'
-                    )}
-                  >
+                <Select value={timezone.value} onValueChange={timezone.onChange}>
+                  <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/40 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/30 data-[placeholder]:text-sidebar-foreground/40">
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover text-popover-foreground border-sidebar-border/40">
                     {timezone.options.map((tz) => (
-                      <option
-                        key={tz}
-                        value={tz}
-                        className="bg-popover text-popover-foreground"
-                      >
+                      <SelectItem key={tz} value={tz}>
                         {tz}
-                      </option>
+                      </SelectItem>
                     ))}
-                  </select>
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-sidebar-foreground/40">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                  </SelectContent>
+                </Select>
               </div>
             )}
             <DropdownMenuSeparator className="bg-sidebar-border/30" />

@@ -15,7 +15,9 @@ import {
 } from '@/server/prop-firms'
 import { assertAdminAccess } from '@/server/authz'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ButtonV2, InputV2, TextareaV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
 
@@ -241,9 +243,9 @@ export default async function PropFirmEditPage({
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
-        <ButtonV2  variant="ghost" size="sm" asChild>
+        <Button  variant="ghost" size="sm" asChild>
           <Link href={`/${locale}/admin/propfirms`}>← Back</Link>
-        </ButtonV2>
+        </Button>
         <h1 className="text-2xl font-semibold tracking-tight">
           {isNew ? 'Add Prop Firm' : 'Edit Prop Firm'}
         </h1>
@@ -259,61 +261,61 @@ export default async function PropFirmEditPage({
 
             <div className={fieldClass}>
               <Label htmlFor="name">Name</Label>
-              <InputV2 id="name" name="name" defaultValue={firm?.name ?? ''} required />
+              <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="slug">Slug</Label>
-                <InputV2 id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
+                <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="category">Category</Label>
-                <InputV2 id="category" name="category" defaultValue={firm?.category ?? ''} placeholder="Futures, Forex, Crypto..." />
+                <Input id="category" name="category" defaultValue={firm?.category ?? ''} placeholder="Futures, Forex, Crypto..." />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="platform">Platform</Label>
-                <InputV2 id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
+                <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="payoutModel">Payout Model</Label>
-                <InputV2 id="payoutModel" name="payoutModel" defaultValue={firm?.payoutModel ?? ''} />
+                <Input id="payoutModel" name="payoutModel" defaultValue={firm?.payoutModel ?? ''} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="drawdownType">Drawdown Type</Label>
-                <InputV2 id="drawdownType" name="drawdownType" defaultValue={firm?.drawdownType ?? ''} />
+                <Input id="drawdownType" name="drawdownType" defaultValue={firm?.drawdownType ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="profitSplit">Profit Split</Label>
-                <InputV2 id="profitSplit" name="profitSplit" defaultValue={firm?.profitSplit ?? ''} />
+                <Input id="profitSplit" name="profitSplit" defaultValue={firm?.profitSplit ?? ''} />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className={fieldClass}>
                 <Label htmlFor="maxAllocation">Max Allocation</Label>
-                <InputV2 id="maxAllocation" name="maxAllocation" defaultValue={firm?.maxAllocation ?? ''} />
+                <Input id="maxAllocation" name="maxAllocation" defaultValue={firm?.maxAllocation ?? ''} />
               </div>
               <div className={fieldClass}>
                 <Label htmlFor="referralUrl">Referral URL</Label>
-                <InputV2 id="referralUrl" name="referralUrl" type="url" defaultValue={firm?.referralUrl ?? ''} />
+                <Input id="referralUrl" name="referralUrl" type="url" defaultValue={firm?.referralUrl ?? ''} />
               </div>
             </div>
 
             <div className={fieldClass}>
               <Label htmlFor="logoUrl">Logo URL</Label>
-              <InputV2 id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
+              <Input id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
             </div>
 
             <div className={fieldClass}>
               <Label htmlFor="description">Description</Label>
-              <TextareaV2
+              <Textarea
                 id="description"
                 name="description"
                 rows={3}
@@ -323,7 +325,7 @@ export default async function PropFirmEditPage({
 
             <div className={fieldClass}>
               <Label htmlFor="shortDesc">Short Description</Label>
-              <InputV2 id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
+              <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
             </div>
 
             <div className="flex items-center gap-2">
@@ -342,10 +344,10 @@ export default async function PropFirmEditPage({
             </p>
 
             <div className="flex justify-end gap-2 pt-2">
-              <ButtonV2  variant="outline" asChild>
+              <Button  variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
-              </ButtonV2>
-              <ButtonV2  type="submit">{isNew ? 'Create' : 'Save Changes'}</ButtonV2>
+              </Button>
+              <Button  type="submit">{isNew ? 'Create' : 'Save Changes'}</Button>
             </div>
           </CardContent>
         </Card>
@@ -387,16 +389,16 @@ function ReviewsSection({
         <form action={onCreateReview}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <div className="flex items-center gap-2">
-            <InputV2 name="title" placeholder="Review title" className="w-40" />
-            <InputV2 name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
-            <InputV2 name="content" placeholder="Content" className="w-60" />
+            <Input name="title" placeholder="Review title" className="w-40" />
+            <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
+            <Input name="content" placeholder="Content" className="w-60" />
             <label className="flex items-center gap-1 text-sm">
               <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
               Verified
             </label>
-            <ButtonV2  type="submit" size="sm" variant="outline">
+            <Button  type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
-            </ButtonV2>
+            </Button>
           </div>
         </form>
       </CardHeader>
@@ -412,15 +414,15 @@ function ReviewsSection({
                     <input type="hidden" name="reviewId" value={review.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
                     <div className="flex items-center gap-2">
-                      <InputV2 name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
-                      <InputV2 name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
+                      <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
+                      <Input name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
                       <label className="flex items-center gap-1 text-sm">
                         <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
                         Verified
                       </label>
-                      <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
+                      <Button  type="submit" size="sm" variant="outline">Save</Button>
                     </div>
-                    <TextareaV2
+                    <Textarea
                       name="content"
                       defaultValue={review.content ?? ''}
                       placeholder="Review content"
@@ -434,9 +436,9 @@ function ReviewsSection({
                 <form action={onDeleteReview}>
                   <input type="hidden" name="reviewId" value={review.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <ButtonV2  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <Button  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
-                  </ButtonV2>
+                  </Button>
                 </form>
               </div>
             ))}
@@ -460,11 +462,11 @@ function CouponsSection({
         <form action={onCreateCoupon}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <div className="flex items-center gap-2">
-            <InputV2 name="code" placeholder="Code" className="w-32" required />
-            <InputV2 name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-28" />
-            <ButtonV2  type="submit" size="sm" variant="outline">
+            <Input name="code" placeholder="Code" className="w-32" required />
+            <Input name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-28" />
+            <Button  type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
-            </ButtonV2>
+            </Button>
           </div>
         </form>
       </CardHeader>
@@ -480,12 +482,12 @@ function CouponsSection({
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
                     <div className="grid grid-cols-2 gap-2">
-                      <InputV2 name="code" defaultValue={coupon.code} placeholder="Code" required />
-                      <InputV2 name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
+                      <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
+                      <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
                     </div>
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs text-muted-foreground">Only coupon code and discount percentage are editable here.</p>
-                      <ButtonV2  type="submit" size="sm" variant="outline">Save</ButtonV2>
+                      <Button  type="submit" size="sm" variant="outline">Save</Button>
                     </div>
                   </form>
                   <p className="text-xs text-muted-foreground">
@@ -495,9 +497,9 @@ function CouponsSection({
                 <form action={onDeleteCoupon}>
                   <input type="hidden" name="couponId" value={coupon.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <ButtonV2  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <Button  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
-                  </ButtonV2>
+                  </Button>
                 </form>
               </div>
             ))}

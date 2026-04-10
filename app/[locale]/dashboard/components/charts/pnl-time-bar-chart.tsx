@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
 import { safeArrayMax, safeArrayMin } from '@/lib/array-utils';
 import { ChartConfig } from "@/components/ui/chart";
@@ -29,7 +29,7 @@ import {
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { useI18n } from "@/locales/client";
 import { formatInTimeZone } from "date-fns-tz";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { useUserStore } from "../../../../../store/user-store";
 
 interface TimeOfDayTradeChartProps {
@@ -173,14 +173,14 @@ export default React.memo(function TimeOfDayTradeChart({
             </TooltipProvider>
           </div>
           {hourFilter.hour !== null && (
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
               onClick={() => setHourFilter({ hour: null })}
             >
               {t("pnlTime.clearFilter")}
-            </ButtonV2>
+            </Button>
           )}
         </div>
       </div>

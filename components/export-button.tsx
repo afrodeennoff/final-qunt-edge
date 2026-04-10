@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Download, CalendarIcon } from 'lucide-react'
 import { Trade } from "@/lib/data-types"
-import { CardV2, CardV2Content, CardV2Footer, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -181,9 +181,9 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {externalOpen === undefined && (
         <DialogTrigger asChild>
-          <ButtonV2  size="sm">
+          <Button  size="sm">
             <Download className="mr-2 h-4 w-4" /> Export Trades
-          </ButtonV2>
+          </Button>
         </DialogTrigger>
       )}
       <DialogContent className="max-w-full h-[90vh] w-full flex flex-col">
@@ -195,11 +195,11 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
         </DialogHeader>
         <div className="flex-1 overflow-y-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-            <CardV2 className="w-full h-fit">
-              <CardV2Header>
-                <CardV2Title className="text-base">Select Data</CardV2Title>
-              </CardV2Header>
-              <CardV2Content>
+            <Card className="w-full h-fit">
+              <CardHeader>
+                <CardTitle className="text-base">Select Data</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="gap-4">
                   <div>
                     <Label className="text-base">Select Accounts</Label>
@@ -256,25 +256,25 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                     </ScrollArea>
                   </div>
                 </div>
-              </CardV2Content>
-            </CardV2>
+              </CardContent>
+            </Card>
 
-            <CardV2 className="w-full h-fit">
-              <CardV2Header>
-                <CardV2Title className="text-base">Select Date Range</CardV2Title>
-              </CardV2Header>
-              <CardV2Content>
+            <Card className="w-full h-fit">
+              <CardHeader>
+                <CardTitle className="text-base">Select Date Range</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="gap-4">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {quickSelectors.map((selector, index) => (
-                      <ButtonV2 
+                      <Button 
                         key={index}
                         variant="outline"
                         className="w-full"
                         onClick={() => setDateRange(selector.getRange())}
                       >
                         {selector.label}
-                      </ButtonV2>
+                      </Button>
                     ))}
                   </div>
                   <Calendar
@@ -287,15 +287,15 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                     className="rounded-md border"
                   />
                 </div>
-              </CardV2Content>
-            </CardV2>
+              </CardContent>
+            </Card>
           </div>
           <div className="mt-6 px-4">
-            <CardV2>
-              <CardV2Header>
-                <CardV2Title className="text-base">Preview ({filteredTrades.length} trades)</CardV2Title>
-              </CardV2Header>
-              <CardV2Content>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Preview ({filteredTrades.length} trades)</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="rounded-md border">
                   <Table>
                     <TableHeader>
@@ -377,18 +377,18 @@ export default function TradeExportDialog({ trades, open: externalOpen, onOpenCh
                     </PaginationContent>
                   </Pagination>
                 </div>
-              </CardV2Content>
-            </CardV2>
+              </CardContent>
+            </Card>
           </div>
         </div>
         <div className="p-4 bg-background border-t mt-auto">
-          <ButtonV2 
+          <Button 
             onClick={handleExport}
             disabled={selectedAccounts.length === 0 || selectedInstruments.length === 0}
             className="w-full max-w-xl mx-auto"
           >
             <Download className="mr-2 h-4 w-4" /> Export {filteredTrades.length} Trades
-          </ButtonV2>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

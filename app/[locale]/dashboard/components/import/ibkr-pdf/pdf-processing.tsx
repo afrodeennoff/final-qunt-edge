@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { useI18n } from "@/locales/client"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format, isValid } from "date-fns"
@@ -265,9 +265,9 @@ export default function PdfProcessing({
         <DataTableColumnHeader column={column} title={t('trade-table.direction')} />
       ),
       cell: ({ row }) => (
-        <BadgeV2 variant={row.original.side === 'long' ? 'default' : 'error'}>
+        <Badge variant={row.original.side === 'long' ? 'default' : 'error'}>
           {row.original.side?.toUpperCase()}
-        </BadgeV2>
+        </Badge>
       ),
       size: 100,
     },
@@ -313,9 +313,9 @@ export default function PdfProcessing({
         <DataTableColumnHeader column={column} title="P&L" />
       ),
       cell: ({ row }) => (
-        <BadgeV2 variant={row.original.pnl >= 0 ? 'default' : 'error'}>
+        <Badge variant={row.original.pnl >= 0 ? 'default' : 'error'}>
           ${Number(row.original.pnl).toFixed(2)}
-        </BadgeV2>
+        </Badge>
       ),
       size: 100,
     },
@@ -447,9 +447,9 @@ export default function PdfProcessing({
           ${totals.totalCommission.toFixed(2)}
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm">
-          <BadgeV2 variant={totals.totalPnl >= 0 ? 'default' : 'error'} className="font-semibold">
+          <Badge variant={totals.totalPnl >= 0 ? 'default' : 'error'} className="font-semibold">
             ${totals.totalPnl.toFixed(2)}
-          </BadgeV2>
+          </Badge>
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-2.5 text-sm">
           {parsePositionTime(totals.totalTimeInPosition)}

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {  Avatar as Avatar, AvatarFallback as AvatarFallback  } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export function AuthProfileButtonSkeleton() {

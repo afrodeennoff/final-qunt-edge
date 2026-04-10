@@ -4,7 +4,6 @@ import * as React from "react"
 import NumberFlow from "@number-flow/react"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardProps } from "./card"
-import { CardV2 } from "./v2/card-v2"
 import { Badge, BadgeProps } from "./badge"
 import { Skeleton } from "./skeleton"
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react"
@@ -272,7 +271,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
 
     if (isLoading) {
       return (
-        <CardV2
+        <Card
           className={cn(
             "relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
             "bg-v2-bg-surface/88",
@@ -285,7 +284,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
             <Skeleton className={cn("h-8 w-32", config.value)} />
             <Skeleton className="h-3 w-24" />
           </div>
-        </CardV2>
+        </Card>
       )
     }
 
@@ -302,7 +301,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
     }
 
     return (
-        <CardV2
+        <Card
           ref={ref}
           data-widget-shell="v2"
           className={cn(
@@ -379,7 +378,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
             {description}
           </p>
         )}
-      </CardV2>
+      </Card>
     )
   }
 )

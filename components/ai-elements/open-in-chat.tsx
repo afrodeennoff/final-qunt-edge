@@ -1,4 +1,4 @@
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -209,10 +209,10 @@ export type OpenInTriggerProps = ComponentProps<typeof DropdownMenuTrigger>;
 export const OpenInTrigger = ({ children, ...props }: OpenInTriggerProps) => (
   <DropdownMenuTrigger {...props} asChild>
     {children ?? (
-      <ButtonV2  type="button" variant="outline">
+      <Button  type="button" variant="outline">
         Open in chat
         <ChevronDownIcon className="ml-2 size-4" />
-      </ButtonV2>
+      </Button>
     )}
   </DropdownMenuTrigger>
 );

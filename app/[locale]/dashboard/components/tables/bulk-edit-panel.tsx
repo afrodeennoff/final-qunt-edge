@@ -1,7 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import { BadgeV2, ButtonV2, InputV2, CardV2 as Card, CardV2Content as CardContent, CardV2Header as CardHeader, CardV2Title as CardTitle } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Clock, Edit3, Plus, Minus, X } from 'lucide-react'
@@ -138,18 +141,18 @@ export function BulkEditPanel({
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             {t('trade-table.bulkEdit.title')}
-            <BadgeV2 variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs">
               {selectedTrades.length} {t('trade-table.bulkEdit.trades')}
-            </BadgeV2>
+            </Badge>
           </CardTitle>
-          <ButtonV2 
+          <Button 
             variant="ghost"
             size="sm"
             onClick={handleClose}
             className="h-6 w-6 p-0"
           >
             <X className="h-4 w-4" />
-          </ButtonV2>
+          </Button>
         </div>
       </CardHeader>
       
@@ -165,63 +168,63 @@ export function BulkEditPanel({
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">{t('trade-table.bulkEdit.entryTime')}</Label>
               <div className="flex items-center gap-1">
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setEntryHourOffset(prev => prev - 1)}
                   className="h-7 w-7 p-0"
                 >
                   <Minus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
                 <div className="text-xs font-mono bg-muted/50 rounded px-2 py-1 min-w-[50px] text-center">
                   {entryHourOffset === 0 ? '±0h' : `${entryHourOffset > 0 ? '+' : ''}${entryHourOffset}h`}
                 </div>
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setEntryHourOffset(prev => prev + 1)}
                   className="h-7 w-7 p-0"
                 >
                   <Plus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
               </div>
             </div>
             
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">{t('trade-table.bulkEdit.exitTime')}</Label>
               <div className="flex items-center gap-1">
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setExitHourOffset(prev => prev - 1)}
                   className="h-7 w-7 p-0"
                 >
                   <Minus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
                 <div className="text-xs font-mono bg-muted/50 rounded px-2 py-1 min-w-[50px] text-center">
                   {exitHourOffset === 0 ? '±0h' : `${exitHourOffset > 0 ? '+' : ''}${exitHourOffset}h`}
                 </div>
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setExitHourOffset(prev => prev + 1)}
                   className="h-7 w-7 p-0"
                 >
                   <Plus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           </div>
           
           {(entryHourOffset !== 0 || exitHourOffset !== 0) && (
-            <ButtonV2 
+            <Button 
               size="sm"
               onClick={handleApplyTimeChanges}
               disabled={isSaving}
               className="w-full"
             >
               {isSaving ? t('trade-table.bulkEdit.applying') : t('trade-table.bulkEdit.applyTimeChanges')}
-            </ButtonV2>
+            </Button>
           )}
         </div>
 
@@ -236,42 +239,42 @@ export function BulkEditPanel({
 
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-1">
-              <ButtonV2 
+              <Button 
                 size="sm"
                 variant={instrumentAction === 'replace' ? 'default' : 'outline'}
                 onClick={() => setInstrumentAction('replace')}
                 className="text-xs"
               >
                 {t('trade-table.bulkEdit.replace')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 size="sm"
                 variant={instrumentAction === 'trim' ? 'default' : 'outline'}
                 onClick={() => setInstrumentAction('trim')}
                 className="text-xs"
               >
                 {t('trade-table.bulkEdit.trim')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 size="sm"
                 variant={instrumentAction === 'prefix' ? 'default' : 'outline'}
                 onClick={() => setInstrumentAction('prefix')}
                 className="text-xs"
               >
                 {t('trade-table.bulkEdit.addPrefix')}
-              </ButtonV2>
-              <ButtonV2 
+              </Button>
+              <Button 
                 size="sm"
                 variant={instrumentAction === 'suffix' ? 'default' : 'outline'}
                 onClick={() => setInstrumentAction('suffix')}
                 className="text-xs"
               >
                 {t('trade-table.bulkEdit.addSuffix')}
-              </ButtonV2>
+              </Button>
             </div>
 
             {instrumentAction === 'replace' && (
-              <InputV2
+              <Input
                 placeholder={t('trade-table.bulkEdit.newInstrumentName')}
                 value={instrumentValue}
                 onChange={(e) => setInstrumentValue(e.target.value)}
@@ -284,56 +287,56 @@ export function BulkEditPanel({
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('trade-table.bulkEdit.fromStart')}</Label>
                   <div className="flex items-center gap-1">
-                    <ButtonV2 
+                    <Button 
                       size="sm"
                       variant="outline"
                       onClick={() => setTrimFromStart(prev => Math.max(0, prev - 1))}
                       className="h-7 w-7 p-0"
                     >
                       <Minus className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                     <div className="text-xs bg-muted/50 rounded px-2 py-1 min-w-[40px] text-center">
                       {trimFromStart}
                     </div>
-                    <ButtonV2 
+                    <Button 
                       size="sm"
                       variant="outline"
                       onClick={() => setTrimFromStart(prev => prev + 1)}
                       className="h-7 w-7 p-0"
                     >
                       <Plus className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground">{t('trade-table.bulkEdit.fromEnd')}</Label>
                   <div className="flex items-center gap-1">
-                    <ButtonV2 
+                    <Button 
                       size="sm"
                       variant="outline"
                       onClick={() => setTrimFromEnd(prev => Math.max(0, prev - 1))}
                       className="h-7 w-7 p-0"
                     >
                       <Minus className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                     <div className="text-xs bg-muted/50 rounded px-2 py-1 min-w-[40px] text-center">
                       {trimFromEnd}
                     </div>
-                    <ButtonV2 
+                    <Button 
                       size="sm"
                       variant="outline"
                       onClick={() => setTrimFromEnd(prev => prev + 1)}
                       className="h-7 w-7 p-0"
                     >
                       <Plus className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
               </div>
             )}
 
             {(instrumentAction === 'prefix' || instrumentAction === 'suffix') && (
-              <InputV2
+              <Input
                 placeholder={instrumentAction === 'prefix' ? t('trade-table.bulkEdit.textToPrepend') : t('trade-table.bulkEdit.textToAppend')}
                 value={instrumentValue}
                 onChange={(e) => setInstrumentValue(e.target.value)}
@@ -342,14 +345,14 @@ export function BulkEditPanel({
             )}
 
             {instrumentAction !== 'none' && (
-              <ButtonV2 
+              <Button 
                 size="sm"
                 onClick={handleApplyInstrumentChanges}
                 disabled={isSaving}
                 className="w-full"
               >
                 {isSaving ? t('trade-table.bulkEdit.applying') : t('trade-table.bulkEdit.applyInstrumentChanges')}
-              </ButtonV2>
+              </Button>
             )}
           </div>
         </div>

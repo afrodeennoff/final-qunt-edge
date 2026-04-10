@@ -5,7 +5,9 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from 'recharts'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { BadgeV2, CardV2, CardV2Content, CardV2Description, CardV2Title, SkeletonV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'
 import {
   Building2,
@@ -29,7 +31,7 @@ import { formatCompactCurrency } from '@/lib/formatting/currency'
 const FirmReviewsSection = dynamic(
   () => import('./components/firm-reviews-section').then((m) => ({ default: m.FirmReviewsSection })),
   {
-    loading: () => <CardV2 className="p-6"><SkeletonV2 className="h-48" /></CardV2>,
+    loading: () => <Card className="p-6"><Skeleton className="h-48" /></Card>,
     ssr: false,
   }
 )
@@ -37,7 +39,7 @@ const FirmReviewsSection = dynamic(
 const FirmCouponsSection = dynamic(
   () => import('./components/firm-coupons-section').then((m) => ({ default: m.FirmCouponsSection })),
   {
-    loading: () => <CardV2 className="p-6"><SkeletonV2 className="h-32" /></CardV2>,
+    loading: () => <Card className="p-6"><Skeleton className="h-32" /></Card>,
     ssr: false,
   }
 )
@@ -472,14 +474,14 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
   }
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
-          <CardV2Title className="mt-3 text-2xl text-foreground">Open the official company site.</CardV2Title>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          <CardTitle className="mt-3 text-2xl text-foreground">Open the official company site.</CardTitle>
+          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             Use the firm link below if you want to continue from research into signup.
-          </CardV2Description>
+          </CardDescription>
           <div className="mt-4 flex items-center gap-2 rounded-2xl border border-border/40 bg-background/50 px-3 py-3">
             <code className="min-w-0 flex-1 truncate text-xs text-foreground/80">{referralUrl}</code>
             <button
@@ -502,8 +504,8 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
           Visit Firm
           <ExternalLink className="h-4 w-4" />
         </a>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -520,14 +522,14 @@ function ChallengeCard({
   const dailyLossValue = getDailyLossValue(size)
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <BadgeV2 variant={size.evaluation ? 'accent' : 'default'}>{size.name}</BadgeV2>
-              {!size.evaluation ? <BadgeV2 variant="default">Direct Funded</BadgeV2> : null}
-              {size.trailing ? <BadgeV2 variant="default">{size.trailing}</BadgeV2> : null}
+              <Badge variant={size.evaluation ? 'accent' : 'default'}>{size.name}</Badge>
+              {!size.evaluation ? <Badge variant="default">Direct Funded</Badge> : null}
+              {size.trailing ? <Badge variant="default">{size.trailing}</Badge> : null}
             </div>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -545,8 +547,8 @@ function ChallengeCard({
             </div>
           </div>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -596,9 +598,9 @@ function ChallengePrice({
             <span className="text-lg font-semibold text-foreground">{formatFirmCurrency(size.priceWithPromo)}</span>
             <span className="text-sm text-muted-foreground line-through">{formatFirmCurrency(size.price)}</span>
             {promoDiscount ? (
-              <BadgeV2 variant="accent" className="text-[10px]">
+              <Badge variant="accent" className="text-[10px]">
                 {promoDiscount}
-              </BadgeV2>
+              </Badge>
             ) : null}
           </>
         ) : (
@@ -616,33 +618,33 @@ function ChallengesSection({ accountSizes, profitSplit }: { accountSizes: FirmDa
 
   if (entries.length === 0) {
     return (
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
+            <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
           </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             No challenge size data is available in the current snapshot. The overview above still covers the current platform, payout model, and allocation details.
-          </CardV2Description>
-        </CardV2Content>
-      </CardV2>
+          </CardDescription>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-v2-accent" />
-          <CardV2Title className="text-2xl text-foreground">Challenge sizes</CardV2Title>
+          <CardTitle className="text-2xl text-foreground">Challenge sizes</CardTitle>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
           Current account sizes, pricing, and trading limits from the live snapshot.
-        </CardV2Description>
-        </CardV2Content>
-      </CardV2>
+        </CardDescription>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4">
         {entries.map(([key, size]) => (
@@ -657,17 +659,17 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
   const details = buildAdditionalDetails(firm)
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <svg className="h-5 w-5 text-v2-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <CardV2Title className="text-2xl text-foreground">Additional Details</CardV2Title>
+          <CardTitle className="text-2xl text-foreground">Additional Details</CardTitle>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
           Key profile details pulled from the current firm record and verified public sources.
-        </CardV2Description>
+        </CardDescription>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {details.map((detail) => (
@@ -684,8 +686,8 @@ function AdditionalDetailsSection({ firm }: { firm: FirmData }) {
             </div>
           ))}
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -697,23 +699,23 @@ function OverviewSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6 sm:p-8">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Research snapshot</p>
-          <CardV2Title className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardV2Title>
-          <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
+          <CardTitle className="mt-4 text-3xl text-foreground">A quick read on reviews, payouts, and fit.</CardTitle>
+          <CardDescription className="mt-4 text-base leading-7 text-foreground/80">
             Use this snapshot to scan the current profile before opening the tabs below.
-          </CardV2Description>
+          </CardDescription>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {['User reviews', 'Database payouts', 'Verified profile notes'].map((label) => (
-              <BadgeV2
+              <Badge
                 key={label}
                 variant="default"
                 className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]"
               >
                 {label}
-              </BadgeV2>
+              </Badge>
             ))}
           </div>
 
@@ -740,30 +742,30 @@ function OverviewSection({ firm }: { firm: FirmData }) {
               </div>
             </div>
           ) : null}
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
 
       <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-          <CardV2Content className="p-6 sm:p-8">
+        <Card className="rounded-2xl border-border/40 bg-card/5">
+          <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Profile summary</p>
-            <CardV2Title className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardV2Title>
-            <CardV2Description className="mt-4 text-base leading-7 text-foreground/80">
+            <CardTitle className="mt-4 text-3xl text-foreground">Firm profile at a glance</CardTitle>
+            <CardDescription className="mt-4 text-base leading-7 text-foreground/80">
               {firm.description ?? firm.shortDesc ?? 'Structured company summary coming soon.'}
-            </CardV2Description>
+            </CardDescription>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {overviewFacts.map((fact) => (
                 <FactTile key={fact.label} icon={fact.icon} label={fact.label} value={fact.value} />
               ))}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
-        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-          <CardV2Content className="p-6 sm:p-8">
+        <Card className="rounded-2xl border-border/40 bg-card/5">
+          <CardContent className="p-6 sm:p-8">
             <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Trust signals</p>
-            <CardV2Title className="mt-4 text-3xl text-foreground">What to check before you click out</CardV2Title>
+            <CardTitle className="mt-4 text-3xl text-foreground">What to check before you click out</CardTitle>
             <div className="mt-6 space-y-3">
               {trustChecklist.map((item) => (
                 <div key={item} className="flex items-start gap-3 rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
@@ -778,8 +780,8 @@ function OverviewSection({ firm }: { firm: FirmData }) {
                 <MetricCard key={metric.label} label={metric.label} value={metric.value} highlight={metric.highlight} />
               ))}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </section>
 
       <AdditionalDetailsSection firm={firm} />
@@ -860,32 +862,32 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
   if (!stats) {
     return (
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
+            <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
           </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             No payout data available in the current database snapshot.
-          </CardV2Description>
-        </CardV2Content>
-      </CardV2>
+          </CardDescription>
+        </CardContent>
+      </Card>
     )
   }
 
   const avgPayout = stats.paidPayoutCount > 0 ? stats.paidPayoutAmount / stats.paidPayoutCount : 0
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-v2-accent" />
-          <CardV2Title className="text-2xl text-foreground">Payout History</CardV2Title>
+          <CardTitle className="text-2xl text-foreground">Payout History</CardTitle>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
           Aggregated payout statistics from tracked trader accounts in the database.
-        </CardV2Description>
+        </CardDescription>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-border/40 bg-background/40 px-4 py-4">
@@ -919,8 +921,8 @@ function PayoutHistorySection({ firm }: { firm: FirmData }) {
             </div>
           </div>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -929,30 +931,30 @@ function ROISection({ firm }: { firm: FirmData }) {
 
   if (accountSizes.length === 0) {
     return (
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
+            <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
           </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             No account size data available for ROI comparison.
-          </CardV2Description>
-        </CardV2Content>
-      </CardV2>
+          </CardDescription>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-v2-accent" />
-          <CardV2Title className="text-2xl text-foreground">ROI Analysis</CardV2Title>
+          <CardTitle className="text-2xl text-foreground">ROI Analysis</CardTitle>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
           Illustrative fee-to-target comparison based on the current challenge templates and the published firm path.
-        </CardV2Description>
+        </CardDescription>
 
         <p className="mt-3 text-xs leading-6 text-muted-foreground">
           This comparison helps you scan the current setup; it is not a promise of profit.
@@ -997,8 +999,8 @@ function ROISection({ firm }: { firm: FirmData }) {
             )
           })}
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -1009,15 +1011,15 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
   return (
     <div className="space-y-5">
-      <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-        <CardV2Content className="p-6">
+      <Card className="rounded-2xl border-border/40 bg-card/5">
+        <CardContent className="p-6">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-v2-accent" />
-            <CardV2Title className="text-2xl text-foreground">Trading Rules</CardV2Title>
+            <CardTitle className="text-2xl text-foreground">Trading Rules</CardTitle>
           </div>
-          <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+          <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
             Key trading rules and restrictions from the current profile and challenge templates.
-          </CardV2Description>
+          </CardDescription>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {rules.map((rule) => (
@@ -1042,19 +1044,19 @@ function RulesSection({ firm }: { firm: FirmData }) {
               </div>
             </div>
           ) : null}
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
 
       {accountSizes.length > 0 && (
-        <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-          <CardV2Content className="p-6">
+        <Card className="rounded-2xl border-border/40 bg-card/5">
+          <CardContent className="p-6">
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-v2-accent" />
-              <CardV2Title className="text-2xl text-foreground">Risk Parameters</CardV2Title>
+              <CardTitle className="text-2xl text-foreground">Risk Parameters</CardTitle>
             </div>
-            <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+            <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
               Loss limits and drawdown rules for each account size.
-            </CardV2Description>
+            </CardDescription>
 
             <div className="mt-6 grid gap-3 lg:hidden">
               {accountSizes.map(([key, size]) => (
@@ -1104,8 +1106,8 @@ function RulesSection({ firm }: { firm: FirmData }) {
                 </tbody>
               </table>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
@@ -1115,15 +1117,15 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
   const stats = firm.catalogueStats
 
   return (
-    <CardV2 className="rounded-2xl border-border/40 bg-card/5">
-      <CardV2Content className="p-6">
+    <Card className="rounded-2xl border-border/40 bg-card/5">
+      <CardContent className="p-6">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-v2-accent" />
-          <CardV2Title className="text-2xl text-foreground">Payout Proof</CardV2Title>
+          <CardTitle className="text-2xl text-foreground">Payout Proof</CardTitle>
         </div>
-        <CardV2Description className="mt-3 text-sm leading-7 text-muted-foreground">
+        <CardDescription className="mt-3 text-sm leading-7 text-muted-foreground">
           Payout evidence pulled from tracked trader records in the database.
-        </CardV2Description>
+        </CardDescription>
 
         {stats && stats.paidPayoutCount > 0 ? (
           <div className="mt-6 space-y-4">
@@ -1166,8 +1168,8 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
             </p>
           </div>
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -1237,8 +1239,8 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <CardV2 className="w-full rounded-2xl border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
-        <CardV2Content className="flex flex-col items-center p-3.5">
+      <Card className="w-full rounded-2xl border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+        <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
             config={radarChartConfig}
@@ -1269,8 +1271,8 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
             </RadarChart>
           </ChartContainer>
           <p className="mt-1.5 text-center text-xs text-muted-foreground">{`Live score: ${averageScore}/100`}</p>
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -1305,10 +1307,10 @@ function FirmHeader({ firm }: { firm: FirmData }) {
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <BadgeV2 variant={formatCategoryTone(firm.category)}>{firm.category}</BadgeV2>
-                <BadgeV2 variant="default">{firm.platform ?? 'Platform pending'}</BadgeV2>
+                <Badge variant={formatCategoryTone(firm.category)}>{firm.category}</Badge>
+                <Badge variant="default">{firm.platform ?? 'Platform pending'}</Badge>
                 {firm.payoutModel && (
-                  <BadgeV2 variant="default">{firm.payoutModel}</BadgeV2>
+                  <Badge variant="default">{firm.payoutModel}</Badge>
                 )}
               </div>
               

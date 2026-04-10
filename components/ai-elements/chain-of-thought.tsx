@@ -1,7 +1,7 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { BadgeV2 } from "@/components/ui/v2";
+import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
   CollapsibleContent,
@@ -160,17 +160,17 @@ export const ChainOfThoughtSearchResults = memo(
   )
 );
 
-export type ChainOfThoughtSearchResultProps = ComponentProps<typeof BadgeV2>;
+export type ChainOfThoughtSearchResultProps = ComponentProps<typeof Badge>;
 
 export const ChainOfThoughtSearchResult = memo(
   ({ className, children, ...props }: ChainOfThoughtSearchResultProps) => (
-    <BadgeV2
+    <Badge
       className={cn("gap-1 px-2 py-0.5 font-normal text-xs", className)}
       variant="secondary"
       {...props}
     >
       {children}
-    </BadgeV2>
+    </Badge>
   )
 );
 

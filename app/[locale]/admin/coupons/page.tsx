@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { connection } from 'next/server'
 import type { ReactNode } from 'react'
-import { BadgeV2, ButtonV2, InputV2 } from "@/components/ui/v2"
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
@@ -86,13 +88,13 @@ function CouponBadges({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <BadgeV2 variant={active ? 'default' : 'secondary'}>
+      <Badge variant={active ? 'default' : 'secondary'}>
         {active ? 'Active' : 'Inactive'}
-      </BadgeV2>
+      </Badge>
       {expiringSoon ? (
-        <BadgeV2 variant="outline" className="border-amber-500/40 text-amber-300">
+        <Badge variant="outline" className="border-amber-500/40 text-amber-300">
           Expires soon
-        </BadgeV2>
+        </Badge>
       ) : null}
     </div>
   )
@@ -154,12 +156,12 @@ function CouponEditCard({
             </p>
           </div>
 
-          <ButtonV2  variant="ghost" size="sm" asChild>
+          <Button  variant="ghost" size="sm" asChild>
             <Link href={`/${locale}/admin/propfirms/${coupon.propFirm.id}`}>
               <Building2 className="h-4 w-4" />
               Firm
             </Link>
-          </ButtonV2>
+          </Button>
         </div>
       </CardHeader>
 
@@ -171,11 +173,11 @@ function CouponEditCard({
           <div className="grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
             <div className="space-y-2">
               <Label htmlFor={`code-${coupon.id}`}>Code</Label>
-              <InputV2 id={`code-${coupon.id}`} name="code" defaultValue={coupon.code} required />
+              <Input id={`code-${coupon.id}`} name="code" defaultValue={coupon.code} required />
             </div>
             <div className="space-y-2">
               <Label htmlFor={`discountPercent-${coupon.id}`}>Discount %</Label>
-              <InputV2
+              <Input
                 id={`discountPercent-${coupon.id}`}
                 name="discountPercent"
                 type="number"
@@ -190,9 +192,9 @@ function CouponEditCard({
             <p className="text-xs text-muted-foreground">
               Only coupon code and discount percentage are editable here.
             </p>
-            <ButtonV2 type="submit" variant="outline" size="sm">
+            <Button type="submit" variant="outline" size="sm">
               Save coupon
-            </ButtonV2>
+            </Button>
           </div>
         </form>
 
@@ -203,7 +205,7 @@ function CouponEditCard({
           <form action={onDeleteCoupon}>
             <input type="hidden" name="couponId" value={coupon.id} />
             <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
-            <ButtonV2 
+            <Button 
               type="submit"
               size="sm"
               variant="ghost"
@@ -211,7 +213,7 @@ function CouponEditCard({
             >
               <Trash2 className="h-4 w-4" />
               Delete
-            </ButtonV2>
+            </Button>
           </form>
         </div>
       </CardContent>
@@ -279,12 +281,12 @@ export default async function AdminCouponsPage({
           </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <ButtonV2  variant="outline" asChild>
+          <Button  variant="outline" asChild>
             <Link href={`/${locale}/admin/propfirms`}>
               <Building2 className="h-4 w-4" />
               Prop firms
             </Link>
-          </ButtonV2>
+          </Button>
         </div>
       </div>
 
@@ -304,7 +306,7 @@ export default async function AdminCouponsPage({
                 Create a new code, attach it to a prop firm, and publish it immediately.
               </p>
             </div>
-            <BadgeV2 variant="secondary">{firms.length} firms available</BadgeV2>
+            <Badge variant="secondary">{firms.length} firms available</Badge>
           </div>
         </CardHeader>
         <CardContent size="sm" className="pt-4">
@@ -332,20 +334,20 @@ export default async function AdminCouponsPage({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-code">Code</Label>
-                  <InputV2 id="new-code" name="code" required placeholder="SAVE20" />
+                  <Input id="new-code" name="code" required placeholder="SAVE20" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="new-discountPercent">Discount %</Label>
-                  <InputV2 id="new-discountPercent" name="discountPercent" type="number" step="0.01" placeholder="20" />
+                  <Input id="new-discountPercent" name="discountPercent" type="number" step="0.01" placeholder="20" />
                 </div>
               </div>
 
               <div className="flex items-center justify-between gap-4">
                 <p className="text-xs text-muted-foreground">Only coupon code and discount percentage are editable here.</p>
-                <ButtonV2  type="submit">
+                <Button  type="submit">
                   <Plus className="h-4 w-4" />
                   Create coupon
-                </ButtonV2>
+                </Button>
               </div>
             </form>
           )}

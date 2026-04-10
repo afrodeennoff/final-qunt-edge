@@ -8,7 +8,7 @@ import {
   useDashboardTradeItems,
 } from "@/context/data-provider"
 import { useUserStore } from "@/store/user-store"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Bug, X, RefreshCw, HardDrive } from "lucide-react"
 import { clearAllCache } from "@/lib/indexeddb/trades-cache"
@@ -37,14 +37,14 @@ export function DataDebug() {
   return (
     <div className="fixed bottom-4 right-4 z-[9999]">
             {!isOpen ? (
-                <ButtonV2 
+                <Button 
                     variant="outline"
                     size="icon"
                     onClick={() => setIsOpen(true)}
                     className="rounded-full bg-background/80 border-foreground/10 hover:bg-foreground/10 backdrop-blur-md shadow-lg"
                 >
                     <Bug className="h-4 w-4 text-primary" />
-                </ButtonV2>
+                </Button>
             ) : (
                 <div className="w-80 bg-background/90 border border-foreground/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <div className="flex items-center justify-between mb-4 border-b border-foreground/5 pb-2">
@@ -91,7 +91,7 @@ export function DataDebug() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 mt-6">
-                        <ButtonV2 
+                        <Button 
                             variant="outline"
                             size="sm"
                             onClick={() => refreshAllData({ force: true })}
@@ -100,8 +100,8 @@ export function DataDebug() {
                         >
                             <RefreshCw className={cn("h-3 w-3 mr-2", isLoading && "animate-spin")} />
                             Sync Now
-                        </ButtonV2>
-                        <ButtonV2 
+                        </Button>
+                        <Button 
                             variant="outline"
                             size="sm"
                             onClick={handleClearCache}
@@ -109,7 +109,7 @@ export function DataDebug() {
                         >
                             <HardDrive className="h-3 w-3 mr-2" />
                             Reset Cache
-                        </ButtonV2>
+                        </Button>
                     </div>
                 </div>
             )}

@@ -4,9 +4,9 @@ import { format } from "date-fns"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 import { useI18n, useCurrentLocale } from "@/locales/client"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { fr, enUS } from 'date-fns/locale'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
@@ -211,22 +211,22 @@ export function AccountTable({
                 )}>
                   -${metric.payout.amount.toFixed(2)}
                 </span>
-                <BadgeV2
+                <Badge
                   variant={metric.payout.status === 'PENDING' ? 'secondary' : 'default'}
                 >
                   {metric.payout.status}
-                </BadgeV2>
+                </Badge>
               </div>
               {onDeletePayout && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive"
                     >
                       <X className="h-3 w-3" />
-                    </ButtonV2>
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>

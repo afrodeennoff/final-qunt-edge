@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ButtonV2 } from "@/components/ui/v2";
+
+import { Button as Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
@@ -80,7 +80,7 @@ export const ConversationScrollButton = ({
 
   return (
     !isAtBottom && (
-      <ButtonV2 
+      <Button 
         className={cn(
           "absolute bottom-4 left-[50%] translate-x-[-50%] rounded-full",
           className
@@ -92,7 +92,7 @@ export const ConversationScrollButton = ({
         {...props}
       >
         <ArrowDownIcon className="size-4" />
-      </ButtonV2>
+      </Button>
     )
   );
 };

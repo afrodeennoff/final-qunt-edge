@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { ButtonV2 as Button } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 
 interface AuthPromptProps {

@@ -1,14 +1,14 @@
 "use client"
 
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useNewsletter } from "./newsletter-context"
 import { useEffect, useState } from "react"
 import { renderEmailPreview } from "../../actions/newsletter"
 import { useDebounce } from "@/hooks/use-debounce"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
 import { Pencil, Eye } from "lucide-react"
-import { InputV2 } from "@/components/ui/v2"
-import { TextareaV2 } from "@/components/ui/v2"
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Label } from "@/components/ui/label"
 import { NewsletterContent } from "./newsletter-context"
 
@@ -60,11 +60,11 @@ export function NewsletterPreview() {
   }
 
   return (
-    <CardV2 className="h-full">
-      <CardV2Header>
+    <Card className="h-full">
+      <CardHeader>
         <div className="flex items-center justify-between">
-          <CardV2Title>Aperçu en Direct</CardV2Title>
-          <ButtonV2 
+          <CardTitle>Aperçu en Direct</CardTitle>
+          <Button 
             variant="outline"
             size="sm"
             onClick={() => setIsEditing(!isEditing)}
@@ -80,15 +80,15 @@ export function NewsletterPreview() {
                 Modifier
               </>
             )}
-          </ButtonV2>
+          </Button>
         </div>
-      </CardV2Header>
-      <CardV2Content>
+      </CardHeader>
+      <CardContent>
         {isEditing ? (
           <div className="space-y-6">
             <div className="space-y-2">
               <Label>Sujet</Label>
-              <InputV2
+              <Input
                 value={content.subject}
                 onChange={e => setContent((prev: NewsletterContent): NewsletterContent => ({ ...prev, subject: e.target.value }))}
                 placeholder="Sujet de la newsletter"
@@ -98,7 +98,7 @@ export function NewsletterPreview() {
 
             <div className="space-y-2">
               <Label>Message d&apos;introduction</Label>
-              <TextareaV2
+              <Textarea
                 value={content.introMessage}
                 onChange={e => setContent((prev: NewsletterContent): NewsletterContent => ({ ...prev, introMessage: e.target.value }))}
                 placeholder="Message d&apos;introduction..."
@@ -110,13 +110,13 @@ export function NewsletterPreview() {
               <Label>Points clés</Label>
               {content.features.map((feature, index) => (
                 <div key={index} className="flex gap-2">
-                  <TextareaV2
+                  <Textarea
                     value={feature}
                     onChange={e => updateFeature(index, e.target.value)}
                     placeholder={`Point clé ${index + 1}`}
                     className="flex-1"
                   />
-                  <ButtonV2 
+                  <Button 
                     type="button"
                     variant="error"
                     size="icon"
@@ -124,16 +124,16 @@ export function NewsletterPreview() {
                     disabled={content.features.length <= 1}
                   >
                     ✕
-                  </ButtonV2>
+                  </Button>
                 </div>
               ))}
-              <ButtonV2 
+              <Button 
                 type="button"
                 variant="outline"
                 onClick={addFeature}
               >
                 Ajouter un point clé
-              </ButtonV2>
+              </Button>
             </div>
           </div>
         ) : (
@@ -148,7 +148,7 @@ export function NewsletterPreview() {
             </div>
           </div>
         )}
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 } 

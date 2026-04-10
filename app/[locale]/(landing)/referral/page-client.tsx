@@ -1,8 +1,8 @@
 'use client'
 
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Gift, Trophy, Sparkles, CheckCircle2, AlertCircle, ArrowUpRight, HandCoins } from "lucide-react"
 import { useI18n } from "@/locales/client"
 import Link from "next/link"
@@ -33,13 +33,13 @@ export default function ReferralPage() {
   return (
     <div className="px-4 py-12 bg-background text-foreground">
       <div className="w-full">
-        <CardV2 className="mb-8 border-border/60 bg-gradient-to-br from-card/85 via-card/70 to-card/85 text-foreground shadow-2xl">
-          <CardV2Content className="p-6 md:p-10">
+        <Card className="mb-8 border-border/60 bg-gradient-to-br from-card/85 via-card/70 to-card/85 text-foreground shadow-2xl">
+          <CardContent className="p-6 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-4">
-                <BadgeV2 className="w-fit bg-card/25 text-foreground hover:bg-card/35">
+                <Badge className="w-fit bg-card/25 text-foreground hover:bg-card/35">
                   {t('referral.landing.heroBadge')}
-                </BadgeV2>
+                </Badge>
                 <h1 className="text-3xl font-bold leading-tight md:text-5xl">
                   {t('referral.landing.heroTitle')}
                 </h1>
@@ -52,7 +52,7 @@ export default function ReferralPage() {
               </div>
 
               <div className="w-full md:w-auto">
-                <ButtonV2 
+                <Button 
                   asChild
                   size="lg"
                   className="h-12 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90 md:w-auto"
@@ -62,11 +62,11 @@ export default function ReferralPage() {
                     {t('referral.landing.affiliateCta')}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
-                </ButtonV2>
+                </Button>
               </div>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">{t('referral.landing.title')}</h2>
@@ -76,11 +76,11 @@ export default function ReferralPage() {
         </div>
 
         {/* How It Works Section */}
-        <CardV2 className="mb-8 bg-card border-border/60">
-          <CardV2Header>
-            <CardV2Title className="text-2xl">{t('referral.landing.howItWorks')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content className="space-y-6">
+        <Card className="mb-8 bg-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.howItWorks')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
             <div className="space-y-4">
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
@@ -110,15 +110,15 @@ export default function ReferralPage() {
                 </div>
               </div>
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         {/* Requirements Section */}
-        <CardV2 className="mb-8 bg-card border-border/60">
-          <CardV2Header>
-            <CardV2Title className="text-2xl">{t('referral.landing.requirements')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="mb-8 bg-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.requirements')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <p className="text-muted-foreground mb-6">
               {t('referral.landing.requirementsDescription')}
             </p>
@@ -135,15 +135,15 @@ export default function ReferralPage() {
                 </div>
               ))}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         {/* Rewards Tiers Section */}
-        <CardV2 className="mb-8 bg-card border-border/60">
-          <CardV2Header>
-            <CardV2Title className="text-2xl">{t('referral.landing.rewards')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="mb-8 bg-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.rewards')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {tiers.map((tier, index) => (
                 <div
@@ -151,29 +151,29 @@ export default function ReferralPage() {
                   className="p-6 rounded-lg border border-border/60 bg-muted/20 flex flex-col items-center text-center transition-colors hover:bg-muted/35"
                 >
                   <div className="mb-4">{tier.icon}</div>
-                  <BadgeV2 variant="secondary" className="mb-3">
+                  <Badge variant="secondary" className="mb-3">
                     {t('referral.landing.tierBadge', { count: tier.count })}
-                  </BadgeV2>
+                  </Badge>
                   <p className="text-sm text-muted-foreground">{tier.reward}</p>
                 </div>
               ))}
             </div>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
 
         {/* Important Notes */}
-        <CardV2 className="bg-card border-border/60">
-          <CardV2Header>
-            <CardV2Title className="text-2xl">{t('referral.landing.importantNotes')}</CardV2Title>
-          </CardV2Header>
-          <CardV2Content>
+        <Card className="bg-card border-border/60">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.importantNotes')}</CardTitle>
+          </CardHeader>
+          <CardContent>
             <ul className="space-y-3 list-disc list-inside text-muted-foreground">
               <li>{t('referral.landing.note1')}</li>
               <li>{t('referral.landing.note2')}</li>
               <li>{t('referral.landing.note3')}</li>
             </ul>
-          </CardV2Content>
-        </CardV2>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

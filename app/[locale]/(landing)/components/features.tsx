@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState, lazy, Suspense } from "react"
 import { BarChart3, Calendar, Database, Brain } from "lucide-react"
-import { CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { ImportFeature } from "./import-feature"
 import { useI18n } from "@/locales/client"
@@ -62,16 +62,16 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
       
       <div className="relative h-full">
-        <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b border-border/60 pb-4">
-          <CardV2Title className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardV2Title>
+        <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/60 pb-4">
+          <CardTitle className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardTitle>
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative">
               {feature.icon}
             </div>
           </div>
-        </CardV2Header>
-        <CardV2Content>
+        </CardHeader>
+        <CardContent>
           <div className="flex flex-col gap-3 sm:gap-4">
             <div>
               <div className="text-xl font-bold text-foreground sm:text-2xl">{feature.stat}</div>
@@ -104,7 +104,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
               </div>
             </div>
           </div>
-        </CardV2Content>
+        </CardContent>
       </div>
     </div>
   )

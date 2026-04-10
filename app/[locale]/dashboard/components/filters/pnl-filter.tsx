@@ -1,7 +1,7 @@
 "use client"
 
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { useState } from "react"
@@ -37,14 +37,14 @@ export function PnlFilter() {
       </DropdownMenuItem>
       <div className="space-y-2 pt-2">
         <div className="flex gap-2">
-          <InputV2
+          <Input
             type="number"
             placeholder={t('filters.min')}
             value={customMin}
             onChange={(e) => setCustomMin(e.target.value)}
             className="w-full"
           />
-          <InputV2
+          <Input
             type="number"
             placeholder={t('filters.max')}
             value={customMax}
@@ -52,13 +52,13 @@ export function PnlFilter() {
             className="w-full"
           />
         </div>
-        <ButtonV2
+        <Button
           onClick={handleCustomRangeApply}
           className="w-full"
           variant="ghost"
         >
           {t('filters.apply')}
-        </ButtonV2>
+        </Button>
       </div>
     </div>
   )

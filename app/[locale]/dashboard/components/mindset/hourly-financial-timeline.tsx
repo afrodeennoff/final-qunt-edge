@@ -5,11 +5,11 @@ import { format } from "date-fns"
 import { formatInTimeZone } from "date-fns-tz"
 import { fr, enUS } from "date-fns/locale"
 import { useCurrentLocale, useI18n } from "@/locales/client"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Clock, ExternalLink, MoreHorizontal, DollarSign } from "lucide-react"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Badge } from "@/components/ui/badge"
 import type { FinancialEvent } from "@/prisma/generated/prisma"
 import type { Locale } from "date-fns"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -381,14 +381,14 @@ export function HourlyFinancialTimeline({
                   {hasMultipleEvents && (
                     <Popover>
                       <PopoverTrigger asChild>
-                        <ButtonV2 
+                        <Button 
                           variant="ghost"
                           size="sm"
                           className="w-full h-auto py-1 text-xs text-muted-foreground flex items-center justify-center"
                         >
                           <MoreHorizontal className="h-3 w-3 mr-1" />
                           {t('mindset.newsImpact.moreEvents', { count: hourEvents.length - 2 })}
-                        </ButtonV2>
+                        </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-72 p-2 max-h-96 overflow-y-auto">
                         <div className="space-y-2">
@@ -479,9 +479,9 @@ function FinancialEventCard({ event, onClick, timezone, dateLocale, expanded = f
 
       <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs">
         {event.country && (
-          <BadgeV2 variant="outline" className="text-xs h-5 px-1.5 rounded-sm font-normal">
+          <Badge variant="outline" className="text-xs h-5 px-1.5 rounded-sm font-normal">
             {event.country}
-          </BadgeV2>
+          </Badge>
         )}
 
         <div className="flex items-center">

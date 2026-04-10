@@ -17,7 +17,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { BadgeV2 } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
 import type {
   DealItem,
   DealsOverview,
@@ -528,7 +528,7 @@ function DealsTabSections({
       <section id="matchup" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Matchup</BadgeV2>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">Matchup</Badge>
             <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Compare prop firm tradeoffs before you pay</h2>
             <p className="mt-3 text-muted-foreground">Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.</p>
           </div>
@@ -568,7 +568,7 @@ function DealsTabSections({
       <section id="cost-planner" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Cost Planner</BadgeV2>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">Cost Planner</Badge>
             <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Model your evaluation cost before you start</h2>
             <p className="mt-3 text-muted-foreground">Set realistic expectations for resets, platform costs, and payout targets.</p>
           </div>
@@ -602,7 +602,7 @@ function DealsTabSections({
       <section id="playbooks" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Playbooks</BadgeV2>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">Playbooks</Badge>
             <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Prop firm playbooks for disciplined execution</h2>
             <p className="mt-3 text-muted-foreground">Convert policy language into concrete actions you can execute during evaluation and funded phases.</p>
           </div>
@@ -628,7 +628,7 @@ function DealsTabSections({
       <section id="help" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <BadgeV2 variant="accent" className="mb-3 rounded-full px-3">Help</BadgeV2>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">Help</Badge>
             <h2 className="text-3xl font-semibold text-foreground sm:text-4xl">Deals FAQ</h2>
             <p className="mt-3 text-muted-foreground">Everything on this page is specific to how Qunt Edge presents and maintains prop firm deal information.</p>
           </div>

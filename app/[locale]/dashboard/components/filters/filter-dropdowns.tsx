@@ -1,4 +1,4 @@
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,10 +54,10 @@ function FilterDropdown({
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <ButtonV2  variant="outline" className={`flex items-center ${className || ''}`}>
+        <Button  variant="outline" className={`flex items-center ${className || ''}`}>
           <span className="flex-1 text-left">{buttonText[type]}</span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
-        </ButtonV2>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[300px] max-w-[90vw]" align="start">
         <Command shouldFilter={false}>

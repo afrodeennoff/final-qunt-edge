@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { CommandItem } from "@/components/ui/command"
-import { InputV2 } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { useDashboardFilters } from "@/context/data-provider"
 import { useI18n } from "@/locales/client"
 import { cn } from "@/lib/utils"
@@ -79,14 +79,14 @@ export function PnlSection({ searchValue }: PnlSectionProps) {
       {showCustomInputs && (
         <div className="px-2 py-2 space-y-2 border-t">
           <div className="flex gap-2">
-            <InputV2
+            <Input
               type="number"
               placeholder={t('filters.min')}
               value={customMin}
               onChange={(e) => setCustomMin(e.target.value)}
               className="h-8 text-sm"
             />
-            <InputV2
+            <Input
               type="number"
               placeholder={t('filters.max')}
               value={customMax}
@@ -94,14 +94,14 @@ export function PnlSection({ searchValue }: PnlSectionProps) {
               className="h-8 text-sm"
             />
           </div>
-          <ButtonV2
+          <Button
             onClick={handleCustomRangeApply}
             size="sm"
             className="w-full h-8"
             variant="ghost"
           >
             {t('filters.apply')}
-          </ButtonV2>
+          </Button>
         </div>
       )}
 

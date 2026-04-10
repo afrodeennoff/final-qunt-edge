@@ -2,8 +2,8 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { ButtonV2 } from "@/components/ui/v2"
-import { InputV2 } from "@/components/ui/v2"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
@@ -21,7 +21,7 @@ import { HIDDEN_GROUP_NAME } from "../filters/account-group-board"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Account } from "@/lib/data-types"
-import { CardV2 as Card, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { useDashboardActions } from '@/context/data-provider'
 import { useUserStore } from '@/store/user-store'
@@ -220,7 +220,7 @@ export function AccountConfigurator({
         {/* Search Input */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <InputV2
+          <Input
             type="text"
             placeholder={t('propFirm.configurator.template.searchPlaceholder')}
             value={searchQuery}
@@ -228,14 +228,14 @@ export function AccountConfigurator({
             className="pl-9"
           />
           {searchQuery && (
-            <ButtonV2 
+            <Button 
               variant="ghost"
               size="icon"
               className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6"
               onClick={() => setSearchQuery("")}
             >
               <X className="h-4 w-4" />
-            </ButtonV2>
+            </Button>
           )}
         </div>
         
@@ -310,7 +310,7 @@ export function AccountConfigurator({
             <CarouselPrevious className="left-0" />
             <CarouselNext className="right-0" />
           </Carousel>
-          <ButtonV2 
+          <Button 
             variant="outline"
             className="mt-4"
             onClick={() => {
@@ -347,7 +347,7 @@ export function AccountConfigurator({
             }}
           >
             {t('propFirm.configurator.template.clear')}
-          </ButtonV2>
+          </Button>
         </div>
       </div>
 
@@ -359,7 +359,7 @@ export function AccountConfigurator({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
               <div className="flex flex-col gap-2">
                 <Label>{t('propFirm.configurator.fields.propfirmName')}</Label>
-                <InputV2
+                <Input
                   value={pendingChanges?.propfirm ?? account.propfirm ?? ''}
                   onChange={(e) => handleInputChange('propfirm', e.target.value)}
                   placeholder={t('propFirm.configurator.fields.propfirmName')}
@@ -368,7 +368,7 @@ export function AccountConfigurator({
               <div className="flex flex-col gap-2">
                 <Label>{t('propFirm.accountSize')}</Label>
                 <div className="relative">
-                  <InputV2
+                  <Input
                     ref={accountSizeInputRef}
                     type="text"
                     inputMode="numeric"
@@ -431,7 +431,7 @@ export function AccountConfigurator({
               </div>
               <div className="flex flex-col gap-2">
                 <Label>{t('propFirm.target')}</Label>
-                <InputV2
+                <Input
                   type="number"
                   value={toInputValue(pendingChanges?.profitTarget ?? account.profitTarget)}
                   onChange={(e) =>
@@ -460,7 +460,7 @@ export function AccountConfigurator({
                 <Label>{t('filters.groupName')}</Label>
                 {showNewGroupInput ? (
                   <div className="flex items-center gap-2">
-                    <InputV2
+                    <Input
                       placeholder={t("filters.newGroup")}
                       value={newGroupName}
                       onChange={(e) => setNewGroupName(e.target.value)}
@@ -475,14 +475,14 @@ export function AccountConfigurator({
                       className="flex-1"
                       autoFocus
                     />
-                    <ButtonV2  
+                    <Button  
                       size="sm" 
                       onClick={handleCreateGroup} 
                       disabled={!newGroupName.trim() || isCreatingGroup}
                     >
                       {isCreatingGroup ? t("common.saving") : t("common.create")}
-                    </ButtonV2>
-                    <ButtonV2 
+                    </Button>
+                    <Button 
                       size="sm"
                       variant="ghost"
                       onClick={() => {
@@ -491,7 +491,7 @@ export function AccountConfigurator({
                       }}
                     >
                       {t("common.cancel")}
-                    </ButtonV2>
+                    </Button>
                   </div>
                 ) : (
                   <Select
@@ -558,7 +558,7 @@ export function AccountConfigurator({
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.drawdown')}</Label>
-                  <InputV2
+                  <Input
                     type="number"
                     value={toInputValue(pendingChanges?.drawdownThreshold ?? account.drawdownThreshold)}
                     onChange={(e) => handleInputChange('drawdownThreshold', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
@@ -595,7 +595,7 @@ export function AccountConfigurator({
                   <div className="flex flex-col gap-2">
                     <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.trailingStopProfit')}</Label>
                     <p className="text-xs text-muted-foreground">{t('propFirm.configurator.tooltips.trailingStopProfit')}</p>
-                    <InputV2
+                    <Input
                       type="number"
                       value={toInputValue(pendingChanges?.trailingStopProfit ?? account.trailingStopProfit)}
                       onChange={(e) => handleInputChange('trailingStopProfit', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
@@ -639,7 +639,7 @@ export function AccountConfigurator({
                         </PopoverContent>
                       </Popover>
                     </div>
-                    <InputV2
+                    <Input
                       type="number"
                       step="0.01"
                       value={toInputValue(pendingChanges?.buffer ?? account.buffer)}
@@ -681,7 +681,7 @@ export function AccountConfigurator({
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.dailyLoss')}</Label>
-                  <InputV2
+                  <Input
                     type="number"
                     value={toInputValue(pendingChanges?.dailyLoss ?? account.dailyLoss)}
                     onChange={(e) => handleInputChange('dailyLoss', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
@@ -706,7 +706,7 @@ export function AccountConfigurator({
                       </PopoverContent>
                     </Popover>
                   </div>
-                  <InputV2
+                  <Input
                     type="number"
                     step="0.01"
                     value={toInputValue(pendingChanges?.minPnlToCountAsDay ?? account.minPnlToCountAsDay)}
@@ -766,7 +766,7 @@ export function AccountConfigurator({
               {isConsistencyEnabled && (
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.coherence')}</Label>
-                  <InputV2
+                  <Input
                     type="number"
                     value={effectiveConsistency}
                     onChange={(e) =>
@@ -791,7 +791,7 @@ export function AccountConfigurator({
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.price')}</Label>
-                  <InputV2
+                  <Input
                     type="number"
                     value={toInputValue(pendingChanges?.price ?? account.price)}
                     onChange={(e) => handleInputChange('price', toDecimal(e.target.value === '' ? 0 : parseFloat(e.target.value) || 0))}
@@ -807,7 +807,7 @@ export function AccountConfigurator({
                   <Dialog open={paymentCalendarOpen} onOpenChange={setPaymentCalendarOpen}>
                     <DialogTrigger asChild>
                       <div className="relative w-full">
-                        <ButtonV2 
+                        <Button 
                           type="button"
                           variant="outline"
                           className={cn(
@@ -829,9 +829,9 @@ export function AccountConfigurator({
                             <span>{t('propFirm.configurator.placeholders.noPaymentDateSet')}</span>
                           )
                         )}
-                        </ButtonV2>
+                        </Button>
                         {((pendingChanges && 'nextPaymentDate' in pendingChanges) ? pendingChanges.nextPaymentDate : account.nextPaymentDate) && (
-                          <ButtonV2 
+                          <Button 
                             type="button"
                             variant="ghost"
                             size="icon"
@@ -844,7 +844,7 @@ export function AccountConfigurator({
                             }}
                           >
                             <X className="h-4 w-4" />
-                          </ButtonV2>
+                          </Button>
                         )}
                       </div>
                     </DialogTrigger>
@@ -937,7 +937,7 @@ export function AccountConfigurator({
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-muted-foreground">{t('propFirm.configurator.fields.minTradingDays')}</Label>
-                  <InputV2
+                  <Input
                     type="number"
                     value={pendingChanges?.minTradingDaysForPayout ?? account.minTradingDaysForPayout ?? ''}
                     onChange={(e) => handleInputChange('minTradingDaysForPayout', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
@@ -956,7 +956,7 @@ export function AccountConfigurator({
               <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
                 <DialogTrigger asChild>
                   <div className="relative w-full">
-                    <ButtonV2 
+                    <Button 
                       type="button"
                       variant="outline"
                       className={cn(
@@ -978,9 +978,9 @@ export function AccountConfigurator({
                           <span>{t('propFirm.resetDate.noDate')}</span>
                         )
                       )}
-                    </ButtonV2>
+                    </Button>
                                           {((pendingChanges && 'resetDate' in pendingChanges) ? pendingChanges.resetDate : account.resetDate) && (
-                      <ButtonV2 
+                      <Button 
                         type="button"
                         variant="ghost"
                         size="icon"
@@ -992,7 +992,7 @@ export function AccountConfigurator({
                         }}
                       >
                         <X className="h-4 w-4" />
-                      </ButtonV2>
+                      </Button>
                     )}
                   </div>
                 </DialogTrigger>

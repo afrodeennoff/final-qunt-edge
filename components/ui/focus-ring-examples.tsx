@@ -6,7 +6,7 @@
  */
 
 import { FocusRing } from "@/components/ui/focus-ring"
-import { Button } from "@/components/ui/button"
+import { Button as Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 /**

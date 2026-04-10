@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { PostType } from '@/prisma/generated/prisma'
 import { createPost } from '@/app/[locale]/(landing)/actions/community'
-import { ButtonV2 as Button } from '@/components/ui/v2'
+import { Button } from '@/components/ui/button'
 import { useI18n } from '@/locales/client'
 import { useRouter } from 'next/navigation'
 import {
@@ -22,8 +22,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { InputV2 } from "@/components/ui/v2"
-import { TextareaV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -185,7 +185,7 @@ export function CreatePost({ children }: Props) {
                   <FormItem>
                     <FormLabel>{t('community.createPost.postTitle')}</FormLabel>
                     <FormControl>
-                      <InputV2 placeholder={t('community.createPost.titlePlaceholder')} {...field} />
+                      <Input placeholder={t('community.createPost.titlePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,7 +198,7 @@ export function CreatePost({ children }: Props) {
                   <FormItem>
                     <FormLabel>{t('community.createPost.content')}</FormLabel>
                     <FormControl>
-                      <TextareaV2
+                      <Textarea
                         placeholder={t('community.createPost.contentPlaceholder')}
                         className="resize-none text-lg sm:text-sm"
                         {...field}
@@ -240,7 +240,7 @@ export function CreatePost({ children }: Props) {
                         </div>
                         {(field.value?.length ?? 0) < 3 && (
                           <div className="flex items-center">
-                            <InputV2
+                            <Input
                               type="file"
                               accept={ACCEPTED_IMAGE_TYPES.join(',')}
                               onChange={(e) => {

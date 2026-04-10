@@ -1,5 +1,5 @@
-import { BadgeV2 } from "@/components/ui/v2"
-import { CardV2 as Card, CardV2Description as CardDescription, CardV2Header as CardHeader, CardV2Title as CardTitle } from '@/components/ui/v2'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle2, Clock3, LineChart, ShieldCheck, Sparkles, Users2 } from 'lucide-react'
 
 const proofStats = [
@@ -42,9 +42,9 @@ export default function WhyChooseUs() {
     <section id="why-us" className="relative border-y border-border/30 bg-card/10 px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
       <div className="mx-auto max-w-6xl space-y-10">
         <div className="text-center">
-          <BadgeV2 variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
             Why Traders Choose Us
-          </BadgeV2>
+          </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.9vw,3.55rem)] font-semibold leading-[0.92] tracking-[-0.028em] [font-family:var(--home-display)]">
             Why high-standard traders
             <span className="block text-foreground">choose Qunt Edge over basic journals</span>

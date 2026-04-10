@@ -27,11 +27,25 @@ import { SidebarNavGroup } from './sidebar-primitives/sidebar-nav-group'
 import { SidebarUserMenu } from './sidebar-primitives/sidebar-user-menu'
 import type { UnifiedSidebarItem, UnifiedSidebarConfig, PendingNavigation } from './sidebar-primitives/types'
 
-// Re-export public types
 export type { UnifiedSidebarItem, UnifiedSidebarConfig, PendingNavigation }
-
-// Re-export hook
 export { useActiveLink }
+
+const SIDEBAR_ROUTE_PREFIXES = ['/dashboard', '/teams', '/admin']
+
+function isSidebarEnabledRoute(pathname: string): boolean {
+  const normalized = stripLocalePrefix(pathname).replace(/\/$/, '') || '/'
+  return SIDEBAR_ROUTE_PREFIXES.some((prefix) => {
+    if (normalized === prefix) return true
+    if (normalized.startsWith(`${prefix}/`)) return true
+    return false
+  })
+}
+
+function buildCurrentRouteKey(pathname: string | null, searchParams: ReturnType<typeof useSearchParams>): string {
+  if (!pathname) return '/'
+  const currentSearch = searchParams?.toString()
+  return currentSearch ? `${pathname}?${currentSearch}` : pathname
+}
 
 function getUserInitials(user?: UnifiedSidebarConfig['user']) {
   const raw = user?.full_name || user?.email || 'User'
@@ -46,6 +60,15 @@ function getUserInitials(user?: UnifiedSidebarConfig['user']) {
   return parts.map((part) => part[0]?.toUpperCase() ?? '').join('')
 }
 
+function buildOpenGroups(items: UnifiedSidebarItem[]): Record<string, boolean> {
+  const groups: Record<string, boolean> = {}
+  const itemGroups = new Set(items.map((item) => item.group || 'Settings'))
+  for (const groupName of itemGroups) {
+    groups[groupName] = DEFAULT_OPEN_GROUPS.has(groupName)
+  }
+  return groups
+}
+
 export function UnifiedSidebar({
   items,
   user,
@@ -56,28 +79,22 @@ export function UnifiedSidebar({
 }: UnifiedSidebarConfig) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const normalizedPathname = stripLocalePrefix(pathname || '/').replace(/\/$/, '') || '/'
-  const currentRouteKey = useMemo(() => {
-    const currentSearch = searchParams?.toString()
-    return currentSearch ? `${pathname || '/'}?${currentSearch}` : (pathname || '/')
-  }, [pathname, searchParams])
-  const isSidebarEnabledRoute =
-    normalizedPathname === '/dashboard' ||
-    normalizedPathname.startsWith('/dashboard/') ||
-    normalizedPathname === '/teams' ||
-    normalizedPathname.startsWith('/teams/') ||
-    normalizedPathname === '/admin' ||
-    normalizedPathname.startsWith('/admin/')
-
+  const currentRouteKey = useMemo(
+    () => buildCurrentRouteKey(pathname, searchParams),
+    [pathname, searchParams]
+  )
   const hasItems = items && items.length > 0
-  const shouldRenderSidebar = isSidebarEnabledRoute || hasItems
+  const shouldRenderSidebar = useMemo(
+    () => isSidebarEnabledRoute(pathname || '/') || hasItems,
+    [pathname, hasItems]
+  )
 
   const { isMobile, setOpenMobile } = useSidebar()
   const isActive = useActiveLink()
   const { isLoading } = useNavigationLoading()
 
   const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => buildOpenGroups(items))
   const navigationFallbackTimerRef = useRef<number | null>(null)
 
   const clearNavigationFallbackTimer = useCallback(() => {
@@ -120,33 +137,6 @@ export function UnifiedSidebar({
     })
   }, [])
 
-  // Initialize open groups based on items
-  useEffect(() => {
-    setOpenGroups((previous) => {
-      const next: Record<string, boolean> = { ...previous }
-      let hasChanges = false
-
-      // Get groups from items
-      const itemGroups = new Set(items.map((item) => item.group || 'Settings'))
-      for (const groupName of itemGroups) {
-        if (!(groupName in next)) {
-          next[groupName] = DEFAULT_OPEN_GROUPS.has(groupName)
-          hasChanges = true
-        }
-      }
-
-      // Clean up removed groups
-      for (const groupName of Object.keys(next)) {
-        if (!itemGroups.has(groupName)) {
-          delete next[groupName]
-          hasChanges = true
-        }
-      }
-
-      return hasChanges ? next : previous
-    })
-  }, [items])
-
   const handleNavigate = useCallback(
     (href: string) => {
       setPendingNavigation({
@@ -165,6 +155,63 @@ export function UnifiedSidebar({
   const initials = useMemo(() => getUserInitials(user), [user])
 
   return shouldRenderSidebar ? (
+    <SidebarContentRender
+      items={items}
+      actions={actions}
+      user={user}
+      timezone={timezone}
+      onLogout={onLogout}
+      displayName={displayName}
+      initials={initials}
+      openGroups={openGroups}
+      pendingNavigation={pendingNavigation}
+      currentRouteKey={currentRouteKey}
+      isLoading={isLoading}
+      isActive={isActive}
+      isMobile={isMobile}
+      styleVariant={styleVariant}
+      onGroupOpenChange={handleGroupOpenChange}
+      onNavigate={handleNavigate}
+    />
+  ) : null
+}
+
+function SidebarContentRender({
+  items,
+  actions,
+  user,
+  timezone,
+  onLogout,
+  displayName,
+  initials,
+  openGroups,
+  pendingNavigation,
+  currentRouteKey,
+  isLoading,
+  isActive,
+  isMobile,
+  styleVariant,
+  onGroupOpenChange,
+  onNavigate,
+}: {
+  items: UnifiedSidebarItem[]
+  actions?: React.ReactNode
+  user?: UnifiedSidebarConfig['user']
+  timezone?: UnifiedSidebarConfig['timezone']
+  onLogout?: () => void
+  displayName: string
+  initials: string
+  openGroups: Record<string, boolean>
+  pendingNavigation: PendingNavigation | null
+  currentRouteKey: string
+  isLoading: boolean
+  isActive: (href: string, exact?: boolean) => boolean
+  isMobile: boolean
+  styleVariant?: 'default' | 'minimal'
+  onGroupOpenChange: (groupName: string, isOpen: boolean) => void
+  onNavigate: (href: string) => void
+}) {
+  return (
     <Sidebar
       collapsible="icon"
       className={cn(
@@ -182,10 +229,10 @@ export function UnifiedSidebar({
         <SidebarNavGroup
           items={items}
           openGroups={openGroups}
-          onGroupOpenChange={handleGroupOpenChange}
+          onGroupOpenChange={onGroupOpenChange}
           pendingNavigation={pendingNavigation}
           currentRouteKey={currentRouteKey}
-          onNavigate={handleNavigate}
+          onNavigate={onNavigate}
           isLoading={isLoading}
           isActive={isActive}
         />
@@ -209,5 +256,5 @@ export function UnifiedSidebar({
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  ) : null
+  )
 }

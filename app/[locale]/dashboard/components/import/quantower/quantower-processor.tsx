@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import type { ImportTradeDraft as Trade } from '@/lib/trade-types'
-import { InputV2 } from "@/components/ui/v2"
+import { Input } from "@/components/ui/input"
 
 interface ContractSpec {
   tickSize: number;
@@ -599,7 +599,7 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
                     <h4 className="font-medium">{symbol}</h4>
                     <div className="flex items-center gap-2">
                       <label className="text-sm">Tick Size:</label>
-                      <InputV2
+                      <Input
                         type="number"
                         value={contractSpecs[symbol].tickSize}
                         onChange={(e) => handleContractSpecChange(symbol, 'tickSize', e.target.value)}
@@ -608,7 +608,7 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
                     </div>
                     <div className="flex items-center gap-2">
                       <label className="text-sm">Tick Value:</label>
-                      <InputV2
+                      <Input
                         type="number"
                         value={contractSpecs[symbol].tickValue}
                         onChange={(e) => handleContractSpecChange(symbol, 'tickValue', e.target.value)}
@@ -678,12 +678,12 @@ export default function QuantowerOrderProcessor({ csvData, headers, processedTra
             <h3 className="text-lg font-semibold mb-2">Instruments Traded</h3>
             <div className="flex flex-wrap gap-2">
               {uniqueSymbols.map((symbol) => (
-                <ButtonV2 
+                <Button 
                   key={symbol}
                   variant="outline"
                 >
                   {symbol}
-                </ButtonV2>
+                </Button>
               ))}
             </div>
           </div>

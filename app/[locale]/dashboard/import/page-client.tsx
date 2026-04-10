@@ -10,15 +10,9 @@ import { useI18n } from "@/locales/client";
 import { useCurrentLocale } from "@/locales/client";
 import { useSyncContext } from "@/context/sync-context"
 import { useDashboardActions } from "@/context/data-provider"
-import {
-  CardV2,
-  CardV2Content,
-  CardV2Description,
-  CardV2Header,
-  CardV2Title,
-} from "@/components/ui/v2";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 
 export default function ImportCallbackPageClient() {
@@ -171,9 +165,9 @@ export default function ImportCallbackPageClient() {
   return (
     <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md">
-      <CardV2>
-        <CardV2Header>
-          <CardV2Title className="flex items-center gap-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             {status === "loading" && (
               <Loader2 className="h-5 w-5 animate-spin" />
             )}
@@ -182,14 +176,14 @@ export default function ImportCallbackPageClient() {
             )}
             {status === "error" && <XCircle className="h-5 w-5 text-semantic-error" />}
             {t("tradovateSync.callback.title")}
-          </CardV2Title>
-          <CardV2Description>
+          </CardTitle>
+          <CardDescription>
             {status === "loading" && t("tradovateSync.callback.processing")}
             {status === "success" && t("tradovateSync.callback.success")}
             {status === "error" && t("tradovateSync.callback.error")}
-          </CardV2Description>
-        </CardV2Header>
-        <CardV2Content className="space-y-4">
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
           {status === "loading" && (
             <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -216,25 +210,25 @@ export default function ImportCallbackPageClient() {
               </Alert>
 
               <div className="flex flex-col gap-2">
-                <ButtonV2 
+                <Button 
                   onClick={handleRetry}
                   variant="outline"
                   className="w-full"
                 >
                   {t("tradovateSync.callback.retry")}
-                </ButtonV2>
-                <ButtonV2 
+                </Button>
+                <Button 
                   onClick={() => router.push(`/${locale}/dashboard`)}
                   variant="secondary"
                   className="w-full"
                 >
                   {t("tradovateSync.callback.backToDashboard")}
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           )}
-        </CardV2Content>
-      </CardV2>
+        </CardContent>
+      </Card>
       </div>
     </div>
   );

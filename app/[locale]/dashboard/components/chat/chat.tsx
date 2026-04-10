@@ -3,9 +3,9 @@
 import type React from "react";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { RotateCcw, ChevronDown, MessageSquare, Loader2 } from "lucide-react";
-import { CardV2, CardV2Content } from "@/components/ui/v2";
+import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import type { UIMessage } from "ai";
 import { useChat } from "@ai-sdk/react";
@@ -211,7 +211,7 @@ const ResumeScrollButton = () => {
           exit={{ opacity: 0, y: 20, scale: 0.8 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
-          <ButtonV2 
+          <Button 
             onClick={handleScrollToBottom}
             size="sm"
             className="shadow-lg hover:shadow-xl transition-shadow"
@@ -219,7 +219,7 @@ const ResumeScrollButton = () => {
           >
             <ChevronDown className="h-4 w-4 mr-1" />
             {t("chat.overlay.resumeScroll")}
-          </ButtonV2>
+          </Button>
         </motion.div>
       )}
     </AnimatePresence>
@@ -445,14 +445,14 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
   }, [setMessages, setStoredMessages, setIsStarted]);
 
   return (
-    <CardV2 className="h-full flex flex-col bg-background border-none shadow-none relative overflow-clip">
+    <Card className="h-full flex flex-col bg-background border-none shadow-none relative overflow-clip">
       <ChatHeader
         title="AI Assistant"
         onReset={handleReset}
         isLoading={isProcessingResponse}
         size={size}
       />
-      <CardV2Content className="flex-1 flex flex-col min-h-0 p-0 relative">
+      <CardContent className="flex-1 flex flex-col min-h-0 p-0 relative">
         <StickToBottom
           className="flex-1 min-h-0 w-full overflow-y-auto"
           initial="smooth"
@@ -462,7 +462,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           <StickToBottom.Content className="p-4">
             {hasMoreMessages && (
               <div className="text-center mb-4">
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="sm"
                   onClick={loadMoreMessages}
@@ -470,7 +470,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                 >
                   Load earlier messages (
                   {messages.length - visibleMessages.length} more)
-                </ButtonV2>
+                </Button>
               </div>
             )}
 
@@ -487,7 +487,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                       An error occurred while processing your message.
                     </span>
                     {/* v5: no reload helper; allow page refresh for now */}
-                    <ButtonV2 
+                    <Button 
                       type="button"
                       onClick={() => router.refresh()}
                       size="sm"
@@ -495,7 +495,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                     >
                       <RotateCcw className="h-3 w-3 mr-1" />
                       Retry
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -630,7 +630,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                   >
                                     {confirmationPart.input?.message}
                                     <div className="flex gap-2 mt-2">
-                                      <ButtonV2 
+                                      <Button 
                                         variant="ghost"
                                         size="sm"
                                         onClick={() =>
@@ -642,8 +642,8 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                         }
                                       >
                                         Yes
-                                      </ButtonV2>
-                                      <ButtonV2 
+                                      </Button>
+                                      <Button 
                                         variant="ghost"
                                         size="sm"
                                         onClick={() =>
@@ -655,7 +655,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                                         }
                                       >
                                         No
-                                      </ButtonV2>
+                                      </Button>
                                     </div>
                                   </BotMessage>
                                 );
@@ -797,7 +797,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
           onFilesChange={setFiles}
           files={files}
         />
-      </CardV2Content>
+      </CardContent>
       {!isStarted && !isLoadingMessages && storedMessages.length === 0 && (
         <div className="absolute inset-0 bg-background/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-md p-4 sm:p-6 gap-4 sm:gap-6 text-center">
@@ -814,7 +814,7 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
                 {t("chat.overlay.description")}
               </p>
             </div>
-            <ButtonV2 
+            <Button 
               onClick={() => {
                 setIsStarted(true);
                 setHideFirstMessage(true);
@@ -825,10 +825,10 @@ export default function ChatWidget({ size = "large" }: ChatWidgetProps) {
               className="w-full text-sm sm:text-base animate-in fade-in zoom-in"
             >
               {t("chat.overlay.startButton")}
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       )}
-    </CardV2>
+    </Card>
   );
 }

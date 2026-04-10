@@ -10,8 +10,8 @@ import {
     RefreshCw
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { ButtonV2 } from "@/components/ui/v2"
-import { BadgeV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getSmartInsights, InsightActionTarget, SmartInsight } from "../../actions/get-smart-insights"
@@ -113,7 +113,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
             icon={<Brain className="h-4 w-4 text-primary" />}
             description={t('widgets.smartInsights.tooltip')}
             actions={
-                <ButtonV2 
+                <Button 
                     variant="ghost"
                     size="icon"
                     className="h-6 w-6 text-muted-foreground hover:text-foreground"
@@ -121,7 +121,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                     disabled={loading}
                 >
                     <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
-                </ButtonV2>
+                </Button>
             }
             state={widgetState}
             emptyMessage={
@@ -166,9 +166,9 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                                         </div>
                                     </div>
                                     {insight.confidence && (
-                                        <BadgeV2 variant="secondary" className="text-[10px] h-5 px-1.5 bg-secondary/22 border-border/55 text-muted-foreground">
+                                        <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-secondary/22 border-border/55 text-muted-foreground">
                                             {insight.confidence}% Conf.
-                                        </BadgeV2>
+                                        </Badge>
                                     )}
                                 </div>
 
@@ -178,12 +178,12 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
 
                                 {insight.action && (
                                     <div className="flex justify-end mt-1">
-                                        <ButtonV2  size="sm" variant="ghost" className="h-6 text-[10px] px-2 gap-1 text-primary hover:text-primary/80 hover:bg-primary/10 font-bold uppercase tracking-widest" asChild>
+                                        <Button  size="sm" variant="ghost" className="h-6 text-[10px] px-2 gap-1 text-primary hover:text-primary/80 hover:bg-primary/10 font-bold uppercase tracking-widest" asChild>
                                             <Link href={resolveInsightHref(insight.action.href)}>
                                                 {insight.action.label}
                                                 <ArrowRight className="h-3 w-3" />
                                             </Link>
-                                        </ButtonV2>
+                                        </Button>
                                     </div>
                                 )}
                             </motion.div>

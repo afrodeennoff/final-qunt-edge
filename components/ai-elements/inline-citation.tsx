@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeV2 } from "@/components/ui/v2";
+import { Badge } from "@/components/ui/badge";
 import {
   Carousel,
   type CarouselApi,
@@ -53,7 +53,7 @@ export const InlineCitationCard = (props: InlineCitationCardProps) => (
   <HoverCard closeDelay={0} openDelay={0} {...props} />
 );
 
-export type InlineCitationCardTriggerProps = ComponentProps<typeof BadgeV2> & {
+export type InlineCitationCardTriggerProps = ComponentProps<typeof Badge> & {
   sources: string[];
 };
 
@@ -63,7 +63,7 @@ export const InlineCitationCardTrigger = ({
   ...props
 }: InlineCitationCardTriggerProps) => (
   <HoverCardTrigger asChild>
-    <BadgeV2
+    <Badge
       className={cn("ml-1 rounded-full", className)}
       variant="secondary"
       {...props}
@@ -76,7 +76,7 @@ export const InlineCitationCardTrigger = ({
       ) : (
         "unknown"
       )}
-    </BadgeV2>
+    </Badge>
   </HoverCardTrigger>
 );
 

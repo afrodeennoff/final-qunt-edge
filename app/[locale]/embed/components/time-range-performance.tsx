@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 import { ChartConfig } from "@/components/ui/chart";
@@ -184,13 +184,13 @@ export default function TimeRangePerformanceChart({
   };
 
   return (
-    <CardV2 data-chart-surface="modern" className="h-[500px] flex flex-col" style={themeVarsToStyle(theme)}>
-      <CardV2Header className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
+    <Card data-chart-surface="modern" className="h-[500px] flex flex-col" style={themeVarsToStyle(theme)}>
+      <CardHeader className="flex flex-row items-center justify-between gap-0 border-b shrink-0 p-3 sm:p-4 h-[56px]">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-1.5">
-            <CardV2Title className="line-clamp-1 text-base">
+            <CardTitle className="line-clamp-1 text-base">
               {t("embed.timeRangePerformance.title")}
-            </CardV2Title>
+            </CardTitle>
             <Popover>
               <PopoverTrigger asChild>
                 <Info className="text-muted-foreground hover:text-foreground transition-colors cursor-help h-4 w-4" />
@@ -201,8 +201,8 @@ export default function TimeRangePerformanceChart({
             </Popover>
           </div>
         </div>
-      </CardV2Header>
-      <CardV2Content className="flex-1 min-h-0 p-2 sm:p-4">
+      </CardHeader>
+      <CardContent className="flex-1 min-h-0 p-2 sm:p-4">
         <div className="w-full h-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -275,7 +275,7 @@ export default function TimeRangePerformanceChart({
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   );
 }

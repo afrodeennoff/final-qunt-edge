@@ -9,8 +9,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { CardV2, CardV2Content, CardV2Header, CardV2Title } from "@/components/ui/v2"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
@@ -113,14 +113,14 @@ export function AccountsBarChart({
   )
 
   return (
-    <CardV2 data-chart-surface="modern" className="border-border/70 bg-card/90">
-      <CardV2Header className="gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <Card data-chart-surface="modern" className="border-border/70 bg-card/90">
+      <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <CardV2Title>{chartTitle}</CardV2Title>
+          <CardTitle>{chartTitle}</CardTitle>
           <p className="text-xs text-muted-foreground">Minimal view. Add layers if you need more detail.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <ButtonV2
+          <Button
             type="button"
             size="sm"
             aria-pressed={showPayoutBars}
@@ -133,8 +133,8 @@ export function AccountsBarChart({
             )}
           >
             Payouts
-          </ButtonV2>
-          <ButtonV2
+          </Button>
+          <Button
             type="button"
             size="sm"
             aria-pressed={showAccountValue}
@@ -147,8 +147,8 @@ export function AccountsBarChart({
             )}
           >
             Value
-          </ButtonV2>
-          <ButtonV2
+          </Button>
+          <Button
             type="button"
             size="sm"
             aria-pressed={showRegistered}
@@ -161,8 +161,8 @@ export function AccountsBarChart({
             )}
           >
             Reg
-          </ButtonV2>
-          <ButtonV2
+          </Button>
+          <Button
             type="button"
             size="sm"
             aria-pressed={showSized}
@@ -175,8 +175,8 @@ export function AccountsBarChart({
             )}
           >
             Sized
-          </ButtonV2>
-          <ButtonV2
+          </Button>
+          <Button
             type="button"
             size="sm"
             aria-pressed={showZeroFirms}
@@ -189,10 +189,10 @@ export function AccountsBarChart({
             )}
           >
             {showZeroFirms ? "Zeros: On" : "Zeros: Off"}
-          </ButtonV2>
+          </Button>
         </div>
-      </CardV2Header>
-      <CardV2Content className="border-t border-border/70 pt-4">
+      </CardHeader>
+      <CardContent className="border-t border-border/70 pt-4">
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}
@@ -373,7 +373,7 @@ export function AccountsBarChart({
             ) : null}
           </ComposedChart>
         </ChartContainer>
-      </CardV2Content>
-    </CardV2>
+      </CardContent>
+    </Card>
   )
 }

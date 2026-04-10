@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import {
   Drawer,
   DrawerClose,
@@ -135,17 +135,17 @@ export function ConsentBanner() {
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground">
                   {t('landing.consent.banner.message')} {t('landing.consent.banner.updatePreferences')}{' '}
-                  <ButtonV2 
+                  <Button 
                     variant="link"
                     className="p-0 h-auto text-sm text-foreground underline underline-offset-2"
                     onClick={() => setShowDetails(true)}
                   >
                     {t('landing.consent.banner.managePreferences')}
-                  </ButtonV2>
+                  </Button>
                 </p>
               </div>
               <div className="flex gap-3 shrink-0">
-                <ButtonV2 
+                <Button 
                   variant="outline"
                   size="sm"
                   onClick={() => saveConsent({
@@ -158,14 +158,14 @@ export function ConsentBanner() {
                   })}
                 >
                   {t('landing.consent.banner.rejectNonEssential')}
-                </ButtonV2>
-                <ButtonV2 
+                </Button>
+                <Button 
                   size="sm"
                   className="bg-primary text-primary-foreground hover:bg-primary/90"
                   onClick={handleAcceptAll}
                 >
                   {t('landing.consent.banner.acceptAll')}
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           </div>
@@ -244,12 +244,12 @@ export function ConsentBanner() {
                   </div>
 
                   <div className="mt-6">
-                    <ButtonV2 
+                    <Button 
                       onClick={handleSavePreferences}
                       className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       {t('landing.consent.preferences.done')}
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
               </DialogContent>
@@ -328,12 +328,12 @@ export function ConsentBanner() {
                 </div>
 
                 <DrawerFooter className="px-6 pb-6">
-                  <ButtonV2
+                  <Button
                     onClick={handleSavePreferences}
                     className="h-11 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {t('landing.consent.preferences.done')}
-                  </ButtonV2>
+                  </Button>
                 </DrawerFooter>
               </div>
             </DrawerContent>

@@ -7,7 +7,7 @@ import { ImportType } from "../import-type-selection";
 import { Progress } from "@/components/ui/progress";
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ButtonV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
 import { Step } from "../import-button";
@@ -317,14 +317,14 @@ export default function AtasFileUpload({
                     />
                   </div>
                 )}
-                <ButtonV2 
+                <Button 
                   variant="ghost"
                   size="sm"
                   onClick={() => removeFile(index)}
                   className="h-8 w-8 p-0"
                 >
                   <XIcon className="h-4 w-4" />
-                </ButtonV2>
+                </Button>
               </div>
             </div>
           ))}

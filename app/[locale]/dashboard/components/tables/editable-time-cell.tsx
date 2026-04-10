@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { ButtonV2, InputV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Label } from '@/components/ui/label'
 import { Clock, Plus, Minus, Check, X } from 'lucide-react'
@@ -109,7 +110,7 @@ export function EditableTimeCell({
   if (isEditing) {
     return (
       <div className="flex items-center gap-1 min-w-[120px]">
-        <InputV2
+        <Input
           ref={inputRef}
           value={tempValue}
           onChange={(e) => setTempValue(e.target.value)}
@@ -118,7 +119,7 @@ export function EditableTimeCell({
           className="h-7 text-xs font-mono border-border/65 focus-visible:ring-1"
           disabled={isSaving}
         />
-        <ButtonV2 
+        <Button 
           size="sm"
           variant="ghost"
           className="h-7 w-7 p-0 hover:bg-secondary/30"
@@ -126,8 +127,8 @@ export function EditableTimeCell({
           disabled={isSaving}
         >
           <Check className="h-3 w-3 text-foreground" />
-        </ButtonV2>
-        <ButtonV2 
+        </Button>
+        <Button 
           size="sm"
           variant="ghost"
           className="h-7 w-7 p-0 hover:bg-secondary/22"
@@ -135,7 +136,7 @@ export function EditableTimeCell({
           disabled={isSaving}
         >
           <X className="h-3 w-3 text-muted-foreground" />
-        </ButtonV2>
+        </Button>
       </div>
     )
   }
@@ -176,25 +177,25 @@ export function EditableTimeCell({
             <div>
               <Label className="text-xs mb-2 block">{t('trade-table.editableTimeCell.timezoneAdjustment')}</Label>
               <div className="flex items-center gap-2">
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setHourOffset(prev => prev - 1)}
                   className="h-8 w-8 p-0"
                 >
                   <Minus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
                 <div className="text-sm font-mono bg-muted/50 rounded px-3 py-1 min-w-[60px] text-center">
                   {hourOffset === 0 ? '±0h' : `${hourOffset > 0 ? '+' : ''}${hourOffset}h`}
                 </div>
-                <ButtonV2 
+                <Button 
                   size="sm"
                   variant="outline"
                   onClick={() => setHourOffset(prev => prev + 1)}
                   className="h-8 w-8 p-0"
                 >
                   <Plus className="h-3 w-3" />
-                </ButtonV2>
+                </Button>
               </div>
               {hourOffset !== 0 && (
                 <div className="text-xs text-muted-foreground mt-1">
@@ -205,7 +206,7 @@ export function EditableTimeCell({
 
             <div>
               <Label className="text-xs mb-2 block">{t('trade-table.editableTimeCell.manualEdit')}</Label>
-              <ButtonV2 
+              <Button 
                 size="sm"
                 variant="outline"
                 onClick={() => {
@@ -215,27 +216,27 @@ export function EditableTimeCell({
                 className="w-full text-xs"
               >
                 {t('trade-table.editableTimeCell.editTimeManually')}
-              </ButtonV2>
+              </Button>
             </div>
           </div>
 
           <div className="flex gap-2 pt-2 border-t">
-            <ButtonV2 
+            <Button 
               size="sm"
               onClick={handleSave}
               disabled={hourOffset === 0 || isSaving}
               className="flex-1"
             >
               {isSaving ? t('trade-table.editableTimeCell.saving') : t('trade-table.editableTimeCell.applyChanges')}
-            </ButtonV2>
-            <ButtonV2 
+            </Button>
+            <Button 
               size="sm"
               variant="outline"
               onClick={() => setIsPopoverOpen(false)}
               className="flex-1"
             >
               {t('trade-table.editableTimeCell.cancel')}
-            </ButtonV2>
+            </Button>
           </div>
         </div>
       </PopoverContent>

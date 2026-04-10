@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { ButtonV2 } from "@/components/ui/v2";
-import { InputV2 } from "@/components/ui/v2";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CardV2 } from "@/components/ui/v2";
+import { Card } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -637,7 +637,7 @@ export default function AtasProcessor({
                       {t("import.account.pickAccountsDescription")}
                     </p>
                   </div>
-                  <ButtonV2 
+                  <Button 
                     variant="outline"
                     size="sm"
                     onClick={() => {
@@ -659,7 +659,7 @@ export default function AtasProcessor({
                       )
                       ? t("shared.deselectAll")
                       : t("shared.selectAll")}
-                  </ButtonV2>
+                  </Button>
                 </div>
               </div>
 
@@ -670,7 +670,7 @@ export default function AtasProcessor({
                   const isSelected = currentSelectedAccounts.includes(account);
 
                   return (
-                    <CardV2
+                    <Card
                       key={account}
                       className={cn(
                         "p-6 cursor-pointer hover:border-border/60 transition-colors relative group",
@@ -703,7 +703,7 @@ export default function AtasProcessor({
                           <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                         )}
                       </div>
-                    </CardV2>
+                    </Card>
                   );
                 })}
               </div>
@@ -740,7 +740,7 @@ export default function AtasProcessor({
                       >
                         {accountNumber} - {instrument} - {t("import.commission.perContract")}
                       </label>
-                      <InputV2
+                      <Input
                         id={`commission-${pair}`}
                         type="number"
                         step="0.01"
@@ -754,9 +754,9 @@ export default function AtasProcessor({
                   );
                 })}
               </div>
-              <ButtonV2  onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
+              <Button  onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
                 {t("import.commission.apply")}
-              </ButtonV2>
+              </Button>
             </div>
           )}
 

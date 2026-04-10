@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { BlogCategory } from '@/prisma/generated/prisma'
 import { BlogCard } from './blog-card'
-import { InputV2 } from '@/components/ui/v2'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 type BlogPost = {
   id: string
   title: string
@@ -45,7 +45,7 @@ export function BlogList({ initialPosts }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <InputV2
+        <Input
           placeholder="Search blog posts..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -55,7 +55,7 @@ export function BlogList({ initialPosts }: Props) {
 
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
-          <ButtonV2
+          <Button
             key={category.value}
             variant={selectedCategory === category.value ? 'default' : 'outline'}
             size="sm"
@@ -63,7 +63,7 @@ export function BlogList({ initialPosts }: Props) {
             className="rounded-xl"
           >
             {category.label}
-          </ButtonV2>
+          </Button>
         ))}
       </div>
 

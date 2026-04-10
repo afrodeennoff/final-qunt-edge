@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { InputV2 } from '@/components/ui/v2'
-import { ButtonV2 } from '@/components/ui/v2'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { resetPasswordForEmail } from '@/server/auth-password'
 import Link from 'next/link'
 
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <InputV2
+        <Input
           type="email"
           placeholder="Email address"
           value={email}
@@ -63,9 +63,9 @@ export default function ForgotPasswordPage() {
           data-testid="forgot-password-email"
           disabled={isLoading}
         />
-        <ButtonV2 type="submit" disabled={isLoading || !email.trim()}>
+        <Button type="submit" disabled={isLoading || !email.trim()}>
           {isLoading ? 'Sending...' : 'Send reset link'}
-        </ButtonV2>
+        </Button>
       </form>
 
       <Link

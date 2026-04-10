@@ -2,7 +2,7 @@ import { getPost } from "@/lib/mdx";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getAllPosts, getAdjacentPosts } from "@/lib/mdx";
-import { BadgeV2 } from "@/components/ui/v2";
+import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { format } from "date-fns";
 import Script from "next/script";
@@ -197,7 +197,7 @@ export default async function Page({ params }: PageProps) {
             <time dateTime={meta.date} itemProp="datePublished">
               {formattedDate}
             </time>
-            <BadgeV2
+            <Badge
               variant={
                 meta.status === "in-progress"
                   ? "secondary"
@@ -211,7 +211,7 @@ export default async function Page({ params }: PageProps) {
                 : meta.status === "completed"
                   ? "Completed"
                   : "Upcoming"}
-            </BadgeV2>
+            </Badge>
           </div>
         </div>
 

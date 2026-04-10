@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle2, Info, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Progress } from "@/components/ui/progress"
-import { ButtonV2 } from "@/components/ui/v2"
+import { Button } from "@/components/ui/button"
 import { useNotificationStore } from '@/store/notification'
 import { useI18n } from '@/locales/client'
 
@@ -278,7 +278,7 @@ export function RithmicSyncNotifications() {
                 <div className="flex items-center justify-between">
                   <AlertTitle>{t('notification.title')}</AlertTitle>
                   <div className="flex items-center gap-1">
-                    <ButtonV2 
+                    <Button 
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
@@ -286,7 +286,7 @@ export function RithmicSyncNotifications() {
                       title={t('notification.collapse')}
                     >
                       <ChevronDown className="h-4 w-4" />
-                    </ButtonV2>
+                    </Button>
                   </div>
                 </div>
                 <AlertDescription>
