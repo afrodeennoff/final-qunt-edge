@@ -1,7 +1,7 @@
 "use client";
 
 import type { ImportTradeDraft } from "@/lib/trade-types";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import {
   Table,
   TableBody,
@@ -494,28 +494,36 @@ export function FormatPreview({
 
     if (uniqueTrades.length === 0) return;
 
-    const mergedTrades = [...processedTradesRef.current, ...uniqueTrades];
-    processedTradesRef.current = mergedTrades;
-    setProcessedTrades(mergedTrades);
+    // Batch state updates to avoid re-render cascades from streaming
+    startTransition(() => {
+      const mergedTrades = [...processedTradesRef.current, ...uniqueTrades];
+      processedTradesRef.current = mergedTrades;
+      setProcessedTrades(mergedTrades);
+    });
     scheduleManagedTimeout(() => {
       scrollToBottom();
     }, 100);
   }, [getTradeSignature, scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
 
   // Handle streaming results from first useObject
+  const prevObject1Ref = useRef<object | null>(null);
   useEffect(() => {
-    if (object1) {
-      const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-      appendUniqueTrades(newTrades);
-    }
+    if (!object1) return;
+    // Skip if the object reference hasn't meaningfully changed (shallow compare)
+    if (prevObject1Ref.current === object1) return;
+    prevObject1Ref.current = object1;
+    const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
+    appendUniqueTrades(newTrades);
   }, [object1, appendUniqueTrades])
 
   // Handle streaming results from second useObject
+  const prevObject2Ref = useRef<object | null>(null);
   useEffect(() => {
-    if (object2) {
-      const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-      appendUniqueTrades(newTrades);
-    }
+    if (!object2) return;
+    if (prevObject2Ref.current === object2) return;
+    prevObject2Ref.current = object2;
+    const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
+    appendUniqueTrades(newTrades);
   }, [object2, appendUniqueTrades])
 
   const columns = useMemo<ColumnDef<Partial<ImportTradeDraft>>[]>(() => [

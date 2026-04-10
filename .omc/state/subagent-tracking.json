@@ -599,10 +599,26 @@
       "started_at": "2026-04-10T13:56:24.132Z",
       "parent_mode": "none",
       "status": "running"
+    },
+    {
+      "agent_id": "afd5aba",
+      "agent_type": "Explore",
+      "started_at": "2026-04-10T15:10:25.338Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-10T15:10:25.923Z",
+      "duration_ms": 585
+    },
+    {
+      "agent_id": "afe2993",
+      "agent_type": "oh-my-claudecode:tracer",
+      "started_at": "2026-04-10T15:19:12.798Z",
+      "parent_mode": "none",
+      "status": "running"
     }
   ],
-  "total_spawned": 41,
-  "total_completed": 60,
+  "total_spawned": 43,
+  "total_completed": 61,
   "total_failed": 0,
-  "last_updated": "2026-04-10T13:56:24.235Z"
+  "last_updated": "2026-04-10T15:19:12.901Z"
 }

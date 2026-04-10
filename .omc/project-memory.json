@@ -482,8 +482,14 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 70,
-      "lastAccessed": 1775830441270,
+      "accessCount": 82,
+      "lastAccessed": 1775834475276,
+      "type": "directory"
+    },
+    {
+      "path": "components/ui/sidebar.tsx",
+      "accessCount": 12,
+      "lastAccessed": 1775834690018,
       "type": "directory"
     },
     {
@@ -559,12 +565,6 @@
       "type": "directory"
     },
     {
-      "path": "components/ui/sidebar.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1775830458627,
-      "type": "directory"
-    },
-    {
       "path": "components",
       "accessCount": 2,
       "lastAccessed": 1775759070826,
@@ -604,6 +604,18 @@
       "path": "app/[locale]/dashboard/components/import/rithmic/rithmic-order-processor-new.tsx",
       "accessCount": 2,
       "lastAccessed": 1775826460127,
+      "type": "directory"
+    },
+    {
+      "path": "components/ui/sidebar-layout-shell.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1775834454498,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/globals.css",
+      "accessCount": 2,
+      "lastAccessed": 1775834623852,
       "type": "directory"
     },
     {
@@ -709,12 +721,6 @@
       "type": "directory"
     },
     {
-      "path": "components/ui/sidebar-layout-shell.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775825086408,
-      "type": "directory"
-    },
-    {
       "path": "lib/analytics/metrics-v1.ts",
       "accessCount": 1,
       "lastAccessed": 1775825205415,
@@ -742,6 +748,36 @@
       "path": "app/api/cron/route.ts",
       "accessCount": 1,
       "lastAccessed": 1775826616474,
+      "type": "directory"
+    },
+    {
+      "path": "components/providers/dashboard-providers.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775834454806,
+      "type": "directory"
+    },
+    {
+      "path": "postcss.config.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1775834455852,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/dashboard/layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775834455923,
+      "type": "directory"
+    },
+    {
+      "path": "app/globals.css",
+      "accessCount": 1,
+      "lastAccessed": 1775834455990,
+      "type": "directory"
+    },
+    {
+      "path": "components/sidebar/dashboard-sidebar.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775834456113,
       "type": "directory"
     }
   ],

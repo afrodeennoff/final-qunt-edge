@@ -35,11 +35,11 @@ function matchesTabHref(
 
 function matchesDefaultDashboard(
   normalizedPathname: string,
-  searchParams: ReturnType<typeof useSearchParams>
+  _searchParams: ReturnType<typeof useSearchParams>
 ): boolean {
   if (normalizedPathname !== '/dashboard') return false
-  const activeTab = searchParams.get('tab')
-  return !activeTab || activeTab === 'widgets'
+  // /dashboard (no tab in href) matches the dashboard route regardless of active tab
+  return true
 }
 
 function matchesExactOrNested(normalizedPathname: string, normalizedHrefPath: string): boolean {

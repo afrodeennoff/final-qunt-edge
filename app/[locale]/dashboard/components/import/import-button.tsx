@@ -195,14 +195,18 @@ export default function ImportButton() {
           numberOfTradesAdded: result.numberOfTradesAdded,
         }),
       });
-      await Promise.all([
+
+      // Close dialog and reset state immediately so the UI doesn't freeze
+      setIsOpen(false);
+      resetImportState();
+
+      // Refresh data in the background — do not await to avoid blocking the dialog close
+      Promise.all([
         refreshTradesOnly({ force: true }),
         refreshUserDataOnly({ force: true }),
-      ]);
-
-      setIsOpen(false);
-      // Reset the import process
-      resetImportState();
+      ]).catch((refreshError) => {
+        logger.error({ error: refreshError }, "Background data refresh failed after import");
+      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : t("import.error.failedDescription");
