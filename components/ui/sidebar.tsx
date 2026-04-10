@@ -146,6 +146,7 @@ function Sidebar({
   collapsible = "offcanvas",
   className,
   children,
+  dir,
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
@@ -176,6 +177,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
+          dir={dir}
           className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           style={{ "--sidebar-width": SIDEBAR_WIDTH_MOBILE } as React.CSSProperties}
           side={side}
@@ -190,7 +192,7 @@ function Sidebar({
     )
   }
 
-  return <SidebarDesktop side={side} variant={variant} collapsible={collapsible} state={state} className={className} data-variant={variant} {...props}>{children}</SidebarDesktop>
+  return <SidebarDesktop side={side} variant={variant} collapsible={collapsible} state={state} className={className} {...props}>{children}</SidebarDesktop>
 }
 
 function SidebarDesktop({
@@ -279,7 +281,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      <PanelLeftIcon className="rtl:rotate-180" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

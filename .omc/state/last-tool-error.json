@@ -1,7 +1,7 @@
 {
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls -la app/[locale]/dashboard/components/widget-canvas.tsx\",\"description\":\"Check if file exists\"}",
-  "error": "Exit code 1\n(eval):1: no matches found: app/[locale]/dashboard/components/widget-canvas.tsx",
-  "timestamp": "2026-04-10T12:51:40.982Z",
-  "retry_count": 2
+  "tool_name": "mcp__plugin_oh-my-claudecode_t__lsp_diagnostics",
+  "tool_input_preview": "{\"file\":\"/Users/timon/Downloads/qunt-edge/components/ui/unified-sidebar.tsx\",\"severity\":\"error\"}",
+  "error": "Language server 'typescript-language-server' not found.\nInstall with: npm install -g typescript-language-server typescript",
+  "timestamp": "2026-04-10T13:27:50.761Z",
+  "retry_count": 3
 }

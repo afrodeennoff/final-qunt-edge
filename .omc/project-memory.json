@@ -737,6 +737,12 @@
       "accessCount": 1,
       "lastAccessed": 1775826616474,
       "type": "directory"
+    },
+    {
+      "path": "components/ui/sidebar.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775827638123,
+      "type": "directory"
     }
   ],
   "userDirectives": []
