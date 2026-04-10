@@ -190,7 +190,7 @@ function Sidebar({
     )
   }
 
-  return <SidebarDesktop side={side} variant={variant} collapsible={collapsible} state={state} className={className} {...props}>{children}</SidebarDesktop>
+  return <SidebarDesktop side={side} variant={variant} collapsible={collapsible} state={state} className={className} data-variant={variant} {...props}>{children}</SidebarDesktop>
 }
 
 function SidebarDesktop({

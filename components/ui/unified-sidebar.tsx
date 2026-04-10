@@ -219,6 +219,7 @@ function SidebarContentRender({
 }) {
   return (
     <Sidebar
+      variant="inset"
       collapsible="icon"
       className={cn(
         'pointer-events-auto overflow-hidden bg-sidebar text-sidebar-foreground',

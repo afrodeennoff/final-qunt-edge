@@ -482,8 +482,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 58,
-      "lastAccessed": 1775763429611,
+      "accessCount": 61,
+      "lastAccessed": 1775825493220,
       "type": "directory"
     },
     {
@@ -494,8 +494,8 @@
     },
     {
       "path": "app",
-      "accessCount": 6,
-      "lastAccessed": 1775763290520,
+      "accessCount": 7,
+      "lastAccessed": 1775825155179,
       "type": "directory"
     },
     {
@@ -694,6 +694,18 @@
       "path": "tests/server/delete-ownership-regression.test.ts",
       "accessCount": 1,
       "lastAccessed": 1775763766141,
+      "type": "directory"
+    },
+    {
+      "path": "components/ui/sidebar-layout-shell.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1775825086408,
+      "type": "directory"
+    },
+    {
+      "path": "lib/analytics/metrics-v1.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775825205415,
       "type": "directory"
     }
   ],

@@ -160,7 +160,7 @@ export function calculateRiskMetricsV1(trades: RiskTradeLike[]): RiskMetricsV1 {
     sortinoRatio,
     calmarRatio,
     maxDrawdown: maxDrawdownNumber,
-    maxDrawdownPercent: 0,
+    maxDrawdownPercent,
     realizedPnl,
     unrealizedPnl,
     winningStreak,

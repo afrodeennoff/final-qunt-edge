@@ -81,16 +81,10 @@ export default async function DashboardLayout({
               backgroundVariant="accent"
               className="selection:bg-primary/20 selection:text-primary"
             >
-              <div className="relative z-0 flex h-svh min-h-0 flex-col pt-safe">
-                <main className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain pb-[calc(theme(spacing.16)+env(safe-area-inset-bottom))] md:pb-safe scroll-smooth">
-                  <div className="min-h-full">
-                    <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8 xl:px-12 py-6 sm:py-8">
-                      <ErrorBoundary>
-                        {children}
-                      </ErrorBoundary>
-                    </div>
-                  </div>
-                </main>
+              <div className="mx-auto flex min-h-full max-w-[1800px] flex-col pb-[calc(theme(spacing.16)+env(safe-area-inset-bottom))] md:pb-safe">
+                <ErrorBoundary>
+                  {children}
+                </ErrorBoundary>
               </div>
             </SidebarLayoutShell>
           </DashboardProvider>

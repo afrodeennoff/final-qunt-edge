@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"npx @anthropics/skills add vercel-labs/next-skills --skill next-best-practices\",\"description\":\"Install next-best-practices from skills registry\"}",
-  "error": "Exit code 1\n(node:14551) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.\n(Use `node --trace-warnings ...` to show where the warning was created)",
-  "timestamp": "2026-04-10T08:46:12.539Z",
-  "retry_count": 3
+  "tool_input_preview": "{\"command\":\"ls -la app/[locale]/dashboard/components/widget-canvas.tsx\",\"description\":\"Check if file exists\"}",
+  "error": "Exit code 1\n(eval):1: no matches found: app/[locale]/dashboard/components/widget-canvas.tsx",
+  "timestamp": "2026-04-10T12:51:40.982Z",
+  "retry_count": 2
 }

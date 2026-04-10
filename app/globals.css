@@ -1535,16 +1535,8 @@
     border-color: transparent !important;
   }
 
-  .home-borderless-shell :is(*, *::before, *::after) {
+  .home-borderless-shell :is(div, section, article, header, footer, nav, main, aside, span):not(button, input, select, textarea, [role="button"], [role="tab"], a, [contenteditable], [data-radix-popper-content-wrapper], [data-slot="dialog-content"], [data-slot="sheet-content"]) {
     border-color: transparent !important;
-    border-style: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    outline-color: transparent !important;
-    --tw-ring-color: transparent !important;
-    --tw-ring-offset-color: transparent !important;
-    --tw-ring-offset-shadow: 0 0 #0000 !important;
-    --tw-ring-shadow: 0 0 #0000 !important;
   }
 
   .marketing-grid {
