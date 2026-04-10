@@ -36,10 +36,10 @@ export function BottomNav({
               onClick={() => onNavigate?.(index)}
             >
               <item.icon
-                className={cn('size-5', isActive ? 'text-primary' : 'text-text-disabled')}
+                className={cn('size-5', isActive ? 'text-primary' : 'text-muted-foreground/60')}
               />
               <span
-                className={cn('text-[10px]', isActive ? 'text-primary' : 'text-text-disabled')}
+                className={cn('text-[10px]', isActive ? 'text-primary' : 'text-muted-foreground/60')}
               >
                 {item.name}
               </span>

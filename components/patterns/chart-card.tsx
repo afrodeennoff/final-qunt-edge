@@ -26,14 +26,14 @@ export function ChartCard({
 }: ChartCardProps) {
   return (
     <div
-      className={cn('rounded-2xl p-6 bg-card shadow-card', className)}
+      className={cn('rounded-2xl p-6 bg-card shadow-card border border-[hsl(var(--border)/0.18)]', className)}
       data-slot="chart-card"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-[18px] font-semibold text-text-primary">
+        <h3 className="text-[18px] font-semibold text-foreground">
           {title}
         </h3>
-        <div className="flex gap-1 bg-surface-muted p-1 rounded-full">
+        <div className="flex gap-1 bg-muted p-1 rounded-full">
           {periods.map((period) => (
             <button
               key={period}
@@ -41,8 +41,8 @@ export function ChartCard({
               className={cn(
                 'px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors',
                 activePeriod === period
-                  ? 'bg-primary text-white'
-                  : 'text-text-disabled hover:text-text-secondary'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               {period}
@@ -54,13 +54,13 @@ export function ChartCard({
       <div className="-mx-2">{children}</div>
 
       {stats && stats.length > 0 && (
-        <div className="border-t border-surface-muted pt-5 mt-6 grid grid-cols-3 gap-3">
+        <div className="border-t border-border pt-5 mt-6 grid grid-cols-3 gap-3">
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
-              <p className="text-[12px] text-text-tertiary mb-1">{stat.label}</p>
-              <p className="text-[16px] font-bold text-text-primary">
+              <p className="text-[12px] text-muted-foreground mb-1">{stat.label}</p>
+              <p className="text-[16px] font-bold text-foreground">
                 {stat.value}
-                {stat.unit && <span className="text-text-secondary text-[14px]">{stat.unit}</span>}
+                {stat.unit && <span className="text-muted-foreground text-[14px]">{stat.unit}</span>}
               </p>
             </div>
           ))}

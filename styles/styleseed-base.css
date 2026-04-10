@@ -66,3 +66,19 @@
     }
   }
 }
+
+@layer utilities {
+  .bg-surface-page { background-color: var(--surface-page); }
+  .bg-surface-card { background-color: var(--surface-card); }
+  .bg-surface-subtle { background-color: var(--surface-subtle); }
+  .bg-surface-muted { background-color: var(--surface-muted); }
+  .bg-brand-tint { background-color: var(--brand-tint); }
+  .text-text-strong { color: var(--text-strong); }
+  .text-text-primary { color: var(--text-primary); }
+  .text-text-secondary { color: var(--text-secondary); }
+  .text-text-tertiary { color: var(--text-tertiary); }
+  .text-text-disabled { color: var(--text-disabled); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-card-hover { box-shadow: var(--shadow-card-hover); }
+  .border-surface-muted { border-color: var(--surface-muted); }
+}

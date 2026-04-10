@@ -39,6 +39,35 @@ const BLUR_ENTRANCE: Variants = {
   }
 }
 
+export const blurIn: Variants = {
+  hidden: {
+    opacity: 0,
+    filter: "blur(10px)",
+    scale: 0.95,
+  },
+  visible: {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: MOTION_EASE.entrance as unknown as number[],
+    },
+  },
+}
+
+export const scaleIn: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: SPRING_GENTLE,
+  },
+}
+
 // ============================================================================
 // MotionSection - Section wrapper with scroll-triggered entrance animation
 // ============================================================================

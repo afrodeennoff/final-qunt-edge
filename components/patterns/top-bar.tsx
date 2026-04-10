@@ -22,7 +22,7 @@ export function TopBar({
       <div className="flex items-center gap-3">
         {logo}
         {subtitle && (
-          <span className="text-[14px] text-text-secondary">{subtitle}</span>
+          <span className="text-[14px] text-muted-foreground">{subtitle}</span>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}

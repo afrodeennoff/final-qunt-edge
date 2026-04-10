@@ -27,7 +27,7 @@ export function HeroCard({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-2xl p-8 bg-card shadow-card',
+        'relative overflow-hidden rounded-2xl p-8 bg-card shadow-card border border-[hsl(var(--border)/0.18)]',
         className
       )}
       data-slot="hero-card"
@@ -41,15 +41,15 @@ export function HeroCard({
         <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
           <Icon className="size-[18px] text-primary" strokeWidth={2} />
         </div>
-        <p className="text-[12px] text-text-secondary font-medium uppercase tracking-[0.05em] mb-1">
+        <p className="text-[12px] text-muted-foreground font-medium uppercase tracking-[0.05em] mb-1">
           {label}
         </p>
-        <div className="flex items-baseline">
-          <span className="text-[48px] font-bold leading-none text-text-primary">
+        <div className="flex items-baseline whitespace-nowrap">
+          <span className="text-[48px] font-bold leading-none text-foreground">
             {value}
           </span>
           {unit && (
-            <span className="text-[24px] ms-0.5 text-text-secondary">
+            <span className="text-[24px] ms-0.5 text-muted-foreground">
               {unit}
             </span>
           )}
@@ -62,7 +62,7 @@ export function HeroCard({
             )}
           >
             {trend.value}
-            {trend.label && <span className="text-text-tertiary ml-1">{trend.label}</span>}
+            {trend.label && <span className="text-muted-foreground ml-1">{trend.label}</span>}
           </p>
         )}
       </div>

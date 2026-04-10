@@ -31,15 +31,15 @@ export function StatCard({
         <Icon className="size-4 text-primary" strokeWidth={2} />
       </div>
       <div>
-        <p className="text-[12px] text-text-secondary font-medium uppercase tracking-[0.05em]">
+        <p className="text-[12px] text-muted-foreground font-medium uppercase tracking-[0.05em]">
           {label}
         </p>
-        <div className="flex items-baseline">
-          <span className="text-[36px] font-bold leading-none text-text-primary">
+        <div className="flex items-baseline whitespace-nowrap">
+          <span className="text-[36px] font-bold leading-none text-foreground">
             {value}
           </span>
           {unit && (
-            <span className="text-[18px] ms-0.5 text-text-secondary">
+            <span className="text-[18px] ms-0.5 text-muted-foreground">
               {unit}
             </span>
           )}
@@ -52,7 +52,7 @@ export function StatCard({
             )}
           >
             {trend.value}
-            {trend.label && <span className="text-text-tertiary ml-1">{trend.label}</span>}
+            {trend.label && <span className="text-muted-foreground ml-1">{trend.label}</span>}
           </p>
         )}
       </div>

@@ -22,14 +22,14 @@ export function EmptyState({
       className={cn('flex flex-col items-center text-center', className)}
       data-slot="empty-state"
     >
-      <div className="size-12 rounded-xl bg-surface-muted flex items-center justify-center mb-4">
-        <Icon className="size-4 text-text-tertiary" />
+      <div className="size-12 rounded-xl bg-muted flex items-center justify-center mb-4">
+        <Icon className="size-4 text-muted-foreground" />
       </div>
-      <p className="text-[14px] text-text-secondary font-semibold mb-2">
+      <p className="text-[14px] text-muted-foreground font-semibold mb-2">
         {title}
       </p>
       {description && (
-        <p className="text-[13px] text-text-tertiary mb-4">{description}</p>
+        <p className="text-[13px] text-muted-foreground mb-4">{description}</p>
       )}
       {action && <div>{action}</div>}
     </div>
