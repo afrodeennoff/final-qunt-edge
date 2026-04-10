@@ -110,6 +110,7 @@ import {
   normalizeAccountsForClient,
   normalizeGroupsForClient,
 } from "@/lib/data-types";
+import type { DashboardBootstrapPayload } from "@/lib/types/bootstrap";
 
 // Combined Context Type
 export interface DashboardDataState {
@@ -274,6 +275,7 @@ export const DataProvider: React.FC<{
     userId: string;
   };
   isAdmin?: boolean;
+  initialBootstrap?: DashboardBootstrapPayload | null;
 }> = ({
   children,
   isSharedView = false,
@@ -281,6 +283,7 @@ export const DataProvider: React.FC<{
   initialSharedData = null,
   adminView = null,
   isAdmin = false,
+  initialBootstrap = null,
 }) => {
   const supabase = useMemo(() => createClient(), []);
   const params = useParams();
@@ -324,6 +327,7 @@ export const DataProvider: React.FC<{
   const [isRevalidating, setIsRevalidating] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const bootstrappedSharedSlugRef = useRef<string | null>(null);
+  const appliedBootstrapRef = useRef(false);
   const dashboardLayoutRef = useRef(dashboardLayout);
   const activeUserIdRef = useRef<string | null>(null);
   const loadInProgressRef = useRef(false);
@@ -417,6 +421,70 @@ export const DataProvider: React.FC<{
       }))
       .filter((t) => isValid(new Date(t.entryDate)));
   }, []);
+
+  const bootstrapSnapshot = useMemo(() => {
+    if (!initialBootstrap || isSharedView || adminView) return null;
+
+    return {
+      user: initialBootstrap.user,
+      subscription: initialBootstrap.subscription,
+      accounts: normalizeAccountsForClient(initialBootstrap.accounts),
+      groups: normalizeGroupsForClient(initialBootstrap.groups),
+      tags: initialBootstrap.tags,
+      moods: initialBootstrap.moods,
+      events: initialBootstrap.financialEvents,
+      tickDetails: initialBootstrap.tickDetails,
+      trades: sanitizeTradesForState(normalizeTradesForClient(initialBootstrap.trades)),
+      dashboardLayout: initialBootstrap.dashboardLayout as DashboardLayoutWithWidgets | null,
+    };
+  }, [adminView, initialBootstrap, isSharedView, sanitizeTradesForState]);
+
+  useLayoutEffect(() => {
+    if (!bootstrapSnapshot || appliedBootstrapRef.current) return;
+
+    appliedBootstrapRef.current = true;
+    activeUserIdRef.current = bootstrapSnapshot.user?.id ?? null;
+
+    setUser(bootstrapSnapshot.user);
+    setSubscription(bootstrapSnapshot.subscription);
+    setTags(bootstrapSnapshot.tags);
+    setMoods(bootstrapSnapshot.moods);
+    setEvents(bootstrapSnapshot.events);
+    setTickDetails(bootstrapSnapshot.tickDetails);
+    setAccounts(bootstrapSnapshot.accounts);
+    setGroups(bootstrapSnapshot.groups);
+    setTrades(bootstrapSnapshot.trades);
+
+    if (bootstrapSnapshot.dashboardLayout) {
+      setDashboardLayout(bootstrapSnapshot.dashboardLayout);
+    } else if (bootstrapSnapshot.user?.id) {
+      setDashboardLayout({
+        id: bootstrapSnapshot.user.id,
+        userId: bootstrapSnapshot.user.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        desktop: defaultLayouts.desktop,
+        mobile: defaultLayouts.mobile,
+      });
+    }
+
+    setIsFirstConnection(bootstrapSnapshot.user?.isFirstConnection ?? false);
+    setIsLoading(false);
+    setRefreshError(null);
+  }, [
+    bootstrapSnapshot,
+    setAccounts,
+    setDashboardLayout,
+    setEvents,
+    setGroups,
+    setIsLoading,
+    setMoods,
+    setSubscription,
+    setTags,
+    setTickDetails,
+    setTrades,
+    setUser,
+  ]);
 
   const withTimeout = useCallback(
     async <T,>(promise: Promise<T>, ms: number, label: string): Promise<T> => {
@@ -515,7 +583,7 @@ export const DataProvider: React.FC<{
   );
 
   // Load data from the server
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (options?: { withLoading?: boolean }) => {
     logger.debug({ isSharedView }, "DataProvider: loadData triggered");
     // Prevent multiple simultaneous loads
     if (loadInProgressRef.current) {
@@ -524,10 +592,13 @@ export const DataProvider: React.FC<{
     }
     loadInProgressRef.current = true;
     let hasLocalSnapshot = false;
+    const withLoading = options?.withLoading ?? true;
 
     try {
       setRefreshError(null);
-      setIsLoading(true);
+      if (withLoading) {
+        setIsLoading(true);
+      }
 
       if (isSharedView) {
         if (initialSharedData) {
@@ -859,27 +930,6 @@ export const DataProvider: React.FC<{
     syncSharedDataState,
   ]);
 
-  // Load data on mount and when isSharedView changes
-  useEffect(() => {
-    let mounted = true;
-
-    const loadDataIfMounted = async () => {
-      if (!mounted) return;
-      if (isSharedView && initialSharedData) {
-        return;
-      }
-      await loadData();
-      if (isSharedView) return;
-      await loadSubscriptionData();
-    };
-
-    loadDataIfMounted();
-
-    return () => {
-      mounted = false;
-    };
-  }, [isSharedView, initialSharedData, loadData]);
-
   // Persist language changes without blocking UI
   useEffect(() => {
     const updateLanguage = async () => {
@@ -912,6 +962,31 @@ export const DataProvider: React.FC<{
       setSubscriptionLoading(false);
     }
   }, [withTimeout, setSubscriptionData, setSubscriptionError, setSubscriptionLoading]);
+
+  // Load data on mount and when isSharedView changes
+  useEffect(() => {
+    let mounted = true;
+
+    const loadDataIfMounted = async () => {
+      if (!mounted) return;
+      if (isSharedView && initialSharedData) {
+        return;
+      }
+      if (bootstrapSnapshot) {
+        await loadData({ withLoading: false });
+      } else {
+        await loadData();
+      }
+      if (isSharedView) return;
+      await loadSubscriptionData();
+    };
+
+    void loadDataIfMounted();
+
+    return () => {
+      mounted = false;
+    };
+  }, [bootstrapSnapshot, initialSharedData, isSharedView, loadData, loadSubscriptionData]);
 
   const refreshTradesOnly = useCallback(
     async (options?: { force?: boolean; withLoading?: boolean }) => {

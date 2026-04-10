@@ -26,7 +26,7 @@ describe('Feature Flags System', () => {
   })
 
   // Import module at describe level to share across tests
-  let featureFlagsModule: any
+  let featureFlagsModule: typeof import('@/lib/feature-flags')
 
   beforeAll(async () => {
     featureFlagsModule = await import('@/lib/feature-flags')
@@ -39,6 +39,7 @@ describe('Feature Flags System', () => {
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_LAZY_LOADING')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_QUERY_CACHING')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ROLLOUT_PERCENTAGE')
+      expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('DARK_ONLY_SURFACE_ENFORCEMENT')
       expect(featureFlagsModule.FEATURE_FLAGS).toHaveProperty('ENABLE_EMERGENCY_ROLLBACK')
     })
 
@@ -50,6 +51,7 @@ describe('Feature Flags System', () => {
       expect(typeof FEATURE_FLAGS.ENABLE_LAZY_LOADING).toBe('boolean')
       expect(typeof FEATURE_FLAGS.ENABLE_QUERY_CACHING).toBe('boolean')
       expect(typeof FEATURE_FLAGS.ROLLOUT_PERCENTAGE).toBe('number')
+      expect(typeof FEATURE_FLAGS.DARK_ONLY_SURFACE_ENFORCEMENT).toBe('boolean')
       expect(typeof FEATURE_FLAGS.ENABLE_EMERGENCY_ROLLBACK).toBe('boolean')
     })
   })
@@ -141,6 +143,14 @@ describe('Feature Flags System', () => {
     })
   })
 
+  describe('shouldEnforceDarkOnlySurfaces', () => {
+    it('defaults dark-only enforcement to enabled unless explicitly rolled back', () => {
+      const { shouldEnforceDarkOnlySurfaces } = featureFlagsModule
+
+      expect(shouldEnforceDarkOnlySurfaces()).toBe(true)
+    })
+  })
+
   describe('isFeatureEnabled', () => {
     it('should return boolean for valid feature flags', () => {
       const { isFeatureEnabled } = featureFlagsModule
@@ -153,7 +163,7 @@ describe('Feature Flags System', () => {
 
   describe('Integration tests', () => {
     it('should work end-to-end with realistic user IDs', () => {
-      const { shouldShowOptimizations, FEATURE_FLAGS, getRolloutStatus } = featureFlagsModule
+      const { shouldShowOptimizations, getRolloutStatus } = featureFlagsModule
 
       // Test with realistic user IDs
       const user1 = 'auth0|user123abc'

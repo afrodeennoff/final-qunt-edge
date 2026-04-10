@@ -18,6 +18,10 @@ function getFeatureFlags() {
     SERVER_DASHBOARD_BOOTSTRAP: process.env.NEXT_PUBLIC_SERVER_DASHBOARD_BOOTSTRAP === 'true',
     SERVER_DASHBOARD_ROLLOUT_PCT: Number(process.env.NEXT_PUBLIC_SERVER_DASHBOARD_BOOTSTRAP_PCT) || 0,
 
+    // Theme rollout
+    DARK_ONLY_SURFACE_ENFORCEMENT:
+      process.env.NEXT_PUBLIC_DARK_ONLY_SURFACE_ENFORCEMENT !== 'false',
+
     // Safety
     ENABLE_EMERGENCY_ROLLBACK: process.env.NEXT_PUBLIC_EMERGENCY_ROLLBACK === 'true',
   } as const
@@ -72,6 +76,13 @@ export function shouldUseServerBootstrap(userId?: string): boolean {
     return (hash % 100) < pct
   }
   return false
+}
+
+/***
+ * Dark-only surfaces are enabled by default and can be rolled back explicitly.
+ */
+export function shouldEnforceDarkOnlySurfaces(): boolean {
+  return FEATURE_FLAGS.DARK_ONLY_SURFACE_ENFORCEMENT
 }
 
 /***

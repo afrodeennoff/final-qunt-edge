@@ -2,7 +2,6 @@
 
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import ExcelJS from "exceljs";
 import { ImportType } from "../import-type-selection";
 import { Progress } from "@/components/ui/progress";
 import { XIcon, FileIcon, AlertCircle, ArrowUpCircle } from "lucide-react";
@@ -22,7 +21,6 @@ interface AtasFileUploadProps {
 }
 
 export default function AtasFileUpload({
-  importType,
   setRawCsvData,
   setCsvData,
   setHeaders,
@@ -54,6 +52,7 @@ export default function AtasFileUpload({
 
         reader.onload = async (e) => {
           try {
+            const { default: ExcelJS } = await import("exceljs");
             const workbook = new ExcelJS.Workbook();
             await workbook.xlsx.load(e.target?.result as ArrayBuffer);
 
@@ -70,9 +69,9 @@ export default function AtasFileUpload({
 
             // Convert sheet to JSON
             const jsonData: string[][] = [];
-            journalSheet.eachRow((row, rowNumber) => {
+            journalSheet.eachRow((row) => {
               const rowData: string[] = [];
-              row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+              row.eachCell({ includeEmpty: true }, (cell) => {
                 rowData.push(cell.value?.toString() || "");
               });
               jsonData.push(rowData);

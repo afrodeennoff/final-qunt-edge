@@ -12,6 +12,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
+import { shouldEnforceDarkOnlySurfaces } from "@/lib/feature-flags";
 import { getUiVariant } from "@/lib/ui-v2";
 import { getSiteOrigin } from "@/lib/site-url";
 
@@ -32,7 +33,7 @@ const fontSerif = Cormorant_Garamond({
   variable: "--font-serif",
   weight: ["400", "500", "600", "700"],
   display: "swap",
-  preload: true,
+  preload: false,
   fallback: ["Georgia", "serif"],
 });
 
@@ -50,7 +51,7 @@ const fontDmSans = DM_Sans({
   variable: "--font-dm-sans",
   weight: ["400", "500", "600", "700"],
   display: "swap",
-  preload: true,
+  preload: false,
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
@@ -59,7 +60,7 @@ const fontOutfit = Outfit({
   variable: "--font-outfit",
   weight: ["500", "600"],
   display: "swap",
-  preload: true,
+  preload: false,
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
@@ -68,7 +69,7 @@ const fontPoppins = Poppins({
   variable: "--font-poppins",
   weight: ["500"],
   display: "swap",
-  preload: true,
+  preload: false,
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
@@ -77,7 +78,7 @@ const fontRoboto = Roboto({
   variable: "--font-roboto",
   weight: ["400", "500", "600"],
   display: "swap",
-  preload: true,
+  preload: false,
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
@@ -189,11 +190,12 @@ export default async function RootLayout({
   const isVercelRuntime = process.env.VERCEL === "1";
   const enableVercelInsights = isProduction && isVercelRuntime;
   const uiVariant = getUiVariant();
+  const darkRootClass = shouldEnforceDarkOnlySurfaces() ? "dark" : "";
 
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} ${fontOutfit.variable} ${fontPoppins.variable} ${fontRoboto.variable} bg-background`} 
+      className={`${darkRootClass} ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDmSans.variable} ${fontOutfit.variable} ${fontPoppins.variable} ${fontRoboto.variable} bg-background`}
       data-ui-variant={uiVariant}
       translate="no"
       suppressHydrationWarning

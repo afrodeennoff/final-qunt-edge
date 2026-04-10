@@ -1,21 +1,6 @@
-'use client'
-
-import dynamic from 'next/dynamic'
 import { ShieldCheck, Sparkles, Users } from 'lucide-react'
+import PricingPlans from '@/components/pricing-plans'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
-
-const PricingPlans = dynamic(() => import('@/components/pricing-plans'), {
-  ssr: false,
-  loading: () => (
-    <div className="mx-auto w-full max-w-5xl rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-6 shadow-[0_28px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-8">
-      <div className="mb-6 h-6 w-56 animate-pulse rounded-full bg-muted/60" />
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="h-[420px] animate-pulse rounded-3xl bg-muted/60" />
-        <div className="h-[420px] animate-pulse rounded-3xl bg-muted/60" />
-      </div>
-    </div>
-  ),
-})
 
 export function PricingPageClient() {
   return (

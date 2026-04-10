@@ -71,7 +71,7 @@ function PlatformCardInner({
             size="sm"
             onClick={isInteractive ? handleSelect : undefined}
             className={cn(
-                "group relative flex h-full flex-col items-start gap-3 text-left transition-all duration-300",
+                "group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-2xl border-v2-border/70 bg-v2-bg-surface/75 text-left transition-all duration-300",
                 isSelected && "border-v2-accent shadow-lg shadow-v2-accent/20",
                 (platform.isDisabled || platform.isComingSoon) &&
                     "cursor-not-allowed opacity-60 grayscale-[0.5]"
@@ -111,13 +111,14 @@ function PlatformCardInner({
             </div>
 
             <CardHeader size="sm" className="p-0 gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-v2-border/50 bg-v2-bg-base/80 p-2 shadow-sm transition-transform group-hover:scale-110">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/50 bg-v2-bg-base/80 p-2 shadow-sm transition-transform group-hover:scale-105">
                     {platform.logo.path && (
                         <div className="relative h-full w-full">
                             <Image
                                 src={platform.logo.path}
                                 alt={platform.logo.alt || ""}
                                 fill
+                                sizes="48px"
                                 className="object-contain"
                             />
                         </div>
@@ -127,15 +128,15 @@ function PlatformCardInner({
             </CardHeader>
 
             <CardContent size="sm" className="p-0 flex flex-col gap-2 flex-1">
-                <CardTitle size="sm">
+                <CardTitle size="sm" className="min-h-[2.75rem] leading-snug">
                     {t(String(platform.name), { count: 1 })}
                 </CardTitle>
-                <p className="text-xs text-v2-text-secondary line-clamp-2 min-h-[2.5em]">
+                <p className="min-h-[3rem] text-xs text-v2-text-secondary line-clamp-2">
                     {t(String(platform.description), { count: 1 })}
                 </p>
             </CardContent>
 
-            <div className="flex flex-wrap gap-2 w-full mt-auto pt-2">
+            <div className="mt-auto flex min-h-[2rem] w-full flex-wrap items-start gap-2 pt-2">
                 <Badge
                     variant={categoryBadge.variant}
                     className={cn("text-[10px]", categoryBadge.className)}

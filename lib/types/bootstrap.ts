@@ -1,37 +1,30 @@
-import type { StatisticsProps } from '@/lib/data-types'
+import type {
+  FinancialEvent,
+  Mood,
+  Subscription as PrismaSubscription,
+  Tag,
+  TickDetails,
+  User as PrismaUser,
+} from '@/prisma/generated/prisma'
+import type { AccountInput, GroupInput, StatisticsProps } from '@/lib/data-types'
 import type { ScoreMetrics } from '@/lib/score-calculator'
 import type { SerializedTrade } from '@/lib/data-types'
 
 /*** DashboardBootstrapPayload — Server-to-client bootstrap contract */
 export interface DashboardBootstrapPayload {
-  // User (from Prisma User model)
-  user: {
-    id: string
-    email: string
-    language: string
-    dashboardTheme: string
-  } | null
+  user: PrismaUser | null
 
-  // Subscription (from Prisma Subscription model)
-  subscription: {
-    id: string
-    plan: string
-    status: string
-    endDate: Date | null
-    interval: string | null
-  } | null
+  subscription: PrismaSubscription | null
 
-  // Layout
   dashboardLayout: unknown | null
   timezone: string
   isAdmin: boolean
 
-  // Entities
-  accounts: unknown[]
-  groups: unknown[]
-  tags: unknown[]
+  accounts: AccountInput[]
+  groups: GroupInput[]
+  tags: Tag[]
+  moods: Mood[]
 
-  // Trades
   trades: SerializedTrade[]
   tradesPagination: {
     page: number
@@ -40,14 +33,11 @@ export interface DashboardBootstrapPayload {
     hasMore: boolean
   }
 
-  // Precomputed analytics
   statistics: StatisticsProps
   scoreMetrics: ScoreMetrics
 
-  // System data
-  tickDetails: Array<{ id: string; ticker: string }>
-  financialEvents: Array<{ id: string; title: string; date: Date; type: string; description: string | null }>
+  tickDetails: TickDetails[]
+  financialEvents: FinancialEvent[]
 
-  // Metadata
   bootstrappedAt: string
 }

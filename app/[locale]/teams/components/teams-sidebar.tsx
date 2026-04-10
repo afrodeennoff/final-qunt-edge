@@ -1,6 +1,6 @@
 "use client"
 
-import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe, ArrowLeft } from "lucide-react"
+import { LayoutDashboard, Users, BarChart3, TrendingUp, Globe } from "lucide-react"
 import { useUserStore } from "@/store/user-store"
 import { UnifiedSidebar, UnifiedSidebarItem } from "@/components/ui/unified-sidebar"
 import { usePathname } from "next/navigation"
@@ -80,7 +80,7 @@ export function TeamsSidebar() {
     },
     {
       href: `${localePrefix}/dashboard`,
-      icon: <ArrowLeft className={NAV_ICON_SIZE} />,
+      icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
       label: "Main Dashboard",
       group: "System"
     },

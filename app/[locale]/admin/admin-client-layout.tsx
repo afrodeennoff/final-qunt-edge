@@ -16,7 +16,7 @@ import {
   CONTENT_PADDING,
   CONTENT_PADDING_Y,
 } from '@/lib/constants/layout'
-import { Building2, Tags, BookOpen, Mail, BarChart } from 'lucide-react'
+import { Building2, Tags, BookOpen, Mail, BarChart, LayoutDashboard } from 'lucide-react'
 import type { MobileNavItem } from '@/components/mobile-bottom-nav'
 
 export function AdminClientLayout({
@@ -42,6 +42,7 @@ export function AdminClientLayout({
   }, [locale, router])
 
   const mobileItems: MobileNavItem[] = [
+    { href: `/${locale}/dashboard`, icon: LayoutDashboard, label: 'Dashboard' },
     { href: `/${locale}/admin/propfirms`, icon: Building2, label: 'Firms' },
     { href: `/${locale}/admin/blogs`, icon: BookOpen, label: 'Blog' },
     { href: `/${locale}/admin/coupons`, icon: Tags, label: 'Coupons' },

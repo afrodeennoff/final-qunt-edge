@@ -4,18 +4,20 @@
  * The 'use cache' directive enables SSR caching.
  */
 import { cacheLife } from 'next/cache'
-import { getUserId, getDatabaseUserId } from '@/server/auth'
+import { getDatabaseUserId } from '@/server/auth'
 import { getUserData } from '@/server/user-data'
 import { getDashboardLayout } from '@/server/user-data'
 import { getTradesAction } from '@/server/database'
 import { deriveScoreMetricsFromTrades } from '@/lib/score-calculator'
+import { normalizeAccountsForClient, normalizeTradesForClient, type GroupInput } from '@/lib/data-types'
+import { calculateStatistics } from '@/lib/utils'
 import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'
 
 const PAGE_SIZE = 500
 
 /*** Get the dashboard bootstrap payload for SSR */
 export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload> {
-  'use cache'
+  'use cache: private'
   cacheLife({ stale: 60, revalidate: 60, expire: 300 })
 
   const userId = await getDatabaseUserId()
@@ -30,7 +32,17 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
     getDashboardLayout(userId),
   ])
 
-  const { userData: user, subscription, tickDetails, tags, accounts, groups, financialEvents } = userData
+  const {
+    userData: user,
+    subscription,
+    tickDetails,
+    tags,
+    accounts,
+    groups,
+    financialEvents,
+    moodHistory,
+  } = userData
+  const normalizedGroups = groups as GroupInput[]
 
   // Load first page of trades
   const tradesResult = await getTradesAction(
@@ -41,32 +53,21 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
     false,
   )
 
-  // Compute score metrics on serialized trades (ScoreTradeLike compatible)
+  const normalizedTrades = normalizeTradesForClient(tradesResult.trades)
+  const normalizedAccounts = normalizeAccountsForClient(accounts)
   const scoreMetrics = deriveScoreMetricsFromTrades(tradesResult.trades)
-
-  // Precomputed statistics skipped for now — requires normalized Trade[] with Date fields.
-  // Client will compute full statistics from the serialized trade data.
+  const statistics = calculateStatistics(normalizedTrades, normalizedAccounts)
 
   return {
-    user: user ? {
-      id: user.id,
-      email: user.email,
-      language: user.language,
-      dashboardTheme: user.dashboardTheme,
-    } : null,
-    subscription: subscription ? {
-      id: subscription.id,
-      plan: subscription.plan,
-      status: subscription.status,
-      endDate: subscription.endDate ?? null,
-      interval: subscription.interval ?? null,
-    } : null,
+    user,
+    subscription,
     dashboardLayout: layout,
-    timezone: user?.language ?? 'en',
+    timezone: 'UTC',
     isAdmin: false,
     accounts,
-    groups,
+    groups: normalizedGroups,
     tags,
+    moods: moodHistory,
     trades: tradesResult.trades,
     tradesPagination: {
       page: 1,
@@ -74,35 +75,10 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
       totalCount: tradesResult.metadata.total,
       hasMore: tradesResult.metadata.hasMore,
     },
-    statistics: {
-      cumulativeFees: 0,
-      cumulativePnl: 0,
-      winningStreak: 0,
-      winRate: 0,
-      nbTrades: 0,
-      nbBe: 0,
-      nbWin: 0,
-      nbLoss: 0,
-      totalPositionTime: 0,
-      averagePositionTime: '0s',
-      profitFactor: 1,
-      grossLosses: 0,
-      grossWin: 0,
-      totalPayouts: 0,
-      nbPayouts: 0,
-    },
+    statistics,
     scoreMetrics,
-    tickDetails: tickDetails.map(t => ({
-      id: t.id,
-      ticker: t.ticker,
-    })),
-    financialEvents: financialEvents.map(e => ({
-      id: e.id,
-      title: e.title,
-      date: e.date,
-      type: e.type,
-      description: e.description ?? null,
-    })),
+    tickDetails,
+    financialEvents,
     bootstrappedAt: new Date().toISOString(),
   }
 }
@@ -112,11 +88,12 @@ function createEmptyBootstrap(): DashboardBootstrapPayload {
     user: null,
     subscription: null,
     dashboardLayout: null,
-    timezone: 'en',
+    timezone: 'UTC',
     isAdmin: false,
     accounts: [],
     groups: [],
     tags: [],
+    moods: [],
     trades: [],
     tradesPagination: {
       page: 1,

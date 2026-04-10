@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Building2, Shield, Tags, BookOpen, Mail, BarChart, UserPlus, Send, ArrowLeft } from 'lucide-react'
+import { Building2, Shield, Tags, BookOpen, Mail, BarChart, UserPlus, Send, LayoutDashboard } from 'lucide-react'
 import { useUserStore } from '@/store/user-store'
 import { UnifiedSidebar, UnifiedSidebarItem } from '@/components/ui/unified-sidebar'
 import { useCurrentLocale } from '@/locales/client'
@@ -65,7 +65,7 @@ export function SidebarNav() {
     {
       href: `/${locale}/dashboard`,
       label: 'Main Dashboard',
-      icon: <ArrowLeft className={NAV_ICON_SIZE} />,
+      icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
       group: 'System',
     },
   ], [locale])

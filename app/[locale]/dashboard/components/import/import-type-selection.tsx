@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter, GitCompare, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -45,6 +45,12 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const t = useTypedI18n()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
+  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase()
+  const platformsByType = useMemo(
+    () => new Map(platforms.map((platform) => [platform.type, platform])),
+    []
+  )
   // useI18n() returns (key: string) => string directly — no cast needed
 
   const handlePlatformCheck = (platformType: string, checked: boolean) => {
@@ -65,22 +71,22 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   // Set default selection from store preference
   useEffect(() => {
     if (lastSelectedType && !selectedType) {
-      const preferredPlatform = platforms.find((platform) => platform.type === lastSelectedType)
+      const preferredPlatform = platformsByType.get(lastSelectedType)
       if (preferredPlatform && !preferredPlatform.isDisabled && !preferredPlatform.isComingSoon) {
         setSelectedType(lastSelectedType)
       }
     }
-  }, [setSelectedType, lastSelectedType, selectedType])
+  }, [lastSelectedType, platformsByType, selectedType, setSelectedType])
 
   useEffect(() => {
     if (!selectedType) return
-    const selectedPlatform = platforms.find((platform) => platform.type === selectedType)
+    const selectedPlatform = platformsByType.get(selectedType)
     if (selectedPlatform?.isDisabled || selectedPlatform?.isComingSoon) {
       setSelectedType('')
     }
-  }, [selectedType, setSelectedType])
+  }, [platformsByType, selectedType, setSelectedType])
 
-  const getTranslatedCategory = (category: PlatformConfig['category']) => {
+  const getTranslatedCategory = useCallback((category: PlatformConfig['category']) => {
     switch (category) {
       case 'Direct Account Sync':
         return t('import.type.category.directSync')
@@ -93,23 +99,28 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
       default:
         return category
     }
-  }
+  }, [t])
 
-  const filteredPlatforms = platforms.filter(platform => {
-    const matchesSearch =
-      String(t(platform.name, { count: 1 })).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      String(t(platform.description, { count: 1 })).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      String(getTranslatedCategory(platform.category)).toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPlatforms = useMemo(() => {
+    return platforms.filter((platform) => {
+      const matchesSearch =
+        normalizedSearchQuery.length === 0 ||
+        String(t(platform.name, { count: 1 })).toLowerCase().includes(normalizedSearchQuery) ||
+        String(t(platform.description, { count: 1 })).toLowerCase().includes(normalizedSearchQuery) ||
+        String(getTranslatedCategory(platform.category)).toLowerCase().includes(normalizedSearchQuery)
 
-    const matchesCategory = activeCategory === "all" || platform.category === activeCategory
+      const matchesCategory = activeCategory === "all" || platform.category === activeCategory
 
-    return matchesSearch && matchesCategory;
-  })
+      return matchesSearch && matchesCategory
+    })
+  }, [activeCategory, getTranslatedCategory, normalizedSearchQuery, t])
 
-  // Get unique categories for tabs
-  const allCategories = Array.from(new Set(platforms.map(p => p.category)));
+  const allCategories = useMemo(
+    () => Array.from(new Set(platforms.map((platform) => platform.category))),
+    []
+  )
 
-  const selectedPlatform = platforms.find(p => p.type === selectedType)
+  const selectedPlatform = selectedType ? platformsByType.get(selectedType) : undefined
   const showDesktopDetailPanel =
     (isCompareMode && selectedPlatforms.length >= 2) || (!!selectedType && !!selectedPlatform)
 
@@ -178,7 +189,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
           {/* Grid Content */}
           <ScrollArea className="flex-1 p-4 md:p-6">
-            <div className="grid gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+            <div className="grid auto-rows-fr gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
               {filteredPlatforms.length > 0 ? (
                 filteredPlatforms.map((platform) => (
                   <div key={platform.type} className="h-full">
@@ -259,7 +270,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
               <div className="h-full overflow-y-auto p-4">
                 <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(selectedPlatforms.length, 4)}, 1fr)` }}>
                   {selectedPlatforms.slice(0, 4).map(platformType => {
-                    const platform = platforms.find(p => p.type === platformType)
+                    const platform = platformsByType.get(platformType)
                     if (!platform) return null
                     return (
                       <div key={platform.type} className="flex flex-col">
@@ -272,6 +283,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                                     src={platform.logo.path}
                                     alt={platform.logo.alt || ""}
                                     fill
+                                    sizes="40px"
                                     className="object-contain"
                                   />
                                 </div>
