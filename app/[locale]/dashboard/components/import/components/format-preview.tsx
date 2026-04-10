@@ -120,6 +120,7 @@ export function FormatPreview({
 
   // Use refs to avoid infinite loops in useEffect
   const processedTradesRef = useRef<Partial<ImportTradeDraft>[]>(processedTrades);
+  const processedTradeSignaturesRef = useRef<Set<string>>(new Set());
   const completedBatchesRef = useRef<Set<number>>(completedBatches);
   const batchSet1Ref = useRef<number[]>(batchSet1);
   const batchSet2Ref = useRef<number[]>(batchSet2);
@@ -132,10 +133,27 @@ export function FormatPreview({
   const scheduledTimeoutsRef = useRef<Set<number>>(new Set());
   const pendingRetriesRef = useRef<Set<number>>(new Set());
   
+  const getTradeSignature = useCallback((trade: Partial<ImportTradeDraft>) => {
+    return [
+      trade.entryDate ?? '',
+      trade.instrument ?? '',
+      trade.quantity ?? '',
+      trade.side ?? '',
+      trade.entryPrice ?? '',
+      trade.closePrice ?? '',
+      trade.pnl ?? '',
+      trade.commission ?? '',
+      trade.timeInPosition ?? '',
+    ].join('|');
+  }, []);
+
   // Update refs when state changes
   useEffect(() => {
     processedTradesRef.current = processedTrades;
-  }, [processedTrades]);
+    processedTradeSignaturesRef.current = new Set(
+      processedTrades.map((trade) => getTradeSignature(trade))
+    );
+  }, [getTradeSignature, processedTrades]);
   
   useEffect(() => {
     completedBatchesRef.current = completedBatches;
@@ -432,6 +450,7 @@ export function FormatPreview({
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
     processedTradesRef.current = [];
+    processedTradeSignaturesRef.current.clear();
     retryCountSet1Ref.current.clear();
     retryCountSet2Ref.current.clear();
     setIsLoading(false);
@@ -461,19 +480,17 @@ export function FormatPreview({
 
 
   const appendUniqueTrades = useCallback((incomingTrades: Partial<ImportTradeDraft>[]) => {
-    const uniqueTrades = incomingTrades.filter(newTrade =>
-      !processedTradesRef.current.some(existingTrade =>
-        existingTrade.entryDate === newTrade.entryDate &&
-        existingTrade.instrument === newTrade.instrument &&
-        existingTrade.quantity === newTrade.quantity &&
-        existingTrade.side === newTrade.side &&
-        existingTrade.entryPrice === newTrade.entryPrice &&
-        existingTrade.closePrice === newTrade.closePrice &&
-        existingTrade.pnl === newTrade.pnl &&
-        existingTrade.commission === newTrade.commission &&
-        existingTrade.timeInPosition === newTrade.timeInPosition
-      )
-    );
+    const uniqueTrades: Partial<ImportTradeDraft>[] = [];
+
+    incomingTrades.forEach((newTrade) => {
+      const signature = getTradeSignature(newTrade);
+      if (processedTradeSignaturesRef.current.has(signature)) {
+        return;
+      }
+
+      processedTradeSignaturesRef.current.add(signature);
+      uniqueTrades.push(newTrade);
+    });
 
     if (uniqueTrades.length === 0) return;
 
@@ -483,7 +500,7 @@ export function FormatPreview({
     scheduleManagedTimeout(() => {
       scrollToBottom();
     }, 100);
-  }, [scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
+  }, [getTradeSignature, scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
 
   // Handle streaming results from first useObject
   useEffect(() => {

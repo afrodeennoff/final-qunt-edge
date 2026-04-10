@@ -22,6 +22,53 @@ interface FileUploadProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024
+const ALLOWED_TYPES = [
+  'text/csv',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+]
+const ALLOWED_EXTENSIONS = ['.csv', '.xls', '.xlsx']
+const VALIDATION_PREVIEW_BYTES = 256 * 1024
+const MALICIOUS_FILE_NAME_PATTERNS = [
+  /<script/i,
+  /javascript:/i,
+  /vbscript:/i,
+  /onload=/i,
+  /onerror=/i,
+  /alert\(/i,
+  /eval\(/i
+]
+const MALICIOUS_CONTENT_PATTERNS = [
+  /<script[^>]*>.*?<\/script>/i,
+  /javascript:/i,
+  /vbscript:/i,
+  /data:\s*text\/html/i,
+  /<iframe/i,
+  /<object/i,
+  /<embed/i,
+  /<applet/i,
+  /<meta/i,
+  /<base/i,
+  /<form/i,
+  /<input/i,
+  /<button/i,
+  /onclick=/i,
+  /onload=/i,
+  /onerror=/i,
+  /alert\(/i,
+  /confirm\(/i,
+  /prompt\(/i,
+  /eval\(/i,
+  /exec\(/i,
+  /setTimeout/i,
+  /setInterval/i,
+  /document\./i,
+  /window\./i,
+  /\.cookie/i,
+  /\.location/i
+]
+
 export default function FileUpload({
   importType,
   setRawCsvData,
@@ -42,17 +89,8 @@ export default function FileUpload({
     uploadedFilesRef.current = uploadedFiles
   }, [uploadedFiles])
 
-  // Security: File size and type validation
-  const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
-  const ALLOWED_TYPES = [
-    'text/csv',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  ]
-  const ALLOWED_EXTENSIONS = ['.csv', '.xls', '.xlsx']
-
   // Security: Enhanced file validation function
-  const validateFile = (file: File): { valid: boolean; error?: string } => {
+  const validateFile = useCallback((file: File): { valid: boolean; error?: string } => {
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
       return {
@@ -79,17 +117,7 @@ export default function FileUpload({
     }
 
     // Check for potentially malicious file names
-    const maliciousPatterns = [
-      /<script/i,
-      /javascript:/i,
-      /vbscript:/i,
-      /onload=/i,
-      /onerror=/i,
-      /alert\(/i,
-      /eval\(/i
-    ]
-    
-    for (const pattern of maliciousPatterns) {
+    for (const pattern of MALICIOUS_FILE_NAME_PATTERNS) {
       if (pattern.test(file.name)) {
         return {
           valid: false,
@@ -99,7 +127,7 @@ export default function FileUpload({
     }
 
     return { valid: true }
-  }
+  }, [])
 
   const processFile = useCallback((file: File, index: number) => {
     return new Promise<void>((resolve, reject) => {
@@ -110,113 +138,79 @@ export default function FileUpload({
         return
       }
 
-       // Security: Read file content for validation
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result?.toString() || '';
-        const firstLine = content.split('\n')[0] || '';
-        const delimiter = firstLine.includes(';') ? ';' : ',';
+      file
+        .slice(0, VALIDATION_PREVIEW_BYTES)
+        .text()
+        .then((previewContent) => {
+          const firstLine = previewContent.split(/\r?\n/)[0] || ''
+          const delimiter = firstLine.includes(';') ? ';' : ','
 
-        // Security: Check for potentially malicious content in file
-        const maliciousContentPatterns = [
-          /<script[^>]*>.*?<\/script>/i,
-          /javascript:/i,
-          /vbscript:/i,
-          /data:\s*text\/html/i,
-          /<iframe/i,
-          /<object/i,
-          /<embed/i,
-          /<applet/i,
-          /<meta/i,
-          /<base/i,
-          /<form/i,
-          /<input/i,
-          /<button/i,
-          /onclick=/i,
-          /onload=/i,
-          /onerror=/i,
-          /alert\(/i,
-          /confirm\(/i,
-          /prompt\(/i,
-          /eval\(/i,
-          /exec\(/i,
-          /setTimeout/i,
-          /setInterval/i,
-          /document\./i,
-          /window\./i,
-          /\.cookie/i,
-          /\.location/i
-        ];
+          for (const pattern of MALICIOUS_CONTENT_PATTERNS) {
+            if (pattern.test(previewContent)) {
+              reject(new Error('File contains potentially malicious content and cannot be processed.'))
+              return
+            }
+          }
 
-        for (const pattern of maliciousContentPatterns) {
-          if (pattern.test(content)) {
-            reject(new Error('File contains potentially malicious content and cannot be processed.'))
+          const lines = previewContent.split(/\r?\n/).filter(line => line.trim())
+          if (lines.length === 0) {
+            reject(new Error('File is empty or contains no valid data.'))
             return
           }
-        }
 
-        // Security: Validate CSV structure
-        const lines = content.split('\n').filter(line => line.trim())
-        if (lines.length === 0) {
-          reject(new Error('File is empty or contains no valid data.'))
-          return
-        }
-
-        // Check if first line contains headers (basic validation)
-        const headers = lines[0].split(delimiter)
-        if (headers.length < 2) {
-          reject(new Error('File does not appear to be a valid CSV format.'))
-          return
-        }
-
-        Papa.parse(file, {
-          delimiter,
-          skipEmptyLines: true,
-          complete: (result) => {
-            // Security: Validate parsed data
-            if (!result.data || !Array.isArray(result.data)) {
-              reject(new Error("Invalid CSV data format."))
-              return
-            }
-
-            if (result.data.length === 0) {
-              reject(new Error("The CSV file appears to be empty or contains no valid data."))
-              return
-            }
-
-            // Security: Check for data that might be too large (potential DoS)
-            if (result.data.length > 100000) {
-              reject(new Error("CSV file contains too many rows (max 100,000)."))
-              return
-            }
-
-            // Security: Validate that each row is an array
-            for (let i = 0; i < Math.min(result.data.length, 100); i++) {
-              if (!Array.isArray(result.data[i])) {
-                reject(new Error(`Invalid data format at row ${i + 1}.`))
-                return
-              }
-            }
-
-            setParsedFiles(prevFiles => {
-              const newFiles = [...prevFiles]
-              newFiles[index] = result.data as string[][]
-              return newFiles
-            })
-            setError(null)
-            resolve()
-          },
-          error: (error) => {
-            reject(new Error(`Error parsing CSV: ${error.message || 'Unknown parsing error'}`))
+          const headers = lines[0].split(delimiter)
+          if (headers.length < 2) {
+            reject(new Error('File does not appear to be a valid CSV format.'))
+            return
           }
+
+          window.requestAnimationFrame(() => {
+            Papa.parse(file, {
+              delimiter,
+              skipEmptyLines: true,
+              worker: true,
+              complete: (result) => {
+                if (!result.data || !Array.isArray(result.data)) {
+                  reject(new Error("Invalid CSV data format."))
+                  return
+                }
+
+                if (result.data.length === 0) {
+                  reject(new Error("The CSV file appears to be empty or contains no valid data."))
+                  return
+                }
+
+                if (result.data.length > 100000) {
+                  reject(new Error("CSV file contains too many rows (max 100,000)."))
+                  return
+                }
+
+                for (let i = 0; i < Math.min(result.data.length, 100); i++) {
+                  if (!Array.isArray(result.data[i])) {
+                    reject(new Error(`Invalid data format at row ${i + 1}.`))
+                    return
+                  }
+                }
+
+                setParsedFiles(prevFiles => {
+                  const newFiles = [...prevFiles]
+                  newFiles[index] = result.data as string[][]
+                  return newFiles
+                })
+                setError(null)
+                resolve()
+              },
+              error: (parseError) => {
+                reject(new Error(`Error parsing CSV: ${parseError.message || 'Unknown parsing error'}`))
+              }
+            })
+          })
         })
-      };
-      reader.onerror = () => {
-        reject(new Error("Error reading file"))
-      };
-      reader.readAsText(file);
+        .catch(() => {
+          reject(new Error("Error reading file"))
+        })
     })
-  }, [setError, MAX_FILE_SIZE, ALLOWED_TYPES])
+  }, [setError, validateFile])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploadedFiles(prevFiles => [...prevFiles, ...acceptedFiles])
@@ -278,20 +272,18 @@ export default function FileUpload({
         return
       }
 
-      let concatenatedData: string[][] = []
-      let headers: string[] = []
-
-      parsedFiles.forEach((file, index) => {
+      const processedFiles = parsedFiles.map((file) => {
         if (!platform.processFile) {
           throw new Error(`No processFile function defined for platform: ${platform.platformName}`)
         }
-        const { headers: fileHeaders, processedData } = platform.processFile(file)
-        if (index === 0) {
-          headers = fileHeaders
-          concatenatedData = processedData
-        } else {
-          concatenatedData = [...concatenatedData, ...processedData]
-        }
+
+        return platform.processFile(file)
+      })
+
+      const [{ headers }, ...remainingFiles] = processedFiles
+      const concatenatedData = [...processedFiles[0].processedData]
+      remainingFiles.forEach(({ processedData }) => {
+        concatenatedData.push(...processedData)
       })
 
       setRawCsvData([headers, ...concatenatedData])
@@ -318,7 +310,7 @@ export default function FileUpload({
     isConcatenatingRef.current = true
     concatenateFiles()
     return () => { isConcatenatingRef.current = false }
-  }, [parsedFiles.length, uploadProgress, uploadedFiles.length])
+  }, [concatenateFiles, parsedFiles.length, uploadProgress, uploadedFiles.length])
 
   return (
     <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
