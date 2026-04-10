@@ -482,8 +482,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 61,
-      "lastAccessed": 1775825493220,
+      "accessCount": 62,
+      "lastAccessed": 1775826245515,
       "type": "directory"
     },
     {
@@ -554,8 +554,8 @@
     },
     {
       "path": "app/api",
-      "accessCount": 2,
-      "lastAccessed": 1775758935529,
+      "accessCount": 3,
+      "lastAccessed": 1775826582887,
       "type": "directory"
     },
     {
@@ -592,6 +592,12 @@
       "path": "server/groups.ts",
       "accessCount": 2,
       "lastAccessed": 1775763797989,
+      "type": "directory"
+    },
+    {
+      "path": "app/[locale]/dashboard/components/import/rithmic/rithmic-order-processor-new.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1775826460127,
       "type": "directory"
     },
     {
@@ -706,6 +712,30 @@
       "path": "lib/analytics/metrics-v1.ts",
       "accessCount": 1,
       "lastAccessed": 1775825205415,
+      "type": "directory"
+    },
+    {
+      "path": "app/api/ai/chat/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775826592065,
+      "type": "directory"
+    },
+    {
+      "path": "app/api/deals/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775826602498,
+      "type": "directory"
+    },
+    {
+      "path": "app/api/admin/subscriptions/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775826609444,
+      "type": "directory"
+    },
+    {
+      "path": "app/api/cron/route.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775826616474,
       "type": "directory"
     }
   ],
