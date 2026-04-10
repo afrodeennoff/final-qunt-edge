@@ -482,8 +482,8 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 62,
-      "lastAccessed": 1775826245515,
+      "accessCount": 70,
+      "lastAccessed": 1775830441270,
       "type": "directory"
     },
     {
@@ -556,6 +556,12 @@
       "path": "app/api",
       "accessCount": 3,
       "lastAccessed": 1775826582887,
+      "type": "directory"
+    },
+    {
+      "path": "components/ui/sidebar.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1775830458627,
       "type": "directory"
     },
     {
@@ -736,12 +742,6 @@
       "path": "app/api/cron/route.ts",
       "accessCount": 1,
       "lastAccessed": 1775826616474,
-      "type": "directory"
-    },
-    {
-      "path": "components/ui/sidebar.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1775827638123,
       "type": "directory"
     }
   ],
