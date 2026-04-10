@@ -98,15 +98,15 @@ export function DashboardHeader() {
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 overflow-hidden border-b border-v2-border/10 backdrop-blur-xl transition-all duration-300",
+                "sticky top-0 z-50 w-full shrink-0 overflow-hidden border-b border-v2-border/10 backdrop-blur-xl transition-all duration-300",
                 "bg-v2-bg-base/95",
                 "supports-[backdrop-filter]:bg-v2-bg-base/85 supports-[backdrop-filter]:backdrop-blur-xl",
-                isMobile ? "pt-safe" : "h-14"
+                isMobile && "pt-safe"
             )}
             data-dashboard-header="true"
         >
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.02),transparent_25%,transparent_75%,hsl(var(--foreground)_/_0.02))]" />
-            <div className={cn("relative flex items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6", isMobile ? "h-14" : "h-full")}>
+            <div className="relative flex min-h-14 items-center justify-between gap-3 px-3 sm:gap-4 sm:px-6">
                 <div className="relative z-10 flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3 pointer-events-auto">
                     <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-7 md:w-7 md:rounded-lg" />
                     <div className="flex min-w-0 items-center gap-3">
@@ -133,19 +133,20 @@ export function DashboardHeader() {
                     </div>
                 </div>
 
-                <div className={cn(
-                    "relative z-10 flex shrink-0 items-center gap-1.5 sm:gap-2 pointer-events-auto",
-                    isMobile
-                        ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5"
-                        : cn(
-                            "rounded-full border p-1 backdrop-blur-xl",
-                            "border-v2-border/15 bg-v2-bg-surface/50",
-                            "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02)]"
-                        )
-                )}>
+                <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
                     <div className={cn(
-                        "flex shrink-0 items-center gap-1",
-                        isMobile ? "" : "rounded-full bg-v2-bg-base/50 px-1 py-0.5"
+                        "flex min-w-0 max-w-full items-center gap-1.5",
+                        isMobile
+                            ? "rounded-full border border-v2-border/15 bg-v2-bg-surface/45 p-0.5"
+                            : cn(
+                                "rounded-full border p-1.5 backdrop-blur-xl",
+                                "border-v2-border/12 bg-v2-bg-surface/40",
+                                "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.02)]"
+                            )
+                    )}>
+                    <div className={cn(
+                        "flex min-w-0 items-center gap-1",
+                        !isMobile && "pr-0.5"
                     )}>
                         <FilterCommandMenu variant="navbar" />
 
@@ -154,18 +155,17 @@ export function DashboardHeader() {
                         {!isMobile && <DailySummaryModal />}
                     </div>
 
-                    <div className="mx-0.5 hidden h-5 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/30 to-v2-border/0 sm:block" />
+                    <div className="mx-0.5 hidden h-5 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/20 to-v2-border/0 sm:block" />
 
-                    <div className="hidden sm:flex items-center gap-1.5">
+                    <div className="hidden sm:flex items-center gap-1">
                         <ImportButton />
 
                         {!isPlusUser() && (
                             <Link href={billingHref}>
                                 <button className={cn(
-                                    "group flex h-8 items-center gap-2 rounded-full border px-3.5",
-                                    "text-[9px] font-bold uppercase tracking-[0.18em] text-v2-text-primary",
-                                    "border-v2-accent/20 bg-v2-accent/8 transition-all duration-200",
-                                    "hover:bg-v2-accent/15 hover:border-v2-accent/30 hover:shadow-[var(--v2-glow-ambient)]",
+                                    "group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5",
+                                    "text-[10px] font-semibold uppercase tracking-[0.18em] text-v2-text-secondary transition-all duration-200",
+                                    "hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
                                     "active:scale-[0.97]"
                                 )}>
                                     <Sparkles className="h-3 w-3 text-v2-accent" />
@@ -176,6 +176,7 @@ export function DashboardHeader() {
                     </div>
 
                     {!isMobile && isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
+                    </div>
                 </div>
             </div>
 

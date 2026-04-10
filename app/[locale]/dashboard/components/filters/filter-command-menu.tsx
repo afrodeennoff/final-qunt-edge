@@ -340,7 +340,9 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
           }}
           placeholder={t('filters.commandMenu.searchPlaceholder')}
           className={cn(
-            "w-full rounded-full border-v2-border/20 bg-v2-bg-base/60 pl-9 pr-20 text-v2-text-primary shadow-none transition-all hover:border-v2-border/35 hover:bg-v2-bg-hover focus-visible:ring-1 focus-visible:ring-v2-border/20",
+            variant === "navbar"
+              ? "h-9 w-full rounded-full border border-transparent bg-v2-bg-base/20 pl-9 pr-20 text-v2-text-primary shadow-none transition-all hover:bg-v2-bg-hover/60 focus-visible:border-v2-border/15 focus-visible:bg-v2-bg-hover/70 focus-visible:ring-0"
+              : "w-full rounded-full border-v2-border/20 bg-v2-bg-base/60 pl-9 pr-20 text-v2-text-primary shadow-none transition-all hover:border-v2-border/35 hover:bg-v2-bg-hover focus-visible:ring-1 focus-visible:ring-v2-border/20",
             variant === "toolbar" && "h-10 rounded-full",
             isParsingDate && "opacity-50",
             isParsingDate && "border-primary ring-2 ring-primary ring-offset-2 animate-pulse"

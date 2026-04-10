@@ -199,20 +199,20 @@ function CustomizingControls({
 
 function getHeaderWrapperClass(isMobile: boolean) {
   return cn(
-    "ml-1 flex shrink-0 items-center gap-1.5",
+    "ml-0.5 flex shrink-0 items-center gap-1",
     isMobile
       ? "rounded-full border border-v2-border/15 bg-v2-bg-base/70 p-1"
-      : "rounded-full border border-v2-border/20 bg-v2-bg-base/60 p-1 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)] backdrop-blur-xl"
+      : "pl-0.5"
   );
 }
 
 function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
   return cn(
     "relative group flex items-center gap-2 rounded-lg transition-all duration-200",
-    isMobile ? "h-11 w-11 justify-center px-0" : "h-8 px-3",
+    isMobile ? "h-11 w-11 justify-center px-0" : "h-9 px-3.5",
     isCustomizing
       ? "bg-v2-accent text-v2-accent-foreground shadow-sm"
-      : "rounded-full border border-transparent text-v2-text-secondary hover:border-v2-border/15 hover:bg-v2-bg-hover hover:text-v2-text-primary"
+      : "rounded-full border border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
   );
 }
 

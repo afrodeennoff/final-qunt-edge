@@ -386,13 +386,13 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
             ref={ref}
             variant={variant}
             className={cn(
-              "h-10 rounded-full flex items-center justify-center transition-transform active:scale-95",
-              isMobile ? "h-11 w-11 p-0" : "min-w-[120px] gap-3 px-4"
+              "flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+              isMobile ? "h-11 w-11 p-0" : "h-9 min-w-[120px] gap-2.5 px-3.5"
             )}
           >
             <Share className="h-4 w-4 shrink-0" />
             {!isMobile && (
-              <span className="text-sm font-medium">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
                 {t("share.button")}
               </span>
             )}

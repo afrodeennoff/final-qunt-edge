@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { Link2, FileSpreadsheet, Database, Pencil, Search, LayoutGrid, ListFilter, GitCompare, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -15,7 +15,6 @@ import { PlatformCard } from './components/platform-card'
 import { PlatformTutorial } from './components/platform-tutorial'
 import { cn } from '@/lib/utils'
 import { useImportTypePreferenceStore } from '@/store/import-type-preference-store'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export type ImportType = string
@@ -179,58 +178,44 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
 
           {/* Grid Content */}
           <ScrollArea className="flex-1 p-4 md:p-6">
-            <motion.div
-              layout
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-              className="grid gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]"
-            >
-              <AnimatePresence mode='popLayout'>
-                {filteredPlatforms.length > 0 ? (
-                  filteredPlatforms.map((platform) => (
-                    <div key={platform.type} className="h-full">
-                      <PlatformCard
-                        platform={platform}
-                        isSelected={selectedType === platform.type}
-                        onSelect={(type) => {
-                          if (!isCompareMode) {
-                            setSelectedType(type as ImportType)
-                            setLastSelectedType(type as ImportType)
-                          }
-                        }}
-                        isWeekend={isWeekend()}
-                        isMultiSelectMode={isCompareMode}
-                        isChecked={selectedPlatforms.includes(platform.type)}
-                        onCheckChange={(checked) => handlePlatformCheck(platform.type, checked)}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="col-span-full py-16 text-center"
-                  >
-                    <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-5">
-                      <ListFilter className="h-8 w-8 text-v2-text-muted" />
-                    </div>
-                    <p className="text-base font-medium text-v2-text-primary mb-1.5">
-                      {t('import.type.noResults')}
-                    </p>
-                    <p className="text-sm text-v2-text-muted">
-                      Try adjusting your search or filter criteria
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+            <div className="grid gap-4 pb-20 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+              {filteredPlatforms.length > 0 ? (
+                filteredPlatforms.map((platform) => (
+                  <div key={platform.type} className="h-full">
+                    <PlatformCard
+                      platform={platform}
+                      isSelected={selectedType === platform.type}
+                      onSelect={(type) => {
+                        if (!isCompareMode) {
+                          setSelectedType(type as ImportType)
+                          setLastSelectedType(type as ImportType)
+                        }
+                      }}
+                      isWeekend={isWeekend()}
+                      isMultiSelectMode={isCompareMode}
+                      isChecked={selectedPlatforms.includes(platform.type)}
+                      onCheckChange={(checked) => handlePlatformCheck(platform.type, checked)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full py-16 text-center">
+                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-5">
+                    <ListFilter className="h-8 w-8 text-v2-text-muted" />
+                  </div>
+                  <p className="text-base font-medium text-v2-text-primary mb-1.5">
+                    {t('import.type.noResults')}
+                  </p>
+                  <p className="text-sm text-v2-text-muted">
+                    Try adjusting your search or filter criteria
+                  </p>
+                </div>
+              )}
+            </div>
           </ScrollArea>
 
           {isCompareMode && selectedPlatforms.length >= 2 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="absolute bottom-4 left-4 right-4 z-20"
+            <div className="absolute bottom-4 left-4 right-4 z-20"
             >
               <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 backdrop-blur border border-v2-border shadow-lg shadow-v2-bg-base/50">
                 <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
@@ -257,19 +242,14 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
 
         {showDesktopDetailPanel && (
           <div className="relative hidden h-full overflow-hidden bg-v2-bg-hover/20 lg:flex">
           {isCompareMode && selectedPlatforms.length >= 2 ? (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="h-full flex flex-col w-full"
-            >
+            <div className="h-full flex flex-col w-full">
               <div className="p-4 border-b border-v2-border flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-v2-text-primary">Compare Platforms</h3>
                 <Button variant="ghost" size="sm" onClick={() => setIsCompareMode(false)}>
@@ -282,12 +262,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                     const platform = platforms.find(p => p.type === platformType)
                     if (!platform) return null
                     return (
-                      <motion.div
-                        key={platform.type}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col"
-                      >
+                      <div key={platform.type} className="flex flex-col">
                         <Card variant="default" size="sm" className="h-full">
                           <CardContent className="p-4 flex flex-col gap-3">
                             <div className="flex items-center gap-3">
@@ -337,20 +312,14 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                             </div>
                           </CardContent>
                         </Card>
-                      </motion.div>
+                      </div>
                     )
                   })}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ) : selectedType && selectedPlatform ? (
-            <motion.div
-              key={selectedType}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="h-full flex flex-col"
-            >
+            <div className="h-full flex flex-col">
               <div className="h-full overflow-y-auto p-6">
                 {selectedPlatform.customComponent ? (
                   <selectedPlatform.customComponent setIsOpen={setIsOpen} />
@@ -358,7 +327,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                   <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
                 )}
               </div>
-            </motion.div>
+            </div>
           ) : null}
           </div>
         )}

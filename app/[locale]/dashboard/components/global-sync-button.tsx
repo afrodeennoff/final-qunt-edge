@@ -114,13 +114,13 @@ export function GlobalSyncButton() {
                 <button
                     type="button"
                     className={cn(
-                        "group relative flex h-10 items-center gap-2 rounded-full border px-3 transition-all duration-200",
+                        "group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-all duration-200",
                         isAnySyncing
-                            ? "cursor-wait border-v2-accent/30 bg-v2-accent/10 text-v2-text-primary"
-                            : "border-v2-border/20 bg-v2-bg-base/60 text-v2-text-secondary hover:border-v2-border/35 hover:bg-v2-bg-hover hover:text-v2-text-primary"
+                            ? "cursor-wait border-v2-accent/20 bg-v2-accent/10 text-v2-text-primary"
+                            : "border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
                     )}
                 >
-                    <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-v2-bg-surface/80">
+                    <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-v2-bg-base/25 transition-colors group-hover:bg-v2-bg-base/45">
                         <RefreshCw className={cn(
                             "h-4 w-4 transition-transform duration-700",
                             isAnySyncing ? "animate-spin" : "group-hover:rotate-180"

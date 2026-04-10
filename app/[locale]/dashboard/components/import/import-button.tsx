@@ -485,14 +485,14 @@ export default function ImportButton() {
         onClick={() => setIsOpen(true)}
         variant="outline"
         className={cn(
-          "group h-10 w-auto justify-center gap-2 rounded-full border-v2-border/20 bg-v2-bg-base/60 px-3 text-v2-text-primary shadow-none backdrop-blur-sm hover:border-v2-border/35 hover:bg-v2-bg-hover md:px-4"
+          "group h-9 w-auto justify-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-v2-text-secondary shadow-none transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary md:px-4"
         )}
         id="import-data"
         onMouseEnter={() => uploadIconRef.current?.startAnimation()}
         onMouseLeave={() => uploadIconRef.current?.stopAnimation()}
       >
         <UploadIcon ref={uploadIconRef} className="h-4 w-4" />
-        <span className="hidden md:block">{t("import.button")}</span>
+        <span className="hidden md:block text-[10px] font-semibold uppercase tracking-[0.18em]">{t("import.button")}</span>
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen} >
