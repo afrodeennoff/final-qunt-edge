@@ -46,7 +46,7 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user h-12 w-full rounded-xl px-2 transition-colors duration-200 hover:bg-sidebar-accent/14 data-[state=open]:bg-sidebar-accent/20 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
+              className="group/user w-full rounded-md px-2 transition-colors duration-200 hover:bg-sidebar-accent/14 data-[state=open]:bg-sidebar-accent/20 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">

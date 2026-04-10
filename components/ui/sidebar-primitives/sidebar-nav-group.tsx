@@ -21,9 +21,9 @@ import {
 import { DEFAULT_OPEN_GROUPS } from './use-sidebar-nav'
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
-const ITEM_BUTTON_CLASS = 'pointer-events-auto h-10 rounded-xl px-2.5 font-medium transition-colors duration-200 hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!'
-const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/78 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground'
-const ACTIVE_ITEM_CLASS = 'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22 shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]'
+const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-md font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground'
+const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/78'
+const ACTIVE_ITEM_CLASS = 'bg-sidebar-accent text-sidebar-accent-foreground'
 
 function isItemPending(
   item: UnifiedSidebarItem,
@@ -169,7 +169,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
             <SidebarGroup className="px-0 py-1.5">
               <CollapsibleTrigger asChild>
                 <SidebarGroupLabel
-                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 hover:text-sidebar-foreground/55"
+                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-sidebar-foreground/40 hover:text-sidebar-foreground/60"
                   id={`sidebar-group-${groupIndex}`}
                 >
                   <span>{groupName}</span>

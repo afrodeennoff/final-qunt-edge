@@ -228,7 +228,7 @@ function SidebarContentRender({
           : 'border-r border-sidebar-border/25'
       )}
     >
-      <SidebarHeader className="h-16 border-b border-sidebar-border/12 px-2 py-2">
+      <SidebarHeader className="border-b border-sidebar-border/12 px-2 py-2">
         <SidebarLogoHeader />
       </SidebarHeader>
 

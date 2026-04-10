@@ -14,7 +14,7 @@ export function SidebarLogoHeader() {
         <SidebarMenuButton
           asChild
           size="lg"
-          className="h-12 rounded-xl px-2 data-[state=open]:bg-sidebar-accent/20 hover:text-sidebar-foreground group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0!"
+          className="h-12 rounded-md px-2 data-[state=open]:bg-sidebar-accent/20 hover:text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
         >
           <Link href="/dashboard" prefetch={false}>
             <div className="flex aspect-square size-9 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-primary text-sidebar-primary-foreground">
