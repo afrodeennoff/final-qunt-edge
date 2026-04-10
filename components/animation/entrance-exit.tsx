@@ -3,13 +3,14 @@
 import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { SPRING_GENTLE, SPRING_BOUNCY } from "./enhanced-motion"
 
 export type VariantType = "fade" | "slide" | "scale" | "bounce"
 export type SlideDirection = "up" | "down" | "left" | "right"
 
 export const SPRING_PRESETS = {
-  gentle: { type: "spring" as const, stiffness: 300, damping: 20 },
-  snappy: { type: "spring" as const, stiffness: 400, damping: 15 },
+  gentle: SPRING_GENTLE,
+  snappy: SPRING_BOUNCY,
   bouncy: { type: "spring" as const, stiffness: 350, damping: 10 },
   smooth: { type: "spring" as const, stiffness: 250, damping: 25 },
 } as const

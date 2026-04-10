@@ -36,7 +36,7 @@ export default function MarketingLayoutShell({
             <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8">
               <RollingAdBanner />
             </div>
-            <div className={cn('pt-4 sm:pt-5 pb-24', contentClassName)}>
+            <div className={cn('pt-4 sm:pt-5 pb-24 space-y-6', contentClassName)}>
               <MotionStagger>
                 <MotionStaggerItem>{children}</MotionStaggerItem>
               </MotionStagger>

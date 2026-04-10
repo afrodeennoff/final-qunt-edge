@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 20 }
+export const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 20 }
 export const SPRING_BOUNCY = { type: "spring" as const, stiffness: 400, damping: 15 }
 const ENTRANCE_EASE = [0.22, 1, 0.36, 1] as const
 
@@ -198,6 +198,49 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
               },
             }
       }
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+interface MotionOrchestratedProps {
+  children: React.ReactNode
+  className?: string
+  stages?: number
+  staggerDelay?: number
+}
+
+export function MotionOrchestrated({
+  children,
+  className,
+  stages = 4,
+  staggerDelay = 0.08,
+}: MotionOrchestratedProps) {
+  const prefersReducedMotion = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-5%" })
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: staggerDelay,
+            delayChildren: 0.1,
+          },
+        },
+      }}
     >
       {children}
     </motion.div>
