@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { ChevronRight, Loader2 } from 'lucide-react'
 
@@ -72,7 +72,7 @@ function getItemTextClass(isItemActive: boolean) {
   )
 }
 
-export interface SidebarNavGroupProps {
+interface SidebarNavGroupProps {
   items: UnifiedSidebarItem[]
   openGroups: Record<string, boolean>
   onGroupOpenChange: (groupName: string, isOpen: boolean) => void
@@ -131,7 +131,7 @@ function computeGroupedItems(items: UnifiedSidebarItem[]): GroupedData {
   return { groups, order: sortedOrder }
 }
 
-export function SidebarNavGroup({
+const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
   items,
   openGroups,
   onGroupOpenChange,
@@ -144,106 +144,118 @@ export function SidebarNavGroup({
   const t = useI18n()
   const translate = t as unknown as (key: string) => string
 
-  const groupedItems = React.useMemo(
+  const groupedItems = useMemo(
     () => computeGroupedItems(items),
     [items]
   )
 
+  const handleGroupToggle = useCallback((groupName: string) => (isOpen: boolean) => {
+    onGroupOpenChange(groupName, isOpen)
+  }, [onGroupOpenChange])
+
   return (
     <>
-      {groupedItems.order.map((groupName, groupIndex) => (
-        <Collapsible
-          key={groupName}
-          open={openGroups[groupName] ?? DEFAULT_OPEN_GROUPS.has(groupName)}
-          onOpenChange={(isOpen) => onGroupOpenChange(groupName, isOpen)}
-          className="group/collapsible"
-        >
-          <SidebarGroup className="px-0 py-1.5">
-            <CollapsibleTrigger asChild>
-              <SidebarGroupLabel
-                className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 hover:text-sidebar-foreground/55"
-                id={`sidebar-group-${groupIndex}`}
-              >
-                <span>{groupName}</span>
-                <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
-              </SidebarGroupLabel>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
-                  {groupedItems.groups[groupName].map((item, index) => {
-                    const label = item.i18nKey ? translate(item.i18nKey) : item.label
-                    const href = item.href
-                    const isItemDisabled = Boolean(item.disabled)
-                    const itemIsActive =
-                      !isItemDisabled && !!href && isActive(href, item.exact)
-                    const isPendingItem = isItemPending(item, pendingNavigation, currentRouteKey, itemIsActive)
+      {groupedItems.order.map((groupName, groupIndex) => {
+        const isGroupOpen = openGroups[groupName] ?? DEFAULT_OPEN_GROUPS.has(groupName)
+        const groupItems = groupedItems.groups[groupName]
 
-                    return (
-                      <SidebarMenuItem
-                        key={`${groupName}-${item.label}-${index}`}
-                        className="relative"
-                      >
-                        {itemIsActive && (
-                          <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
-                        )}
-                        {href ? (
-                          <SidebarMenuButton
-                            asChild
-                            isActive={itemIsActive}
-                            tooltip={label}
-                            disabled={isItemDisabled}
-                            className={cn(
-                              ITEM_BUTTON_CLASS,
-                              itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
-                            )}
-                          >
-                            <Link
-                              href={href}
-                              prefetch={false}
-                              onClick={() => onNavigate(href)}
-                              className="flex w-full items-center"
-                              aria-busy={isPendingItem}
+        return (
+          <Collapsible
+            key={groupName}
+            open={isGroupOpen}
+            onOpenChange={handleGroupToggle(groupName)}
+            className="group/collapsible"
+          >
+            <SidebarGroup className="px-0 py-1.5">
+              <CollapsibleTrigger asChild>
+                <SidebarGroupLabel
+                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[9px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/35 hover:text-sidebar-foreground/55"
+                  id={`sidebar-group-${groupIndex}`}
+                >
+                  <span>{groupName}</span>
+                  <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                </SidebarGroupLabel>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
+                    {groupItems.map((item, index) => {
+                      const label = item.i18nKey ? translate(item.i18nKey) : item.label
+                      const href = item.href
+                      const isItemDisabled = Boolean(item.disabled)
+                      const itemIsActive =
+                        !isItemDisabled && !!href && isActive(href, item.exact)
+                      const isPendingItem = isItemPending(item, pendingNavigation, currentRouteKey, itemIsActive)
+
+                      return (
+                        <SidebarMenuItem
+                          key={`${groupName}-${item.label}-${index}`}
+                          className="relative"
+                        >
+                          {itemIsActive && (
+                            <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
+                          )}
+                          {href ? (
+                            <SidebarMenuButton
+                              asChild
+                              isActive={itemIsActive}
+                              tooltip={label}
+                              disabled={isItemDisabled}
+                              className={cn(
+                                ITEM_BUTTON_CLASS,
+                                itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
+                              )}
                             >
-                              {renderItemIcon(item, itemIsActive, isPendingItem, isLoading)}
-                              <span className={getItemTextClass(itemIsActive)}>
-                                {label}
-                              </span>
-                            </Link>
-                          </SidebarMenuButton>
-                        ) : (
-                          <SidebarMenuButton
-                            isActive={itemIsActive}
-                            tooltip={label}
-                            disabled={isItemDisabled}
-                            onClick={() => item.action?.()}
-                            className={cn(
-                              ITEM_BUTTON_CLASS,
-                              itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
-                            )}
-                          >
-                            <div className="flex w-full items-center">
-                              {renderItemIcon(item, itemIsActive, false, false)}
-                              <span className={getItemTextClass(itemIsActive)}>
-                                {label}
-                              </span>
-                            </div>
-                          </SidebarMenuButton>
-                        )}
-                        {item.badge && (
-                          <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
-                            {item.badge}
-                          </SidebarMenuBadge>
-                        )}
-                      </SidebarMenuItem>
-                    )
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
-      ))}
+                              <Link
+                                href={href}
+                                prefetch={false}
+                                onClick={() => onNavigate(href)}
+                                className="flex w-full items-center"
+                                aria-busy={isPendingItem}
+                              >
+                                {renderItemIcon(item, itemIsActive, isPendingItem, isLoading)}
+                                <span className={getItemTextClass(itemIsActive)}>
+                                  {label}
+                                </span>
+                              </Link>
+                            </SidebarMenuButton>
+                          ) : (
+                            <SidebarMenuButton
+                              isActive={itemIsActive}
+                              tooltip={label}
+                              disabled={isItemDisabled}
+                              onClick={() => item.action?.()}
+                              className={cn(
+                                ITEM_BUTTON_CLASS,
+                                itemIsActive ? ACTIVE_ITEM_CLASS : INACTIVE_ITEM_CLASS
+                              )}
+                            >
+                              <div className="flex w-full items-center">
+                                {renderItemIcon(item, itemIsActive, false, false)}
+                                <span className={getItemTextClass(itemIsActive)}>
+                                  {label}
+                                </span>
+                              </div>
+                            </SidebarMenuButton>
+                          )}
+                          {item.badge && (
+                            <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
+                              {item.badge}
+                            </SidebarMenuBadge>
+                          )}
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </SidebarGroup>
+          </Collapsible>
+        )
+      })}
     </>
   )
-}
+})
+
+export { SidebarNavGroupInner as SidebarNavGroup }
+export type { SidebarNavGroupProps }

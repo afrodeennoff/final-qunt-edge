@@ -23,9 +23,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+  SIDEBAR_STATE_COOKIE_MAX_AGE,
+  SIDEBAR_STATE_COOKIE_NAME,
+} from "@/lib/sidebar-state"
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state"
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
@@ -49,6 +51,19 @@ function useSidebar() {
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
   return context
+}
+
+function isEditableTarget(target: EventTarget | null): boolean {
+  const element = target instanceof HTMLElement ? target : null
+  if (!element) return false
+
+  if (element.isContentEditable) return true
+
+  const closestEditable = element.closest(
+    'input, textarea, select, [contenteditable="true"], [role="textbox"]'
+  )
+
+  return closestEditable instanceof HTMLElement
 }
 
 function SidebarProvider({
@@ -76,7 +91,7 @@ function SidebarProvider({
       } else {
         _setOpen(openState)
       }
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; Secure; SameSite=Lax`
+      document.cookie = `${SIDEBAR_STATE_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_STATE_COOKIE_MAX_AGE}; Secure; SameSite=Lax`
     },
     [setOpenProp, open]
   )
@@ -85,6 +100,7 @@ function SidebarProvider({
   }, [isMobile, setOpen, setOpenMobile])
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isEditableTarget(event.target)) return
       if (
         event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
         (event.metaKey || event.ctrlKey)

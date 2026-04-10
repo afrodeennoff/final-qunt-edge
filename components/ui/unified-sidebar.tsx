@@ -94,7 +94,7 @@ export function UnifiedSidebar({
   const { isLoading } = useNavigationLoading()
 
   const [pendingNavigation, setPendingNavigation] = useState<PendingNavigation | null>(null)
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => buildOpenGroups(items))
+  const openGroups = useMemo(() => buildOpenGroups(items), [items])
   const navigationFallbackTimerRef = useRef<number | null>(null)
 
   const clearNavigationFallbackTimer = useCallback(() => {
@@ -127,8 +127,10 @@ export function UnifiedSidebar({
     }
   }, [clearNavigationFallbackTimer])
 
+  const [groupStates, setGroupStates] = useState<Record<string, boolean>>({})
+
   const handleGroupOpenChange = useCallback((groupName: string, isOpen: boolean) => {
-    setOpenGroups((previous) => {
+    setGroupStates((previous) => {
       if (previous[groupName] === isOpen) return previous
       return {
         ...previous,
@@ -136,6 +138,10 @@ export function UnifiedSidebar({
       }
     })
   }, [])
+
+  const mergedOpenGroups = useMemo(() => {
+    return { ...openGroups, ...groupStates }
+  }, [openGroups, groupStates])
 
   const handleNavigate = useCallback(
     (href: string) => {
@@ -163,7 +169,7 @@ export function UnifiedSidebar({
       onLogout={onLogout}
       displayName={displayName}
       initials={initials}
-      openGroups={openGroups}
+      openGroups={mergedOpenGroups}
       pendingNavigation={pendingNavigation}
       currentRouteKey={currentRouteKey}
       isLoading={isLoading}
