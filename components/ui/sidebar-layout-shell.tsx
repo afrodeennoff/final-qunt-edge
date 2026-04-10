@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useSidebar } from '@/components/ui/sidebar'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import {
@@ -26,8 +27,13 @@ export function SidebarLayoutShell({
   className,
   backgroundVariant = 'default',
 }: SidebarLayoutShellProps) {
+  const { state } = useSidebar()
+
   return (
-    <div className={cn('flex min-h-screen w-full bg-background', className)}>
+    <div
+      className={cn('flex min-h-screen w-full bg-background', className)}
+      data-state={state}
+    >
       {sidebar}
       <SidebarInset className="flex-1 relative overflow-hidden">
         <BackgroundGlow variant={backgroundVariant} />
