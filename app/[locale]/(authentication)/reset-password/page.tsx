@@ -106,7 +106,7 @@ export default function ResetPasswordPage() {
             <div
               key={req.key}
               className={`text-xs flex items-center gap-1.5 ${
-                req.met ? 'text-green-600' : 'text-muted-foreground'
+                req.met ? 'text-success' : 'text-muted-foreground'
               }`}
             >
               <span>{req.met ? '✓' : '○'}</span>
@@ -114,7 +114,7 @@ export default function ResetPasswordPage() {
             </div>
           ))}
           {password.length > 0 && (
-            <div className={`text-xs flex items-center gap-1.5 ${passwordsMatch ? 'text-green-600' : 'text-muted-foreground'}`}>
+            <div className={`text-xs flex items-center gap-1.5 ${passwordsMatch ? 'text-success' : 'text-muted-foreground'}`}>
               <span>{passwordsMatch ? '✓' : '○'}</span>
               <span>Passwords match</span>
             </div>
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
         </div>
 
         {error && (
-          <p className="text-sm text-red-500">{error}</p>
+          <p className="text-sm text-destructive">{error}</p>
         )}
 
         <Button type="submit" disabled={isLoading || !allMet}>

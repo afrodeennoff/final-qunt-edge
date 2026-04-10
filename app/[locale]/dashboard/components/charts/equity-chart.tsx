@@ -201,7 +201,7 @@ const renderDot = (props: DotRendererProps) => {
           r={5}
           fill="hsl(var(--destructive))"
           stroke="hsl(var(--chart-axis))"
-          strokeWidth={2}
+          strokeWidth={2.5}
         />
       );
     }
@@ -879,7 +879,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
         <Line
           type="monotone"
           dataKey="equity"
-          strokeWidth={2}
+          strokeWidth={2.5}
           dot={renderDot}
           isAnimationActive={false}
           activeDot={{ r: 3, style: { fill: "hsl(var(--foreground))" } }}
