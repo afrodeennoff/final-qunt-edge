@@ -223,6 +223,10 @@ export function FormatPreview({
     setBatchSet2(set2);
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
+    batchSet1Ref.current = set1;
+    batchSet2Ref.current = set2;
+    currentBatchIndex1Ref.current = 0;
+    currentBatchIndex2Ref.current = 0;
     retryCountSet1Ref.current.clear();
     retryCountSet2Ref.current.clear();
   };
@@ -254,6 +258,7 @@ export function FormatPreview({
     retryMap.set(batchIndex, attempt);
 
     if (attempt > MAX_RETRIES_PER_BATCH) {
+      isAutoProcessingRef.current = false;
       setIsAutoProcessing(false);
       return;
     }
@@ -297,6 +302,7 @@ export function FormatPreview({
       }
 
       setError(`Failed to process batch set 1: ${message}`);
+      isAutoProcessingRef.current = false;
       setIsAutoProcessing(false);
     },
     onFinish() {
@@ -351,6 +357,7 @@ export function FormatPreview({
       }
 
       setError(`Failed to process batch set 2: ${message}`);
+      isAutoProcessingRef.current = false;
       setIsAutoProcessing(false);
     },
     onFinish() {
@@ -419,18 +426,36 @@ export function FormatPreview({
   };
 
   const startProcessing = () => {
+    if (totalBatches === 0) {
+      return;
+    }
+
     clearManagedTimeouts();
+    pendingRetriesRef.current.clear();
+    setError(null);
+    isStoppedRef.current = false;
+    isAutoProcessingRef.current = true;
     setIsAutoProcessing(true);
     setIsStopped(false);
-    splitBatches();
-    // Start both instances with their first batches after a small delay to ensure state is updated
-    scheduleManagedTimeout(() => {
-      processNextBatchInSet1();
-      processNextBatchInSet2();
-    }, 100);
+
+    const shouldRestart =
+      completedBatchesRef.current.size === 0 ||
+      completedBatchesRef.current.size === totalBatches ||
+      (batchSet1Ref.current.length === 0 && batchSet2Ref.current.length === 0);
+
+    if (shouldRestart) {
+      setCompletedBatches(new Set());
+      completedBatchesRef.current = new Set();
+      splitBatches();
+    }
+
+    processNextBatchInSet1();
+    processNextBatchInSet2();
   };
 
   const stopProcessing = () => {
+    isAutoProcessingRef.current = false;
+    isStoppedRef.current = true;
     setIsAutoProcessing(false);
     setIsStopped(true);
     clearManagedTimeouts();
@@ -441,6 +466,9 @@ export function FormatPreview({
 
   const resetProcessing = () => {
     clearManagedTimeouts();
+    pendingRetriesRef.current.clear();
+    isAutoProcessingRef.current = false;
+    isStoppedRef.current = false;
     setIsAutoProcessing(false);
     setIsStopped(false);
     setProcessedTrades([]);
@@ -449,6 +477,11 @@ export function FormatPreview({
     setBatchSet2([]);
     setCurrentBatchIndex1(0);
     setCurrentBatchIndex2(0);
+    completedBatchesRef.current = new Set();
+    batchSet1Ref.current = [];
+    batchSet2Ref.current = [];
+    currentBatchIndex1Ref.current = 0;
+    currentBatchIndex2Ref.current = 0;
     processedTradesRef.current = [];
     processedTradeSignaturesRef.current.clear();
     retryCountSet1Ref.current.clear();
@@ -824,7 +857,7 @@ export function FormatPreview({
           {!isAutoProcessing && completedBatches.size === 0 && (
             <Button 
               onClick={startProcessing}
-              disabled={isProcessing}
+              disabled={isProcessing || totalBatches === 0}
               className="bg-muted/50 hover:bg-muted/50 text-foreground"
             >
               {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
@@ -840,7 +873,7 @@ export function FormatPreview({
             </Button>
           )}
           
-          {!isAutoProcessing && completedBatches.size > 0 && (
+          {!isAutoProcessing && completedBatches.size > 0 && completedBatches.size < totalBatches && (
         <Button 
               onClick={startProcessing}
               disabled={isProcessing}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useCallback } from "react";
@@ -15,8 +14,6 @@ interface PlatformCardProps {
     platform: PlatformConfig;
     isSelected: boolean;
     onSelect: (type: string) => void;
-    onHover?: (category: string) => void;
-    onLeave?: () => void;
     isWeekend: boolean;
     isMultiSelectMode?: boolean;
     isChecked?: boolean;
@@ -34,8 +31,6 @@ function PlatformCardInner({
     platform,
     isSelected,
     onSelect,
-    onHover,
-    onLeave,
     isWeekend,
     isMultiSelectMode = false,
     isChecked = false,
@@ -68,21 +63,13 @@ function PlatformCardInner({
         }
     }, [onCheckChange]);
 
-    const handleMouseEnter = useCallback(() => {
-        if (onHover) onHover(platform.category);
-    }, [onHover, platform.category]);
-
-    const handleMouseLeave = useCallback(() => {
-        if (onLeave) onLeave();
-    }, [onLeave]);
-
     return (
         <Card
             clickable={isInteractive}
             variant={isSelected ? "elevated" : "default"}
             hover={isInteractive}
             size="sm"
-            onClick={handleSelect}
+            onClick={isInteractive ? handleSelect : undefined}
             className={cn(
                 "group relative flex h-full flex-col items-start gap-3 text-left transition-all duration-300",
                 isSelected && "border-v2-accent shadow-lg shadow-v2-accent/20",

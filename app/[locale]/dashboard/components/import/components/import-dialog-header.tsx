@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import Image from 'next/image'
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { useTypedI18n } from "@/locales/client"
@@ -28,11 +28,13 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
       <div className="flex items-center gap-3">
         {platform.logo.path && (
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-v2-border/50 bg-v2-bg-base/80 p-1.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={platform.logo.path}
               alt={platform.logo.alt || ""}
+              width={20}
+              height={20}
               className="h-full w-full object-contain"
+              sizes="20px"
             />
           </div>
         )}
