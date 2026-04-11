@@ -57,6 +57,7 @@ const eslintConfig = defineConfig([
     "next.config.compiled.js",
     "prisma/generated/**",
     ".worktrees/**",
+    "components/sidebar/__tests__/**",
   ]),
 ]);
 
