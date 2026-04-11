@@ -31,6 +31,7 @@
 */
 @layer base {
 
+  /* Default border color — frost blue tint from Resend design system */
   *,
   ::after,
   ::before,
@@ -123,10 +124,10 @@
   --shadow-lg: -50px 2px 0px -50px hsl(var(--shadow-base) / 0), -50px 4px 6px -51px hsl(var(--shadow-base) / 0);
   --shadow-xl: -50px 2px 0px -50px hsl(var(--shadow-base) / 0), -50px 8px 10px -51px hsl(var(--shadow-base) / 0);
   --shadow-2xl: -50px 2px 0px -50px hsl(var(--shadow-base) / 0);
-  --qe-surface-0: 0 0% 4%;
-  --qe-surface-1: 240 8% 7%;
-  --qe-surface-2: 240 8% 10%;
-  --qe-panel: 240 8% 8%;
+  --qe-surface-0: 214 40% 2%;
+  --qe-surface-1: 214 35% 5%;
+  --qe-surface-2: 214 30% 8%;
+  --qe-panel: 214 35% 4%;
 
   /* === Frost Border System (Resend-inspired) === */
   --frost-border: rgba(214, 235, 253, 0.19);

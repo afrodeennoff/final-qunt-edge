@@ -19,26 +19,26 @@
     --ui-10-accent: var(--primary);
     --ui-10-accent-fg: var(--primary-foreground);
 
-    /* ===== MARKETING SURFACE TOKENS (Precision Terminal Theme) ===== */
-    --mk-bg-0: 0 0% 1%;
-    --mk-bg-1: 0 0% 2%;
-    --mk-bg-2: 0 0% 3%;
-    --mk-surface: 240 6% 4%;
-    --mk-surface-muted: 240 4% 6%;
-    --mk-border: 240 12% 10%;
-    --mk-text: 0 0% 88%;
+    /* ===== MARKETING SURFACE TOKENS (Resend Frost Theme) ===== */
+    --mk-bg-0: 0 0% 0%;
+    --mk-bg-1: 0 0% 0%;
+    --mk-bg-2: 214 30% 3%;
+    --mk-surface: 214 40% 4%;
+    --mk-surface-muted: 214 30% 6%;
+    --mk-border: 214 50% 85% / 0.19;
+    --mk-text: 0 0% 94%;
     --mk-text-muted: 0 0% 44%;
-    --mk-lime: 76 86% 59%;
+    --mk-lime: 160 100% 53%;
     --mk-lime-ink: 0 0% 10%;
 
-    /* ===== BACKGROUND HIERARCHY (7 levels) ===== */
-    --bg-base: 240 8% 1.5%;
-    --bg-elevated: 240 6% 3%;
-    --bg-card: 240 6% 4.5%;
-    --bg-card-hover: 240 5% 6%;
-    --bg-overlay: 240 5% 8%;
-    --bg-modal: 240 4% 10%;
-    --bg-highlight: 240 4% 12%;
+    /* ===== BACKGROUND HIERARCHY (7 levels — Resend void + frost) ===== */
+    --bg-base: 214 40% 1%;
+    --bg-elevated: 214 40% 3%;
+    --bg-card: 214 40% 4%;
+    --bg-card-hover: 214 35% 5%;
+    --bg-overlay: 214 30% 7%;
+    --bg-modal: 214 25% 9%;
+    --bg-highlight: 214 20% 11%;
 
     /* ===== PRIMARY ACCENT (maps to --primary) ===== */
     --accent-neutral: var(--primary);
@@ -48,13 +48,13 @@
     --accent-neutral-glow: var(--primary) / 0.2;
     --accent-neutral-rgb: 130 160 255;
 
-    /* ===== PRECISION PANEL (maps to --primary) ===== */
-    --precision-cobalt: var(--primary);
-    --precision-cobalt-rgb: 130 160 255;
-    --precision-panel: 240 6% 2%;
-    --precision-panel-elevated: 240 6% 4%;
-    --precision-panel-line: 220 20% 18%;
-    --precision-panel-inner: var(--primary);
+    /* ===== PRECISION PANEL (Resend frost borders) ===== */
+    --precision-cobalt: oklch(0.62 0.19 260);
+    --precision-cobalt-rgb: 59 158 255;
+    --precision-panel: 214 40% 2%;
+    --precision-panel-elevated: 214 40% 4%;
+    --precision-panel-line: 214 50% 85% / 0.19;
+    --precision-panel-inner: oklch(0.62 0.19 260);
 
     /* ===== RESEND FROST SYSTEM (resend.com aesthetic) ===== */
     --rs-frost-border: 214 100% 92% / 0.19;
