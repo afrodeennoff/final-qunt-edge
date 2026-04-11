@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Card } from "@/components/ui/card"
+
 import { Avatar as Avatar, AvatarFallback as AvatarFallback, AvatarImage as AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -62,6 +62,8 @@ interface TraderMetrics {
 }
 
 type DateFilterPreset = "last_week" | "last_month" | "last_3_months" | "last_6_months" | "last_year" | "custom"
+
+const FR = { boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }
 
 function clamp(value: number, min = 0, max = 100) {
  return Math.min(max, Math.max(min, value))
@@ -487,43 +489,43 @@ export default function TraderProfilePage() {
  }, [dateFilterPreset, customDateRange?.from, customDateRange?.to, closedTrades.length])
 
  return (
- <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
+ <div className="min-h-[calc(100vh-72px)] bg-black px-6 py-20 sm:px-8">
  
 
- <div className="relative mx-auto grid w-full max-w-[1600px] gap-3 sm:gap-4 xl:grid-cols-[1.35fr_1fr]">
- <section className="space-y-3 sm:space-y-4">
- <Card className="border rs-frost-border bg-background p-3.5 sm:rs-frost-ring transition-colors">
+ <div className="mx-auto grid max-w-[1120px] gap-6 xl:grid-cols-[1.35fr_1fr]">
+ <section className="space-y-6">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
  <div className="flex items-start gap-4">
- <Avatar className="h-20 w-20 border rs-frost-border rs-frost-surface rs-frost-ring transition-transform duration-300">
+ <Avatar className="h-20 w-20 border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-transform duration-300">
  <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
- <AvatarFallback className="bg-background text-sm font-semibold rs-text-strong">
+ <AvatarFallback className="bg-background text-sm font-semibold text-[#f0f0f0]">
  {profileInitials}
  </AvatarFallback>
  </Avatar>
  <div className="min-w-0 flex-1">
- <p className="truncate text-[2.25rem] font-bold leading-tight rs-text-strong">{profileName}</p>
- <p className="mt-1 text-sm rs-text-secondary">{activeAccountsCount} active accounts</p>
+ <p className="truncate text-[2.25rem] font-bold leading-tight text-[#f0f0f0]">{profileName}</p>
+ <p className="mt-1 text-sm text-[#a1a4a5]">{activeAccountsCount} active accounts</p>
  <div className="mt-2.5 flex flex-wrap gap-1.5">
- <span className="inline-flex items-center gap-1.5 rounded-md border rs-frost-border rs-frost-surface px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rs-text-strong">
+ <span className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  <Zap className="h-3 w-3" />
  Trader Profile
  </span>
- <span className="inline-flex items-center rounded-md border rs-frost-border rs-frost-surface px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rs-text-strong">
+ <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Total Trades {metrics.totalTrades}
  </span>
- <span className="inline-flex items-center rounded-md border rs-frost-border rs-frost-surface px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide rs-text-strong">
+ <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Withdraw {formatValue(totalWithdrawAllAccounts, 0)}
  </span>
  </div>
  {isOwnProfile ? (
- <div className="mt-3 flex items-center gap-3 rounded-lg border rs-frost-border rs-frost-surface px-3 py-2">
+ <div className="mt-3 flex items-center gap-3 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-3 py-2">
  <div className="flex items-center gap-2 min-w-0 flex-1">
  {showOnLeaderboard ? (
  <Globe className="h-3.5 w-3.5 text-semantic-success shrink-0" />
  ) : (
- <Lock className="h-3.5 w-3.5 rs-text-secondary shrink-0" />
+ <Lock className="h-3.5 w-3.5 text-[#a1a4a5] shrink-0" />
  )}
- <p className="text-xs rs-text-secondary truncate">
+ <p className="text-xs text-[#a1a4a5] truncate">
  {showOnLeaderboard ? "Your profile is public — visible on the leaderboard" : "Your profile is private — hidden from the leaderboard"}
  </p>
  </div>
@@ -538,44 +540,44 @@ export default function TraderProfilePage() {
  </div>
  </div>
  <div className="mt-3 grid gap-1.5 sm:grid-cols-3">
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-2.5">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Total Trades</p>
- <p className="mt-1 text-lg font-semibold rs-text-strong">{metrics.totalTrades}</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Trades</p>
+ <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">{metrics.totalTrades}</p>
  </div>
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-2.5">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Current Streak</p>
- <p className="mt-1 text-lg font-semibold rs-text-strong">
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Current Streak</p>
+ <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">
  {metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : "No winning streak"}
  </p>
  </div>
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-2.5">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Net PnL</p>
- <p className="mt-1 text-lg font-semibold rs-text-strong">{formatSigned(metrics.netPnl)}</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Net PnL</p>
+ <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">{formatSigned(metrics.netPnl)}</p>
  </div>
  </div>
- </Card>
+ </div>
 
  <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-2">
- <Card className="border rs-frost-border bg-background p-2.5 rs-frost-ring transition-colors">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Risk Reward</p>
- <p className="mt-1 text-2xl font-semibold rs-text-strong">{formatValue(metrics.riskReward)}</p>
- </Card>
- <Card className="border rs-frost-border bg-background p-2.5 rs-frost-ring transition-colors">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Max Drawdown</p>
- <p className="mt-1 text-2xl font-semibold rs-text-strong">{formatValue(metrics.drawdown)}</p>
- </Card>
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-5 transition-colors" style={FR}>
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Risk Reward</p>
+ <p className="mt-1 text-2xl font-semibold text-[#f0f0f0]">{formatValue(metrics.riskReward)}</p>
+ </div>
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-5 transition-colors" style={FR}>
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Max Drawdown</p>
+ <p className="mt-1 text-2xl font-semibold text-[#f0f0f0]">{formatValue(metrics.drawdown)}</p>
+ </div>
  </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
- <div className="mb-2 rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-2.5">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="mb-2 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Date Filter</p>
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Date Filter</p>
  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
  <Select
  value={dateFilterPreset}
  onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
  >
- <SelectTrigger className="h-9 w-full rs-frost-border bg-[hsl(var(--qe-surface-1))] text-xs rs-text-strong sm:w-[210px]">
+ <SelectTrigger className="h-9 w-full border-[rgba(214,235,253,0.19)] bg-black text-xs text-[#f0f0f0] sm:w-[210px]">
  <SelectValue placeholder="Select range" />
  </SelectTrigger>
  <SelectContent>
@@ -592,13 +594,13 @@ export default function TraderProfilePage() {
  <Button 
  type="button"
  variant="outline"
- className="h-9 justify-start rs-frost-border bg-[hsl(var(--qe-surface-1))] text-xs rs-text-strong rs-frost-hover"
+ className="h-9 justify-start border-[rgba(214,235,253,0.19)] bg-black text-xs text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.08)]"
  >
  <CalendarIcon className="h-3.5 w-3.5" />
  {dateFilterLabel ?? "Custom Range"}
  </Button>
  </PopoverTrigger>
- <PopoverContent className="w-auto rs-frost-border bg-[hsl(var(--qe-surface-1))] p-2" align="start">
+ <PopoverContent className="w-auto border-[rgba(214,235,253,0.19)] bg-black p-2" align="start">
  <Calendar
  mode="range"
  selected={customDateRange}
@@ -612,8 +614,8 @@ export default function TraderProfilePage() {
  </div>
  </div>
  <div className="mb-2.5 flex items-center justify-between">
- <p className="text-sm font-semibold rs-text-strong">PnL Calendar</p>
- <div className="flex items-center gap-3 text-xs rs-text-secondary">
+ <p className="text-sm font-semibold text-[#f0f0f0]">PnL Calendar</p>
+ <div className="flex items-center gap-3 text-xs text-[#a1a4a5]">
  <span>{tradeCalendarDays.length} active days</span>
  {activeDateRange?.from ? (
  <span className="hidden sm:inline">
@@ -623,7 +625,7 @@ export default function TraderProfilePage() {
  ) : null}
  </div>
  </div>
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-1.5">
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-1.5">
  <Calendar
  mode="single"
  selected={selectedCalendarDay ?? latestTradeDay}
@@ -641,10 +643,10 @@ export default function TraderProfilePage() {
  classNames={{
  months: "flex flex-col gap-2",
  month: "space-y-2",
- weekday: "w-10 text-center text-[0.75rem] font-medium rs-text-secondary",
+ weekday: "w-10 text-center text-[0.75rem] font-medium text-[#a1a4a5]",
  day: "relative h-10 w-10 overflow-hidden rounded-md p-0 text-center align-middle",
  day_button:
- "h-10 w-10 rounded-md p-0 font-normal rs-text-strong rs-frost-hover aria-selected:bg-foreground/3 aria-selected:rs-text-strong",
+ "h-10 w-10 rounded-md p-0 font-normal text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.08)] aria-selected:bg-foreground/3 aria-selected:text-[#f0f0f0]",
  }}
  components={{
  DayButton: ({ day, className, ...buttonProps }: DayButtonProps) => {
@@ -657,7 +659,7 @@ export default function TraderProfilePage() {
  {...buttonProps}
  className={className}
  >
- <span className="text-[11px] rs-text-secondary">{format(date, "d")}</span>
+ <span className="text-[11px] text-[#a1a4a5]">{format(date, "d")}</span>
  </button>
  )
  }
@@ -665,7 +667,7 @@ export default function TraderProfilePage() {
  const pnl = tradePnlByDay.get(key) ?? 0
  const hasTrade = tradePnlByDay.has(key)
  const tint =
- pnl > 0 ? "text-semantic-success" : pnl < 0 ? "text-semantic-error" : hasTrade ? "rs-text-strong" : "rs-text-secondary"
+ pnl > 0 ? "text-semantic-success" : pnl < 0 ? "text-semantic-error" : hasTrade ? "text-[#f0f0f0]" : "text-[#a1a4a5]"
 
  return (
  <button
@@ -684,7 +686,7 @@ export default function TraderProfilePage() {
  },
  }}
  />
- <div className="mt-2 flex flex-wrap items-center gap-2 px-1 text-[11px] rs-text-secondary">
+ <div className="mt-2 flex flex-wrap items-center gap-2 px-1 text-[11px] text-[#a1a4a5]">
  <span className="inline-flex items-center gap-1">
  <span className="h-2 w-2 rounded-full bg-semantic-success-bg/50" />
  Profit
@@ -694,15 +696,15 @@ export default function TraderProfilePage() {
  Loss
  </span>
  <span className="inline-flex items-center gap-1">
- <span className="h-2 w-2 rounded-full bg-primary/25" />
+ <span className="h-2 w-2 rounded-full bg-[rgba(59,158,255,0.2)]" />
  No trades
  </span>
  </div>
  </div>
- <div className="mt-1.5 flex items-center justify-between rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors px-3 py-2">
+ <div className="mt-1.5 flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-3 py-2">
  <div className="min-w-0">
- <p className="text-xs rs-text-secondary">Selected Day</p>
- <p className="truncate text-xs font-semibold rs-text-strong">
+ <p className="text-xs text-[#a1a4a5]">Selected Day</p>
+ <p className="truncate text-xs font-semibold text-[#f0f0f0]">
  {selectedCalendarDay ? format(selectedCalendarDay, "EEE, MMM d") : latestTradeDay ? format(latestTradeDay, "EEE, MMM d") : "—"}
  </p>
  </div>
@@ -710,24 +712,24 @@ export default function TraderProfilePage() {
  {formatSigned(selectedPnl)}
  </p>
  </div>
- </Card>
+ </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
  <div className="mb-2.5 flex items-center justify-between">
- <p className="text-sm font-semibold rs-text-strong">Trade Feed</p>
- <p className="text-xs rs-text-secondary">
+ <p className="text-sm font-semibold text-[#f0f0f0]">Trade Feed</p>
+ <p className="text-xs text-[#a1a4a5]">
  Closed trades {closedTrades.length === 0 ? "0" : `${(tradeFeedPage - 1) * tradesPerPage + 1}-${Math.min(tradeFeedPage * tradesPerPage, closedTrades.length)}`} of {closedTrades.length}
  </p>
  </div>
  {isLoading ? (
  <div className="space-y-1.5">
  {[1, 2, 3].map((i) => (
- <div key={i} className="flex items-center justify-between rounded-lg border rs-frost-border rs-frost-surface px-3 py-2 animate-pulse">
+ <div key={i} className="flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-3 py-2 animate-pulse">
  <div className="flex items-center gap-2">
  <div className="h-3.5 w-3.5 rounded-full bg-muted" />
  <div className="space-y-1">
  <div className="h-3 w-20 rounded bg-muted" />
- <div className="h-2 w-32 rounded bg-muted/60" />
+ <div className="h-2 w-32 rounded bg-[rgba(214,235,253,0.02)]" />
  </div>
  </div>
  <div className="h-3 w-12 rounded bg-muted" />
@@ -737,7 +739,7 @@ export default function TraderProfilePage() {
  ) : null}
  <div className="space-y-1.5">
  {paginatedClosedTrades.length === 0 ? (
- <p className="text-sm rs-text-secondary">No closed trades in this range.</p>
+ <p className="text-sm text-[#a1a4a5]">No closed trades in this range.</p>
  ) : (
  paginatedClosedTrades.map((trade) => {
  const pnl = Number(trade.pnl || 0)
@@ -745,13 +747,13 @@ export default function TraderProfilePage() {
  return (
  <div
  key={trade.id}
- className="flex items-center justify-between rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors px-3 py-2"
+ className="flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-3 py-2"
  >
  <div className="flex items-center gap-2">
  <CircleDot className={`h-3.5 w-3.5 ${pnl >= 0 ? "text-semantic-success" : "text-semantic-error"}`} />
  <div>
- <p className="text-sm font-semibold rs-text-strong">{trade.instrument || "N/A"}</p>
- <p className="text-[11px] rs-text-secondary">
+ <p className="text-sm font-semibold text-[#f0f0f0]">{trade.instrument || "N/A"}</p>
+ <p className="text-[11px] text-[#a1a4a5]">
  Closed {closeDate ? new Date(closeDate).toLocaleString() : new Date(trade.entryDate).toLocaleString()}
  </p>
  </div>
@@ -765,7 +767,7 @@ export default function TraderProfilePage() {
  )}
  </div>
  {closedTrades.length > tradesPerPage ? (
- <div className="mt-3 rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors px-1.5 py-1">
+ <div className="mt-3 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-1.5 py-1">
  <Pagination className="justify-end">
  <PaginationContent>
  <PaginationItem>
@@ -797,19 +799,19 @@ export default function TraderProfilePage() {
  </Pagination>
  </div>
  ) : null}
- </Card>
+ </div>
  </section>
 
- <aside className="mx-auto w-full max-w-[430px] space-y-2 xl:max-w-none">
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
- <div className="flex items-center justify-between text-sm rs-text-secondary">
+ <aside className="space-y-4">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="flex items-center justify-between text-sm text-[#a1a4a5]">
  <span className="inline-flex items-center gap-1">
  Compare with: average user
  <ChevronDown className="h-3.5 w-3.5" />
  </span>
  <span className="text-[11px]">{isBenchmarkLoading ? "Loading..." : "Live"}</span>
  </div>
- <div className="mt-2.5 rounded-xl border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-2.5">
+ <div className="mt-2.5 rounded-xl border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
  <RadarChart data={radarData}>
@@ -823,75 +825,75 @@ export default function TraderProfilePage() {
  </ResponsiveContainer>
  </div>
  </div>
- </Card>
+ </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
  <div className="grid gap-2 sm:grid-cols-2">
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-3">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Total Capital</p>
- <p className="mt-1 text-3xl font-semibold rs-text-strong">{formatCapitalCompact(totalCapitalAllAccounts)}</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Capital</p>
+ <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatCapitalCompact(totalCapitalAllAccounts)}</p>
  </div>
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-3">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Total Withdraw</p>
- <p className="mt-1 text-3xl font-semibold rs-text-strong">{formatCapitalCompact(totalWithdrawAllAccounts)}</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Withdraw</p>
+ <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatCapitalCompact(totalWithdrawAllAccounts)}</p>
  </div>
  </div>
- <div className="mt-2 rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-3">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Avg. Return</p>
- <p className="mt-1 text-4xl font-semibold rs-text-strong">{formatValue(Math.abs(metrics.avgReturn))}%</p>
+ <div className="mt-2 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Avg. Return</p>
+ <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{formatValue(Math.abs(metrics.avgReturn))}%</p>
  </div>
- <div className="mt-3 h-2 rounded-full bg-background">
- <div className="h-full rounded-full bg-primary/35" style={{ width: `${Math.min(100, Math.max(8, metrics.consistencyRate))}%` }} />
+ <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.consistencyRate))}%` }} />
  </div>
- </Card>
+ </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Win Rate</p>
- <p className="mt-1 text-4xl font-semibold rs-text-strong">{formatValue(metrics.winRate)}%</p>
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Win Rate</p>
+ <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{formatValue(metrics.winRate)}%</p>
  <div className="mt-3 grid gap-2 sm:grid-cols-2">
- <div className="h-2 rounded-full bg-background">
- <div className="h-full rounded-full bg-primary/40" style={{ width: `${Math.min(100, Math.max(8, metrics.winRate))}%` }} />
+ <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.winRate))}%` }} />
  </div>
- <div className="h-2 rounded-full bg-background">
- <div className="h-full rounded-full bg-primary/25" style={{ width: `${winRateGuidePercent}%` }} />
+ <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="h-full rounded-full bg-[rgba(59,158,255,0.2)]" style={{ width: `${winRateGuidePercent}%` }} />
  </div>
  </div>
- </Card>
+ </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
  <div className="flex items-center justify-between">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Total Trades</p>
- <span className="inline-flex items-center rounded-md border rs-frost-border rs-frost-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rs-text-strong">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Trades</p>
+ <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Serial Trader
  </span>
  </div>
- <p className="mt-1 text-4xl font-semibold rs-text-strong">{metrics.totalTrades}</p>
+ <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{metrics.totalTrades}</p>
  <div className="mt-3 grid gap-2 sm:grid-cols-2">
- <div className="h-2 rounded-full bg-background">
- <div className="h-full rounded-full bg-primary/40" style={{ width: `${Math.min(100, Math.max(8, metrics.totalTrades))}%` }} />
+ <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.totalTrades))}%` }} />
  </div>
- <div className="h-2 rounded-full bg-background">
- <div className="h-full rounded-full bg-primary/25" style={{ width: `${Math.min(100, Math.max(8, 100 - Math.min(100, metrics.totalTrades)))}%` }} />
+ <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="h-full rounded-full bg-[rgba(59,158,255,0.2)]" style={{ width: `${Math.min(100, Math.max(8, 100 - Math.min(100, metrics.totalTrades)))}%` }} />
  </div>
  </div>
- </Card>
+ </div>
 
- <Card className="border rs-frost-border bg-background p-3.5 rs-frost-ring transition-colors">
+ <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
  <div className="grid gap-2 sm:grid-cols-2">
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-3">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Break Even Rate</p>
- <p className="mt-1 text-3xl font-semibold rs-text-strong">{formatValue(metrics.breakEvenRate)}%</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Break Even Rate</p>
+ <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatValue(metrics.breakEvenRate)}%</p>
  </div>
- <div className="rounded-lg border rs-frost-border rs-frost-surface rs-frost-ring transition-colors p-3">
- <p className="text-[10px] uppercase tracking-wider rs-text-secondary">Sum Gain</p>
- <p className="mt-1 text-3xl font-semibold rs-text-strong">{formatValue(metrics.sumGain)}%</p>
+ <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Sum Gain</p>
+ <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatValue(metrics.sumGain)}%</p>
  </div>
  </div>
- </Card>
+ </div>
 
  <button
  type="button"
- className="w-full rounded-lg border rs-frost-border rs-frost-hover rounded-full border rs-frost-border bg-transparent px-5 py-2.5 text-sm font-semibold rs-text-strong transition-colors"
+ className="w-full rounded-lg border border-[rgba(214,235,253,0.19)] hover:bg-[rgba(255,255,255,0.08)] rounded-full border border-[rgba(214,235,253,0.19)] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#f0f0f0] transition-colors"
  >
  Show All Stats
  </button>

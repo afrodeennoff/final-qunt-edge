@@ -43,46 +43,53 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
     })
   }
 
+  /* ─── Empty state ─── */
   if (initialEntries.length === 0) {
     return (
-      <section className="rs-frost-ring rounded-3xl border rs-frost-border bg-background p-8 text-center">
-        <div className="mx-auto max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full border rs-frost-border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] rs-text-secondary">
-            <Trophy className="h-3.5 w-3.5 rs-accent-orange" />
+      <div className="rounded-3xl border border-[rgba(214,235,253,0.19)] bg-black p-10 text-center"
+           style={{ boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }}>
+        <div className="mx-auto max-w-lg">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(214,235,253,0.19)] bg-transparent px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#a1a4a5]">
+            <Trophy className="h-3.5 w-3.5 text-[#ff801f]" />
             Public rankings
           </div>
-          <h2 className="mt-6 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] rs-text-strong">
+          <h2 className="mt-8 text-3xl font-semibold leading-[1.05] tracking-[-0.04em] text-[#f0f0f0]">
             No public traders are ranked yet.
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.6] rs-text-secondary">
+          <p className="mt-4 text-[14px] leading-[1.6] text-[#a1a4a5]">
             The leaderboard only shows traders who opted into public visibility. Check back after more traders publish live performance.
           </p>
         </div>
-      </section>
+      </div>
     )
   }
 
+  /* ─── Hero + Summary ─── */
   return (
-    <div className="space-y-8">
-      <section className="rs-frost-ring grid gap-8 rounded-3xl border rs-frost-border bg-background p-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:p-10">
+    <div className="space-y-10">
+      <section className="rounded-3xl border border-[rgba(214,235,253,0.19)] bg-black p-8 sm:p-10 lg:grid lg:grid-cols-[1.15fr_0.85fr] lg:gap-10"
+               style={{ boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }}>
+        {/* Left — hero */}
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border rs-frost-border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] rs-text-secondary">
-            <Trophy className="h-3.5 w-3.5 rs-accent-orange" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(214,235,253,0.19)] bg-transparent px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#a1a4a5]">
+            <Trophy className="h-3.5 w-3.5 text-[#ff801f]" />
             Public rankings
           </div>
-          <h2 className="mt-6 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.04em] rs-text-strong">
-            Real traders. Real monthly performance.
+          <h2 className="mt-8 text-[clamp(2rem,4.5vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#f0f0f0]">
+            Real traders.<br />Real monthly performance.
           </h2>
-          <p className="mt-4 max-w-2xl text-[15px] leading-[1.6] rs-text-secondary">
-            The board highlights opted-in traders using live production metrics, with enough depth to understand how they are actually performing, not just who had one lucky day.
+          <p className="mt-5 max-w-xl text-[14px] leading-[1.6] text-[#a1a4a5]">
+            The board highlights opted-in traders using live production metrics — enough depth to understand how they are actually performing, not just who had one lucky day.
           </p>
           {isDemoBoard ? (
-            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border rs-border-green rs-bg-green px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] rs-accent-green">
+            <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-[rgba(17,255,153,0.22)] bg-[rgba(17,255,153,0.08)] px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-[#11ff99]">
               <Shield className="mr-1 h-3 w-3" />
               Demo rankings shown until live accounts connect
             </div>
           ) : null}
-          <div className="mt-6 flex flex-wrap gap-2">
+
+          {/* Sort pills */}
+          <div className="mt-8 flex flex-wrap gap-2">
             {([
               { key: 'monthly_pnl', label: 'Rank by PnL' },
               { key: 'winrate', label: 'Rank by win rate' },
@@ -92,32 +99,34 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 key={item.key}
                 type="button"
                 onClick={() => updateSort(item.key)}
-                className={`rounded-full border px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                className={`rounded-full border px-4 py-[5px] text-[13px] font-medium transition-colors ${
                   currentSort === item.key
-                    ? 'border-foreground/25 bg-foreground text-background'
-                    : 'rs-frost-border bg-transparent rs-text-secondary hover:bg-foreground/8 hover:rs-text-strong'
+                    ? 'border-[rgba(214,235,253,0.35)] bg-[#f0f0f0] text-[#000000]'
+                    : 'border-[rgba(214,235,253,0.19)] bg-transparent text-[#a1a4a5] hover:bg-[rgba(255,255,255,0.08)] hover:text-[#f0f0f0]'
                 }`}
               >
                 {item.label}
               </button>
             ))}
           </div>
-          <p className="mt-5 text-[13px] leading-[1.5] rs-text-tertiary">
+          <p className="mt-6 text-[13px] text-[#7a7a7a]">
             Want to change what shows on the board?{' '}
-            <Link href={`/${locale}/dashboard/trader-profile`} className="font-medium rs-accent-blue hover:underline underline-offset-4">
+            <Link href={`/${locale}/dashboard/trader-profile`} className="font-medium text-[#3b9eff] hover:underline underline-offset-4">
               Open Trader Profile
             </Link>
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <SummaryCard label="Ranked traders" value={initialEntries.length.toString()} icon={Trophy} accent="blue" />
+        {/* Right — summary cards */}
+        <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:mt-0">
+          <SummaryCard label="Ranked traders" value={initialEntries.length.toString()} icon={Trophy} accent="orange" />
           <SummaryCard label="Combined PnL" value={formatCurrency(summary.totalPnl)} icon={Wallet} accent="green" />
-          <SummaryCard label="Average win rate" value={`${summary.avgWinRate}%`} icon={Activity} accent="orange" />
-          <SummaryCard label="Trades logged" value={summary.totalTrades.toLocaleString()} icon={Shield} accent="blue" />
-          <div className="rs-frost-ring sm:col-span-2 rounded-2xl border rs-frost-border rs-frost-surface p-4">
-            <p className="text-[11px] uppercase tracking-[0.18em] rs-text-tertiary">Methodology</p>
-            <p className="mt-2 text-[13px] leading-[1.6] rs-text-secondary">
+          <SummaryCard label="Average win rate" value={`${summary.avgWinRate}%`} icon={Activity} accent="blue" />
+          <SummaryCard label="Trades logged" value={summary.totalTrades.toLocaleString()} icon={Shield} accent="orange" />
+          <div className="sm:col-span-2 rounded-2xl border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] p-4"
+               style={{ boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }}>
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]">Methodology</p>
+            <p className="mt-2 text-[13px] leading-[1.6] text-[#a1a4a5]">
               Rankings are based on public opt-in accounts and the current month&apos;s trade data. Sort changes recalculate only the ordering, not the underlying dataset.
             </p>
           </div>
@@ -133,6 +142,8 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
   )
 }
 
+/* ─── Helpers ─── */
+
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -141,10 +152,10 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
-const accentMap = {
-  blue: { bg: 'rs-bg-blue', border: 'rs-border-blue', text: 'rs-accent-blue', iconBg: 'bg-primary/12' },
-  green: { bg: 'rs-bg-green', border: 'rs-border-green', text: 'rs-accent-green', iconBg: 'rs-bg-green' },
-  orange: { bg: 'rs-bg-orange', border: 'rs-border-orange', text: 'rs-accent-orange', iconBg: 'rs-bg-orange' },
+const ACCENT = {
+  orange: { bg: 'bg-[rgba(255,128,31,0.08)]', border: 'border-[rgba(255,128,31,0.22)]', text: 'text-[#ff801f]', dot: 'bg-[rgba(255,128,31,0.22)]' },
+  green:  { bg: 'bg-[rgba(17,255,153,0.06)]',  border: 'border-[rgba(17,255,153,0.18)]', text: 'text-[#11ff99]', dot: 'bg-[rgba(17,255,153,0.18)]' },
+  blue:   { bg: 'bg-[rgba(59,158,255,0.08)]',  border: 'border-[rgba(59,158,255,0.2)]',  text: 'text-[#3b9eff]', dot: 'bg-[rgba(59,158,255,0.2)]' },
 } as const
 
 function SummaryCard({
@@ -156,16 +167,17 @@ function SummaryCard({
   label: string
   value: string
   icon: typeof Trophy
-  accent: keyof typeof accentMap
+  accent: keyof typeof ACCENT
 }) {
-  const style = accentMap[accent]
+  const a = ACCENT[accent]
   return (
-    <div className={`rs-frost-ring rounded-2xl border ${style.border} ${style.bg} p-4`}>
-      <div className={`inline-flex h-6 w-6 items-center justify-center rounded-md ${style.iconBg}`}>
-        <Icon className={`h-3.5 w-3.5 ${style.text}`} />
+    <div className={`rounded-2xl border ${a.border} ${a.bg} p-4`}
+         style={{ boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }}>
+      <div className={`inline-flex h-6 w-6 items-center justify-center rounded-md ${a.dot}`}>
+        <Icon className={`h-3 w-3 ${a.text}`} />
       </div>
-      <p className="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">{label}</p>
-      <p className={`mt-1 text-2xl font-semibold tracking-tight ${style.text}`}>{value}</p>
+      <p className="mt-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold tracking-[-0.02em] ${a.text}`}>{value}</p>
     </div>
   )
 }

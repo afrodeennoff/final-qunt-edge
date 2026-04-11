@@ -35,7 +35,7 @@ export default async function LeaderboardPage({
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="mx-auto max-w-[1200px] px-6 py-16 sm:px-8 lg:px-10">
+      <div className="mx-auto max-w-[1120px] px-6 py-20 sm:px-8">
         <Suspense fallback={<LeaderboardTableSkeleton />}>
           <LeaderboardContent initialEntries={entries} locale={locale} />
         </Suspense>
