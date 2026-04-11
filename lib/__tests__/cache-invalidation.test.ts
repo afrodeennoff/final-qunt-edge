@@ -78,6 +78,12 @@ describe('invalidateTradeDataCaches', () => {
     invalidateTradeDataCaches('user-ghi')
     expect(updateTagMock).toHaveBeenCalledWith('equity-chart-user-ghi')
   })
+
+  it('invalidates leaderboard cache so new trades reflect on the board', () => {
+    const updateTagMock = vi.mocked(updateTag)
+    invalidateTradeDataCaches('user-ghi')
+    expect(updateTagMock).toHaveBeenCalledWith('leaderboard')
+  })
 })
 
 describe('invalidateAccountRelatedCaches', () => {
@@ -85,6 +91,12 @@ describe('invalidateAccountRelatedCaches', () => {
     const updateTagMock = vi.mocked(updateTag)
     invalidateAccountRelatedCaches('user-jkl')
     expect(updateTagMock).toHaveBeenCalledWith('equity-chart-user-jkl')
+  })
+
+  it('invalidates leaderboard cache so account changes reflect on the board', () => {
+    const updateTagMock = vi.mocked(updateTag)
+    invalidateAccountRelatedCaches('user-jkl')
+    expect(updateTagMock).toHaveBeenCalledWith('leaderboard')
   })
 })
 

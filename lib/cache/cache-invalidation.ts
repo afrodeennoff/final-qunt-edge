@@ -30,6 +30,7 @@ export const CACHE_TAGS = {
   GROUPS: (userId: string) => `groups-${userId}`,
   TAGS: (userId: string) => `tags-${userId}`,
   MOOD: (userId: string) => `mood-${userId}`,
+  LEADERBOARD: 'leaderboard',
 } as const
 
 function updateTags(tags: string[]): void {
@@ -148,6 +149,7 @@ export function invalidateTradeDataCaches(userId: string): void {
     CACHE_TAGS.TRADES(userId),
     CACHE_TAGS.DASHBOARD(userId),
     CACHE_TAGS.EQUITY_CHART(userId),
+    CACHE_TAGS.LEADERBOARD,
   ])
 }
 
@@ -161,6 +163,7 @@ export function invalidateAccountRelatedCaches(userId: string): void {
     CACHE_TAGS.GROUPS(userId),
     CACHE_TAGS.DASHBOARD(userId),
     CACHE_TAGS.EQUITY_CHART(userId),
+    CACHE_TAGS.LEADERBOARD,
   ])
 }
 
