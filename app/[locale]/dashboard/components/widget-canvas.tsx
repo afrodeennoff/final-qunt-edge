@@ -47,8 +47,8 @@ const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => 
     version: layout.version ?? 1,
     checksum: layout.checksum ?? null,
     deviceId: layout.deviceId ?? null,
-    desktop: desktop as unknown as DashboardLayout['desktop'],
-    mobile: mobile as unknown as DashboardLayout['mobile'],
+    desktop: layout.desktop || defaultLayouts.desktop,
+    mobile: layout.mobile || defaultLayouts.mobile,
   }
 }
 
