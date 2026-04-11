@@ -10,7 +10,6 @@ import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/s
 import { SidebarRootProviders } from "@/components/providers/root-providers"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { BackgroundGlow } from "@/components/ui/background-glow"
-import { LayoutDashboard, BarChart3, TrendingUp, ArrowLeft } from "lucide-react"
 import {
     HEADER_HEIGHT,
     HEADER_Z_INDEX,
@@ -19,9 +18,8 @@ import {
     CONTENT_PADDING,
     CONTENT_PADDING_Y,
 } from "@/lib/constants/layout"
-import { MobileBottomNav } from "@/components/mobile-bottom-nav"
-import type { MobileNavItem } from "@/components/mobile-bottom-nav"
 import { DashboardProviders } from "@/components/providers/dashboard-providers"
+import { TeamsMobileBottomNav } from "../components/teams-mobile-bottom-nav"
 
 export const metadata: Metadata = {
     robots: {
@@ -75,32 +73,6 @@ export default async function TeamManageLayout({
     const pathname = `/${locale}/teams/manage`
     const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
 
-    const teamsMobileItems: MobileNavItem[] = [
-        {
-            href: slug ? `${dashboardRoot}/${slug}` : dashboardRoot,
-            icon: LayoutDashboard,
-            label: "Overview",
-            exact: true,
-        },
-        {
-            href: slug ? `${dashboardRoot}/${slug}/analytics` : dashboardRoot,
-            icon: BarChart3,
-            label: "Analytics",
-            disabled: !slug,
-        },
-        {
-            href: slug ? `${dashboardRoot}/${slug}/traders` : dashboardRoot,
-            icon: TrendingUp,
-            label: "Traders",
-            disabled: !slug,
-        },
-        {
-            href: `/${locale}/dashboard`,
-            icon: ArrowLeft,
-            label: "Dashboard",
-        },
-    ]
-
     return (
         <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
             <DashboardProviders>
@@ -137,7 +109,11 @@ export default async function TeamManageLayout({
                             </div>
                         </main>
                     </div>
-                    <MobileBottomNav items={teamsMobileItems} />
+                    <TeamsMobileBottomNav
+                        dashboardRoot={dashboardRoot}
+                        slug={slug}
+                        backHref={`/${locale}/dashboard`}
+                    />
                 </SidebarInset>
             </DashboardProviders>
         </SidebarRootProviders>
