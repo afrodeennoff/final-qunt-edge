@@ -80,7 +80,7 @@ export const generateEquityChart = tool({
     const allDates = eachDayOfInterval({ start, end });
     
     // Pre-process trades by date for faster lookup
-    const tradesMap = new Map<string, Record<string, unknown>[]>();
+    const tradesMap = new Map<string, import('@/server/trades').SerializedTrade[]>();
     
     trades.forEach(trade => {
       const dateKey = formatInTimeZone(new Date(trade.entryDate), timezone, 'yyyy-MM-dd');
@@ -126,7 +126,7 @@ export const generateEquityChart = tool({
       // Process trades for this date
       relevantTrades.forEach(trade => {
         if (limitedAccountNumbers.includes(trade.accountNumber)) {
-          const netPnL = trade.pnl - (trade.commission || 0);
+          const netPnL = Number(trade.pnl) - (Number(trade.commission) || 0);
           accountEquities[trade.accountNumber] += netPnL;
           
           // Mark first activity if not already set

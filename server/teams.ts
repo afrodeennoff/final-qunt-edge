@@ -516,7 +516,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
     let totalBalance = 0
     let activeTraders = 0
-    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date }> = []
+    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
 
     const now = new Date()
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)

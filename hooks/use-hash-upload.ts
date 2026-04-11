@@ -1,4 +1,4 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable */
 import { useCallback, useEffect, useMemo, useState, startTransition } from 'react'
 import { type FileError, type FileRejection, useDropzone } from 'react-dropzone'
 import { createClient } from '@/lib/supabase'
