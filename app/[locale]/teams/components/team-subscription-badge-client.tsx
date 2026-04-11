@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Link from "next/link"
-import { useI18n } from "@/locales/client"
+import { useI18n, useCurrentLocale } from "@/locales/client"
 import type { Subscription } from '@/prisma/generated/prisma'
 
 export function TeamSubscriptionBadge({
@@ -21,6 +21,7 @@ export function TeamSubscriptionBadge({
   className?: string
 }) {
   const t = useI18n()
+  const locale = useCurrentLocale()
 
   // If no subscription data, user is on Free plan
   if (!subscription) {
@@ -122,7 +123,7 @@ export function TeamSubscriptionBadge({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link href="/dashboard/billing">
+          <Link href={`/${locale}/dashboard/billing`}>
             <Badge
               variant="secondary"
               className={cn(

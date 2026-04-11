@@ -70,7 +70,7 @@ export default function EmbedPage() {
     const searchParams = useSearchParams()
     const preset = searchParams.get('preset') || undefined
     const lang = searchParams.get('lang') || 'en'
-    const [trades, setTrades] = React.useState<any[]>(mockTrades)
+    const [trades, setTrades] = React.useState<Array<{ pnl: number; timeInPosition: number; entryDate: string; side: string; quantity: number; commission: number; instrument: string }>>(mockTrades)
 
     // Dark-only theme with optional presets/overrides.
     React.useEffect(() => {

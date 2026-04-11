@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { updatePassword } from '@/server/auth-password'
@@ -11,6 +11,8 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const params = useParams<{ locale: string }>()
+  const locale = params.locale || 'en'
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -52,7 +54,7 @@ export default function ResetPasswordPage() {
         <p className="text-muted-foreground">
           Your password has been successfully updated. Redirecting to dashboard...
         </p>
-        <Link href="/dashboard" className="text-sm text-primary underline-offset-4 hover:underline">
+        <Link href={`/${locale}/dashboard`} className="text-sm text-primary underline-offset-4 hover:underline">
           Go to dashboard
         </Link>
       </div>

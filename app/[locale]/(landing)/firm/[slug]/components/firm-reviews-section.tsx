@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import Link from 'next/link'
+import { useCurrentLocale } from '@/locales/client'
 import { createFirmReview, listFirmReviews, getFirmReviewStats, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -218,6 +219,7 @@ function ReviewSkeleton() {
 }
 
 export function FirmReviewsSection({ firmId }: { firmId: string }) {
+  const locale = useCurrentLocale()
   const [title, setTitle] = React.useState('')
   const [body, setBody] = React.useState('')
   const [rating, setRating] = React.useState(0)
@@ -487,7 +489,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           {isAuthenticated === false && (
             <div className="rounded-2xl border border-border/70 bg-card/60 p-5 text-center">
               <p className="text-sm text-muted-foreground">
-                Please <Link href="/authentication" className="text-v2-accent hover:underline">sign in</Link> to write a review
+                Please <Link href={`/${locale}/authentication`} className="text-v2-accent hover:underline">sign in</Link> to write a review
               </p>
             </div>
           )}
