@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
 import type { Metadata } from 'next'
-import { Card } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { getFallbackLeaderboardEntryByUserId } from '../../leaderboard/data/leaderboard-query'
@@ -112,33 +111,33 @@ export default async function TraderProfilePage({
 
   if (!snapshot) {
     return (
-      <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
-        <div className="relative mx-auto w-full max-w-[1600px]">
-          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-6 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="min-h-[calc(100vh-72px)] bg-background px-6 py-16 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="rs-frost-ring rounded-3xl border rs-frost-border bg-background p-8">
+            <div className="flex flex-wrap items-center justify-between gap-6">
               <div>
-                <p className="text-sm uppercase tracking-[0.18em] text-fg-muted">Trader profile</p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{slug}</h1>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-fg-muted">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] rs-text-tertiary">Trader profile</p>
+                <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em] rs-text-strong">{slug}</h1>
+                <p className="mt-3 max-w-xl text-[14px] leading-[1.6] rs-text-secondary">
                   This profile is not available yet. Once the trader has public stats or the database is connected, it will appear here.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href={`/${locale}/leaderboard`}
-                  className="rounded-full border border-border/15 bg-card/5 px-4 py-2 text-sm font-medium text-fg-primary transition-all duration-300 hover:border-border/20 hover:bg-card/10"
+                  className="rs-frost-hover rounded-full border rs-frost-border bg-transparent px-4 py-2 text-[13px] font-medium rs-text-strong transition-colors"
                 >
                   Back to leaderboard
                 </Link>
                 <Link
                   href={`/${locale}/dashboard/trader-profile`}
-                  className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all duration-300 hover:opacity-90"
+                  className="rounded-full bg-foreground px-4 py-2 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
                 >
                   Manage profile
                 </Link>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     )
@@ -148,190 +147,188 @@ export default async function TraderProfilePage({
   const negative = snapshot.totalPnl < 0
 
   return (
-    <div className="relative w-full min-h-[calc(100vh-72px)] overflow-hidden p-2.5 sm:p-3.5 lg:p-4">
+    <div className="min-h-[calc(100vh-72px)] bg-background px-6 py-16 sm:px-8 lg:px-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
       />
-      <div className="relative mx-auto grid w-full max-w-[1600px] gap-3 sm:gap-4 xl:grid-cols-[1.35fr_1fr]">
-        <section className="space-y-3 sm:space-y-4">
-          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-20 w-20 border border-border/10 bg-card/5 shadow-xl ring-2 ring-border/5 transition-transform duration-500 hover:scale-105 hover:ring-primary/30">
-                <AvatarFallback className="bg-card/10 text-xl font-semibold text-fg-primary">
+      <div className="mx-auto grid max-w-[1200px] gap-6 xl:grid-cols-[1.35fr_1fr]">
+        <section className="space-y-6">
+          <div className="rs-frost-ring rounded-3xl border rs-frost-border bg-background p-6 sm:p-8">
+            <div className="flex items-start gap-5">
+              <Avatar className="h-20 w-20 border rs-frost-border rs-frost-surface rs-frost-ring">
+                <AvatarFallback className="rs-frost-surface text-lg font-semibold rs-text-strong">
                   {snapshot.username.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[2.25rem] font-bold leading-tight text-foreground">{snapshot.username}</p>
-                <p className="mt-1 text-sm text-fg-muted">Public profile</p>
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+                <p className="truncate text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] rs-text-strong">{snapshot.username}</p>
+                <p className="mt-1 text-[13px] rs-text-secondary">Public profile</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border rs-border-blue rs-bg-blue px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] rs-accent-blue">
                     <Zap className="h-3 w-3" />
                     Trader Profile
                   </span>
                   {snapshot.demo ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border rs-border-green rs-bg-green px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] rs-accent-green">
                       Demo profile preview
                     </span>
                   ) : null}
-                  <span className="inline-flex items-center rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
-                    Total Trades {snapshot.totalTrades}
+                  <span className="inline-flex items-center rounded-full border rs-frost-border rs-frost-surface px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-secondary">
+                    {snapshot.totalTrades} Trades
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-3 grid gap-1.5 sm:grid-cols-3">
-              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
-                <p className="mt-1 text-lg font-semibold text-fg-primary">{snapshot.totalTrades.toLocaleString()}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total Trades</p>
+                <p className="mt-2 text-xl font-semibold rs-text-strong">{snapshot.totalTrades.toLocaleString()}</p>
               </div>
-              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total PnL</p>
-                <p className={`mt-1 text-lg font-semibold ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-fg-primary'}`}>
+              <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total PnL</p>
+                <p className={`mt-2 text-xl font-semibold ${positive ? 'rs-accent-green' : negative ? 'rs-accent-red' : 'rs-text-strong'}`}>
                   {formatSigned(snapshot.totalPnl)}
                 </p>
               </div>
-              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Type</p>
-                <p className="mt-1 text-lg font-semibold text-fg-primary">
+              <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Profile Type</p>
+                <p className="mt-2 text-xl font-semibold rs-text-strong">
                   {snapshot.demo ? 'Demo' : 'Live'}
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <div className="grid gap-1.5 sm:grid-cols-2">
-            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Profit</p>
-              <p className={`mt-1 text-2xl font-semibold ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-fg-primary'}`}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total Profit</p>
+              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'rs-accent-green' : negative ? 'rs-accent-red' : 'rs-text-strong'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
-              <p className="mt-2 text-xs text-fg-muted">Current public performance snapshot</p>
-            </Card>
+              <p className="mt-2 text-[12px] rs-text-tertiary">Current public performance snapshot</p>
+            </div>
 
-            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
-              <p className="mt-1 text-2xl font-semibold text-fg-primary">{snapshot.totalTrades.toLocaleString()}</p>
-              <p className="mt-2 text-xs text-fg-muted">Visible public trades</p>
-            </Card>
+            <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total Trades</p>
+              <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] rs-text-strong">{snapshot.totalTrades.toLocaleString()}</p>
+              <p className="mt-2 text-[12px] rs-text-tertiary">Visible public trades</p>
+            </div>
           </div>
 
           {snapshot.demo && snapshot.winRate !== undefined ? (
-            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-              <div className="mb-2.5 flex items-center justify-between">
-                <p className="text-sm font-semibold text-fg-primary">Demo Leaderboard Stats</p>
-                <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+            <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-[14px] font-semibold rs-text-strong">Demo Leaderboard Stats</p>
+                <span className="inline-flex items-center gap-1.5 rounded-full border rs-frost-border rs-frost-surface px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-secondary">
                   <Lock className="h-3 w-3" />
                   Preview Data
                 </span>
               </div>
 
-              <div className="grid gap-2 sm:grid-cols-3">
-                <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
-                  <p className="mt-1 text-3xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
-                  <div className="mt-3 h-2 rounded-full bg-card/10">
-                    <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Win Rate</p>
+                  <p className="mt-2 text-3xl font-semibold rs-text-strong">{formatValue(snapshot.winRate)}%</p>
+                  <div className="mt-3 h-1.5 rounded-full bg-primary/8">
+                    <div className="h-full rounded-full bg-primary/40" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
                   </div>
                 </div>
 
                 {snapshot.returnPct !== undefined && (
-                  <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-fg-muted">Return</p>
-                    <p className={`mt-1 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Return</p>
+                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'rs-accent-green' : 'rs-accent-red'}`}>
                       {formatSigned(snapshot.returnPct)}%
                     </p>
-                    <div className="mt-3 h-2 rounded-full bg-card/10">
-                      <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-emerald-400/35' : 'bg-red-400/35'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
+                    <div className="mt-3 h-1.5 rounded-full bg-primary/8">
+                      <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-[var(--rs-accent-green)]/35' : 'bg-[var(--rs-accent-red)]/35'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
                     </div>
                   </div>
                 )}
 
                 {snapshot.topInstrument && (
-                  <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-fg-muted">Top Instrument</p>
-                    <p className="mt-1 text-3xl font-semibold text-fg-primary">{snapshot.topInstrument}</p>
+                  <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Top Instrument</p>
+                    <p className="mt-2 text-3xl font-semibold rs-text-strong">{snapshot.topInstrument}</p>
                     {snapshot.avgDurationMinutes !== undefined && (
-                      <p className="mt-2 text-xs text-fg-muted">
+                      <p className="mt-2 text-[12px] rs-text-tertiary">
                         Avg Duration: {formatValue(snapshot.avgDurationMinutes, 0)}m
                       </p>
                     )}
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             <Link
               href={`/${locale}/leaderboard`}
-              className="inline-flex items-center justify-center rounded-full border border-border/15 bg-card/5 px-6 py-2.5 text-sm font-semibold text-fg-primary transition-all duration-300 hover:border-border/20 hover:bg-card/10"
+              className="rs-frost-hover inline-flex items-center justify-center rounded-full border rs-frost-border bg-transparent px-5 py-2.5 text-[13px] font-medium rs-text-strong transition-colors"
             >
               Back to leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:opacity-90"
+              className="inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-[13px] font-semibold text-background transition-opacity hover:opacity-90"
             >
               Manage profile
             </Link>
           </div>
         </section>
 
-        <aside className="mx-auto w-full max-w-[430px] space-y-2 xl:max-w-none">
-          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-            <div className="grid gap-2">
-              <div className="rounded-lg border border-border/5 bg-card/[0.01] backdrop-blur-sm shadow-inner transition-colors duration-300 hover:bg-card/[0.03] p-3">
-                <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Capital</p>
-                <p className="mt-1 text-3xl font-semibold text-fg-primary">{formatCapitalCompact(snapshot.totalPnl)}</p>
-              </div>
+        <aside className="space-y-4">
+          <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
+            <div className="rs-frost-ring rounded-xl border rs-frost-border rs-frost-surface p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total Capital</p>
+              <p className="mt-2 text-3xl font-semibold rs-text-strong">{formatCapitalCompact(snapshot.totalPnl)}</p>
             </div>
-          </Card>
+          </div>
 
           {snapshot.demo && snapshot.winRate !== undefined && (
-            <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
-              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Win Rate</p>
-              <p className="mt-1 text-4xl font-semibold text-fg-primary">{formatValue(snapshot.winRate)}%</p>
+            <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Win Rate</p>
+              <p className="mt-2 text-4xl font-semibold rs-text-strong">{formatValue(snapshot.winRate)}%</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                <div className="h-2 rounded-full bg-card/10">
-                  <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
+                <div className="h-1.5 rounded-full bg-primary/8">
+                  <div className="h-full rounded-full bg-primary/40" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
                 </div>
-                <div className="h-2 rounded-full bg-card/10">
-                  <div className="h-full rounded-full bg-card/20" style={{ width: `${Math.min(100, Math.max(8, 100 - snapshot.winRate))}%` }} />
+                <div className="h-1.5 rounded-full bg-primary/8">
+                  <div className="h-full rounded-full bg-primary/12" style={{ width: `${Math.min(100, Math.max(8, 100 - snapshot.winRate))}%` }} />
                 </div>
               </div>
-            </Card>
+            </div>
           )}
 
-          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Total Trades</p>
-              <span className="inline-flex items-center rounded-md border border-border/20 bg-card/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-fg-primary">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Total Trades</p>
+              <span className="inline-flex items-center rounded-full border rs-frost-border rs-frost-surface px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] rs-text-secondary">
                 {snapshot.totalTrades > 100 ? 'Active Trader' : 'Growing'}
               </span>
             </div>
-            <p className="mt-1 text-4xl font-semibold text-fg-primary">{snapshot.totalTrades}</p>
-            <div className="mt-3 h-2 rounded-full bg-card/10">
-              <div className="h-full rounded-full bg-card/35" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
+            <p className="mt-2 text-4xl font-semibold rs-text-strong">{snapshot.totalTrades}</p>
+            <div className="mt-3 h-1.5 rounded-full bg-primary/8">
+              <div className="h-full rounded-full bg-primary/40" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
             </div>
-          </Card>
+          </div>
 
-          <Card className="border border-border/5 bg-card/[0.02] backdrop-blur-xl p-3.5 shadow-2xl transition-all duration-500 hover:border-border/10 hover:bg-card/[0.04] hover:-translate-y-1 hover:shadow-primary/5">
+          <div className="rs-frost-ring rounded-2xl border rs-frost-border bg-background p-5">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-wider text-fg-muted">Profile Status</p>
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-border/15 bg-card/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-fg-primary">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">Profile Status</p>
+              <span className="inline-flex items-center gap-1.5 rounded-full border rs-frost-border rs-frost-surface px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-secondary">
                 <Lock className="h-3 w-3" />
                 {snapshot.demo ? 'Demo' : 'Live'}
               </span>
             </div>
-            <p className="mt-2 text-sm text-fg-muted">
+            <p className="mt-2 text-[13px] leading-[1.5] rs-text-secondary">
               {snapshot.demo
                 ? 'This is a demo profile with preview data from the leaderboard.'
                 : 'Live trading profile with verified performance data.'}
             </p>
-          </Card>
+          </div>
         </aside>
       </div>
     </div>

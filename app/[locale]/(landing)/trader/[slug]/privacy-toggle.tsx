@@ -5,9 +5,9 @@ export default function PrivacyToggle() {
   const [isPublic, setIsPublic] = useState(true)
   return (
     <div className="mb-4 flex items-center gap-2">
-      <span className="text-sm text-foreground">Profile: {isPublic ? 'Public' : 'Private'}</span>
+      <span className="text-sm rs-text-strong">Profile: {isPublic ? 'Public' : 'Private'}</span>
       <button
-        className="rounded-md border border-border bg-card px-3 py-1 text-sm text-foreground hover:bg-input"
+        className="rs-frost-hover rounded-full border rs-frost-border bg-transparent px-4 py-1.5 text-[13px] font-medium rs-text-strong transition-colors"
         onClick={() => setIsPublic((s) => !s)}
       >
         {isPublic ? 'Set Private' : 'Set Public'}

@@ -56,6 +56,31 @@
     --precision-panel-line: 220 20% 18%;
     --precision-panel-inner: var(--primary);
 
+    /* ===== RESEND FROST SYSTEM (resend.com aesthetic) ===== */
+    --rs-frost-border: 214 100% 92% / 0.19;
+    --rs-frost-border-alt: 217 100% 93% / 0.145;
+    --rs-frost-ring: 214 50% 78% / 0.145;
+    --rs-frost-surface: 214 100% 92% / 0.02;
+    --rs-frost-hover: 0 0% 100% / 0.08;
+    --rs-text-strong: 0 0% 94%;
+    --rs-text-primary: 0 0% 88%;
+    --rs-text-secondary: 0 0% 64%;
+    --rs-text-tertiary: 0 0% 48%;
+    --rs-accent-orange: 22 100% 56%;
+    --rs-accent-orange-bg: 22 100% 56% / 0.08;
+    --rs-accent-orange-border: 22 100% 56% / 0.22;
+    --rs-accent-green: 150 100% 53%;
+    --rs-accent-green-bg: 150 100% 53% / 0.06;
+    --rs-accent-green-border: 150 100% 53% / 0.18;
+    --rs-accent-blue: 213 100% 62%;
+    --rs-accent-blue-bg: 213 100% 62% / 0.08;
+    --rs-accent-blue-border: 213 100% 62% / 0.2;
+    --rs-accent-red: 348 100% 56%;
+    --rs-accent-red-bg: 348 100% 56% / 0.08;
+    --rs-accent-red-border: 348 100% 56% / 0.2;
+    --rs-accent-gold: 42 100% 62%;
+    --rs-accent-gold-border: 42 100% 62% / 0.25;
+
     /* ===== BRAND TOKENS (maps to semantic) ===== */
     --brand-primary: var(--primary);
     --brand-primary-strong: var(--primary);
@@ -345,4 +370,28 @@
     -webkit-tap-highlight-color: transparent;
   }
   .card-clickable:active { transform: scale(0.98); }
+
+  /* ===== RESEND FROST UTILITIES ===== */
+  .rs-frost-border { border-color: hsl(var(--rs-frost-border)); }
+  .rs-frost-ring { box-shadow: 0 0 0 1px hsl(var(--rs-frost-ring)); }
+  .rs-frost-surface { background-color: hsl(var(--rs-frost-surface)); }
+  .rs-frost-hover:hover { background-color: hsl(var(--rs-frost-hover)); }
+  .rs-text-strong { color: hsl(var(--rs-text-strong)); }
+  .rs-text-primary { color: hsl(var(--rs-text-primary)); }
+  .rs-text-secondary { color: hsl(var(--rs-text-secondary)); }
+  .rs-text-tertiary { color: hsl(var(--rs-text-tertiary)); }
+  .rs-accent-orange { color: hsl(var(--rs-accent-orange)); }
+  .rs-accent-green { color: hsl(var(--rs-accent-green)); }
+  .rs-accent-blue { color: hsl(var(--rs-accent-blue)); }
+  .rs-accent-red { color: hsl(var(--rs-accent-red)); }
+  .rs-accent-gold { color: hsl(var(--rs-accent-gold)); }
+  .rs-bg-orange { background-color: hsl(var(--rs-accent-orange-bg)); }
+  .rs-bg-green { background-color: hsl(var(--rs-accent-green-bg)); }
+  .rs-bg-blue { background-color: hsl(var(--rs-accent-blue-bg)); }
+  .rs-bg-red { background-color: hsl(var(--rs-accent-red-bg)); }
+  .rs-border-orange { border-color: hsl(var(--rs-accent-orange-border)); }
+  .rs-border-green { border-color: hsl(var(--rs-accent-green-border)); }
+  .rs-border-blue { border-color: hsl(var(--rs-accent-blue-border)); }
+  .rs-border-red { border-color: hsl(var(--rs-accent-red-border)); }
+  .rs-border-gold { border-color: hsl(var(--rs-accent-gold-border)); }
 }

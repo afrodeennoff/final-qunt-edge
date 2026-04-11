@@ -3,8 +3,7 @@
 import Link from 'next/link'
 import { useMemo, useTransition } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Badge } from "@/components/ui/badge"
-import { Activity, Shield, Trophy, Wallet } from 'lucide-react'
+import { Trophy, Wallet, Activity, Shield } from 'lucide-react'
 import { LeaderboardTable, LeaderboardTableSkeleton } from './leaderboard-table'
 import type { LeaderboardEntry, LeaderboardSort } from '../data/leaderboard-query'
 
@@ -46,14 +45,16 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
 
   if (initialEntries.length === 0) {
     return (
-      <section className="rounded-3xl border border-border/60 bg-[linear-gradient(160deg,hsl(var(--card)/0.62),hsl(var(--background)/0.48))] p-8 text-center shadow-[0_24px_90px_-70px_hsl(0_0%_0%_/0.95)]">
+      <section className="rs-frost-ring rounded-3xl border rs-frost-border bg-background p-8 text-center">
         <div className="mx-auto max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            <Trophy className="h-3.5 w-3.5 text-primary" />
+          <div className="inline-flex items-center gap-2 rounded-full border rs-frost-border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] rs-text-secondary">
+            <Trophy className="h-3.5 w-3.5 rs-accent-orange" />
             Public rankings
           </div>
-          <h2 className="mt-5 text-3xl font-semibold tracking-tight text-foreground">No public traders are ranked yet.</h2>
-          <p className="mt-4 text-sm leading-7 text-muted-foreground">
+          <h2 className="mt-6 text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] rs-text-strong">
+            No public traders are ranked yet.
+          </h2>
+          <p className="mt-4 text-[15px] leading-[1.6] rs-text-secondary">
             The leaderboard only shows traders who opted into public visibility. Check back after more traders publish live performance.
           </p>
         </div>
@@ -62,29 +63,26 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
   }
 
   return (
-    <div className="space-y-6">
-      <section className="grid gap-6 rounded-3xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--card)/0.68),hsl(var(--background)/0.52))] p-5 shadow-[0_34px_110px_-72px_hsl(0_0%_0%_/0.95)] sm:p-6 lg:grid-cols-[1.05fr_0.95fr] lg:p-7">
+    <div className="space-y-8">
+      <section className="rs-frost-ring grid gap-8 rounded-3xl border rs-frost-border bg-background p-6 sm:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:p-10">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            <Trophy className="h-3.5 w-3.5 text-primary" />
+          <div className="inline-flex items-center gap-2 rounded-full border rs-frost-border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] rs-text-secondary">
+            <Trophy className="h-3.5 w-3.5 rs-accent-orange" />
             Public rankings
           </div>
-          <h2 className="mt-5 text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground">
+          <h2 className="mt-6 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.04em] rs-text-strong">
             Real traders. Real monthly performance.
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          <p className="mt-4 max-w-2xl text-[15px] leading-[1.6] rs-text-secondary">
             The board highlights opted-in traders using live production metrics, with enough depth to understand how they are actually performing, not just who had one lucky day.
           </p>
           {isDemoBoard ? (
-            <Badge
-              variant="secondary"
-              className="mt-5 border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary"
-            >
-              <Shield className="mr-1.5 h-3.5 w-3.5" />
+            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border rs-border-green rs-bg-green px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] rs-accent-green">
+              <Shield className="mr-1 h-3 w-3" />
               Demo rankings shown until live accounts connect
-            </Badge>
+            </div>
           ) : null}
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-2">
             {([
               { key: 'monthly_pnl', label: 'Rank by PnL' },
               { key: 'winrate', label: 'Rank by win rate' },
@@ -94,32 +92,32 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 key={item.key}
                 type="button"
                 onClick={() => updateSort(item.key)}
-                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                className={`rounded-full border px-4 py-1.5 text-[13px] font-medium transition-colors ${
                   currentSort === item.key
-                    ? 'border-foreground/15 bg-foreground text-background'
-                    : 'border-border bg-background/70 text-muted-foreground hover:text-foreground'
+                    ? 'border-foreground/25 bg-foreground text-background'
+                    : 'rs-frost-border bg-transparent rs-text-secondary hover:bg-foreground/8 hover:rs-text-strong'
                 }`}
               >
                 {item.label}
               </button>
             ))}
           </div>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">
+          <p className="mt-5 text-[13px] leading-[1.5] rs-text-tertiary">
             Want to change what shows on the board?{' '}
-            <Link href={`/${locale}/dashboard/trader-profile`} className="font-medium text-foreground underline-offset-4 hover:underline">
+            <Link href={`/${locale}/dashboard/trader-profile`} className="font-medium rs-accent-blue hover:underline underline-offset-4">
               Open Trader Profile
             </Link>
           </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <SummaryCard label="Ranked traders" value={initialEntries.length.toString()} icon={Trophy} />
-          <SummaryCard label="Combined PnL" value={formatCurrency(summary.totalPnl)} icon={Wallet} />
-          <SummaryCard label="Average win rate" value={`${summary.avgWinRate}%`} icon={Activity} />
-          <SummaryCard label="Trades logged" value={summary.totalTrades.toLocaleString()} icon={Shield} />
-          <div className="sm:col-span-2 rounded-2xl border border-border/60 bg-background/70 p-4">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Methodology</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          <SummaryCard label="Ranked traders" value={initialEntries.length.toString()} icon={Trophy} accent="blue" />
+          <SummaryCard label="Combined PnL" value={formatCurrency(summary.totalPnl)} icon={Wallet} accent="green" />
+          <SummaryCard label="Average win rate" value={`${summary.avgWinRate}%`} icon={Activity} accent="orange" />
+          <SummaryCard label="Trades logged" value={summary.totalTrades.toLocaleString()} icon={Shield} accent="blue" />
+          <div className="rs-frost-ring sm:col-span-2 rounded-2xl border rs-frost-border rs-frost-surface p-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] rs-text-tertiary">Methodology</p>
+            <p className="mt-2 text-[13px] leading-[1.6] rs-text-secondary">
               Rankings are based on public opt-in accounts and the current month&apos;s trade data. Sort changes recalculate only the ordering, not the underlying dataset.
             </p>
           </div>
@@ -143,22 +141,31 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
+const accentMap = {
+  blue: { bg: 'rs-bg-blue', border: 'rs-border-blue', text: 'rs-accent-blue', iconBg: 'bg-primary/12' },
+  green: { bg: 'rs-bg-green', border: 'rs-border-green', text: 'rs-accent-green', iconBg: 'rs-bg-green' },
+  orange: { bg: 'rs-bg-orange', border: 'rs-border-orange', text: 'rs-accent-orange', iconBg: 'rs-bg-orange' },
+} as const
+
 function SummaryCard({
   label,
   value,
   icon: Icon,
+  accent,
 }: {
   label: string
   value: string
   icon: typeof Trophy
+  accent: keyof typeof accentMap
 }) {
+  const style = accentMap[accent]
   return (
-    <div className="rounded-2xl border border-border/60 bg-[linear-gradient(150deg,hsl(var(--background)/0.86),hsl(var(--card)/0.52))] p-4">
-      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-        <Icon className="h-3.5 w-3.5" />
-        {label}
+    <div className={`rs-frost-ring rounded-2xl border ${style.border} ${style.bg} p-4`}>
+      <div className={`inline-flex h-6 w-6 items-center justify-center rounded-md ${style.iconBg}`}>
+        <Icon className={`h-3.5 w-3.5 ${style.text}`} />
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+      <p className="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] rs-text-tertiary">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold tracking-tight ${style.text}`}>{value}</p>
     </div>
   )
 }
