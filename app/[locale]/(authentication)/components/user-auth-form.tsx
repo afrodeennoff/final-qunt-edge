@@ -708,7 +708,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 )}
                             />
                             <Link
-                                href="/authentication/forgot-password"
+                                href={withLocalePrefix("/authentication/forgot-password", locale)}
                                 className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
                             >
                                 Forgot your password?
