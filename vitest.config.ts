@@ -20,6 +20,7 @@ export default defineConfig({
       ".next",
       "out",
       ".opencode/**",
+      ".worktrees/**",
       "components/sidebar/__tests__/**",
       "tests/performance/performance-regression.test.ts",
     ],

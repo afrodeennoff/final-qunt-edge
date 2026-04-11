@@ -162,7 +162,7 @@ export async function getAccountSummaryOptimized(userId: string) {
 
 export async function batchUpdateTradesOptimized(
   userId: string,
-  updates: Array<{ id: string; data: any }>
+  updates: Array<{ id: string; data: Record<string, unknown> }>
 ) {
   return prisma.$transaction(
     updates.map(update =>

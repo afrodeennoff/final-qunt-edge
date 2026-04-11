@@ -462,7 +462,7 @@ export class WebhookService {
     email: string,
     userId: string | undefined,
     planName: string,
-    interval: any,
+    interval: string,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     const metadata = membership.metadata || {}
@@ -559,7 +559,7 @@ export class WebhookService {
     email: string,
     userId: string | undefined,
     planName: string,
-    interval: any,
+    interval: string,
     _prisma: PrismaClient
   ): Promise<WebhookProcessingResult> {
     const metadata = membership.metadata || {}

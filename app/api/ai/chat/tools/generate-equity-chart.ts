@@ -80,7 +80,7 @@ export const generateEquityChart = tool({
     const allDates = eachDayOfInterval({ start, end });
     
     // Pre-process trades by date for faster lookup
-    const tradesMap = new Map<string, any[]>();
+    const tradesMap = new Map<string, Record<string, unknown>[]>();
     
     trades.forEach(trade => {
       const dateKey = formatInTimeZone(new Date(trade.entryDate), timezone, 'yyyy-MM-dd');

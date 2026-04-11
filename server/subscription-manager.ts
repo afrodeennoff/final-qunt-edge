@@ -130,7 +130,7 @@ export class SubscriptionManager {
       }
 
       const updateData: Record<string, unknown> = {}
-      const eventLogs: Array<{ eventType: string; eventData: any }> = []
+      const eventLogs: Array<{ eventType: string; eventData: Record<string, unknown> }> = []
 
       if (data.plan && data.plan !== subscription.plan) {
         updateData.plan = data.plan.toUpperCase()

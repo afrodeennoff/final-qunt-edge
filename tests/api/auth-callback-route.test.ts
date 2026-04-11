@@ -25,9 +25,33 @@ vi.mock('@supabase/ssr', () => ({
   createServerClient: createServerClientMock,
 }))
 
+vi.mock('next/server', async () => {
+  const actual = await vi.importActual<typeof import('next/server')>('next/server')
+  return {
+    ...actual,
+    NextResponse: {
+      ...(typeof actual.NextResponse === 'object' ? actual.NextResponse : {}),
+      next: vi.fn(() => ({
+        cookies: { getAll: vi.fn(() => []), set: vi.fn() },
+        headers: new Headers(),
+      })),
+      redirect: vi.fn((url: URL | string) => ({
+        status: 307,
+        headers: new Headers({ location: typeof url === 'string' ? url : url.toString() }),
+        cookies: { getAll: vi.fn(() => []), set: vi.fn() },
+      })),
+      json: vi.fn(),
+    },
+  }
+})
+
 describe('GET /api/auth/callback', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+
+    // Set env vars required by createCallbackClient in the auth callback route
+    process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://localhost:54321'
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
 
     getWebsiteURLMock.mockResolvedValue('http://localhost:3000/')
     exchangeCodeForSessionMock.mockResolvedValue({ error: null })

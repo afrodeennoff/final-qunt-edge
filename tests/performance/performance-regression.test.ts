@@ -106,7 +106,7 @@ describe('Performance Regression Tests', () => {
 
 function getMemoryUsage(): number {
   if (typeof performance !== 'undefined' && 'memory' in performance) {
-    return (performance as any).memory.usedJSHeapSize;
+    return (performance as unknown as { memory: { usedJSHeapSize: number } }).memory.usedJSHeapSize;
   }
   return 0;
 }

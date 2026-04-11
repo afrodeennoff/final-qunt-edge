@@ -16,6 +16,11 @@ vi.mock("@/lib/supabase/route-client", () => ({
   createRouteClient: createRouteClientMock,
 }))
 
+vi.mock("next/server", async () => ({
+  ...(await vi.importActual("next/server")),
+  connection: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe("/api/deals/unified", () => {
   beforeEach(() => {
     vi.resetAllMocks()

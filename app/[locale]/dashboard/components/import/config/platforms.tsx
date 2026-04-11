@@ -5,25 +5,28 @@ import { TradovateSync } from '../tradovate/tradovate-sync'
 import { ImportType } from '../import-type-selection'
 import { RithmicSyncWrapper } from '../rithmic/sync/rithmic-sync-connection'
 import type { ComponentType } from 'react'
+import dynamic from 'next/dynamic'
 import ImportTypeSelection from '../import-type-selection'
 import FileUpload from '../file-upload'
 import HeaderSelection from '../header-selection'
 import AccountSelection from '../account-selection'
 import ColumnMapping from '../column-mapping'
 import { FormatPreview } from '../components/format-preview'
-import TradezellaProcessor from '../tradezella/tradezella-processor'
-import TradovateProcessor from '../tradovate/tradovate-processor'
-import QuantowerOrderProcessor from '../quantower/quantower-processor'
-import TopstepProcessor from '../topstep/topstep-processor'
-import NinjaTraderPerformanceProcessor from '../ninjatrader/ninjatrader-performance-processor'
-import RithmicPerformanceProcessor from '../rithmic/rithmic-performance-processor'
-import RithmicOrderProcessor from '../rithmic/rithmic-order-processor-new'
-import PdfUpload from '../ibkr-pdf/pdf-upload'
-import PdfProcessing from '../ibkr-pdf/pdf-processing'
-import AtasFileUpload from '../atas/atas-file-upload'
-import AtasProcessor from '../atas/atas-processor'
-import FtmoProcessor from '../ftmo/ftmo-processor'
-import ManualProcessor from '../manual/manual-processor'
+
+// Lazy-load heavy processor modules to prevent import dialog freeze
+const TradezellaProcessor = dynamic(() => import('../tradezella/tradezella-processor'), { ssr: false })
+const TradovateProcessor = dynamic(() => import('../tradovate/tradovate-processor'), { ssr: false })
+const QuantowerOrderProcessor = dynamic(() => import('../quantower/quantower-processor'), { ssr: false })
+const TopstepProcessor = dynamic(() => import('../topstep/topstep-processor'), { ssr: false })
+const NinjaTraderPerformanceProcessor = dynamic(() => import('../ninjatrader/ninjatrader-performance-processor'), { ssr: false })
+const RithmicPerformanceProcessor = dynamic(() => import('../rithmic/rithmic-performance-processor'), { ssr: false })
+const RithmicOrderProcessor = dynamic(() => import('../rithmic/rithmic-order-processor-new'), { ssr: false })
+const PdfUpload = dynamic(() => import('../ibkr-pdf/pdf-upload'), { ssr: false })
+const PdfProcessing = dynamic(() => import('../ibkr-pdf/pdf-processing'), { ssr: false })
+const AtasFileUpload = dynamic(() => import('../atas/atas-file-upload'), { ssr: false })
+const AtasProcessor = dynamic(() => import('../atas/atas-processor'), { ssr: false })
+const FtmoProcessor = dynamic(() => import('../ftmo/ftmo-processor'), { ssr: false })
+const ManualProcessor = dynamic(() => import('../manual/manual-processor'), { ssr: false })
 import { Step } from '../import-button'
 import { Sparkles, PenTool } from 'lucide-react'
 import Image from 'next/image'

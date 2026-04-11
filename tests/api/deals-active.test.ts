@@ -16,6 +16,11 @@ vi.mock("@/lib/supabase/route-client", () => ({
   createRouteClient: createRouteClientMock,
 }))
 
+vi.mock("next/server", async () => ({
+  ...(await vi.importActual("next/server")),
+  connection: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe("/api/deals/active", () => {
   beforeEach(() => {
     vi.resetAllMocks()
@@ -132,7 +137,7 @@ describe("/api/deals/active", () => {
     const data = await response.json()
 
     expect(response.status).toBe(500)
-    expect(data.error).toBe("Failed to fetch deals")
+    expect(data.error.message).toBe("Failed to fetch deals")
   })
 
   it("should return 401 when unauthenticated", async () => {
