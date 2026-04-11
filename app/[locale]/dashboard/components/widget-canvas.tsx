@@ -47,9 +47,7 @@ const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => 
     version: layout.version ?? 1,
     checksum: layout.checksum ?? null,
     deviceId: layout.deviceId ?? null,
-    desktop: layout.desktop || defaultLayouts.desktop,
-    mobile: layout.mobile || defaultLayouts.mobile,
-  }
+  } as unknown as DashboardLayout
 }
 
 const LAYOUT_SAVE_DEBOUNCE_MS = 250
