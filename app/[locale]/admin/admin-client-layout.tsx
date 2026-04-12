@@ -15,6 +15,7 @@ import {
   HEADER_BG,
   CONTENT_PADDING,
   CONTENT_PADDING_Y,
+  APP_SHELL_SOFT_BORDER_STYLE,
 } from '@/lib/constants/layout'
 import { Building2, Tags, BookOpen, Mail, BarChart, LayoutDashboard } from 'lucide-react'
 import type { MobileNavItem } from '@/components/mobile-bottom-nav'
@@ -51,7 +52,11 @@ export function AdminClientLayout({
   ]
 
   return (
-    <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
+    <SidebarRootProviders
+      defaultOpen={defaultSidebarOpen}
+      withAuthTimeout
+      style={APP_SHELL_SOFT_BORDER_STYLE}
+    >
       <SidebarNav />
       <SidebarInset className="relative overflow-hidden">
         <header

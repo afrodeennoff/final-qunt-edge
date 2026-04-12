@@ -22,7 +22,7 @@ export function SidebarLogoHeader() {
           className="h-12 rounded-md px-2 data-[state=open]:bg-sidebar-accent/20 hover:text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
         >
           <Link href={`/${locale}/dashboard`} prefetch={false}>
-            <div className="flex aspect-square size-9 items-center justify-center rounded-xl border border-sidebar-border/15 bg-sidebar-primary text-sidebar-primary-foreground">
+            <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
               <Logo className="size-5 fill-current" />
             </div>
             <div className="grid min-w-0 flex-1 gap-0.5 px-1.5 text-left leading-none group-data-[collapsible=icon]:hidden">

@@ -87,7 +87,7 @@ function StatsCardSkeleton({ size = "md", className }: StatsCardSkeletonProps) {
     <Card
       variant="flat"
       className={cn(
-        "border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
+        "border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
         config.padding,
         className
       )}
@@ -273,7 +273,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
       return (
         <Card
           className={cn(
-            "relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
+            "relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
             "bg-v2-bg-surface/88",
             config.padding,
             className
@@ -305,7 +305,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
           ref={ref}
           data-widget-shell="v2"
           className={cn(
-            "group relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px] transition-all duration-[180ms]",
+            "group relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)] transition-all duration-[180ms]",
             "bg-v2-bg-surface/88",
             "hover:border-[var(--frost-border)] hover:bg-v2-bg-surface/92",
             glass && "bg-v2-bg-surface/60 backdrop-blur-md",

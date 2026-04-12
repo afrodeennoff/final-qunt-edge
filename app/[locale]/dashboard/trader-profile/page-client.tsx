@@ -63,8 +63,6 @@ interface TraderMetrics {
 
 type DateFilterPreset = "last_week" | "last_month" | "last_3_months" | "last_6_months" | "last_year" | "custom"
 
-const FR = { boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }
-
 function clamp(value: number, min = 0, max = 100) {
  return Math.min(max, Math.max(min, value))
 }
@@ -494,9 +492,9 @@ export default function TraderProfilePage() {
 
  <div className="mx-auto grid max-w-[1120px] gap-6 xl:grid-cols-[1.35fr_1fr]">
  <section className="space-y-6">
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="flex items-start gap-4">
- <Avatar className="h-20 w-20 border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-transform duration-300">
+ <Avatar className="qe-soft-surface h-20 w-20 transition-transform duration-300">
  <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
  <AvatarFallback className="bg-background text-sm font-semibold text-[#f0f0f0]">
  {profileInitials}
@@ -506,19 +504,19 @@ export default function TraderProfilePage() {
  <p className="truncate text-[2.25rem] font-bold leading-tight text-[#f0f0f0]">{profileName}</p>
  <p className="mt-1 text-sm text-[#a1a4a5]">{activeAccountsCount} active accounts</p>
  <div className="mt-2.5 flex flex-wrap gap-1.5">
- <span className="inline-flex items-center gap-1.5 rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
+ <span className="qe-soft-surface inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  <Zap className="h-3 w-3" />
  Trader Profile
  </span>
- <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
+ <span className="qe-soft-surface inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Total Trades {metrics.totalTrades}
  </span>
- <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
+ <span className="qe-soft-surface inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Withdraw {formatValue(totalWithdrawAllAccounts, 0)}
  </span>
  </div>
  {isOwnProfile ? (
- <div className="mt-3 flex items-center gap-3 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-3 py-2">
+ <div className="qe-soft-surface mt-3 flex items-center gap-3 rounded-lg px-3 py-2">
  <div className="flex items-center gap-2 min-w-0 flex-1">
  {showOnLeaderboard ? (
  <Globe className="h-3.5 w-3.5 text-semantic-success shrink-0" />
@@ -540,17 +538,17 @@ export default function TraderProfilePage() {
  </div>
  </div>
  <div className="mt-3 grid gap-1.5 sm:grid-cols-3">
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <div className="qe-soft-surface rounded-lg transition-colors p-2.5">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Trades</p>
  <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">{metrics.totalTrades}</p>
  </div>
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <div className="qe-soft-surface rounded-lg transition-colors p-2.5">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Current Streak</p>
  <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">
  {metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : "No winning streak"}
  </p>
  </div>
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <div className="qe-soft-surface rounded-lg transition-colors p-2.5">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Net PnL</p>
  <p className="mt-1 text-lg font-semibold text-[#f0f0f0]">{formatSigned(metrics.netPnl)}</p>
  </div>
@@ -558,18 +556,18 @@ export default function TraderProfilePage() {
  </div>
 
  <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-2">
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-5 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-5 transition-colors">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Risk Reward</p>
  <p className="mt-1 text-2xl font-semibold text-[#f0f0f0]">{formatValue(metrics.riskReward)}</p>
  </div>
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-5 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-5 transition-colors">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Max Drawdown</p>
  <p className="mt-1 text-2xl font-semibold text-[#f0f0f0]">{formatValue(metrics.drawdown)}</p>
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
- <div className="mb-2 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <div className="qe-soft-panel p-6 transition-colors">
+ <div className="qe-soft-surface mb-2 rounded-lg transition-colors p-2.5">
  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Date Filter</p>
  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -577,7 +575,7 @@ export default function TraderProfilePage() {
  value={dateFilterPreset}
  onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
  >
- <SelectTrigger className="h-9 w-full border-[rgba(214,235,253,0.19)] bg-black text-xs text-[#f0f0f0] sm:w-[210px]">
+ <SelectTrigger className="qe-soft-surface h-9 w-full text-xs text-[#f0f0f0] sm:w-[210px]">
  <SelectValue placeholder="Select range" />
  </SelectTrigger>
  <SelectContent>
@@ -594,13 +592,13 @@ export default function TraderProfilePage() {
  <Button 
  type="button"
  variant="outline"
- className="h-9 justify-start border-[rgba(214,235,253,0.19)] bg-black text-xs text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.08)]"
+ className="h-9 justify-start border-[hsl(var(--border)/0.32)] bg-black text-xs text-[#f0f0f0] hover:bg-accent/55"
  >
  <CalendarIcon className="h-3.5 w-3.5" />
  {dateFilterLabel ?? "Custom Range"}
  </Button>
  </PopoverTrigger>
- <PopoverContent className="w-auto border-[rgba(214,235,253,0.19)] bg-black p-2" align="start">
+ <PopoverContent className="qe-soft-panel w-auto p-2" align="start">
  <Calendar
  mode="range"
  selected={customDateRange}
@@ -625,7 +623,7 @@ export default function TraderProfilePage() {
  ) : null}
  </div>
  </div>
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-1.5">
+ <div className="qe-soft-surface rounded-lg transition-colors p-1.5">
  <Calendar
  mode="single"
  selected={selectedCalendarDay ?? latestTradeDay}
@@ -646,7 +644,7 @@ export default function TraderProfilePage() {
  weekday: "w-10 text-center text-[0.75rem] font-medium text-[#a1a4a5]",
  day: "relative h-10 w-10 overflow-hidden rounded-md p-0 text-center align-middle",
  day_button:
- "h-10 w-10 rounded-md p-0 font-normal text-[#f0f0f0] hover:bg-[rgba(255,255,255,0.08)] aria-selected:bg-foreground/3 aria-selected:text-[#f0f0f0]",
+ "h-10 w-10 rounded-md p-0 font-normal text-[#f0f0f0] hover:bg-accent/55 aria-selected:bg-foreground/3 aria-selected:text-[#f0f0f0]",
  }}
  components={{
  DayButton: ({ day, className, ...buttonProps }: DayButtonProps) => {
@@ -701,7 +699,7 @@ export default function TraderProfilePage() {
  </span>
  </div>
  </div>
- <div className="mt-1.5 flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-3 py-2">
+ <div className="qe-soft-surface mt-1.5 flex items-center justify-between rounded-lg transition-colors px-3 py-2">
  <div className="min-w-0">
  <p className="text-xs text-[#a1a4a5]">Selected Day</p>
  <p className="truncate text-xs font-semibold text-[#f0f0f0]">
@@ -714,7 +712,7 @@ export default function TraderProfilePage() {
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="mb-2.5 flex items-center justify-between">
  <p className="text-sm font-semibold text-[#f0f0f0]">Trade Feed</p>
  <p className="text-xs text-[#a1a4a5]">
@@ -724,12 +722,12 @@ export default function TraderProfilePage() {
  {isLoading ? (
  <div className="space-y-1.5">
  {[1, 2, 3].map((i) => (
- <div key={i} className="flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-3 py-2 animate-pulse">
+ <div key={i} className="qe-soft-surface flex items-center justify-between rounded-lg px-3 py-2 animate-pulse">
  <div className="flex items-center gap-2">
  <div className="h-3.5 w-3.5 rounded-full bg-muted" />
  <div className="space-y-1">
  <div className="h-3 w-20 rounded bg-muted" />
- <div className="h-2 w-32 rounded bg-[rgba(214,235,253,0.02)]" />
+ <div className="h-2 w-32 rounded bg-card/45" />
  </div>
  </div>
  <div className="h-3 w-12 rounded bg-muted" />
@@ -747,7 +745,7 @@ export default function TraderProfilePage() {
  return (
  <div
  key={trade.id}
- className="flex items-center justify-between rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-3 py-2"
+ className="qe-soft-surface flex items-center justify-between rounded-lg transition-colors px-3 py-2"
  >
  <div className="flex items-center gap-2">
  <CircleDot className={`h-3.5 w-3.5 ${pnl >= 0 ? "text-semantic-success" : "text-semantic-error"}`} />
@@ -767,7 +765,7 @@ export default function TraderProfilePage() {
  )}
  </div>
  {closedTrades.length > tradesPerPage ? (
- <div className="mt-3 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors px-1.5 py-1">
+ <div className="qe-soft-surface mt-3 rounded-lg transition-colors px-1.5 py-1">
  <Pagination className="justify-end">
  <PaginationContent>
  <PaginationItem>
@@ -803,7 +801,7 @@ export default function TraderProfilePage() {
  </section>
 
  <aside className="space-y-4">
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="flex items-center justify-between text-sm text-[#a1a4a5]">
  <span className="inline-flex items-center gap-1">
  Compare with: average user
@@ -811,7 +809,7 @@ export default function TraderProfilePage() {
  </span>
  <span className="text-[11px]">{isBenchmarkLoading ? "Loading..." : "Live"}</span>
  </div>
- <div className="mt-2.5 rounded-xl border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-2.5">
+ <div className="qe-soft-surface mt-2.5 rounded-xl transition-colors p-2.5">
  <div className="h-56">
  <ResponsiveContainer width="100%" height="100%">
  <RadarChart data={radarData}>
@@ -827,64 +825,64 @@ export default function TraderProfilePage() {
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="grid gap-2 sm:grid-cols-2">
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <div className="qe-soft-surface rounded-lg transition-colors p-3">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Capital</p>
  <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatCapitalCompact(totalCapitalAllAccounts)}</p>
  </div>
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <div className="qe-soft-surface rounded-lg transition-colors p-3">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Withdraw</p>
  <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatCapitalCompact(totalWithdrawAllAccounts)}</p>
  </div>
  </div>
- <div className="mt-2 rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <div className="qe-soft-surface mt-2 rounded-lg transition-colors p-3">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Avg. Return</p>
  <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{formatValue(Math.abs(metrics.avgReturn))}%</p>
  </div>
- <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="qe-soft-meter mt-3 h-1.5 rounded-full">
  <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.consistencyRate))}%` }} />
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Win Rate</p>
  <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{formatValue(metrics.winRate)}%</p>
  <div className="mt-3 grid gap-2 sm:grid-cols-2">
- <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="qe-soft-meter h-1.5 rounded-full">
  <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.winRate))}%` }} />
  </div>
- <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="qe-soft-meter h-1.5 rounded-full">
  <div className="h-full rounded-full bg-[rgba(59,158,255,0.2)]" style={{ width: `${winRateGuidePercent}%` }} />
  </div>
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="flex items-center justify-between">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Total Trades</p>
- <span className="inline-flex items-center rounded-md border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
+ <span className="qe-soft-surface inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#f0f0f0]">
  Serial Trader
  </span>
  </div>
  <p className="mt-1 text-4xl font-semibold text-[#f0f0f0]">{metrics.totalTrades}</p>
  <div className="mt-3 grid gap-2 sm:grid-cols-2">
- <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="qe-soft-meter h-1.5 rounded-full">
  <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, metrics.totalTrades))}%` }} />
  </div>
- <div className="h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+ <div className="qe-soft-meter h-1.5 rounded-full">
  <div className="h-full rounded-full bg-[rgba(59,158,255,0.2)]" style={{ width: `${Math.min(100, Math.max(8, 100 - Math.min(100, metrics.totalTrades)))}%` }} />
  </div>
  </div>
  </div>
 
- <div className="border border-[rgba(214,235,253,0.19)] bg-black p-6 transition-colors" style={FR}>
+ <div className="qe-soft-panel p-6 transition-colors">
  <div className="grid gap-2 sm:grid-cols-2">
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <div className="qe-soft-surface rounded-lg transition-colors p-3">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Break Even Rate</p>
  <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatValue(metrics.breakEvenRate)}%</p>
  </div>
- <div className="rounded-lg border border-[rgba(214,235,253,0.19)] bg-[rgba(214,235,253,0.02)] transition-colors p-3">
+ <div className="qe-soft-surface rounded-lg transition-colors p-3">
  <p className="text-[10px] uppercase tracking-wider text-[#a1a4a5]">Sum Gain</p>
  <p className="mt-1 text-3xl font-semibold text-[#f0f0f0]">{formatValue(metrics.sumGain)}%</p>
  </div>
@@ -893,7 +891,7 @@ export default function TraderProfilePage() {
 
  <button
  type="button"
- className="w-full rounded-lg border border-[rgba(214,235,253,0.19)] hover:bg-[rgba(255,255,255,0.08)] rounded-full border border-[rgba(214,235,253,0.19)] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#f0f0f0] transition-colors"
+ className="w-full rounded-full border border-[hsl(var(--border)/0.32)] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#f0f0f0] transition-colors hover:bg-accent/55"
  >
  Show All Stats
  </button>

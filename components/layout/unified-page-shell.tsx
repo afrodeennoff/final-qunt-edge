@@ -42,8 +42,8 @@ export function UnifiedPageShell({
     <div
       className={cn(
         "mx-auto w-full relative",
-        variant === "refined" && "border-x border-v2-border/40",
-        variant === "minimal" && "border-x border-v2-border/20",
+        variant === "refined" && "border-x border-v2-border/20",
+        variant === "minimal" && "border-x border-v2-border/10",
         widthClassName === "max-w-none" && "max-w-[1800px]",
         widthClassName,
         "px-4 sm:px-6 lg:px-8 xl:px-12",
@@ -52,7 +52,7 @@ export function UnifiedPageShell({
           "before:absolute before:inset-0 before:pointer-events-none before:z-0",
           "before:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(41,98,255,0.08),transparent)]",
           "after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0",
-          "after:bg-gradient-to-r after:from-transparent after:via-v2-border/30 after:to-transparent",
+          "after:bg-gradient-to-r after:from-transparent after:via-v2-border/12 after:to-transparent",
         ],
         "[&_.scroll-container]:overflow-y-auto [&_.scroll-container]:scrollbar-thin",
         "animate-in fade-in-0 duration-500",
@@ -80,16 +80,16 @@ export function UnifiedPageHeader({
         "mb-8 rounded-3xl border px-5 py-6 shadow-sm backdrop-blur-sm sm:px-6",
         "transition-all duration-300 ease-out",
         variant === "default" && [
-          "border-v2-border/60 bg-v2-bg-surface/70",
-          "hover:border-v2-border/80 hover:bg-v2-bg-surface/80",
+          "border-v2-border/32 bg-v2-bg-surface/70",
+          "hover:border-v2-border/42 hover:bg-v2-bg-surface/80",
         ],
         variant === "gradient" && [
-          "border-v2-border/60 bg-gradient-to-br from-v2-bg-surface/80 via-v2-bg-surface/60 to-v2-bg-surface/80",
-          "hover:border-v2-border/80 hover:from-v2-bg-surface/90 hover:via-v2-bg-surface/70 hover:to-v2-bg-surface/90",
+          "border-v2-border/32 bg-gradient-to-br from-v2-bg-surface/80 via-v2-bg-surface/60 to-v2-bg-surface/80",
+          "hover:border-v2-border/42 hover:from-v2-bg-surface/90 hover:via-v2-bg-surface/70 hover:to-v2-bg-surface/90",
         ],
         variant === "elevated" && [
-          "border-v2-border/50 bg-v2-bg-surface/90 shadow-lg",
-          "hover:border-v2-border/70 hover:shadow-xl hover:-translate-y-0.5",
+          "border-v2-border/28 bg-v2-bg-surface/90 shadow-lg",
+          "hover:border-v2-border/38 hover:shadow-xl hover:-translate-y-0.5",
         ],
         className,
       )}
@@ -142,13 +142,13 @@ export function UnifiedSurface({
         "rounded-3xl border p-4 shadow-sm sm:p-6",
         "transition-all duration-300 ease-out",
         variant === "default" && [
-          "border-v2-border/60 bg-v2-bg-surface/70 backdrop-blur-sm",
-          "hover:border-v2-border/80 hover:bg-v2-bg-surface/80 hover:shadow-md",
+          "border-v2-border/32 bg-v2-bg-surface/70 backdrop-blur-sm",
+          "hover:border-v2-border/42 hover:bg-v2-bg-surface/80 hover:shadow-md",
         ],
         variant === "glass" && [
-          "border-v2-border/40 bg-v2-bg-surface/30 backdrop-blur-xl",
+          "border-v2-border/20 bg-v2-bg-surface/30 backdrop-blur-xl",
           "shadow-[inset_0_1px_0_hsl(var(--v2-border)_/_0.1)]",
-          "hover:border-v2-border/60 hover:bg-v2-bg-surface/40 hover:shadow-lg",
+          "hover:border-v2-border/30 hover:bg-v2-bg-surface/40 hover:shadow-lg",
           "hover:shadow-[inset_0_1px_0_hsl(var(--v2-border)_/_0.15),0_8px_16px_-4px_rgba(0,0,0,0.3)]",
         ],
         variant === "gradient-border" && [
@@ -160,12 +160,12 @@ export function UnifiedSurface({
           "hover:before:from-v2-accent/40 hover:before:to-v2-accent/20",
         ],
         variant === "elevated" && [
-          "border-v2-border/50 bg-v2-bg-surface/90 backdrop-blur-md shadow-lg",
-          "hover:border-v2-border/70 hover:bg-v2-bg-surface/95 hover:shadow-xl hover:-translate-y-1",
+          "border-v2-border/28 bg-v2-bg-surface/90 backdrop-blur-md shadow-lg",
+          "hover:border-v2-border/38 hover:bg-v2-bg-surface/95 hover:shadow-xl hover:-translate-y-1",
         ],
         variant === "subtle" && [
-          "border-v2-border/30 bg-v2-bg-surface/50 backdrop-blur-sm shadow-none",
-          "hover:border-v2-border/50 hover:bg-v2-bg-surface/60",
+          "border-v2-border/16 bg-v2-bg-surface/50 backdrop-blur-sm shadow-none",
+          "hover:border-v2-border/26 hover:bg-v2-bg-surface/60",
         ],
         className,
       )}

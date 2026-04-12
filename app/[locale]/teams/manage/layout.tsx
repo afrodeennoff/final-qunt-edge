@@ -17,6 +17,7 @@ import {
     HEADER_BG,
     CONTENT_PADDING,
     CONTENT_PADDING_Y,
+    APP_SHELL_SOFT_BORDER_STYLE,
 } from "@/lib/constants/layout"
 import { DashboardProviders } from "@/components/providers/dashboard-providers"
 import { TeamsMobileBottomNav } from "../components/teams-mobile-bottom-nav"
@@ -74,7 +75,11 @@ export default async function TeamManageLayout({
     const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
 
     return (
-        <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
+        <SidebarRootProviders
+            defaultOpen={defaultSidebarOpen}
+            withAuthTimeout
+            style={APP_SHELL_SOFT_BORDER_STYLE}
+        >
             <DashboardProviders>
                 <TeamsSidebar />
 

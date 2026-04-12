@@ -90,8 +90,8 @@
   --destructive-foreground: oklch(1 0 0);
   /* ═══ FROST BORDERS — the signature icy blue tint ═══ */
   /* rgba(214,235,253,0.19) in HSL — frost at 19% opacity */
-  --border: 214 100% 92% / 0.06;
-  --input: 214 100% 92% / 0.05;
+  --border: 214 100% 92% / 0.035;
+  --input: 214 100% 92% / 0.03;
   --ring: oklch(0.62 0.19 260);
   --chart-1: 221 84% 62%;
   --chart-2: 194 68% 66%;
@@ -109,7 +109,7 @@
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.08 0.01 264);
   --sidebar-accent-foreground: oklch(0.62 0.19 260);
-  --sidebar-border: 214 100% 92% / 0.04;
+  --sidebar-border: 214 100% 92% / 0.025;
   --sidebar-ring: oklch(0.62 0.19 260);
   --font-sans: Geist, sans-serif;
   --font-serif: Georgia, serif;
@@ -130,10 +130,10 @@
   --qe-panel: 0 0% 3%;
 
   /* === Frost Border System (Resend-inspired) === */
-  --frost-border: rgba(214, 235, 253, 0.06);
-  --frost-border-strong: rgba(214, 235, 253, 0.10);
+  --frost-border: rgba(214, 235, 253, 0.035);
+  --frost-border-strong: rgba(214, 235, 253, 0.055);
   --frost-border-alt: rgba(217, 237, 254, 0.04);
-  --frost-shadow: rgba(176, 199, 217, 0.145) 0px 0px 0px 1px;
+  --frost-shadow: rgba(176, 199, 217, 0.06) 0px 0px 0px 1px;
 
   /* === Multi-Color Accent System (Resend palette) === */
   --accent-orange: #ff801f;
@@ -188,8 +188,8 @@
   --destructive: oklch(0.62 0.24 25);
   --destructive-foreground: oklch(1 0 0);
   /* Frost border — rgba(214,235,253,0.19) in HSL */
-  --border: 214 100% 92% / 0.06;
-  --input: 214 100% 92% / 0.05;
+  --border: 214 100% 92% / 0.035;
+  --input: 214 100% 92% / 0.03;
   --ring: oklch(0.62 0.19 260);
   --chart-1: 221 84% 62%;
   --chart-2: 194 68% 66%;
@@ -206,7 +206,7 @@
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.08 0.01 264);
   --sidebar-accent-foreground: oklch(0.62 0.19 260);
-  --sidebar-border: 214 100% 92% / 0.04;
+  --sidebar-border: 214 100% 92% / 0.025;
   --sidebar-ring: oklch(0.62 0.19 260);
   --font-sans: Geist, sans-serif;
   --font-serif: Georgia, serif;
@@ -244,8 +244,8 @@
   --v2-text-primary: oklch(0.95 0.005 264);
   --v2-text-secondary: oklch(0.68 0.01 240);
   --v2-text-muted: oklch(0.45 0.005 264);
-  --v2-border: 214 100% 92% / 0.06;
-  --v2-border-subtle: 214 100% 92% / 0.04;
+  --v2-border: 214 100% 92% / 0.035;
+  --v2-border-subtle: 214 100% 92% / 0.025;
   --v2-accent: oklch(0.55 0.22 264);
   --v2-accent-foreground: oklch(1 0 0);
   --v2-accent-hover: oklch(0.65 0.22 264);
@@ -279,10 +279,10 @@
   /* mk-* tokens are defined in styles/tokens.css (extended token file) */
 
   /* === Frost Border System (dark mode — slightly brighter frost) === */
-  --frost-border: rgba(214, 235, 253, 0.06);
-  --frost-border-strong: rgba(214, 235, 253, 0.10);
+  --frost-border: rgba(214, 235, 253, 0.035);
+  --frost-border-strong: rgba(214, 235, 253, 0.055);
   --frost-border-alt: rgba(217, 237, 254, 0.04);
-  --frost-shadow: rgba(176, 199, 217, 0.145) 0px 0px 0px 1px;
+  --frost-shadow: rgba(176, 199, 217, 0.06) 0px 0px 0px 1px;
 
   /* === Accent Colors (brightened for dark mode) === */
   --accent-orange: #ffa057;
@@ -2799,4 +2799,25 @@
   animation: animate-scan-line 4s linear infinite;
   border-radius: inherit;
   z-index: 10;
+}
+
+@layer utilities {
+  .qe-soft-panel {
+    border: 1px solid hsl(var(--border) / 0.36);
+    background: hsl(var(--background));
+    box-shadow: 0 24px 48px -32px rgba(0, 0, 0, 0.72);
+  }
+
+  .qe-soft-surface {
+    border: 1px solid hsl(var(--border) / 0.32);
+    background: hsl(var(--card) / 0.34);
+  }
+
+  .qe-soft-divider {
+    border-color: hsl(var(--border) / 0.28);
+  }
+
+  .qe-soft-meter {
+    background: hsl(var(--border) / 0.12);
+  }
 }

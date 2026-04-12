@@ -236,8 +236,8 @@ function Sidebar({
           data-slot="sidebar-inner"
           className={cn(
             "flex h-full w-full flex-col bg-sidebar",
-            "group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm",
-            "group-data-[variant=inset]:rounded-lg group-data-[variant=inset]:border group-data-[variant=inset]:border-sidebar-border/60 group-data-[variant=inset]:shadow-sm"
+            "group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border/35 group-data-[variant=floating]:shadow-sm",
+            "group-data-[variant=inset]:rounded-lg group-data-[variant=inset]:shadow-sm"
           )}
         >
           {children}
@@ -469,7 +469,7 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
         outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+          "border border-[hsl(var(--sidebar-border)/0.4)] bg-background shadow-none hover:border-[hsl(var(--sidebar-accent)/0.55)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
       },
       size: {
         default: "h-8 text-sm",

@@ -222,13 +222,11 @@ function SidebarContentRender({
       variant="inset"
       collapsible="icon"
       className={cn(
-        'pointer-events-auto overflow-hidden bg-sidebar text-sidebar-foreground',
-        styleVariant === 'minimal'
-          ? 'border-r border-sidebar-border/12'
-          : 'border-r border-sidebar-border/25'
+        'pointer-events-auto overflow-hidden text-sidebar-foreground',
+        styleVariant === 'minimal' ? 'bg-sidebar/96' : 'bg-sidebar'
       )}
     >
-      <SidebarHeader className="border-b border-sidebar-border/12 px-2 py-2">
+      <SidebarHeader className="px-2 py-2">
         <SidebarLogoHeader />
       </SidebarHeader>
 
@@ -245,13 +243,13 @@ function SidebarContentRender({
         />
 
         {actions && (
-          <SidebarGroup className="mt-auto border-t border-sidebar-border/15 px-0 pb-1 pt-3">
+          <SidebarGroup className="mt-auto px-0 pb-1 pt-3">
             <SidebarMenu>{actions}</SidebarMenu>
           </SidebarGroup>
         )}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/15 p-2">
+      <SidebarFooter className="p-2">
         <SidebarUserMenu
           user={user}
           timezone={timezone}

@@ -1,5 +1,6 @@
 "use client"
 
+import type { CSSProperties } from "react";
 import { ThemeProvider } from "@/context/theme-provider";
 import type { DashboardTheme } from "@/lib/constants/dashboard-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -198,15 +199,17 @@ export function SidebarRootProviders({
     defaultOpen = true,
     withAuthTimeout = false,
     initialTheme,
+    style,
 }: {
     children: React.ReactNode
     defaultOpen?: boolean
     withAuthTimeout?: boolean
     initialTheme?: DashboardTheme
+    style?: CSSProperties
 }) {
     return (
         <RootProviders themeScope="dashboard" initialTheme={initialTheme}>
-            <SidebarProvider defaultOpen={defaultOpen}>
+            <SidebarProvider defaultOpen={defaultOpen} style={style}>
                 {withAuthTimeout ? <AuthTimeout /> : null}
                 {children}
             </SidebarProvider>

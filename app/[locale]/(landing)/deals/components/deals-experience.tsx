@@ -103,9 +103,9 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-[68px] z-40 border-b border-[hsl(var(--mk-border)/0.68)] bg-[hsl(var(--background)/0.82)] backdrop-blur">
+    <nav className="sticky top-[68px] z-40 bg-[hsl(var(--background)/0.82)] backdrop-blur">
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        <div className="my-2 flex gap-1.5 overflow-x-auto rounded-full border border-[hsl(var(--mk-border)/0.75)] bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
+        <div className="my-2 flex gap-1.5 overflow-x-auto rounded-full bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -525,7 +525,7 @@ function DealsTabSections({
   return (
     <>
       {/* ── Matchup ── */}
-      <section id="matchup" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+      <section id="matchup" className="scroll-mt-[120px] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">Matchup</Badge>
@@ -565,7 +565,7 @@ function DealsTabSections({
       </section>
 
       {/* ── Cost Planner ── */}
-      <section id="cost-planner" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
+      <section id="cost-planner" className="scroll-mt-[120px] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">Cost Planner</Badge>
@@ -599,7 +599,7 @@ function DealsTabSections({
       </section>
 
       {/* ── Playbooks ── */}
-      <section id="playbooks" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+      <section id="playbooks" className="scroll-mt-[120px] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">Playbooks</Badge>
@@ -625,7 +625,7 @@ function DealsTabSections({
       </section>
 
       {/* ── Help / FAQ ── */}
-      <section id="help" className="scroll-mt-[120px] border-t border-[hsl(var(--mk-border)/0.56)] py-16 sm:py-20">
+      <section id="help" className="scroll-mt-[120px] py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">Help</Badge>
@@ -687,10 +687,6 @@ function BiggestDealsCarousel({
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 pb-8 pt-7 text-[hsl(var(--mk-text))] sm:px-8 sm:pb-10 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-[hsl(var(--mk-border)/0.68)]" />
-      </div>
-
       <div className="relative flex items-center justify-between gap-3">
         <h2 className="text-[clamp(2rem,2.8vw,3.3rem)] font-semibold leading-tight tracking-tight text-[hsl(var(--mk-text))]">
           Today&apos;s Biggest &amp; Largest Deals!
@@ -723,7 +719,7 @@ function BiggestDealsCarousel({
           <BackgroundDealTeaser deal={nextDeal} align="right" />
         </div>
 
-        <div className="relative mx-auto w-full max-w-[1020px] rounded-3xl border border-[hsl(var(--mk-text-muted)/0.56)] bg-[hsl(var(--mk-bg-0))] px-6 py-8 sm:px-8 sm:py-9">
+        <div className="relative mx-auto w-full max-w-[1020px] rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 py-8 sm:px-8 sm:py-9 shadow-[0_28px_70px_-48px_hsl(var(--foreground)/0.32)]">
           <div className="absolute left-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))]">
             <Flame className="h-4 w-4" />
           </div>
@@ -930,7 +926,7 @@ function DealsHero({
   overview: DealsOverview
 }) {
   return (
-    <section className="grid gap-6 rounded-3xl border border-[hsl(var(--mk-border)/0.74)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-5 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+    <section className="grid gap-6 rounded-3xl bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-5 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -1238,7 +1234,7 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
-    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.75)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
+    <div className="rounded-3xl bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
       <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -1276,7 +1272,7 @@ function InsightCard({
   helper: string
 }) {
   return (
-    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.72)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.92)]">
+    <div className="rounded-3xl bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.92)]">
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
       <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{helper}</p>

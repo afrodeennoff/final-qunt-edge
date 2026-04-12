@@ -18,9 +18,10 @@ type TraderSnapshot = {
   demo: boolean
 }
 
-const FB = 'border-[rgba(214,235,253,0.19)]'
-const FS = 'bg-[rgba(214,235,253,0.02)]'
-const FR = { boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' }
+const FB = 'border-[hsl(var(--border)/0.36)]'
+const FS = 'bg-[hsl(var(--card)/0.34)]'
+const FM = 'bg-[hsl(var(--border)/0.12)]'
+const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' }
 
 function formatSigned(value: number, digits = 2): string {
   if (!Number.isFinite(value)) return "0.00"
@@ -100,7 +101,7 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
           <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-[rgba(255,255,255,0.08)]`}
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
@@ -223,7 +224,7 @@ export default async function TraderProfilePage({
                 <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
                   <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Win Rate</p>
                   <p className="mt-2 text-3xl font-semibold text-[#f0f0f0]">{formatValue(snapshot.winRate)}%</p>
-                  <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+                  <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
                     <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
                   </div>
                 </div>
@@ -233,7 +234,7 @@ export default async function TraderProfilePage({
                     <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-[#11ff99]' : 'text-[#ff2047]'}`}>
                       {formatSigned(snapshot.returnPct)}%
                     </p>
-                    <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+                    <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
                       <div className={`h-full rounded-full ${snapshot.returnPct >= 0 ? 'bg-[rgba(17,255,153,0.35)]' : 'bg-[rgba(255,32,71,0.35)]'}`} style={{ width: `${Math.min(100, Math.max(8, Math.abs(snapshot.returnPct)))}%` }} />
                     </div>
                   </div>
@@ -255,7 +256,7 @@ export default async function TraderProfilePage({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-[rgba(255,255,255,0.08)]`}
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
@@ -280,7 +281,7 @@ export default async function TraderProfilePage({
             <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Win Rate</p>
               <p className="mt-2 text-4xl font-semibold text-[#f0f0f0]">{formatValue(snapshot.winRate)}%</p>
-              <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+              <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
                 <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.winRate))}%` }} />
               </div>
             </div>
@@ -294,7 +295,7 @@ export default async function TraderProfilePage({
               </span>
             </div>
             <p className="mt-2 text-4xl font-semibold text-[#f0f0f0]">{snapshot.totalTrades}</p>
-            <div className="mt-3 h-1.5 rounded-full bg-[rgba(214,235,253,0.06)]">
+            <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
               <div className="h-full rounded-full bg-[rgba(59,158,255,0.4)]" style={{ width: `${Math.min(100, Math.max(8, snapshot.totalTrades))}%` }} />
             </div>
           </div>

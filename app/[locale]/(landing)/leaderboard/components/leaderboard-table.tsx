@@ -8,10 +8,10 @@ import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 /* ─── Shared constants ─── */
 
-const FB = 'border-[rgba(214,235,253,0.19)]' // frost border
-const FA = 'border-[rgba(217,237,254,0.145)]' // frost border alt (row dividers)
-const FS = 'bg-[rgba(214,235,253,0.02)]' // frost surface
-const FR = { boxShadow: '0 0 0 1px rgba(176,199,217,0.145)' } // frost ring
+const FB = 'border-[hsl(var(--border)/0.36)]' // frost border
+const FA = 'border-[hsl(var(--border)/0.28)]' // frost border alt (row dividers)
+const FS = 'bg-[hsl(var(--card)/0.34)]' // frost surface
+const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' } // panel shadow
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -33,7 +33,7 @@ function profileHref(locale: string, userId: string): string {
 
 function rankClasses(rank: number): string {
   if (rank === 1) return 'border-[rgba(255,128,31,0.35)] bg-[rgba(255,128,31,0.1)] text-[#ff801f]'
-  if (rank === 2) return 'border-[rgba(214,235,253,0.25)] bg-[rgba(214,235,253,0.06)] text-[#a1a4a5]'
+  if (rank === 2) return 'border-[hsl(var(--border)/0.4)] bg-[hsl(var(--card)/0.42)] text-[#a1a4a5]'
   if (rank === 3) return 'border-[rgba(255,197,61,0.3)] bg-[rgba(255,197,61,0.08)] text-[#ffc53d]'
   return `${FB} ${FS} text-[#a1a4a5]`
 }
@@ -189,7 +189,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
 
       <Link
         href={profileLink}
-        className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border ${FB} bg-transparent px-3 py-2 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-[rgba(255,255,255,0.08)]`}
+        className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border ${FB} bg-transparent px-3 py-2 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
         aria-label={`View ${entry.username} profile`}
       >
         View profile
@@ -206,7 +206,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
   const profileLink = profileHref(locale, entry.userId)
 
   return (
-    <tr className="group transition-colors hover:bg-[rgba(214,235,253,0.03)]">
+    <tr className="group transition-colors hover:bg-accent/35">
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
         <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold ${rankClasses(entry.rank)}`}>
           #{entry.rank}
@@ -226,7 +226,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
         <Link
           href={profileLink}
-          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-[rgba(255,255,255,0.08)]`}
+          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
           aria-label={`View ${entry.username} profile`}
         >
           View profile
