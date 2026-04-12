@@ -514,7 +514,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     </div>
                     <Button
                         size="sm"
-                        className="shrink-0 bg-success/20 text-success hover:bg-success/30 border-success/30"
+                        className="shrink-0 border-success/30 bg-success/20 text-success hover:bg-success/30"
                         onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
                     >
                         Go to Dashboard

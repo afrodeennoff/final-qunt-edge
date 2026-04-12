@@ -377,21 +377,21 @@ function PayoutPill({
   variant: 'paid' | 'pending' | 'refused'
 }) {
   const borderStyles = {
-    paid: 'border-success/35 bg-[linear-gradient(135deg,hsl(var(--success)/0.18),hsl(var(--mk-surface-muted)/0.65))]',
-    pending: 'border-warning/35 bg-[linear-gradient(135deg,hsl(var(--warning)/0.16),hsl(var(--mk-surface-muted)/0.65))]',
-    refused: 'border-destructive/35 bg-[linear-gradient(135deg,hsl(var(--destructive)/0.16),hsl(var(--mk-surface-muted)/0.65))]',
+    paid: 'border-success/30 bg-[linear-gradient(135deg,hsl(var(--success)/0.12),hsl(var(--mk-surface-muted)/0.72))]',
+    pending: 'border-warning/30 bg-[linear-gradient(135deg,hsl(var(--warning)/0.1),hsl(var(--mk-surface-muted)/0.72))]',
+    refused: 'border-semantic-error-border bg-[linear-gradient(135deg,hsl(var(--semantic-error-bg)),hsl(var(--mk-surface-muted)/0.72))]',
   }
 
   const labelStyles = {
-    paid: 'text-success/90',
-    pending: 'text-warning/90',
-    refused: 'text-destructive/90',
+    paid: 'text-success',
+    pending: 'text-warning',
+    refused: 'text-semantic-error',
   }
 
   const amountStyles = {
     paid: 'text-success',
     pending: 'text-warning',
-    refused: 'text-destructive',
+    refused: 'text-semantic-error',
   }
 
   const amountLabel = new Intl.NumberFormat('en-US', {

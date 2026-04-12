@@ -57,10 +57,10 @@ export function StatsSummaryRow() {
     {
       label: 'Total Refused',
       value: formatCompactCurrency(data.totalRefused),
-      dot: 'bg-destructive',
-      text: 'text-destructive',
-      border: 'border-destructive/30',
-      bg: 'bg-destructive/10',
+      dot: 'bg-semantic-error',
+      text: 'text-semantic-error',
+      border: 'border-semantic-error-border',
+      bg: 'bg-semantic-error-bg',
     },
     {
       label: 'Tracked Firms',

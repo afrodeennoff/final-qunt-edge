@@ -7,6 +7,7 @@
 - Hardened `lib/constants/layout.ts` localized border tokens to near-black values so neutral outlines across `app/en/*` cannot render as bright white.
 - Added `qe-no-white-borders` overrides in `app/globals.css` to force neutral `border-border`, `border-v2-border`, `--mk-border`, `--frost-border`, `--glass-border`, `divide-border`, `ring-border`, and `border-foreground/*` usages to subdued dark border colors across the localized app shell.
 - Working rule recorded for future passes: on localized surfaces, white or bright neutral outlines are considered regressions and should be fixed at the shared token/scope layer first, not page by page.
+- Legacy `success` / `warning` utility usage can visually fall back to neutral/white if the top-level Tailwind theme colors are missing. Keep top-level `success` and `warning` mapped to the real `--success` / `--warning` tokens in `tailwind.config.ts`; use semantic classes only when the blue/gold semantic palette is explicitly intended.
 
 ## Current Session: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
 

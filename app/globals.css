@@ -2801,6 +2801,27 @@
 }
 
 @layer utilities {
+  .text-success { color: hsl(var(--success)); }
+  .text-success\/90 { color: hsl(var(--success)); }
+  .bg-success { background-color: hsl(var(--success)); }
+  .bg-success\/10 { background-color: hsl(var(--success) / 0.1); }
+  .bg-success\/15 { background-color: hsl(var(--success) / 0.15); }
+  .bg-success\/20 { background-color: hsl(var(--success) / 0.2); }
+  .bg-success\/30 { background-color: hsl(var(--success) / 0.3); }
+  .bg-success\/80 { background-color: hsl(var(--success) / 0.8); }
+  .border-success { border-color: hsl(var(--success)); }
+  .border-success\/30 { border-color: hsl(var(--success) / 0.3); }
+  .border-success\/35 { border-color: hsl(var(--success) / 0.35); }
+
+  .text-warning { color: hsl(var(--warning)); }
+  .text-warning\/90 { color: hsl(var(--warning)); }
+  .bg-warning { background-color: hsl(var(--warning)); }
+  .bg-warning\/10 { background-color: hsl(var(--warning) / 0.1); }
+  .bg-warning\/80 { background-color: hsl(var(--warning) / 0.8); }
+  .border-warning { border-color: hsl(var(--warning)); }
+  .border-warning\/30 { border-color: hsl(var(--warning) / 0.3); }
+  .border-warning\/35 { border-color: hsl(var(--warning) / 0.35); }
+
   .qe-no-white-borders {
     --qe-enforced-border: hsl(var(--border) / 0.12);
     --qe-enforced-border-strong: hsl(var(--border) / 0.18);
