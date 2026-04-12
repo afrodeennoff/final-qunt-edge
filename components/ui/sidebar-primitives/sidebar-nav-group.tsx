@@ -169,7 +169,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
             <SidebarGroup className="px-0 py-1.5">
               <CollapsibleTrigger asChild>
                 <SidebarGroupLabel
-                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-sidebar-foreground/40 hover:text-sidebar-foreground/60"
+                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-sidebar-foreground/40 hover:text-sidebar-foreground/60"
                   id={`sidebar-group-${groupIndex}`}
                 >
                   <span>{groupName}</span>

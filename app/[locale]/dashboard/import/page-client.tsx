@@ -26,7 +26,7 @@ export default function ImportCallbackPageClient() {
   const { refreshAllData } = useDashboardActions();
   const t = useI18n();
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
+  const [status, setStatus] = useState<"loading" | "success" | "destructive">(
     "loading",
   );
   const [error, setError] = useState<string>("");

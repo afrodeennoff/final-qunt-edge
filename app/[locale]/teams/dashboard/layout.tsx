@@ -94,7 +94,7 @@ export default async function DashboardLayout({
                                         <h1 className="text-sm font-bold tracking-wide text-foreground">
                                             Teams Dashboard
                                         </h1>
-                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                                        <span className="text-[0.625rem] font-medium uppercase tracking-widest text-muted-foreground">
                                             Unified Workspace
                                         </span>
                                     </div>

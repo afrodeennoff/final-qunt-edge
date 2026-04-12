@@ -306,7 +306,7 @@ export function DataManagementCard() {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button 
-                  variant="error"
+                  variant="destructive"
                   size="sm"
                   className="flex-1 md:flex-none"
                   disabled={selectedAccounts.length === 0 || deleteLoading}
@@ -343,7 +343,7 @@ export function DataManagementCard() {
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button 
-                  variant="error"
+                  variant="destructive"
                   size="sm"
                   disabled={deleteLoading}
                   onClick={() => {

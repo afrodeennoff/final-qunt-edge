@@ -28,8 +28,8 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      "border-b border-[var(--frost-border)] [&_tr]:border-b [&_tr]:border-[var(--frost-border)]",
-      "bg-v2-bg-surface/50",
+      "border-b border-white/[0.06] [&_tr]:border-b [&_tr]:border-white/[0.06]",
+      "bg-white/[0.03]",
       className
     )}
     {...props}
@@ -58,7 +58,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     data-slot="table-footer"
     className={cn(
-      "border-t border-[var(--frost-border)] bg-v2-bg-surface/50 font-medium last:[&>tr]:border-b-0",
+      "border-t border-white/[0.06] bg-white/[0.03] font-medium last:[&>tr]:border-b-0",
       className
     )}
     {...props}
@@ -74,7 +74,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     data-slot="table-row"
     className={cn(
-      "border-b border-[var(--frost-border)] transition-colors hover:bg-v2-bg-hover data-[state=selected]:bg-v2-bg-hover",
+      "border-b border-white/[0.06] transition-colors hover:bg-v2-bg-hover data-[state=selected]:bg-v2-bg-hover",
       className
     )}
     {...props}
@@ -90,7 +90,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     data-slot="table-head"
     className={cn(
-      "h-10 px-3 text-left align-middle text-xs font-medium text-v2-text-muted sm:h-12 sm:px-4 sm:text-sm [&:has([role=checkbox])]:pr-0",
+      "h-10 px-3 text-left align-middle text-xs font-medium text-muted-foreground sm:h-12 sm:px-4 sm:text-sm [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -106,7 +106,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     data-slot="table-cell"
     className={cn(
-      "p-3 align-middle text-sm sm:p-4 border-b border-[var(--frost-border)] [&:has([role=checkbox])]:pr-0",
+      "p-3 align-middle text-sm sm:p-4 border-b border-white/[0.06] [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}

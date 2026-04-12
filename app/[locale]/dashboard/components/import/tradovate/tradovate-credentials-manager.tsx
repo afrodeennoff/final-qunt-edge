@@ -430,7 +430,7 @@ export function TradovateCredentialsManager() {
               {t("common.cancel")}
             </Button>
             <Button 
-              variant="error"
+              variant="destructive"
               onClick={() =>
                 selectedAccountId && handleDelete(selectedAccountId)
               }

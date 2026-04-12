@@ -43,7 +43,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName
 const NavigationMenuItem = NavigationMenuPrimitive.Item
 
 const navigationMenuTriggerStyle = cva(
-  "group inline-flex h-10 w-max items-center justify-center rounded-md border border-transparent bg-background px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--frost-border)] hover:bg-v2-bg-hover data-[state=open]:border-[var(--frost-border)] data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+  "group inline-flex h-10 w-max items-center justify-center rounded-md border border-transparent bg-background px-4 py-2 text-sm font-medium transition-colors hover:border-white/[0.06] hover:bg-v2-bg-hover data-[state=open]:border-white/[0.06] data-[state=open]:bg-v2-accent/10 data-[state=open]:text-v2-accent focus:outline-hidden disabled:pointer-events-none disabled:opacity-50"
 )
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -91,7 +91,7 @@ const NavigationMenuViewport = React.forwardRef<
     <NavigationMenuPrimitive.Viewport
       data-slot="navigation-menu-viewport"
       className={cn(
-        "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-md border border-[var(--frost-border)] bg-popover text-popover-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-(--radix-navigation-menu-viewport-width)",
+        "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-md border border-white/[0.06] bg-popover text-popover-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-(--radix-navigation-menu-viewport-width)",
         className
       )}
       ref={ref}
