@@ -46,13 +46,13 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-md px-2 transition-colors duration-200 hover:bg-sidebar-accent/14 data-[state=open]:bg-sidebar-accent/20 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-2xl border border-sidebar-border/40 bg-sidebar-accent/25 px-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-colors duration-200 hover:bg-sidebar-accent/40 data-[state=open]:bg-sidebar-accent/48 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl">
+                  <Avatar className="h-10 w-10 overflow-hidden rounded-2xl">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
-                    <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
+                    <AvatarFallback className="rounded-2xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-xl border-sidebar-border/18 bg-sidebar/95 backdrop-blur-xl"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-2xl border-sidebar-border/40 bg-sidebar/95 shadow-[0_28px_72px_-40px_rgba(4,10,24,0.92)] backdrop-blur-2xl"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2.5 px-3 py-2.5 text-left text-sm bg-gradient-to-r from-sidebar-accent/30 to-sidebar-accent/10">
-                <Avatar className="h-8 w-8 rounded-lg shadow-sm">
+              <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-accent/32 to-sidebar-accent/12 px-3 py-2.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-xl shadow-sm">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}

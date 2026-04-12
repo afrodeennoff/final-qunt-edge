@@ -74,7 +74,7 @@ export function SharedWidgetCanvas() {
       >
         {transformedLayout.map((widget: Widget) => (
           <div key={widget.i} className="h-full">
-            <div className="relative h-full w-full overflow-hidden rounded-lg bg-background shadow-[0_2px_4px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
+            <div className="relative h-full w-full overflow-hidden rounded-[calc(var(--radius)+0.35rem)] transition-transform duration-200 hover:-translate-y-0.5">
               {renderWidget(widget)}
             </div>
           </div>

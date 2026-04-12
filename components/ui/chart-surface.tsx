@@ -120,13 +120,13 @@ export function ChartSurface({
     <div
       data-chart-surface="modern"
       className={cn(
-        "relative flex h-full flex-col overflow-hidden rounded-xl border",
-        "border-[hsl(var(--border))_/_0.18]",
-        "bg-[hsl(var(--card))_/_0.88]",
-        "shadow-[inset_0_1px_0_hsl(var(--foreground)_/_0.03)]",
+        "relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius)+0.1rem)] border",
+        "border-[hsl(var(--v2-border)/0.72)]",
+        "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)]",
         "transition-all duration-[180ms] ease-out",
-        "hover:border-[hsl(var(--border))_/_0.26]",
-        "hover:bg-[hsl(var(--card))_/_0.92]",
+        "hover:border-[hsl(var(--v2-border)/0.95)]",
+        "hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.96))]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         className
       )}
@@ -135,7 +135,7 @@ export function ChartSurface({
       {hasHeader && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-b border-border/18",
+            "flex shrink-0 items-center border-b border-border/18 bg-[rgba(255,255,255,0.03)]",
             isSmall ? "h-10 px-2.5" : "h-12 px-3.5",
             headerClassName
           )}

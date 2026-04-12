@@ -7,8 +7,8 @@ export default function TeamsPageClient() {
   const locale = useCurrentLocale()
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <section className="rounded-3xl border border-border bg-card/80 p-8 sm:p-10">
+    <main className="qe-v2-app-shell mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="qe-v2-card rounded-[calc(var(--radius)+0.55rem)] p-8 sm:p-10">
         <p className="inline-flex rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
           Teams
         </p>

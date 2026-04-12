@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import net from "node:net";
 import { join } from "node:path";
 
@@ -43,6 +43,18 @@ function runCapture(command, args) {
     status: result.status ?? 1,
     output: `${stdout}\n${stderr}`,
   };
+}
+
+function hasGeneratedPrismaClient() {
+  return existsSync(join(process.cwd(), "node_modules", ".prisma", "client"));
+}
+
+function isPrismaCliInteropFailure(output) {
+  return (
+    output.includes("Error [ERR_REQUIRE_ESM]") &&
+    output.includes("@prisma/dev") &&
+    output.includes("zeptomatch")
+  );
 }
 
 function baselineAllMigrations() {
@@ -122,7 +134,25 @@ async function canReachDatabase(urlString) {
   };
 }
 
-run("npx", ["prisma", "generate"], "Prisma client generated");
+const shouldForcePrismaGenerate = process.env.PRISMA_GENERATE_STRICT === "true";
+
+if (hasGeneratedPrismaClient() && !shouldForcePrismaGenerate) {
+  info("[sync-stack] Using existing generated Prisma client");
+} else {
+  const prismaGenerateResult = runCapture("npx", ["prisma", "generate"]);
+
+  if (prismaGenerateResult.status !== 0) {
+    if (isPrismaCliInteropFailure(prismaGenerateResult.output) && hasGeneratedPrismaClient()) {
+      console.warn(
+        "[sync-stack] Prisma generate hit the known @prisma/dev ↔ zeptomatch ESM interop failure. Continuing with the existing generated client.",
+      );
+    } else {
+      process.exit(prismaGenerateResult.status);
+    }
+  }
+
+  info("[sync-stack] Prisma client generated");
+}
 
 const rawUrl = process.env.DIRECT_URL || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL || process.env.POSTGRES_URL;
 const migrationUrl = rawUrl ? rawUrl.replace(/^"(.*)"$/, '$1') : null;
@@ -162,6 +192,18 @@ if (baselineMode) {
       `[sync-stack] Skipping Prisma migrate status: ${dbCheck.reason}. Continuing build.`,
     );
   } else {
-    run("npx", ["prisma", "migrate", "status"], "Prisma migrations up to date");
+    const migrationStatusResult = runCapture("npx", ["prisma", "migrate", "status"]);
+
+    if (migrationStatusResult.status !== 0) {
+      if (isPrismaCliInteropFailure(migrationStatusResult.output)) {
+        console.warn(
+          "[sync-stack] Prisma migrate status hit the known @prisma/dev ↔ zeptomatch ESM interop failure. Skipping status verification for this build.",
+        );
+      } else {
+        process.exit(migrationStatusResult.status);
+      }
+    } else {
+      info("[sync-stack] Prisma migrations up to date");
+    }
   }
 }

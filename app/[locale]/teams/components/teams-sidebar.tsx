@@ -42,28 +42,28 @@ export function TeamsSidebar() {
     {
       href: slug ? `${dashboardRoot}/${slug}` : dashboardRoot,
       icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
-      label: "Overview",
-      group: "Team Overview",
+      label: "Command",
+      group: "Team Workspace",
       exact: true
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/analytics` : dashboardRoot,
       icon: <BarChart3 className={NAV_ICON_SIZE} />,
-      label: "Analytics",
-      group: "Team Overview",
+      label: "Insights",
+      group: "Team Workspace",
       disabled: !slug
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/traders` : dashboardRoot,
       icon: <TrendingUp className={NAV_ICON_SIZE} />,
-      label: "Traders",
-      group: "Team Overview",
+      label: "Roster",
+      group: "Team Workspace",
       disabled: !slug
     },
     {
       href: slug ? `${dashboardRoot}/${slug}/members` : `${teamsRoot}/manage`,
       icon: <Users className={NAV_ICON_SIZE} />,
-      label: "Members & Roles",
+      label: "Access",
       group: "Management"
     },
     {
@@ -81,7 +81,7 @@ export function TeamsSidebar() {
     {
       href: `${localePrefix}/dashboard`,
       icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
-      label: "Main Dashboard",
+      label: "Personal Workspace",
       group: "System"
     },
   ]

@@ -59,15 +59,15 @@ export function DashboardHeader() {
 
     const getTitle = () => {
         if (isDashboardRoot) {
-            if (activeTab === 'table') return 'Trades';
+            if (activeTab === 'table') return 'Journal';
             if (activeTab === 'accounts') return 'Accounts';
-            if (activeTab === 'chart') return 'Chart the Future';
-            return 'Dashboard';
+            if (activeTab === 'chart') return 'Scenario Lab';
+            return 'Home';
         }
-        if (pathname.includes('strategies')) return 'Trade Desk';
+        if (pathname.includes('strategies')) return 'Playbook';
         if (pathname.includes('reports')) return 'Analytics';
-        if (pathname.includes('behavior')) return 'Behavior';
-        if (pathname.includes('trader-profile')) return 'Trader Profile';
+        if (pathname.includes('behavior')) return 'Coaching';
+        if (pathname.includes('trader-profile')) return 'Profile';
         if (pathname.includes('calendar')) return 'Calendar';
         if (pathname.includes('data')) return 'Data';
         if (pathname.includes('settings')) return 'Settings';
@@ -81,14 +81,14 @@ export function DashboardHeader() {
     const subtitle = isDashboardRoot
         ? (
             activeTab === 'table'
-                ? 'Review execution details, filters, and performance by trade.'
+                ? 'Review executions, annotate trades, and move through your daily journal.'
                 : activeTab === 'accounts'
-                    ? 'Track account growth, balances, and consistency in one place.'
+                    ? 'Track balances, challenge pressure, and account consistency in one place.'
                     : activeTab === 'chart'
-                        ? 'Explore scenario planning and forward-looking projections.'
-                        : 'Trading dashboard'
+                        ? 'Explore forward-looking scenarios and projection experiments.'
+                        : 'Your trading operating system for review, risk, and momentum.'
         )
-        : 'Focus mode for analysis, execution, and daily workflow.';
+        : 'Focused workspace for analysis, review, and execution.';
     const hasActiveFilters =
         (accountNumbers?.length || 0) > 0 ||
         (instruments?.length || 0) > 0 ||
@@ -100,94 +100,97 @@ export function DashboardHeader() {
     return (
         <header
             className={cn(
-                "sticky top-0 z-50 w-full shrink-0 overflow-hidden border-b border-v2-border/10 backdrop-blur-xl transition-all duration-300",
-                "bg-v2-bg-base/95",
-                "supports-[backdrop-filter]:bg-v2-bg-base/85 supports-[backdrop-filter]:backdrop-blur-xl",
-                isMobile && "pt-safe"
+                'sticky top-0 z-50 w-full shrink-0 px-3 pb-2 pt-3 transition-all duration-300 sm:px-4 sm:pb-3 sm:pt-4',
+                isMobile && 'pt-[calc(env(safe-area-inset-top)+0.75rem)]'
             )}
             data-dashboard-header="true"
         >
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--foreground)_/_0.02),transparent_25%,transparent_75%,hsl(var(--foreground)_/_0.02))]" />
-            <div className="relative flex min-h-14 items-center justify-between gap-3 px-3 sm:gap-4 sm:px-6">
-                <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-                    <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-transparent text-v2-text-muted transition-all duration-200 hover:border-v2-border/15 hover:bg-v2-bg-surface/55 hover:text-v2-text-primary md:h-7 md:w-7 md:rounded-lg" />
-                    <div className="flex min-w-0 items-center gap-3">
-                        <div className="hidden h-7 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/40 to-v2-border/0 sm:block" />
-                        <div className="min-w-0 max-w-[min(28rem,42vw)]">
-                            <div className="flex items-center gap-2.5">
-                                {showSectionLabel && (
-                                    <span className={cn(
-                                        "hidden sm:inline-flex rounded-lg border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em]",
-                                        "border-v2-border/15 bg-v2-bg-surface/40 text-v2-text-muted",
-                                        "backdrop-blur-sm"
-                                    )}>
-                                        {sectionLabel}
-                                    </span>
-                                )}
-                                <h1 className="truncate text-[11px] font-bold tracking-[0.1em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.14em]">
-                                    {title}
-                                </h1>
+            <div className="relative mx-auto max-w-[1800px]">
+                <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_32%),radial-gradient(circle_at_right,rgba(16,185,129,0.08),transparent_30%)] opacity-80" />
+                <div className="qe-v2-card relative flex min-h-[4.4rem] items-center justify-between gap-3 px-3 py-2.5 sm:gap-4 sm:px-4">
+                    <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
+                        <SidebarTrigger className="h-10 w-10 shrink-0 rounded-2xl border border-v2-border/45 bg-v2-bg-surface/78 text-v2-text-secondary shadow-[0_16px_32px_-24px_rgba(8,15,34,0.92)] transition-all duration-200 hover:border-v2-border/70 hover:bg-v2-bg-hover hover:text-v2-text-primary md:h-9 md:w-9" />
+                        <div className="flex min-w-0 items-center gap-3">
+                            <div className="hidden h-8 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/45 to-v2-border/0 sm:block" />
+                            <div className="min-w-0 max-w-[min(32rem,44vw)]">
+                                <div className="flex items-center gap-2.5">
+                                    {showSectionLabel && (
+                                        <span className={cn(
+                                            'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em]',
+                                            'border-v2-border/30 bg-v2-bg-surface/80 text-v2-text-secondary',
+                                            'backdrop-blur-sm'
+                                        )}>
+                                            {sectionLabel}
+                                        </span>
+                                    )}
+                                    <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                                        {title}
+                                    </h1>
+                                </div>
+                                <p className="hidden truncate pt-1 text-xs text-v2-text-secondary/85 xl:block">
+                                    {subtitle}
+                                </p>
                             </div>
-                            {(!isDashboardRoot || activeTab !== 'widgets') ? (
-                                <p className="hidden truncate pt-0.5 text-xs text-v2-text-secondary/80 xl:block">{subtitle}</p>
-                            ) : null}
                         </div>
                     </div>
-                </div>
 
-                <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
-                    <div className="flex min-w-0 w-full items-center justify-end gap-1">
-                    <div className="flex min-w-0 items-center gap-1">
-                        <FilterCommandMenu
-                            variant="navbar"
-                            className={cn(
-                                isSidebarCollapsed
-                                    ? "w-[clamp(280px,34vw,460px)]"
-                                    : "w-[clamp(220px,24vw,360px)]"
-                            )}
-                        />
+                    <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
+                        <div className="flex min-w-0 w-full items-center justify-end gap-1">
+                            <div className="flex min-w-0 items-center gap-1">
+                                <FilterCommandMenu
+                                    variant="navbar"
+                                    className={cn(
+                                        isSidebarCollapsed
+                                            ? 'w-[clamp(280px,34vw,460px)]'
+                                            : 'w-[clamp(220px,24vw,360px)]'
+                                    )}
+                                />
 
-                        {!isMobile && <GlobalSyncButton />}
+                                {!isMobile && <GlobalSyncButton />}
 
-                        {!isMobile && <DailySummaryModal />}
-                    </div>
+                                {!isMobile && <DailySummaryModal />}
+                            </div>
 
-                    <div className="hidden sm:flex items-center gap-1">
-                        <ImportButton />
+                            <div className="hidden sm:flex items-center gap-1">
+                                <ImportButton />
 
-                        {!isPlusUser() && (
-                            <Link href={billingHref}>
-                                <button className={cn(
-                                    "group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5",
-                                    "text-[10px] font-semibold uppercase tracking-[0.18em] text-v2-text-secondary transition-all duration-200",
-                                    "hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
-                                    "active:scale-[0.97]"
-                                )}>
-                                    <Sparkles className="h-3 w-3 text-v2-accent" />
-                                    <span>UPGRADE</span>
-                                </button>
-                            </Link>
-                        )}
-                    </div>
+                                {!isPlusUser() && (
+                                    <Link href={billingHref}>
+                                        <button className={cn(
+                                            'group flex h-10 items-center gap-2 rounded-full border border-v2-border/40 bg-[linear-gradient(135deg,rgba(35,52,87,0.92),rgba(16,24,42,0.9))] px-4',
+                                            'text-[10px] font-semibold uppercase tracking-[0.22em] text-v2-text-primary shadow-[0_20px_40px_-30px_rgba(37,99,235,0.86)] transition-all duration-200',
+                                            'hover:-translate-y-0.5 hover:border-v2-accent/55 hover:shadow-[0_26px_46px_-28px_rgba(37,99,235,0.8)]',
+                                            'active:translate-y-0 active:scale-[0.98]'
+                                        )}>
+                                            <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
+                                            <span>Upgrade</span>
+                                        </button>
+                                    </Link>
+                                )}
+                            </div>
 
-                    {!isMobile && isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
+                            {!isMobile && isDashboardRoot && isWidgetsTab ? <DashboardHeaderWidgetControls isMobile={isMobile} /> : null}
+                        </div>
                     </div>
                 </div>
             </div>
 
             {isMobile && isDashboardRoot && isWidgetsTab ? (
-                <div className="relative px-3 pb-2 pt-1">
-                    <DashboardHeaderWidgetControls isMobile={isMobile} />
+                <div className="relative mx-auto max-w-[1800px] pt-2">
+                    <div className="qe-v2-card px-2 py-2 sm:px-3">
+                        <DashboardHeaderWidgetControls isMobile={isMobile} />
+                    </div>
                 </div>
             ) : null}
 
             {
                 hasActiveFilters ? (
                     <div className={cn(
-                        "relative px-3 pb-2.5 pt-1",
-                        !isMobile && "px-4 sm:px-6"
+                        'relative mx-auto max-w-[1800px] pt-2'
                     )}>
-                        <ActiveFilterTags showAccountNumbers={true} />
+                        <div className="qe-v2-card px-3 py-2">
+                            <ActiveFilterTags showAccountNumbers={true} />
+                        </div>
                     </div>
                 ) : null
             }

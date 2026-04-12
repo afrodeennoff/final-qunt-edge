@@ -87,13 +87,13 @@ export function WidgetShell({
     <Card
       data-widget-shell="v2"
       className={cn(
-        "relative overflow-hidden rounded-xl border",
-        "border-v2-border/16",
-        "bg-v2-bg-surface/88",
-        "shadow-[inset_0_1px_0_oklch(var(--v2-text-primary)/0.035)]",
+        "relative overflow-hidden rounded-[calc(var(--radius)+0.1rem)] border",
+        "border-v2-border/70",
+        "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)]",
         "transition-all duration-[180ms] ease-out",
-        "hover:border-v2-border/24",
-        "hover:bg-v2-bg-surface/92",
+        "hover:border-v2-border/95",
+        "hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.96))]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         "h-full shadow-none",
         variant === "hoverable" && "hover:shadow-[var(--v2-glow-ambient)]",
@@ -101,7 +101,7 @@ export function WidgetShell({
       )}
     >
       {(title || actions || icon || description) && (
-        <CardHeader className="border-b border-border/18 px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+        <CardHeader className="border-b border-border/18 bg-[rgba(255,255,255,0.03)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
             <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (

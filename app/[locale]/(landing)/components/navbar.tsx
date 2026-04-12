@@ -47,15 +47,15 @@ export default function Navbar() {
       >
         <motion.div
           className={cn(
-            'flex h-[58px] items-center rounded-full border px-2.5 sm:h-[62px] sm:px-3.5',
-            'border-[var(--frost-border)] bg-background/80 supports-[backdrop-filter]:bg-background/80 backdrop-blur-sm',
-            'shadow-none'
+            'qe-v2-card flex h-[60px] items-center rounded-[calc(var(--radius)+0.4rem)] px-2.5 sm:h-[66px] sm:px-3.5',
+            'border-[var(--frost-border)] bg-background/72 supports-[backdrop-filter]:bg-background/72 backdrop-blur-xl',
+            'shadow-[0_28px_72px_-42px_rgba(4,10,24,0.9)]'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
-          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--frost-border)] bg-card">
+          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-2xl px-2 py-1.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-[var(--frost-border)] bg-card shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
               <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight text-[var(--text-secondary)] sm:inline-flex">Qunt Edge</span>
@@ -72,10 +72,10 @@ export default function Navbar() {
                   key={link.href}
                   href={`/${locale}${link.href}`}
                   className={cn(
-                    'relative rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
+                    'relative rounded-2xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'bg-card text-[var(--text-primary)] border border-[var(--frost-border)]'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-card'
+                      ? 'border border-[var(--frost-border)] bg-card text-[var(--text-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
+                      : 'text-[var(--text-secondary)] hover:bg-card hover:text-[var(--text-primary)]'
                   )}
                 >
                   {link.title}
@@ -87,7 +87,7 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden rounded-full px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] hover:bg-card md:inline-flex"
+              className="hidden rounded-2xl px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-card hover:text-[var(--text-primary)] md:inline-flex"
             >
               Login
             </Link>

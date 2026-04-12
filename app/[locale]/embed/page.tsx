@@ -20,6 +20,8 @@ import { useSearchParams } from 'next/navigation'
 import { applyEmbedTheme, THEME_PRESETS, getOverridesFromSearchParams } from './theme'
 import Script from 'next/script'
 import { I18nProviderClient } from '@/locales/client'
+import { BackgroundGlow } from '@/components/ui/background-glow'
+import { MotionSection, MotionStagger, MotionStaggerItem } from '@/components/animation/enhanced-motion'
 
 
 // Removed ThemeProvider import - using simple theme implementation
@@ -66,6 +68,14 @@ function generateRandomTrade() {
 function generateRandomTrades(count: number = 1) {
     return Array.from({ length: count }, generateRandomTrade)
 }
+
+function formatChartName(chartKey: string) {
+  return chartKey
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
 export default function EmbedPage() {
     const searchParams = useSearchParams()
     const preset = searchParams.get('preset') || undefined
@@ -116,7 +126,7 @@ export default function EmbedPage() {
                 } else if (data.type === 'SET_THEME') {
                     const root = document.documentElement
                     const { preset: p, vars } = data
-                                root.classList.add('dark')
+                    root.classList.add('dark')
                     if (p && THEME_PRESETS[p as keyof typeof THEME_PRESETS]) {
                         applyEmbedTheme(THEME_PRESETS[p as keyof typeof THEME_PRESETS], root)
                     }
@@ -192,25 +202,22 @@ export default function EmbedPage() {
       return (selectedCharts && filtered.length === 0 ? chartDefinitions : filtered).map((component) => (
         <div 
           key={component.key}
-          className="cursor-pointer hover:opacity-90 transition-opacity"
+          className="group relative cursor-pointer rounded-[calc(var(--radius)+0.5rem)] transition-transform duration-200 hover:-translate-y-1"
           onClick={() => {
-            const chartName = component.key.split('-').map(word => 
-              word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' ')
-            sendChartClickMessage(component.key, chartName)
+            sendChartClickMessage(component.key, formatChartName(component.key))
           }}
-          title={`Click to add "${component.key.split('-').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-          ).join(' ')}" to selection`}
+          title={`Click to add "${formatChartName(component.key)}" to selection`}
         >
-          {component.render()}
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-v2-border/0 transition-colors duration-200 group-hover:border-v2-border/65 group-hover:shadow-[0_26px_48px_-36px_rgba(16,185,129,0.55)]" />
+          <div className="relative">{component.render()}</div>
         </div>
       ))
     }, [chartDefinitions, selectedCharts, sendChartClickMessage])
 
     return (
       <I18nProviderClient locale={lang}>
-        <div className="w-full h-full min-h-[400px] mb-20">
+        <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
+          <BackgroundGlow variant="accent" />
           {/*Dismiss cookie consent banner*/}
           <Script id="embed-autoconsent" strategy="beforeInteractive">
           {`try {
@@ -230,8 +237,48 @@ export default function EmbedPage() {
           </Script>
 
           <Toaster />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-            {chartsToRender}
+          <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-5 lg:px-6 lg:pt-6">
+            <MotionSection delay={0.03}>
+              <section className="qe-v2-card overflow-hidden px-5 py-5 lg:px-6">
+                <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                  <div className="space-y-2">
+                    <div className="inline-flex w-fit rounded-full border border-v2-border/30 bg-v2-bg-surface/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-v2-text-secondary">
+                      Embed Library
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-semibold tracking-tight text-v2-text-primary lg:text-2xl">
+                        Qunt Edge chart modules
+                      </h1>
+                      <p className="max-w-3xl pt-1 text-sm text-v2-text-secondary">
+                        Production-ready embed cards with preserved query-param theming, selection, and postMessage contracts.
+                      </p>
+                    </div>
+                  </div>
+                  <MotionStagger className="grid gap-2 text-xs text-v2-text-secondary sm:grid-cols-2">
+                    <MotionStaggerItem>
+                      <div className="rounded-2xl border border-v2-border/30 bg-v2-bg-surface/68 px-3 py-2">
+                        <span className="block text-[10px] uppercase tracking-[0.18em] text-v2-text-muted">Preset</span>
+                        <span className="block pt-1 text-sm font-medium text-v2-text-primary">{preset ?? 'Default'}</span>
+                      </div>
+                    </MotionStaggerItem>
+                    <MotionStaggerItem>
+                      <div className="rounded-2xl border border-v2-border/30 bg-v2-bg-surface/68 px-3 py-2">
+                        <span className="block text-[10px] uppercase tracking-[0.18em] text-v2-text-muted">Charts</span>
+                        <span className="block pt-1 text-sm font-medium text-v2-text-primary">
+                          {selectedCharts ? Array.from(selectedCharts).length : 'All'}
+                        </span>
+                      </div>
+                    </MotionStaggerItem>
+                  </MotionStagger>
+                </div>
+              </section>
+            </MotionSection>
+
+            <MotionSection delay={0.08}>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-5">
+                {chartsToRender}
+              </div>
+            </MotionSection>
           </div>
         </div>
       </I18nProviderClient>

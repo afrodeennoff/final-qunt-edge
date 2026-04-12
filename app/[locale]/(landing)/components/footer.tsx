@@ -45,7 +45,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="relative mt-8 border-t border-[var(--frost-border)] bg-card rounded-t-2xl px-4 pb-8 pt-6 sm:px-6 sm:pb-10"
+      className="relative mt-10 rounded-t-[calc(var(--radius)+0.4rem)] border-t border-[var(--frost-border)] bg-card/90 px-4 pb-8 pt-6 backdrop-blur-xl sm:px-6 sm:pb-10"
     >
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
@@ -54,12 +54,12 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1240px] rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-6 sm:p-8 lg:p-10"
+        className="mx-auto w-full max-w-[1240px] rounded-[calc(var(--radius)+0.4rem)] border border-[var(--frost-border)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_80px_-42px_rgba(4,10,24,0.9)] backdrop-blur-xl sm:p-8 lg:p-10"
       >
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1.8fr]">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--frost-border)] bg-card">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--frost-border)] bg-card shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
                 <Logo className="h-5 w-5 fill-foreground" />
               </div>
               <div className="leading-none">

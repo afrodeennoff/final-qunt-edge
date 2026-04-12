@@ -44,105 +44,105 @@ export function DashboardSidebar({ isAdmin = false }: { isAdmin?: boolean }) {
         {
             href: `/${locale}/dashboard`, // Matches widgets by default in our new mapping
             icon: <LayoutDashboard className={NAV_ICON_SIZE} />,
-            label: "Dashboard",
-            group: "Overview",
+            label: "Home",
+            group: "Workspace",
             exact: true
         },
         {
             href: `/${locale}/dashboard?tab=table`,
             icon: <TrendingUp className={NAV_ICON_SIZE} />,
-            label: "Trades",
-            group: "Trading"
+            label: "Journal",
+            group: "Workspace"
         },
         {
             href: `/${locale}/dashboard?tab=chart`,
             icon: <Sparkles className={NAV_ICON_SIZE} />,
-            label: "Chart the Future",
-            group: "Trading"
+            label: "Scenario Lab",
+            group: "Workspace"
         },
         {
             href: `/${locale}/dashboard?tab=accounts`,
             icon: <Activity className={NAV_ICON_SIZE} />,
             label: "Accounts",
-            group: "Trading"
+            group: "Workspace"
         },
         {
             href: `/${locale}/dashboard/trader-profile`,
             icon: <Brain className={NAV_ICON_SIZE} />,
-            label: "Trader Profile",
-            group: "Trading"
+            label: "Profile",
+            group: "Performance"
         },
         {
             href: `/${locale}/dashboard/strategies`,
             icon: <BookOpen className={NAV_ICON_SIZE} />,
-            label: "Trade Desk",
-            group: "Trading"
+            label: "Playbook",
+            group: "Performance"
         },
         {
             href: `/${locale}/dashboard/reports`,
             icon: <BarChart3 className={NAV_ICON_SIZE} />,
-            label: "Reports",
-            group: "Analytics"
+            label: "Analytics",
+            group: "Performance"
         },
         {
             href: `/${locale}/dashboard/behavior`,
             icon: <Brain className={NAV_ICON_SIZE} />,
-            label: "Behavior",
-            group: "Analytics"
+            label: "Coaching",
+            group: "Performance"
         },
         {
             href: `/${locale}/teams/dashboard`,
             icon: <Building2 className={NAV_ICON_SIZE} />,
             label: "Team",
-            group: "Community"
+            group: "Network"
         },
         {
             href: `/${locale}/propfirms`,
             icon: <Globe className={NAV_ICON_SIZE} />,
             label: "Prop Firms",
-            group: "Community"
+            group: "Network"
         },
         {
             href: `/${locale}/deals`,
             icon: <TrendingUp className={NAV_ICON_SIZE} />,
             label: "Deals",
-            group: "Community"
+            group: "Network"
         },
         {
             href: `/${locale}/leaderboard`,
             icon: <LeaderboardIcon size={20} />,
             label: "Leaderboard",
-            group: "Community"
+            group: "Network"
         },
         {
             href: `/${locale}/dashboard/data`,
             icon: <Database className={NAV_ICON_SIZE} />,
             label: "Data",
-            group: "System"
+            group: "Control"
         },
         {
             label: "Sync",
             icon: <RefreshCw className={NAV_ICON_SIZE} />,
             action: () => refreshAllData({ force: true }),
-            group: "System"
+            group: "Control"
         },
         {
             href: `/${locale}/dashboard/billing`,
             icon: <CreditCard className={NAV_ICON_SIZE} />,
             label: "Billing",
-            group: "System"
+            group: "Control"
         },
         {
             href: `/${locale}/dashboard/settings`,
             icon: <Settings className={NAV_ICON_SIZE} />,
             label: "Settings",
-            group: "System"
+            group: "Control"
         },
         ...(isAdmin ? [{
             href: `/${locale}/admin`,
             icon: <Shield className={NAV_ICON_SIZE} />,
             label: "Admin",
-            group: "System"
+            group: "Control"
         }] : []),
     ], [locale, refreshAllData, isAdmin])
 

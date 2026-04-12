@@ -241,7 +241,7 @@ export default async function RootLayout({
 
       </head>
       <body
-        className="font-sans antialiased text-foreground"
+        className="bg-background font-sans antialiased text-foreground"
         data-ui-variant={uiVariant}
       >
         <a 

@@ -30,7 +30,7 @@ export default function AuthenticationPageClient() {
   ]
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-28 top-[-8rem] h-[40rem] w-[40rem] rounded-full bg-accent/70 blur-3xl" />
         <div className="absolute -right-36 bottom-[-10rem] h-[42rem] w-[42rem] rounded-full bg-accent/50 blur-3xl" />
@@ -38,9 +38,9 @@ export default function AuthenticationPageClient() {
       </div>
 
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10">
-        <div className="w-full overflow-hidden rounded-2xl border border-border/24 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
+        <div className="w-full overflow-hidden rounded-[calc(var(--radius)+0.55rem)] border border-[hsl(var(--v2-border)/0.76)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.96),hsl(var(--v2-bg-elevated)/0.94))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_40px_100px_-48px_rgba(4,10,24,0.95)] backdrop-blur-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]">
-        <section className="p-6 sm:p-8 lg:border-r lg:border-border/24 lg:p-10">
+        <section className="p-6 sm:p-8 lg:border-r lg:border-[hsl(var(--v2-border)/0.72)] lg:p-10">
           <div className="flex items-center justify-between">
             <Link
               href={`/${locale}`}

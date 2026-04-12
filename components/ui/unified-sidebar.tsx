@@ -223,14 +223,14 @@ function SidebarContentRender({
       collapsible="icon"
       className={cn(
         'pointer-events-auto overflow-hidden text-sidebar-foreground',
-        styleVariant === 'minimal' ? 'bg-sidebar/96' : 'bg-sidebar'
+        styleVariant === 'minimal' ? 'bg-sidebar/94' : 'bg-sidebar/96'
       )}
     >
-      <SidebarHeader className="px-2 py-2">
+      <SidebarHeader className="px-3 py-3">
         <SidebarLogoHeader />
       </SidebarHeader>
 
-      <SidebarContent className="overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
+      <SidebarContent className="overflow-y-auto px-3 py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-border/30 hover:scrollbar-thumb-sidebar-border/45 scrollbar-w-[3px]">
         <SidebarNavGroup
           items={items}
           openGroups={openGroups}
@@ -249,7 +249,7 @@ function SidebarContentRender({
         )}
       </SidebarContent>
 
-      <SidebarFooter className="p-2">
+      <SidebarFooter className="p-3">
         <SidebarUserMenu
           user={user}
           timezone={timezone}

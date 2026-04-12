@@ -107,7 +107,7 @@ export function UnifiedMobileNav({
           type="button"
           variant="ghost"
           className={cn(
-            'h-11 w-11 rounded-xl p-0 text-sidebar-foreground lg:hidden',
+            'h-11 w-11 rounded-2xl border border-[hsl(var(--v2-border)/0.75)] bg-[rgba(255,255,255,0.04)] p-0 text-sidebar-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] lg:hidden',
             triggerClassName
           )}
           aria-label="Open navigation menu"
@@ -117,13 +117,13 @@ export function UnifiedMobileNav({
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="w-[88vw] max-w-[340px] border-l border-sidebar-border/30 bg-sidebar p-0"
+        className="w-[88vw] max-w-[340px] border-none bg-transparent p-0"
       >
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.
         </SheetDescription>
-        <div className="flex h-full flex-col overflow-y-auto">
+        <div className="qe-v2-card flex h-full flex-col overflow-y-auto rounded-[calc(var(--radius)+0.2rem)]">
           {showUser && (
             <>
               <div className="px-3 pt-6 pb-2">

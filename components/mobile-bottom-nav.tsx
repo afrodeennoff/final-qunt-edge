@@ -25,20 +25,20 @@ function useNavItems(): MobileNavItem[] {
       {
         href: `/${locale}/dashboard`,
         icon: LayoutDashboard,
-        label: 'Dashboard',
+        label: 'Home',
         tab: 'widgets',
         exact: true,
       },
       {
         href: `/${locale}/dashboard?tab=table`,
         icon: TrendingUp,
-        label: 'Trades',
+        label: 'Journal',
         tab: 'table',
       },
       {
         href: `/${locale}/dashboard?tab=chart`,
         icon: Sparkles,
-        label: 'Chart',
+        label: 'Lab',
         tab: 'chart',
       },
       {
@@ -88,7 +88,7 @@ function TabItem({ item }: { item: MobileNavItem }) {
     <Link
       href={item.href}
       className={cn(
-        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[44px] py-1.5 transition-colors duration-200',
+        'relative group flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-2xl py-1.5 transition-all duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
       )}
       aria-current={active ? 'page' : undefined}
@@ -96,19 +96,22 @@ function TabItem({ item }: { item: MobileNavItem }) {
       <Icon
         className={cn(
           'size-5 transition-all duration-200',
-          active ? 'scale-110 text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/75'
+          active ? 'scale-110 text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/80'
         )}
       />
       <span
         className={cn(
           'text-[10px] font-medium leading-tight transition-colors duration-200',
-          active ? 'text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/75'
+          active ? 'text-sidebar-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/80'
         )}
       >
         {item.label}
       </span>
       {active && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[2px] w-6 rounded-full bg-sidebar-primary" />
+        <>
+          <div className="absolute inset-0 rounded-2xl border border-sidebar-border/55 bg-sidebar-primary/10 shadow-[0_18px_32px_-24px_rgba(37,99,235,0.95)]" />
+          <div className="absolute top-1.5 left-1/2 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary" />
+        </>
       )}
     </Link>
   )
@@ -125,11 +128,11 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
     <nav
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 md:hidden',
-        'bg-sidebar pb-safe'
+        'px-3 pb-safe'
       )}
       aria-label="Dashboard navigation"
     >
-      <div className="flex h-14 items-center justify-around px-2">
+      <div className="qe-v2-card flex h-[4.2rem] items-center justify-around rounded-[calc(var(--radius)+0.35rem)] px-2">
         {navItems.map((item) => (
           <TabItem key={item.label} item={item} />
         ))}
