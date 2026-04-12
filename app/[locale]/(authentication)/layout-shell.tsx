@@ -3,14 +3,14 @@
 import dynamic from "next/dynamic"
 
 const AuthenticationClientLayout = dynamic(() => import("./client-layout"), {
-  ssr: false,
-  loading: () => <div className="min-h-screen bg-background" />,
+ ssr: false,
+ loading: () => <div className="min-h-screen bg-background" />,
 })
 
 export default function AuthenticationLayoutShell({
-  children,
+ children,
 }: {
-  children: React.ReactNode
+ children: React.ReactNode
 }) {
-  return <AuthenticationClientLayout>{children}</AuthenticationClientLayout>
+ return <AuthenticationClientLayout>{children}</AuthenticationClientLayout>
 }

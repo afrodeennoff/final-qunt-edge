@@ -8,72 +8,72 @@ import DesktopCalendarPnl from "@/app/[locale]/dashboard/components/calendar/des
 import { CalendarData } from "@/app/[locale]/dashboard/types/calendar"
 
 function buildDemoCalendarData(): CalendarData {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = today.getMonth()
+ const today = new Date()
+ const year = today.getFullYear()
+ const month = today.getMonth()
 
-  const entries = [
-    { day: 1, pnl: 120, trades: 1, longs: 1, shorts: 0 },
-    { day: 2, pnl: 620, trades: 4, longs: 2, shorts: 2 },
-    { day: 3, pnl: 80, trades: 2, longs: 1, shorts: 1 },
-    { day: 4, pnl: -240, trades: 3, longs: 1, shorts: 2 },
-    { day: 6, pnl: 380, trades: 2, longs: 2, shorts: 0 },
-    { day: 7, pnl: -60, trades: 1, longs: 0, shorts: 1 },
-    { day: 9, pnl: 980, trades: 5, longs: 3, shorts: 2 },
-    { day: 11, pnl: 210, trades: 2, longs: 1, shorts: 1 },
-    { day: 12, pnl: -120, trades: 2, longs: 1, shorts: 1 },
-    { day: 14, pnl: 320, trades: 1, longs: 1, shorts: 0 },
-    { day: 15, pnl: 540, trades: 3, longs: 2, shorts: 1 },
-    { day: 18, pnl: -320, trades: 4, longs: 1, shorts: 3 },
-    { day: 19, pnl: 90, trades: 1, longs: 0, shorts: 1 },
-    { day: 21, pnl: 760, trades: 3, longs: 2, shorts: 1 },
-    { day: 22, pnl: -45, trades: 1, longs: 0, shorts: 1 },
-    { day: 24, pnl: 150, trades: 2, longs: 1, shorts: 1 },
-    { day: 25, pnl: 70, trades: 1, longs: 1, shorts: 0 },
-    { day: 27, pnl: 420, trades: 3, longs: 2, shorts: 1 },
-    { day: 29, pnl: -95, trades: 1, longs: 0, shorts: 1 }
-  ]
+ const entries = [
+ { day: 1, pnl: 120, trades: 1, longs: 1, shorts: 0 },
+ { day: 2, pnl: 620, trades: 4, longs: 2, shorts: 2 },
+ { day: 3, pnl: 80, trades: 2, longs: 1, shorts: 1 },
+ { day: 4, pnl: -240, trades: 3, longs: 1, shorts: 2 },
+ { day: 6, pnl: 380, trades: 2, longs: 2, shorts: 0 },
+ { day: 7, pnl: -60, trades: 1, longs: 0, shorts: 1 },
+ { day: 9, pnl: 980, trades: 5, longs: 3, shorts: 2 },
+ { day: 11, pnl: 210, trades: 2, longs: 1, shorts: 1 },
+ { day: 12, pnl: -120, trades: 2, longs: 1, shorts: 1 },
+ { day: 14, pnl: 320, trades: 1, longs: 1, shorts: 0 },
+ { day: 15, pnl: 540, trades: 3, longs: 2, shorts: 1 },
+ { day: 18, pnl: -320, trades: 4, longs: 1, shorts: 3 },
+ { day: 19, pnl: 90, trades: 1, longs: 0, shorts: 1 },
+ { day: 21, pnl: 760, trades: 3, longs: 2, shorts: 1 },
+ { day: 22, pnl: -45, trades: 1, longs: 0, shorts: 1 },
+ { day: 24, pnl: 150, trades: 2, longs: 1, shorts: 1 },
+ { day: 25, pnl: 70, trades: 1, longs: 1, shorts: 0 },
+ { day: 27, pnl: 420, trades: 3, longs: 2, shorts: 1 },
+ { day: 29, pnl: -95, trades: 1, longs: 0, shorts: 1 }
+ ]
 
-  return entries.reduce<CalendarData>((acc, { day, pnl, trades, longs, shorts }) => {
-    const dateKey = format(new Date(year, month, day), "yyyy-MM-dd")
+ return entries.reduce<CalendarData>((acc, { day, pnl, trades, longs, shorts }) => {
+ const dateKey = format(new Date(year, month, day),"yyyy-MM-dd")
 
-    const tradeCount = Math.max(1, trades)
-    const tradeStubs = Array.from({ length: tradeCount }).map((_, idx) => ({
-      entryDate: new Date(year, month, day, 10 + idx * 2).toISOString(),
-      pnl: pnl / tradeCount,
-      commission: 2 + idx
-    }))
+ const tradeCount = Math.max(1, trades)
+ const tradeStubs = Array.from({ length: tradeCount }).map((_, idx) => ({
+ entryDate: new Date(year, month, day, 10 + idx * 2).toISOString(),
+ pnl: pnl / tradeCount,
+ commission: 2 + idx
+ }))
 
-    acc[dateKey] = {
-      pnl,
-      tradeNumber: trades,
-      longNumber: longs,
-      shortNumber: shorts,
-      // Minimal trade stubs so the preview shows intra-day stats without
-      // requiring full trade objects from the dashboard.
-      trades: tradeStubs as unknown as import("@/lib/data-types").Trade[]
-    }
+ acc[dateKey] = {
+ pnl,
+ tradeNumber: trades,
+ longNumber: longs,
+ shortNumber: shorts,
+ // Minimal trade stubs so the preview shows intra-day stats without
+ // requiring full trade objects from the dashboard.
+ trades: tradeStubs as unknown as import("@/lib/data-types").Trade[]
+ }
 
-    return acc
-  }, {})
+ return acc
+ }, {})
 }
 
 export function CalendarFeaturePreview() {
-  const calendarData = useMemo(() => buildDemoCalendarData(), [])
+ const calendarData = useMemo(() => buildDemoCalendarData(), [])
 
-  return (
-    <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
-          <Calendar className="size-[18px] text-primary" strokeWidth={2} />
-        </div>
-        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
-          Daily Calendar
-        </p>
-      </div>
-      <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-white/[0.02] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none lg:min-h-[440px]">
-        <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
-      </div>
-    </div>
-  )
+ return (
+ <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
+ <div className="flex items-center gap-3 mb-4">
+ <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+ <Calendar className="size-[18px] text-primary" strokeWidth={2} />
+ </div>
+ <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+ Daily Calendar
+ </p>
+ </div>
+ <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-white/[0.02] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none lg:min-h-[440px]">
+ <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
+ </div>
+ </div>
+ )
 }

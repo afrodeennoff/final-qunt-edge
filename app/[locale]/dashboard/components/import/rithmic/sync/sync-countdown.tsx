@@ -9,72 +9,72 @@ import { Badge } from "@/components/ui/badge"
 import { Clock } from 'lucide-react'
 
 interface SyncCountdownProps {
-  lastSyncTime: string
-  isAutoSyncing: boolean
-  credentialId?: string
+ lastSyncTime: string
+ isAutoSyncing: boolean
+ credentialId?: string
 }
 
 export function SyncCountdown({ lastSyncTime, isAutoSyncing, credentialId }: SyncCountdownProps) {
-  const [timeLeft, setTimeLeft] = useState<string>('')
-  const { syncInterval } = useRithmicSyncStore()
+ const [timeLeft, setTimeLeft] = useState<string>('')
+ const { syncInterval } = useRithmicSyncStore()
 
-  const { rithmic } = useSyncContext()
-  const { performSyncForCredential } = rithmic
+ const { rithmic } = useSyncContext()
+ const { performSyncForCredential } = rithmic
 
-  const hasTriggeredSyncRef = useRef(false)
+ const hasTriggeredSyncRef = useRef(false)
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const lastSync = new Date(lastSyncTime)
-      const now = new Date()
-      const nextSync = new Date(lastSync.getTime() + syncInterval * 60 * 1000) // Convert minutes to milliseconds
-      const diff = nextSync.getTime() - now.getTime()
+ useEffect(() => {
+ const calculateTimeLeft = () => {
+ const lastSync = new Date(lastSyncTime)
+ const now = new Date()
+ const nextSync = new Date(lastSync.getTime() + syncInterval * 60 * 1000) // Convert minutes to milliseconds
+ const diff = nextSync.getTime() - now.getTime()
 
-      if (diff <= 0) {
-        setTimeLeft('Ready')
+ if (diff <= 0) {
+ setTimeLeft('Ready')
 
-        // Trigger immediate sync check when ready (only once per ready state)
-        // Check if auto sync is enabled globally
-        const { autoSyncEnabled } = useRithmicSyncStore.getState();
+ // Trigger immediate sync check when ready (only once per ready state)
+ // Check if auto sync is enabled globally
+ const { autoSyncEnabled } = useRithmicSyncStore.getState();
 
-        if (!hasTriggeredSyncRef.current && credentialId && !isAutoSyncing && autoSyncEnabled) {
-          hasTriggeredSyncRef.current = true
+ if (!hasTriggeredSyncRef.current && credentialId && !isAutoSyncing && autoSyncEnabled) {
+ hasTriggeredSyncRef.current = true
 
-          performSyncForCredential(credentialId).catch(error => {
+ performSyncForCredential(credentialId).catch(error => {
 
-            console.error('Error triggering immediate sync:', error)
-          })
-        }
-        return
-      }
+ console.error('Error triggering immediate sync:', error)
+ })
+ }
+ return
+ }
 
-      // Reset the trigger flag when we're not in ready state
-      if (hasTriggeredSyncRef.current) {
-        hasTriggeredSyncRef.current = false
-      }
+ // Reset the trigger flag when we're not in ready state
+ if (hasTriggeredSyncRef.current) {
+ hasTriggeredSyncRef.current = false
+ }
 
-      const minutes = Math.floor(diff / (1000 * 60))
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+ const minutes = Math.floor(diff / (1000 * 60))
+ const seconds = Math.floor((diff % (1000 * 60)) / 1000)
 
-      setTimeLeft(`${minutes}m ${seconds}s`)
-    }
+ setTimeLeft(`${minutes}m ${seconds}s`)
+ }
 
-    calculateTimeLeft()
-    const interval = setInterval(calculateTimeLeft, 1000)
+ calculateTimeLeft()
+ const interval = setInterval(calculateTimeLeft, 1000)
 
-    return () => clearInterval(interval)
+ return () => clearInterval(interval)
 
-  }, [lastSyncTime, syncInterval, credentialId, isAutoSyncing, performSyncForCredential])
+ }, [lastSyncTime, syncInterval, credentialId, isAutoSyncing, performSyncForCredential])
 
 
-  if (isAutoSyncing) {
-    return <span className="text-primary">Syncing...</span>
-  }
+ if (isAutoSyncing) {
+ return <span className="text-primary">Syncing...</span>
+ }
 
-  return (
-    <Badge variant={isAutoSyncing ? "default" : "secondary"} className="ml-2">
-      <Clock className="h-3 w-3 mr-1" />
-      {timeLeft}
-    </Badge>
-  )
+ return (
+ <Badge variant={isAutoSyncing ?"default" :"secondary"} className="ml-2">
+ <Clock className="h-3 w-3 mr-1" />
+ {timeLeft}
+ </Badge>
+ )
 } 

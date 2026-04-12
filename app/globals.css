@@ -13,8 +13,6 @@
 @source "../src/**/*.{ts,tsx}";
 
 @source "../node_modules/streamdown/dist/index.js";
-
-
 /*
   ---break---
 */
@@ -40,42 +38,12 @@
     border-color: hsl(var(--border));
   }
 
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  [role="button"],
-  [role="tab"] {
-    transition-property: opacity, color, background-color, border-color, box-shadow, transform, filter;
-    transition-timing-function: var(--easing-spring);
-    transition-duration: 200ms;
-  }
+  /* Interactive element transitions set below in micro-interactions block */
 
-  /* Butter-smooth scroll physics for all scroll containers */
+  /* Smooth scroll for all overflow containers */
   .scroll-smooth-butter {
-    scroll-behavior: smooth;
-    scroll-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
     scroll-padding-top: 1rem;
-  }
-
-  /* Premium scroll momentum — iOS/macOS feel */
-  .scroll-smooth-butter {
-    scroll-snap-type: proximity;
-    scroll-padding: 0.5rem;
-  }
-
-  /* Ultra-smooth inertial scroll for main content areas */
-  main,
-  [data-slot="sidebar-content"],
-  .overflow-y-auto,
-  .overflow-auto {
-    scroll-behavior: smooth;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
   }
 
   * {
@@ -83,17 +51,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
-    /* GPU-accelerated compositing for butter-smooth transforms */
-    -webkit-transform: translateZ(0) translate3d(0, 0, 0);
   }
 
-  /* Ensure all animated elements use GPU layers */
-  [style*="transform"],
-  [style*="opacity"],
-  .group,
-  [data-state],
-  [data-slot],
-  [data-radix-popper-content-wrapper] {
+  /* GPU layers only for elements that actually animate — never on * */
+  .animate-float-gentle,
+  .animate-glow-breathe,
+  .marketing-orb,
+  .marketing-pulse,
+  .animate-shimmer-sweep {
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -106,13 +71,14 @@
   [role="tab"]:not(:disabled),
   [role="menuitem"]:not(:disabled),
   summary {
-    transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-property: opacity, color, background-color, border-color, box-shadow;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-duration: 200ms;
   }
 
-  /* Press state — subtle scale feedback */
+  /* Press state — faster transition on press */
   button:active:not(:disabled),
   [role="button"]:active:not(:disabled) {
-    transform: scale(0.97);
     transition-duration: 80ms;
   }
 
@@ -186,10 +152,6 @@
     background-color: oklch(0 0 0);
     color: oklch(0.97 0.003 264);
     font-feature-settings: "rlig" 1, "calt" 1;
-    /* Butter-smooth page scroll */
-    scroll-behavior: smooth;
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
   }
 
   .tabular {
@@ -462,7 +424,6 @@
   .frost-surface {
     background: rgba(180, 210, 255, 0.03);
     border: 1px solid rgba(180, 210, 255, 0.09);
-    backdrop-filter: blur(24px) saturate(180%);
   }
 
   .text-gradient-white {
@@ -702,7 +663,7 @@
 
 @utility react-grid-item {
   &.react-grid-placeholder {
-    @apply !bg-accent/40 !border-2 !border-dashed !border-accent !rounded-lg !opacity-100 !transition-all !duration-200 !backdrop-blur-xs !origin-center;
+    @apply !bg-accent/40 !border-2 !border-dashed !border-accent !rounded-lg !opacity-100 !transition-all !duration-200 !origin-center;
   }
 
   &.react-draggable-dragging {
@@ -729,7 +690,7 @@
 
 @utility react-grid-placeholder {
   &.react-grid-item {
-    @apply !bg-accent/40 !border-2 !border-dashed !border-accent !rounded-lg !opacity-100 !transition-all !duration-200 !backdrop-blur-xs !origin-center;
+    @apply !bg-accent/40 !border-2 !border-dashed !border-accent !rounded-lg !opacity-100 !transition-all !duration-200 !origin-center;
   }
 }
 
@@ -1123,8 +1084,6 @@
   .chart-negative-muted {
     opacity: 1 !important;
   }
-
-
   .no-select {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -1313,7 +1272,6 @@
     }
 
     .marketing-glass {
-      backdrop-filter: blur(9px);
       box-shadow:
         inset 0 1px 0 hsl(var(--mk-text) / 0.03),
         0 16px 32px -28px hsl(var(--brand-ink) / 0.52);
@@ -1324,7 +1282,6 @@
     }
 
     [data-dashboard-header="true"] {
-      backdrop-filter: blur(12px);
     }
   }
 }
@@ -1653,7 +1610,7 @@
     height: 100%;
     content: "";
     opacity: 0.03;
-    z-index: 9999;
+    z-index: 0;
     pointer-events: none;
     background: url('https://grainy-gradients.vercel.app/noise.svg');
   }
@@ -1735,7 +1692,6 @@
   .marketing-glass {
     border: 1px solid hsl(var(--mk-border) / 0.26);
     background: hsl(var(--mk-surface) / 0.62);
-    backdrop-filter: blur(14px);
     box-shadow:
       inset 0 1px 0 hsl(var(--mk-text) / 0.04),
       0 28px 54px -36px hsl(var(--brand-ink) / 0.6);
@@ -1751,12 +1707,10 @@
     border: 1px solid hsl(var(--mk-border) / 0.24);
     background: hsl(var(--mk-surface) / 0.66);
     color: hsl(var(--mk-text-muted));
-    backdrop-filter: blur(10px);
   }
 
   .marketing-orb {
     animation: drift 10s ease-in-out infinite;
-    filter: blur(70px);
   }
 
   .marketing-pulse {
@@ -1825,12 +1779,11 @@
   from {
     opacity: 0;
     transform: translateY(6px) scale(0.998);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
+    
   }
 }
 
@@ -1838,12 +1791,11 @@
   from {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
+    
   }
   to {
     opacity: 0;
     transform: scale(0.998);
-    filter: blur(2px);
   }
 }
 
@@ -1852,12 +1804,11 @@
   from {
     opacity: 0;
     transform: translateY(12px);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
+    
   }
 }
 
@@ -1875,11 +1826,9 @@
 @keyframes glow-breathe {
   0%, 100% {
     opacity: 0.4;
-    filter: blur(60px);
   }
   50% {
     opacity: 0.7;
-    filter: blur(80px);
   }
 }
 
@@ -1931,12 +1880,11 @@
   from {
     opacity: 0;
     transform: scale(0.96) translateZ(0);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: scale(1) translateZ(0);
-    filter: blur(0);
+    
   }
 }
 
@@ -2060,34 +2008,28 @@
   }
 
   /* ===== BUTTER-SMOOTH SCROLL CONTAINER ===== */
-  .scroll-smooth-butter {
-    scroll-behavior: smooth;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
-    scroll-padding-top: 1rem;
-  }
+  /* (Defined once in @layer base above — this is a no-op alias for utility resolution) */
 
   /* ===== PREMIUM TRANSITION TOKENS ===== */
   .transition-butter {
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-property: opacity, transform; transition-duration: 0.35s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .transition-butter-fast {
-    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-property: opacity, transform; transition-duration: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .transition-butter-slow {
-    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-property: opacity, transform; transition-duration: 0.5s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Spring-like bounce transitions */
   .transition-elastic {
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-property: opacity, transform; transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .transition-elastic-subtle {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-property: opacity, transform; transition-duration: 0.3s; transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   /* ===== RESPECT REDUCED MOTION ===== */
@@ -2385,15 +2327,11 @@
   /* Glass-morphism utilities */
   .glass-surface {
     background: oklch(0.07 0 0 / 0.6);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid oklch(0.14 0 0 / 0.4);
   }
 
   .glass-card {
     background: oklch(0.09 0 0 / 0.7);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
     border: 1px solid oklch(0.14 0 0 / 0.5);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.05),
@@ -2402,15 +2340,11 @@
 
   .glass-panel {
     background: oklch(0.06 0 0 / 0.65);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
     border: 1px solid oklch(0.14 0 0 / 0.35);
   }
 
   .glass-header {
     background: oklch(0.05 0 0 / 0.8);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
     border-bottom: 1px solid oklch(0.14 0 0 / 0.3);
   }
 
@@ -2443,7 +2377,6 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 28px 70px -42px rgba(4, 10, 24, 0.9);
-    backdrop-filter: blur(18px);
   }
 
   .qe-v2-hairline {
@@ -2783,8 +2716,6 @@
   /* Glass surface with better blur values */
   .glass-surface-premium {
     background: oklch(0.07 0 0 / 0.55);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid oklch(0.14 0 0 / 0.35);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.06),
@@ -2794,15 +2725,11 @@
   /* Glass-morphism card variants */
   .glass-card-subtle {
     background: oklch(0.06 0 0 / 0.5);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid oklch(0.14 0 0 / 0.3);
   }
 
   .glass-card-premium {
     background: oklch(0.08 0 0 / 0.65);
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
     border: 1px solid oklch(0.14 0 0 / 0.45);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.07),
@@ -2811,8 +2738,6 @@
 
   .glass-card-accent {
     background: oklch(0.07 0 0 / 0.6);
-    backdrop-filter: blur(32px) saturate(200%);
-    -webkit-backdrop-filter: blur(32px) saturate(200%);
     border: 1px solid oklch(0.55 0.22 264 / 0.25);
     box-shadow:
       inset 0 1px 0 oklch(1 0 0 / 0.08),
@@ -3195,11 +3120,11 @@
 
 /* Bounce transitions */
 .transition-bounce {
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-property: opacity, transform; transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .transition-bounce-subtle {
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-property: opacity, transform; transition-duration: 0.3s; transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .transition-bounce-elastic {

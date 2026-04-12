@@ -1,13 +1,12 @@
- 
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { Button } from "@/components/ui/button"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+ Popover,
+ PopoverContent,
+ PopoverTrigger,
 } from "@/components/ui/popover"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Minus, Maximize2, GripVertical } from 'lucide-react'
@@ -34,659 +33,648 @@ import { useSearchParams } from "next/navigation"
 import { logger } from "@/lib/logger"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  generateResponsiveLayouts,
-  getEffectiveWidgetSize,
-  isRegisteredWidgetType,
-  normalizeWidgetSize,
-  sizeToGrid,
+ generateResponsiveLayouts,
+ getEffectiveWidgetSize,
+ isRegisteredWidgetType,
+ normalizeWidgetSize,
+ sizeToGrid,
 } from "@/lib/widget-layout"
 // Helper function to convert internal layout to Prisma type
 const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => {
-  return {
-    ...layout,
-    version: layout.version ?? 1,
-    checksum: layout.checksum ?? null,
-    deviceId: layout.deviceId ?? null,
-  } as unknown as DashboardLayout
+ return {
+ ...layout,
+ version: layout.version ?? 1,
+ checksum: layout.checksum ?? null,
+ deviceId: layout.deviceId ?? null,
+ } as unknown as DashboardLayout
 }
 
 const LAYOUT_SAVE_DEBOUNCE_MS = 250
 
 const createLayoutSignature = (widgets: Widget[]) =>
-  widgets
-    .map((widget) => `${widget.i}:${widget.x}:${widget.y}:${widget.w}:${widget.h}`)
-    .sort()
-    .join("|")
+ widgets
+ .map((widget) => `${widget.i}:${widget.x}:${widget.y}:${widget.w}:${widget.h}`)
+ .sort()
+ .join("|")
 
 function WidgetErrorFallback({ widgetId }: { widgetId: string }) {
-  const translate = useTypedI18n()
-  return (
-    <WidgetShell
-      title={translate("widgets.error.title") || "Widget Error"}
-      state="error"
-      errorMessage={translate("widgets.error.description") || "This widget encountered an error."}
-    />
-  )
+ const translate = useTypedI18n()
+ return (
+ <WidgetShell
+ title={translate("widgets.error.title") ||"Widget Error"}
+ state="error"
+ errorMessage={translate("widgets.error.description") ||"This widget encountered an error."}
+ />
+ )
 }
 
 function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
-  const t = useI18n()
-  return (
-    <WidgetShell
-      title={t('widgets.deprecated.title')}
-      description={t('widgets.deprecated.description')}
-      state="error"
-      errorMessage={t('widgets.deprecated.description')}
-      actions={(
-        <Button  variant="error" size="sm" onClick={onRemove}>
-          {t('widgets.deprecated.remove')}
-        </Button>
-      )}
-    />
-  )
+ const t = useI18n()
+ return (
+ <WidgetShell
+ title={t('widgets.deprecated.title')}
+ description={t('widgets.deprecated.description')}
+ state="error"
+ errorMessage={t('widgets.deprecated.description')}
+ actions={(
+ <Button variant="error" size="sm" onClick={onRemove}>
+ {t('widgets.deprecated.remove')}
+ </Button>
+ )}
+ />
+ )
 }
 
 const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomizing, size, currentType }: {
-  children: React.ReactNode
-  onRemove: () => void
-  onChangeSize: (size: WidgetSize) => void
-  isCustomizing: boolean
-  size: WidgetSize
-  currentType: WidgetType
+ children: React.ReactNode
+ onRemove: () => void
+ onChangeSize: (size: WidgetSize) => void
+ isCustomizing: boolean
+ size: WidgetSize
+ currentType: WidgetType
 }) => {
-  const t = useI18n()
-  const isMobile = useDataIsMobile()
-  const uiV2Enabled = isUiV2Enabled()
-  const widgetRef = useRef<HTMLDivElement>(null)
-  const [isSizePopoverOpen, setIsSizePopoverOpen] = useState(false)
+ const t = useI18n()
+ const isMobile = useDataIsMobile()
+ const uiV2Enabled = isUiV2Enabled()
+ const widgetRef = useRef<HTMLDivElement>(null)
+ const [isSizePopoverOpen, setIsSizePopoverOpen] = useState(false)
 
-  const handleSizeChange = (newSize: WidgetSize) => {
-    onChangeSize(newSize)
-    setIsSizePopoverOpen(false)
-  }
+ const handleSizeChange = (newSize: WidgetSize) => {
+ onChangeSize(newSize)
+ setIsSizePopoverOpen(false)
+ }
 
-  const isValidSize = (widgetType: WidgetType, size: WidgetSize) => {
-    const config = WIDGET_REGISTRY[widgetType]
-    if (!config) return true // Allow any size for deprecated widgets
-    if (isMobile) {
-      // On mobile, only allow tiny (shown as Small), medium (shown as Medium), and large (shown as Large)
-      if (size === 'small' || size === 'small-long') return false
-      return config.allowedSizes.includes(size)
-    }
-    return config.allowedSizes.includes(size)
-  }
+ const isValidSize = (widgetType: WidgetType, size: WidgetSize) => {
+ const config = WIDGET_REGISTRY[widgetType]
+ if (!config) return true // Allow any size for deprecated widgets
+ if (isMobile) {
+ // On mobile, only allow tiny (shown as Small), medium (shown as Medium), and large (shown as Large)
+ if (size === 'small' || size === 'small-long') return false
+ return config.allowedSizes.includes(size)
+ }
+ return config.allowedSizes.includes(size)
+ }
 
-  return (
-    <div
-      ref={widgetRef}
-      className="relative h-full min-h-0 w-full group isolate overflow-hidden"
-    >
-      <div
-        data-widget-shell="true"
-        className={cn(
-          "h-full min-h-0 w-full",
-          uiV2Enabled && "rounded-xl",
-          isCustomizing && "blur-[2px]"
-        )}
-      >
-        {children}
-      </div>
-      {isCustomizing && (
-        <>
-          <div className="absolute inset-0 rounded-xl border border-v2-border/25 border-dashed" />
-          <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
-            <div className="flex flex-col items-center gap-2 rounded-xl border border-v2-border/15 bg-v2-bg-surface/70 px-4 py-3 text-v2-text-primary backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
-              <GripVertical className="h-6 w-4" />
-              <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
-            </div>
-          </div>
-          <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
-            <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
-              <PopoverTrigger asChild>
-                <Button 
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 rounded-full border-v2-border/20 bg-v2-bg-surface/70 text-v2-text-primary hover:bg-v2-bg-hover hover:border-v2-border/35 backdrop-blur-md"
-                  aria-label="Change widget size"
-                >
-                  <Maximize2 className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-56 border-v2-border/15 bg-v2-bg-surface/90 p-2 text-v2-text-primary backdrop-blur-xl">
-                <div className="flex flex-col gap-1">
-                  {isMobile ? (
-                    <>
-                      <Button 
-                        variant={size === 'tiny' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('tiny')}
-                        disabled={!isValidSize(currentType, 'tiny') || size === 'tiny'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-4 rounded",
-                            size === 'tiny' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.mobile.small')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'medium' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('medium')}
-                        disabled={!isValidSize(currentType, 'medium') || size === 'medium'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-8 rounded",
-                            size === 'medium' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.mobile.medium')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'large' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('large')}
-                        disabled={!isValidSize(currentType, 'large') || size === 'large'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-12 rounded",
-                            size === 'large' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.mobile.large')}</span>
-                        </div>
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button 
-                        variant={size === 'tiny' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('tiny')}
-                        disabled={!isValidSize(currentType, 'tiny') || size === 'tiny'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-4 rounded",
-                            size === 'tiny' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.tiny')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'small' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('small')}
-                        disabled={!isValidSize(currentType, 'small') || size === 'small'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-6 rounded",
-                            size === 'small' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.small')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'medium' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('medium')}
-                        disabled={!isValidSize(currentType, 'medium') || size === 'medium'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-8 rounded",
-                            size === 'medium' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.medium')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'large' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('large')}
-                        disabled={!isValidSize(currentType, 'large') || size === 'large'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-10 rounded",
-                            size === 'large' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.large')}</span>
-                        </div>
-                      </Button>
-                      <Button 
-                        variant={size === 'extra-large' ? "secondary" : "ghost"}
-                        className="w-full justify-start"
-                        onClick={() => handleSizeChange('extra-large')}
-                        disabled={!isValidSize(currentType, 'extra-large') || size === 'extra-large'}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className={cn(
-                            "h-4 w-12 rounded",
-                            size === 'extra-large' ? "bg-v2-accent" : "bg-white/[0.03]"
-                          )} />
-                          <span>{t('widgets.size.extra-large')}</span>
-                        </div>
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="error"
-                  size="icon"
-                  className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-v2-text-primary hover:bg-v2-error/20"
-                  aria-label="Remove widget"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{t('widgets.removeWidgetConfirm')}</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t('widgets.removeWidgetDescription')}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t('widgets.cancel')}</AlertDialogCancel>
-                  <AlertDialogAction onClick={onRemove}>{t('widgets.removeWidget')}</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </>
-      )}
-    </div>
-  )
+ return (
+ <div
+ ref={widgetRef}
+ className="relative h-full min-h-0 w-full group isolate overflow-hidden"
+ >
+ <div
+ data-widget-shell="true"
+ className={cn("h-full min-h-0 w-full",
+ uiV2Enabled &&"rounded-xl",
+ isCustomizing &&"blur-[2px]"
+ )}
+ >
+ {children}
+ </div>
+ {isCustomizing && (
+ <>
+ <div className="absolute inset-0 rounded-xl border border-v2-border/25 border-dashed" />
+ <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
+ <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
+ <div className="flex flex-col items-center gap-2 rounded-xl border border-v2-border/15 bg-v2-bg-surface/70 px-4 py-3 text-v2-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+ <GripVertical className="h-6 w-4" />
+ <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
+ </div>
+ </div>
+ <div className="absolute top-2 right-2 flex gap-2 opacity-100 z-10">
+ <Popover open={isSizePopoverOpen} onOpenChange={setIsSizePopoverOpen}>
+ <PopoverTrigger asChild>
+ <Button 
+ variant="outline"
+ size="icon"
+ className="h-8 w-8 rounded-full border-v2-border/20 bg-v2-bg-surface/70 text-v2-text-primary hover:bg-v2-bg-hover hover:border-v2-border/35"
+ aria-label="Change widget size"
+ >
+ <Maximize2 className="h-4 w-4" />
+ </Button>
+ </PopoverTrigger>
+ <PopoverContent className="w-56 border-v2-border/15 bg-v2-bg-surface/90 p-2 text-v2-text-primary">
+ <div className="flex flex-col gap-1">
+ {isMobile ? (
+ <>
+ <Button 
+ variant={size === 'tiny' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('tiny')}
+ disabled={!isValidSize(currentType, 'tiny') || size === 'tiny'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-4 rounded",
+ size === 'tiny' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.mobile.small')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'medium' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('medium')}
+ disabled={!isValidSize(currentType, 'medium') || size === 'medium'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-8 rounded",
+ size === 'medium' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.mobile.medium')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'large' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('large')}
+ disabled={!isValidSize(currentType, 'large') || size === 'large'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-12 rounded",
+ size === 'large' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.mobile.large')}</span>
+ </div>
+ </Button>
+ </>
+ ) : (
+ <>
+ <Button 
+ variant={size === 'tiny' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('tiny')}
+ disabled={!isValidSize(currentType, 'tiny') || size === 'tiny'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-4 rounded",
+ size === 'tiny' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.tiny')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'small' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('small')}
+ disabled={!isValidSize(currentType, 'small') || size === 'small'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-6 rounded",
+ size === 'small' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.small')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'medium' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('medium')}
+ disabled={!isValidSize(currentType, 'medium') || size === 'medium'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-8 rounded",
+ size === 'medium' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.medium')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'large' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('large')}
+ disabled={!isValidSize(currentType, 'large') || size === 'large'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-10 rounded",
+ size === 'large' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.large')}</span>
+ </div>
+ </Button>
+ <Button 
+ variant={size === 'extra-large' ?"secondary" :"ghost"}
+ className="w-full justify-start"
+ onClick={() => handleSizeChange('extra-large')}
+ disabled={!isValidSize(currentType, 'extra-large') || size === 'extra-large'}
+ >
+ <div className="flex items-center gap-2">
+ <div className={cn("h-4 w-12 rounded",
+ size === 'extra-large' ?"bg-v2-accent" :"bg-white/[0.03]"
+ )} />
+ <span>{t('widgets.size.extra-large')}</span>
+ </div>
+ </Button>
+ </>
+ )}
+ </div>
+ </PopoverContent>
+ </Popover>
+ <AlertDialog>
+ <AlertDialogTrigger asChild>
+ <Button 
+ variant="error"
+ size="icon"
+ className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-v2-text-primary hover:bg-v2-error/20"
+ aria-label="Remove widget"
+ >
+ <Minus className="h-4 w-4" />
+ </Button>
+ </AlertDialogTrigger>
+ <AlertDialogContent>
+ <AlertDialogHeader>
+ <AlertDialogTitle>{t('widgets.removeWidgetConfirm')}</AlertDialogTitle>
+ <AlertDialogDescription>
+ {t('widgets.removeWidgetDescription')}
+ </AlertDialogDescription>
+ </AlertDialogHeader>
+ <AlertDialogFooter>
+ <AlertDialogCancel>{t('widgets.cancel')}</AlertDialogCancel>
+ <AlertDialogAction onClick={onRemove}>{t('widgets.removeWidget')}</AlertDialogAction>
+ </AlertDialogFooter>
+ </AlertDialogContent>
+ </AlertDialog>
+ </div>
+ </>
+ )}
+ </div>
+ )
 }, (prevProps, nextProps) => {
-  return (
-    prevProps.isCustomizing === nextProps.isCustomizing &&
-    prevProps.size === nextProps.size &&
-    prevProps.currentType === nextProps.currentType &&
-    prevProps.children === nextProps.children
-  )
+ return (
+ prevProps.isCustomizing === nextProps.isCustomizing &&
+ prevProps.size === nextProps.size &&
+ prevProps.currentType === nextProps.currentType &&
+ prevProps.children === nextProps.children
+ )
 })
-WidgetWrapper.displayName = "WidgetWrapper"
+WidgetWrapper.displayName ="WidgetWrapper"
 
 function DebugDataBadge() {
-  const trades = useDataTradeItems();
-  const formattedTrades = useDataFormattedTrades();
-  const { instruments, accountNumbers, dateRange } = useDataFilters();
-  const isFiltered =
-    instruments.length > 0 ||
-    accountNumbers.length > 0 ||
-    Boolean(dateRange?.from || dateRange?.to);
+ const trades = useDataTradeItems();
+ const formattedTrades = useDataFormattedTrades();
+ const { instruments, accountNumbers, dateRange } = useDataFilters();
+ const isFiltered =
+ instruments.length > 0 ||
+ accountNumbers.length > 0 ||
+ Boolean(dateRange?.from || dateRange?.to);
 
-  return (
-    <div className="absolute left-2 top-2 z-30 rounded-md border border-v2-border/12 bg-v2-bg-surface/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-v2-text-secondary backdrop-blur-sm">
-      T:{trades.length} F:{formattedTrades.length}
-      {isFiltered && (
-        <span className="ml-2 text-v2-text-muted">filtered</span>
-      )}
-    </div>
-  );
+ return (
+ <div className="absolute left-2 top-2 z-30 rounded-md border border-v2-border/12 bg-v2-bg-surface/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-v2-text-secondary">
+ T:{trades.length} F:{formattedTrades.length}
+ {isFiltered && (
+ <span className="ml-2 text-v2-text-muted">filtered</span>
+ )}
+ </div>
+ );
 }
 
 export default function WidgetCanvas() {
-  const isMobile = useDataIsMobile()
-  const layouts = useUserStore((state) => state.dashboardLayout)
-  const setLayouts = useUserStore((state) => state.setDashboardLayout)
-  const user = useUserStore(state => state.user)
-  const { saveDashboardLayout } = useDataActions()
-  const searchParams = useSearchParams()
-  const {
-    isCustomizing,
-    setIsCustomizing,
-  } = useDashboard()
-  const t = useI18n()
-  const translate = t
-  const shouldReduceMotion = useReducedMotion()
-  const showDataDebug = searchParams.get("debugData") === "1"
-  const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
-  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+ const isMobile = useDataIsMobile()
+ const layouts = useUserStore((state) => state.dashboardLayout)
+ const setLayouts = useUserStore((state) => state.setDashboardLayout)
+ const user = useUserStore(state => state.user)
+ const { saveDashboardLayout } = useDataActions()
+ const searchParams = useSearchParams()
+ const {
+ isCustomizing,
+ setIsCustomizing,
+ } = useDashboard()
+ const t = useI18n()
+ const translate = t
+ const shouldReduceMotion = useReducedMotion()
+ const showDataDebug = searchParams.get("debugData") ==="1"
+ const pendingSaveRef = useRef<DashboardLayoutWithWidgets | null>(null)
+ const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Add this state to track if the layout change is from user interaction
-  const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
+ // Add this state to track if the layout change is from user interaction
+ const activeLayout = useMemo(() => isMobile ? 'mobile' : 'desktop', [isMobile])
 
-  // Move all memoized values up, out of conditional rendering paths
-  const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), [])
-  const activeWidgets = useMemo(
-    () => (Array.isArray(layouts?.[activeLayout]) ? layouts[activeLayout] : []),
-    [layouts, activeLayout]
-  )
+ // Move all memoized values up, out of conditional rendering paths
+ const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), [])
+ const activeWidgets = useMemo(
+ () => (Array.isArray(layouts?.[activeLayout]) ? layouts[activeLayout] : []),
+ [layouts, activeLayout]
+ )
 
-  const responsiveLayout = useMemo(() => {
-    if (!layouts) return {}
-    return generateResponsiveLayouts(activeWidgets)
-  }, [layouts, activeWidgets])
+ const responsiveLayout = useMemo(() => {
+ if (!layouts) return {}
+ return generateResponsiveLayouts(activeWidgets)
+ }, [layouts, activeWidgets])
 
-  const currentLayout = activeWidgets
-  const shouldAnimateWidgets =
-    !shouldReduceMotion && !isCustomizing && currentLayout.length <= 12
+ const currentLayout = activeWidgets
+ const shouldAnimateWidgets =
+ !shouldReduceMotion && !isCustomizing && currentLayout.length <= 12
 
-  // Define handleOutsideClick with stable reference
-  const handleOutsideClick = useCallback((e: MouseEvent) => {
-    // Check if the click is on a widget or its children
-    const isWidgetClick = (e.target as HTMLElement).closest('.react-grid-item')
-    const isContextMenuClick = (e.target as HTMLElement).closest('[role="menu"]')
-    const isCustomizationSwitchClick = (e.target as HTMLElement).closest('#customize-mode')
-    const isDialogClick = (e.target as HTMLElement).closest('[role="dialog"]')
-    const isDialogTriggerClick = (e.target as HTMLElement).closest('[data-state="open"]')
+ // Define handleOutsideClick with stable reference
+ const handleOutsideClick = useCallback((e: MouseEvent) => {
+ // Check if the click is on a widget or its children
+ const isWidgetClick = (e.target as HTMLElement).closest('.react-grid-item')
+ const isContextMenuClick = (e.target as HTMLElement).closest('[role="menu"]')
+ const isCustomizationSwitchClick = (e.target as HTMLElement).closest('#customize-mode')
+ const isDialogClick = (e.target as HTMLElement).closest('[role="dialog"]')
+ const isDialogTriggerClick = (e.target as HTMLElement).closest('[data-state="open"]')
 
-    // If click is outside widgets and not on context menu, customization switch, or dialog elements, turn off customization
-    if (!isWidgetClick && !isContextMenuClick && !isCustomizationSwitchClick && !isDialogClick && !isDialogTriggerClick) {
-      setIsCustomizing(false)
-    }
-  }, [setIsCustomizing])
+ // If click is outside widgets and not on context menu, customization switch, or dialog elements, turn off customization
+ if (!isWidgetClick && !isContextMenuClick && !isCustomizationSwitchClick && !isDialogClick && !isDialogTriggerClick) {
+ setIsCustomizing(false)
+ }
+ }, [setIsCustomizing])
 
-  const flushPendingLayoutSave = useCallback(async () => {
-    if (!pendingSaveRef.current) return
+ const flushPendingLayoutSave = useCallback(async () => {
+ if (!pendingSaveRef.current) return
 
-    const pendingLayouts = pendingSaveRef.current
-    pendingSaveRef.current = null
+ const pendingLayouts = pendingSaveRef.current
+ pendingSaveRef.current = null
 
-    try {
-      await saveDashboardLayout(toPrismaLayout(pendingLayouts))
-    } catch (error) {
-      logger.error({ error }, 'Error saving dashboard layout')
-    }
-  }, [saveDashboardLayout])
+ try {
+ await saveDashboardLayout(toPrismaLayout(pendingLayouts))
+ } catch (error) {
+ logger.error({ error }, 'Error saving dashboard layout')
+ }
+ }, [saveDashboardLayout])
 
-  const queueLayoutSave = useCallback((nextLayouts: DashboardLayoutWithWidgets) => {
-    pendingSaveRef.current = nextLayouts
+ const queueLayoutSave = useCallback((nextLayouts: DashboardLayoutWithWidgets) => {
+ pendingSaveRef.current = nextLayouts
 
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current)
-    }
+ if (saveTimeoutRef.current) {
+ clearTimeout(saveTimeoutRef.current)
+ }
 
-    saveTimeoutRef.current = setTimeout(() => {
-      saveTimeoutRef.current = null
-      void flushPendingLayoutSave()
-    }, LAYOUT_SAVE_DEBOUNCE_MS)
-  }, [flushPendingLayoutSave])
+ saveTimeoutRef.current = setTimeout(() => {
+ saveTimeoutRef.current = null
+ void flushPendingLayoutSave()
+ }, LAYOUT_SAVE_DEBOUNCE_MS)
+ }, [flushPendingLayoutSave])
 
-  // Update handleLayoutChange with proper type handling and all dependencies
-  const handleLayoutChange = useCallback((layout: LayoutItem[]) => {
-    if (!user?.id || !isCustomizing || !setLayouts || !layouts) return;
+ // Update handleLayoutChange with proper type handling and all dependencies
+ const handleLayoutChange = useCallback((layout: LayoutItem[]) => {
+ if (!user?.id || !isCustomizing || !setLayouts || !layouts) return;
 
-    const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
+ const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
 
-    try {
-      const updatedActiveLayout = layout.map(item => {
-        const existingWidget = currentActiveLayout.find(w => w.i === item.i);
-        if (!existingWidget) return null;
+ try {
+ const updatedActiveLayout = layout.map(item => {
+ const existingWidget = currentActiveLayout.find(w => w.i === item.i);
+ if (!existingWidget) return null;
 
-        return {
-          ...existingWidget,
-          x: isMobile ? 0 : item.x,
-          y: item.y,
-          w: isMobile ? 12 : item.w,
-          h: item.h,
-        };
-      }).filter((item): item is NonNullable<typeof item> => item !== null)
+ return {
+ ...existingWidget,
+ x: isMobile ? 0 : item.x,
+ y: item.y,
+ w: isMobile ? 12 : item.w,
+ h: item.h,
+ };
+ }).filter((item): item is NonNullable<typeof item> => item !== null)
 
-      const currentSignature = createLayoutSignature(currentActiveLayout)
-      const nextSignature = createLayoutSignature(updatedActiveLayout)
-      if (currentSignature === nextSignature) {
-        return
-      }
+ const currentSignature = createLayoutSignature(currentActiveLayout)
+ const nextSignature = createLayoutSignature(updatedActiveLayout)
+ if (currentSignature === nextSignature) {
+ return
+ }
 
-      const updatedLayouts: DashboardLayoutWithWidgets = {
-        ...layouts,
-        [activeLayout]: updatedActiveLayout,
-        updatedAt: new Date()
-      }
+ const updatedLayouts: DashboardLayoutWithWidgets = {
+ ...layouts,
+ [activeLayout]: updatedActiveLayout,
+ updatedAt: new Date()
+ }
 
-      setLayouts(updatedLayouts);
-      queueLayoutSave(updatedLayouts)
-    } catch (error) {
-      logger.error({ error }, 'Error updating layout');
-      // Revert to previous layout on error
-      setLayouts(layouts);
-    }
-  }, [user?.id, isCustomizing, setLayouts, layouts, activeLayout, isMobile, queueLayoutSave]);
+ setLayouts(updatedLayouts);
+ queueLayoutSave(updatedLayouts)
+ } catch (error) {
+ logger.error({ error }, 'Error updating layout');
+ // Revert to previous layout on error
+ setLayouts(layouts);
+ }
+ }, [user?.id, isCustomizing, setLayouts, layouts, activeLayout, isMobile, queueLayoutSave]);
 
-  // Define removeWidget with all dependencies
-  const removeWidget = useCallback(async (i: string) => {
-    if (!user?.id || !layouts) return
-    const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
-    const updatedWidgets = currentActiveLayout.filter(widget => widget.i !== i)
-    const newLayouts = {
-      ...layouts,
-      [activeLayout]: updatedWidgets,
-      updatedAt: new Date()
-    }
-    setLayouts(newLayouts)
-    await saveDashboardLayout(toPrismaLayout(newLayouts))
-  }, [user?.id, layouts, activeLayout, setLayouts, saveDashboardLayout]);
+ // Define removeWidget with all dependencies
+ const removeWidget = useCallback(async (i: string) => {
+ if (!user?.id || !layouts) return
+ const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
+ const updatedWidgets = currentActiveLayout.filter(widget => widget.i !== i)
+ const newLayouts = {
+ ...layouts,
+ [activeLayout]: updatedWidgets,
+ updatedAt: new Date()
+ }
+ setLayouts(newLayouts)
+ await saveDashboardLayout(toPrismaLayout(newLayouts))
+ }, [user?.id, layouts, activeLayout, setLayouts, saveDashboardLayout]);
 
-  // Define changeWidgetSize with all dependencies
-  const changeWidgetSize = useCallback(async (i: string, newSize: WidgetSize) => {
-    if (!user?.id || !layouts) return
+ // Define changeWidgetSize with all dependencies
+ const changeWidgetSize = useCallback(async (i: string, newSize: WidgetSize) => {
+ if (!user?.id || !layouts) return
 
-    // Find the widget
-    const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
-    const widget = currentActiveLayout.find(w => w.i === i)
-    if (!widget) return
+ // Find the widget
+ const currentActiveLayout = Array.isArray(layouts[activeLayout]) ? layouts[activeLayout] : []
+ const widget = currentActiveLayout.find(w => w.i === i)
+ if (!widget) return
 
-    // Prevent charts from being set to tiny size
-    let effectiveSize = newSize
-    effectiveSize = normalizeWidgetSize(widget.type, newSize)
+ // Prevent charts from being set to tiny size
+ let effectiveSize = newSize
+ effectiveSize = normalizeWidgetSize(widget.type, newSize)
 
-    const grid = sizeToGrid(effectiveSize, activeLayout === 'mobile')
-    const updatedWidgets = currentActiveLayout.map(widget =>
-      widget.i === i ? { ...widget, size: effectiveSize, ...grid } : widget
-    )
-    const newLayouts = {
-      ...layouts,
-      [activeLayout]: updatedWidgets,
-      updatedAt: new Date()
-    }
-    setLayouts(newLayouts)
-    await saveDashboardLayout(toPrismaLayout(newLayouts))
-  }, [user?.id, layouts, activeLayout, setLayouts, saveDashboardLayout]);
+ const grid = sizeToGrid(effectiveSize, activeLayout === 'mobile')
+ const updatedWidgets = currentActiveLayout.map(widget =>
+ widget.i === i ? { ...widget, size: effectiveSize, ...grid } : widget
+ )
+ const newLayouts = {
+ ...layouts,
+ [activeLayout]: updatedWidgets,
+ updatedAt: new Date()
+ }
+ setLayouts(newLayouts)
+ await saveDashboardLayout(toPrismaLayout(newLayouts))
+ }, [user?.id, layouts, activeLayout, setLayouts, saveDashboardLayout]);
 
-  // Restore default layout for both desktop and mobile
-  const restoreDefaultLayout = useCallback(async () => {
-    if (!user?.id || !layouts) return
-    const newLayouts = {
-      ...layouts,
-      desktop: defaultLayouts.desktop,
-      mobile: defaultLayouts.mobile,
-      updatedAt: new Date()
-    }
-    setLayouts(newLayouts)
-    await saveDashboardLayout(toPrismaLayout(newLayouts))
-    toast.success(t('widgets.restoredDefaultsTitle'), {
-      description: t('widgets.restoredDefaultsDescription')
-    })
-  }, [user?.id, layouts, setLayouts, saveDashboardLayout, t, toast])
+ // Restore default layout for both desktop and mobile
+ const restoreDefaultLayout = useCallback(async () => {
+ if (!user?.id || !layouts) return
+ const newLayouts = {
+ ...layouts,
+ desktop: defaultLayouts.desktop,
+ mobile: defaultLayouts.mobile,
+ updatedAt: new Date()
+ }
+ setLayouts(newLayouts)
+ await saveDashboardLayout(toPrismaLayout(newLayouts))
+ toast.success(t('widgets.restoredDefaultsTitle'), {
+ description: t('widgets.restoredDefaultsDescription')
+ })
+ }, [user?.id, layouts, setLayouts, saveDashboardLayout, t, toast])
 
-  // Define renderWidget with all dependencies
-  const renderWidget = useCallback((widget: Widget) => {
-    // Ensure widget.type is a valid WidgetType
-    if (!isRegisteredWidgetType(widget.type)) {
-      return (
-        <DeprecatedWidget onRemove={() => removeWidget(widget.i)} />
-      )
-    }
+ // Define renderWidget with all dependencies
+ const renderWidget = useCallback((widget: Widget) => {
+ // Ensure widget.type is a valid WidgetType
+ if (!isRegisteredWidgetType(widget.type)) {
+ return (
+ <DeprecatedWidget onRemove={() => removeWidget(widget.i)} />
+ )
+ }
 
-    const effectiveSize = getEffectiveWidgetSize(widget.type, widget.size, isMobile)
+ const effectiveSize = getEffectiveWidgetSize(widget.type, widget.size, isMobile)
 
-    return getWidgetComponent(widget.type, effectiveSize)
-  }, [isMobile, removeWidget]);
+ return getWidgetComponent(widget.type, effectiveSize)
+ }, [isMobile, removeWidget]);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      handleOutsideClick(e)
-    }
-    if (isCustomizing) {
-      document.addEventListener('click', handleClick)
-      return () => document.removeEventListener('click', handleClick)
-    }
-  }, [isCustomizing, handleOutsideClick])
+ useEffect(() => {
+ const handleClick = (e: MouseEvent) => {
+ handleOutsideClick(e)
+ }
+ if (isCustomizing) {
+ document.addEventListener('click', handleClick)
+ return () => document.removeEventListener('click', handleClick)
+ }
+ }, [isCustomizing, handleOutsideClick])
 
-  useEffect(() => {
-    if (!isCustomizing) {
-      void flushPendingLayoutSave()
-    }
-  }, [isCustomizing, flushPendingLayoutSave])
+ useEffect(() => {
+ if (!isCustomizing) {
+ void flushPendingLayoutSave()
+ }
+ }, [isCustomizing, flushPendingLayoutSave])
 
-  useEffect(() => {
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current)
-      }
-      void flushPendingLayoutSave()
-    }
-  }, [flushPendingLayoutSave])
+ useEffect(() => {
+ return () => {
+ if (saveTimeoutRef.current) {
+ clearTimeout(saveTimeoutRef.current)
+ }
+ void flushPendingLayoutSave()
+ }
+ }, [flushPendingLayoutSave])
 
 
 
-  // Add auto-scroll functionality for mobile
-  useAutoScroll(isMobile && isCustomizing)
+ // Add auto-scroll functionality for mobile
+ useAutoScroll(isMobile && isCustomizing)
 
-  if (!layouts) {
-    return (
-      <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
-        <div className="rounded-xl border border-v2-border/12 bg-v2-bg-surface/40 p-5 space-y-3" aria-hidden="true">
-          <Skeleton className="h-4 w-48" />
-          <Skeleton className="h-3 w-80 max-w-full" />
-          <div className="flex gap-2 pt-2">
-            <Skeleton className="h-8 w-36 rounded-lg" />
-            <Skeleton className="h-8 w-24 rounded-lg" />
-          </div>
-        </div>
-        <span className="sr-only">Loading dashboard widgets...</span>
-      </div>
-    )
-  }
+ if (!layouts) {
+ return (
+ <div className="relative mt-0 w-full min-h-0" role="status" aria-label="Loading dashboard">
+ <div className="rounded-xl border border-v2-border/12 bg-v2-bg-surface/40 p-5 space-y-3" aria-hidden="true">
+ <Skeleton className="h-4 w-48" />
+ <Skeleton className="h-3 w-80 max-w-full" />
+ <div className="flex gap-2 pt-2">
+ <Skeleton className="h-8 w-36 rounded-lg" />
+ <Skeleton className="h-8 w-24 rounded-lg" />
+ </div>
+ </div>
+ <span className="sr-only">Loading dashboard widgets...</span>
+ </div>
+ )
+ }
 
-  if (currentLayout.length === 0) {
-    return (
-      <div className="relative mt-0 w-full min-h-0" role="status">
-        <div className="mx-auto mt-8 max-w-lg rounded-xl border border-v2-border/15 bg-v2-bg-surface/50 p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]" role="alert">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/15 bg-v2-bg-elevated text-v2-text-muted">
-            <Maximize2 className="h-5 w-5" />
-          </div>
-          <div className="text-sm font-semibold tracking-tight text-v2-text-primary">
-            {translate("widgets.emptyLayoutTitle") || "No widgets on your dashboard."}
-          </div>
-          <div className="mt-2 text-sm text-v2-text-secondary leading-relaxed">
-            {translate("widgets.emptyLayoutDescription") || "Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
-          </div>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            <Button 
-              onClick={restoreDefaultLayout}
-              className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"
-            >
-              {translate("widgets.restoreDefaults") || "Restore default layout"}
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => setIsCustomizing(true)}
-              className="border-v2-border/15 bg-transparent text-v2-text-primary hover:bg-v2-bg-hover hover:text-v2-text-primary rounded-lg"
-            >
-              {translate("widgets.edit") || "Edit"}
-            </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }
+ if (currentLayout.length === 0) {
+ return (
+ <div className="relative mt-0 w-full min-h-0" role="status">
+ <div className="mx-auto mt-8 max-w-lg rounded-xl border border-v2-border/15 bg-v2-bg-surface/50 p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]" role="alert">
+ <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/15 bg-v2-bg-elevated text-v2-text-muted">
+ <Maximize2 className="h-5 w-5" />
+ </div>
+ <div className="text-sm font-semibold tracking-tight text-v2-text-primary">
+ {translate("widgets.emptyLayoutTitle") ||"No widgets on your dashboard."}
+ </div>
+ <div className="mt-2 text-sm text-v2-text-secondary leading-relaxed">
+ {translate("widgets.emptyLayoutDescription") ||"Restore the default layout to show charts and stats, or switch to Edit mode to add widgets."}
+ </div>
+ <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+ <Button 
+ onClick={restoreDefaultLayout}
+ className="bg-v2-accent text-v2-accent-foreground hover:bg-v2-accent-hover font-semibold rounded-lg"
+ >
+ {translate("widgets.restoreDefaults") ||"Restore default layout"}
+ </Button>
+ <Button 
+ variant="outline"
+ onClick={() => setIsCustomizing(true)}
+ className="border-v2-border/15 bg-transparent text-v2-text-primary hover:bg-v2-bg-hover hover:text-v2-text-primary rounded-lg"
+ >
+ {translate("widgets.edit") ||"Edit"}
+ </Button>
+ </div>
+ </div>
+ </div>
+ )
+ }
 
-  return (
-    <div className={cn(
-      "relative mt-0 w-full min-h-0",
-      isMobile ? "overflow-x-hidden" : ""
-    )}>
-      {layouts && (
-        <div className="relative">
-          <div id="tooltip-portal" className="fixed inset-0 pointer-events-none z-9999" />
-          <ResponsiveGridLayout
-            layouts={responsiveLayout}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 }}
-            rowHeight={isMobile ? 56 : 68}
-            isDraggable={isCustomizing}
-            isResizable={false}
-            draggableHandle=".drag-handle"
-            onDragStop={() => {
-              void flushPendingLayoutSave()
-            }}
-            onLayoutChange={handleLayoutChange}
-            margin={isMobile ? [6, 4] : [8, 8]}
-            containerPadding={[0, 0]}
-            useCSSTransforms={true}
-          >
-            {currentLayout.map((widget, index) => {
-              const shouldAnimateWidget =
-                shouldAnimateWidgets && index < 6
-              return (
-                <div
-                  key={widget.i}
-                  className="h-full min-h-0"
-                  data-customizing={isCustomizing}
-                >
-                  <motion.div
-                    className="h-full min-h-0"
-                    initial={shouldAnimateWidget ? { opacity: 0, y: 12 } : false}
-                    animate={shouldAnimateWidget ? { opacity: 1, y: 0 } : undefined}
-                    transition={
-                      shouldAnimateWidget
-                        ? {
-                          delay: Math.min(0.03 * index, 0.3),
-                          type: "tween",
-                          duration: 0.25,
-                          ease: [0.22, 1, 0.36, 1],
-                        }
-                        : undefined
-                    }
-                    whileHover={shouldAnimateWidget ? { scale: 1.01 } : undefined}
-                  >
-                    <WidgetWrapper
-                      onRemove={() => removeWidget(widget.i)}
-                      onChangeSize={(size) => changeWidgetSize(widget.i, size)}
-                      isCustomizing={isCustomizing}
-                      size={widget.size}
-                      currentType={widget.type}
-                    >
-                      <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
-                        <div
-                          className={cn(
-                            "relative h-full w-full overflow-hidden rounded-xl transition-all duration-300 group/widget",
-                            isCustomizing
-                              ? "border border-v2-accent/30 bg-v2-bg-surface/95 shadow-[var(--v2-glow-ambient)]"
-                              : "border border-transparent bg-transparent"
-                          )}
-                        >
-                          {showDataDebug && !isCustomizing && (
-                            <DebugDataBadge />
-                          )}
-                          {isCustomizing ? (
-                            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-v2-accent/[0.03] to-transparent" />
-                          ) : null}
-                          <div className="relative h-full w-full">
-                            {renderWidget(widget)}
-                          </div>
-                        </div>
-                      </ErrorBoundary>
-                    </WidgetWrapper>
-                  </motion.div>
-                </div>
-              )
-            })}
-          </ResponsiveGridLayout>
-        </div>
-      )}
-    </div>
-  )
+ return (
+ <div className={cn("relative mt-0 w-full min-h-0",
+ isMobile ?"overflow-x-hidden" :""
+ )}>
+ {layouts && (
+ <div className="relative">
+ <div id="tooltip-portal" className="fixed inset-0 pointer-events-none z-9999" />
+ <ResponsiveGridLayout
+ layouts={responsiveLayout}
+ breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+ cols={{ lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 }}
+ rowHeight={isMobile ? 56 : 68}
+ isDraggable={isCustomizing}
+ isResizable={false}
+ draggableHandle=".drag-handle"
+ onDragStop={() => {
+ void flushPendingLayoutSave()
+ }}
+ onLayoutChange={handleLayoutChange}
+ margin={isMobile ? [6, 4] : [8, 8]}
+ containerPadding={[0, 0]}
+ useCSSTransforms={true}
+ >
+ {currentLayout.map((widget, index) => {
+ const shouldAnimateWidget =
+ shouldAnimateWidgets && index < 6
+ return (
+ <div
+ key={widget.i}
+ className="h-full min-h-0"
+ data-customizing={isCustomizing}
+ >
+ <motion.div
+ className="h-full min-h-0"
+ initial={shouldAnimateWidget ? { opacity: 0, y: 12 } : false}
+ animate={shouldAnimateWidget ? { opacity: 1, y: 0 } : undefined}
+ transition={
+ shouldAnimateWidget
+ ? {
+ delay: Math.min(0.03 * index, 0.3),
+ type:"tween",
+ duration: 0.25,
+ ease: [0.22, 1, 0.36, 1],
+ }
+ : undefined
+ }
+ whileHover={shouldAnimateWidget ? { scale: 1.01 } : undefined}
+ >
+ <WidgetWrapper
+ onRemove={() => removeWidget(widget.i)}
+ onChangeSize={(size) => changeWidgetSize(widget.i, size)}
+ isCustomizing={isCustomizing}
+ size={widget.size}
+ currentType={widget.type}
+ >
+ <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
+ <div
+ className={cn("relative h-full w-full overflow-hidden rounded-xl transition-all duration-300 group/widget",
+ isCustomizing
+ ?"border border-v2-accent/30 bg-v2-bg-surface/95 shadow-[var(--v2-glow-ambient)]"
+ :"border border-transparent bg-transparent"
+ )}
+ >
+ {showDataDebug && !isCustomizing && (
+ <DebugDataBadge />
+ )}
+ {isCustomizing ? (
+ <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-v2-accent/[0.03] to-transparent" />
+ ) : null}
+ <div className="relative h-full w-full">
+ {renderWidget(widget)}
+ </div>
+ </div>
+ </ErrorBoundary>
+ </WidgetWrapper>
+ </motion.div>
+ </div>
+ )
+ })}
+ </ResponsiveGridLayout>
+ </div>
+ )}
+ </div>
+ )
 }

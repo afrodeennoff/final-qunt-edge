@@ -5,75 +5,73 @@ import { cn } from "@/lib/utils"
 import { WidgetSize } from '../../types/dashboard'
 import { useI18n } from '@/locales/client'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+ Tooltip,
+ TooltipContent,
+ TooltipProvider,
+ TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { WidgetShell } from "@/components/ui/widget-shell"
 
 interface ProfitFactorCardProps {
-  size?: WidgetSize
+ size?: WidgetSize
 }
 
 function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
-  const { statistics: { profitFactor } } = useDashboardStats()
-  const t = useI18n()
+ const { statistics: { profitFactor } } = useDashboardStats()
+ const t = useI18n()
 
-  const safeProfitFactor = Number.isFinite(profitFactor) ? profitFactor : 0
-  const formattedPF = safeProfitFactor.toFixed(2)
-  const isProfitable = safeProfitFactor >= 1
-  const isCompact = size === 'tiny' || size === 'small' || size === 'small-long'
+ const safeProfitFactor = Number.isFinite(profitFactor) ? profitFactor : 0
+ const formattedPF = safeProfitFactor.toFixed(2)
+ const isProfitable = safeProfitFactor >= 1
+ const isCompact = size === 'tiny' || size === 'small' || size === 'small-long'
 
-  if (isCompact) {
-    return (
-      <WidgetShell
-        className="h-full"
-        contentClassName="flex h-full items-center justify-center px-2 py-1"
-      >
-        <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
-          <Scale className={cn("h-4 w-4 shrink-0", isProfitable ? "metric-positive" : "metric-negative")} />
-          <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">PF</span>
-          <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
-            {formattedPF}
-          </span>
-          <TooltipProvider delayDuration={100}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
-                {t('widgets.profitFactor.tooltip')}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </WidgetShell>
-    )
-  }
+ if (isCompact) {
+ return (
+ <WidgetShell
+ className="h-full"
+ contentClassName="flex h-full items-center justify-center px-2 py-1"
+ >
+ <div className="mx-auto inline-flex items-center justify-center gap-2.5 text-center">
+ <Scale className={cn("h-4 w-4 shrink-0", isProfitable ?"metric-positive" :"metric-negative")} />
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">PF</span>
+ <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
+ {formattedPF}
+ </span>
+ <TooltipProvider delayDuration={100}>
+ <Tooltip>
+ <TooltipTrigger asChild>
+ <HelpCircle className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
+ </TooltipTrigger>
+ <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
+ {t('widgets.profitFactor.tooltip')}
+ </TooltipContent>
+ </Tooltip>
+ </TooltipProvider>
+ </div>
+ </WidgetShell>
+ )
+ }
 
-  return (
-    <WidgetShell
-      className="h-full"
-      contentClassName="flex items-center justify-center h-full gap-2 p-2"
-      info={t('widgets.profitFactor.tooltip')}
-    >
-      <div className={cn(
-        "precision-panel-premium flex items-center gap-1.5 px-3 py-1 rounded-md",
-        isProfitable
-          ? "bg-secondary/18"
-          : "bg-secondary/14"
-      )}>
-        <Scale className={cn("h-3 w-3", isProfitable ? "metric-positive" : "metric-negative")} />
-        <span className={cn(
-          "micro-sans font-bold text-[11px] uppercase tracking-[0.18em]",
-          isProfitable ? "metric-positive" : "metric-negative"
-        )}>
-          {formattedPF} PF
-        </span>
-      </div>
-    </WidgetShell>
-  )
+ return (
+ <WidgetShell
+ className="h-full"
+ contentClassName="flex items-center justify-center h-full gap-2 p-2"
+ info={t('widgets.profitFactor.tooltip')}
+ >
+ <div className={cn("precision-panel-premium flex items-center gap-1.5 px-3 py-1 rounded-md",
+ isProfitable
+ ?"bg-secondary/18"
+ :"bg-secondary/14"
+ )}>
+ <Scale className={cn("h-3 w-3", isProfitable ?"metric-positive" :"metric-negative")} />
+ <span className={cn("micro-sans font-bold text-[11px] uppercase tracking-[0.18em]",
+ isProfitable ?"metric-positive" :"metric-negative"
+ )}>
+ {formattedPF} PF
+ </span>
+ </div>
+ </WidgetShell>
+ )
 }
 
 export default React.memo(ProfitFactorCardInner)

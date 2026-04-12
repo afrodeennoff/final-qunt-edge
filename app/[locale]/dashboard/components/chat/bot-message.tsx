@@ -12,56 +12,56 @@ import { Response } from "@/components/ai-elements/response"
 
 // Message Components
 export function BotMessage({ children, status }: { children: React.ReactNode, status?: ChatStatus }) {
-  const t = useI18n()
-  const clipboardRef = useRef<ClipboardCheckIconHandle>(null);
+ const t = useI18n()
+ const clipboardRef = useRef<ClipboardCheckIconHandle>(null);
 
-  const handleCopy = () => {
-    const textToCopy = typeof children === "string" ? children : "";
-    navigator.clipboard.writeText(textToCopy);
-    clipboardRef.current?.startAnimation();
-    toast.success("Message copied to clipboard");
-  };
+ const handleCopy = () => {
+ const textToCopy = typeof children ==="string" ? children :"";
+ navigator.clipboard.writeText(textToCopy);
+ clipboardRef.current?.startAnimation();
+ toast.success("Message copied to clipboard");
+ };
 
-  const content = (() => {
-    if (typeof children === "string") {
-      return (
-        <div className="prose prose-sm dark:prose-invert max-w-none">
-          <Response>{children}</Response>
-        </div>
-      );
-    }
+ const content = (() => {
+ if (typeof children ==="string") {
+ return (
+ <div className="prose prose-sm dark:prose-invert max-w-none">
+ <Response>{children}</Response>
+ </div>
+ );
+ }
 
-    return (
-      <div className="inline-flex items-baseline">
-        <span>{children}</span>
-      </div>
-    );
-  })()
+ return (
+ <div className="inline-flex items-baseline">
+ <span>{children}</span>
+ </div>
+ );
+ })()
 
-  return (
-    <motion.div
-      className="flex w-full mb-3"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="flex flex-col gap-2">
-        <div className="text-pretty wrap-break-word max-w-[95%] bg-secondary/30 p-5 rounded-lg border border-border/40 shadow-none backdrop-blur-sm">
-          {content}
-          {status === "streaming" ? <span className="terminal-cursor text-primary" aria-hidden /> : null}
-        </div>
-        {typeof children === "string" && status === "ready" && (
-          <Button 
-            variant="ghost"
-            size="sm"
-            className="self-start"
-            onClick={handleCopy}
-          >
-            <ClipboardCheckIcon ref={clipboardRef} size={16} className="mr-2" />
-            {t('chat.copy')}
-          </Button>
-        )}
-      </div>
-    </motion.div>
-  )
+ return (
+ <motion.div
+ className="flex w-full mb-3"
+ initial={{ opacity: 0, y: 10 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+ >
+ <div className="flex flex-col gap-2">
+ <div className="text-pretty wrap-break-word max-w-[95%] bg-secondary/30 p-5 rounded-lg border border-border/40 shadow-none">
+ {content}
+ {status ==="streaming" ? <span className="terminal-cursor text-primary" aria-hidden /> : null}
+ </div>
+ {typeof children ==="string" && status ==="ready" && (
+ <Button 
+ variant="ghost"
+ size="sm"
+ className="self-start"
+ onClick={handleCopy}
+ >
+ <ClipboardCheckIcon ref={clipboardRef} size={16} className="mr-2" />
+ {t('chat.copy')}
+ </Button>
+ )}
+ </div>
+ </motion.div>
+ )
 }

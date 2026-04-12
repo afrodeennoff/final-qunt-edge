@@ -6,35 +6,35 @@ import { Tracker } from "@/components/ui/mood-tracker"
 import { EmotionPresets } from "./emotion-presets"
 
 interface EmotionSelectorProps {
-  value: number
-  onChange: (value: number) => void
+ value: number
+ onChange: (value: number) => void
 }
 
 export function EmotionSelector({ value, onChange }: EmotionSelectorProps) {
-  const t = useI18n()
+ const t = useI18n()
 
-  const moodData = Array.from({ length: 20 }, (_, i) => ({
-    key: i,
-  }))
+ const moodData = Array.from({ length: 20 }, (_, i) => ({
+ key: i,
+ }))
 
-  return (
-    <div className="flex flex-col gap-4">
-      <EmotionPresets value={value} onChange={onChange} />
-      <div className="flex items-center gap-4 w-full">
-        <Frown className="h-6 w-6 text-muted-foreground" />
-        <Tracker
-          data={moodData}
-          hoverEffect={true}
-          valueIndex={Math.max(0, Math.min(19, Math.round(value / 5)))}
-          onSelectionChange={(index) => onChange(index * 5)} // Convert 0-19 to 0-95 with steps of 5
-          className="flex-1"
-        />
-        <Smile className="h-6 w-6 text-muted-foreground" />
-      </div>
-      
-      <p className="text-sm text-muted-foreground">
-        {t('mindset.emotion.description')}
-      </p>
-    </div>
-  )
+ return (
+ <div className="flex flex-col gap-4">
+ <EmotionPresets value={value} onChange={onChange} />
+ <div className="flex items-center gap-4 w-full">
+ <Frown className="h-6 w-6 text-muted-foreground" />
+ <Tracker
+ data={moodData}
+ hoverEffect={true}
+ valueIndex={Math.max(0, Math.min(19, Math.round(value / 5)))}
+ onSelectionChange={(index) => onChange(index * 5)} // Convert 0-19 to 0-95 with steps of 5
+ className="flex-1"
+ />
+ <Smile className="h-6 w-6 text-muted-foreground" />
+ </div>
+ 
+ <p className="text-sm text-muted-foreground">
+ {t('mindset.emotion.description')}
+ </p>
+ </div>
+ )
 } 

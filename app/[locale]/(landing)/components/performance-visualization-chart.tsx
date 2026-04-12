@@ -4,139 +4,139 @@ import { useMemo } from "react"
 import { TrendingUp } from "lucide-react"
 
 type PnlPoint = {
-  day: string
-  pnl: number
-  contracts: number
+ day: string
+ pnl: number
+ contracts: number
 }
 
 export function PerformanceVisualizationChart() {
-  const data = useMemo<PnlPoint[]>(() => ([
-    { day: "Mon", pnl: 520, contracts: 3 },
-    { day: "Tue", pnl: -180, contracts: 2 },
-    { day: "Wed", pnl: 340, contracts: 2 },
-    { day: "Thu", pnl: 80, contracts: 1 },
-    { day: "Fri", pnl: 610, contracts: 4 },
-    { day: "Mon", pnl: -60, contracts: 1 },
-    { day: "Tue", pnl: 290, contracts: 2 },
-    { day: "Wed", pnl: 420, contracts: 3 },
-    { day: "Thu", pnl: -140, contracts: 2 },
-    { day: "Fri", pnl: 510, contracts: 3 }
-  ]), [])
+ const data = useMemo<PnlPoint[]>(() => ([
+ { day:"Mon", pnl: 520, contracts: 3 },
+ { day:"Tue", pnl: -180, contracts: 2 },
+ { day:"Wed", pnl: 340, contracts: 2 },
+ { day:"Thu", pnl: 80, contracts: 1 },
+ { day:"Fri", pnl: 610, contracts: 4 },
+ { day:"Mon", pnl: -60, contracts: 1 },
+ { day:"Tue", pnl: 290, contracts: 2 },
+ { day:"Wed", pnl: 420, contracts: 3 },
+ { day:"Thu", pnl: -140, contracts: 2 },
+ { day:"Fri", pnl: 510, contracts: 3 }
+ ]), [])
 
-  const normalized = useMemo(() => {
-    return data.map(d => ({
-      ...d,
-      perContract: d.contracts ? d.pnl / d.contracts : 0
-    }))
-  }, [data])
+ const normalized = useMemo(() => {
+ return data.map(d => ({
+ ...d,
+ perContract: d.contracts ? d.pnl / d.contracts : 0
+ }))
+ }, [data])
 
-  const maxAbs = useMemo(() => {
-    return Math.max(
-      100,
-      ...normalized.map(d => Math.abs(d.perContract))
-    )
-  }, [normalized])
+ const maxAbs = useMemo(() => {
+ return Math.max(
+ 100,
+ ...normalized.map(d => Math.abs(d.perContract))
+ )
+ }, [normalized])
 
-  const chartHeight = 240
-  const chartWidth = normalized.length * 48
-  const mid = chartHeight / 2
+ const chartHeight = 240
+ const chartWidth = normalized.length * 48
+ const mid = chartHeight / 2
 
-  return (
-    <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
-          <TrendingUp className="size-[18px] text-primary" strokeWidth={2} />
-        </div>
-        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
-          Performance Viz
-        </p>
-      </div>
-    <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-white/[0.02] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
-      <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-win))]" />
-            PnL / contract
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-6))]" />
-            Contracts
-          </span>
-        </div>
-        <span className="text-xs">Mock data</span>
-      </div>
+ return (
+ <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
+ <div className="flex items-center gap-3 mb-4">
+ <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+ <TrendingUp className="size-[18px] text-primary" strokeWidth={2} />
+ </div>
+ <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+ Performance Viz
+ </p>
+ </div>
+ <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-white/[0.02] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
+ <div className="flex items-center gap-3">
+ <span className="flex items-center gap-1">
+ <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-win))]" />
+ PnL / contract
+ </span>
+ <span className="flex items-center gap-1">
+ <span className="h-2 w-2 rounded-full bg-[hsl(var(--chart-6))]" />
+ Contracts
+ </span>
+ </div>
+ <span className="text-xs">Mock data</span>
+ </div>
 
-      <div className="w-full h-[280px]">
-        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full">
-          {/* Baseline */}
-          <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-border" strokeWidth={1} />
+ <div className="w-full h-[280px]">
+ <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full">
+ {/* Baseline */}
+ <line x1={0} x2={chartWidth} y1={mid} y2={mid} className="stroke-border" strokeWidth={1} />
 
-          {/* Bars for per-contract PnL */}
-          {normalized.map((point, idx) => {
-            const x = idx * 48 + 16
-            const barHeight = (Math.abs(point.perContract) / maxAbs) * (chartHeight / 2 - 20)
-            const isPositive = point.perContract >= 0
-            const y = isPositive ? mid - barHeight : mid
+ {/* Bars for per-contract PnL */}
+ {normalized.map((point, idx) => {
+ const x = idx * 48 + 16
+ const barHeight = (Math.abs(point.perContract) / maxAbs) * (chartHeight / 2 - 20)
+ const isPositive = point.perContract >= 0
+ const y = isPositive ? mid - barHeight : mid
 
-            return (
-              <rect
-                key={`${point.day}-${idx}-pnl`}
-                x={x}
-                y={y}
-                width={18}
-                height={barHeight}
-                rx={4}
-                className={isPositive ? "fill-[hsl(var(--chart-win)/0.85)]" : "fill-[hsl(var(--chart-loss)/0.85)]"}
-              />
-            )
-          })}
+ return (
+ <rect
+ key={`${point.day}-${idx}-pnl`}
+ x={x}
+ y={y}
+ width={18}
+ height={barHeight}
+ rx={4}
+ className={isPositive ?"fill-[hsl(var(--chart-win)/0.85)]" :"fill-[hsl(var(--chart-loss)/0.85)]"}
+ />
+ )
+ })}
 
-          {/* Line for contracts */}
-          {normalized.map((point, idx) => {
-            const x = idx * 48 + 25
-            const y = mid - ((point.contracts / 4) * (chartHeight / 2 - 30))
-            return (
-              <circle
-                key={`${point.day}-${idx}-dot`}
-                cx={x}
-                cy={y}
-                r={4}
-                className="fill-[hsl(var(--chart-6))]"
-              />
-            )
-          })}
+ {/* Line for contracts */}
+ {normalized.map((point, idx) => {
+ const x = idx * 48 + 25
+ const y = mid - ((point.contracts / 4) * (chartHeight / 2 - 30))
+ return (
+ <circle
+ key={`${point.day}-${idx}-dot`}
+ cx={x}
+ cy={y}
+ r={4}
+ className="fill-[hsl(var(--chart-6))]"
+ />
+ )
+ })}
 
-          <path
-            d={normalized.map((point, idx) => {
-              const x = idx * 48 + 25
-              const y = mid - ((point.contracts / 4) * (chartHeight / 2 - 30))
-              return `${idx === 0 ? "M" : "L"} ${x} ${y}`
-            }).join(" ")}
-            className="stroke-[hsl(var(--chart-6))]"
-            strokeWidth={2}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+ <path
+ d={normalized.map((point, idx) => {
+ const x = idx * 48 + 25
+ const y = mid - ((point.contracts / 4) * (chartHeight / 2 - 30))
+ return `${idx === 0 ?"M" :"L"} ${x} ${y}`
+ }).join("")}
+ className="stroke-[hsl(var(--chart-6))]"
+ strokeWidth={2}
+ fill="none"
+ strokeLinecap="round"
+ strokeLinejoin="round"
+ />
 
-          {/* Day labels */}
-          {normalized.map((point, idx) => {
-            const x = idx * 48 + 25
-            return (
-              <text
-                key={`${point.day}-${idx}-label`}
-                x={x}
-                y={chartHeight - 8}
-                textAnchor="middle"
-                className="fill-foreground/80 text-[10px]"
-              >
-                {point.day}
-              </text>
-            )
-          })}
-        </svg>
-      </div>
-      </div>
-    </div>
-  )
+ {/* Day labels */}
+ {normalized.map((point, idx) => {
+ const x = idx * 48 + 25
+ return (
+ <text
+ key={`${point.day}-${idx}-label`}
+ x={x}
+ y={chartHeight - 8}
+ textAnchor="middle"
+ className="fill-foreground/80 text-[10px]"
+ >
+ {point.day}
+ </text>
+ )
+ })}
+ </svg>
+ </div>
+ </div>
+ </div>
+ )
 }

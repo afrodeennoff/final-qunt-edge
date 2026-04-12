@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
+ Bar,
+ BarChart,
+ CartesianGrid,
+ XAxis,
+ YAxis,
+ Tooltip,
+ ResponsiveContainer,
+ Cell,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSurface } from "@/components/ui/chart-surface";
@@ -19,281 +19,276 @@ import { cn } from "@/lib/utils";
 import { WidgetSize } from "@/app/[locale]/dashboard/types/dashboard";
 import { Info } from "lucide-react";
 import {
-  Tooltip as UITooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+ Tooltip as UITooltip,
+ TooltipContent,
+ TooltipProvider,
+ TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useI18n } from "@/locales/client";
 import { Button } from "@/components/ui/button";
 import { useTickDetailsStore } from "@/store/tick-details-store";
 
 interface TickDistributionProps {
-  size?: WidgetSize;
+ size?: WidgetSize;
 }
 
 interface ChartDataPoint {
-  ticks: string;
-  count: number;
+ ticks: string;
+ count: number;
 }
 
 const chartConfig = {
-  count: {
-    label: "Count",
-    color: "hsl(var(--foreground))",
-  },
+ count: {
+ label:"Count",
+ color:"hsl(var(--foreground))",
+ },
 } satisfies ChartConfig;
 
 const formatCount = (value: number) => {
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)}k`;
-  }
-  return value.toString();
+ if (value >= 1000) {
+ return `${(value / 1000).toFixed(1)}k`;
+ }
+ return value.toString();
 };
 
 interface CustomTooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    payload: ChartDataPoint;
-  }>;
-  t: ReturnType<typeof useI18n>;
+ active?: boolean;
+ payload?: Array<{
+ payload: ChartDataPoint;
+ }>;
+ t: ReturnType<typeof useI18n>;
 }
 
 function CustomTooltip({ active, payload, t }: CustomTooltipProps) {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="bg-v2-bg-surface/96 backdrop-blur-xl p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
-        <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
-          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
-          <span className="font-bold text-v2-text-primary text-sm uppercase">{data.ticks}</span>
-        </div>
-        <div className="flex justify-between items-center pt-1.5">
-          <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
-          <span className="font-bold text-v2-text-primary text-sm tabular-nums">
-            {data.count}
-          </span>
-        </div>
-      </div>
-    );
-  }
-  return null;
+ if (active && payload && payload.length) {
+ const data = payload[0].payload;
+ return (
+ <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
+ <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.ticks")}</span>
+ <span className="font-bold text-v2-text-primary text-sm uppercase">{data.ticks}</span>
+ </div>
+ <div className="flex justify-between items-center pt-1.5">
+ <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("tickDistribution.tooltip.trades")}</span>
+ <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ {data.count}
+ </span>
+ </div>
+ </div>
+ );
+ }
+ return null;
 }
 
 export default React.memo(function TickDistributionChart({
-  size = "medium",
+ size ="medium",
 }: TickDistributionProps) {
-  const { formattedTrades: trades } = useDashboardStats();
-  const { tickFilter, setTickFilter } = useDashboardFilters();
-  const tickDetails = useTickDetailsStore((state) => state.tickDetails);
-  const t = useI18n();
+ const { formattedTrades: trades } = useDashboardStats();
+ const { tickFilter, setTickFilter } = useDashboardFilters();
+ const tickDetails = useTickDetailsStore((state) => state.tickDetails);
+ const t = useI18n();
 
-  const chartData = React.useMemo(() => {
-    if (!trades.length) return [];
+ const chartData = React.useMemo(() => {
+ if (!trades.length) return [];
 
-    // Create a map to store tick counts
-    const tickCounts: Record<number, number> = {};
+ // Create a map to store tick counts
+ const tickCounts: Record<number, number> = {};
 
-    // Count trades for each tick value
-    trades.forEach((trade) => {
-      // Fix ticker matching logic - sort by length descending to match longer tickers first
-      // This prevents "ES" from matching "MES" trades
-      const matchingTicker = Object.keys(tickDetails)
-        .sort((a, b) => b.length - a.length) // Sort by length descending
-        .find((ticker) => trade.instrument.includes(ticker));
+ // Count trades for each tick value
+ trades.forEach((trade) => {
+ // Fix ticker matching logic - sort by length descending to match longer tickers first
+ // This prevents"ES" from matching"MES" trades
+ const matchingTicker = Object.keys(tickDetails)
+ .sort((a, b) => b.length - a.length) // Sort by length descending
+ .find((ticker) => trade.instrument.includes(ticker));
 
-      // Use tickValue (monetary value per tick) instead of tickSize (minimum price increment)
-      const tickValue = matchingTicker
-        ? tickDetails[matchingTicker].tickValue
-        : 1;
+ // Use tickValue (monetary value per tick) instead of tickSize (minimum price increment)
+ const tickValue = matchingTicker
+ ? tickDetails[matchingTicker].tickValue
+ : 1;
 
-      // Calculate PnL per contract first
-      const pnlPerContract = Number(trade.pnl) / Number(trade.quantity);
-      const ticks = Math.round(pnlPerContract / Number(tickValue));
-      tickCounts[ticks] = (tickCounts[ticks] || 0) + 1;
-    });
+ // Calculate PnL per contract first
+ const pnlPerContract = Number(trade.pnl) / Number(trade.quantity);
+ const ticks = Math.round(pnlPerContract / Number(tickValue));
+ tickCounts[ticks] = (tickCounts[ticks] || 0) + 1;
+ });
 
-    // Convert the tick counts to sorted chart data
-    return Object.entries(tickCounts)
-      .map(([tick, count]) => ({
-        ticks: tick === "0" ? "0" : Number(tick) > 0 ? `+${tick}` : `${tick}`,
-        count,
-      }))
-      .sort(
-        (a, b) =>
-          Number(a.ticks.replace("+", "")) - Number(b.ticks.replace("+", "")),
-      );
-  }, [trades, tickDetails]);
-  const hasData = chartData.some((entry) => entry.count > 0);
+ // Convert the tick counts to sorted chart data
+ return Object.entries(tickCounts)
+ .map(([tick, count]) => ({
+ ticks: tick ==="0" ?"0" : Number(tick) > 0 ? `+${tick}` : `${tick}`,
+ count,
+ }))
+ .sort(
+ (a, b) =>
+ Number(a.ticks.replace("+","")) - Number(b.ticks.replace("+","")),
+ );
+ }, [trades, tickDetails]);
+ const hasData = chartData.some((entry) => entry.count > 0);
 
-  const handleBarClick = (data: ChartDataPoint | undefined) => {
-    if (!data || !trades.length) return;
-    const clickedTicks = data.ticks;
-    if (tickFilter.value === clickedTicks) {
-      setTickFilter({ value: null });
-    } else {
-      setTickFilter({ value: clickedTicks });
-    }
-  };
+ const handleBarClick = (data: ChartDataPoint | undefined) => {
+ if (!data || !trades.length) return;
+ const clickedTicks = data.ticks;
+ if (tickFilter.value === clickedTicks) {
+ setTickFilter({ value: null });
+ } else {
+ setTickFilter({ value: clickedTicks });
+ }
+ };
 
-  return (
-    <ChartSurface>
-      <div
-        className={cn(
-          "flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0",
-          size === "small" ? "p-2 h-10 justify-center" : "p-3 sm:p-3.5 h-12 justify-center",
-        )}
-      >
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
-                size === "small" ? "text-sm" : "text-base",
-              )}
-            >
-              {t("tickDistribution.title")}
-            </span>
-            <TooltipProvider>
-              <UITooltip>
-                <TooltipTrigger asChild>
-                  <Info
-                    className={cn(
-                      "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
-                      size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
-                    )}
-                  />
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  <p className="text-xs">{t("tickDistribution.description")}</p>
-                </TooltipContent>
-              </UITooltip>
-            </TooltipProvider>
-          </div>
-          {tickFilter.value && (
-            <Button 
-              variant="ghost"
-              size="sm"
-              className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground/95 hover:bg-secondary/22"
-              onClick={() => setTickFilter({ value: null })}
-            >
-              {t("tickDistribution.clearFilter")}
-            </Button>
-          )}
-        </div>
-      </div>
-      <div
-        className={cn(
-          "flex-1 min-h-0",
-          size === "small" ? "p-1" : "p-2 sm:p-3",
-        )}
-      >
-        <div className={cn("w-full h-full")}>
-          {hasData ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={
-                  size === "small"
-                    ? { left: 0, right: 0, top: 4, bottom: 20 }
-                    : { left: 0, right: 0, top: 8, bottom: 24 }
-                }
-                onClick={(e) =>
-                  e?.activePayload && handleBarClick(e.activePayload[0].payload)
-                }
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  className="text-border dark:opacity-[0.1] opacity-[0.2]"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="ticks"
-                  tickLine={false}
-                  axisLine={false}
-                  height={size === "small" ? 20 : 24}
-                  tickMargin={size === "small" ? 4 : 8}
-                  hide
-                  tick={(props) => {
-                    const { x, y, payload } = props;
-                    return (
-                      <g transform={`translate(${x},${y})`}>
-                        <text
-                          x={0}
-                          y={0}
-                          dy={size === "small" ? 8 : 4}
-                          textAnchor="middle"
-                          fill="hsl(var(--text-secondary))"
-                          fontSize={size === "small" ? 9 : 10}
-                          transform={
-                            size === "small" ? "rotate(-45)" : "rotate(0)"
-                          }
-                        >
-                          {payload.value}
-                        </text>
-                      </g>
-                    );
-                  }}
-                  interval={0}
-                  allowDataOverflow={true}
-                />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  width={45}
-                  tickMargin={4}
-                  hide
-                  tickFormatter={formatCount}
-                  tick={{
-                    fontSize: size === "small" ? 9 : 10,
-                    fill: "hsl(var(--text-secondary))",
-                  }}
-                />
-                <Tooltip
-                  content={<CustomTooltip t={t} />}
-                  cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
-                />
-                <Bar
-                  dataKey="count"
-                  radius={[2, 2, 2, 2]}
-                  maxBarSize={size === "small" ? 25 : 40}
-                  className="transition-all duration-300 ease-in-out"
-                  cursor="pointer"
-                >
-                  {chartData.map((entry) => (
-                    <Cell
-                      key={`cell-${entry.ticks}`}
-                      fill={
-                        parseInt(entry.ticks) >= 0
-                          ? "hsl(var(--chart-1))"
-                          : "hsl(var(--chart-4))"
-                      }
-                      fillOpacity={
-                        tickFilter.value === entry.ticks
-                          ? 1
-                          : tickFilter.value
-                            ? 0.22
-                            : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
-                      }
-                      stroke="hsl(var(--chart-axis))"
-                      strokeOpacity={0.55}
-                      strokeWidth={1}
-                      className={cn(
-                        "hover:fill-opacity-100 transition-all duration-300",
-                        parseInt(entry.ticks) >= 0 ? "chart-positive-emphasis" : "chart-negative-muted"
-                      )}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
-              {t("widgets.emptyState") ?? "No trades yet."}
-            </div>
-          )}
-        </div>
-      </div>
-    </ChartSurface>
-  );
+ return (
+ <ChartSurface>
+ <div
+ className={cn("flex flex-col items-stretch gap-0 border-b border-border/55 shrink-0",
+ size ==="small" ?"p-2 h-10 justify-center" :"p-3 sm:p-3.5 h-12 justify-center",
+ )}
+ >
+ <div className="flex items-center justify-between w-full">
+ <div className="flex items-center gap-2">
+ <span
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
+ size ==="small" ?"text-sm" :"text-base",
+ )}
+ >
+ {t("tickDistribution.title")}
+ </span>
+ <TooltipProvider>
+ <UITooltip>
+ <TooltipTrigger asChild>
+ <Info
+ className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
+ )}
+ />
+ </TooltipTrigger>
+ <TooltipContent side="top">
+ <p className="text-xs">{t("tickDistribution.description")}</p>
+ </TooltipContent>
+ </UITooltip>
+ </TooltipProvider>
+ </div>
+ {tickFilter.value && (
+ <Button 
+ variant="ghost"
+ size="sm"
+ className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground/95 hover:bg-secondary/22"
+ onClick={() => setTickFilter({ value: null })}
+ >
+ {t("tickDistribution.clearFilter")}
+ </Button>
+ )}
+ </div>
+ </div>
+ <div
+ className={cn("flex-1 min-h-0",
+ size ==="small" ?"p-1" :"p-2 sm:p-3",
+ )}
+ >
+ <div className={cn("w-full h-full")}>
+ {hasData ? (
+ <ResponsiveContainer width="100%" height="100%">
+ <BarChart
+ data={chartData}
+ margin={
+ size ==="small"
+ ? { left: 0, right: 0, top: 4, bottom: 20 }
+ : { left: 0, right: 0, top: 8, bottom: 24 }
+ }
+ onClick={(e) =>
+ e?.activePayload && handleBarClick(e.activePayload[0].payload)
+ }
+ >
+ <CartesianGrid
+ strokeDasharray="3 3"
+ className="text-border dark:opacity-[0.1] opacity-[0.2]"
+ vertical={false}
+ />
+ <XAxis
+ dataKey="ticks"
+ tickLine={false}
+ axisLine={false}
+ height={size ==="small" ? 20 : 24}
+ tickMargin={size ==="small" ? 4 : 8}
+ hide
+ tick={(props) => {
+ const { x, y, payload } = props;
+ return (
+ <g transform={`translate(${x},${y})`}>
+ <text
+ x={0}
+ y={0}
+ dy={size ==="small" ? 8 : 4}
+ textAnchor="middle"
+ fill="hsl(var(--text-secondary))"
+ fontSize={size ==="small" ? 9 : 10}
+ transform={
+ size ==="small" ?"rotate(-45)" :"rotate(0)"
+ }
+ >
+ {payload.value}
+ </text>
+ </g>
+ );
+ }}
+ interval={0}
+ allowDataOverflow={true}
+ />
+ <YAxis
+ tickLine={false}
+ axisLine={false}
+ width={45}
+ tickMargin={4}
+ hide
+ tickFormatter={formatCount}
+ tick={{
+ fontSize: size ==="small" ? 9 : 10,
+ fill:"hsl(var(--text-secondary))",
+ }}
+ />
+ <Tooltip
+ content={<CustomTooltip t={t} />}
+ cursor={{ fill: 'hsl(var(--chart-grid) / 0.55)' }}
+ />
+ <Bar
+ dataKey="count"
+ radius={[2, 2, 2, 2]}
+ maxBarSize={size ==="small" ? 25 : 40}
+ className="transition-all duration-300 ease-in-out"
+ cursor="pointer"
+ >
+ {chartData.map((entry) => (
+ <Cell
+ key={`cell-${entry.ticks}`}
+ fill={
+ parseInt(entry.ticks) >= 0
+ ?"hsl(var(--chart-1))"
+ :"hsl(var(--chart-4))"
+ }
+ fillOpacity={
+ tickFilter.value === entry.ticks
+ ? 1
+ : tickFilter.value
+ ? 0.22
+ : parseInt(entry.ticks) >= 0 ? 0.94 : 0.84
+ }
+ stroke="hsl(var(--chart-axis))"
+ strokeOpacity={0.55}
+ strokeWidth={1}
+ className={cn("hover:fill-opacity-100 transition-all duration-300",
+ parseInt(entry.ticks) >= 0 ?"chart-positive-emphasis" :"chart-negative-muted"
+ )}
+ />
+ ))}
+ </Bar>
+ </BarChart>
+ </ResponsiveContainer>
+ ) : (
+ <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
+ {t("widgets.emptyState") ??"No trades yet."}
+ </div>
+ )}
+ </div>
+ </div>
+ </ChartSurface>
+ );
 })

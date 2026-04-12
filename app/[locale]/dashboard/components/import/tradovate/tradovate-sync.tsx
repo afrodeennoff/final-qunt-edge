@@ -5,17 +5,17 @@ import { TradovateCredentialsManager } from './tradovate-credentials-manager'
  
 
 export function TradovateSync() {
-  const t = useI18n()
+ const t = useI18n()
 
-  return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold">{t('tradovateSync.title')}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t('tradovateSync.description')}
-        </p>
-      </div>
-      <TradovateCredentialsManager />
-    </div>
-  )
+ return (
+ <div className="flex flex-col gap-6 p-6">
+ <div className="flex flex-col gap-2">
+ <h2 className="text-lg font-semibold">{t('tradovateSync.title')}</h2>
+ <p className="text-sm text-muted-foreground">
+ {t('tradovateSync.description')}
+ </p>
+ </div>
+ <TradovateCredentialsManager />
+ </div>
+ )
 } 

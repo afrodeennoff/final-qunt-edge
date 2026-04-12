@@ -3,12 +3,12 @@
 import type { ImportTradeDraft } from "@/lib/trade-types";
 import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+ Table,
+ TableBody,
+ TableCell,
+ TableHead,
+ TableHeader,
+ TableRow,
 } from "@/components/ui/table";
 import { format, isValid } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,1011 +18,1010 @@ import { parsePositionTime } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
+ ColumnDef,
+ flexRender,
+ getCoreRowModel,
+ useReactTable,
 } from "@tanstack/react-table";
 import { experimental_useObject as useObject } from '@ai-sdk/react'
 import { tradeSchema } from '@/app/api/ai/format-trades/schema'
 import { z } from 'zod/v3';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+ Tooltip,
+ TooltipContent,
+ TooltipProvider,
+ TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { logger } from "@/lib/logger";
 
 interface FormatPreviewProps {
-  trades: string[][];
-  processedTrades: Partial<ImportTradeDraft>[];
-  setProcessedTrades: (trades: Partial<ImportTradeDraft>[]) => void;
-  setIsLoading: (isLoading: boolean) => void;
-  isLoading: boolean;
-  headers: string[];
-  mappings: { [key: string]: string };
+ trades: string[][];
+ processedTrades: Partial<ImportTradeDraft>[];
+ setProcessedTrades: (trades: Partial<ImportTradeDraft>[]) => void;
+ setIsLoading: (isLoading: boolean) => void;
+ isLoading: boolean;
+ headers: string[];
+ mappings: { [key: string]: string };
 }
 
 function transformRowData(rows: string[][], headers: string[], mappings: { [key: string]: string }): string[][] {
-  return rows.map(row => {
-    const transformedRow: string[] = [];
-    
-    // Create a mapping from unique ID to destination column and source index
-    const uniqueIdToMapping: { [key: string]: { destination: string; sourceIndex: number } } = {};
-    headers.forEach((header, index) => {
-      const uniqueId = `${header}_${index}`;
-      if (mappings[uniqueId]) {
-        uniqueIdToMapping[uniqueId] = {
-          destination: mappings[uniqueId],
-          sourceIndex: index
-        };
-      }
-    });
-    
-    // Get all unique destination columns that are mapped, in the order they appear in mappings
-    const destinationColumns = [...new Set(Object.values(mappings))];
-    
-    // For each destination column, find the corresponding data using the unique ID
-    destinationColumns.forEach(destColumn => {
-      const mapping = Object.entries(uniqueIdToMapping).find(([, mapping]) => mapping.destination === destColumn);
-      if (mapping) {
-        const [, { sourceIndex }] = mapping;
-        transformedRow.push(row[sourceIndex] || '');
-      } else {
-        transformedRow.push('');
-      }
-    });
-    
-    return transformedRow;
-  });
+ return rows.map(row => {
+ const transformedRow: string[] = [];
+ 
+ // Create a mapping from unique ID to destination column and source index
+ const uniqueIdToMapping: { [key: string]: { destination: string; sourceIndex: number } } = {};
+ headers.forEach((header, index) => {
+ const uniqueId = `${header}_${index}`;
+ if (mappings[uniqueId]) {
+ uniqueIdToMapping[uniqueId] = {
+ destination: mappings[uniqueId],
+ sourceIndex: index
+ };
+ }
+ });
+ 
+ // Get all unique destination columns that are mapped, in the order they appear in mappings
+ const destinationColumns = [...new Set(Object.values(mappings))];
+ 
+ // For each destination column, find the corresponding data using the unique ID
+ destinationColumns.forEach(destColumn => {
+ const mapping = Object.entries(uniqueIdToMapping).find(([, mapping]) => mapping.destination === destColumn);
+ if (mapping) {
+ const [, { sourceIndex }] = mapping;
+ transformedRow.push(row[sourceIndex] || '');
+ } else {
+ transformedRow.push('');
+ }
+ });
+ 
+ return transformedRow;
+ });
 }
 
 // AI batch streaming: two parallel useObject hooks with error/retry logic make this
 // structural complexity unavoidable. Extracted where possible; inline where necessary.
 /* eslint-disable complexity */
 export function FormatPreview({
-  trades: initialTrades,
-  processedTrades,
-  setProcessedTrades,
-  setIsLoading,
-  headers,
-  mappings,
+ trades: initialTrades,
+ processedTrades,
+ setProcessedTrades,
+ setIsLoading,
+ headers,
+ mappings,
 }: FormatPreviewProps) {
-  const t = useI18n();
-  const tableContainerRef = useRef<HTMLDivElement>(null);
+ const t = useI18n();
+ const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  // Transform headers using mappings - get the destination columns in the correct order
-  const transformedHeaders = useMemo(() => {
-    const destinationColumns = [...new Set(Object.values(mappings))];
-    return destinationColumns;
-  }, [mappings]);
+ // Transform headers using mappings - get the destination columns in the correct order
+ const transformedHeaders = useMemo(() => {
+ const destinationColumns = [...new Set(Object.values(mappings))];
+ return destinationColumns;
+ }, [mappings]);
 
-  // Calculate valid trades only when initialTrades changes
-  const validTrades = useMemo(() =>
-    initialTrades.filter(row => row.length > 0 && row[0] !== ""),
-    [initialTrades]
-  );
+ // Calculate valid trades only when initialTrades changes
+ const validTrades = useMemo(() =>
+ initialTrades.filter(row => row.length > 0 && row[0] !==""),
+ [initialTrades]
+ );
 
-  const [error, setError] = useState<string | null>(null);
-  const [isAutoProcessing, setIsAutoProcessing] = useState(false);
-  const [isStopped, setIsStopped] = useState(false);
-  const [completedBatches, setCompletedBatches] = useState<Set<number>>(new Set());
-  const [batchSet1, setBatchSet1] = useState<number[]>([]);
-  const [batchSet2, setBatchSet2] = useState<number[]>([]);
-  const [currentBatchIndex1, setCurrentBatchIndex1] = useState(0);
-  const [currentBatchIndex2, setCurrentBatchIndex2] = useState(0);
-  const batchSize = 5;
-  const MAX_RETRIES_PER_BATCH = 3;
-  const RETRY_BASE_DELAY_MS = 1200;
-  const totalBatches = Math.ceil(validTrades.length / batchSize);
+ const [error, setError] = useState<string | null>(null);
+ const [isAutoProcessing, setIsAutoProcessing] = useState(false);
+ const [isStopped, setIsStopped] = useState(false);
+ const [completedBatches, setCompletedBatches] = useState<Set<number>>(new Set());
+ const [batchSet1, setBatchSet1] = useState<number[]>([]);
+ const [batchSet2, setBatchSet2] = useState<number[]>([]);
+ const [currentBatchIndex1, setCurrentBatchIndex1] = useState(0);
+ const [currentBatchIndex2, setCurrentBatchIndex2] = useState(0);
+ const batchSize = 5;
+ const MAX_RETRIES_PER_BATCH = 3;
+ const RETRY_BASE_DELAY_MS = 1200;
+ const totalBatches = Math.ceil(validTrades.length / batchSize);
 
-  // Use refs to avoid infinite loops in useEffect
-  const processedTradesRef = useRef<Partial<ImportTradeDraft>[]>(processedTrades);
-  const processedTradeSignaturesRef = useRef<Set<string>>(new Set());
-  const completedBatchesRef = useRef<Set<number>>(completedBatches);
-  const batchSet1Ref = useRef<number[]>(batchSet1);
-  const batchSet2Ref = useRef<number[]>(batchSet2);
-  const currentBatchIndex1Ref = useRef<number>(currentBatchIndex1);
-  const currentBatchIndex2Ref = useRef<number>(currentBatchIndex2);
-  const isAutoProcessingRef = useRef<boolean>(isAutoProcessing);
-  const isStoppedRef = useRef<boolean>(isStopped);
-  const retryCountSet1Ref = useRef<Map<number, number>>(new Map());
-  const retryCountSet2Ref = useRef<Map<number, number>>(new Map());
-  const scheduledTimeoutsRef = useRef<Set<number>>(new Set());
-  const pendingRetriesRef = useRef<Set<number>>(new Set());
-  
-  const getTradeSignature = useCallback((trade: Partial<ImportTradeDraft>) => {
-    return [
-      trade.entryDate ?? '',
-      trade.instrument ?? '',
-      trade.quantity ?? '',
-      trade.side ?? '',
-      trade.entryPrice ?? '',
-      trade.closePrice ?? '',
-      trade.pnl ?? '',
-      trade.commission ?? '',
-      trade.timeInPosition ?? '',
-    ].join('|');
-  }, []);
+ // Use refs to avoid infinite loops in useEffect
+ const processedTradesRef = useRef<Partial<ImportTradeDraft>[]>(processedTrades);
+ const processedTradeSignaturesRef = useRef<Set<string>>(new Set());
+ const completedBatchesRef = useRef<Set<number>>(completedBatches);
+ const batchSet1Ref = useRef<number[]>(batchSet1);
+ const batchSet2Ref = useRef<number[]>(batchSet2);
+ const currentBatchIndex1Ref = useRef<number>(currentBatchIndex1);
+ const currentBatchIndex2Ref = useRef<number>(currentBatchIndex2);
+ const isAutoProcessingRef = useRef<boolean>(isAutoProcessing);
+ const isStoppedRef = useRef<boolean>(isStopped);
+ const retryCountSet1Ref = useRef<Map<number, number>>(new Map());
+ const retryCountSet2Ref = useRef<Map<number, number>>(new Map());
+ const scheduledTimeoutsRef = useRef<Set<number>>(new Set());
+ const pendingRetriesRef = useRef<Set<number>>(new Set());
+ 
+ const getTradeSignature = useCallback((trade: Partial<ImportTradeDraft>) => {
+ return [
+ trade.entryDate ?? '',
+ trade.instrument ?? '',
+ trade.quantity ?? '',
+ trade.side ?? '',
+ trade.entryPrice ?? '',
+ trade.closePrice ?? '',
+ trade.pnl ?? '',
+ trade.commission ?? '',
+ trade.timeInPosition ?? '',
+ ].join('|');
+ }, []);
 
-  // Update refs when state changes
-  useEffect(() => {
-    processedTradesRef.current = processedTrades;
-    processedTradeSignaturesRef.current = new Set(
-      processedTrades.map((trade) => getTradeSignature(trade))
-    );
-  }, [getTradeSignature, processedTrades]);
-  
-  useEffect(() => {
-    completedBatchesRef.current = completedBatches;
-  }, [completedBatches]);
-  
-  useEffect(() => {
-    batchSet1Ref.current = batchSet1;
-  }, [batchSet1]);
-  
-  useEffect(() => {
-    batchSet2Ref.current = batchSet2;
-  }, [batchSet2]);
-  
-  useEffect(() => {
-    currentBatchIndex1Ref.current = currentBatchIndex1;
-  }, [currentBatchIndex1]);
-  
-  useEffect(() => {
-    currentBatchIndex2Ref.current = currentBatchIndex2;
-  }, [currentBatchIndex2]);
-  
-  useEffect(() => {
-    isAutoProcessingRef.current = isAutoProcessing;
-  }, [isAutoProcessing]);
-  
-  useEffect(() => {
-    isStoppedRef.current = isStopped;
-  }, [isStopped]);
+ // Update refs when state changes
+ useEffect(() => {
+ processedTradesRef.current = processedTrades;
+ processedTradeSignaturesRef.current = new Set(
+ processedTrades.map((trade) => getTradeSignature(trade))
+ );
+ }, [getTradeSignature, processedTrades]);
+ 
+ useEffect(() => {
+ completedBatchesRef.current = completedBatches;
+ }, [completedBatches]);
+ 
+ useEffect(() => {
+ batchSet1Ref.current = batchSet1;
+ }, [batchSet1]);
+ 
+ useEffect(() => {
+ batchSet2Ref.current = batchSet2;
+ }, [batchSet2]);
+ 
+ useEffect(() => {
+ currentBatchIndex1Ref.current = currentBatchIndex1;
+ }, [currentBatchIndex1]);
+ 
+ useEffect(() => {
+ currentBatchIndex2Ref.current = currentBatchIndex2;
+ }, [currentBatchIndex2]);
+ 
+ useEffect(() => {
+ isAutoProcessingRef.current = isAutoProcessing;
+ }, [isAutoProcessing]);
+ 
+ useEffect(() => {
+ isStoppedRef.current = isStopped;
+ }, [isStopped]);
 
-  const scheduleManagedTimeout = useCallback((fn: () => void, delayMs: number) => {
-    const id = window.setTimeout(() => {
-      scheduledTimeoutsRef.current.delete(id);
-      fn();
-    }, delayMs);
-    scheduledTimeoutsRef.current.add(id);
-  }, []);
+ const scheduleManagedTimeout = useCallback((fn: () => void, delayMs: number) => {
+ const id = window.setTimeout(() => {
+ scheduledTimeoutsRef.current.delete(id);
+ fn();
+ }, delayMs);
+ scheduledTimeoutsRef.current.add(id);
+ }, []);
 
-  const clearManagedTimeouts = useCallback(() => {
-    for (const timeoutId of scheduledTimeoutsRef.current) {
-      clearTimeout(timeoutId);
-    }
-    scheduledTimeoutsRef.current.clear();
-  }, []);
+ const clearManagedTimeouts = useCallback(() => {
+ for (const timeoutId of scheduledTimeoutsRef.current) {
+ clearTimeout(timeoutId);
+ }
+ scheduledTimeoutsRef.current.clear();
+ }, []);
 
-  useEffect(() => {
-    return () => {
-      clearManagedTimeouts();
-      setIsLoading(false);
-    };
-  }, [clearManagedTimeouts, setIsLoading]);
+ useEffect(() => {
+ return () => {
+ clearManagedTimeouts();
+ setIsLoading(false);
+ };
+ }, [clearManagedTimeouts, setIsLoading]);
 
-  // Split batches into two sets
-  const splitBatches = () => {
-    const allBatches = Array.from({ length: totalBatches }, (_, i) => i);
-    const set1: number[] = [];
-    const set2: number[] = [];
-    
-    allBatches.forEach((batch, index) => {
-      if (index % 2 === 0) {
-        set1.push(batch);
-      } else {
-        set2.push(batch);
-      }
-    });
-    
-    setBatchSet1(set1);
-    setBatchSet2(set2);
-    setCurrentBatchIndex1(0);
-    setCurrentBatchIndex2(0);
-    batchSet1Ref.current = set1;
-    batchSet2Ref.current = set2;
-    currentBatchIndex1Ref.current = 0;
-    currentBatchIndex2Ref.current = 0;
-    retryCountSet1Ref.current.clear();
-    retryCountSet2Ref.current.clear();
-  };
+ // Split batches into two sets
+ const splitBatches = () => {
+ const allBatches = Array.from({ length: totalBatches }, (_, i) => i);
+ const set1: number[] = [];
+ const set2: number[] = [];
+ 
+ allBatches.forEach((batch, index) => {
+ if (index % 2 === 0) {
+ set1.push(batch);
+ } else {
+ set2.push(batch);
+ }
+ });
+ 
+ setBatchSet1(set1);
+ setBatchSet2(set2);
+ setCurrentBatchIndex1(0);
+ setCurrentBatchIndex2(0);
+ batchSet1Ref.current = set1;
+ batchSet2Ref.current = set2;
+ currentBatchIndex1Ref.current = 0;
+ currentBatchIndex2Ref.current = 0;
+ retryCountSet1Ref.current.clear();
+ retryCountSet2Ref.current.clear();
+ };
 
-  const parseAiErrorMessage = (rawMessage: string): string => {
-    if (!rawMessage) return "Unknown AI error";
-    try {
-      const parsed = JSON.parse(rawMessage) as { error?: { message?: string } };
-      return parsed?.error?.message ?? rawMessage;
-    } catch {
-      return rawMessage;
-    }
-  };
+ const parseAiErrorMessage = (rawMessage: string): string => {
+ if (!rawMessage) return"Unknown AI error";
+ try {
+ const parsed = JSON.parse(rawMessage) as { error?: { message?: string } };
+ return parsed?.error?.message ?? rawMessage;
+ } catch {
+ return rawMessage;
+ }
+ };
 
-  const parseAiErrorCode = (rawMessage: string): string | null => {
-    try {
-      const parsed = JSON.parse(rawMessage) as { error?: { code?: string } };
-      return parsed?.error?.code ?? null;
-    } catch {
-      return null;
-    }
-  };
+ const parseAiErrorCode = (rawMessage: string): string | null => {
+ try {
+ const parsed = JSON.parse(rawMessage) as { error?: { code?: string } };
+ return parsed?.error?.code ?? null;
+ } catch {
+ return null;
+ }
+ };
 
-  const scheduleRetryForSet = (setNumber: 1 | 2, batchIndex: number) => {
-    if (isStoppedRef.current) return;
+ const scheduleRetryForSet = (setNumber: 1 | 2, batchIndex: number) => {
+ if (isStoppedRef.current) return;
 
-    const retryMap = setNumber === 1 ? retryCountSet1Ref.current : retryCountSet2Ref.current;
-    const attempt = (retryMap.get(batchIndex) ?? 0) + 1;
-    retryMap.set(batchIndex, attempt);
+ const retryMap = setNumber === 1 ? retryCountSet1Ref.current : retryCountSet2Ref.current;
+ const attempt = (retryMap.get(batchIndex) ?? 0) + 1;
+ retryMap.set(batchIndex, attempt);
 
-    if (attempt > MAX_RETRIES_PER_BATCH) {
-      isAutoProcessingRef.current = false;
-      setIsAutoProcessing(false);
-      return;
-    }
+ if (attempt > MAX_RETRIES_PER_BATCH) {
+ isAutoProcessingRef.current = false;
+ setIsAutoProcessing(false);
+ return;
+ }
 
-    pendingRetriesRef.current.add(batchIndex);
+ pendingRetriesRef.current.add(batchIndex);
 
-    const delayMs = RETRY_BASE_DELAY_MS * attempt;
-    scheduleManagedTimeout(() => {
-      pendingRetriesRef.current.delete(batchIndex);
-      if (!isAutoProcessingRef.current || isStoppedRef.current) return;
-      if (setNumber === 1) {
-        processNextBatchInSet1();
-      } else {
-        processNextBatchInSet2();
-      }
-    }, delayMs);
-  };
+ const delayMs = RETRY_BASE_DELAY_MS * attempt;
+ scheduleManagedTimeout(() => {
+ pendingRetriesRef.current.delete(batchIndex);
+ if (!isAutoProcessingRef.current || isStoppedRef.current) return;
+ if (setNumber === 1) {
+ processNextBatchInSet1();
+ } else {
+ processNextBatchInSet2();
+ }
+ }, delayMs);
+ };
 
-  // First useObject instance - processes batchSet1
-  const { 
-    object: object1, 
-    submit: submit1, 
-    isLoading: isProcessing1 
-  } = useObject({
-    api: '/api/ai/format-trades',
-    schema: z.array(tradeSchema),
-    onError(error) {
-      logger.error('Error processing batch set 1:', { error: error.message });
-      const message = parseAiErrorMessage(error.message);
-      const code = parseAiErrorCode(error.message);
-      const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
-      const isRetryable = code === "SERVICE_UNAVAILABLE" || code === "RATE_LIMITED";
+ // First useObject instance - processes batchSet1
+ const { 
+ object: object1, 
+ submit: submit1, 
+ isLoading: isProcessing1 
+ } = useObject({
+ api: '/api/ai/format-trades',
+ schema: z.array(tradeSchema),
+ onError(error) {
+ logger.error('Error processing batch set 1:', { error: error.message });
+ const message = parseAiErrorMessage(error.message);
+ const code = parseAiErrorCode(error.message);
+ const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
+ const isRetryable = code ==="SERVICE_UNAVAILABLE" || code ==="RATE_LIMITED";
 
-      if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
-        const currentAttempt = (retryCountSet1Ref.current.get(currentBatch) ?? 0) + 1;
-        setError(
-          `Batch set 1 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
-        );
-        scheduleRetryForSet(1, currentBatch);
-        return;
-      }
+ if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
+ const currentAttempt = (retryCountSet1Ref.current.get(currentBatch) ?? 0) + 1;
+ setError(
+ `Batch set 1 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
+ );
+ scheduleRetryForSet(1, currentBatch);
+ return;
+ }
 
-      setError(`Failed to process batch set 1: ${message}`);
-      isAutoProcessingRef.current = false;
-      setIsAutoProcessing(false);
-    },
-    onFinish() {
-      const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
-      if (currentBatch === undefined) return;
-      if (pendingRetriesRef.current.has(currentBatch)) return;
+ setError(`Failed to process batch set 1: ${message}`);
+ isAutoProcessingRef.current = false;
+ setIsAutoProcessing(false);
+ },
+ onFinish() {
+ const currentBatch = batchSet1Ref.current[currentBatchIndex1Ref.current];
+ if (currentBatch === undefined) return;
+ if (pendingRetriesRef.current.has(currentBatch)) return;
 
-      retryCountSet1Ref.current.delete(currentBatch);
-      setCompletedBatches(prev => {
-        return new Set([...prev, currentBatch]);
-      });
-      
-      // Move to next batch in set 1
-      setCurrentBatchIndex1(prev => {
-        return prev + 1;
-      });
-      
-      // Check if all batches are completed
-      if (completedBatchesRef.current.size + 1 === totalBatches) {
-        setIsAutoProcessing(false);
-      } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
-        // Process next batch in set 1 if available and not stopped
-        scheduleManagedTimeout(() => {
-          processNextBatchInSet1();
-        }, 500);
-      }
-    }
-  });
+ retryCountSet1Ref.current.delete(currentBatch);
+ setCompletedBatches(prev => {
+ return new Set([...prev, currentBatch]);
+ });
+ 
+ // Move to next batch in set 1
+ setCurrentBatchIndex1(prev => {
+ return prev + 1;
+ });
+ 
+ // Check if all batches are completed
+ if (completedBatchesRef.current.size + 1 === totalBatches) {
+ setIsAutoProcessing(false);
+ } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
+ // Process next batch in set 1 if available and not stopped
+ scheduleManagedTimeout(() => {
+ processNextBatchInSet1();
+ }, 500);
+ }
+ }
+ });
 
-  // Second useObject instance - processes batchSet2
-  const { 
-    object: object2, 
-    submit: submit2, 
-    isLoading: isProcessing2 
-  } = useObject({
-    api: '/api/ai/format-trades',
-    schema: z.array(tradeSchema),
-    onError(error) {
-      logger.error('Error processing batch set 2:', { error: error.message });
-      const message = parseAiErrorMessage(error.message);
-      const code = parseAiErrorCode(error.message);
-      const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
-      const isRetryable = code === "SERVICE_UNAVAILABLE" || code === "RATE_LIMITED";
+ // Second useObject instance - processes batchSet2
+ const { 
+ object: object2, 
+ submit: submit2, 
+ isLoading: isProcessing2 
+ } = useObject({
+ api: '/api/ai/format-trades',
+ schema: z.array(tradeSchema),
+ onError(error) {
+ logger.error('Error processing batch set 2:', { error: error.message });
+ const message = parseAiErrorMessage(error.message);
+ const code = parseAiErrorCode(error.message);
+ const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
+ const isRetryable = code ==="SERVICE_UNAVAILABLE" || code ==="RATE_LIMITED";
 
-      if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
-        const currentAttempt = (retryCountSet2Ref.current.get(currentBatch) ?? 0) + 1;
-        setError(
-          `Batch set 2 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
-        );
-        scheduleRetryForSet(2, currentBatch);
-        return;
-      }
+ if (isRetryable && currentBatch !== undefined && !isStoppedRef.current) {
+ const currentAttempt = (retryCountSet2Ref.current.get(currentBatch) ?? 0) + 1;
+ setError(
+ `Batch set 2 temporary issue (${message}). Retrying ${Math.min(currentAttempt, MAX_RETRIES_PER_BATCH)}/${MAX_RETRIES_PER_BATCH}...`
+ );
+ scheduleRetryForSet(2, currentBatch);
+ return;
+ }
 
-      setError(`Failed to process batch set 2: ${message}`);
-      isAutoProcessingRef.current = false;
-      setIsAutoProcessing(false);
-    },
-    onFinish() {
-      const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
-      if (currentBatch === undefined) return;
-      if (pendingRetriesRef.current.has(currentBatch)) return;
+ setError(`Failed to process batch set 2: ${message}`);
+ isAutoProcessingRef.current = false;
+ setIsAutoProcessing(false);
+ },
+ onFinish() {
+ const currentBatch = batchSet2Ref.current[currentBatchIndex2Ref.current];
+ if (currentBatch === undefined) return;
+ if (pendingRetriesRef.current.has(currentBatch)) return;
 
-      retryCountSet2Ref.current.delete(currentBatch);
-      setCompletedBatches(prev => {
-        return new Set([...prev, currentBatch]);
-      });
-      
-      // Move to next batch in set 2
-      setCurrentBatchIndex2(prev => {
-        return prev + 1;
-      });
-      
-      // Check if all batches are completed
-      if (completedBatchesRef.current.size + 1 === totalBatches) {
-        setIsAutoProcessing(false);
-      } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
-        // Process next batch in set 2 if available and not stopped
-        scheduleManagedTimeout(() => {
-          processNextBatchInSet2();
-        }, 500);
-      }
-    }
-  });
+ retryCountSet2Ref.current.delete(currentBatch);
+ setCompletedBatches(prev => {
+ return new Set([...prev, currentBatch]);
+ });
+ 
+ // Move to next batch in set 2
+ setCurrentBatchIndex2(prev => {
+ return prev + 1;
+ });
+ 
+ // Check if all batches are completed
+ if (completedBatchesRef.current.size + 1 === totalBatches) {
+ setIsAutoProcessing(false);
+ } else if (isAutoProcessingRef.current && !isStoppedRef.current) {
+ // Process next batch in set 2 if available and not stopped
+ scheduleManagedTimeout(() => {
+ processNextBatchInSet2();
+ }, 500);
+ }
+ }
+ });
 
-  const isProcessing = isProcessing1 || isProcessing2;
+ const isProcessing = isProcessing1 || isProcessing2;
 
-  useEffect(() => {
-    setIsLoading(isProcessing || isAutoProcessing);
-  }, [isProcessing, isAutoProcessing, setIsLoading]);
+ useEffect(() => {
+ setIsLoading(isProcessing || isAutoProcessing);
+ }, [isProcessing, isAutoProcessing, setIsLoading]);
 
-  // Process next batch in set 1
-  const processNextBatchInSet1 = () => {
-    if (isStoppedRef.current || !isAutoProcessingRef.current) return;
-    const currentIndex = currentBatchIndex1Ref.current;
-    const batchSet = batchSet1Ref.current;
+ // Process next batch in set 1
+ const processNextBatchInSet1 = () => {
+ if (isStoppedRef.current || !isAutoProcessingRef.current) return;
+ const currentIndex = currentBatchIndex1Ref.current;
+ const batchSet = batchSet1Ref.current;
 
-    if (currentIndex < batchSet.length) {
-      const nextBatch = batchSet[currentIndex];
-      const batchData = getBatchData(nextBatch);
-      submit1({
-        headers: transformedHeaders,
-        rows: batchData
-      });
-    }
-  };
+ if (currentIndex < batchSet.length) {
+ const nextBatch = batchSet[currentIndex];
+ const batchData = getBatchData(nextBatch);
+ submit1({
+ headers: transformedHeaders,
+ rows: batchData
+ });
+ }
+ };
 
-  // Process next batch in set 2
-  const processNextBatchInSet2 = () => {
-    if (isStoppedRef.current || !isAutoProcessingRef.current) return;
-    const currentIndex = currentBatchIndex2Ref.current;
-    const batchSet = batchSet2Ref.current;
+ // Process next batch in set 2
+ const processNextBatchInSet2 = () => {
+ if (isStoppedRef.current || !isAutoProcessingRef.current) return;
+ const currentIndex = currentBatchIndex2Ref.current;
+ const batchSet = batchSet2Ref.current;
 
-    if (currentIndex < batchSet.length) {
-      const nextBatch = batchSet[currentIndex];
-      const batchData = getBatchData(nextBatch);
-      submit2({
-        headers: transformedHeaders,
-        rows: batchData
-      });
-    }
-  };
+ if (currentIndex < batchSet.length) {
+ const nextBatch = batchSet[currentIndex];
+ const batchData = getBatchData(nextBatch);
+ submit2({
+ headers: transformedHeaders,
+ rows: batchData
+ });
+ }
+ };
 
-  const startProcessing = () => {
-    if (totalBatches === 0) {
-      return;
-    }
+ const startProcessing = () => {
+ if (totalBatches === 0) {
+ return;
+ }
 
-    clearManagedTimeouts();
-    pendingRetriesRef.current.clear();
-    setError(null);
-    isStoppedRef.current = false;
-    isAutoProcessingRef.current = true;
-    setIsAutoProcessing(true);
-    setIsStopped(false);
+ clearManagedTimeouts();
+ pendingRetriesRef.current.clear();
+ setError(null);
+ isStoppedRef.current = false;
+ isAutoProcessingRef.current = true;
+ setIsAutoProcessing(true);
+ setIsStopped(false);
 
-    const shouldRestart =
-      completedBatchesRef.current.size === 0 ||
-      completedBatchesRef.current.size === totalBatches ||
-      (batchSet1Ref.current.length === 0 && batchSet2Ref.current.length === 0);
+ const shouldRestart =
+ completedBatchesRef.current.size === 0 ||
+ completedBatchesRef.current.size === totalBatches ||
+ (batchSet1Ref.current.length === 0 && batchSet2Ref.current.length === 0);
 
-    if (shouldRestart) {
-      setCompletedBatches(new Set());
-      completedBatchesRef.current = new Set();
-      splitBatches();
-    }
+ if (shouldRestart) {
+ setCompletedBatches(new Set());
+ completedBatchesRef.current = new Set();
+ splitBatches();
+ }
 
-    processNextBatchInSet1();
-    processNextBatchInSet2();
-  };
+ processNextBatchInSet1();
+ processNextBatchInSet2();
+ };
 
-  const stopProcessing = () => {
-    isAutoProcessingRef.current = false;
-    isStoppedRef.current = true;
-    setIsAutoProcessing(false);
-    setIsStopped(true);
-    clearManagedTimeouts();
+ const stopProcessing = () => {
+ isAutoProcessingRef.current = false;
+ isStoppedRef.current = true;
+ setIsAutoProcessing(false);
+ setIsStopped(true);
+ clearManagedTimeouts();
 
-    // Don't mark currently processing batches as completed - let them finish naturally
-    // The onFinish callbacks will handle completion when they finish streaming
-  };
+ // Don't mark currently processing batches as completed - let them finish naturally
+ // The onFinish callbacks will handle completion when they finish streaming
+ };
 
-  const resetProcessing = () => {
-    clearManagedTimeouts();
-    pendingRetriesRef.current.clear();
-    isAutoProcessingRef.current = false;
-    isStoppedRef.current = false;
-    setIsAutoProcessing(false);
-    setIsStopped(false);
-    setProcessedTrades([]);
-    setCompletedBatches(new Set());
-    setBatchSet1([]);
-    setBatchSet2([]);
-    setCurrentBatchIndex1(0);
-    setCurrentBatchIndex2(0);
-    completedBatchesRef.current = new Set();
-    batchSet1Ref.current = [];
-    batchSet2Ref.current = [];
-    currentBatchIndex1Ref.current = 0;
-    currentBatchIndex2Ref.current = 0;
-    processedTradesRef.current = [];
-    processedTradeSignaturesRef.current.clear();
-    retryCountSet1Ref.current.clear();
-    retryCountSet2Ref.current.clear();
-    setIsLoading(false);
-  };
+ const resetProcessing = () => {
+ clearManagedTimeouts();
+ pendingRetriesRef.current.clear();
+ isAutoProcessingRef.current = false;
+ isStoppedRef.current = false;
+ setIsAutoProcessing(false);
+ setIsStopped(false);
+ setProcessedTrades([]);
+ setCompletedBatches(new Set());
+ setBatchSet1([]);
+ setBatchSet2([]);
+ setCurrentBatchIndex1(0);
+ setCurrentBatchIndex2(0);
+ completedBatchesRef.current = new Set();
+ batchSet1Ref.current = [];
+ batchSet2Ref.current = [];
+ currentBatchIndex1Ref.current = 0;
+ currentBatchIndex2Ref.current = 0;
+ processedTradesRef.current = [];
+ processedTradeSignaturesRef.current.clear();
+ retryCountSet1Ref.current.clear();
+ retryCountSet2Ref.current.clear();
+ setIsLoading(false);
+ };
 
-  const getBatchData = (batchIndex: number) => {
-    const startIndex = batchIndex * batchSize;
-    const endIndex = Math.min(startIndex + batchSize, validTrades.length);
-    const batchRows = validTrades.slice(startIndex, endIndex);
-    return transformRowData(batchRows, headers, mappings);
-  };
+ const getBatchData = (batchIndex: number) => {
+ const startIndex = batchIndex * batchSize;
+ const endIndex = Math.min(startIndex + batchSize, validTrades.length);
+ const batchRows = validTrades.slice(startIndex, endIndex);
+ return transformRowData(batchRows, headers, mappings);
+ };
 
-  const scrollToBottom = useCallback(() => {
-    if (!tableContainerRef.current) return;
+ const scrollToBottom = useCallback(() => {
+ if (!tableContainerRef.current) return;
 
-    const scrollContainer = tableContainerRef.current.querySelector<HTMLElement>(
-      '[data-radix-scroll-area-viewport]'
-    );
+ const scrollContainer = tableContainerRef.current.querySelector<HTMLElement>(
+ '[data-radix-scroll-area-viewport]'
+ );
 
-    if (!scrollContainer) return;
+ if (!scrollContainer) return;
 
-    scrollContainer.scrollTo({
-      top: scrollContainer.scrollHeight,
-      behavior: 'smooth',
-    });
-  }, []);
+ scrollContainer.scrollTo({
+ top: scrollContainer.scrollHeight,
+ behavior: 'smooth',
+ });
+ }, []);
 
 
-  const appendUniqueTrades = useCallback((incomingTrades: Partial<ImportTradeDraft>[]) => {
-    const uniqueTrades: Partial<ImportTradeDraft>[] = [];
+ const appendUniqueTrades = useCallback((incomingTrades: Partial<ImportTradeDraft>[]) => {
+ const uniqueTrades: Partial<ImportTradeDraft>[] = [];
 
-    incomingTrades.forEach((newTrade) => {
-      const signature = getTradeSignature(newTrade);
-      if (processedTradeSignaturesRef.current.has(signature)) {
-        return;
-      }
+ incomingTrades.forEach((newTrade) => {
+ const signature = getTradeSignature(newTrade);
+ if (processedTradeSignaturesRef.current.has(signature)) {
+ return;
+ }
 
-      processedTradeSignaturesRef.current.add(signature);
-      uniqueTrades.push(newTrade);
-    });
+ processedTradeSignaturesRef.current.add(signature);
+ uniqueTrades.push(newTrade);
+ });
 
-    if (uniqueTrades.length === 0) return;
+ if (uniqueTrades.length === 0) return;
 
-    // Batch state updates to avoid re-render cascades from streaming
-    startTransition(() => {
-      const mergedTrades = [...processedTradesRef.current, ...uniqueTrades];
-      processedTradesRef.current = mergedTrades;
-      setProcessedTrades(mergedTrades);
-    });
-    scheduleManagedTimeout(() => {
-      scrollToBottom();
-    }, 100);
-  }, [getTradeSignature, scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
+ // Batch state updates to avoid re-render cascades from streaming
+ startTransition(() => {
+ const mergedTrades = [...processedTradesRef.current, ...uniqueTrades];
+ processedTradesRef.current = mergedTrades;
+ setProcessedTrades(mergedTrades);
+ });
+ scheduleManagedTimeout(() => {
+ scrollToBottom();
+ }, 100);
+ }, [getTradeSignature, scheduleManagedTimeout, scrollToBottom, setProcessedTrades]);
 
-  // Handle streaming results from first useObject
-  const prevObject1Ref = useRef<object | null>(null);
-  useEffect(() => {
-    if (!object1) return;
-    // Skip if the object reference hasn't meaningfully changed (shallow compare)
-    if (prevObject1Ref.current === object1) return;
-    prevObject1Ref.current = object1;
-    const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-    appendUniqueTrades(newTrades);
-  }, [object1, appendUniqueTrades])
+ // Handle streaming results from first useObject
+ const prevObject1Ref = useRef<object | null>(null);
+ useEffect(() => {
+ if (!object1) return;
+ // Skip if the object reference hasn't meaningfully changed (shallow compare)
+ if (prevObject1Ref.current === object1) return;
+ prevObject1Ref.current = object1;
+ const newTrades = object1.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
+ appendUniqueTrades(newTrades);
+ }, [object1, appendUniqueTrades])
 
-  // Handle streaming results from second useObject
-  const prevObject2Ref = useRef<object | null>(null);
-  useEffect(() => {
-    if (!object2) return;
-    if (prevObject2Ref.current === object2) return;
-    prevObject2Ref.current = object2;
-    const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
-    appendUniqueTrades(newTrades);
-  }, [object2, appendUniqueTrades])
+ // Handle streaming results from second useObject
+ const prevObject2Ref = useRef<object | null>(null);
+ useEffect(() => {
+ if (!object2) return;
+ if (prevObject2Ref.current === object2) return;
+ prevObject2Ref.current = object2;
+ const newTrades = object2.filter((trade): trade is NonNullable<typeof trade> => trade !== undefined) as Partial<ImportTradeDraft>[];
+ appendUniqueTrades(newTrades);
+ }, [object2, appendUniqueTrades])
 
-  const columns = useMemo<ColumnDef<Partial<ImportTradeDraft>>[]>(() => [
-    {
-      accessorKey: "entryDate",
-      header: () => (
-        <div className="font-medium">{t('trade-table.entryDate')}</div>
-      ),
-      cell: ({ row }) => {
-        const entryDate = row.original.entryDate ? new Date(row.original.entryDate) : null;
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'entryDate')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {entryDate && isValid(entryDate) ? format(entryDate, "yyyy-MM-dd HH:mm") : "Invalid Date"}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 180,
-    },
-    {
-      accessorKey: "instrument",
-      header: () => (
-        <div className="font-medium">{t('trade-table.instrument')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'instrument')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {row.original.instrument}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-    {
-      accessorKey: "side",
-      header: () => (
-        <div className="font-medium">{t('trade-table.direction')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'side')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className="capitalize">{row.original.side}</span>
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 100,
-    },
-    {
-      accessorKey: "quantity",
-      header: () => (
-        <div className="font-medium">{t('trade-table.quantity')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'quantity')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {row.original.quantity}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 100,
-    },
-    {
-      accessorKey: "entryPrice",
-      header: () => (
-        <div className="font-medium">{t('trade-table.entryPrice')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'entryPrice')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                ${row.original.entryPrice}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-    {
-      accessorKey: "closePrice",
-      header: () => (
-        <div className="font-medium">{t('trade-table.exitPrice')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'closePrice')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                ${row.original.closePrice}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-    {
-      accessorKey: "pnl",
-      header: () => (
-        <div className="font-medium">{t('trade-table.pnl')}</div>
-      ),
-      cell: ({ row }) => {
-        const pnl = row.original.pnl ?? 0;
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'pnl')];
-        const originalPnl = originalData ? parseFloat(originalData.replace(/[,$]/g, '')) : null;
-        const isMismatch = originalPnl !== null && Math.abs(pnl - originalPnl) > 0.01;
-        
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <div className="flex items-center gap-1">
-                  <span className={pnl >= 0 ? "text-foreground/95" : "text-semantic-error"}>
-                    ${pnl.toFixed(2)}
-                  </span>
-                  {isMismatch && (
-                    <span className="text-semantic-warning text-xs" title="PnL value doesn't match original data">
-                      ⚠️
-                    </span>
-                  )}
-                </div>
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <div className="space-y-1">
-                    <p>Original: {originalData}</p>
-                    {isMismatch && (
-                      <p className="text-semantic-warning text-sm">
-                        ⚠️ Mismatch detected! Expected: ${originalPnl?.toFixed(2)}, Got: ${pnl.toFixed(2)}
-                      </p>
-                    )}
-                  </div>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-    {
-      accessorKey: "commission",
-      header: () => (
-        <div className="font-medium">{t('calendar.modal.commission')}</div>
-      ),
-      cell: ({ row }) => {
-        const commission = row.original.commission ?? 0;
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'commission')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                ${commission.toFixed(2)}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-    {
-      accessorKey: "timeInPosition",
-      header: () => (
-        <div className="font-medium">{t('trade-table.positionTime')}</div>
-      ),
-      cell: ({ row }) => {
-        const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'timeInPosition')];
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {parsePositionTime(row.original.timeInPosition || 0)}
-              </TooltipTrigger>
-              {originalData && (
-                <TooltipContent>
-                  <p>Original: {originalData}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 120,
-    },
-  ], [t, validTrades, headers, mappings]);
+ const columns = useMemo<ColumnDef<Partial<ImportTradeDraft>>[]>(() => [
+ {
+ accessorKey:"entryDate",
+ header: () => (
+ <div className="font-medium">{t('trade-table.entryDate')}</div>
+ ),
+ cell: ({ row }) => {
+ const entryDate = row.original.entryDate ? new Date(row.original.entryDate) : null;
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'entryDate')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ {entryDate && isValid(entryDate) ? format(entryDate,"yyyy-MM-dd HH:mm") :"Invalid Date"}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 180,
+ },
+ {
+ accessorKey:"instrument",
+ header: () => (
+ <div className="font-medium">{t('trade-table.instrument')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'instrument')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ {row.original.instrument}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ {
+ accessorKey:"side",
+ header: () => (
+ <div className="font-medium">{t('trade-table.direction')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'side')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ <span className="capitalize">{row.original.side}</span>
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 100,
+ },
+ {
+ accessorKey:"quantity",
+ header: () => (
+ <div className="font-medium">{t('trade-table.quantity')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'quantity')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ {row.original.quantity}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 100,
+ },
+ {
+ accessorKey:"entryPrice",
+ header: () => (
+ <div className="font-medium">{t('trade-table.entryPrice')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'entryPrice')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ ${row.original.entryPrice}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ {
+ accessorKey:"closePrice",
+ header: () => (
+ <div className="font-medium">{t('trade-table.exitPrice')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'closePrice')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ ${row.original.closePrice}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ {
+ accessorKey:"pnl",
+ header: () => (
+ <div className="font-medium">{t('trade-table.pnl')}</div>
+ ),
+ cell: ({ row }) => {
+ const pnl = row.original.pnl ?? 0;
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'pnl')];
+ const originalPnl = originalData ? parseFloat(originalData.replace(/[,$]/g, '')) : null;
+ const isMismatch = originalPnl !== null && Math.abs(pnl - originalPnl) > 0.01;
+ 
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ <div className="flex items-center gap-1">
+ <span className={pnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ ${pnl.toFixed(2)}
+ </span>
+ {isMismatch && (
+ <span className="text-semantic-warning text-xs" title="PnL value doesn't match original data">
+ ⚠️
+ </span>
+ )}
+ </div>
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <div className="space-y-1">
+ <p>Original: {originalData}</p>
+ {isMismatch && (
+ <p className="text-semantic-warning text-sm">
+ ⚠️ Mismatch detected! Expected: ${originalPnl?.toFixed(2)}, Got: ${pnl.toFixed(2)}
+ </p>
+ )}
+ </div>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ {
+ accessorKey:"commission",
+ header: () => (
+ <div className="font-medium">{t('calendar.modal.commission')}</div>
+ ),
+ cell: ({ row }) => {
+ const commission = row.original.commission ?? 0;
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'commission')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ ${commission.toFixed(2)}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ {
+ accessorKey:"timeInPosition",
+ header: () => (
+ <div className="font-medium">{t('trade-table.positionTime')}</div>
+ ),
+ cell: ({ row }) => {
+ const originalData = validTrades[row.index]?.[headers.findIndex(h => mappings[h] === 'timeInPosition')];
+ return (
+ <TooltipProvider>
+ <Tooltip>
+ <TooltipTrigger>
+ {parsePositionTime(row.original.timeInPosition || 0)}
+ </TooltipTrigger>
+ {originalData && (
+ <TooltipContent>
+ <p>Original: {originalData}</p>
+ </TooltipContent>
+ )}
+ </Tooltip>
+ </TooltipProvider>
+ );
+ },
+ size: 120,
+ },
+ ], [t, validTrades, headers, mappings]);
 
-  const table = useReactTable({
-    data: processedTrades,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    defaultColumn: {
-      size: 400,
-      minSize: 100,
-    },
-  });
+ const table = useReactTable({
+ data: processedTrades,
+ columns,
+ getCoreRowModel: getCoreRowModel(),
+ defaultColumn: {
+ size: 400,
+ minSize: 100,
+ },
+ });
 
-  // Calculate totals for footer
-  const totals = useMemo(() => {
-    const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
-    const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0);
-    const netPnl = totalPnl - totalCommission;
-    
-    return {
-      totalPnl,
-      totalCommission,
-      netPnl
-    };
-  }, [processedTrades]);
+ // Calculate totals for footer
+ const totals = useMemo(() => {
+ const totalPnl = processedTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
+ const totalCommission = processedTrades.reduce((sum, trade) => sum + (trade.commission || 0), 0);
+ const netPnl = totalPnl - totalCommission;
+ 
+ return {
+ totalPnl,
+ totalCommission,
+ netPnl
+ };
+ }, [processedTrades]);
 
-  return (
-    <div className="flex flex-col gap-4 h-full">
-      {error && (
-        <div className="rounded-md border border-semantic-error-border bg-semantic-error-bg px-3 py-2 text-sm text-semantic-error">
-          {error}
-        </div>
-      )}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col gap-1">
-        <p className="text-sm text-muted-foreground">
-          {processedTrades.filter(trade => trade.entryDate).length} of {validTrades.length} trades formatted
-        </p>
-            <p className="text-xs text-muted-foreground">
-              Batches: {completedBatches.size}/{totalBatches} completed
-            </p>
-          </div>
-          {isAutoProcessing && (
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-muted/50 rounded-full animate-pulse"></div>
-              <span className="text-xs text-foreground/95 font-medium">{t('import.processing.autoProcessing')}</span>
-            </div>
-          )}
-          {!isAutoProcessing && completedBatches.size === totalBatches && totalBatches > 0 && (
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-muted/50 rounded-full"></div>
-              <span className="text-xs text-foreground/95 font-medium">{t('import.processing.allBatchesCompleted')}</span>
-            </div>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {!isAutoProcessing && completedBatches.size === 0 && (
-            <Button 
-              onClick={startProcessing}
-              disabled={isProcessing || totalBatches === 0}
-              className="bg-muted/50 hover:bg-muted/50 text-foreground/95"
-            >
-              {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
-            </Button>
-          )}
-          
-          {isAutoProcessing && (
-            <Button 
-              onClick={stopProcessing}
-              variant="error"
-            >
-              {t('import.processing.stopProcessing')}
-            </Button>
-          )}
-          
-          {!isAutoProcessing && completedBatches.size > 0 && completedBatches.size < totalBatches && (
-        <Button 
-              onClick={startProcessing}
-              disabled={isProcessing}
-          variant="outline"
-        >
-              {isProcessing ? t('import.processing.resuming') : t('import.processing.resumeProcessing')}
-        </Button>
-          )}
-          
-          <Button 
-            onClick={resetProcessing}
-            disabled={isProcessing}
-            variant="outline"
-            className="border-semantic-error-border text-semantic-error hover:bg-semantic-error-bg"
-        >
-          {t('import.processing.reset')}
-          </Button>
-        </div>
-      </div>
-      
-      {/* Progress Bar */}
-      {totalBatches > 0 && (
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{t('import.processing.processingProgress')}</span>
-            <span>{Math.round((completedBatches.size / totalBatches) * 100)}%</span>
-          </div>
-          <Progress 
-            value={(completedBatches.size / totalBatches) * 100} 
-            className="h-2"
-          />
-        </div>
-      )}
-      
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <div className="flex flex-col h-full">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-background shadow-xs">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className="whitespace-nowrap px-4 py-3 text-left text-sm"
-                      style={{ width: header.getSize() }}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-          </Table>
-          <ScrollArea className="flex-1" ref={tableContainerRef}>
-            <Table>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                        className={cn(
-                          "border-b transition-colors hover:bg-white/[0.03]",
-                          row.getIsExpanded()
-                            ? "bg-white/[0.03]"
-                            : row.getCanExpand()
-                              ? ""
-                              : "bg-muted/50"
-                        )}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell
-                            key={cell.id}
-                            className="whitespace-nowrap px-4 py-2.5 text-sm"
-                            style={{ width: cell.column.getSize() }}
-                          >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                ) : isProcessing || (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-                {isProcessing && (
-                  <TableRow>
-                    {columns.map((column, index) => (
-                      <TableCell
-                        key={`loading-${index}`}
-                        className="whitespace-nowrap px-4 py-2.5 text-sm"
-                        style={{ width: column.size }}
-                      >
-                        <Skeleton className="h-6 w-full" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </ScrollArea>
-          
-          {/* Table Footer with Totals */}
-          {processedTrades.length > 0 && (
-            <div className="border-t bg-muted/30">
-              <Table>
-                <TableBody>
-                  <TableRow className="font-medium">
-                    <TableCell className="px-4 py-3 text-sm font-semibold">
-                      {t('trade-table.footer.totalPnl')}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.totalPnl >= 0 ? "text-foreground/95" : "text-semantic-error"}>
-                        ${totals.totalPnl.toFixed(2)}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm font-semibold">
-                      {t('trade-table.footer.totalCommission')}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm">
-                      ${totals.totalCommission.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm font-semibold">
-                      {t('trade-table.footer.netPnl')}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-sm">
-                      <span className={totals.netPnl >= 0 ? "text-foreground/95" : "text-semantic-error"}>
-                        ${totals.netPnl.toFixed(2)}
-                      </span>
-                    </TableCell>
-                    <TableCell colSpan={3}></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+ return (
+ <div className="flex flex-col gap-4 h-full">
+ {error && (
+ <div className="rounded-md border border-semantic-error-border bg-semantic-error-bg px-3 py-2 text-sm text-semantic-error">
+ {error}
+ </div>
+ )}
+ <div className="flex items-center justify-between">
+ <div className="flex items-center gap-4">
+ <div className="flex flex-col gap-1">
+ <p className="text-sm text-muted-foreground">
+ {processedTrades.filter(trade => trade.entryDate).length} of {validTrades.length} trades formatted
+ </p>
+ <p className="text-xs text-muted-foreground">
+ Batches: {completedBatches.size}/{totalBatches} completed
+ </p>
+ </div>
+ {isAutoProcessing && (
+ <div className="flex items-center gap-2">
+ <div className="w-2 h-2 bg-muted/50 rounded-full animate-pulse"></div>
+ <span className="text-xs text-foreground/95 font-medium">{t('import.processing.autoProcessing')}</span>
+ </div>
+ )}
+ {!isAutoProcessing && completedBatches.size === totalBatches && totalBatches > 0 && (
+ <div className="flex items-center gap-2">
+ <div className="w-2 h-2 bg-muted/50 rounded-full"></div>
+ <span className="text-xs text-foreground/95 font-medium">{t('import.processing.allBatchesCompleted')}</span>
+ </div>
+ )}
+ </div>
+ <div className="flex items-center gap-2">
+ {!isAutoProcessing && completedBatches.size === 0 && (
+ <Button 
+ onClick={startProcessing}
+ disabled={isProcessing || totalBatches === 0}
+ className="bg-muted/50 hover:bg-muted/50 text-foreground/95"
+ >
+ {isProcessing ? t('import.processing.starting') : t('import.processing.startProcessing')}
+ </Button>
+ )}
+ 
+ {isAutoProcessing && (
+ <Button 
+ onClick={stopProcessing}
+ variant="error"
+ >
+ {t('import.processing.stopProcessing')}
+ </Button>
+ )}
+ 
+ {!isAutoProcessing && completedBatches.size > 0 && completedBatches.size < totalBatches && (
+ <Button 
+ onClick={startProcessing}
+ disabled={isProcessing}
+ variant="outline"
+ >
+ {isProcessing ? t('import.processing.resuming') : t('import.processing.resumeProcessing')}
+ </Button>
+ )}
+ 
+ <Button 
+ onClick={resetProcessing}
+ disabled={isProcessing}
+ variant="outline"
+ className="border-semantic-error-border text-semantic-error hover:bg-semantic-error-bg"
+ >
+ {t('import.processing.reset')}
+ </Button>
+ </div>
+ </div>
+ 
+ {/* Progress Bar */}
+ {totalBatches > 0 && (
+ <div className="space-y-2">
+ <div className="flex justify-between text-xs text-muted-foreground">
+ <span>{t('import.processing.processingProgress')}</span>
+ <span>{Math.round((completedBatches.size / totalBatches) * 100)}%</span>
+ </div>
+ <Progress 
+ value={(completedBatches.size / totalBatches) * 100} 
+ className="h-2"
+ />
+ </div>
+ )}
+ 
+ <div className="flex-1 min-h-0 overflow-hidden">
+ <div className="flex flex-col h-full">
+ <Table>
+ <TableHeader className="sticky top-0 z-10 bg-background shadow-xs">
+ {table.getHeaderGroups().map((headerGroup) => (
+ <TableRow key={headerGroup.id}>
+ {headerGroup.headers.map((header) => (
+ <TableHead
+ key={header.id}
+ className="whitespace-nowrap px-4 py-3 text-left text-sm"
+ style={{ width: header.getSize() }}
+ >
+ {header.isPlaceholder
+ ? null
+ : flexRender(
+ header.column.columnDef.header,
+ header.getContext()
+ )}
+ </TableHead>
+ ))}
+ </TableRow>
+ ))}
+ </TableHeader>
+ </Table>
+ <ScrollArea className="flex-1" ref={tableContainerRef}>
+ <Table>
+ <TableBody>
+ {table.getRowModel().rows?.length ? (
+ table.getRowModel().rows.map((row) => (
+ <TableRow
+ key={row.id}
+ data-state={row.getIsSelected() &&"selected"}
+ className={cn("border-b transition-colors hover:bg-white/[0.03]",
+ row.getIsExpanded()
+ ?"bg-white/[0.03]"
+ : row.getCanExpand()
+ ?""
+ :"bg-muted/50"
+ )}
+ >
+ {row.getVisibleCells().map((cell) => (
+ <TableCell
+ key={cell.id}
+ className="whitespace-nowrap px-4 py-2.5 text-sm"
+ style={{ width: cell.column.getSize() }}
+ >
+ {flexRender(cell.column.columnDef.cell, cell.getContext())}
+ </TableCell>
+ ))}
+ </TableRow>
+ ))
+ ) : isProcessing || (
+ <TableRow>
+ <TableCell
+ colSpan={columns.length}
+ className="h-24 text-center"
+ >
+ No results.
+ </TableCell>
+ </TableRow>
+ )}
+ {isProcessing && (
+ <TableRow>
+ {columns.map((column, index) => (
+ <TableCell
+ key={`loading-${index}`}
+ className="whitespace-nowrap px-4 py-2.5 text-sm"
+ style={{ width: column.size }}
+ >
+ <Skeleton className="h-6 w-full" />
+ </TableCell>
+ ))}
+ </TableRow>
+ )}
+ </TableBody>
+ </Table>
+ </ScrollArea>
+ 
+ {/* Table Footer with Totals */}
+ {processedTrades.length > 0 && (
+ <div className="border-t bg-muted/30">
+ <Table>
+ <TableBody>
+ <TableRow className="font-medium">
+ <TableCell className="px-4 py-3 text-sm font-semibold">
+ {t('trade-table.footer.totalPnl')}
+ </TableCell>
+ <TableCell className="px-4 py-3 text-sm">
+ <span className={totals.totalPnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ ${totals.totalPnl.toFixed(2)}
+ </span>
+ </TableCell>
+ <TableCell className="px-4 py-3 text-sm font-semibold">
+ {t('trade-table.footer.totalCommission')}
+ </TableCell>
+ <TableCell className="px-4 py-3 text-sm">
+ ${totals.totalCommission.toFixed(2)}
+ </TableCell>
+ <TableCell className="px-4 py-3 text-sm font-semibold">
+ {t('trade-table.footer.netPnl')}
+ </TableCell>
+ <TableCell className="px-4 py-3 text-sm">
+ <span className={totals.netPnl >= 0 ?"text-foreground/95" :"text-semantic-error"}>
+ ${totals.netPnl.toFixed(2)}
+ </span>
+ </TableCell>
+ <TableCell colSpan={3}></TableCell>
+ </TableRow>
+ </TableBody>
+ </Table>
+ </div>
+ )}
+ </div>
+ </div>
+ </div>
+ );
 }

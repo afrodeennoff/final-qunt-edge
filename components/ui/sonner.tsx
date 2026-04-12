@@ -5,24 +5,21 @@ import { Toaster as Sonner } from "sonner"
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  return (
-    <Sonner
-      theme="dark"
-      className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground/95 group-[.toaster]:border-white/[0.06] group-[.toaster]:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-white/[0.03] group-[.toast]:text-muted-foreground",
-        },
-      }}
-      {...props}
-    />
-  )
+ return (
+ <Sonner
+ theme="dark"
+ className="toaster group"
+ toastOptions={{
+ classNames: {
+ toast:"group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground/95 group-[.toaster]:border-white/[0.06] group-[.toaster]:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]",
+ description:"group-[.toast]:text-muted-foreground",
+ actionButton:"group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+ cancelButton:"group-[.toast]:bg-white/[0.03] group-[.toast]:text-muted-foreground",
+ },
+ }}
+ {...props}
+ />
+ )
 }
 
 export { Toaster }

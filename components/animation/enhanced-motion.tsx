@@ -4,8 +4,8 @@ import { useRef, useEffect, useState } from "react"
 import { motion, useReducedMotion, useInView, useSpring, Variants } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-export const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 20 }
-export const SPRING_BOUNCY = { type: "spring" as const, stiffness: 400, damping: 15 }
+export const SPRING_GENTLE = { type:"spring" as const, stiffness: 300, damping: 20 }
+export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 15 }
 const ENTRANCE_EASE = [0.22, 1, 0.36, 1] as const
 
 // ============================================================================
@@ -13,16 +13,16 @@ const ENTRANCE_EASE = [0.22, 1, 0.36, 1] as const
 // ============================================================================
 
 export const MOTION_DURATION = {
-  fast: 100, // --duration-fast: hover, color changes
-  normal: 200, // --duration-normal: enter animations, expand
-  slow: 350, // --duration-slow: page transitions, spring
+ fast: 100, // --duration-fast: hover, color changes
+ normal: 200, // --duration-normal: enter animations, expand
+ slow: 350, // --duration-slow: page transitions, spring
 } as const
 
 export const MOTION_EASE = {
-  default: [0.4, 0, 0.2, 1] as const,
-  spring: [0.22, 1, 0.36, 1] as const,
-  entrance: [0.16, 1, 0.3, 1] as const,
-  bounce: [0.68, -0.55, 0.265, 1.55] as const,
+ default: [0.4, 0, 0.2, 1] as const,
+ spring: [0.22, 1, 0.36, 1] as const,
+ entrance: [0.16, 1, 0.3, 1] as const,
+ bounce: [0.68, -0.55, 0.265, 1.55] as const,
 } as const
 
 // ============================================================================
@@ -30,42 +30,39 @@ export const MOTION_EASE = {
 // ============================================================================
 
 const BLUR_ENTRANCE: Variants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(12px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.9, ease: MOTION_EASE.spring }
-  }
+ hidden: { opacity: 0, y: 24 },
+ show: {
+ opacity: 1,
+ y: 0,
+ transition: { duration: 0.9, ease: MOTION_EASE.spring }
+ }
 }
 
 export const blurIn: Variants = {
-  hidden: {
-    opacity: 0,
-    filter: "blur(10px)",
-    scale: 0.95,
-  },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: MOTION_EASE.entrance as unknown as number[],
-    },
-  },
+ hidden: {
+ opacity: 0,
+ scale: 0.95,
+ },
+ visible: {
+ opacity: 1,
+ scale: 1,
+ transition: {
+ duration: 0.5,
+ ease: MOTION_EASE.entrance as unknown as number[],
+ },
+ },
 }
 
 export const scaleIn: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.8,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: SPRING_GENTLE,
-  },
+ hidden: {
+ opacity: 0,
+ scale: 0.8,
+ },
+ visible: {
+ opacity: 1,
+ scale: 1,
+ transition: SPRING_GENTLE,
+ },
 }
 
 // ============================================================================
@@ -73,44 +70,44 @@ export const scaleIn: Variants = {
 // ============================================================================
 
 interface MotionSectionProps {
-  children: React.ReactNode
-  className?: string
-  delay?: number
-  spring?: typeof SPRING_GENTLE
-  threshold?: number
+ children: React.ReactNode
+ className?: string
+ delay?: number
+ spring?: typeof SPRING_GENTLE
+ threshold?: number
 }
 
 export function MotionSection({
-  children,
-  className,
-  delay = 0,
-  spring = SPRING_GENTLE,
-  threshold = 0.05,
+ children,
+ className,
+ delay = 0,
+ spring = SPRING_GENTLE,
+ threshold = 0.05,
 }: MotionSectionProps) {
-  const ref = useRef<HTMLElement>(null)
-  const prefersReducedMotion = useReducedMotion()
-  const isInView = useInView(ref, { once: true, amount: threshold })
+ const ref = useRef<HTMLElement>(null)
+ const prefersReducedMotion = useReducedMotion()
+ const isInView = useInView(ref, { once: true, amount: threshold })
 
-  if (prefersReducedMotion) {
-    return <section className={className}>{children}</section>
-  }
+ if (prefersReducedMotion) {
+ return <section className={className}>{children}</section>
+ }
 
-  return (
-    <motion.section
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-      animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(4px)" }}
-      transition={{
-        duration: 0.5,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-        ...spring,
-      }}
-    >
-      {children}
-    </motion.section>
-  )
+ return (
+ <motion.section
+ ref={ref}
+ className={className}
+ initial={{ opacity: 0, y: 12 }}
+ animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+ transition={{
+ duration: 0.5,
+ delay,
+ ease: [0.22, 1, 0.36, 1],
+ ...spring,
+ }}
+ >
+ {children}
+ </motion.section>
+ )
 }
 
 // ============================================================================
@@ -118,48 +115,48 @@ export function MotionSection({
 // ============================================================================
 
 interface MotionStaggerProps {
-  children: React.ReactNode
-  className?: string
-  delay?: number // Base delay between items (0.05 - 0.15)
-  staggerSpeed?: number // Multiplier for stagger delay
+ children: React.ReactNode
+ className?: string
+ delay?: number // Base delay between items (0.05 - 0.15)
+ staggerSpeed?: number // Multiplier for stagger delay
 }
 
 export function MotionStagger({
-  children,
-  className,
-  delay = 0.08,
-  staggerSpeed = 1,
+ children,
+ className,
+ delay = 0.08,
+ staggerSpeed = 1,
 }: MotionStaggerProps) {
-  const prefersReducedMotion = useReducedMotion()
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-5%" })
+ const prefersReducedMotion = useReducedMotion()
+ const ref = useRef<HTMLDivElement>(null)
+ const isInView = useInView(ref, { once: true, margin:"-5%" })
 
-  const clampedDelay = Math.max(0.05, Math.min(0.15, delay))
+ const clampedDelay = Math.max(0.05, Math.min(0.15, delay))
 
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>
-  }
+ if (prefersReducedMotion) {
+ return <div className={className}>{children}</div>
+ }
 
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            staggerChildren: clampedDelay * staggerSpeed,
-            delayChildren: 0.1,
-          },
-        },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
+ return (
+ <motion.div
+ ref={ref}
+ className={className}
+ initial="hidden"
+ animate={isInView ?"visible" :"hidden"}
+ variants={{
+ hidden: { opacity: 0 },
+ visible: {
+ opacity: 1,
+ transition: {
+ staggerChildren: clampedDelay * staggerSpeed,
+ delayChildren: 0.1,
+ },
+ },
+ }}
+ >
+ {children}
+ </motion.div>
+ )
 }
 
 // ============================================================================
@@ -167,85 +164,84 @@ export function MotionStagger({
 // ============================================================================
 
 interface MotionStaggerItemProps {
-  children: React.ReactNode
-  className?: string
-  blur?: boolean
+ children: React.ReactNode
+ className?: string
+ blur?: boolean
 }
 
 export function MotionStaggerItem({ children, className, blur = false }: MotionStaggerItemProps) {
-  const prefersReducedMotion = useReducedMotion()
+ const prefersReducedMotion = useReducedMotion()
 
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>
-  }
+ if (prefersReducedMotion) {
+ return <div className={className}>{children}</div>
+ }
 
-  return (
-    <motion.div
-      className={className}
-      variants={
-        blur
-          ? BLUR_ENTRANCE
-          : {
-              hidden: { opacity: 0, y: 10, scale: 0.99, filter: "blur(3px)" },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                filter: "blur(0px)",
-                transition: {
-                  duration: 0.45,
-                  ease: [0.22, 1, 0.36, 1],
-                },
-              },
-            }
-      }
-    >
-      {children}
-    </motion.div>
-  )
+ return (
+ <motion.div
+ className={className}
+ variants={
+ blur
+ ? BLUR_ENTRANCE
+ : {
+ hidden: { opacity: 0, y: 10, scale: 0.99 },
+ visible: {
+ opacity: 1,
+ y: 0,
+ scale: 1,
+ transition: {
+ duration: 0.45,
+ ease: [0.22, 1, 0.36, 1],
+ },
+ },
+ }
+ }
+ >
+ {children}
+ </motion.div>
+ )
 }
 
 interface MotionOrchestratedProps {
-  children: React.ReactNode
-  className?: string
-  stages?: number
-  staggerDelay?: number
+ children: React.ReactNode
+ className?: string
+ stages?: number
+ staggerDelay?: number
 }
 
 export function MotionOrchestrated({
-  children,
-  className,
-  stages = 4,
-  staggerDelay = 0.08,
+ children,
+ className,
+ stages = 4,
+ staggerDelay = 0.08,
 }: MotionOrchestratedProps) {
-  const prefersReducedMotion = useReducedMotion()
-  const ref = useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-5%" })
+ const prefersReducedMotion = useReducedMotion()
+ const ref = useRef<HTMLDivElement>(null)
+ const isInView = useInView(ref, { once: true, margin:"-5%" })
 
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>
-  }
+ if (prefersReducedMotion) {
+ return <div className={className}>{children}</div>
+ }
 
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            staggerChildren: staggerDelay,
-            delayChildren: 0.1,
-          },
-        },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
+ return (
+ <motion.div
+ ref={ref}
+ className={className}
+ initial="hidden"
+ animate={isInView ?"visible" :"hidden"}
+ variants={{
+ hidden: { opacity: 0 },
+ visible: {
+ opacity: 1,
+ transition: {
+ staggerChildren: staggerDelay,
+ delayChildren: 0.1,
+ },
+ },
+ }}
+ >
+ {children}
+ </motion.div>
+ )
 }
 
 // ============================================================================
@@ -253,32 +249,32 @@ export function MotionOrchestrated({
 // ============================================================================
 
 interface MotionPhraseProps {
-  children: React.ReactNode
-  className?: string
-  delay?: number
+ children: React.ReactNode
+ className?: string
+ delay?: number
 }
 
 export function MotionPhrase({ children, className, delay = 0 }: MotionPhraseProps) {
-  const prefersReducedMotion = useReducedMotion()
+ const prefersReducedMotion = useReducedMotion()
 
-  if (prefersReducedMotion) {
-    return <span className={className}>{children}</span>
-  }
+ if (prefersReducedMotion) {
+ return <span className={className}>{children}</span>
+ }
 
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: MOTION_DURATION.slow / 1000,
-        delay: delay / 1000,
-        ease: MOTION_EASE.entrance
-      }}
-      className={className}
-    >
-      {children}
-    </motion.span>
-  )
+ return (
+ <motion.span
+ initial={{ opacity: 0, y: 8 }}
+ animate={{ opacity: 1, y: 0 }}
+ transition={{
+ duration: MOTION_DURATION.slow / 1000,
+ delay: delay / 1000,
+ ease: MOTION_EASE.entrance
+ }}
+ className={className}
+ >
+ {children}
+ </motion.span>
+ )
 }
 
 // ============================================================================
@@ -286,62 +282,62 @@ export function MotionPhrase({ children, className, delay = 0 }: MotionPhrasePro
 // ============================================================================
 
 interface AnimatedCounterProps {
-  target: number
-  className?: string
-  prefix?: string
-  suffix?: string
-  decimals?: number
-  formatOptions?: Intl.NumberFormatOptions
+ target: number
+ className?: string
+ prefix?: string
+ suffix?: string
+ decimals?: number
+ formatOptions?: Intl.NumberFormatOptions
 }
 
 export function AnimatedCounter({
-  target,
-  className,
-  prefix = "",
-  suffix = "",
-  decimals = 0,
-  formatOptions,
+ target,
+ className,
+ prefix ="",
+ suffix ="",
+ decimals = 0,
+ formatOptions,
 }: AnimatedCounterProps) {
-  const prefersReducedMotion = useReducedMotion()
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-10%" })
+ const prefersReducedMotion = useReducedMotion()
+ const ref = useRef<HTMLSpanElement>(null)
+ const isInView = useInView(ref, { once: true, margin:"-10%" })
 
-  const spring = useSpring(0, { stiffness: 100, damping: 30 })
-  const [displayValue, setDisplayValue] = useState("0")
+ const spring = useSpring(0, { stiffness: 100, damping: 30 })
+ const [displayValue, setDisplayValue] = useState("0")
 
-  useEffect(() => {
-    if (!isInView || prefersReducedMotion) return
+ useEffect(() => {
+ if (!isInView || prefersReducedMotion) return
 
-    spring.set(target)
+ spring.set(target)
 
-    const unsubscribe = spring.on("change", (latest) => {
-      const formatted = new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-        ...formatOptions,
-      }).format(latest)
+ const unsubscribe = spring.on("change", (latest) => {
+ const formatted = new Intl.NumberFormat("en-US", {
+ minimumFractionDigits: decimals,
+ maximumFractionDigits: decimals,
+ ...formatOptions,
+ }).format(latest)
 
-      setDisplayValue(formatted)
-    })
+ setDisplayValue(formatted)
+ })
 
-    return () => {
-      unsubscribe()
-    }
-  }, [target, decimals, formatOptions, isInView, spring, prefersReducedMotion])
+ return () => {
+ unsubscribe()
+ }
+ }, [target, decimals, formatOptions, isInView, spring, prefersReducedMotion])
 
-  const formatted = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-    ...formatOptions,
-  }).format(prefersReducedMotion || !isInView ? target : target)
+ const formatted = new Intl.NumberFormat("en-US", {
+ minimumFractionDigits: decimals,
+ maximumFractionDigits: decimals,
+ ...formatOptions,
+ }).format(prefersReducedMotion || !isInView ? target : target)
 
-  return (
-    <span ref={ref} className={className}>
-      {prefix}
-      {prefersReducedMotion || !isInView ? formatted : displayValue}
-      {suffix}
-    </span>
-  )
+ return (
+ <span ref={ref} className={className}>
+ {prefix}
+ {prefersReducedMotion || !isInView ? formatted : displayValue}
+ {suffix}
+ </span>
+ )
 }
 
 // ============================================================================
@@ -349,102 +345,102 @@ export function AnimatedCounter({
 // ============================================================================
 
 interface OrbConfig {
-  size: number
-  x: string // CSS position
-  y: string
-  duration: number
-  delay: number
-  opacity: number
-  color: string
+ size: number
+ x: string // CSS position
+ y: string
+ duration: number
+ delay: number
+ opacity: number
+ color: string
 }
 
 const DEFAULT_ORBS: OrbConfig[] = [
-  { size: 300, x: "10%", y: "20%", duration: 20, delay: 0, opacity: 0.15, color: "from-blue-500/30 to-purple-500/30" },
-  { size: 400, x: "70%", y: "10%", duration: 25, delay: 5, opacity: 0.12, color: "from-cyan-500/20 to-teal-500/20" },
-  { size: 250, x: "30%", y: "60%", duration: 18, delay: 2, opacity: 0.18, color: "from-indigo-500/25 to-violet-500/25" },
-  { size: 350, x: "80%", y: "50%", duration: 22, delay: 8, opacity: 0.1, color: "from-emerald-500/20 to-green-500/20" },
-  { size: 200, x: "50%", y: "80%", duration: 16, delay: 3, opacity: 0.14, color: "from-orange-500/25 to-amber-500/25" },
+ { size: 300, x:"10%", y:"20%", duration: 20, delay: 0, opacity: 0.15, color:"from-blue-500/30 to-purple-500/30" },
+ { size: 400, x:"70%", y:"10%", duration: 25, delay: 5, opacity: 0.12, color:"from-cyan-500/20 to-teal-500/20" },
+ { size: 250, x:"30%", y:"60%", duration: 18, delay: 2, opacity: 0.18, color:"from-indigo-500/25 to-violet-500/25" },
+ { size: 350, x:"80%", y:"50%", duration: 22, delay: 8, opacity: 0.1, color:"from-emerald-500/20 to-green-500/20" },
+ { size: 200, x:"50%", y:"80%", duration: 16, delay: 3, opacity: 0.14, color:"from-orange-500/25 to-amber-500/25" },
 ]
 
 interface FloatingOrbsProps {
-  className?: string
-  orbs?: OrbConfig[]
-  enableParallax?: boolean
-  blobCount?: number
+ className?: string
+ orbs?: OrbConfig[]
+ enableParallax?: boolean
+ blobCount?: number
 }
 
 export function FloatingOrbs({
-  className,
-  orbs = DEFAULT_ORBS,
-  enableParallax = true,
+ className,
+ orbs = DEFAULT_ORBS,
+ enableParallax = true,
 }: FloatingOrbsProps) {
-  const prefersReducedMotion = useReducedMotion()
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+ const prefersReducedMotion = useReducedMotion()
+ const containerRef = useRef<HTMLDivElement>(null)
+ const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
-  useEffect(() => {
-    if (!enableParallax || prefersReducedMotion) return
+ useEffect(() => {
+ if (!enableParallax || prefersReducedMotion) return
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return
+ const handleMouseMove = (e: MouseEvent) => {
+ if (!containerRef.current) return
 
-      const rect = containerRef.current.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width - 0.5
-      const y = (e.clientY - rect.top) / rect.height - 0.5
+ const rect = containerRef.current.getBoundingClientRect()
+ const x = (e.clientX - rect.left) / rect.width - 0.5
+ const y = (e.clientY - rect.top) / rect.height - 0.5
 
-      setMousePosition({ x, y })
-    }
+ setMousePosition({ x, y })
+ }
 
-    const container = containerRef.current
-    if (container) {
-      container.addEventListener("mousemove", handleMouseMove)
-    }
+ const container = containerRef.current
+ if (container) {
+ container.addEventListener("mousemove", handleMouseMove)
+ }
 
-    return () => {
-      if (container) {
-        container.removeEventListener("mousemove", handleMouseMove)
-      }
-    }
-  }, [enableParallax, prefersReducedMotion])
+ return () => {
+ if (container) {
+ container.removeEventListener("mousemove", handleMouseMove)
+ }
+ }
+ }, [enableParallax, prefersReducedMotion])
 
-  if (prefersReducedMotion) {
-    return null
-  }
+ if (prefersReducedMotion) {
+ return null
+ }
 
-  return (
-    <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
-      {orbs.map((orb, index) => {
-        const parallaxX = enableParallax ? mousePosition.x * 20 * (index + 1) : 0
-        const parallaxY = enableParallax ? mousePosition.y * 20 * (index + 1) : 0
+ return (
+ <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
+ {orbs.map((orb, index) => {
+ const parallaxX = enableParallax ? mousePosition.x * 20 * (index + 1) : 0
+ const parallaxY = enableParallax ? mousePosition.y * 20 * (index + 1) : 0
 
-        return (
-          <motion.div
-            key={index}
-            className={cn("absolute rounded-full blur-3xl", orb.color)}
-            animate={{
-              x: [0, 30 + index * 10, -20 - index * 5, 0 + parallaxX],
-              y: [0, -20 - index * 8, 30 + index * 12, 0 + parallaxY],
-              scale: [1, 1.1, 0.95, 1],
-            }}
-            transition={{
-              duration: orb.duration,
-              delay: orb.delay,
-              repeat: Infinity,
-              repeatType: "reverse" as const,
-              ease: "easeInOut",
-            }}
-            style={{
-              width: orb.size,
-              height: orb.size,
-              left: orb.x,
-              top: orb.y,
-              opacity: orb.opacity,
-            }}
-          />
-        )
-      })}
-    </div>
-  )
+ return (
+ <motion.div
+ key={index}
+ className={cn("absolute rounded-full blur-3xl", orb.color)}
+ animate={{
+ x: [0, 30 + index * 10, -20 - index * 5, 0 + parallaxX],
+ y: [0, -20 - index * 8, 30 + index * 12, 0 + parallaxY],
+ scale: [1, 1.1, 0.95, 1],
+ }}
+ transition={{
+ duration: orb.duration,
+ delay: orb.delay,
+ repeat: Infinity,
+ repeatType:"reverse" as const,
+ ease:"easeInOut",
+ }}
+ style={{
+ width: orb.size,
+ height: orb.size,
+ left: orb.x,
+ top: orb.y,
+ opacity: orb.opacity,
+ }}
+ />
+ )
+ })}
+ </div>
+ )
 }
 
 // ============================================================================
@@ -456,5 +452,5 @@ export function FloatingOrbs({
  * Returns true if prefers-reduced-motion is set
  */
 export function usePrefersReducedMotion() {
-  return useReducedMotion()
+ return useReducedMotion()
 }

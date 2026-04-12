@@ -8,68 +8,68 @@ import { useRithmicSyncStore } from "@/store/rithmic-sync-store";
 import { useDashboardRefreshError, useDashboardActions } from "@/context/data-provider";
 
 const Modals = dynamic(() => import("@/components/modals"), {
-  ssr: false,
+ ssr: false,
 });
 
 const RithmicSyncNotifications = dynamic(
-  () =>
-    import("./import/rithmic/sync/rithmic-notifications").then(
-      (module) => module.RithmicSyncNotifications
-    ),
-  {
-    ssr: false,
-  }
+ () =>
+ import("./import/rithmic/sync/rithmic-notifications").then(
+ (module) => module.RithmicSyncNotifications
+ ),
+ {
+ ssr: false,
+ }
 );
 
 export function DashboardClientOverlays() {
-  const [ready, setReady] = useState(false);
-  const pathname = usePathname();
-  const isImportRoute = pathname?.endsWith("/dashboard/import") || pathname?.endsWith("/dashboard/import/");
-  const { autoSyncEnabled: rithmicAutoEnabled } = useRithmicSyncStore();
-  const hasActiveSync = isImportRoute || rithmicAutoEnabled;
+ const [ready, setReady] = useState(false);
+ const pathname = usePathname();
+ const isImportRoute = pathname?.endsWith("/dashboard/import ") || pathname?.endsWith("/dashboard/import/");
+ const { autoSyncEnabled: rithmicAutoEnabled } = useRithmicSyncStore();
+ const hasActiveSync = isImportRoute || rithmicAutoEnabled;
 
-  const refreshError = useDashboardRefreshError();
-  const { retryDataLoad } = useDashboardActions();
+ const refreshError = useDashboardRefreshError();
+ const { retryDataLoad } = useDashboardActions();
 
-  useEffect(() => {
-    if (!refreshError) return;
+ useEffect(() => {
+ if (!refreshError) return;
 
-    const toastId = toast.error("Failed to refresh dashboard data", {
-      description: refreshError,
-      action: {
-        label: "Retry",
-        onClick: () => retryDataLoad(),
-      },
-      duration: Infinity,
-    });
+ const toastId = toast.error("Failed to refresh dashboard data", {
+ description: refreshError,
+ action: {
+ label:"Retry",
+ onClick: () => retryDataLoad(),
+ },
+ duration: Infinity,
+ });
 
-    return () => {
-      toast.dismiss(toastId);
-    };
-  }, [refreshError, retryDataLoad]);
+ return () => {
+ toast.dismiss(toastId);
+ };
+ }, [refreshError, retryDataLoad]);
 
-  useEffect(() => {
-    const schedule: (cb: IdleRequestCallback) => number =
-      window.requestIdleCallback
-        ? (cb) => window.requestIdleCallback(cb)
-        : (cb) => window.setTimeout(() => cb({} as IdleDeadline), 250);
-    const cancel: (id: number) => void =
-      window.cancelIdleCallback
-        ? (id) => window.cancelIdleCallback(id)
-        : (id) => window.clearTimeout(id);
-    const handle = schedule(() => setReady(true));
+ useEffect(() => {
+ const schedule: (cb: IdleRequestCallback) => number =
+ window.requestIdleCallback
+ ? (cb) => window.requestIdleCallback(cb)
+ : (cb) => window.setTimeout(() => cb({} as IdleDeadline), 250);
+ const cancel: (id: number) => void =
+ window.cancelIdleCallback
+ ? (id) => window.cancelIdleCallback(id)
+ : (id) => window.clearTimeout(id);
+ const handle = schedule(() => setReady(true));
 
-    return () => {
-      cancel(handle);
-    };
-  }, []);
+ return () => {
+ cancel(handle);
+ };
+ }, []);
 
-  if (!ready) return null;
+ if (!ready) return null;
 
-  return (
-    <>
-      {hasActiveSync && <RithmicSyncNotifications />}
-      <Modals />
-    </>
-  );
+ return (
+ <>
+ {hasActiveSync && <RithmicSyncNotifications />}
+ <Modals />
+ </>
+ );
 }

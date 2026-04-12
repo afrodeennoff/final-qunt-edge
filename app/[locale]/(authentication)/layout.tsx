@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import AuthenticationLayoutShell from "./layout-shell";
 
 export const metadata: Metadata = {
-  robots: {
-    index: false,
-    follow: false,
-  },
+ robots: {
+ index: false,
+ follow: false,
+ },
 };
 
 export default function AuthenticationLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }) {
-  return <AuthenticationLayoutShell>{children}</AuthenticationLayoutShell>;
+ return <AuthenticationLayoutShell>{children}</AuthenticationLayoutShell>;
 }

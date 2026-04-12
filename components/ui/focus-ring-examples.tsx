@@ -15,30 +15,30 @@ import { Input } from "@/components/ui/input"
  * Best for: Custom interactive elements, cards, non-button elements
  */
 export function FocusRingComponentExample() {
-  return (
-    <div className="space-y-4 p-6">
-      {/* Wrap custom interactive elements */}
-      <FocusRing className="block cursor-pointer rounded-lg">
-        <div className="border border-white/[0.06] bg-white/[0.02] p-4">
-          <h3 className="font-semibold">Custom Interactive Card</h3>
-          <p className="text-sm text-muted-foreground">
-            Click or Tab to focus - consistent ring appears
-          </p>
-        </div>
-      </FocusRing>
+ return (
+ <div className="space-y-4 p-6">
+ {/* Wrap custom interactive elements */}
+ <FocusRing className="block cursor-pointer rounded-lg">
+ <div className="border border-white/[0.06] bg-white/[0.02] p-4">
+ <h3 className="font-semibold">Custom Interactive Card</h3>
+ <p className="text-sm text-muted-foreground">
+ Click or Tab to focus - consistent ring appears
+ </p>
+ </div>
+ </FocusRing>
 
-      {/* Wrap elements that need focus but aren't buttons */}
-      <FocusRing>
-        <div
-          role="button"
-          tabIndex={0}
-          className="cursor-pointer rounded-md bg-primary px-4 py-2 text-primary-foreground"
-        >
-          Custom Button-like Element
-        </div>
-      </FocusRing>
-    </div>
-  )
+ {/* Wrap elements that need focus but aren't buttons */}
+ <FocusRing>
+ <div
+ role="button"
+ tabIndex={0}
+ className="cursor-pointer rounded-md bg-primary px-4 py-2 text-primary-foreground"
+ >
+ Custom Button-like Element
+ </div>
+ </FocusRing>
+ </div>
+ )
 }
 
 /**
@@ -47,27 +47,27 @@ export function FocusRingComponentExample() {
  * Best for: Standard buttons, inputs, links
  */
 export function FocusRingUtilityExample() {
-  return (
-    <div className="space-y-4 p-6">
-      {/* Apply focus-ring utility directly */}
-      <button className="focus-ring rounded-md bg-primary px-4 py-2 text-primary-foreground">
-        Button with focus-ring utility
-      </button>
+ return (
+ <div className="space-y-4 p-6">
+ {/* Apply focus-ring utility directly */}
+ <button className="focus-ring rounded-md bg-primary px-4 py-2 text-primary-foreground">
+ Button with focus-ring utility
+ </button>
 
-      <input
-        type="text"
-        className="focus-ring rounded-md border border-input bg-background px-3 py-2"
-        placeholder="Input with focus-ring utility"
-      />
+ <input
+ type="text"
+ className="focus-ring rounded-md border border-input bg-background px-3 py-2"
+ placeholder="Input with focus-ring utility"
+ />
 
-      <a
-        href="#"
-        className="focus-ring inline-block rounded-md text-accent underline"
-      >
-        Link with focus-ring utility
-      </a>
-    </div>
-  )
+ <a
+ href="#"
+ className="focus-ring inline-block rounded-md text-accent underline"
+ >
+ Link with focus-ring utility
+ </a>
+ </div>
+ )
 }
 
 /**
@@ -76,28 +76,26 @@ export function FocusRingUtilityExample() {
  * Best for: When you need complete control over focus styles
  */
 export function FocusRingDirectExample() {
-  return (
-    <div className="space-y-4 p-6">
-      <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground
-        focus-visible:outline-none
-        focus-visible:ring-2
-        focus-visible:ring-[hsl(var(--ring))]
-        focus-visible:ring-offset-2
-        focus-visible:ring-offset-[hsl(var(--background))]
-      ">
-        Button with direct focus classes
-      </button>
+ return (
+ <div className="space-y-4 p-6">
+ <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground
+ focus-visible:outline-none
+ focus-visible:ring-2
+ focus-visible:ring-[hsl(var(--ring))]
+ focus-visible:ring-offset-2
+ focus-visible:ring-offset-[hsl(var(--background))]">
+ Button with direct focus classes
+ </button>
 
-      <Input
-        className="
-          focus-visible:border-ring
-          focus-visible:ring-ring/50
-          focus-visible:ring-[3px]
-        "
-        placeholder="Input with custom focus styles"
-      />
-    </div>
-  )
+ <Input
+ className="
+ focus-visible:border-ring
+ focus-visible:ring-ring/50
+ focus-visible:ring-[3px]"
+ placeholder="Input with custom focus styles"
+ />
+ </div>
+ )
 }
 
 /**
@@ -106,21 +104,21 @@ export function FocusRingDirectExample() {
  * Button and Input components already have focus rings built-in
  */
 export function ExistingComponentsExample() {
-  return (
-    <div className="space-y-4 p-6">
-      {/* Button component - focus ring already included */}
-      <Button variant="solid">
-        Standard Button (focus ring built-in)
-      </Button>
+ return (
+ <div className="space-y-4 p-6">
+ {/* Button component - focus ring already included */}
+ <Button variant="solid">
+ Standard Button (focus ring built-in)
+ </Button>
 
-      <Button variant="outline">
-        Outline Button (focus ring built-in)
-      </Button>
+ <Button variant="outline">
+ Outline Button (focus ring built-in)
+ </Button>
 
-      {/* Input component - custom focus style already included */}
-      <Input placeholder="Standard Input (focus ring built-in)" />
-    </div>
-  )
+ {/* Input component - custom focus style already included */}
+ <Input placeholder="Standard Input (focus ring built-in)" />
+ </div>
+ )
 }
 
 /**
@@ -131,25 +129,25 @@ export function ExistingComponentsExample() {
  * - Click: No focus ring ✓
  */
 export function KeyboardNavigationExample() {
-  return (
-    <div className="space-y-4 p-6">
-      <p className="text-sm text-muted-foreground">
-        Press Tab to navigate - focus rings appear only for keyboard navigation
-      </p>
+ return (
+ <div className="space-y-4 p-6">
+ <p className="text-sm text-muted-foreground">
+ Press Tab to navigate - focus rings appear only for keyboard navigation
+ </p>
 
-      <div className="flex gap-4">
-        <Button size="lg">First Button</Button>
-        <Button size="lg">Second Button</Button>
-        <Button size="lg">Third Button</Button>
-      </div>
+ <div className="flex gap-4">
+ <Button size="lg">First Button</Button>
+ <Button size="lg">Second Button</Button>
+ <Button size="lg">Third Button</Button>
+ </div>
 
-      <FocusRing className="block cursor-pointer">
-        <div className="border border-white/[0.06] bg-white/[0.02] p-4">
-          Fourth Focusable Element
-        </div>
-      </FocusRing>
-    </div>
-  )
+ <FocusRing className="block cursor-pointer">
+ <div className="border border-white/[0.06] bg-white/[0.02] p-4">
+ Fourth Focusable Element
+ </div>
+ </FocusRing>
+ </div>
+ )
 }
 
 /**
@@ -160,19 +158,19 @@ export function KeyboardNavigationExample() {
  * - Users preferring reduced motion: instant appearance
  */
 export function ReducedMotionExample() {
-  return (
-    <div className="space-y-4 p-6">
-      <p className="text-sm text-muted-foreground">
-        Focus rings automatically adapt to prefers-reduced-motion setting
-      </p>
+ return (
+ <div className="space-y-4 p-6">
+ <p className="text-sm text-muted-foreground">
+ Focus rings automatically adapt to prefers-reduced-motion setting
+ </p>
 
-      <Button size="lg">Test Focus Ring Animation</Button>
+ <Button size="lg">Test Focus Ring Animation</Button>
 
-      <FocusRing>
-        <div className="border border-white/[0.06] bg-white/[0.02] p-4 cursor-pointer">
-          Custom Element with Adaptive Animation
-        </div>
-      </FocusRing>
-    </div>
-  )
+ <FocusRing>
+ <div className="border border-white/[0.06] bg-white/[0.02] p-4 cursor-pointer">
+ Custom Element with Adaptive Animation
+ </div>
+ </FocusRing>
+ </div>
+ )
 }

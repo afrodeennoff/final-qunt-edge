@@ -6,29 +6,29 @@ import { toast } from "sonner";
 import { useCurrentLocale } from "@/locales/client";
 import { RootProviders } from "@/components/providers/root-providers";
 interface AuthenticationLayoutProps {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }
 
 export default function AuthenticationLayout({
-  children,
+ children,
 }: AuthenticationLayoutProps) {
-  const router = useRouter();
-  const locale = useCurrentLocale();
+ const router = useRouter();
+ const locale = useCurrentLocale();
 
-  useEffect(() => {
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.slice(1)); // Remove the # and parse
+ useEffect(() => {
+ const hash = window.location.hash;
+ const params = new URLSearchParams(hash.slice(1)); // Remove the # and parse
 
-    if (params.get('error')) {
-      const errorDescription = params.get('error_description');
-      toast.error("Authentication Error", {
-        description: errorDescription?.replace(/\+/g, ' ') || "An error occurred during authentication",
-      });
+ if (params.get('error')) {
+ const errorDescription = params.get('error_description');
+ toast.error("Authentication Error", {
+ description: errorDescription?.replace(/\+/g, ' ') ||"An error occurred during authentication",
+ });
 
-      // Clear the hash after showing the toast
-      router.replace(`/${locale}/authentication`);
-    }
-  }, [locale, router]);
+ // Clear the hash after showing the toast
+ router.replace(`/${locale}/authentication`);
+ }
+ }, [locale, router]);
 
-  return <RootProviders>{children}</RootProviders>;
+ return <RootProviders>{children}</RootProviders>;
 }

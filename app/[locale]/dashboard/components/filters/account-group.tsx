@@ -12,146 +12,145 @@ import { cn } from "@/lib/utils"
 import { useI18n } from "@/locales/client"
 
 export interface AccountGroup {
-  id: string
-  name: string
-  accounts: Account[]
-  color?: string
+ id: string
+ name: string
+ accounts: Account[]
+ color?: string
 }
 
 interface AccountGroupProps {
-  group: AccountGroup
-  onDrop?: (e: React.DragEvent, groupId: string) => void
-  onDragOver?: (e: React.DragEvent) => void
-  onDragLeave?: (e: React.DragEvent) => void
-  onDragStart?: (e: React.DragEvent, account: Account, fromGroupId: string) => void
-  onDragEnd?: () => void
-  onRename?: (groupId: string, newName: string) => void
-  onDelete?: (groupId: string) => void
-  isDragOver?: boolean
-  className?: string
-  isHiddenGroup?: boolean
+ group: AccountGroup
+ onDrop?: (e: React.DragEvent, groupId: string) => void
+ onDragOver?: (e: React.DragEvent) => void
+ onDragLeave?: (e: React.DragEvent) => void
+ onDragStart?: (e: React.DragEvent, account: Account, fromGroupId: string) => void
+ onDragEnd?: () => void
+ onRename?: (groupId: string, newName: string) => void
+ onDelete?: (groupId: string) => void
+ isDragOver?: boolean
+ className?: string
+ isHiddenGroup?: boolean
 }
 
 export function AccountGroup({
-  group,
-  onDrop,
-  onDragOver,
-  onDragLeave,
-  onDragStart,
-  onDragEnd,
-  onRename,
-  onDelete,
-  isDragOver = false,
-  className,
-  isHiddenGroup = false,
+ group,
+ onDrop,
+ onDragOver,
+ onDragLeave,
+ onDragStart,
+ onDragEnd,
+ onRename,
+ onDelete,
+ isDragOver = false,
+ className,
+ isHiddenGroup = false,
 }: AccountGroupProps) {
-  const t = useI18n()
-  const [isEditing, setIsEditing] = useState(false)
-  const [editName, setEditName] = useState(group.name)
+ const t = useI18n()
+ const [isEditing, setIsEditing] = useState(false)
+ const [editName, setEditName] = useState(group.name)
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    onDrop?.(e, group.id)
-  }
+ const handleDrop = (e: React.DragEvent) => {
+ e.preventDefault()
+ onDrop?.(e, group.id)
+ }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    onDragOver?.(e)
-  }
+ const handleDragOver = (e: React.DragEvent) => {
+ e.preventDefault()
+ onDragOver?.(e)
+ }
 
-  const handleRename = () => {
-    if (editName.trim() && editName !== group.name) {
-      onRename?.(group.id, editName.trim())
-    }
-    setIsEditing(false)
-  }
+ const handleRename = () => {
+ if (editName.trim() && editName !== group.name) {
+ onRename?.(group.id, editName.trim())
+ }
+ setIsEditing(false)
+ }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleRename()
-    } else if (e.key === "Escape") {
-      setEditName(group.name)
-      setIsEditing(false)
-    }
-  }
+ const handleKeyPress = (e: React.KeyboardEvent) => {
+ if (e.key ==="Enter") {
+ handleRename()
+ } else if (e.key ==="Escape") {
+ setEditName(group.name)
+ setIsEditing(false)
+ }
+ }
 
-  return (
-    <Card
-      className={cn(
-        "transition-all duration-300 ease-out",
-        isDragOver && "ring-2 ring-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] scale-[1.02]",
-        isHiddenGroup && "border-destructive",
-        className,
-      )}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={onDragLeave}
-    >
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          {isEditing ? (
-            <Input
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onBlur={handleRename}
-              onKeyDown={handleKeyPress}
-              className="text-lg font-semibold h-8 px-2"
-              autoFocus
-            />
-          ) : (
-            <CardTitle className="text-lg flex items-center gap-2">
-              {isHiddenGroup && <EyeOff className="h-4 w-4 text-destructive" />}
-              {isHiddenGroup ? t("filters.hiddenAccounts") : group.name}
-            </CardTitle>
-          )}
+ return (
+ <Card
+ className={cn("transition-all duration-300 ease-out",
+ isDragOver &&"ring-2 ring-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] scale-[1.02]",
+ isHiddenGroup &&"border-destructive",
+ className,
+ )}
+ onDrop={handleDrop}
+ onDragOver={handleDragOver}
+ onDragLeave={onDragLeave}
+ >
+ <CardHeader className="pb-3">
+ <div className="flex items-center justify-between">
+ {isEditing ? (
+ <Input
+ value={editName}
+ onChange={(e) => setEditName(e.target.value)}
+ onBlur={handleRename}
+ onKeyDown={handleKeyPress}
+ className="text-lg font-semibold h-8 px-2"
+ autoFocus
+ />
+ ) : (
+ <CardTitle className="text-lg flex items-center gap-2">
+ {isHiddenGroup && <EyeOff className="h-4 w-4 text-destructive" />}
+ {isHiddenGroup ? t("filters.hiddenAccounts") : group.name}
+ </CardTitle>
+ )}
 
-          {!isHiddenGroup && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button  variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setIsEditing(true)}>
-                  <Edit2 className="w-4 h-4 mr-2" />
-                  {t("common.rename")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onDelete?.(group.id)} className="text-destructive">
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  {t("common.delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {group.accounts.length} {group.accounts.length !== 1 ? t("filters.accounts") : t("filters.account")}
-        </p>
-      </CardHeader>
+ {!isHiddenGroup && (
+ <DropdownMenu>
+ <DropdownMenuTrigger asChild>
+ <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+ <MoreHorizontal className="w-4 h-4" />
+ </Button>
+ </DropdownMenuTrigger>
+ <DropdownMenuContent align="end">
+ <DropdownMenuItem onClick={() => setIsEditing(true)}>
+ <Edit2 className="w-4 h-4 mr-2" />
+ {t("common.rename")}
+ </DropdownMenuItem>
+ <DropdownMenuItem onClick={() => onDelete?.(group.id)} className="text-destructive">
+ <Trash2 className="w-4 h-4 mr-2" />
+ {t("common.delete")}
+ </DropdownMenuItem>
+ </DropdownMenuContent>
+ </DropdownMenu>
+ )}
+ </div>
+ <p className="text-sm text-muted-foreground">
+ {group.accounts.length} {group.accounts.length !== 1 ? t("filters.accounts") : t("filters.account")}
+ </p>
+ </CardHeader>
 
-      <CardContent>
-        {group.accounts.length === 0 ? (
-          <div className="flex items-center justify-center h-16 border-2 border-dashed border-white/[0.06] rounded-lg">
-            <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-3">
-            {group.accounts.map((account) => (
-              <div
-                key={account.id}
-                className="shrink-0 transition-transform duration-200 ease-out"
-              >
-                <AccountCoin
-                  account={account}
-                  onDragStart={(e, account) => onDragStart?.(e, account, group.id)}
-                  onDragEnd={onDragEnd}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  )
+ <CardContent>
+ {group.accounts.length === 0 ? (
+ <div className="flex items-center justify-center h-16 border-2 border-dashed border-white/[0.06] rounded-lg">
+ <p className="text-muted-foreground text-sm">{t("filters.dropAccountsHere")}</p>
+ </div>
+ ) : (
+ <div className="flex flex-wrap gap-3">
+ {group.accounts.map((account) => (
+ <div
+ key={account.id}
+ className="shrink-0 transition-transform duration-200 ease-out"
+ >
+ <AccountCoin
+ account={account}
+ onDragStart={(e, account) => onDragStart?.(e, account, group.id)}
+ onDragEnd={onDragEnd}
+ />
+ </div>
+ ))}
+ </div>
+ )}
+ </CardContent>
+ </Card>
+ )
 }

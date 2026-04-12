@@ -39,7 +39,7 @@ export default async function RootLayout(
   return (
     <PublicRootProviders>
       <MarketingLayoutShell contentClassName="w-full px-4 sm:px-6 lg:px-8">
-        <div className="pb-safe scroll-smooth-butter">
+        <div className="pb-safe">
           {children}
         </div>
       </MarketingLayoutShell>

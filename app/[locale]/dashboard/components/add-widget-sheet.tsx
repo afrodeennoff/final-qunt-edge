@@ -13,247 +13,244 @@ import { getWidgetsByCategory, WIDGET_REGISTRY, getWidgetPreview, WidgetConfig }
 import { useDashboardIsMobile } from '@/context/data-provider'
 
 interface AddWidgetSheetProps {
-  onAddWidget: (type: WidgetType, size?: WidgetSize) => void
-  isCustomizing: boolean
-  showLabelOnMobile?: boolean
+ onAddWidget: (type: WidgetType, size?: WidgetSize) => void
+ isCustomizing: boolean
+ showLabelOnMobile?: boolean
 }
 
 interface PreviewCardProps {
-  onClick: () => void
-  children: React.ReactNode
-  className?: string
-  style?: React.CSSProperties
+ onClick: () => void
+ children: React.ReactNode
+ className?: string
+ style?: React.CSSProperties
 }
 
 interface LazyWidgetPreviewProps {
-  config: WidgetConfig
-  index: number
-  isLoaded: boolean
-  onVisible: () => void
-  onWidgetLoaded: (index: number) => void
+ config: WidgetConfig
+ index: number
+ isLoaded: boolean
+ onVisible: () => void
+ onWidgetLoaded: (index: number) => void
 }
 
 const LazyWidgetPreview: React.FC<LazyWidgetPreviewProps> = ({
-  config,
-  index,
-  isLoaded,
-  onVisible,
-  onWidgetLoaded
+ config,
+ index,
+ isLoaded,
+ onVisible,
+ onWidgetLoaded
 }) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [hasLoaded, setHasLoaded] = useState(false)
-  const elementRef = useRef<HTMLDivElement>(null)
+ const [isVisible, setIsVisible] = useState(false)
+ const [hasLoaded, setHasLoaded] = useState(false)
+ const elementRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true)
-          onVisible()
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '50px'
-      }
-    )
+ useEffect(() => {
+ const observer = new IntersectionObserver(
+ ([entry]) => {
+ if (entry.isIntersecting && !isVisible) {
+ setIsVisible(true)
+ onVisible()
+ }
+ },
+ {
+ threshold: 0.1,
+ rootMargin: '50px'
+ }
+ )
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current)
-    }
+ if (elementRef.current) {
+ observer.observe(elementRef.current)
+ }
 
-    return () => observer.disconnect()
-  }, [isVisible, onVisible])
+ return () => observer.disconnect()
+ }, [isVisible, onVisible])
 
-  useEffect(() => {
-    if (isVisible && isLoaded && !hasLoaded) {
-      // Simulate progressive loading with a small delay
-      const timer = setTimeout(() => {
-        setHasLoaded(true)
-        onWidgetLoaded(index)
-      }, index * 100) // Stagger loading by 100ms per widget
+ useEffect(() => {
+ if (isVisible && isLoaded && !hasLoaded) {
+ // Simulate progressive loading with a small delay
+ const timer = setTimeout(() => {
+ setHasLoaded(true)
+ onWidgetLoaded(index)
+ }, index * 100) // Stagger loading by 100ms per widget
 
-      return () => clearTimeout(timer)
-    }
-  }, [isVisible, isLoaded, hasLoaded, index, onWidgetLoaded])
+ return () => clearTimeout(timer)
+ }
+ }, [isVisible, isLoaded, hasLoaded, index, onWidgetLoaded])
 
-  return (
-    <div ref={elementRef} className="w-full h-full">
-      {!isVisible ? (
-        <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
-          <div className="w-8 h-8 bg-white/[0.03] rounded animate-pulse" />
-        </div>
-      ) : !hasLoaded ? (
-        <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
-          <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-        </div>
-      ) : (
-        getWidgetPreview(config.type)
-      )}
-    </div>
-  )
+ return (
+ <div ref={elementRef} className="w-full h-full">
+ {!isVisible ? (
+ <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
+ <div className="w-8 h-8 bg-white/[0.03] rounded animate-pulse" />
+ </div>
+ ) : !hasLoaded ? (
+ <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
+ <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+ </div>
+ ) : (
+ getWidgetPreview(config.type)
+ )}
+ </div>
+ )
 }
 
 const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
-  ({ onClick, className, style, children }, ref) => {
-    const t = useI18n()
-    const isMobile = useDashboardIsMobile()
-    return (
-      <div 
-        ref={ref}
-        className={cn(
-          "cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-white/[0.06] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)] backdrop-blur-md",
-          "active:scale-[0.98] transition-all duration-150 ease-in-out",
-          className
-        )}
-        style={style}
-        onClick={onClick}
-      >
-        {!isMobile && (
-          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 shadow-xs">
-            {t('widgets.clickToAdd')}
-          </div>
-        )}
-        {children}
-      </div>
-    )
-  }
+ ({ onClick, className, style, children }, ref) => {
+ const t = useI18n()
+ const isMobile = useDashboardIsMobile()
+ return (
+ <div 
+ ref={ref}
+ className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-white/[0.06] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-all duration-150 ease-in-out",
+ className
+ )}
+ style={style}
+ onClick={onClick}
+ >
+ {!isMobile && (
+ <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 shadow-xs">
+ {t('widgets.clickToAdd')}
+ </div>
+ )}
+ {children}
+ </div>
+ )
+ }
 )
-PreviewCard.displayName = "PreviewCard"
+PreviewCard.displayName ="PreviewCard"
 
 export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>(
-  ({ onAddWidget, isCustomizing, showLabelOnMobile = false }, ref) => {
-    const t = useI18n()
-    const isMobile = useDashboardIsMobile()
-    const [isOpen, setIsOpen] = React.useState(false)
-    const [loadedItems, setLoadedItems] = useState<Set<number>>(new Set())
-    const [loadingStarted, setLoadingStarted] = useState(false)
+ ({ onAddWidget, isCustomizing, showLabelOnMobile = false }, ref) => {
+ const t = useI18n()
+ const isMobile = useDashboardIsMobile()
+ const [isOpen, setIsOpen] = React.useState(false)
+ const [loadedItems, setLoadedItems] = useState<Set<number>>(new Set())
+ const [loadingStarted, setLoadingStarted] = useState(false)
 
-    const handleAddWidget = (type: WidgetType) => {
-      const config = WIDGET_REGISTRY[type]
-      onAddWidget(type, config.defaultSize)
-    }
+ const handleAddWidget = (type: WidgetType) => {
+ const config = WIDGET_REGISTRY[type]
+ onAddWidget(type, config.defaultSize)
+ }
 
-    const startLoading = useCallback(() => {
-      if (!loadingStarted) {
-        setLoadingStarted(true)
-        // Progressive loading - load first few items immediately
-        const initialItems = new Set([0, 1, 2])
-        setLoadedItems(initialItems)
-      }
-    }, [loadingStarted])
+ const startLoading = useCallback(() => {
+ if (!loadingStarted) {
+ setLoadingStarted(true)
+ // Progressive loading - load first few items immediately
+ const initialItems = new Set([0, 1, 2])
+ setLoadedItems(initialItems)
+ }
+ }, [loadingStarted])
 
-    const onWidgetLoaded = useCallback((index: number) => {
-      setLoadedItems(prev => {
-        const newSet = new Set(prev)
-        newSet.add(index)
-        
-        // Load next batch when current batch is loaded
-        if (newSet.size > 0 && newSet.size % 3 === 0) {
-          const nextBatch = Array.from({ length: 3 }, (_, i) => newSet.size + i)
-          nextBatch.forEach(i => newSet.add(i))
-        }
-        
-        return newSet
-      })
-    }, [])
+ const onWidgetLoaded = useCallback((index: number) => {
+ setLoadedItems(prev => {
+ const newSet = new Set(prev)
+ newSet.add(index)
+ 
+ // Load next batch when current batch is loaded
+ if (newSet.size > 0 && newSet.size % 3 === 0) {
+ const nextBatch = Array.from({ length: 3 }, (_, i) => newSet.size + i)
+ nextBatch.forEach(i => newSet.add(i))
+ }
+ 
+ return newSet
+ })
+ }, [])
 
-    const handleOpenChange = (open: boolean) => {
-      setIsOpen(open)
-      if (!open) {
-        setLoadedItems(new Set())
-        setLoadingStarted(false)
-      }
-    }
+ const handleOpenChange = (open: boolean) => {
+ setIsOpen(open)
+ if (!open) {
+ setLoadedItems(new Set())
+ setLoadingStarted(false)
+ }
+ }
 
-    const renderWidgetsByCategory = (category: 'charts' | 'statistics' | 'tables' | 'other') => {
-      const widgets = getWidgetsByCategory(category)
-      return (
-        <div className="grid gap-4">
-          {widgets.map((config, index) => (
-            <PreviewCard
-              key={config.type}
-              onClick={() => handleAddWidget(config.type)}
-              className="w-full"
-              style={{ height: config.previewHeight }}
-            >
-              {
-                category === 'charts' ? (
-                  <LazyWidgetPreview
-                    key={config.type}
-                    config={config}
-                    index={index}
-                    isLoaded={loadedItems.has(index)}
-                    onVisible={() => {
-                      if (loadedItems.size === 0) {
-                        startLoading()
-                      }
-                    }}
-                    onWidgetLoaded={onWidgetLoaded}
-                  />
-                ) : (
-                  getWidgetPreview(config.type)
-                )
-              }
-            </PreviewCard>
-          ))}
-        </div>
-      )
-    }
+ const renderWidgetsByCategory = (category: 'charts' | 'statistics' | 'tables' | 'other') => {
+ const widgets = getWidgetsByCategory(category)
+ return (
+ <div className="grid gap-4">
+ {widgets.map((config, index) => (
+ <PreviewCard
+ key={config.type}
+ onClick={() => handleAddWidget(config.type)}
+ className="w-full"
+ style={{ height: config.previewHeight }}
+ >
+ {
+ category === 'charts' ? (
+ <LazyWidgetPreview
+ key={config.type}
+ config={config}
+ index={index}
+ isLoaded={loadedItems.has(index)}
+ onVisible={() => {
+ if (loadedItems.size === 0) {
+ startLoading()
+ }
+ }}
+ onWidgetLoaded={onWidgetLoaded}
+ />
+ ) : (
+ getWidgetPreview(config.type)
+ )
+ }
+ </PreviewCard>
+ ))}
+ </div>
+ )
+ }
 
-    return (
-      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-        <SheetTrigger asChild>
-          <Button 
-            ref={ref}
-            variant="ghost"
-            disabled={!isCustomizing}
-            className={cn(
-              "flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
-              !isCustomizing && "opacity-60",
-              isMobile && !showLabelOnMobile ? "h-10 w-10 p-0" : "h-9 min-w-[120px] gap-2.5 px-3.5"
-            )}
-          >
-            <Plus className="h-4 w-4 shrink-0" />
-            {(!isMobile || showLabelOnMobile) && (
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
-                {t('widgets.addWidget')}
-              </span>
-            )}
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden">
-          <SheetHeader>
-            <SheetTitle>{t('widgets.addWidget')}</SheetTitle>
-          </SheetHeader>
-          <Tabs defaultValue="other" className="flex-1 flex flex-col mt-6 min-h-0">
-            <TabsList className="w-full">
-              <TabsTrigger value="other" className="flex-1">{t('widgets.categories.other')}</TabsTrigger>
-              <TabsTrigger value="charts" className="flex-1">{t('widgets.categories.charts')}</TabsTrigger>
-              <TabsTrigger value="tables" className="flex-1">{t('widgets.categories.tables')}</TabsTrigger>
-              <TabsTrigger value="statistics" className="flex-1">{t('widgets.categories.statistics')}</TabsTrigger>
-            </TabsList>
-            <ScrollArea className="flex-1 mt-2">
-              <div className="pr-4 pb-8">
-                <TabsContent value="other" className="mt-0">
-                  {renderWidgetsByCategory('other')}
-                </TabsContent>
-                <TabsContent value="charts" className="mt-0">
-                  {renderWidgetsByCategory('charts')}
-                </TabsContent>
-                <TabsContent value="tables" className="mt-0">
-                  {renderWidgetsByCategory('tables')}
-                </TabsContent>
-                <TabsContent value="statistics" className="mt-0">
-                  {renderWidgetsByCategory('statistics')}
-                </TabsContent>
-              </div>
-            </ScrollArea>
-          </Tabs>
-        </SheetContent>
-      </Sheet>
-    )
-  }
+ return (
+ <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+ <SheetTrigger asChild>
+ <Button 
+ ref={ref}
+ variant="ghost"
+ disabled={!isCustomizing}
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+ !isCustomizing &&"opacity-60",
+ isMobile && !showLabelOnMobile ?"h-10 w-10 p-0" :"h-9 min-w-[120px] gap-2.5 px-3.5"
+ )}
+ >
+ <Plus className="h-4 w-4 shrink-0" />
+ {(!isMobile || showLabelOnMobile) && (
+ <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+ {t('widgets.addWidget')}
+ </span>
+ )}
+ </Button>
+ </SheetTrigger>
+ <SheetContent side="right" className="w-[90vw] sm:max-w-[640px] flex flex-col h-dvh overflow-hidden">
+ <SheetHeader>
+ <SheetTitle>{t('widgets.addWidget')}</SheetTitle>
+ </SheetHeader>
+ <Tabs defaultValue="other" className="flex-1 flex flex-col mt-6 min-h-0">
+ <TabsList className="w-full">
+ <TabsTrigger value="other" className="flex-1">{t('widgets.categories.other')}</TabsTrigger>
+ <TabsTrigger value="charts" className="flex-1">{t('widgets.categories.charts')}</TabsTrigger>
+ <TabsTrigger value="tables" className="flex-1">{t('widgets.categories.tables')}</TabsTrigger>
+ <TabsTrigger value="statistics" className="flex-1">{t('widgets.categories.statistics')}</TabsTrigger>
+ </TabsList>
+ <ScrollArea className="flex-1 mt-2">
+ <div className="pr-4 pb-8">
+ <TabsContent value="other" className="mt-0">
+ {renderWidgetsByCategory('other')}
+ </TabsContent>
+ <TabsContent value="charts" className="mt-0">
+ {renderWidgetsByCategory('charts')}
+ </TabsContent>
+ <TabsContent value="tables" className="mt-0">
+ {renderWidgetsByCategory('tables')}
+ </TabsContent>
+ <TabsContent value="statistics" className="mt-0">
+ {renderWidgetsByCategory('statistics')}
+ </TabsContent>
+ </div>
+ </ScrollArea>
+ </Tabs>
+ </SheetContent>
+ </Sheet>
+ )
+ }
 )
 
-AddWidgetSheet.displayName = "AddWidgetSheet" 
+AddWidgetSheet.displayName ="AddWidgetSheet" 

@@ -1,5 +1,4 @@
-// components/newsletter-transcription.tsx
-"use client"
+// components/newsletter-transcription.tsx"use client"
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,298 +11,298 @@ import { z } from 'zod/v3'
 
 // Add schema for transcription validation
 const transcriptionSchema = z.object({
-  transcription: z.string(),
-  language: z.string().optional(),
+ transcription: z.string(),
+ language: z.string().optional(),
 })
 
 interface AudioSegment {
-  buffer: ArrayBuffer
-  fileName: string
-  startTime: number
-  endTime: number
-  index: number
+ buffer: ArrayBuffer
+ fileName: string
+ startTime: number
+ endTime: number
+ index: number
 }
 
 interface TranscriptionResult {
-  text: string
-  language: string
-  duration: number
-  segmentIndex: number
+ text: string
+ language: string
+ duration: number
+ segmentIndex: number
 }
 
 interface TranscriptionComponentProps {
-  segments: AudioSegment[]
-  onTranscriptionComplete?: (results: TranscriptionResult[]) => void
+ segments: AudioSegment[]
+ onTranscriptionComplete?: (results: TranscriptionResult[]) => void
 }
 
 function createErrorResult(segment: AudioSegment): TranscriptionResult {
-  return {
-    text: 'Erreur de transcription',
-    language: 'fr',
-    duration: 0,
-    segmentIndex: segment.index
-  }
+ return {
+ text: 'Erreur de transcription',
+ language: 'fr',
+ duration: 0,
+ segmentIndex: segment.index
+ }
 }
 
 async function transcribeSegment(segment: AudioSegment): Promise<TranscriptionResult> {
-  const audioBlob = new Blob([segment.buffer], { type: 'audio/wav' })
-  const formData = new FormData()
-  formData.append('audio', audioBlob, `segment_${segment.index}.wav`)
+ const audioBlob = new Blob([segment.buffer], { type: 'audio/wav' })
+ const formData = new FormData()
+ formData.append('audio', audioBlob, `segment_${segment.index}.wav`)
 
-  const response = await fetch('/api/ai/transcribe', {
-    method: 'POST',
-    body: formData
-  })
+ const response = await fetch('/api/ai/transcribe', {
+ method: 'POST',
+ body: formData
+ })
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    const errorMessage = errorData?.error?.message || `API error: ${response.status}`
-    throw new Error(errorMessage)
-  }
+ if (!response.ok) {
+ const errorData = await response.json().catch(() => ({}))
+ const errorMessage = errorData?.error?.message || `API error: ${response.status}`
+ throw new Error(errorMessage)
+ }
 
-  const data = await response.json()
-  const validatedData = transcriptionSchema.parse(data)
-  const duration = segment.buffer.byteLength / (16000 * 2)
+ const data = await response.json()
+ const validatedData = transcriptionSchema.parse(data)
+ const duration = segment.buffer.byteLength / (16000 * 2)
 
-  return {
-    text: validatedData.transcription || 'Transcription non disponible',
-    language: validatedData.language || 'fr',
-    duration,
-    segmentIndex: segment.index
-  }
+ return {
+ text: validatedData.transcription || 'Transcription non disponible',
+ language: validatedData.language || 'fr',
+ duration,
+ segmentIndex: segment.index
+ }
 }
 
 async function transcribeAllSegments(
-  segments: AudioSegment[],
-  onProgress: (segmentIndex: number, progressPercent: number) => void
+ segments: AudioSegment[],
+ onProgress: (segmentIndex: number, progressPercent: number) => void
 ): Promise<TranscriptionResult[]> {
-  const results: TranscriptionResult[] = []
+ const results: TranscriptionResult[] = []
 
-  for (let index = 0; index < segments.length; index++) {
-    const segment = segments[index]
-    onProgress(segment.index, ((index + 1) / segments.length) * 100)
+ for (let index = 0; index < segments.length; index++) {
+ const segment = segments[index]
+ onProgress(segment.index, ((index + 1) / segments.length) * 100)
 
-    try {
-      results.push(await transcribeSegment(segment))
-    } catch (error) {
-      console.error(`Failed to transcribe segment ${segment.index}:`, error)
-      results.push(createErrorResult(segment))
-    }
-  }
+ try {
+ results.push(await transcribeSegment(segment))
+ } catch (error) {
+ console.error(`Failed to transcribe segment ${segment.index}:`, error)
+ results.push(createErrorResult(segment))
+ }
+ }
 
-  return results
+ return results
 }
 
 function buildTranscriptionText(results: TranscriptionResult[]) {
-  return results
-    .slice()
-    .sort((a, b) => a.segmentIndex - b.segmentIndex)
-    .map(result => `Segment ${result.segmentIndex} (${result.duration.toFixed(1)}s): ${result.text}`)
-    .join('\n\n')
+ return results
+ .slice()
+ .sort((a, b) => a.segmentIndex - b.segmentIndex)
+ .map(result => `Segment ${result.segmentIndex} (${result.duration.toFixed(1)}s): ${result.text}`)
+ .join('\n\n')
 }
 
 function downloadTextFile(filename: string, text: string) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
+ const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+ const url = URL.createObjectURL(blob)
+ const a = document.createElement('a')
+ a.href = url
+ a.download = filename
+ document.body.appendChild(a)
+ a.click()
+ document.body.removeChild(a)
+ URL.revokeObjectURL(url)
 }
 
 export function TranscriptionComponent({ segments, onTranscriptionComplete }: TranscriptionComponentProps) {
-  const [isTranscribing, setIsTranscribing] = useState(false)
-  const [transcriptionResults, setTranscriptionResults] = useState<TranscriptionResult[]>([])
-  const [progress, setProgress] = useState(0)
-  const [currentSegment, setCurrentSegment] = useState<number | null>(null)
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+ const [isTranscribing, setIsTranscribing] = useState(false)
+ const [transcriptionResults, setTranscriptionResults] = useState<TranscriptionResult[]>([])
+ const [progress, setProgress] = useState(0)
+ const [currentSegment, setCurrentSegment] = useState<number | null>(null)
+ const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
 
-  const handleTranscribeAllSegments = async () => {
-    if (segments.length === 0) return
+ const handleTranscribeAllSegments = async () => {
+ if (segments.length === 0) return
 
-    try {
-      setIsTranscribing(true)
-      setProgress(0)
-      setTranscriptionResults([])
-      const results = await transcribeAllSegments(segments, (segmentIndex, progressPercent) => {
-        setCurrentSegment(segmentIndex)
-        setProgress(progressPercent)
-      })
+ try {
+ setIsTranscribing(true)
+ setProgress(0)
+ setTranscriptionResults([])
+ const results = await transcribeAllSegments(segments, (segmentIndex, progressPercent) => {
+ setCurrentSegment(segmentIndex)
+ setProgress(progressPercent)
+ })
 
-      setTranscriptionResults(results)
-      
-      if (onTranscriptionComplete) {
-        onTranscriptionComplete(results)
-      }
+ setTranscriptionResults(results)
+ 
+ if (onTranscriptionComplete) {
+ onTranscriptionComplete(results)
+ }
 
-      toast.success(`Transcription terminée: ${results.length} segments traités`)
-    } catch (error) {
-      console.error('Transcription failed:', error)
-      toast.error('Échec de la transcription')
-    } finally {
-      setIsTranscribing(false)
-      setCurrentSegment(null)
-    }
-  }
+ toast.success(`Transcription terminée: ${results.length} segments traités`)
+ } catch (error) {
+ console.error('Transcription failed:', error)
+ toast.error('Échec de la transcription')
+ } finally {
+ setIsTranscribing(false)
+ setCurrentSegment(null)
+ }
+ }
 
-  const copyToClipboard = async (text: string, index: number) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopiedIndex(index)
-      toast.success('Texte copié dans le presse-papiers')
-      
-      // Reset copied state after 2 seconds
-      setTimeout(() => setCopiedIndex(null), 2000)
-    } catch (error) {
-      console.error('Failed to copy text:', error)
-      toast.error('Échec de la copie')
-    }
-  }
+ const copyToClipboard = async (text: string, index: number) => {
+ try {
+ await navigator.clipboard.writeText(text)
+ setCopiedIndex(index)
+ toast.success('Texte copié dans le presse-papiers')
+ 
+ // Reset copied state after 2 seconds
+ setTimeout(() => setCopiedIndex(null), 2000)
+ } catch (error) {
+ console.error('Failed to copy text:', error)
+ toast.error('Échec de la copie')
+ }
+ }
 
-  const downloadTranscription = () => {
-    if (transcriptionResults.length === 0) return
-    downloadTextFile('transcription_complete.txt', buildTranscriptionText(transcriptionResults))
-  }
+ const downloadTranscription = () => {
+ if (transcriptionResults.length === 0) return
+ downloadTextFile('transcription_complete.txt', buildTranscriptionText(transcriptionResults))
+ }
 
-  const getTotalDuration = () => {
-    return transcriptionResults.reduce((total, result) => total + result.duration, 0)
-  }
+ const getTotalDuration = () => {
+ return transcriptionResults.reduce((total, result) => total + result.duration, 0)
+ }
 
-  if (segments.length === 0) {
-    return (
-      <Card className="bg-muted/50 dark:bg-white/[0.2] border-white/[0.6] ">
-        <CardContent className="p-6 text-center">
-          <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            Aucun segment audio disponible pour la transcription
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
+ if (segments.length === 0) {
+ return (
+ <Card className="bg-muted/50 dark:bg-white/[0.2] border-white/[0.6]">
+ <CardContent className="p-6 text-center">
+ <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+ <p className="text-muted-foreground">
+ Aucun segment audio disponible pour la transcription
+ </p>
+ </CardContent>
+ </Card>
+ )
+ }
 
-  return (
-    <Card className="bg-white/[0.2] border-white/[0.6] ">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground/95">
-          <Mic className="w-5 h-5" />
-          Transcription Audio (Français)
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Service Status */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Badge variant="default">
-              Prêt
-            </Badge>
-            <span className="text-sm text-muted-foreground">
-              {segments.length} segments disponibles
-            </span>
-          </div>
-          
-          <Button 
-            onClick={handleTranscribeAllSegments}
-            disabled={isTranscribing}
-            className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground/95"
-          >
-            {isTranscribing ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Transcription...
-              </>
-            ) : (
-              <>
-                <Mic className="w-4 h-4 mr-2" />
-                Transcrire tous les segments
-              </>
-            )}
-          </Button>
-        </div>
+ return (
+ <Card className="bg-white/[0.2] border-white/[0.6]">
+ <CardHeader>
+ <CardTitle className="flex items-center gap-2 text-foreground/95">
+ <Mic className="w-5 h-5" />
+ Transcription Audio (Français)
+ </CardTitle>
+ </CardHeader>
+ <CardContent className="space-y-4">
+ {/* Service Status */}
+ <div className="flex items-center justify-between">
+ <div className="flex items-center gap-2">
+ <Badge variant="default">
+ Prêt
+ </Badge>
+ <span className="text-sm text-muted-foreground">
+ {segments.length} segments disponibles
+ </span>
+ </div>
+ 
+ <Button 
+ onClick={handleTranscribeAllSegments}
+ disabled={isTranscribing}
+ className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground/95"
+ >
+ {isTranscribing ? (
+ <>
+ <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+ Transcription...
+ </>
+ ) : (
+ <>
+ <Mic className="w-4 h-4 mr-2" />
+ Transcrire tous les segments
+ </>
+ )}
+ </Button>
+ </div>
 
-        {/* Progress */}
-        {isTranscribing && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
-                {currentSegment ? `Segment ${currentSegment}/${segments.length}` : 'Préparation...'}
-              </span>
-              <span className="text-muted-foreground">
-                {Math.round(progress)}%
-              </span>
-            </div>
-            <Progress value={progress} className="w-full" />
-          </div>
-        )}
+ {/* Progress */}
+ {isTranscribing && (
+ <div className="space-y-2">
+ <div className="flex items-center justify-between text-sm">
+ <span className="text-muted-foreground">
+ {currentSegment ? `Segment ${currentSegment}/${segments.length}` : 'Préparation...'}
+ </span>
+ <span className="text-muted-foreground">
+ {Math.round(progress)}%
+ </span>
+ </div>
+ <Progress value={progress} className="w-full" />
+ </div>
+ )}
 
-        {/* Transcription Results */}
-        {transcriptionResults.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-foreground/95">
-                Résultats de transcription
-              </h3>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">
-                  {getTotalDuration().toFixed(1)}s total
-                </Badge>
-                <Button 
-                  onClick={downloadTranscription}
-                  variant="outline"
-                  size="sm"
-                  className="text-foreground/95 border-white/[0.8] hover:bg-accent/70"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Télécharger
-                </Button>
-              </div>
-            </div>
+ {/* Transcription Results */}
+ {transcriptionResults.length > 0 && (
+ <div className="space-y-4">
+ <div className="flex items-center justify-between">
+ <h3 className="text-lg font-semibold text-foreground/95">
+ Résultats de transcription
+ </h3>
+ <div className="flex items-center gap-2">
+ <Badge variant="outline">
+ {getTotalDuration().toFixed(1)}s total
+ </Badge>
+ <Button 
+ onClick={downloadTranscription}
+ variant="outline"
+ size="sm"
+ className="text-foreground/95 border-white/[0.8] hover:bg-accent/70"
+ >
+ <Download className="w-4 h-4 mr-2" />
+ Télécharger
+ </Button>
+ </div>
+ </div>
 
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {transcriptionResults
-                .sort((a, b) => a.segmentIndex - b.segmentIndex)
-                .map((result) => (
-                  <div
-                    key={result.segmentIndex}
-                    className="p-3 bg-muted/50  rounded-lg border border-white/[0.6] "
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="secondary" className="text-xs">
-                            Segment {result.segmentIndex}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground dark:text-muted-foreground">
-                            {result.duration.toFixed(1)}s
-                          </span>
-                        </div>
-                        <p className="text-foreground/95 text-sm leading-relaxed">
-                          {result.text || "Aucune transcription disponible"}
-                        </p>
-                      </div>
-                      <Button 
-                        onClick={() => copyToClipboard(result.text, result.segmentIndex)}
-                        variant="ghost"
-                        size="sm"
-                        className="text-muted-foreground hover:text-foreground/95 dark:text-muted-foreground hover:text-foreground/95"
-                      >
-                        {copiedIndex === result.segmentIndex ? (
-                          <Check className="w-4 h-4" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
+ <div className="space-y-3 max-h-96 overflow-y-auto">
+ {transcriptionResults
+ .sort((a, b) => a.segmentIndex - b.segmentIndex)
+ .map((result) => (
+ <div
+ key={result.segmentIndex}
+ className="p-3 bg-muted/50 rounded-lg border border-white/[0.6]"
+ >
+ <div className="flex items-start justify-between gap-3">
+ <div className="flex-1">
+ <div className="flex items-center gap-2 mb-2">
+ <Badge variant="secondary" className="text-xs">
+ Segment {result.segmentIndex}
+ </Badge>
+ <span className="text-xs text-muted-foreground dark:text-muted-foreground">
+ {result.duration.toFixed(1)}s
+ </span>
+ </div>
+ <p className="text-foreground/95 text-sm leading-relaxed">
+ {result.text ||"Aucune transcription disponible"}
+ </p>
+ </div>
+ <Button 
+ onClick={() => copyToClipboard(result.text, result.segmentIndex)}
+ variant="ghost"
+ size="sm"
+ className="text-muted-foreground hover:text-foreground/95 dark:text-muted-foreground hover:text-foreground/95"
+ >
+ {copiedIndex === result.segmentIndex ? (
+ <Check className="w-4 h-4" />
+ ) : (
+ <Copy className="w-4 h-4" />
+ )}
+ </Button>
+ </div>
+ </div>
+ ))}
+ </div>
+ </div>
+ )}
 
-      </CardContent>
-    </Card>
-  )
+ </CardContent>
+ </Card>
+ )
 }
