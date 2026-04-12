@@ -78,7 +78,7 @@ export default async function BlogDetailPage(props: Props) {
         </Link>
 
         {post.coverImage && (
-          <div className="relative w-full overflow-hidden rounded-2xl">
+          <div className="relative w-full overflow-hidden rounded-xl">
             <Image
               src={post.coverImage}
               alt={post.title}
@@ -95,7 +95,7 @@ export default async function BlogDetailPage(props: Props) {
             {categoryLabel}
           </Badge>
 
-          <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
+          <h1 className="text-4xl font-bold text-foreground/95 sm:text-5xl">
             {post.title}
           </h1>
 

@@ -46,7 +46,7 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-2xl px-2.5 py-1.5 transition-all duration-200 hover:bg-sidebar-accent/12 data-[state=open]:bg-sidebar-accent/18 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-xl px-2.5 py-1.5 transition-all duration-200 hover:bg-sidebar-accent/12 data-[state=open]:bg-sidebar-accent/18 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-2xl border-sidebar-border/40 bg-sidebar/95 shadow-[0_28px_72px_-40px_rgba(4,10,24,0.92)] backdrop-blur-2xl"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border-sidebar-border/40 bg-sidebar/95 shadow-[0_28px_72px_-40px_rgba(4,10,24,0.92)] backdrop-blur-2xl"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-accent/32 to-sidebar-accent/12 px-3 py-2.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-xl shadow-sm">
+                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}
@@ -104,7 +104,7 @@ export function SidebarUserMenu({
                   <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/18 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/20 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
-                  <SelectContent className="bg-popover text-popover-foreground border-sidebar-border/18">
+                  <SelectContent className="bg-white/[0.04] text-popover-foreground border-sidebar-border/18">
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}

@@ -82,7 +82,7 @@ export const ChainOfThoughtHeader = memo(
       <Collapsible onOpenChange={setIsOpen} open={isOpen}>
         <CollapsibleTrigger
           className={cn(
-            "flex w-full items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground",
+            "flex w-full items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground/95",
             className
           )}
           {...props}
@@ -122,7 +122,7 @@ export const ChainOfThoughtStep = memo(
   }: ChainOfThoughtStepProps) => {
     const statusStyles = {
       complete: "text-muted-foreground",
-      active: "text-foreground",
+      active: "text-foreground/95",
       pending: "text-muted-foreground/50",
     };
 
@@ -206,7 +206,7 @@ export type ChainOfThoughtImageProps = ComponentProps<"div"> & {
 export const ChainOfThoughtImage = memo(
   ({ className, children, caption, ...props }: ChainOfThoughtImageProps) => (
     <div className={cn("mt-2 gap-2", className)} {...props}>
-      <div className="relative flex max-h-88 items-center justify-center overflow-hidden rounded-lg bg-muted p-3">
+      <div className="relative flex max-h-88 items-center justify-center overflow-hidden rounded-lg bg-white/[0.03] p-3">
         {children}
       </div>
       {caption && <p className="text-muted-foreground text-xs">{caption}</p>}

@@ -41,7 +41,7 @@ export default function TrustAndProof() {
           </Badge>
           <h2 className="mt-3 text-[clamp(2rem,4.8vw,3.4rem)] font-semibold leading-[0.92] tracking-[-0.02em] [font-family:var(--home-display)]">
             Built like a trading system:
-            <span className="block text-foreground">secure, observable, and review-ready</span>
+            <span className="block text-foreground/95">secure, observable, and review-ready</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-[1.78] text-foreground/80 [font-family:var(--home-copy)]">
             Trust is not a slogan. It is enforced boundaries, predictable failure modes, and a review loop you can audit week after week.
@@ -52,8 +52,8 @@ export default function TrustAndProof() {
           {trustPillars.map((pillar) => {
             const Icon = pillar.icon
             return (
-              <article key={pillar.title} className="marketing-panel rounded-2xl p-6">
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-foreground">
+              <article key={pillar.title} className="liquid-panel-premium rounded-xl p-6">
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.8)] text-foreground/95">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">{pillar.title}</h3>
@@ -64,7 +64,7 @@ export default function TrustAndProof() {
         </div>
 
         <div className="mt-6">
-          <article className="marketing-panel rounded-2xl p-6">
+          <article className="liquid-panel-premium rounded-xl p-6">
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">
               What We Enforce
             </p>
@@ -74,7 +74,7 @@ export default function TrustAndProof() {
             <ul className="mt-4 space-y-3">
               {enforcement.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-foreground/80 [font-family:var(--home-copy)]">
-                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground">
+                  <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[hsl(var(--mk-border)/0.32)] bg-[hsl(var(--mk-surface-muted)/0.7)] text-foreground/95">
                     <Check className="h-3.5 w-3.5" />
                   </span>
                   <span>{item}</span>
@@ -85,7 +85,7 @@ export default function TrustAndProof() {
         </div>
 
         <div className="mt-5 flex items-center justify-center gap-2 text-xs text-foreground/80 [font-family:var(--home-copy)]">
-          <ShieldCheck className="h-4 w-4 text-foreground" />
+          <ShieldCheck className="h-4 w-4 text-foreground/95" />
           <span>Transparent quality bar: secure data boundaries, disciplined review loops, and production-grade reliability.</span>
         </div>
       </div>

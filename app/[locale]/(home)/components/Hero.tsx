@@ -60,7 +60,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.div>
 
           <motion.h1
-            className="max-w-5xl text-[clamp(3.2rem,7vw,6.6rem)] font-[350] leading-[0.94] tracking-[-0.055em] text-foreground [font-family:var(--home-display)]"
+            className="max-w-5xl text-[clamp(3.2rem,7vw,6.6rem)] font-[350] leading-[0.94] tracking-[-0.055em] text-foreground/95 [font-family:var(--home-display)]"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease }}
@@ -102,7 +102,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground sm:w-auto"
+              className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
             >
               <a href="#how-it-works">
                 Watch Demo
@@ -132,7 +132,7 @@ export default function Hero({ locale }: { locale: string }) {
                 className="rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-4 text-left shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_16px_40px_-28px_rgba(0,0,0,0.88)]"
               >
                 <div
-                  className="rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.05] to-transparent px-4 py-3"
+                  className="rounded-xl border border-white/[0.07] bg-gradient-to-br from-white/[0.05] to-transparent px-4 py-3"
                 >
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/38">
                     {card.title}

@@ -137,7 +137,7 @@ export default React.memo(function ContractQuantityChart({
           <div className="flex items-center gap-1.5">
             <CardTitle
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
+                "line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -148,7 +148,7 @@ export default React.memo(function ContractQuantityChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />

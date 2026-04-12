@@ -174,7 +174,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
 
   if (segments.length === 0) {
     return (
-      <Card className="bg-muted/50 dark:bg-card border-border ">
+      <Card className="bg-muted/50 dark:bg-white/[0.02] border-white/[0.06] ">
         <CardContent className="p-6 text-center">
           <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground">
@@ -186,9 +186,9 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
   }
 
   return (
-    <Card className="bg-card border-border ">
+    <Card className="bg-white/[0.02] border-white/[0.06] ">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-foreground">
+        <CardTitle className="flex items-center gap-2 text-foreground/95">
           <Mic className="w-5 h-5" />
           Transcription Audio (Français)
         </CardTitle>
@@ -208,7 +208,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
           <Button 
             onClick={handleTranscribeAllSegments}
             disabled={isTranscribing}
-            className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground"
+            className="bg-semantic-info-bg hover:bg-semantic-info-bg dark:bg-semantic-info-bg dark:hover:bg-semantic-info-bg text-foreground/95"
           >
             {isTranscribing ? (
               <>
@@ -243,7 +243,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
         {transcriptionResults.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-foreground">
+              <h3 className="text-lg font-semibold text-foreground/95">
                 Résultats de transcription
               </h3>
               <div className="flex items-center gap-2">
@@ -254,7 +254,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                   onClick={downloadTranscription}
                   variant="outline"
                   size="sm"
-                  className="text-foreground border-border/28 hover:bg-accent/70"
+                  className="text-foreground/95 border-white/[0.08] hover:bg-accent/70"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Télécharger
@@ -268,7 +268,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                 .map((result) => (
                   <div
                     key={result.segmentIndex}
-                    className="p-3 bg-muted/50  rounded-lg border border-border "
+                    className="p-3 bg-muted/50  rounded-lg border border-white/[0.06] "
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
@@ -280,7 +280,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                             {result.duration.toFixed(1)}s
                           </span>
                         </div>
-                        <p className="text-foreground text-sm leading-relaxed">
+                        <p className="text-foreground/95 text-sm leading-relaxed">
                           {result.text || "Aucune transcription disponible"}
                         </p>
                       </div>
@@ -288,7 +288,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
                         onClick={() => copyToClipboard(result.text, result.segmentIndex)}
                         variant="ghost"
                         size="sm"
-                        className="text-muted-foreground hover:text-foreground dark:text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground hover:text-foreground/95 dark:text-muted-foreground hover:text-foreground/95"
                       >
                         {copiedIndex === result.segmentIndex ? (
                           <Check className="w-4 h-4" />

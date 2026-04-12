@@ -17,7 +17,7 @@ const Progress = React.forwardRef<
     ref={ref}
     data-slot="progress"
     className={cn(
-      "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
+      "relative h-4 w-full overflow-hidden rounded-full bg-white/[0.04]",
       className
     )}
     {...props}

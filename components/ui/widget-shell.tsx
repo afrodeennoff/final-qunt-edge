@@ -101,7 +101,7 @@ export function WidgetShell({
       )}
     >
       {(title || actions || icon || description) && (
-        <CardHeader className="border-b border-border/18 bg-[rgba(255,255,255,0.03)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+        <CardHeader className="border-b border-white/[0.04] bg-[rgba(255,255,255,0.03)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
           <div className="flex items-start justify-between gap-[var(--space-3)]">
             <div className="min-w-0 gap-[var(--space-2)]">
               {(title || icon) && (

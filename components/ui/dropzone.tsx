@@ -49,7 +49,7 @@ const Dropzone = ({
       <div
         {...getRootProps({
           className: cn(
-            'border-2 border-border rounded-lg p-6 text-center bg-card transition-colors duration-300 text-foreground',
+            'border-2 border-white/[0.06] rounded-lg p-6 text-center bg-white/[0.02] transition-colors duration-300 text-foreground/95',
             className,
             isSuccess ? 'border-solid' : 'border-dashed',
             isActive && 'border-primary bg-primary/10',
@@ -110,7 +110,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
             className="flex items-center gap-x-4 border-b py-2 first:mt-4 last:mb-4 "
           >
             {file.type.startsWith('image/') && file.preview ? (
-              <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-muted flex items-center justify-center relative">
+              <div className="h-10 w-10 rounded border overflow-hidden shrink-0 bg-white/[0.03] flex items-center justify-center relative">
                 <Image
                   src={file.preview}
                   alt={file.name}
@@ -122,7 +122,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
                 />
               </div>
             ) : (
-              <div className="h-10 w-10 rounded border bg-muted flex items-center justify-center">
+              <div className="h-10 w-10 rounded border bg-white/[0.03] flex items-center justify-center">
                 <File size={18} />
               </div>
             )}
@@ -156,7 +156,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
               <Button 
                 size="icon"
                 variant="link"
-                className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground"
+                className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground/95"
                 onClick={() => handleRemoveFile(file.name)}
               >
                 <X />
@@ -210,7 +210,7 @@ const DropzoneEmptyState = ({ className }: { className?: string }) => {
         <p className="text-xs text-muted-foreground">
           {t('dropzone.clickToBrowse.prefix')}{' '}
           <span
-            className="underline cursor-pointer transition hover:text-foreground"
+            className="underline cursor-pointer transition hover:text-foreground/95"
           >
             {t('dropzone.clickToBrowse.action')}
           </span>{' '}

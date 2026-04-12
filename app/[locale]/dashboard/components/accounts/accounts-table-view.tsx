@@ -262,7 +262,7 @@ function AccountsTableSection({
             </div>
             <Progress
               value={summary.summary.averageProgress}
-              className="h-1.5 bg-card/10"
+              className="h-1.5 bg-white/[0.010]"
               indicatorClassName="transition-colors duration-300 bg-primary/80"
             />
           </div>
@@ -295,16 +295,16 @@ function AccountsTableSection({
     <div className="relative">
       <div className="overflow-x-auto" ref={tableWrapperRef}>
         <table className="w-full border-separate border-spacing-0 text-sm">
-        <thead className="sticky top-0 z-10 bg-card/90 backdrop-blur-xs shadow-xs border-b [&_tr]:border-b">
+        <thead className="sticky top-0 z-10 bg-white/[0.090] backdrop-blur-xs shadow-xs border-b [&_tr]:border-b">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               key={headerGroup.id}
-              className="border-b transition-colors hover:bg-card/40"
+              className="border-b transition-colors hover:bg-white/[0.040]"
             >
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-card/90 border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
+                  className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-white/[0.090] border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
                   style={{ width: header.getSize() }}
                 >
                   {header.isPlaceholder
@@ -324,7 +324,7 @@ function AccountsTableSection({
               return (
                 <tr
                   key={entry.summary.id}
-                className="border-b border-border bg-card/90 font-semibold"
+                className="border-b border-white/[0.06] bg-white/[0.090] font-semibold"
                 >
                   {table.getVisibleLeafColumns().map((column) => (
                     <td
@@ -344,9 +344,9 @@ function AccountsTableSection({
               <tr
                 key={row.id}
                 className={cn(
-                  "border-b border-border transition-all duration-75 hover:bg-card/40",
-                  rowIndex % 2 === 1 && "bg-card/5",
-                  row.getCanExpand() && "bg-card/10 font-medium",
+                  "border-b border-white/[0.06] transition-all duration-75 hover:bg-white/[0.040]",
+                  rowIndex % 2 === 1 && "bg-white/[0.05]",
+                  row.getCanExpand() && "bg-white/[0.010] font-medium",
                   isDrawdownBreached(row.original) && "opacity-50",
                   (row.getCanExpand() || row.depth > 0) && "cursor-pointer"
                 )}
@@ -381,7 +381,7 @@ function AccountsTableSection({
       </div>
       {showScrollHint && (
         <div className="pointer-events-none absolute bottom-2 right-2">
-          <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/24 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-sm">
+          <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-white/[0.06] bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] backdrop-blur-sm">
             <span className="max-w-[220px] leading-snug">
               {t("accounts.table.scrollHint")}
             </span>
@@ -430,7 +430,7 @@ export function AccountsTableView({
                 event.stopPropagation()
                 row.toggleExpanded()
               }}
-              className="flex items-center justify-center h-6 w-6 rounded hover:bg-card/60 transition-colors"
+              className="flex items-center justify-center h-6 w-6 rounded hover:bg-white/[0.060] transition-colors"
               aria-label={
                 row.getIsExpanded()
                   ? t("accounts.table.collapseGroup")

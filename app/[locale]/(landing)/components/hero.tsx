@@ -45,7 +45,7 @@ export default function Hero({ }: HeroProps) {
                 label: 'vs. last month',
               }}
               watermarkIcon={TrendingUp}
-              className="mx-6 rounded-2xl p-8"
+              className="mx-6 rounded-xl p-8"
             />
           </MotionStaggerItem>
         </MotionStagger>
@@ -56,7 +56,7 @@ export default function Hero({ }: HeroProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8"
         >
-          <h1 className="mb-6 text-[42px] font-[350] leading-[1.06] tracking-[-0.045em] text-foreground [font-family:var(--font-geist,sans-serif)] sm:text-[60px] md:text-[76px] lg:text-[90px]">
+          <h1 className="mb-6 text-[42px] font-[350] leading-[1.06] tracking-[-0.045em] text-foreground/95 [font-family:var(--font-geist,sans-serif)] sm:text-[60px] md:text-[76px] lg:text-[90px]">
             Qunt <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">Edge.</span>
           </h1>
 
@@ -81,7 +81,7 @@ export default function Hero({ }: HeroProps) {
 
           <Link
             href={`/${locale}/updates`}
-            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-white/[0.20] hover:bg-white/[0.07] hover:text-foreground sm:w-auto"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-white/[0.20] hover:bg-white/[0.07] hover:text-foreground/95 sm:w-auto"
           >
             View Product Updates
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -95,10 +95,10 @@ export default function Hero({ }: HeroProps) {
           className="mt-20 border-t border-white/[0.06] px-4 pt-10 opacity-50 transition-all duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
         >
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
-            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
-            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">RITHMIC</span>
-            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">IBKR</span>
-            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">CQG</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground/95 hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground/95 hover:tracking-[0.15em] cursor-default">RITHMIC</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground/95 hover:tracking-[0.15em] cursor-default">IBKR</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground/95 hover:tracking-[0.15em] cursor-default">CQG</span>
           </div>
         </motion.div>
       </motion.div>

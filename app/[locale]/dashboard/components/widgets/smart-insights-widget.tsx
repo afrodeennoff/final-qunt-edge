@@ -65,8 +65,8 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
         switch (type) {
             case 'risk': return <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             case 'opportunity': return <Lightbulb className="h-4 w-4 text-muted-foreground" />
-            case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground" />
-            default: return <Brain className="h-4 w-4 text-foreground" />
+            case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground/95" />
+            default: return <Brain className="h-4 w-4 text-foreground/95" />
         }
     }
 
@@ -116,7 +116,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                 <Button 
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                    className="h-6 w-6 text-muted-foreground hover:text-foreground/95"
                     onClick={fetchInsights}
                     disabled={loading}
                 >
@@ -148,7 +148,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                className="group/item relative rounded-2xl border border-white/[0.07] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_4px_20px_-8px_rgba(0,0,0,0.80)] overflow-hidden transition-all duration-300 hover:border-white/[0.11] hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_8px_32px_-8px_rgba(0,0,0,0.85)] flex flex-col gap-2 p-3"
+                                className="group/item relative rounded-xl border border-white/[0.07] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_4px_20px_-8px_rgba(0,0,0,0.80)] overflow-hidden transition-all duration-300 hover:border-white/[0.11] hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_8px_32px_-8px_rgba(0,0,0,0.85)] flex flex-col gap-2 p-3"
                             >
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="flex items-center gap-2">

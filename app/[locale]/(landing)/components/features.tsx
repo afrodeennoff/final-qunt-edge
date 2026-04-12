@@ -15,7 +15,7 @@ const TradingChatAssistant = lazy(() => import("./chat-feature").then(m => ({ de
 
 function ChatLoadingFallback() {
   return (
-    <div className="h-full w-full flex items-center justify-center bg-card/50">
+    <div className="h-full w-full flex items-center justify-center bg-white/[0.050]">
       <div className="space-y-3 w-full max-w-[280px]">
         <Skeleton className="h-4 w-3/4" />
         <Skeleton className="h-4 w-1/2" />
@@ -58,11 +58,11 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
       
       <div className="relative h-full">
         <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-white/[0.06] pb-4">
-          <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground sm:text-lg">{feature.title}</CardTitle>
+          <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground/95 sm:text-lg">{feature.title}</CardTitle>
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="relative">
@@ -73,7 +73,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
         <CardContent>
           <div className="flex flex-col gap-3 sm:gap-4">
             <div>
-              <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground sm:text-[32px]">{feature.stat}</div>
+              <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 sm:text-[32px]">{feature.stat}</div>
               <p className="mt-3 text-xs leading-[1.7] text-foreground/54 sm:text-sm">
                 {feature.description}
               </p>
@@ -200,7 +200,7 @@ export default function Features() {
           isVisible && "opacity-100 translate-y-0"
         )}>
           <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34 [font-family:var(--home-copy)]">Platform Weapons</p>
-          <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground [font-family:var(--home-display)]">
+          <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground/95 [font-family:var(--home-display)]">
             {t("landing.features.heading")}
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-[1.8] text-foreground/56 sm:text-base md:text-lg">

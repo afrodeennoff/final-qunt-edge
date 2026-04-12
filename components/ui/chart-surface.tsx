@@ -135,7 +135,7 @@ export function ChartSurface({
       {hasHeader && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-b border-border/18 bg-[rgba(255,255,255,0.03)]",
+            "flex shrink-0 items-center border-b border-white/[0.04] bg-[rgba(255,255,255,0.03)]",
             isSmall ? "h-10 px-2.5" : "h-12 px-3.5",
             headerClassName
           )}
@@ -173,7 +173,7 @@ export function ChartSurface({
       {hasFooter && (
         <div
           className={cn(
-            "flex shrink-0 items-center border-t border-border/18",
+            "flex shrink-0 items-center border-t border-white/[0.04]",
             isSmall ? "h-8 px-2.5" : "h-10 px-3.5",
             footerClassName
           )}

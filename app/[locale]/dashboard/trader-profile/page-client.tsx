@@ -724,13 +724,13 @@ export default function TraderProfilePage() {
  {[1, 2, 3].map((i) => (
  <div key={i} className="qe-soft-surface flex items-center justify-between rounded-lg px-3 py-2 animate-pulse">
  <div className="flex items-center gap-2">
- <div className="h-3.5 w-3.5 rounded-full bg-muted" />
+ <div className="h-3.5 w-3.5 rounded-full bg-white/[0.03]" />
  <div className="space-y-1">
- <div className="h-3 w-20 rounded bg-muted" />
- <div className="h-2 w-32 rounded bg-card/45" />
+ <div className="h-3 w-20 rounded bg-white/[0.03]" />
+ <div className="h-2 w-32 rounded bg-white/[0.045]" />
  </div>
  </div>
- <div className="h-3 w-12 rounded bg-muted" />
+ <div className="h-3 w-12 rounded bg-white/[0.03]" />
  </div>
  ))}
  </div>

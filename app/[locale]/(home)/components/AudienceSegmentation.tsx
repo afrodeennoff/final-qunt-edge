@@ -74,7 +74,7 @@ function AudienceCard({
       variant="strong"
       hover
       size="lg"
-      className={`relative overflow-hidden h-full rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)]`}
+      className={`relative overflow-hidden h-full rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)]`}
     >
       {index === 0 && (
         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--accent-blue)]" />
@@ -93,7 +93,7 @@ function AudienceCard({
             >
               {audience.badge}
             </Badge>
-            <h3 className="text-[clamp(1.1rem,2.2vw,1.4rem)] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
+            <h3 className="text-[clamp(1.1rem,2.2vw,1.4rem)] font-semibold tracking-[-0.01em] text-foreground/95 [font-family:var(--home-display)]">
               {audience.title}
             </h3>
           </div>
@@ -150,7 +150,7 @@ export default function AudienceSegmentation() {
             Built For You
           </p>
           <h2
-            className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
+            className={`${TYPO_MINOR} text-foreground/95 leading-tight [font-family:var(--home-display)]`}
           >
             Whatever your trading style,{' '}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">

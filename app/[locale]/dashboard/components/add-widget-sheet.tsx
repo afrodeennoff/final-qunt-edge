@@ -81,7 +81,7 @@ const LazyWidgetPreview: React.FC<LazyWidgetPreviewProps> = ({
     <div ref={elementRef} className="w-full h-full">
       {!isVisible ? (
         <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
-          <div className="w-8 h-8 bg-muted rounded animate-pulse" />
+          <div className="w-8 h-8 bg-white/[0.03] rounded animate-pulse" />
         </div>
       ) : !hasLoaded ? (
         <div className="w-full h-full bg-muted/30 rounded-md flex items-center justify-center">
@@ -102,7 +102,7 @@ const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
       <div 
         ref={ref}
         className={cn(
-          "cursor-pointer rounded-2xl relative group m-1 w-full overflow-hidden border border-border/24 bg-card/60 px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)] backdrop-blur-md",
+          "cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-white/[0.06] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)] backdrop-blur-md",
           "active:scale-[0.98] transition-all duration-150 ease-in-out",
           className
         )}

@@ -153,7 +153,7 @@ export function DailyStats({ dayData, isWeekly = false }: DailyStatsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-2 mt-auto">
-            <p className={`text-xl md:text-2xl font-bold ${maxProfit > 0 ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <p className={`text-xl md:text-2xl font-bold ${maxProfit > 0 ? 'text-foreground/95' : 'text-muted-foreground'}`}>
               {formatCurrency(maxProfit)}
             </p>
           </CardContent>

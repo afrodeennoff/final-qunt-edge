@@ -27,7 +27,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
 
   return (
     <section className="py-5">
-      <div className="rounded-3xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4 sm:p-5">
+      <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4 sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -44,7 +44,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
                 variant="ghost"
                 size="sm"
                 onClick={() => onFilterChange({ platform: 'All', challengeType: 'All', drawdown: 'All' })}
-                className="gap-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground"
+                className="gap-1.5 rounded-full text-xs text-muted-foreground hover:text-foreground/95"
               >
                 <X className="h-3 w-3" />
                 Reset
@@ -102,7 +102,7 @@ function ChipRow({
               'shrink-0 rounded-full border px-3.5 py-2 text-xs font-medium transition-colors',
               selected === option
                 ? 'border border-[var(--frost-border-strong)] bg-[var(--text-primary)] text-[var(--surface-card)]'
-                : 'border border-[var(--frost-border)] bg-[var(--surface-card)] text-muted-foreground hover:border-[var(--frost-border-strong)] hover:text-foreground'
+                : 'border border-[var(--frost-border)] bg-[var(--surface-card)] text-muted-foreground hover:border-[var(--frost-border-strong)] hover:text-foreground/95'
             )}
           >
             {option}

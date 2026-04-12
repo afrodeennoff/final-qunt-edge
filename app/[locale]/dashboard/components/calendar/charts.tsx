@@ -153,7 +153,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
         <div className="bg-background p-2 border rounded shadow-xs text-xs md:text-sm">
           <p className="font-semibold">{isWeekly ? data.date : data.time}</p>
           {payload.map((entry: any, index: number) => (
-            <p key={index} className={cn("font-bold", entry.dataKey === 'pnl' ? (Number(entry.value ?? 0) >= 0 ? 'text-foreground' : 'text-muted-foreground') : 'text-muted-foreground/85')}>
+            <p key={index} className={cn("font-bold", entry.dataKey === 'pnl' ? (Number(entry.value ?? 0) >= 0 ? 'text-foreground/95' : 'text-muted-foreground') : 'text-muted-foreground/85')}>
               {entry.name}: {formatCurrency(entry.value)}
             </p>
           ))}
@@ -177,7 +177,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
       return (
         <div className="bg-background p-2 border rounded shadow-xs text-xs md:text-sm">
           <p className="font-semibold">{data.name}</p>
-          <p className={cn("font-bold", data.value >= 0 ? 'text-foreground' : 'text-muted-foreground')}>
+          <p className={cn("font-bold", data.value >= 0 ? 'text-foreground/95' : 'text-muted-foreground')}>
             {formatCurrency(data.value)}
           </p>
           {data.account !== 'total' && (

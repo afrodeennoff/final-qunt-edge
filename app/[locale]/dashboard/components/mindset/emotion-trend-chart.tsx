@@ -30,7 +30,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
     return (
       <div
         className={cn(
-          "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
+          "journal-glass-elevated mb-4 rounded-xl border border-white/[0.08] bg-white/[0.070] p-4 backdrop-blur-md",
           className
         )}
       >
@@ -65,13 +65,13 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
   return (
     <div
       className={cn(
-        "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
+        "journal-glass-elevated mb-4 rounded-xl border border-white/[0.08] bg-white/[0.070] p-4 backdrop-blur-md",
         className
       )}
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>
+          <p className="text-sm font-medium text-foreground/95">{t("mindset.emotion.title")}</p>
           <span className="text-xs text-muted-foreground">Last 7 days</span>
         </div>
 

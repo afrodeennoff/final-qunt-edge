@@ -214,7 +214,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
                 ))
               ) : (
                 <div className="col-span-full py-16 text-center">
-                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-v2-bg-hover mb-5">
+                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-v2-bg-hover mb-5">
                     <ListFilter className="h-8 w-8 text-v2-text-muted" />
                   </div>
                   <p className="text-base font-medium text-v2-text-primary mb-1.5">
@@ -231,7 +231,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           {isCompareMode && selectedPlatforms.length >= 2 && (
             <div className="absolute bottom-4 left-4 right-4 z-20"
             >
-              <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 backdrop-blur border border-v2-border shadow-lg shadow-v2-bg-base/50">
+              <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 backdrop-blur border border-v2-border shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
                 <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
                   <span>{selectedPlatforms.length} platforms selected</span>
                 </div>

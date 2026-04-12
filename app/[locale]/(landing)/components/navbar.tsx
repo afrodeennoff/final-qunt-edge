@@ -52,11 +52,11 @@ export default function Navbar() {
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
-          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-2xl px-2 py-1.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
+          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
               <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
             </div>
-            <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground">Qunt Edge</span>
+            <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground/95">Qunt Edge</span>
           </Link>
 
           <nav className="mx-auto hidden items-center gap-1 lg:flex">
@@ -70,10 +70,10 @@ export default function Navbar() {
                   key={link.href}
                   href={`/${locale}${link.href}`}
                   className={cn(
-                    'relative rounded-2xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
+                    'relative rounded-xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'border border-white/[0.12] bg-white/[0.06] text-foreground'
-                      : 'text-[13px] font-medium text-foreground/55 hover:text-foreground transition-colors duration-150 tracking-[-0.005em]'
+                      ? 'border border-white/[0.12] bg-white/[0.06] text-foreground/95'
+                      : 'text-[13px] font-medium text-foreground/55 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em]'
                   )}
                 >
                   {link.title}
@@ -85,7 +85,7 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden rounded-2xl px-3 py-2 text-[13px] font-medium text-foreground/55 hover:text-foreground transition-colors duration-150 tracking-[-0.005em] md:inline-flex"
+              className="hidden rounded-xl px-3 py-2 text-[13px] font-medium text-foreground/55 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em] md:inline-flex"
             >
               Login
             </Link>

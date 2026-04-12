@@ -41,18 +41,18 @@ export function DataDebug() {
                     variant="outline"
                     size="icon"
                     onClick={() => setIsOpen(true)}
-                    className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 backdrop-blur-md shadow-lg"
+                    className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]"
                 >
                     <Bug className="h-4 w-4 text-primary" />
                 </Button>
             ) : (
-                <div className="w-80 bg-background/90 border border-border/14 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="w-80 bg-background/90 border border-border/14 rounded-xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
                         <div className="flex items-center gap-2">
                             <Bug className="h-4 w-4 text-primary" />
                             <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">Debug Dashboard</span>
                         </div>
-                        <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground transition-colors">
+                        <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground/95 transition-colors">
                             <X className="h-4 w-4" />
                         </button>
                     </div>

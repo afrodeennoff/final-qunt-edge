@@ -92,14 +92,14 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
         Capability
       </span>
 
-      <h3 className="mt-4 text-[1.1rem] font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+      <h3 className="mt-4 text-[1.1rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
         {feature.title}
       </h3>
       <p className="mt-3 text-[0.92rem] leading-[1.75] text-muted-foreground/70 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
 
-      <div className="mt-6 flex items-center gap-1.5 text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground/54 transition-colors hover:text-foreground">
+      <div className="mt-6 flex items-center gap-1.5 text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground/54 transition-colors hover:text-foreground/95">
         <ArrowRight className="w-3.5 h-3.5" />
         <span>Inspect signal</span>
       </div>
@@ -124,7 +124,7 @@ export default function AIFeatures() {
               <p className={`${TYPO_EYEBROW} mb-4 text-muted-foreground/46 [font-family:var(--home-copy)]`}>
                 AI-Powered
               </p>
-              <h2 className={`${TYPO_MINOR} text-foreground leading-[0.94] [font-family:var(--home-display)]`}>
+              <h2 className={`${TYPO_MINOR} text-foreground/95 leading-[0.94] [font-family:var(--home-display)]`}>
                 A private analyst layer that studies every trade like a desk review.
               </h2>
               <p className="mt-5 max-w-xl text-[0.98rem] leading-[1.8] text-muted-foreground/70">

@@ -120,7 +120,7 @@ export default function FAQSection(_props: FAQSectionProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+            <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground/95 [font-family:var(--home-copy)]">
               <HelpCircle className="mr-1.5 h-3 w-3" />
               FAQ
             </Badge>

@@ -49,7 +49,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
   return (
     <Card
       className={cn(
-        "flex flex-col cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl liquid-panel liquid-panel-hover overflow-hidden",
+        "flex flex-col cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl liquid-panel-premium liquid-panel-hover overflow-hidden",
         size === 'small' || size === 'small-long' ? "w-72" : "w-96"
       )}
       onClick={onClick}
@@ -96,7 +96,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
         "flex-1 pt-0",
         size === 'small' || size === 'small-long' ? "p-2 space-y-1.5" : "p-3 space-y-2"
       )}>
-        <div className="flex justify-between items-baseline border-b border-border pb-2">
+        <div className="flex justify-between items-baseline border-b border-white/[0.06] pb-2">
           <span className={cn(
             "text-muted-foreground uppercase tracking-widest font-bold",
             size === 'small' || size === 'small-long' ? "text-[9px]" : "text-[10px]"
@@ -126,7 +126,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
               <Progress
                 value={progress}
                 className={cn(
-                  "bg-secondary",
+                  "bg-white/[0.04]",
                   size === 'small' || size === 'small-long' ? "h-1" : "h-1.5"
                 )}
                 indicatorClassName={cn(
@@ -156,7 +156,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
               <Progress
                 value={drawdownProgress}
                 className={cn(
-                  "bg-secondary",
+                  "bg-white/[0.04]",
                   size === 'small' || size === 'small-long' ? "h-1" : "h-1.5"
                 )}
                 indicatorClassName={cn(
@@ -170,7 +170,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
 
             {/* Consistency Section - only show for larger sizes */}
             {metrics && (size === 'large' || size === 'extra-large') && (
-              <div className="space-y-1 pt-2 border-t border-border mt-2">
+              <div className="space-y-1 pt-2 border-t border-white/[0.06] mt-2">
                 <div className="flex justify-between text-[10px] uppercase font-bold tracking-tight">
                   <span className="text-muted-foreground">{t('propFirm.card.consistency')}</span>
                   <span className={cn(

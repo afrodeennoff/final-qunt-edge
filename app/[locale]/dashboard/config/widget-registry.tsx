@@ -10,7 +10,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 import { useI18n } from '@/locales/client'
 import { translateWeekday } from '@/lib/translation-utils'
 
-const widgetFallback = <div className="h-full w-full rounded-xl bg-card/5" />
+const widgetFallback = <div className="h-full w-full rounded-xl bg-white/[0.05]" />
 
 const SmartInsightsWidget = dynamic(
   () => import('../components/widgets/smart-insights-widget').then((m) => m.SmartInsightsWidget),
@@ -174,10 +174,10 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-2">
-          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-muted rounded-md border-border">
+          <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 bg-white/[0.03] rounded-md border-white/[0.06]">
             {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
               <div key={i} className={cn(
-                "h-4 bg-muted-foreground/20 rounded",
+                "h-4 bg-white/[0.03]-foreground/20 rounded",
                 type === 'tradeTableReview'
                   ? i === 1 ? "flex-3" : "flex-2"
                   : i < 2 ? "flex-2" : "flex-1"
@@ -188,7 +188,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
             <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/20 rounded-md">
               {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
                 <div key={i} className={cn(
-                  "h-3 bg-muted-foreground/10 rounded",
+                  "h-3 bg-white/[0.03]-foreground/10 rounded",
                   type === 'tradeTableReview'
                     ? i === 1 ? "flex-3" : "flex-2"
                     : i < 2 ? "flex-2" : "flex-1"
@@ -221,10 +221,10 @@ function createPropfirmPreview() {
       <CardContent className="pb-2">
         <div className="w-full flex flex-col gap-3">
           {[...Array(2)].map((_, index) => (
-            <div key={index} className="flex flex-col gap-2 p-3 bg-muted rounded-md border-border">
+            <div key={index} className="flex flex-col gap-2 p-3 bg-white/[0.03] rounded-md border-white/[0.06]">
               <div className="flex justify-between items-center">
-                <div className="h-4 w-24 bg-muted-foreground/20 rounded" />
-                <div className="h-4 w-16 bg-muted-foreground/20 rounded" />
+                <div className="h-4 w-24 bg-white/[0.03]-foreground/20 rounded" />
+                <div className="h-4 w-16 bg-white/[0.03]-foreground/20 rounded" />
               </div>
               <div className="h-20 w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -267,8 +267,8 @@ function createMindsetPreview() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
               <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-              <div className="h-1.5 w-1.5 rounded-full bg-muted" />
-              <div className="h-1.5 w-1.5 rounded-full bg-muted" />
+              <div className="h-1.5 w-1.5 rounded-full bg-white/[0.03]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-white/[0.03]" />
             </div>
           </div>
         </div>
@@ -282,9 +282,9 @@ function createMindsetPreview() {
                 "h-6 w-6 rounded-full border-2 flex items-center justify-center",
                 index === 2 ? "bg-foreground border-foreground" : "border-muted-foreground/20"
               )}>
-                <div className="h-1 w-1 rounded-full bg-card" />
+                <div className="h-1 w-1 rounded-full bg-white/[0.02]" />
               </div>
-              {index < 6 && <div className="h-4 w-px bg-muted-foreground/20" />}
+              {index < 6 && <div className="h-4 w-px bg-white/[0.03]-foreground/20" />}
             </div>
           ))}
         </div>
@@ -292,24 +292,24 @@ function createMindsetPreview() {
         {/* Content area mock */}
         <div className="flex-1 p-4 flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-32 bg-muted-foreground/20 rounded" />
+            <div className="h-4 w-32 bg-white/[0.03]-foreground/20 rounded" />
             <div className="flex gap-2">
-              <div className="h-6 w-16 bg-muted rounded-full" />
-              <div className="h-6 w-20 bg-muted rounded-full" />
-              <div className="h-6 w-18 bg-muted rounded-full" />
+              <div className="h-6 w-16 bg-white/[0.03] rounded-full" />
+              <div className="h-6 w-20 bg-white/[0.03] rounded-full" />
+              <div className="h-6 w-18 bg-white/[0.03] rounded-full" />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-24 bg-muted-foreground/20 rounded" />
-            <div className="h-16 w-full bg-muted rounded border-border" />
+            <div className="h-4 w-24 bg-white/[0.03]-foreground/20 rounded" />
+            <div className="h-16 w-full bg-white/[0.03] rounded border-white/[0.06]" />
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="h-4 w-28 bg-muted-foreground/20 rounded" />
+            <div className="h-4 w-28 bg-white/[0.03]-foreground/20 rounded" />
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-muted rounded-full" />
-              <div className="h-2 flex-1 bg-muted-foreground/10 rounded-full">
+              <div className="h-8 w-8 bg-white/[0.03] rounded-full" />
+              <div className="h-2 flex-1 bg-white/[0.03]-foreground/10 rounded-full">
                 <div className="h-2 w-1/2 bg-primary rounded-full" />
               </div>
             </div>
@@ -375,10 +375,10 @@ function CreateCalendarPreview() {
           {Array.from({ length: 35 }, (_, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center p-1 rounded border border-border hover:bg-accent transition-colors cursor-pointer"
+              className="flex flex-col items-center justify-center p-1 rounded border border-white/[0.06] hover:bg-white/[0.05] transition-colors cursor-pointer"
             >
-              <div className="h-4 w-full bg-muted-foreground/10 rounded mb-0.5" />
-              <div className="h-2 w-3/4 bg-muted-foreground/5 rounded" />
+              <div className="h-4 w-full bg-white/[0.03]-foreground/10 rounded mb-0.5" />
+              <div className="h-2 w-3/4 bg-white/[0.03]-foreground/5 rounded" />
             </div>
           ))}
         </div>
@@ -411,9 +411,9 @@ function CreateChatPreview() {
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <div className="w-3 h-3 rounded-full bg-primary" />
               </div>
-              <div className="bg-muted rounded-lg p-2 max-w-[80%]">
-                <div className="h-3 w-32 bg-muted-foreground/20 rounded mb-1" />
-                <div className="h-3 w-24 bg-muted-foreground/20 rounded" />
+              <div className="bg-white/[0.03] rounded-lg p-2 max-w-[80%]">
+                <div className="h-3 w-32 bg-white/[0.03]-foreground/20 rounded mb-1" />
+                <div className="h-3 w-24 bg-white/[0.03]-foreground/20 rounded" />
               </div>
             </div>
 
@@ -422,8 +422,8 @@ function CreateChatPreview() {
               <div className="bg-primary rounded-lg p-2 max-w-[80%]">
                 <div className="h-3 w-20 bg-primary-foreground/40 rounded" />
               </div>
-              <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center shrink-0">
-                <div className="w-3 h-3 rounded-full bg-muted-foreground" />
+              <div className="w-6 h-6 rounded-full bg-white/[0.03] flex items-center justify-center shrink-0">
+                <div className="w-3 h-3 rounded-full bg-white/[0.03]-foreground" />
               </div>
             </div>
 
@@ -432,10 +432,10 @@ function CreateChatPreview() {
               <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <div className="w-3 h-3 rounded-full bg-primary" />
               </div>
-              <div className="bg-muted rounded-lg p-2 max-w-[80%]">
-                <div className="h-3 w-40 bg-muted-foreground/20 rounded mb-1" />
-                <div className="h-3 w-28 bg-muted-foreground/20 rounded mb-1" />
-                <div className="h-3 w-16 bg-muted-foreground/20 rounded" />
+              <div className="bg-white/[0.03] rounded-lg p-2 max-w-[80%]">
+                <div className="h-3 w-40 bg-white/[0.03]-foreground/20 rounded mb-1" />
+                <div className="h-3 w-28 bg-white/[0.03]-foreground/20 rounded mb-1" />
+                <div className="h-3 w-16 bg-white/[0.03]-foreground/20 rounded" />
               </div>
             </div>
           </div>
@@ -444,8 +444,8 @@ function CreateChatPreview() {
         {/* Input area */}
         <div className="border-t p-3">
           <div className="flex items-center gap-2">
-            <div className="flex-1 h-9 bg-muted rounded-md border-border flex items-center px-3">
-              <div className="h-3 w-24 bg-muted-foreground/20 rounded" />
+            <div className="flex-1 h-9 bg-white/[0.03] rounded-md border-white/[0.06] flex items-center px-3">
+              <div className="h-3 w-24 bg-white/[0.03]-foreground/20 rounded" />
             </div>
             <Button size="sm" className="h-9 px-3">
               Send
@@ -473,22 +473,22 @@ function createSmartInsightsPreview() {
         </div>
       </CardHeader>
       <CardContent className="flex-1 p-4 gap-3">
-        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-card/5 p-3">
+        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-white/[0.05] p-3">
           <div className="h-8 w-8 rounded-full bg-semantic-info-bg/10 border border-semantic-info-border/20 flex items-center justify-center">
             <Brain className="h-4 w-4 text-semantic-info" />
           </div>
           <div className="space-y-2 flex-1">
-            <div className="h-4 w-24 bg-card/10 rounded" />
-            <div className="h-3 w-full bg-card/5 rounded" />
+            <div className="h-4 w-24 bg-white/[0.010] rounded" />
+            <div className="h-3 w-full bg-white/[0.05] rounded" />
           </div>
         </div>
-        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-card/5 p-3 opacity-60">
+        <div className="flex items-start gap-3 rounded-lg border border-border/5 bg-white/[0.05] p-3 opacity-60">
           <div className="h-8 w-8 rounded-full bg-semantic-error-bg/10 border border-semantic-error-border/20 flex items-center justify-center">
             <div className="h-4 w-4 rounded-sm bg-semantic-error-bg/50" />
           </div>
           <div className="space-y-2 flex-1">
-            <div className="h-4 w-16 bg-card/10 rounded" />
-            <div className="h-3 w-3/4 bg-card/5 rounded" />
+            <div className="h-4 w-16 bg-white/[0.010] rounded" />
+            <div className="h-3 w-3/4 bg-white/[0.05] rounded" />
           </div>
         </div>
       </CardContent>

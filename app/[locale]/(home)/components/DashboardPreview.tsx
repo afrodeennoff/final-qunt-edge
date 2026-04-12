@@ -51,7 +51,7 @@ export default function DashboardPreview() {
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
                   {stat.label}
                 </p>
-                <p className="font-mono text-[28px] font-[250] tracking-[-0.05em] tabular-nums text-foreground">
+                <p className="font-mono text-[28px] font-[250] tracking-[-0.05em] tabular-nums text-foreground/95">
                   {stat.value}
                 </p>
                 <div className="mt-1 flex items-center gap-1">
@@ -122,7 +122,7 @@ export default function DashboardPreview() {
                   className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/20 px-3 py-2 text-sm"
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-mono text-[0.85rem] font-semibold text-foreground">
+                    <span className="font-mono text-[0.85rem] font-semibold text-foreground/95">
                       {trade.symbol}
                     </span>
                     <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/34">{trade.side}</span>

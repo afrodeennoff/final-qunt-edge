@@ -24,10 +24,10 @@ function formatChallengeFee(fee: number | null): string {
 
 export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
   return (
-    <section className="qe-soft-panel mt-6 rounded-3xl p-4 sm:p-6">
+    <section className="qe-soft-panel mt-6 rounded-2xl p-4 sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-semibold text-foreground">Side-by-side decision matrix</h2>
+          <h2 className="text-2xl font-semibold text-foreground/95">Side-by-side decision matrix</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Use this as a first-pass filter, then validate exact terms at checkout before committing capital.
           </p>
@@ -39,30 +39,30 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
 
       <div className="mt-5 grid gap-3 lg:hidden">
         {firms.map((firm) => (
-          <article key={firm.id} className="qe-soft-surface rounded-2xl p-4">
-            <h3 className="text-base font-semibold text-foreground">{firm.name}</h3>
+          <article key={firm.id} className="qe-soft-surface rounded-xl p-4">
+            <h3 className="text-base font-semibold text-foreground/95">{firm.name}</h3>
             <dl className="mt-3 grid grid-cols-2 gap-3 text-sm">
               <div>
                 <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Typical Entry</dt>
-                <dd className="mt-1 font-medium text-foreground">{formatChallengeFee(getLowestChallengeFee(firm))}</dd>
+                <dd className="mt-1 font-medium text-foreground/95">{formatChallengeFee(getLowestChallengeFee(firm))}</dd>
               </div>
               <div>
                 <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Drawdown</dt>
-                <dd className="mt-1 font-medium text-foreground">{firm.drawdownType}</dd>
+                <dd className="mt-1 font-medium text-foreground/95">{firm.drawdownType}</dd>
               </div>
               <div>
                 <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Payout Tempo</dt>
-                <dd className="mt-1 font-medium text-foreground">{firm.payoutModel}</dd>
+                <dd className="mt-1 font-medium text-foreground/95">{firm.payoutModel}</dd>
               </div>
               <div>
                 <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Tracked Accounts</dt>
-                <dd className="mt-1 font-medium text-foreground">
+                <dd className="mt-1 font-medium text-foreground/95">
                   {firm.catalogueStats?.accountsCount?.toLocaleString() ?? '0'}
                 </dd>
               </div>
               <div className="col-span-2">
                 <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Paid Payouts</dt>
-                <dd className="mt-1 font-medium text-foreground">
+                <dd className="mt-1 font-medium text-foreground/95">
                   ${(firm.catalogueStats?.paidPayoutAmount ?? 0).toLocaleString()}
                 </dd>
               </div>
@@ -85,8 +85,8 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
           </thead>
           <tbody>
             {firms.map((firm) => (
-              <tr key={firm.id} className="border-b border-border/18 transition-colors hover:bg-background/50 last:border-b-0">
-                <td className="sticky left-0 bg-card px-3 py-4 font-semibold text-foreground">{firm.name}</td>
+              <tr key={firm.id} className="border-b border-white/[0.04] transition-colors hover:bg-background/50 last:border-b-0">
+                <td className="sticky left-0 bg-white/[0.02] px-3 py-4 font-semibold text-foreground/95">{firm.name}</td>
                 <td className="px-3 py-4 text-muted-foreground">
                   {formatChallengeFee(getLowestChallengeFee(firm))}
                 </td>

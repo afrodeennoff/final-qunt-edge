@@ -31,7 +31,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
         <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] px-6 py-16 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-40px_rgba(0,0,0,0.95),0_0_100px_-40px_oklch(0.65_0.22_260/0.16)] sm:px-12 sm:py-20">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.14),transparent_45%)]" />
           <div className="relative z-10">
-            <h2 className="mb-6 text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[1.02] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
+            <h2 className="mb-6 text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[1.02] tracking-[-0.05em] text-foreground/95 [font-family:var(--home-display)]">
               Ready to{' '}
               <span className="line-through decoration-muted-foreground/30 decoration-2">stop guessing</span>
               {' '}and{' '}
@@ -69,7 +69,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
             <Button
               asChild
               size="lg"
-              className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground"
+              className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
             >
               <Link href={`/${locale}/propfirms`}>
                 Browse Prop Firms

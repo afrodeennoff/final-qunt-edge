@@ -55,7 +55,7 @@ export const AccountSelectionPopover = React.memo(({
         <Button 
           variant="ghost"
           size="sm"
-          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground/95"
         >
           <Settings className="h-3 w-3 mr-1" />
           {t('equity.legend.selectAccounts')}
@@ -73,7 +73,7 @@ export const AccountSelectionPopover = React.memo(({
                     variant="ghost"
                     size="sm"
                     onClick={clearSearch}
-                    className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                    className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground/95"
                   >
                     <X className="h-3 w-3 mr-1" />
                     {t('equity.legend.clearSearch')}
@@ -107,7 +107,7 @@ export const AccountSelectionPopover = React.memo(({
                       />
                       <Label
                         htmlFor={`account-${accountNumber}`}
-                        className="text-xs font-normal cursor-pointer flex-1 hover:text-foreground"
+                        className="text-xs font-normal cursor-pointer flex-1 hover:text-foreground/95"
                       >
                         {accountNumber}
                       </Label>

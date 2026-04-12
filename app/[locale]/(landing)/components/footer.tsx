@@ -59,11 +59,11 @@ export default function Footer() {
         <div className="grid gap-8 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)] lg:grid-cols-[1.2fr_1.8fr] sm:p-8 lg:p-10">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--frost-border)] bg-card shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--frost-border)] bg-white/[0.02] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
                 <Logo className="h-5 w-5 fill-foreground" />
               </div>
               <div className="leading-none">
-                <div className="text-[13px] font-semibold tracking-[-0.02em] text-foreground">Qunt Edge</div>
+                <div className="text-[13px] font-semibold tracking-[-0.02em] text-foreground/95">Qunt Edge</div>
                 <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/30">Trading Intelligence</div>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function Footer() {
               <Link
                 href={`/${locale}/support`}
                 prefetch={false}
-                className="rounded-full border border-[var(--frost-border)] px-4 py-2 text-[11px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
+                className="rounded-full border border-[var(--frost-border)] px-4 py-2 text-[11px] font-medium text-foreground/95 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-0"
               >
                 Contact Support
               </Link>
@@ -142,7 +142,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-full px-2 py-1 text-[13px] text-foreground/50 hover:text-foreground transition-colors duration-150 tracking-[-0.005em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+              className="inline-flex rounded-full px-2 py-1 text-[13px] text-foreground/50 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
             >
               {item.name}
             </Link>

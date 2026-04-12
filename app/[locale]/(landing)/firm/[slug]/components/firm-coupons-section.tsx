@@ -31,10 +31,10 @@ export function FirmCouponsSection({
   }, [firmId])
 
   return (
-    <Card className="rounded-2xl border-border/40 bg-card/5 p-6">
+    <Card className="rounded-xl border-border/40 bg-white/[0.05] p-6">
       <div className="mb-2 flex items-center gap-2">
         <DealsIcon size={18} className="text-v2-accent" />
-        <span className="text-lg font-semibold text-foreground">Current coupons</span>
+        <span className="text-lg font-semibold text-foreground/95">Current coupons</span>
         <span className="text-xs text-muted-foreground">({coupons.length})</span>
       </div>
       <CardDescription className="mb-4 text-sm leading-6 text-muted-foreground">
@@ -47,7 +47,7 @@ export function FirmCouponsSection({
           <Skeleton className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border/24 bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-xl border border-dashed border-white/[0.06] bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
           <p>No active coupons are currently tracked in the database snapshot.</p>
           <p className="mx-auto mt-2 max-w-lg leading-6">
             We only show live codes when the firm record has an active coupon attached. Check the Deals board for current offers or visit the official site for the firm&apos;s latest pricing.
@@ -64,7 +64,7 @@ export function FirmCouponsSection({
                 href={referralUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border/40 bg-background/50 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-background/80"
+                className="rounded-full border border-border/40 bg-background/50 px-4 py-2 text-xs font-semibold text-foreground/95 transition-colors hover:bg-background/80"
               >
                 Visit Official Site
               </a>
@@ -74,7 +74,7 @@ export function FirmCouponsSection({
       ) : (
         <div className="space-y-3">
           {coupons.map((coupon) => (
-            <div key={coupon.id} className="rounded-2xl border border-border/40 bg-background/40 p-4">
+            <div key={coupon.id} className="rounded-xl border border-border/40 bg-background/40 p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-mono text-sm font-bold text-v2-accent bg-v2-accent-subtle px-2 py-1 rounded">
                   {coupon.code}

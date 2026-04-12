@@ -103,7 +103,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
               <div className={cn(
                 "text-center text-xs font-semibold px-1 py-0.5 rounded transition-colors",
                 monthlyPnl > 0 
-                  ? "text-foreground dark:text-foreground bg-secondary/30 dark:bg-secondary/22" 
+                  ? "text-foreground/95 dark:text-foreground/95 bg-secondary/30 dark:bg-secondary/22" 
                   : monthlyPnl < 0 
                     ? "text-semantic-error dark:text-semantic-error/90 bg-semantic-error-bg/50 dark:bg-semantic-error-bg/30" 
                     : "text-muted-foreground bg-muted/20"
@@ -150,7 +150,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                   return (
                     <div
                       key={weekIndex}
-                      className="flex flex-col items-center justify-center border-border rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
+                      className="flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
                     />
                   )
                 }
@@ -162,13 +162,13 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                     <PopoverTrigger asChild>
                       <div
                         className={cn(
-                          "flex flex-col items-center justify-center border-border rounded p-1 min-h-12 flex-1 cursor-pointer",
+                          "flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 cursor-pointer",
                           "transition-all duration-200 hover:scale-[1.02] hover:shadow-xs",
                           pnl > 0 
-                            ? "bg-secondary/30 dark:bg-secondary/22 text-foreground dark:text-foreground border-border/65 dark:border-border/55" 
+                            ? "bg-secondary/30 dark:bg-secondary/22 text-foreground/95 dark:text-foreground/95 border-border/65 dark:border-border/55" 
                             : pnl < 0 
                               ? "bg-semantic-error-bg/60 dark:bg-semantic-error-bg/30 text-semantic-error dark:text-semantic-error/90 border-semantic-error-border/80 dark:border-semantic-error-border/40" 
-                              : "bg-muted/20 dark:bg-muted/10 text-muted-foreground border-border"
+                              : "bg-muted/20 dark:bg-muted/10 text-muted-foreground border-white/[0.06]"
                         )}
                       >
                         <div className="text-[10px] font-medium opacity-80">{t('calendar.week')} {getWeek(weekStart, { locale: dateLocale })}</div>
@@ -188,7 +188,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                           </h4>
                           <div className={cn(
                             "text-sm font-semibold",
-                            pnl > 0 ? "text-foreground dark:text-foreground" : "text-semantic-error dark:text-semantic-error"
+                            pnl > 0 ? "text-foreground/95 dark:text-foreground/95" : "text-semantic-error dark:text-semantic-error"
                           )}>
                             {formatCurrency(pnl)}
                           </div>
@@ -210,7 +210,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                                       </div>
                                       <div className={cn(
                                         "text-sm font-semibold",
-                                        dayPnl > 0 ? "text-foreground dark:text-foreground" : "text-semantic-error dark:text-semantic-error"
+                                        dayPnl > 0 ? "text-foreground/95 dark:text-foreground/95" : "text-semantic-error dark:text-semantic-error"
                                       )}>
                                         {formatCurrency(dayPnl)}
                                       </div>
@@ -231,7 +231,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
                                           </div>
                                           <div className={cn(
                                             "text-sm font-semibold",
-                                            Number(trade.pnl) > 0 ? "text-foreground dark:text-foreground" : "text-semantic-error dark:text-semantic-error"
+                                            Number(trade.pnl) > 0 ? "text-foreground/95 dark:text-foreground/95" : "text-semantic-error dark:text-semantic-error"
                                           )}>
                                             {formatCurrency(Number(trade.pnl))}
                                           </div>

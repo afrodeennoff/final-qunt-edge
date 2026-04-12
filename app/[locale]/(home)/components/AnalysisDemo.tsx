@@ -31,7 +31,7 @@ const logs = [
 const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), {
   ssr: false,
   loading: () => (
-    <div className="h-full w-full animate-pulse rounded-2xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.65)]" />
+    <div className="h-full w-full animate-pulse rounded-xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-surface-muted)/0.65)]" />
   ),
 })
 
@@ -64,7 +64,7 @@ export default function AnalysisDemo() {
             <p className="text-[0.68rem] uppercase tracking-[0.2em] text-foreground/80 [font-family:var(--home-copy)]">Trading Journal Intelligence</p>
             <h2 className="mt-2 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
               Real-time review for
-              <span className="block text-foreground">process over outcome</span>
+              <span className="block text-foreground/95">process over outcome</span>
             </h2>
           </div>
             <p className="max-w-md text-[15px] leading-[1.75] text-muted-foreground/80 [font-family:var(--home-copy)]">
@@ -72,7 +72,7 @@ export default function AnalysisDemo() {
             </p>
         </div>
 
-        <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] overflow-hidden">
+        <div className="rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)] overflow-hidden">
           <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
             <div className="border-b border-[var(--frost-border)] p-5 sm:p-7 lg:border-b-0 lg:border-r">
               <div className="mb-6 flex items-center justify-between">
@@ -80,28 +80,28 @@ export default function AnalysisDemo() {
                   <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Execution Stream</p>
                   <p className="mt-1 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">4,367.00</p>
                 </div>
-                <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground [font-family:var(--home-copy)]">
+                <span className="rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/95 [font-family:var(--home-copy)]">
                   +1.27%
                 </span>
               </div>
 
               {isMobile ? (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
+                  <div className="rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Plan Adherence</p>
                     <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">87%</p>
                   </div>
-                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
+                  <div className="rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Risk Drift</p>
-                    <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">-22%</p>
+                    <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">-22%</p>
                   </div>
-                  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
+                  <div className="rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Review SLA</p>
                     <p className="mt-2 font-mono text-2xl font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">9m</p>
                   </div>
                 </div>
               ) : (
-                <div className="h-[300px] overflow-hidden rounded-2xl bg-[oklch(0.05_0_0)] p-3">
+                <div className="h-[300px] overflow-hidden rounded-xl bg-[oklch(0.05_0_0)] p-3">
                   <AnalysisDemoChart data={mockData} />
                 </div>
               )}
@@ -119,12 +119,12 @@ export default function AnalysisDemo() {
                 </div>
               </div>
               <div className={cn("mt-4 space-y-3", isMobile ? "min-h-0" : "min-h-[220px]")}>
-                <div className="rounded-2xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4 text-sm font-mono leading-relaxed text-[oklch(0.65_0.01_275)] [font-family:var(--home-copy)]">
+                <div className="rounded-xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4 text-sm font-mono leading-relaxed text-[oklch(0.65_0.01_275)] [font-family:var(--home-copy)]">
                   {activeLog}
                 </div>
               </div>
 
-              <div className="mt-5 rounded-2xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4">
+              <div className="mt-5 rounded-xl border border-[var(--frost-border-alt)] bg-[oklch(0.05_0_0)] p-4">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/80 [font-family:var(--home-copy)]">Anomaly Probability</p>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-[hsl(var(--mk-border)/0.3)]">
                   <div

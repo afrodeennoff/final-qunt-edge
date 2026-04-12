@@ -93,7 +93,7 @@ export default function PricingSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease }}
         >
-          <h2 className="mb-5 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] tracking-[-0.045em] text-foreground leading-tight [font-family:var(--home-display)]">
+          <h2 className="mb-5 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] tracking-[-0.045em] text-foreground/95 leading-tight [font-family:var(--home-display)]">
             Simple, transparent{' '}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">pricing</span>
           </h2>
@@ -110,7 +110,7 @@ export default function PricingSection() {
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 !isAnnual
                   ? 'rounded-full bg-white text-black'
-                  : 'text-foreground/46 hover:text-foreground'
+                  : 'text-foreground/46 hover:text-foreground/95'
               }`}
             >
               Monthly
@@ -122,7 +122,7 @@ export default function PricingSection() {
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 isAnnual
                   ? 'rounded-full bg-white text-black'
-                  : 'text-foreground/46 hover:text-foreground'
+                  : 'text-foreground/46 hover:text-foreground/95'
               }`}
             >
               Annual <span className="text-success font-semibold">-20%</span>
@@ -161,7 +161,7 @@ export default function PricingSection() {
               )}
 
               {/* Plan Name */}
-              <h3 className="mb-2 text-lg font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+              <h3 className="mb-2 text-lg font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
                 {plan.name}
               </h3>
 
@@ -208,7 +208,7 @@ export default function PricingSection() {
               ) : (
                 <Button
                   variant="outline"
-                  className="h-11 w-full rounded-full border border-white/[0.12] bg-white/[0.04] text-[0.9rem] font-medium text-foreground/76 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground"
+                  className="h-11 w-full rounded-full border border-white/[0.12] bg-white/[0.04] text-[0.9rem] font-medium text-foreground/76 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95"
                 >
                   {plan.cta}
                 </Button>

@@ -14,7 +14,7 @@ export default function FAQ() {
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
               FAQ
             </p>
-            <h2 className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground sm:text-4xl">
+            <h2 className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground/95 sm:text-4xl">
               {t("faq.heading")}
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-[1.8] text-foreground/60">
@@ -24,7 +24,7 @@ export default function FAQ() {
           <div className="rounded-[1.9rem] border border-white/[0.08] bg-black/20 p-5">
             <div className="space-y-4">
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question1")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
@@ -32,7 +32,7 @@ export default function FAQ() {
                 </p>
               </details>
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question2")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
@@ -40,7 +40,7 @@ export default function FAQ() {
                 </p>
               </details>
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question3")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
@@ -48,7 +48,7 @@ export default function FAQ() {
                 </p>
               </details>
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question4")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
@@ -56,7 +56,7 @@ export default function FAQ() {
                 </p>
               </details>
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question5")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
@@ -64,7 +64,7 @@ export default function FAQ() {
                 </p>
               </details>
               <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="cursor-pointer font-semibold text-foreground/95">
                   {t("faq.question6")}
                 </summary>
                 <p className="mt-3 text-sm leading-[1.75] text-foreground/68">

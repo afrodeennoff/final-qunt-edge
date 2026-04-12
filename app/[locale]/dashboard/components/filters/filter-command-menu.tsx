@@ -420,7 +420,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
     <Command 
       ref={commandRef} 
       className={cn(
-        "rounded-2xl border border-v2-border/18 bg-v2-bg-surface/95 shadow-xl shadow-black/20",
+        "rounded-xl border border-v2-border/18 bg-v2-bg-surface/95 shadow-xl shadow-black/20",
         (isMobileDevice || isMobile) && "h-full"
       )} 
       shouldFilter={false}
@@ -469,7 +469,7 @@ export function FilterCommandMenu({ className, variant = "navbar" }: FilterComma
           )}
         </div>
       )}
-      <div className="border-b border-border/18 bg-v2-bg-base/55 px-3 pb-2 pt-3">
+      <div className="border-b border-white/[0.04] bg-v2-bg-base/55 px-3 pb-2 pt-3">
         <p className="text-xs font-medium text-muted-foreground mb-2">
           {t('filters.commandMenu.categories.title')}
         </p>

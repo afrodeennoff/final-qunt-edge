@@ -68,7 +68,7 @@ export function BlogManagementClient({
   return (
     <>
       <Card variant="flat" hover>
-        <div className="border-b border-border/24 p-4">
+        <div className="border-b border-white/[0.06] p-4">
           <div className="flex items-center gap-3">
             <Search className="h-4 w-4 text-muted-foreground" />
             <Input
@@ -93,7 +93,7 @@ export function BlogManagementClient({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border/24 text-left text-sm">
+                <tr className="border-b border-white/[0.06] text-left text-sm">
                   <th className="p-4 font-medium text-muted-foreground">Title</th>
                   <th className="p-4 font-medium text-muted-foreground">Slug</th>
                   <th className="p-4 font-medium text-muted-foreground">Category</th>
@@ -107,7 +107,7 @@ export function BlogManagementClient({
                 {filteredPosts.map((post) => (
                   <tr key={post.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
                     <td className="p-4">
-                      <div className="font-medium text-foreground">{post.title}</div>
+                      <div className="font-medium text-foreground/95">{post.title}</div>
                       {post.excerpt && (
                         <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">
                           {post.excerpt}
@@ -115,7 +115,7 @@ export function BlogManagementClient({
                       )}
                     </td>
                     <td className="p-4">
-                      <code className="rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
+                      <code className="rounded bg-white/[0.03] px-2 py-1 text-xs text-muted-foreground">
                         {post.slug}
                       </code>
                     </td>

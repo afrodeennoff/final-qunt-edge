@@ -64,7 +64,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
             />
           </svg>
         </div>
-        <h3 className="text-sm font-medium text-foreground mb-1">No firms found</h3>
+        <h3 className="text-sm font-medium text-foreground/95 mb-1">No firms found</h3>
         <p className="text-xs text-muted-foreground/70">
           Try adjusting your search or filters
         </p>
@@ -96,7 +96,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
             size="sm"
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage <= 1 || isPending}
-            className="h-8 px-3 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40"
+            className="h-8 px-3 text-xs font-medium text-muted-foreground hover:text-foreground/95 disabled:opacity-40"
           >
             <svg className="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -136,8 +136,8 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
                   className={cn(
                     "h-8 w-8 p-0 text-xs font-medium rounded-md transition-all duration-200",
                     currentPage === page
-                      ? "bg-primary/15 text-foreground border border-primary/30"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "bg-primary/15 text-foreground/95 border border-primary/30"
+                      : "text-muted-foreground hover:text-foreground/95 hover:bg-muted/50"
                   )}
                 >
                   {page}
@@ -151,7 +151,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
             size="sm"
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage >= totalPages || isPending}
-            className="h-8 px-3 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-40"
+            className="h-8 px-3 text-xs font-medium text-muted-foreground hover:text-foreground/95 disabled:opacity-40"
           >
             Next
             <svg className="w-3.5 h-3.5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

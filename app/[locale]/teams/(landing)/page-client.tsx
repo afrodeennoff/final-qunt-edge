@@ -15,7 +15,7 @@ export default function TeamsPageClient() {
             <p className="inline-flex rounded-full border border-white/[0.12] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/38">
               Teams
             </p>
-            <h1 className="mt-5 max-w-3xl text-3xl font-[350] tracking-[-0.05em] text-foreground sm:text-5xl">
+            <h1 className="mt-5 max-w-3xl text-3xl font-[350] tracking-[-0.05em] text-foreground/95 sm:text-5xl">
               A shared trading desk, rebuilt as one command surface.
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-[1.8] tracking-[-0.01em] text-foreground/56 sm:text-base">
@@ -31,7 +31,7 @@ export default function TeamsPageClient() {
               </Link>
               <Link
                 href={`/${locale}/support`}
-                className="inline-flex items-center rounded-full border border-white/[0.12] bg-white/[0.04] px-6 py-3 text-[13px] font-medium tracking-[-0.01em] text-foreground/76 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground"
+                className="inline-flex items-center rounded-full border border-white/[0.12] bg-white/[0.04] px-6 py-3 text-[13px] font-medium tracking-[-0.01em] text-foreground/76 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95"
               >
                 Contact Sales
               </Link>

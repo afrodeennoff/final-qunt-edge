@@ -17,9 +17,9 @@ export default function LandingError({
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="max-w-md border-border/24 bg-card/90">
+      <Card className="max-w-md border-white/[0.06] bg-white/[0.090]">
         <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
-          <h2 className="text-xl font-semibold text-foreground">Something went wrong</h2>
+          <h2 className="text-xl font-semibold text-foreground/95">Something went wrong</h2>
           <p className="text-sm text-muted-foreground">
             An unexpected error has occurred. Please try again.
           </p>

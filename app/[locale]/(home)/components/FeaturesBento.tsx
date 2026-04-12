@@ -195,7 +195,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
       >
         {problem.badge}
       </Badge>
-      <h3 className="text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+      <h3 className="text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
         {problem.title}
       </h3>
       <p className="mt-3 text-[0.9rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
@@ -254,7 +254,7 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
           <Icon className="w-4 h-4 text-primary" />
         </div>
       </div>
-      <h3 className="relative text-[1rem] font-medium tracking-[-0.015em] text-foreground [font-family:var(--home-display)]">
+      <h3 className="relative text-[1rem] font-medium tracking-[-0.015em] text-foreground/95 [font-family:var(--home-display)]">
         {feature.title}
       </h3>
       <p className="relative mt-2.5 text-[0.88rem] leading-[1.65] text-foreground/58 [font-family:var(--home-copy)]">
@@ -282,7 +282,7 @@ export default function FeaturesBento() {
               Platform Capabilities
             </p>
             <h2
-              className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}
+              className={`${TYPO_MINOR} text-foreground/95 leading-tight [font-family:var(--home-display)]`}
             >
               Everything you need to{' '}
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">

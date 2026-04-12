@@ -215,7 +215,7 @@ const ResumeScrollButton = () => {
           <Button 
             onClick={handleScrollToBottom}
             size="sm"
-            className="shadow-lg hover:shadow-xl transition-shadow"
+            className="shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] hover:shadow-xl transition-shadow"
             variant="ghost"
           >
             <ChevronDown className="h-4 w-4 mr-1" />

@@ -162,7 +162,7 @@ export default React.memo(function PnLBySideChart({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-foreground",
+                "line-clamp-1 font-bold tracking-tight text-foreground/95",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -173,7 +173,7 @@ export default React.memo(function PnLBySideChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -195,7 +195,7 @@ export default React.memo(function PnLBySideChart({
             <Switch
               checked={showAverage}
               onCheckedChange={setShowAverage}
-              className="data-[state=checked]:bg-card"
+              className="data-[state=checked]:bg-white/[0.02]"
             />
           </div>
         </div>

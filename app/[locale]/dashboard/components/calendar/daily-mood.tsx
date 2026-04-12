@@ -133,7 +133,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
                 <Button 
                   variant="ghost"
                   size="lg"
-                  className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
+                  className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground/95' : ''}`}
                   onClick={() => handleMoodSelect('great')}
                   disabled={isLoading !== null}
                 >
@@ -191,7 +191,7 @@ export function DailyMood({ dayData, isWeekly = false, selectedDate }: DailyMood
               <Button 
                 variant="ghost"
                 size="lg"
-                className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground' : ''}`}
+                className={`flex flex-col items-center h-auto py-2 px-4 ${selectedMood === 'great' ? 'text-foreground/95' : ''}`}
                 onClick={() => handleMoodSelect('great')}
                 disabled={isLoading !== null}
               >

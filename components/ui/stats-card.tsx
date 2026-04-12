@@ -34,7 +34,7 @@ const SIZE_CONFIG = {
     value: "text-lg",
     title: "text-xs",
     trend: "text-xs",
-    padding: "p-[var(--space-3)]",
+    padding: "p-3.5",
     cardTitleSize: "sm" as const,
   },
   md: {
@@ -42,7 +42,7 @@ const SIZE_CONFIG = {
     value: "text-2xl",
     title: "text-sm",
     trend: "text-sm",
-    padding: "p-[var(--space-4)]",
+    padding: "p-5",
     cardTitleSize: "md" as const,
   },
   lg: {
@@ -50,7 +50,7 @@ const SIZE_CONFIG = {
     value: "text-3xl",
     title: "text-base",
     trend: "text-base",
-    padding: "p-[var(--space-5)]",
+    padding: "p-6",
     cardTitleSize: "lg" as const,
   },
 } as const
@@ -68,7 +68,7 @@ function formatCurrencyValue(value: number, locale: string = "en-US"): string {
 }
 
 function getTrendBadgeVariant(isPositive: boolean): BadgeProps["variant"] {
-  return isPositive ? "default" : "destructive"
+  return isPositive ? "success" : "destructive"
 }
 
 function getTrendIcon(isPositive: boolean) {
@@ -84,17 +84,19 @@ function StatsCardSkeleton({ size = "md", className }: StatsCardSkeletonProps) {
   const config = SIZE_CONFIG[size]
 
   return (
-    <Card
-      variant="flat"
+    <div
       className={cn(
-        "border border-white/[0.06] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
+        "relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
         config.padding,
         className
       )}
     >
-      <div className="flex flex-col gap-[var(--space-3)]">
+      {/* Top accent line */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <Skeleton className={cn(config.icon, "shrink-0")} />
             <Skeleton className={cn("h-4 w-20", config.title)} />
           </div>
@@ -103,7 +105,7 @@ function StatsCardSkeleton({ size = "md", className }: StatsCardSkeletonProps) {
         <Skeleton className={cn("h-8 w-32", config.value)} />
         <Skeleton className="h-3 w-24" />
       </div>
-    </Card>
+    </div>
   )
 }
 
@@ -162,15 +164,15 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
         {...props}
       >
         {(title || Icon || trend) && (
-          <CardHeader size={size} className="flex-row items-center justify-between pb-[var(--space-2)]">
-            <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
+          <CardHeader size={size} className="flex-row items-center justify-between pb-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
               {renderIcon() && (
-                <div className="shrink-0 text-muted-foreground group-hover:text-v2-accent transition-colors duration-200" aria-hidden="true">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 transition-colors duration-200" aria-hidden="true">
                   {renderIcon()}
                 </div>
               )}
               <h3 className={cn(
-                "font-medium text-muted-foreground truncate micro-sans",
+                "font-semibold text-muted-foreground/80 truncate micro-sans",
                 config.title
               )}>
                 {title}
@@ -180,15 +182,13 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
             {trend && (
               <Badge
                 variant={getTrendBadgeVariant(trend.isPositive)}
-                className={cn(
-                  "shrink-0 gap-1 font-medium",
-                  config.trend,
-                  "bg-white/[0.03] border-v2-border/40"
-                )}
+                size="sm"
+                
+                className="shrink-0 gap-1"
                 aria-label={`${trend.isPositive ? 'Increased' : 'Decreased'} by ${Math.abs(trend.value)}%`}
               >
                 {React.createElement(getTrendIcon(trend.isPositive), {
-                  className: cn(config.icon, "stroke-2"),
+                  className: cn("h-3 w-3", "stroke-2"),
                   "aria-hidden": true,
                 })}
                 <span>{trend.isPositive ? "+" : ""}{trend.value}%</span>
@@ -197,16 +197,16 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
           </CardHeader>
         )}
 
-        <CardContent size={size} className="gap-[var(--space-2)]">
+        <CardContent size={size} className="gap-1.5">
           <div
             className={cn(
-              "font-bold tracking-tight tabular-nums micro-sans",
+              "font-bold tracking-tight tabular-nums",
               config.value,
               trend
                 ? trend.isPositive
-                  ? "metric-positive"
-                  : "metric-negative"
-                : "text-foreground",
+                  ? "text-emerald-400"
+                  : "text-red-400"
+                : "text-foreground/95",
               "transition-colors duration-200"
             )}
             aria-label={`Value: ${displayValue}`}
@@ -224,7 +224,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
 
           {description && (
             <p className={cn(
-              "text-muted-foreground micro-sans",
+              "text-muted-foreground/60 micro-sans",
               config.trend
             )}>
               {description}
@@ -271,20 +271,20 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
 
     if (isLoading) {
       return (
-        <Card
+        <div
           className={cn(
-            "relative overflow-hidden rounded-xl border border-white/[0.06] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
-            "bg-v2-bg-surface/88",
+            "relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]",
+            "shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
             config.padding,
             className
           )}
         >
-          <div className="flex flex-col gap-[var(--space-3)]">
+          <div className="flex flex-col gap-3">
             <Skeleton className="h-4 w-1/3" />
             <Skeleton className={cn("h-8 w-32", config.value)} />
             <Skeleton className="h-3 w-24" />
           </div>
-        </Card>
+        </div>
       )
     }
 
@@ -301,28 +301,37 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
     }
 
     return (
-        <Card
-          ref={ref}
-          data-widget-shell="v2"
-          className={cn(
-            "group relative overflow-hidden rounded-xl border border-white/[0.06] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)] transition-all duration-[180ms]",
-            "bg-v2-bg-surface/88",
-            "hover:border-white/[0.06] hover:bg-v2-bg-surface/92",
-            glass && "bg-v2-bg-surface/60 backdrop-blur-md",
-            !!onClick && "cursor-pointer hover:shadow-md",
-            config.padding,
-            className
-          )}
-        >
+      <div
+        ref={ref}
+        data-widget-shell="v2"
+        role={onClick ? "button" : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        onClick={onClick}
+        className={cn(
+          "group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] transition-all duration-200",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+          glass && "bg-white/[0.03] backdrop-blur-md",
+          !!onClick && "cursor-pointer hover:border-white/[0.10] hover:bg-white/[0.035] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
+          config.padding,
+          className
+        )}
+        {...props}
+      >
+        {/* Top accent line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+        
+        {/* Hover glow */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
         {(title || trend) && (
-          <div className="flex items-center justify-between gap-[var(--space-3)]">
-            <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
+          <div className="relative flex items-center justify-between gap-3 mb-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
               {renderIcon() && (
-                <div className="shrink-0 text-muted-foreground group-hover:text-v2-accent transition-colors duration-200" aria-hidden="true">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 transition-colors duration-200" aria-hidden="true">
                   {renderIcon()}
                 </div>
               )}
-              <h3 className={cn("text-muted-foreground truncate micro-sans", config.title)}>
+              <h3 className={cn("text-muted-foreground/70 font-semibold truncate micro-sans", config.title)}>
                 {title}
               </h3>
             </div>
@@ -330,14 +339,13 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
             {trend && (
               <Badge
                 variant={getTrendBadgeVariant(trend.isPositive)}
-                className={cn(
-                  "shrink-0 gap-1 font-medium",
-                  config.trend
-                )}
+                size="sm"
+                
+                className="shrink-0 gap-1"
                 aria-label={`${trend.isPositive ? 'Increased' : 'Decreased'} by ${Math.abs(trend.value)}%`}
               >
                 {React.createElement(getTrendIcon(trend.isPositive), {
-                  className: cn(config.icon, "stroke-2"),
+                  className: "h-3 w-3 stroke-2",
                   "aria-hidden": true,
                 })}
                 <span>{trend.isPositive ? "+" : ""}{trend.value}%</span>
@@ -348,13 +356,13 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
 
         <div
           className={cn(
-            "font-bold tracking-tight tabular-nums micro-sans",
+            "relative font-bold tracking-tight tabular-nums",
             config.value,
             trend
               ? trend.isPositive
-                ? "metric-positive"
-                : "metric-negative"
-              : "text-foreground",
+                ? "text-emerald-400"
+                : "text-red-400"
+              : "text-foreground/95",
             "transition-colors duration-200"
           )}
           aria-label={`Value: ${displayValue}`}
@@ -372,13 +380,13 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
 
         {description && (
           <p className={cn(
-            "text-muted-foreground micro-sans",
+            "relative text-muted-foreground/55 micro-sans mt-1",
             config.trend
           )}>
             {description}
           </p>
         )}
-      </Card>
+      </div>
     )
   }
 )

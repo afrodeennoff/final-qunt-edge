@@ -76,7 +76,7 @@ export default function ComparisonSection() {
           </Badge>
           <h2 className="mt-4 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] leading-[0.92] tracking-[-0.04em] [font-family:var(--home-display)]">
             Why we&apos;re different
-            <span className="block text-foreground">from standard trading analytics tools</span>
+            <span className="block text-foreground/95">from standard trading analytics tools</span>
           </h2>
           <p className="mt-5 max-w-xl leading-[1.85] text-foreground/56 [font-family:var(--home-copy)]">
             See how Qunt Edge compares to traditional journaling tools and basic spreadsheet tracking.

@@ -60,7 +60,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 Daily P&L
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-foreground/95">
                 {dailyPnL >= 0 ? '+' : ''}{dailyPnL.toFixed(2)}
               </span>
             </div>
@@ -68,7 +68,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 Cumulative
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-foreground/95">
                 {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
               </span>
             </div>
@@ -76,7 +76,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 Trades
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-foreground/95">
                 {tradeCount}
               </span>
             </div>
@@ -102,7 +102,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 P&L
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-foreground/95">
                 {pnlValue >= 0 ? '+' : ''}{pnlValue.toFixed(2)}
               </span>
             </div>
@@ -110,7 +110,7 @@ function CustomTooltip({ active, payload, label, showDailyView }: CustomTooltipP
               <span className="text-[0.70rem] uppercase text-muted-foreground">
                 Cumulative
               </span>
-              <span className="font-bold text-foreground">
+              <span className="font-bold text-foreground/95">
                 {cumulativeValue >= 0 ? '+' : ''}{cumulativeValue.toFixed(2)}
               </span>
             </div>

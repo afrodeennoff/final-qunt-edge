@@ -15,7 +15,7 @@ export default function DashboardError({
 
   return (
     <main className="flex min-h-[60vh] items-center justify-center p-6">
-      <section className="w-full max-w-lg rounded-lg border-border bg-background p-6 shadow-sm">
+      <section className="w-full max-w-lg rounded-lg border-white/[0.06] bg-background p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <h1 className="text-lg font-semibold">Dashboard failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || 'A dashboard error occurred.'}
@@ -29,7 +29,7 @@ export default function DashboardError({
             Reload dashboard
           </button>
           <button
-            className="rounded-md border-border px-3 py-2 text-sm"
+            className="rounded-md border-white/[0.06] px-3 py-2 text-sm"
             onClick={() => window.location.assign('/')}
             type="button"
           >

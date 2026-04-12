@@ -80,7 +80,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       data-slot="select-content"
       className={cn(
-        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border border-white/[0.06] bg-background/95 backdrop-blur-xl text-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-xl border border-white/[0.08] bg-[oklch(0.048_0.005_264)] backdrop-blur-xl text-foreground/95 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_28px_72px_-24px_rgba(0,0,0,0.88)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
@@ -125,7 +125,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     data-slot="select-item"
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--space-2)] pl-[var(--space-6)] pr-[var(--space-2)] text-sm outline-hidden transition-all duration-150 focus:bg-v2-bg-hover focus:text-foreground hover:bg-v2-bg-hover hover:shadow-sm hover:shadow-v2-accent/10 data-[state=checked]:bg-v2-accent/10 data-[state=checked]:text-v2-accent data-disabled:pointer-events-none data-disabled:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--space-2)] pl-[var(--space-6)] pr-[var(--space-2)] text-sm outline-hidden transition-all duration-150 focus:bg-v2-bg-hover focus:text-foreground/95 hover:bg-v2-bg-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-v2-accent/10 data-[state=checked]:bg-v2-accent/10 data-[state=checked]:text-v2-accent data-disabled:pointer-events-none data-disabled:opacity-50",
       className
     )}
     {...props}
@@ -148,7 +148,7 @@ const SelectSeparator = React.forwardRef<
   <SelectPrimitive.Separator
     ref={ref}
     data-slot="select-separator"
-    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    className={cn("-mx-1 my-1 h-px bg-white/[0.03]", className)}
     {...props}
   />
 ))

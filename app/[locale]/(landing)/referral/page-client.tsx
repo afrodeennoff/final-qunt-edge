@@ -21,7 +21,7 @@ export default function ReferralPage() {
     {
       title: t('referral.landing.requirement1Title'),
       description: t('referral.landing.requirement1Description'),
-      icon: <CheckCircle2 className="w-5 h-5 text-foreground" />,
+      icon: <CheckCircle2 className="w-5 h-5 text-foreground/95" />,
     },
     {
       title: t('referral.landing.requirement2Title'),
@@ -31,13 +31,13 @@ export default function ReferralPage() {
   ]
 
   return (
-    <div className="px-4 py-12 bg-background text-foreground">
+    <div className="px-4 py-12 bg-background text-foreground/95">
       <div className="w-full">
-        <Card className="mb-8 border-border/24 bg-gradient-to-br from-card/85 via-card/70 to-card/85 text-foreground shadow-2xl">
+        <Card className="mb-8 border-white/[0.06] bg-gradient-to-br from-card/85 via-card/70 to-card/85 text-foreground/95 shadow-2xl">
           <CardContent className="p-6 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="space-y-4">
-                <Badge className="w-fit bg-card/25 text-foreground hover:bg-card/35">
+                <Badge className="w-fit bg-white/[0.025] text-foreground/95 hover:bg-white/[0.035]">
                   {t('referral.landing.heroBadge')}
                 </Badge>
                 <h1 className="text-3xl font-bold leading-tight md:text-5xl">
@@ -76,7 +76,7 @@ export default function ReferralPage() {
         </div>
 
         {/* How It Works Section */}
-        <Card className="mb-8 bg-card border-border/24">
+        <Card className="mb-8 bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-2xl">{t('referral.landing.howItWorks')}</CardTitle>
           </CardHeader>
@@ -114,7 +114,7 @@ export default function ReferralPage() {
         </Card>
 
         {/* Requirements Section */}
-        <Card className="mb-8 bg-card border-border/24">
+        <Card className="mb-8 bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-2xl">{t('referral.landing.requirements')}</CardTitle>
           </CardHeader>
@@ -124,7 +124,7 @@ export default function ReferralPage() {
             </p>
             <div className="space-y-4">
               {requirements.map((req, index) => (
-                <div key={index} className="flex gap-4 p-4 rounded-lg border border-border/24 bg-muted/30">
+                <div key={index} className="flex gap-4 p-4 rounded-lg border border-white/[0.06] bg-muted/30">
                   <div className="flex-shrink-0 mt-0.5">
                     {req.icon}
                   </div>
@@ -139,7 +139,7 @@ export default function ReferralPage() {
         </Card>
 
         {/* Rewards Tiers Section */}
-        <Card className="mb-8 bg-card border-border/24">
+        <Card className="mb-8 bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-2xl">{t('referral.landing.rewards')}</CardTitle>
           </CardHeader>
@@ -148,7 +148,7 @@ export default function ReferralPage() {
               {tiers.map((tier, index) => (
                 <div
                   key={index}
-                  className="p-6 rounded-lg border border-border/24 bg-muted/20 flex flex-col items-center text-center transition-colors hover:bg-muted/35"
+                  className="p-6 rounded-lg border border-white/[0.06] bg-muted/20 flex flex-col items-center text-center transition-colors hover:bg-muted/35"
                 >
                   <div className="mb-4">{tier.icon}</div>
                   <Badge variant="secondary" className="mb-3">
@@ -162,7 +162,7 @@ export default function ReferralPage() {
         </Card>
 
         {/* Important Notes */}
-        <Card className="bg-card border-border/24">
+        <Card className="bg-white/[0.02] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-2xl">{t('referral.landing.importantNotes')}</CardTitle>
           </CardHeader>

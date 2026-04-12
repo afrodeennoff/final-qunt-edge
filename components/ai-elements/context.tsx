@@ -167,7 +167,7 @@ export const ContextContentHeader = ({
             </p>
           </div>
           <div className="gap-2">
-            <Progress className="bg-muted" value={usedPercent * PERCENT_MAX} />
+            <Progress className="bg-white/[0.03]" value={usedPercent * PERCENT_MAX} />
           </div>
         </>
       )}
@@ -212,7 +212,7 @@ export const ContextContentFooter = ({
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-between gap-3 bg-secondary p-3 text-xs",
+        "flex w-full items-center justify-between gap-3 bg-white/[0.04] p-3 text-xs",
         className
       )}
       {...props}

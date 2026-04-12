@@ -205,7 +205,7 @@ const ChartTooltipContent = React.forwardRef<
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-sm border-border bg-(--color-bg)",
+                            "shrink-0 rounded-sm border-white/[0.06] bg-(--color-bg)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -236,7 +236,7 @@ const ChartTooltipContent = React.forwardRef<
                         </span>
                       </div>
                       {item.value && (
-                        <span className="font-mono font-medium tabular-nums text-foreground">
+                        <span className="font-mono font-medium tabular-nums text-foreground/95">
                           {item.value.toLocaleString()}
                         </span>
                       )}

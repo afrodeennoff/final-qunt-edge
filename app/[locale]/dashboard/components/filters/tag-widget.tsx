@@ -481,7 +481,7 @@ export function TagWidget({ size = 'medium', onTagSelectionChange }: TagWidgetPr
                           variant="ghost"
                           size="icon"
                           className={cn(
-                            "hover:bg-muted",
+                            "hover:bg-white/[0.03]",
                             size === 'small' ? "h-6 w-6" : "h-7 w-7"
                           )}
                           onClick={() => handleEdit(tag)}

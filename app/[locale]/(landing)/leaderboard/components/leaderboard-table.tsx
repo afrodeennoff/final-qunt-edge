@@ -42,14 +42,14 @@ function rankClasses(rank: number): string {
 
 export function LeaderboardTableSkeleton() {
   return (
-    <div className={`overflow-hidden rounded-3xl border ${FB} bg-black`} style={FR}>
+    <div className={`overflow-hidden rounded-2xl border ${FB} bg-black`} style={FR}>
       <div className={`border-b ${FA} px-6 py-6`}>
         <Skeleton className="h-3.5 w-28" />
         <Skeleton className="mt-3 h-8 w-56" />
       </div>
       <div className="grid gap-3 p-4 lg:hidden">
         {Array.from({ length: 4 }, (_, i) => (
-          <div key={i} className={`rounded-2xl border ${FB} ${FS} p-4`}>
+          <div key={i} className={`rounded-xl border ${FB} ${FS} p-4`}>
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-9 w-9 rounded-full" />
@@ -100,7 +100,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
   isLoading = false,
 }: LeaderboardTableProps) {
   return (
-    <div className={`overflow-hidden rounded-3xl border ${FB} bg-black`} style={FR}>
+    <div className={`overflow-hidden rounded-2xl border ${FB} bg-black`} style={FR}>
       <div className={`flex flex-wrap items-end justify-between gap-4 border-b ${FA} px-6 py-6`}>
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]">Leaderboard table</p>
@@ -114,7 +114,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
 
       {entries.length === 0 ? (
         <div className="px-6 py-12">
-          <div className={`rounded-2xl border border-dashed ${FB} ${FS} p-8 text-center text-[13px] text-[#a1a4a5]`}>
+          <div className={`rounded-xl border border-dashed ${FB} ${FS} p-8 text-center text-[13px] text-[#a1a4a5]`}>
             No public traders are available yet. Once users opt in from Trader Profile, they will appear here.
           </div>
         </div>
@@ -155,7 +155,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
   const profileLink = profileHref(locale, entry.userId)
 
   return (
-    <article className={`rounded-2xl border ${FB} ${FS} p-4`} style={FR}>
+    <article className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${rankClasses(entry.rank)}`}>

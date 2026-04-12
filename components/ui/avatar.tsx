@@ -42,7 +42,7 @@ const AvatarFallback = React.forwardRef<
     ref={ref}
     data-slot="avatar-fallback"
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      "flex h-full w-full items-center justify-center rounded-full bg-white/[0.03]",
       className
     )}
     {...props}

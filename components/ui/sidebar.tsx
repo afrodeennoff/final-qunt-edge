@@ -259,7 +259,7 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-9 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/72 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08)] hover:border-white/[0.12] hover:bg-white/[0.08] hover:text-foreground", className)}
+      className={cn("size-9 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/72 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08)] hover:border-white/[0.12] hover:bg-white/[0.08] hover:text-foreground/95", className)}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(event)
         toggleSidebar()

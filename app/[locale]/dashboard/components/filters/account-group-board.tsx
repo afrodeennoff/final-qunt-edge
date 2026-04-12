@@ -484,7 +484,7 @@ export function AccountGroupBoard() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border bg-card shadow-sm">
+      <div className="rounded-lg border bg-white/[0.02] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <div className="flex flex-wrap items-center gap-2 border-b px-3 py-2">
           <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -724,7 +724,7 @@ export function AccountGroupBoard() {
                         <CommandItem
                           key={account.id}
                           value={`${account.number} ${group.name ?? ""}`}
-                          className="flex items-center gap-3 rounded-md border bg-card/60 px-3 py-2"
+                          className="flex items-center gap-3 rounded-md border bg-white/[0.060] px-3 py-2"
                           draggable
                           onDragStart={() => handleDragStart(account)}
                           onDragEnd={handleDragEnd}

@@ -109,7 +109,7 @@ export function DashboardHeader() {
                 <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_32%),radial-gradient(circle_at_right,rgba(16,185,129,0.08),transparent_30%)] opacity-80" />
                 <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-white/[0.08] bg-black/72 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_60px_-36px_rgba(0,0,0,0.92)] backdrop-blur-2xl sm:gap-4 sm:px-4">
                     <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-                        <SidebarTrigger className="h-10 w-10 shrink-0 rounded-2xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground md:h-9 md:w-9" />
+                        <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95 md:h-9 md:w-9" />
                         <div className="flex min-w-0 items-center gap-3">
                             <div className="hidden h-8 w-px bg-gradient-to-b from-white/0 via-white/[0.12] to-white/0 sm:block" />
                             <div className="min-w-0 max-w-[min(32rem,44vw)]">
@@ -123,7 +123,7 @@ export function DashboardHeader() {
                                             {sectionLabel}
                                         </span>
                                     )}
-                                    <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                                    <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground/95 sm:text-sm sm:uppercase sm:tracking-[0.18em]">
                                         {title}
                                     </h1>
                                 </div>
@@ -158,7 +158,7 @@ export function DashboardHeader() {
                                     <Link href={billingHref}>
                                         <button className={cn(
                                         'group flex h-10 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4',
-                                        'text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground shadow-[0_20px_40px_-30px_rgba(37,99,235,0.36)] transition-all duration-200',
+                                        'text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/95 shadow-[0_20px_40px_-30px_rgba(37,99,235,0.36)] transition-all duration-200',
                                         'hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.08] hover:shadow-[0_26px_46px_-28px_rgba(37,99,235,0.5)]',
                                         'active:translate-y-0 active:scale-[0.98]'
                                     )}>

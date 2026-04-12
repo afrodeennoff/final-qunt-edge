@@ -4,17 +4,17 @@ import { motion } from 'framer-motion';
 
 export default function Qualification() {
   return (
-    <section className="border-t border-border/28 bg-background px-6 py-32">
-      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+    <section className="border-t border-white/[0.08] bg-background px-6 py-32">
+      <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-2 bg-card/10 border border-border/24 p-2 rounded-sm overflow-hidden">
+        <div className="grid md:grid-cols-2 gap-2 bg-white/[0.010] border border-white/[0.06] p-2 rounded-sm overflow-hidden">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-16 bg-card"
+            className="p-16 bg-white/[0.02]"
           >
-            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground mb-10 mono">Ideal Candidate</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/95 mb-10 mono">Ideal Candidate</h3>
             <ul className="space-y-6">
               {[
                 "Discretionary traders seeking institutional structure",
@@ -23,7 +23,7 @@ export default function Qualification() {
                 "Traders tired of self-deception and PnL noise"
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-4 text-foreground/85">
-                  <span className="text-foreground mt-1">✓</span>
+                  <span className="text-foreground/95 mt-1">✓</span>
                   <span className="text-sm font-medium leading-relaxed tracking-tight">{item}</span>
                 </li>
               ))}
@@ -33,7 +33,7 @@ export default function Qualification() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-16 bg-card/95"
+            className="p-16 bg-white/[0.095]"
           >
             <h3 className="mb-10 text-xs font-bold uppercase tracking-[0.3em] text-foreground/85 mono">Hard Refusals</h3>
             <ul className="space-y-6">

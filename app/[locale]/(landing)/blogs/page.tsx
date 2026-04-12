@@ -28,7 +28,7 @@ export default async function BlogsPage() {
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <UnifiedSurface>
         <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-foreground">{t('blogs.title')}</h1>
+          <h1 className="text-3xl font-semibold text-foreground/95">{t('blogs.title')}</h1>
           <p className="mt-1 text-muted-foreground">{t('blogs.description')}</p>
         </div>
         <BlogList initialPosts={posts} />

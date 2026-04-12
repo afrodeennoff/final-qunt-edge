@@ -45,7 +45,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
+              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground/95"
             >
               {isExpanded 
                 ? t('shared.showLessAccounts')
@@ -60,7 +60,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             variant="ghost" 
             size="sm"
             onClick={toggleAll}
-            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
+            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground/95"
           >
             {accountNumbers.length === accounts.length ? t('shared.deselectAll') : t('shared.selectAll')}
           </Button>
@@ -74,7 +74,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             className={cn(
               "flex items-center rounded-xl border px-2 py-2 transition-all duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
-                ? "border-[oklch(0.65_0.22_260/0.28)] bg-[linear-gradient(135deg,oklch(0.12_0.03_260),oklch(0.05_0.01_264))] text-foreground shadow-[0_18px_36px_-26px_oklch(0.65_0.22_260/0.45)]" 
+                ? "border-[oklch(0.65_0.22_260/0.28)] bg-[linear-gradient(135deg,oklch(0.12_0.03_260),oklch(0.05_0.01_264))] text-foreground/95 shadow-[0_18px_36px_-26px_oklch(0.65_0.22_260/0.45)]" 
                 : "border-white/[0.08] bg-white/[0.03] text-foreground/56 hover:border-white/[0.14] hover:bg-white/[0.06]"
             )}
           >

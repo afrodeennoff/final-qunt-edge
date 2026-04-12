@@ -110,7 +110,7 @@ function RatingDistributionBar({
     <div className="flex items-center gap-2">
       <span className="w-3 text-xs text-muted-foreground">{rating}</span>
       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-card/70">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.070]">
         <div
           className="h-full rounded-full bg-yellow-400/80 transition-all duration-500"
           style={{ width: `${percentage}%` }}
@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-2xl border border-border/28 bg-card/60 p-5 transition-all duration-200 hover:border-border hover:bg-card/80">
+    <div className="group rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 transition-all duration-200 hover:border-white/[0.06] hover:bg-white/[0.080]">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
@@ -151,7 +151,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="truncate text-sm font-medium text-foreground">
+              <span className="truncate text-sm font-medium text-foreground/95">
                 {review.userId ? 'Verified Trader' : 'Anonymous Trader'}
               </span>
               {review.isVerified && (
@@ -165,7 +165,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
               {canFlag && (
                 <button
                   onClick={() => onFlag(review.id)}
-                  className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-card/80"
+                  className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/[0.080]"
                   title="Report this review"
                 >
                   <Flag className="h-3.5 w-3.5 text-muted-foreground transition-colors hover:text-v2-error" />
@@ -182,7 +182,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
           </div>
           
           {review.title && (
-            <h4 className="mt-2 text-sm font-medium text-foreground">
+            <h4 className="mt-2 text-sm font-medium text-foreground/95">
               {review.title}
             </h4>
           )}
@@ -200,7 +200,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-2xl border border-border/28 bg-card/60 p-5">
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.060] p-5">
       <div className="flex items-start gap-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -407,11 +407,11 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
   return (
     <div className="space-y-6">
       {/* Statistics Card */}
-      <Card className="rounded-2xl border-border/40 bg-card/5">
+      <Card className="rounded-xl border-border/40 bg-white/[0.05]">
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground">User reviews & ratings</CardTitle>
+            <CardTitle className="text-2xl text-foreground/95">User reviews & ratings</CardTitle>
           </div>
           <CardDescription className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
             Approved trader submissions from Qunt Edge users. Review counts, averages, and moderation states stay visible in one place.
@@ -419,8 +419,8 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-border/28 bg-card/60 p-6">
-              <div className="text-5xl font-bold tracking-tight text-foreground">
+            <div className="flex flex-col items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.060] p-6">
+              <div className="text-5xl font-bold tracking-tight text-foreground/95">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
               <div className="mt-2">
@@ -449,7 +449,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Success Message */}
       {submitSuccess && (
-        <div className="flex items-center gap-3 rounded-2xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
+        <div className="flex items-center gap-3 rounded-xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
           <CheckCircle2 className="h-5 w-5 text-v2-success shrink-0" />
           <p className="text-sm text-v2-success">Your review has been submitted successfully!</p>
         </div>
@@ -457,7 +457,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Error Message */}
       {error && (
-        <div className="flex items-center gap-3 rounded-2xl border border-v2-error/30 bg-v2-error-subtle/50 px-5 py-4">
+        <div className="flex items-center gap-3 rounded-xl border border-v2-error/30 bg-v2-error-subtle/50 px-5 py-4">
           <AlertCircle className="h-5 w-5 text-v2-error shrink-0" />
           <p className="text-sm text-v2-error">{error}</p>
           <button
@@ -470,10 +470,10 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <Card className="rounded-2xl border-border/28 bg-card/80">
+      <Card className="rounded-xl border-white/[0.08] bg-white/[0.080]">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
+            <h3 className="text-lg font-semibold text-foreground/95">Write a Review</h3>
             {!showForm && isAuthenticated && !hasUserReviewed && (
               <Button
                 variant="outline"
@@ -487,7 +487,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-2xl border border-border/28 bg-card/60 p-5 text-center">
+            <div className="rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 text-center">
               <p className="text-sm text-muted-foreground">
                 Please <Link href={`/${locale}/authentication`} className="text-v2-accent hover:underline">sign in</Link> to write a review
               </p>
@@ -496,7 +496,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-2xl border border-border/28 bg-card/60 p-5">
+            <div className="rounded-xl border border-white/[0.08] bg-white/[0.060] p-5">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-v2-success" />
                 <p className="text-sm text-muted-foreground">
@@ -616,7 +616,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Success Message for flag */}
       {flagSuccess && (
-        <div className="flex items-center gap-3 rounded-2xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
+        <div className="flex items-center gap-3 rounded-xl border border-v2-success/30 bg-v2-success-subtle/50 px-5 py-4">
           <CheckCircle2 className="h-5 w-5 text-v2-success shrink-0" />
           <p className="text-sm text-v2-success">Thank you for reporting this review. Our team will review it shortly.</p>
         </div>
@@ -625,10 +625,10 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-border/28 bg-card p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
-              <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-card/70">
+              <h3 className="text-lg font-semibold text-foreground/95">Report Review</h3>
+              <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-white/[0.070]">
                 <XCircle className="h-5 w-5 text-muted-foreground" />
               </button>
             </div>
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
+                  className="w-full rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-2.5 text-sm text-foreground/95 placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -672,10 +672,10 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <Card className="rounded-2xl border-border/28 bg-card/80">
+      <Card className="rounded-xl border-white/[0.08] bg-white/[0.080]">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-            <h3 className="text-lg font-semibold text-foreground">
+            <h3 className="text-lg font-semibold text-foreground/95">
               All Reviews
               {stats.total > 0 && (
                 <span className="ml-2 text-sm font-normal text-muted-foreground">({stats.total})</span>
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-foreground focus:border-v2-accent focus:outline-none"
+                className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-sm text-foreground/95 focus:border-v2-accent focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -712,7 +712,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : reviews.length === 0 ? (
               // Empty state
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border/28 bg-card/60">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.060]">
                   <ReviewsIcon size={28} className="text-muted-foreground" />
                 </div>
                 <p className="text-sm font-medium text-muted-foreground">No reviews yet</p>
@@ -745,7 +745,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/28 pt-4">
+            <div className="mt-6 flex items-center justify-center gap-2 border-t border-white/[0.08] pt-4">
               <Button
                 variant="ghost"
                 size="sm"

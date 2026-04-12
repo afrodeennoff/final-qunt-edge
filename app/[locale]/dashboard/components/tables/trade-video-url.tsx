@@ -166,7 +166,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                     )}
                     {showSuccess && !isUpdating && (
                       <svg
-                        className="h-4 w-4 text-foreground"
+                        className="h-4 w-4 text-foreground/95"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         stroke="currentColor"
@@ -203,7 +203,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                   size="icon"
                   disabled={isUpdating || !draftUrl}
                   onClick={handleClear}
-                  className="shrink-0 text-muted-foreground hover:text-foreground"
+                  className="shrink-0 text-muted-foreground hover:text-foreground/95"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -214,7 +214,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                 </p>
               )}
               {draftUrl && isValid && (
-                <div className="rounded-lg overflow-hidden border bg-muted">
+                <div className="rounded-lg overflow-hidden border bg-white/[0.03]">
                   <div className="aspect-video w-full relative">
                     <iframe
                       src={getEmbedUrl(draftUrl)}

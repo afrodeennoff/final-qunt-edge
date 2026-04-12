@@ -64,13 +64,13 @@ export function AdminClientLayout({
           <div className="mx-auto flex w-full max-w-[1800px] items-center">
             <div className="flex min-h-[4.5rem] w-full flex-col gap-4 rounded-[2rem] border border-white/[0.08] bg-black/70 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_18px_44px_-28px_rgba(0,0,0,0.88)] backdrop-blur-2xl sm:px-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex min-w-0 items-center gap-3">
-                <SidebarTrigger className="h-10 w-10 rounded-2xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground md:h-9 md:w-9" />
+                <SidebarTrigger className="h-10 w-10 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95 md:h-9 md:w-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-center gap-2.5">
                     <span className="hidden rounded-full border border-white/[0.12] bg-white/[0.04] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 sm:inline-flex">
                       Admin
                     </span>
-                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground/95">
                       Operations Studio
                     </h1>
                   </div>

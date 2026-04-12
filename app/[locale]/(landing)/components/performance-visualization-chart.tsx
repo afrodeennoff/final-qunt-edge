@@ -42,7 +42,7 @@ export function PerformanceVisualizationChart() {
   const mid = chartHeight / 2
 
   return (
-    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+    <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
       <div className="flex items-center gap-3 mb-4">
         <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
           <TrendingUp className="size-[18px] text-primary" strokeWidth={2} />
@@ -51,7 +51,7 @@ export function PerformanceVisualizationChart() {
           Performance Viz
         </p>
       </div>
-    <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-card px-4 py-3 shadow-sm">
+    <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-white/[0.02] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
       <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">

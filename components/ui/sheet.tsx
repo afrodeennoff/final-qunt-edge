@@ -32,7 +32,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 border-[hsl(var(--v2-border)/0.82)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_40px_100px_-48px_rgba(4,10,24,0.96)] backdrop-blur-2xl transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  "fixed z-50 gap-4 border-white/[0.08] bg-[oklch(0.042_0.005_264)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_48px_120px_-48px_rgba(0,0,0,0.95)] backdrop-blur-2xl transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
   {
     variants: {
       side: {
@@ -67,8 +67,8 @@ const SheetContent = React.forwardRef<
       {...props}
     >
       {children}
-      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-full border border-[hsl(var(--v2-border)/0.85)] bg-[rgba(255,255,255,0.03)] p-1.5 opacity-80 ring-offset-background transition-all hover:bg-[rgba(255,255,255,0.08)] hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-        <X className="h-4 w-4" />
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-1.5 opacity-60 ring-offset-background transition-all duration-200 hover:bg-white/[0.08] hover:opacity-100 hover:border-white/[0.12] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-white/[0.04]">
+        <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         <span className="sr-only">Close</span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
@@ -113,7 +113,7 @@ const SheetTitle = React.forwardRef<
   <SheetPrimitive.Title
     ref={ref}
     data-slot="sheet-title"
-    className={cn("text-lg font-semibold text-foreground", className)}
+    className={cn("text-lg font-semibold text-foreground/95", className)}
     {...props}
   />
 ))

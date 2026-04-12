@@ -54,34 +54,34 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "group relative overflow-hidden text-foreground transition-all duration-200",
+          "group relative overflow-hidden text-foreground/95 transition-all duration-200",
           accent && variant !== "gradient-border" && "border-transparent",
           variant === "default" && [
-            "rounded-2xl border bg-[oklch(0.038_0.005_264)]",
+            "rounded-xl border bg-[oklch(0.038_0.005_264)]",
             "border-white/[0.08]",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_4px_20px_-8px_rgba(0,0,0,0.80)]",
           ],
           variant === "glass" && [
-            "rounded-2xl border bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-200",
+            "rounded-xl border bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-200",
             "border-white/[0.08]",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
           ],
           variant === "elevated" && [
-            "rounded-2xl border bg-[oklch(0.055_0.006_264)]",
+            "rounded-xl border bg-[oklch(0.055_0.006_264)]",
             "border-white/[0.10]",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_12px_40px_-12px_rgba(0,0,0,0.85)]",
           ],
           variant === "outlined" && [
-            "rounded-2xl border-2 border-white/[0.14] bg-transparent shadow-none",
+            "rounded-xl border-2 border-white/[0.14] bg-transparent shadow-none",
           ],
-          variant === "flat" && "border-0 bg-transparent shadow-none rounded-2xl",
+          variant === "flat" && "border-0 bg-transparent shadow-none rounded-xl",
           variant === "gradient-border" && [
-            "rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent",
+            "rounded-xl bg-gradient-to-br from-white/[0.05] to-transparent",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
             accent ? `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}` : "border border-white/[0.12]",
           ],
           variant === "frost" && [
-            "rounded-2xl bg-transparent",
+            "rounded-xl bg-transparent",
             "border border-[rgba(180,210,255,0.09)]",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.07),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
           ],
@@ -122,13 +122,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         )}
         {status && (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 backdrop-blur-md px-2.5 py-1 shadow-sm">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 backdrop-blur-md px-2.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
             <div
               className={cn(
                 "h-1.5 w-1.5 rounded-full",
                 status === "live" && "bg-emerald-400 animate-pulse shadow-[0_0_8px_hsl(160_70%_55%)]",
                 status === "synced" && "bg-primary shadow-[0_0_6px_hsl(var(--primary)/0.5)]",
-                status === "idle" && "bg-muted-foreground/40",
+                status === "idle" && "bg-white/[0.03]-foreground/40",
                 (status === "destructive" || status === "error") && "bg-red-400 shadow-[0_0_6px_hsl(0_80%_60%/0.5)]"
               )}
             />
@@ -186,7 +186,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
           "h-1.5 w-1.5 rounded-full",
           tone === "live" && "bg-emerald-400 animate-pulse",
           tone === "synced" && "bg-primary",
-          tone === "idle" && "bg-muted-foreground/40",
+          tone === "idle" && "bg-white/[0.03]-foreground/40",
           (tone === "destructive" || tone === "error") && "bg-red-400",
           className
         )}
@@ -221,7 +221,7 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
     <h3
       ref={ref}
       className={cn(
-        "font-semibold leading-none tracking-tight text-foreground",
+        "font-semibold leading-none tracking-tight text-foreground/95",
         {
           "text-sm": size === "sm",
           "text-base": size === "md",
@@ -257,7 +257,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
     <div
       ref={ref}
       className={cn(
-        "text-foreground",
+        "text-foreground/95",
         {
           "p-4": size === "sm",
           "p-5 sm:p-6": size === "md",

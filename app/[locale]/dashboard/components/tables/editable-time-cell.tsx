@@ -126,7 +126,7 @@ export function EditableTimeCell({
           onClick={handleSave}
           disabled={isSaving}
         >
-          <Check className="h-3 w-3 text-foreground" />
+          <Check className="h-3 w-3 text-foreground/95" />
         </Button>
         <Button 
           size="sm"

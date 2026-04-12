@@ -141,13 +141,13 @@ export function GlobalSyncButton() {
                     )}
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-72 rounded-2xl border border-v2-border/20 bg-v2-bg-surface/95 text-popover-foreground shadow-xl shadow-black/20 backdrop-blur-xl">
+            <DropdownMenuContent align="end" className="w-72 rounded-xl border border-v2-border/20 bg-v2-bg-surface/95 text-popover-foreground shadow-xl shadow-black/20 backdrop-blur-xl">
                 <DropdownMenuLabel className="flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-widest">Sync Status</span>
                     {isAnySyncing ? (
                         <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
                     ) : (
-                        <Badge variant="outline" className="bg-muted text-muted-foreground border-border text-[8px]">Standby</Badge>
+                        <Badge variant="outline" className="bg-white/[0.03] text-muted-foreground border-white/[0.06] text-[8px]">Standby</Badge>
                     )}
                 </DropdownMenuLabel>
 
@@ -187,7 +187,7 @@ export function GlobalSyncButton() {
                             <Clock className="w-3 h-3" />
                             <span>Next Sync</span>
                         </div>
-                        <span className="font-mono text-foreground">{nextSyncText}</span>
+                        <span className="font-mono text-foreground/95">{nextSyncText}</span>
                     </div>
 
                     <button

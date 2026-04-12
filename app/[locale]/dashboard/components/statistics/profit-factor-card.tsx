@@ -59,7 +59,7 @@ function ProfitFactorCardInner({ size = 'medium' }: ProfitFactorCardProps) {
       info={t('widgets.profitFactor.tooltip')}
     >
       <div className={cn(
-        "precision-panel flex items-center gap-1.5 px-3 py-1 rounded-md",
+        "precision-panel-premium flex items-center gap-1.5 px-3 py-1 rounded-md",
         isProfitable
           ? "bg-secondary/18"
           : "bg-secondary/14"

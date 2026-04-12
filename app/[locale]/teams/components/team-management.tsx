@@ -626,7 +626,7 @@ export function TeamManagement({
       case 'viewer':
         return 'bg-surface-subtle' // Green for viewer
       default:
-        return 'bg-muted'
+        return 'bg-white/[0.03]'
     }
   }
 
@@ -694,7 +694,7 @@ export function TeamManagement({
   return (
     <div className="mx-auto py-4">
       {/* Header */}
-      <div className="mb-6 rounded-2xl border border-v2-border/50 bg-v2-bg-surface/60 p-5 sm:p-6 backdrop-blur-sm">
+      <div className="mb-6 rounded-xl border border-v2-border/50 bg-v2-bg-surface/60 p-5 sm:p-6 backdrop-blur-sm">
         <h1 className="text-2xl font-bold tracking-tight text-v2-text-primary">{t('teams.management.component.title')}</h1>
         <p className="text-v2-text-secondary mt-2 text-sm">{t('teams.management.component.description')}</p>
       </div>
@@ -711,7 +711,7 @@ export function TeamManagement({
 
           return (
             <Card key={team.id} className={cn(
-              "cursor-pointer transition-all duration-200 border-v2-border/50 bg-v2-bg-surface/60 backdrop-blur-sm shadow-sm hover:shadow-md hover:border-v2-accent/30",
+              "cursor-pointer transition-all duration-200 border-v2-border/50 bg-v2-bg-surface/60 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-v2-accent/30",
               isActive 
                 ? "border-v2-accent ring-2 ring-v2-accent/20" 
                 : ""
@@ -859,7 +859,7 @@ export function TeamManagement({
         {filteredTeams.length > 0 && (
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
+              <Card className="cursor-pointer transition-all duration-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
                 <CardContent className="flex flex-col items-center justify-center h-48 p-6">
                   <Plus className="h-12 w-12 text-muted-foreground mb-4" />
                   <CardTitle className="text-lg text-center mb-2">

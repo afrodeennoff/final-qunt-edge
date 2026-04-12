@@ -673,8 +673,8 @@ export default function AtasProcessor({
                     <Card
                       key={account}
                       className={cn(
-                        "p-6 cursor-pointer hover:border-border/24 transition-colors relative group",
-                        isSelected ? "border-border/24 bg-card/90" : "border-border/40 bg-card/20"
+                        "p-6 cursor-pointer hover:border-white/[0.06] transition-colors relative group",
+                        isSelected ? "border-white/[0.06] bg-white/[0.090]" : "border-border/40 bg-white/[0.020]"
                       )}
                       onClick={() => {
                         if (isSelected) {
@@ -713,7 +713,7 @@ export default function AtasProcessor({
           {/* Commissions Section - Only show for selected accounts */}
           {selectedAccountInstrumentPairs.length > 0 && (
             <div
-              className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+              className="flex-none bg-white/[0.080] border border-border/20 text-muted-foreground p-4 rounded-md"
               role="alert"
             >
               <p className="font-bold">{t("import.commission.title")}</p>
@@ -748,13 +748,13 @@ export default function AtasProcessor({
                         onChange={(e) =>
                           handleCommissionChange(pair, e.target.value)
                         }
-                        className="w-24 bg-background/60 border-border/24 text-foreground"
+                        className="w-24 bg-background/60 border-white/[0.06] text-foreground/95"
                       />
                     </div>
                   );
                 })}
               </div>
-              <Button  onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
+              <Button  onClick={applyCommissions} className="mt-4 bg-white/[0.090] text-foreground/95 hover:bg-white/[0.080]">
                 {t("import.commission.apply")}
               </Button>
             </div>
@@ -762,7 +762,7 @@ export default function AtasProcessor({
 
           {allProcessedTrades.length === 0 && (
             <div
-              className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+              className="flex-none bg-white/[0.080] border border-border/20 text-muted-foreground p-4 rounded-md"
               role="alert"
             >
               <p className="font-bold">{t("import.error.duplicateTrades")}</p>
@@ -773,7 +773,7 @@ export default function AtasProcessor({
           {currentSelectedAccounts.length === 0 &&
             allProcessedTrades.length > 0 && (
               <div
-                className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+                className="flex-none bg-white/[0.080] border border-border/20 text-muted-foreground p-4 rounded-md"
                 role="alert"
               >
                 <p className="font-bold">{t("import.account.selectAccount")}</p>

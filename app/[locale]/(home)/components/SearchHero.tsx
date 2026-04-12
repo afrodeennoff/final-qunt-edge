@@ -17,14 +17,14 @@ export default function SearchHero({
   filteredCount,
 }: SearchHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden rounded-3xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-6 sm:px-6 sm:py-8">
+    <section className="relative isolate overflow-hidden rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-6 sm:px-6 sm:py-8">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(75%_60%_at_50%_0%,hsl(var(--foreground)/0.06),transparent_70%)]" />
 
       <div className="max-w-3xl">
         <div className="inline-flex items-center gap-2 rounded-full border border-[var(--frost-border)] bg-[oklch(0.06_0_0)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           Explorer
         </div>
-        <h2 className="mt-4 text-[clamp(1.8rem,4vw,3.4rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground [font-family:var(--home-display)]">
+        <h2 className="mt-4 text-[clamp(1.8rem,4vw,3.4rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-foreground/95 [font-family:var(--home-display)]">
           Compare firms with a cleaner first pass.
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
@@ -40,7 +40,7 @@ export default function SearchHero({
             placeholder="Search by firm, platform, or payout model..."
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
-            className="h-[52px] rounded-2xl border-border/28 bg-card/90 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
+            className="h-[52px] rounded-xl border-white/[0.08] bg-white/[0.090] pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
           />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">
@@ -54,9 +54,9 @@ export default function SearchHero({
 
 function MetaCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-3">
+    <div className="rounded-xl border border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-foreground">{value}</p>
+      <p className="mt-1 text-lg font-semibold text-foreground/95">{value}</p>
     </div>
   )
 }

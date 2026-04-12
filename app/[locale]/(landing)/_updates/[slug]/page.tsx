@@ -216,7 +216,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         {meta.image && (
-          <div className="mb-8 rounded-lg overflow-hidden bg-card/70 dark:bg-card/80">
+          <div className="mb-8 rounded-lg overflow-hidden bg-white/[0.070] dark:bg-white/[0.080]">
             <Image
               src={meta.image}
               alt={meta.title}
@@ -232,13 +232,13 @@ export default async function Page({ params }: PageProps) {
         <div
           className="prose dark:prose-invert max-w-none 
           prose-pre:p-0 prose-pre:bg-transparent 
-          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-card/70 prose-code:text-muted-foreground
-          dark:prose-code:bg-card/90 dark:prose-code:text-muted-foreground/80
+          prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-white/[0.070] prose-code:text-muted-foreground
+          dark:prose-code:bg-white/[0.090] dark:prose-code:text-muted-foreground/80
           prose-table:w-full prose-table:mt-6 prose-table:mb-8
-          prose-thead:border-b prose-thead:border-border/24 dark:prose-thead:border-border/36
+          prose-thead:border-b prose-thead:border-white/[0.06] dark:prose-thead:border-border/36
           prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
-          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border/24 dark:prose-td:border-border/36
-          prose-tr:transition-colors prose-tr:hover:bg-card/80 dark:prose-tr:hover:bg-card/90"
+          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-white/[0.06] dark:prose-td:border-border/36
+          prose-tr:transition-colors prose-tr:hover:bg-white/[0.080] dark:prose-tr:hover:bg-white/[0.090]"
           itemProp="articleBody"
         >
           {content}

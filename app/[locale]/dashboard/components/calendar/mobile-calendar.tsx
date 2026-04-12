@@ -153,8 +153,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
   }, [calendarData])
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden border-border/24 bg-card/95 backdrop-blur-xl">
-      <div className="shrink-0 border-b border-border/24 p-3">
+    <Card className="h-full flex flex-col overflow-hidden border-white/[0.06] bg-white/[0.095] backdrop-blur-xl">
+      <div className="shrink-0 border-b border-white/[0.06] p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <CardTitle className="truncate text-base font-semibold capitalize">
@@ -168,16 +168,16 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Previous month">
+            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-white/[0.06] bg-white/[0.092]" aria-label="Previous month">
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Next month">
+            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-white/[0.06] bg-white/[0.092]" aria-label="Next month">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-          <span className="rounded-md border border-border/55 bg-card/92 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
+          <span className="rounded-md border border-border/55 bg-white/[0.092] px-1.5 py-0.5">Days {monthStats.activeDays}</span>
           <span className="rounded-md border border-semantic-success-border/40 bg-semantic-success-bg/10 px-1.5 py-0.5 text-semantic-success">W {monthStats.wins}</span>
           <span className="rounded-md border border-semantic-error-border/40 bg-semantic-error-bg/10 px-1.5 py-0.5 text-semantic-error">L {monthStats.losses}</span>
         </div>
@@ -219,7 +219,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
                 key={dateString} // Key is the timezone-correct date string
                 className={cn(
                   "relative flex cursor-pointer flex-col justify-between rounded-lg border p-1 transition-all",
-                  dayData ? "border-border/55" : "border-border/55 bg-card/92",
+                  dayData ? "border-border/55" : "border-border/55 bg-white/[0.092]",
                   dayPnl > 0 && "border-semantic-success-border/40",
                   dayPnl < 0 && "border-semantic-error-border/40",
                   isDateStringToday(dateString, timezone) && "border-primary/70 bg-primary/10",
@@ -237,7 +237,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
                   style={{ opacity: intensity * 0.8 }}
                 />
                 <div className={cn(
-                  "inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/55 bg-card/92 text-xs font-semibold",
+                  "inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/55 bg-white/[0.092] text-xs font-semibold",
                   dayPnl > 0 && "text-semantic-success",
                   dayPnl < 0 && "text-semantic-error"
                 )}>

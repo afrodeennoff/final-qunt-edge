@@ -88,7 +88,7 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
-      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] backdrop-blur-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
@@ -108,7 +108,7 @@ export default function BillingManagement() {
                 </span>
                 <span className="text-muted-foreground">•</span>
                 {subscription?.status === 'ACTIVE' ? (
-                  <span className="text-foreground inline-flex items-center gap-1">
+                  <span className="text-foreground/95 inline-flex items-center gap-1">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     {t('billing.status.active')}
                   </span>
@@ -143,7 +143,7 @@ export default function BillingManagement() {
           </div>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="space-y-6 rounded-2xl border border-border/28 bg-background/70 p-4 sm:p-6">
+          <div className="space-y-6 rounded-xl border border-white/[0.08] bg-background/70 p-4 sm:p-6">
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               {isLoading ? (
@@ -159,7 +159,7 @@ export default function BillingManagement() {
                   <div>
                     {subscription?.plan?.interval === 'lifetime' ? (
                       <div className="space-y-1">
-                        <div className="text-2xl font-bold text-foreground">
+                        <div className="text-2xl font-bold text-foreground/95">
                           {t('pricing.lifetimeAccess')}
                         </div>
                         <p className="text-sm text-muted-foreground">
@@ -183,7 +183,7 @@ export default function BillingManagement() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="bg-secondary/25 text-foreground">
+                          <Badge variant="secondary" className="bg-secondary/25 text-foreground/95">
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
                               : subscription.promotion.amount_off 
@@ -322,7 +322,7 @@ export default function BillingManagement() {
 
       {/* Subscription Management */}
       {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
-        <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+        <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] backdrop-blur-sm">
           <CardContent className="px-0">
             <div className="flex flex-col gap-4">
               {!subscription.cancel_at_period_end && (
@@ -443,7 +443,7 @@ export default function BillingManagement() {
       )}
 
       {/* Available Plans */}
-      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] backdrop-blur-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.availablePlans')}</CardTitle>
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
@@ -454,13 +454,13 @@ export default function BillingManagement() {
       </Card>
 
       {/* Payment History */}
-      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] backdrop-blur-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.paymentHistory')}</CardTitle>
           <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="rounded-2xl border border-border/28 bg-background/70">
+          <div className="rounded-xl border border-white/[0.08] bg-background/70">
             {isLoading ? (
               <div className="p-4 space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -491,7 +491,7 @@ export default function BillingManagement() {
                     </div>
                     <div className="flex items-center gap-2">
                       {invoice.status === 'paid' && (
-                        <Badge variant="secondary" className="bg-secondary/25 text-foreground">
+                        <Badge variant="secondary" className="bg-secondary/25 text-foreground/95">
                           {t('billing.paymentStatus.succeeded')}
                         </Badge>
                       )}

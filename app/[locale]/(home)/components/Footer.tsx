@@ -30,7 +30,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border/20 bg-card/30">
+    <footer className="border-t border-border/20 bg-white/[0.030]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-14">
           <div className="col-span-2">
@@ -38,7 +38,7 @@ export default function Footer() {
               <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_16px_-4px_hsl(var(--primary)/0.5)] transition-shadow duration-300 group-hover:shadow-[0_0_24px_-4px_hsl(var(--primary)/0.65)]">
                 <span className="text-primary-foreground font-bold text-sm">Q</span>
               </div>
-              <span className="font-semibold text-foreground tracking-tight">Qunt Edge</span>
+              <span className="font-semibold text-foreground/95 tracking-tight">Qunt Edge</span>
             </Link>
             <p className="text-[0.875rem] text-muted-foreground/70 max-w-xs leading-relaxed">
               The trading journal and analytics platform for discretionary traders who take their craft seriously.
@@ -46,13 +46,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4 text-[0.85rem] tracking-[-0.01em]">Product</h4>
+            <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Product</h4>
             <ul className="space-y-2.5">
               {footerLinks.product.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground transition-colors duration-200"
+                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground/95 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -62,13 +62,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4 text-[0.85rem] tracking-[-0.01em]">Resources</h4>
+            <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Resources</h4>
             <ul className="space-y-2.5">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground transition-colors duration-200"
+                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground/95 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -78,13 +78,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-foreground mb-4 text-[0.85rem] tracking-[-0.01em]">Company</h4>
+            <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Company</h4>
             <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground transition-colors duration-200"
+                    className="text-[0.85rem] text-muted-foreground/70 hover:text-foreground/95 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -106,7 +106,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground/50 hover:text-foreground transition-colors duration-200 p-1 rounded-lg hover:bg-foreground/[0.04] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+                  className="text-muted-foreground/50 hover:text-foreground/95 transition-colors duration-200 p-1 rounded-lg hover:bg-foreground/[0.04] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
                   aria-label={social.label}
                 >
                   <Icon className="w-[1.15rem] h-[1.15rem]" />

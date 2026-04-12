@@ -86,7 +86,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
         <div className="flex h-full flex-col justify-between rounded-[1.8rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05)]">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Explorer brief</p>
-            <h3 className="mt-4 text-[1.35rem] font-[350] tracking-[-0.04em] text-foreground">
+            <h3 className="mt-4 text-[1.35rem] font-[350] tracking-[-0.04em] text-foreground/95">
               Shortlist firms before you burn time on deeper review.
             </h3>
             <p className="mt-4 text-sm leading-[1.75] text-foreground/60">
@@ -122,7 +122,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
         <div className="flex flex-col gap-4 rounded-[1.9rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Need the full board?</p>
-            <h2 className="mt-3 text-[1.5rem] font-[350] tracking-[-0.04em] text-foreground">
+            <h2 className="mt-3 text-[1.5rem] font-[350] tracking-[-0.04em] text-foreground/95">
               Open the complete firm catalogue.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-[1.75] text-foreground/60">
@@ -131,7 +131,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
           </div>
           <Link
             href={`/${locale}/propfirms`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-white/[0.18] hover:bg-white/[0.08]"
+            className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-5 py-3 text-sm font-medium text-foreground/95 transition-colors hover:border-white/[0.18] hover:bg-white/[0.08]"
           >
             Explore all firms
             <ArrowRight className="h-4 w-4" />

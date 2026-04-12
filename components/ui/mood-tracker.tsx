@@ -91,7 +91,7 @@ const COLOR_SCALE = [
 
 const Tracker = React.forwardRef<HTMLDivElement, TrackerProps>(
   (
-    { data = [], defaultBackgroundColor = "bg-muted", className, hoverEffect, onSelectionChange, valueIndex, ...props },
+    { data = [], defaultBackgroundColor = "bg-white/[0.03]", className, hoverEffect, onSelectionChange, valueIndex, ...props },
     forwardedRef,
   ) => {
     const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null)

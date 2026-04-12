@@ -487,7 +487,7 @@ const AccountsLegend = React.memo(
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info className="h-3 w-3 text-muted-foreground hover:text-foreground cursor-help" />
+                  <Info className="h-3 w-3 text-muted-foreground hover:text-foreground/95 cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="top" className="z-9999 max-w-xs">
                   <p className="text-xs">
@@ -526,7 +526,7 @@ const AccountsLegend = React.memo(
                       style={{ backgroundColor: color }}
                     />
                     <div className="flex flex-col h-[50px] justify-start">
-                      <span className="text-xs font-medium text-foreground leading-tight">
+                      <span className="text-xs font-medium text-foreground/95 leading-tight">
                         {accountNumber}
                       </span>
                       <span className="text-xs text-muted-foreground leading-tight">
@@ -916,7 +916,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
     <ChartSurface>
       <div
         className={cn(
-          "flex shrink-0 flex-col items-stretch gap-0 border-b border-border/18",
+          "flex shrink-0 flex-col items-stretch gap-0 border-b border-white/[0.04]",
           size === "small" ? "p-2 h-10 justify-center" : "p-3 sm:p-3.5 h-12 justify-center"
         )}
       >
@@ -924,7 +924,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
+                "line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
                 size === "small" ? "text-sm" : "text-base"
               )}
             >
@@ -935,7 +935,7 @@ export default React.memo(function EquityChart({ size = "medium" }: EquityChartP
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4"
                     )}
                   />

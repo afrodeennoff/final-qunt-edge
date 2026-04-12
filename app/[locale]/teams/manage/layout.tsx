@@ -83,7 +83,7 @@ export default async function TeamManageLayout({
             <DashboardProviders>
                 <TeamsSidebar />
 
-                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-muted selection:text-foreground">
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-white/[0.03] selection:text-foreground/95">
                     <BackgroundGlow variant="default" />
 
                     <div className="relative z-0 flex h-full flex-col">
@@ -94,7 +94,7 @@ export default async function TeamManageLayout({
                                 <div className="flex items-center gap-3">
                                     <SidebarTrigger className="-ml-1" />
                                     <div className="flex flex-col">
-                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
+                                        <h1 className="text-sm font-bold tracking-wide text-foreground/95">
                                             Team Management
                                         </h1>
                                         <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">

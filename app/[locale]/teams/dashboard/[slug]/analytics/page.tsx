@@ -127,7 +127,7 @@ function CustomTooltip({
   const value = payload[0]?.value ?? 0
 
   return (
-    <div className="rounded-xl border border-border/28 bg-popover/95 p-3 shadow-lg backdrop-blur">
+    <div className="rounded-xl border border-white/[0.08] bg-popover/95 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] backdrop-blur">
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
         {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       </p>
@@ -179,15 +179,15 @@ export default function TeamAnalyticsPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-28 animate-pulse rounded-2xl border border-border/28 bg-card/70" />
-        <div className="h-80 animate-pulse rounded-2xl border border-border/28 bg-card/70" />
+        <div className="h-28 animate-pulse rounded-xl border border-white/[0.08] bg-white/[0.070]" />
+        <div className="h-80 animate-pulse rounded-xl border border-white/[0.08] bg-white/[0.070]" />
       </div>
     )
   }
 
   return (
     <section className="space-y-6">
-      <header className="rounded-2xl border border-border/28 bg-card/70 p-5 sm:p-6">
+      <header className="rounded-xl border border-white/[0.08] bg-white/[0.070] p-5 sm:p-6">
         <div className="flex items-center gap-2 text-muted-foreground">
           <BarChart3 className="h-4 w-4 text-primary" />
           <p className="text-[10px] font-black uppercase tracking-[0.2em]">Team Intelligence</p>
@@ -199,7 +199,7 @@ export default function TeamAnalyticsPage() {
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="border-border/28 bg-card/70">
+        <Card className="border-white/[0.08] bg-white/[0.070]">
           <CardHeader className="pb-2">
             <CardDescription>Total PnL</CardDescription>
             <CardTitle className={cn('text-xl', summary.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
@@ -208,21 +208,21 @@ export default function TeamAnalyticsPage() {
           </CardHeader>
         </Card>
 
-        <Card className="border-border/28 bg-card/70">
+        <Card className="border-white/[0.08] bg-white/[0.070]">
           <CardHeader className="pb-2">
             <CardDescription>Win Rate</CardDescription>
             <CardTitle className="text-xl">{summary.winRate.toFixed(1)}%</CardTitle>
           </CardHeader>
         </Card>
 
-        <Card className="border-border/28 bg-card/70">
+        <Card className="border-white/[0.08] bg-white/[0.070]">
           <CardHeader className="pb-2">
             <CardDescription>Total Trades</CardDescription>
             <CardTitle className="text-xl">{summary.trades}</CardTitle>
           </CardHeader>
         </Card>
 
-        <Card className="border-border/28 bg-card/70">
+        <Card className="border-white/[0.08] bg-white/[0.070]">
           <CardHeader className="pb-2">
             <CardDescription>Profit Factor</CardDescription>
             <CardTitle className="text-xl">{summary.profitFactor.toFixed(2)}</CardTitle>
@@ -231,7 +231,7 @@ export default function TeamAnalyticsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-12">
-        <Card data-chart-surface="modern" className="border-border/28 bg-card/70 xl:col-span-8">
+        <Card data-chart-surface="modern" className="border-white/[0.08] bg-white/[0.070] xl:col-span-8">
           <CardHeader>
             <CardTitle className="text-lg">Cumulative Equity</CardTitle>
             <CardDescription>Rolling team performance over time</CardDescription>
@@ -278,7 +278,7 @@ export default function TeamAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/28 bg-card/70 xl:col-span-4">
+        <Card className="border-white/[0.08] bg-white/[0.070] xl:col-span-4">
           <CardHeader>
             <CardTitle className="text-lg">Member Breakdown</CardTitle>
             <CardDescription>Per-trader contribution</CardDescription>
@@ -286,7 +286,7 @@ export default function TeamAnalyticsPage() {
           <CardContent className="space-y-3">
             {data?.membersPerformance?.length ? (
               data.membersPerformance.slice(0, 8).map((member) => (
-                <div key={member.userId} className="rounded-xl border border-border/28 bg-background/40 p-3">
+                <div key={member.userId} className="rounded-xl border border-white/[0.08] bg-background/40 p-3">
                   <div className="flex items-center justify-between gap-3">
                     <p className="truncate text-sm font-semibold">{member.email.split('@')[0]}</p>
                     <p className={cn('text-sm font-black', member.totalPnL >= 0 ? 'text-primary' : 'text-destructive')}>
@@ -312,7 +312,7 @@ export default function TeamAnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="border-border/28 bg-card/70">
+      <Card className="border-white/[0.08] bg-white/[0.070]">
         <CardHeader>
           <CardTitle className="inline-flex items-center gap-2 text-lg">
             <TrendingUp className="h-5 w-5 text-primary" />

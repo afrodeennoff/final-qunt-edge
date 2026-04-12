@@ -105,7 +105,7 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-border/12 bg-popover/45 shadow-sm">
+    <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
@@ -121,7 +121,7 @@ function TeamSettingsCard({
             <Label className="text-base font-medium">Current Teams</Label>
             <div className="mt-2 space-y-2">
               {userTeams.ownedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border-border rounded-lg">
+                <div key={team.id} className="flex items-center justify-between p-3 border-white/[0.06] rounded-lg">
                   <div>
                     <p className="font-medium">{team.name}</p>
                     <p className="text-sm text-muted-foreground">
@@ -133,7 +133,7 @@ function TeamSettingsCard({
               ))}
 
               {userTeams.joinedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border-border rounded-lg">
+                <div key={team.id} className="flex items-center justify-between p-3 border-white/[0.06] rounded-lg">
                   <div>
                     <p className="font-medium">{team.name}</p>
                     <p className="text-sm text-muted-foreground">
@@ -224,7 +224,7 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-border/12 bg-popover/45 shadow-sm">
+    <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
@@ -393,7 +393,7 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
+        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
@@ -443,7 +443,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
+        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
@@ -570,7 +570,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
+        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
@@ -658,7 +658,7 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <Card className="border-border/12 bg-popover/45 shadow-sm">
+        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />

@@ -44,7 +44,7 @@ export default function HowItWorks() {
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-foreground/40 [font-family:var(--home-copy)]">
                 How It Works
               </p>
-              <h2 className="mt-4 text-[clamp(2.1rem,4.8vw,4rem)] font-[350] leading-[0.92] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
+              <h2 className="mt-4 text-[clamp(2.1rem,4.8vw,4rem)] font-[350] leading-[0.92] tracking-[-0.05em] text-foreground/95 [font-family:var(--home-display)]">
                 A precision loop for traders who want repeatable improvement.
               </h2>
               <p className="mt-5 max-w-xl text-[0.96rem] leading-[1.8] text-foreground/58 [font-family:var(--home-copy)]">

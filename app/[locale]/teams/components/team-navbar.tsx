@@ -33,7 +33,7 @@ const ListItem = React.forwardRef<
             <NavigationMenuLink asChild>
                 <a
                     ref={ref}
-                    className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${className}`}
+                    className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-white/[0.05] hover:text-accent-foreground focus:bg-white/[0.05] focus:text-accent-foreground ${className}`}
                     {...props}
                 >
                     <div className="text-sm font-medium leading-none flex items-center">
@@ -142,7 +142,7 @@ export default function TeamNavbar() {
         <>
             <div className={`fixed inset-0 bg-background/80  backdrop-blur-xs z-40 transition-opacity duration-300 ${hoveredItem ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} />
             <span className={`h-14 fixed top-0 left-0 right-0 bg-background z-50 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}></span>
-            <header className={`max-w-7xl mx-auto fixed top-0 left-0 right-0 px-4 lg:px-6 h-14 flex items-center justify-between z-50  text-foreground transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+            <header className={`max-w-7xl mx-auto fixed top-0 left-0 right-0 px-4 lg:px-6 h-14 flex items-center justify-between z-50  text-foreground/95 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
                 <Link href="/teams" className="flex items-center gap-2">
                     <Logo className='w-6 h-6 fill-black dark:fill-white' />
                     <span className="font-bold text-xl">Qunt Edge</span>
@@ -159,7 +159,7 @@ export default function TeamNavbar() {
                                     <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] list-none">
                                         <li className="row-span-3">
                                             <NavigationMenuLink asChild>
-                                                <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-hidden focus:shadow-md" href="/team">
+                                                <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-hidden focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]" href="/team">
                                                     <Logo className='w-6 h-6' />
                                                     <div className="mb-2 mt-4 text-lg font-medium">
                                                         Qunt Edge Enterprise
@@ -217,7 +217,7 @@ export default function TeamNavbar() {
 
                 <div className="flex items-center gap-4">
                     <LanguageSelector />
-                    <Button  variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground">
+                    <Button  variant="ghost" className="hidden lg:inline-flex h-9 items-center gap-2 px-3 text-muted-foreground hover:text-foreground/95">
                         <Moon className="h-4 w-4 text-primary" />
                         <span className="text-xs uppercase tracking-[0.14em]">Dark</span>
                     </Button>

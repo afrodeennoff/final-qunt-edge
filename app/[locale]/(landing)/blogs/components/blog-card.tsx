@@ -32,7 +32,7 @@ const categoryColors: Record<BlogCategory, string> = {
   [BlogCategory.MARKET_ANALYSIS]: 'bg-primary/10 text-primary border-primary/30',
   [BlogCategory.PSYCHOLOGY]: 'bg-secondary/50 text-secondary-foreground border-secondary/30',
   [BlogCategory.RISK_MANAGEMENT]: 'bg-destructive/10 text-destructive border-destructive/30',
-  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-border',
+  [BlogCategory.PLATFORM_UPDATES]: 'bg-muted/50 text-muted-foreground border-white/[0.06]',
 }
 
 const categoryLabels: Record<BlogCategory, string> = {
@@ -67,7 +67,7 @@ export function BlogCard({ post }: Props) {
               {categoryLabels[post.category]}
             </Badge>
           </div>
-          <h3 className="font-semibold line-clamp-2 text-lg leading-snug text-foreground group-hover:text-primary transition-colors">
+          <h3 className="font-semibold line-clamp-2 text-lg leading-snug text-foreground/95 group-hover:text-primary transition-colors">
             {post.title}
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-3">

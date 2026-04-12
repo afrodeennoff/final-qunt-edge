@@ -63,10 +63,10 @@ function StatCard({ stat, index }: { stat: (typeof stats)[number]; index: number
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08, ease }}
     >
-      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-black/50 text-foreground">
+      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-black/50 text-foreground/95">
         <Icon className="h-5 w-5" />
       </div>
-      <div className="text-[clamp(1.7rem,3vw,2.4rem)] font-[350] tracking-[-0.05em] text-foreground tabular-nums [font-family:var(--home-display)]">
+      <div className="text-[clamp(1.7rem,3vw,2.4rem)] font-[350] tracking-[-0.05em] text-foreground/95 tabular-nums [font-family:var(--home-display)]">
         {stat.prefix}
         <AnimatedCounter target={stat.value} />
         {stat.suffix}
@@ -106,7 +106,7 @@ function TestimonialCard({
           {testimonial.initials}
         </div>
         <div>
-          <p className="text-sm font-semibold text-foreground [font-family:var(--home-display)]">
+          <p className="text-sm font-semibold text-foreground/95 [font-family:var(--home-display)]">
             {testimonial.name}
           </p>
           <p className="text-[0.78rem] text-muted-foreground/60 [font-family:var(--home-copy)]">
@@ -162,7 +162,7 @@ export default function SocialProof() {
           <div className="rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-40px_rgba(0,0,0,0.95)]">
             <Badge
               variant="outline"
-              className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]"
+              className="border-primary/40 bg-primary/10 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-foreground/95 [font-family:var(--home-copy)]"
             >
               Trusted By Serious Traders
             </Badge>

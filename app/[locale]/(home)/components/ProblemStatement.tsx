@@ -43,7 +43,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
       <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[var(--accent-red)]/30 bg-[rgba(255,32,71,0.06)]">
         <Icon className="h-4 w-4 text-[var(--accent-red)]" />
       </div>
-      <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
+      <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
         {problem.title}
       </h3>
       <p className="mt-3 text-[0.88rem] leading-[1.7] text-foreground/58 [font-family:var(--home-copy)]">
@@ -68,7 +68,7 @@ export default function ProblemStatement() {
             <p className={`${TYPO_EYEBROW} text-foreground/34 mb-3 [font-family:var(--home-copy)]`}>
               The Gap
             </p>
-            <h2 className={`${TYPO_MINOR} text-foreground leading-tight [font-family:var(--home-display)]`}>
+            <h2 className={`${TYPO_MINOR} text-foreground/95 leading-tight [font-family:var(--home-display)]`}>
               Results tell you if you were paid,{' '}
               <span className="bg-gradient-to-r from-foreground/60 to-foreground/30 bg-clip-text text-transparent">
                 not if you were good.

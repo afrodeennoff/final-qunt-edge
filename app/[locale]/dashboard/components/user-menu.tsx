@@ -147,7 +147,7 @@ export default function UserMenu({ variant = 'sidebar' }: { variant?: MenuVarian
               "grid flex-1 text-left text-sm leading-tight",
               variantClass.account
             )}>
-              <span className="truncate font-bold text-foreground">
+              <span className="truncate font-bold text-foreground/95">
                 {userDisplayName}
               </span>
               <span className="truncate text-[10px] text-muted-foreground font-medium">

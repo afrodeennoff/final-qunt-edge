@@ -322,7 +322,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
               "h-1.5 w-1.5 rounded-full transition-colors",
               current === index
                 ? "bg-primary"
-                : "bg-muted"
+                : "bg-white/[0.03]"
             )}
           />
         ))}

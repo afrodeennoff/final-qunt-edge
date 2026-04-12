@@ -56,7 +56,7 @@ const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
         aria-label={title}
         {...props}
       >
-        <div className={cn("relative overflow-hidden bg-muted", aspectClasses[imageAspect])} aria-hidden="true">
+        <div className={cn("relative overflow-hidden bg-white/[0.03]", aspectClasses[imageAspect])} aria-hidden="true">
           <Image
             src={image}
             alt={title}

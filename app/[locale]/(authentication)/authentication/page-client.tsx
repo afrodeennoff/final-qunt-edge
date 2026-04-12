@@ -30,7 +30,7 @@ export default function AuthenticationPageClient() {
   ]
 
   return (
-    <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="qe-v2-app-shell relative min-h-screen overflow-hidden bg-background text-foreground/95">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -left-28 top-[-8rem] h-[40rem] w-[40rem] rounded-full bg-[oklch(0.65_0.22_260/0.18)] blur-[140px]" />
         <div className="absolute -right-36 bottom-[-10rem] h-[42rem] w-[42rem] rounded-full bg-[oklch(0.82_0.185_155/0.08)] blur-[140px]" />
@@ -44,7 +44,7 @@ export default function AuthenticationPageClient() {
           <div className="flex items-center justify-between">
             <Link
               href={`/${locale}`}
-              className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/72 transition hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground"
+              className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/72 transition hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to website
@@ -61,11 +61,11 @@ export default function AuthenticationPageClient() {
             className="my-10 max-w-xl lg:my-14"
           >
             <div className="mb-7 inline-flex items-center gap-3 rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] px-4 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06)]">
-              <Logo className="h-5 w-5 text-foreground" />
+              <Logo className="h-5 w-5 text-foreground/95" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/72">Qunt Edge</span>
             </div>
 
-            <h1 className="text-balance text-4xl font-[350] leading-[0.98] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="text-balance text-4xl font-[350] leading-[0.98] tracking-[-0.045em] text-foreground/95 sm:text-5xl lg:text-6xl">
               Welcome back to
               <br className="hidden sm:block" /> your trading command center.
             </h1>
@@ -81,10 +81,10 @@ export default function AuthenticationPageClient() {
                 >
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 rounded-[1rem] border border-white/[0.08] bg-white/[0.04] p-2.5 shadow-[0_0_18px_oklch(0.65_0.22_260/0.14)]">
-                      <point.icon className="h-4 w-4 text-foreground" />
+                      <point.icon className="h-4 w-4 text-foreground/95" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold tracking-[-0.01em] text-foreground">{point.title}</p>
+                      <p className="text-sm font-semibold tracking-[-0.01em] text-foreground/95">{point.title}</p>
                       <p className="mt-1.5 text-xs leading-[1.6] text-foreground/52">{point.description}</p>
                     </div>
                   </div>
@@ -99,7 +99,7 @@ export default function AuthenticationPageClient() {
           </div>
         </section>
 
-        <section className="flex items-center justify-center border-t border-border/24 p-6 sm:p-8 lg:border-t-0 lg:p-10">
+        <section className="flex items-center justify-center border-t border-white/[0.06] p-6 sm:p-8 lg:border-t-0 lg:p-10">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -110,20 +110,20 @@ export default function AuthenticationPageClient() {
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Account Access</p>
                 <div className="rounded-[1rem] border border-white/[0.08] bg-white/[0.04] p-2.5">
-                  <LockKeyhole className="h-4 w-4 text-foreground" />
+                  <LockKeyhole className="h-4 w-4 text-foreground/95" />
                 </div>
               </div>
-              <h2 className="text-xl font-semibold tracking-[-0.025em] text-foreground">Sign in to continue</h2>
+              <h2 className="text-xl font-semibold tracking-[-0.025em] text-foreground/95">Sign in to continue</h2>
               <p className="mt-1 text-xs text-foreground/46">{t('authentication.testimonialAuthor')}</p>
             </div>
 
             <div className="mb-6 grid gap-2 rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
               <div className="flex items-center gap-2 text-xs text-foreground/54">
-                <CheckCircle2 className="h-3.5 w-3.5 text-foreground" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-foreground/95" />
                 <span>Magic link and password sign-in</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-foreground/54">
-                <CheckCircle2 className="h-3.5 w-3.5 text-foreground" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-foreground/95" />
                 <span>Discord and Google authentication</span>
               </div>
               <div>
@@ -135,11 +135,11 @@ export default function AuthenticationPageClient() {
 
             <p className="mt-7 text-center text-[11px] leading-relaxed text-foreground/42">
               {t('authentication.termsAndPrivacy.prefix')} {" "}
-              <Link href={`/${locale}/terms`} className="text-foreground underline decoration-border/80 underline-offset-4 hover:text-foreground">
+              <Link href={`/${locale}/terms`} className="text-foreground/95 underline decoration-border/80 underline-offset-4 hover:text-foreground/95">
                 {t('authentication.termsAndPrivacy.terms')}
               </Link>{" "}
               {t('authentication.termsAndPrivacy.and')}{" "}
-              <Link href={`/${locale}/privacy`} className="text-foreground underline decoration-border/80 underline-offset-4 hover:text-foreground">
+              <Link href={`/${locale}/privacy`} className="text-foreground/95 underline decoration-border/80 underline-offset-4 hover:text-foreground/95">
                 {t('authentication.termsAndPrivacy.privacy')}
               </Link>
             </p>

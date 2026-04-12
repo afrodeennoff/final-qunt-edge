@@ -181,7 +181,7 @@ export default React.memo(function WeekdayPNLChart({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "line-clamp-1 font-bold tracking-tight text-foreground",
+                "line-clamp-1 font-bold tracking-tight text-foreground/95",
                 size === "small" ? "text-sm" : "text-base",
               )}
             >
@@ -192,7 +192,7 @@ export default React.memo(function WeekdayPNLChart({
                 <TooltipTrigger asChild>
                   <Info
                     className={cn(
-                      "text-muted-foreground hover:text-foreground transition-colors cursor-help",
+                      "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
                       size === "small" ? "h-3.5 w-3.5" : "h-4 w-4",
                     )}
                   />
@@ -207,7 +207,7 @@ export default React.memo(function WeekdayPNLChart({
             <Button 
               variant="ghost"
               size="sm"
-              className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground hover:bg-secondary/30"
+              className="h-6 px-2 text-[10px] uppercase font-bold tracking-wider text-muted-foreground hover:text-foreground/95 hover:bg-secondary/30"
               onClick={() => setWeekdayFilter({ days: [] })}
             >
               {t("weekdayPnl.clearFilter")}

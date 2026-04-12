@@ -331,7 +331,7 @@ export function TradovateCredentialsManager() {
                     className={`px-2 py-1 rounded text-xs ${
                       isExpired
                         ? "bg-semantic-error-bg text-semantic-error dark:bg-semantic-error-bg dark:text-semantic-error"
-                        : "bg-muted text-foreground"
+                        : "bg-white/[0.03] text-foreground/95"
                     }`}
                   >
                     {isExpired

@@ -244,7 +244,7 @@ const EquityChartTooltip = React.memo(
     });
 
     return (
-      <div className="rounded-lg border-border bg-background p-2 shadow-xs">
+      <div className="rounded-lg border-white/[0.06] bg-background p-2 shadow-xs">
         <div className="grid gap-2">
           <div className="flex flex-col">
             <span className="text-[0.70rem] uppercase text-muted-foreground">
@@ -258,7 +258,7 @@ const EquityChartTooltip = React.memo(
             <span className="text-[0.70rem] uppercase text-muted-foreground">
               {t("equity.tooltip.totalEquity")}
             </span>
-            <span className="font-bold text-foreground">
+            <span className="font-bold text-foreground/95">
               {formatCurrency(data.equity || 0)}
             </span>
           </div>
@@ -279,7 +279,7 @@ const EquityChartTooltip = React.memo(
                           accountColorMap.get(account) || ACCOUNT_COLORS[0],
                       }}
                     />
-                    <span className="text-sm text-foreground">
+                    <span className="text-sm text-foreground/95">
                       {t("equity.tooltip.accountReset", { account })}
                     </span>
                   </div>
@@ -304,7 +304,7 @@ const EquityChartTooltip = React.memo(
                           accountColorMap.get(account) || ACCOUNT_COLORS[0],
                       }}
                     />
-                    <span className="text-sm text-foreground">
+                    <span className="text-sm text-foreground/95">
                       {account}: {formatCurrency(amount)}
                     </span>
                     <span

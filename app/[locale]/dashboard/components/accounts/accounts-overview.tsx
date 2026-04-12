@@ -211,8 +211,8 @@ function SortRuleItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-2 rounded-md border-border bg-background px-2 py-1.5 text-sm",
-        isDragging && "opacity-70 shadow-sm"
+        "flex items-center gap-2 rounded-md border-white/[0.06] bg-background px-2 py-1.5 text-sm",
+        isDragging && "opacity-70 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]"
       )}
     >
       <button
@@ -244,7 +244,7 @@ function SortRuleItem({
         variant="ghost"
         size="icon"
         onClick={onRemove}
-        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+        className="h-7 w-7 text-muted-foreground hover:text-foreground/95"
         aria-label={removeLabel}
       >
         <X className="h-4 w-4" />
@@ -470,7 +470,7 @@ function PayoutDialog({
             </div>
 
             {/* Selected Date Display */}
-            <div className="p-3 bg-muted/30 rounded-md border-border">
+            <div className="p-3 bg-muted/30 rounded-md border-white/[0.06]">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{t('propFirm.payout.selectedDate')}</p>
@@ -483,7 +483,7 @@ function PayoutDialog({
             </div>
 
             {/* Inline Calendar with Custom Header */}
-            <div className="border-border rounded-md bg-background max-h-[400px] flex flex-col">
+            <div className="border-white/[0.06] rounded-md bg-background max-h-[400px] flex flex-col">
               {/* Custom Month/Year Header */}
               <div className="p-3 border-b bg-muted/20 shrink-0">
                 <div className="flex items-center justify-between">
@@ -496,7 +496,7 @@ function PayoutDialog({
                         newDate.setMonth(newDate.getMonth() - 1)
                         setDate(newDate)
                       }}
-                      className="h-7 w-7 p-0 hover:bg-muted"
+                      className="h-7 w-7 p-0 hover:bg-white/[0.03]"
                       disabled={isProcessing}
                     >
                       <ChevronLeft className="h-3 w-3" />
@@ -514,7 +514,7 @@ function PayoutDialog({
                         newDate.setMonth(newDate.getMonth() + 1)
                         setDate(newDate)
                       }}
-                      className="h-7 w-7 p-0 hover:bg-muted"
+                      className="h-7 w-7 p-0 hover:bg-white/[0.03]"
                       disabled={isProcessing}
                     >
                       <ChevronRight className="h-3 w-3" />
@@ -537,7 +537,7 @@ function PayoutDialog({
                         }
                         setDate(newDate)
                       }}
-                      className="h-7 w-7 p-0 hover:bg-muted"
+                      className="h-7 w-7 p-0 hover:bg-white/[0.03]"
                       disabled={isProcessing}
                     >
                       <ChevronLeft className="h-3 w-3" />
@@ -559,7 +559,7 @@ function PayoutDialog({
                         }
                         setDate(newDate)
                       }}
-                      className="h-7 w-7 p-0 hover:bg-muted"
+                      className="h-7 w-7 p-0 hover:bg-white/[0.03]"
                       disabled={isProcessing}
                     >
                       <ChevronRight className="h-3 w-3" />
@@ -589,14 +589,14 @@ function PayoutDialog({
                     head_row: "flex",
                     head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.75rem]",
                     row: "flex w-full mt-1",
-                    cell: "h-8 w-8 text-center text-xs p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                    day: "h-8 w-8 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors text-xs",
+                    cell: "h-8 w-8 text-center text-xs p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-white/[0.05] first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-8 w-8 p-0 font-normal aria-selected:opacity-100 hover:bg-white/[0.05] hover:text-accent-foreground rounded-md transition-colors text-xs",
                     day_range_end: "day-range-end",
                     day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md",
-                    day_today: "bg-accent text-accent-foreground font-semibold",
+                    day_today: "bg-white/[0.05] text-accent-foreground font-semibold",
                     day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
                     day_disabled: "text-muted-foreground opacity-50",
-                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                    day_range_middle: "aria-selected:bg-white/[0.05] aria-selected:text-accent-foreground",
                     day_hidden: "invisible",
                   }}
                 />
@@ -1130,7 +1130,7 @@ function AccountsOverviewComponent({
               <UITooltip>
                 <TooltipTrigger asChild>
                   <Info className={cn(
-                    "text-muted-foreground hover:text-foreground transition-colors cursor-help",
+                    "text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
                     size === 'small' ? "h-3.5 w-3.5" : "h-4 w-4"
                   )} />
                 </TooltipTrigger>
@@ -1324,7 +1324,7 @@ function AccountsOverviewComponent({
 
       {/* Unconfigured accounts banner */}
       {(unconfiguredAccounts.length > 0 && !isLoading) && (
-        <div className="border-b border-border bg-secondary/20 backdrop-blur-sm">
+        <div className="border-b border-white/[0.06] bg-secondary/20 backdrop-blur-sm">
           <div className="px-4 py-2 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
@@ -1337,15 +1337,15 @@ function AccountsOverviewComponent({
                 {unconfiguredAccounts.map((accountNumber, index) => (
                   <div
                     key={accountNumber}
-                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border border-border"
+                    className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border border-white/[0.06]"
                   >
-                    <span className="text-[10px] font-bold text-foreground">
+                    <span className="text-[10px] font-bold text-foreground/95">
                       {accountNumber}
                     </span>
                     <Button 
                       variant="ghost"
                       size="sm"
-                      className="h-5 w-5 p-0 hover:bg-muted"
+                      className="h-5 w-5 p-0 hover:bg-white/[0.03]"
                       onClick={() => {
                         // Create a minimal account object for configuration
                         const tempAccount = {
@@ -1364,7 +1364,7 @@ function AccountsOverviewComponent({
                         setSelectedAccountForTable(tempAccount as unknown as Account)
                       }}
                     >
-                      <Settings className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors" />
+                      <Settings className="h-3 w-3 text-muted-foreground hover:text-foreground/95 transition-colors" />
                     </Button>
                   </div>
                 ))}
@@ -1395,8 +1395,8 @@ function AccountsOverviewComponent({
                   // Generate a consistent color for each group based on group index
                   const groupColors = [
                     'border-primary/20 bg-primary/[0.02]',
-                    'border-muted-foreground/20 bg-muted-foreground/[0.02]',
-                    'border-border bg-card',
+                    'border-muted-foreground/20 bg-white/[0.03]-foreground/[0.02]',
+                    'border-white/[0.06] bg-white/[0.02]',
                     'border-primary/10 bg-primary/[0.01]',
                     'border-secondary bg-secondary/10',
                     'border-border/14 bg-foreground/[0.02]',
@@ -1410,7 +1410,7 @@ function AccountsOverviewComponent({
                       className={cn(
                         "relative border-l-4 rounded-r-lg",
                         groupColorClass,
-                        "transition-all duration-200 hover:shadow-md"
+                        "transition-all duration-200 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]"
                       )}
                     >
                       {/* Group header with subtle styling */}
@@ -1464,8 +1464,8 @@ function AccountsOverviewComponent({
                   return (
                     <div
                       className={cn(
-                        "relative border-l-4 border-border bg-secondary/5 rounded-r-lg",
-                        "transition-all duration-300 hover:shadow-md hover:bg-secondary/10"
+                        "relative border-l-4 border-white/[0.06] bg-secondary/5 rounded-r-lg",
+                        "transition-all duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:bg-secondary/10"
                       )}
                     >
                       {/* Ungrouped header */}

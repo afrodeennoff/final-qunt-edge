@@ -127,8 +127,8 @@ function TagsColumnHeader() {
           variant="ghost"
           size="sm"
           className={cn(
-            "-ml-3 h-8 data-[state=open]:bg-accent",
-            hasActiveFilter && "bg-accent",
+            "-ml-3 h-8 data-[state=open]:bg-white/[0.05]",
+            hasActiveFilter && "bg-white/[0.05]",
           )}
         >
           <span>{t("trade-table.tags")}</span>
@@ -724,7 +724,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           <Button 
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 data-[state=open]:bg-white/[0.05]"
           >
             {t("trade-table.accounts")}
           </Button>
@@ -737,7 +737,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               <div className="flex items-center gap-1">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <div className="flex items-center justify-center w-fit min-w-6 px-2 h-6 rounded-full bg-muted text-xs font-medium cursor-pointer hover:bg-muted/80 transition-colors">
+                    <div className="flex items-center justify-center w-fit min-w-6 px-2 h-6 rounded-full bg-white/[0.03] text-xs font-medium cursor-pointer hover:bg-muted/80 transition-colors">
                       {accounts.length === 1
                         ? `${accounts[0].slice(0, 2)}${accounts[0].slice(-2)}`
                         : `+${accounts.length}`}
@@ -1058,7 +1058,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           return (
             <div className="text-right font-medium">
               <span
-                className={cn(value >= 0 ? "text-foreground" : "text-muted-foreground")}
+                className={cn(value >= 0 ? "text-foreground/95" : "text-muted-foreground")}
               >
                 {showPoints ? value.toFixed(2) : value}
               </span>
@@ -1082,7 +1082,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           <Button 
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 data-[state=open]:bg-white/[0.05]"
           >
             {t("trade-table.image")}
           </Button>
@@ -1297,11 +1297,11 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
 
   return (
     <Card
-      className="flex h-full w-full flex-col border-border/28 bg-card/80 shadow-[0_20px_40px_-32px_hsl(var(--foreground)/0.55)] backdrop-blur-sm"
+      className="flex h-full w-full flex-col border-white/[0.08] bg-white/[0.080] shadow-[0_20px_40px_-32px_hsl(var(--foreground)/0.55)] backdrop-blur-sm"
       style={cardStyle}
     >
       {showHeader && (
-        <CardHeader className="h-[56px] shrink-0 border-b border-border/28 bg-muted/25 p-3 sm:p-4">
+        <CardHeader className="h-[56px] shrink-0 border-b border-white/[0.08] bg-muted/25 p-3 sm:p-4">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-1.5">
               <CardTitle className="line-clamp-1 text-base">
@@ -1310,7 +1310,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
+                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground/95 transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent side="top">
                     <p>{t("trade-table.description")}</p>
@@ -1382,7 +1382,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Info
-                              className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help mr-2 shrink-0"
+                              className="h-4 w-4 text-muted-foreground hover:text-foreground/95 transition-colors cursor-help mr-2 shrink-0"
                               onClick={(e) => e.stopPropagation()}
                             />
                           </TooltipTrigger>
@@ -1449,12 +1449,12 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
-                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-white/[0.03]"
                 >
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-border last:border-r-0 first:border-l h-12 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                      className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-white/[0.06] last:border-r-0 first:border-l h-12 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
                       style={{ width: header.getSize() }}
                     >
                       {header.isPlaceholder
@@ -1486,8 +1486,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                     <tr
                       data-state={row.getIsSelected() && "selected"}
                       className={cn(
-                        "group border-b border-border/28 transition-all duration-75 hover:bg-muted/40",
-                        row.getIsSelected() && "bg-accent/50 hover:bg-accent data-[state=selected]:bg-muted",
+                        "group border-b border-white/[0.08] transition-all duration-75 hover:bg-muted/40",
+                        row.getIsSelected() && "bg-accent/50 hover:bg-white/[0.05] data-[state=selected]:bg-white/[0.03]",
                         row.getIsExpanded()
                           ? "bg-muted/60"
                           : row.getCanExpand()
@@ -1502,8 +1502,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                         <td
                           key={cell.id}
                           className={cn(
-                            "whitespace-nowrap border-r border-border/20 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-border",
-                            row.getIsSelected() && "border-border",
+                            "whitespace-nowrap border-r border-border/20 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-white/[0.06]",
+                            row.getIsSelected() && "border-white/[0.06]",
                           )}
                           style={{ width: cell.column.getSize() }}
                         >
@@ -1549,7 +1549,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                 </tr>
               )}
             </tbody>
-            <tfoot className="sticky bottom-0 z-10 border-t border-border bg-background/90 shadow-md backdrop-blur-md">
+            <tfoot className="sticky bottom-0 z-10 border-t border-white/[0.06] bg-background/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] backdrop-blur-md">
               <tr className="border-b transition-colors">
                 {visibleColumns.map((column, index) => {
                   const columnId = column.id || (column as ColumnAccessor).accessorKey;
@@ -1656,7 +1656,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           </table>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between border-t border-border/28 bg-background/80 px-4 py-3 backdrop-blur-sm">
+      <CardFooter className="flex items-center justify-between border-t border-white/[0.08] bg-background/80 px-4 py-3 backdrop-blur-sm">
         <div className="text-sm text-muted-foreground">
           {t("trade-table.totalTrades", { count: totalTradeCount })}
         </div>

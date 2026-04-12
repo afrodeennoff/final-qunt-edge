@@ -61,7 +61,7 @@ export function DeleteTradeConfirmation({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the <span className="font-semibold text-foreground">{tradeSymbol}</span> trade.
+            This will permanently delete the <span className="font-semibold text-foreground/95">{tradeSymbol}</span> trade.
             This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>

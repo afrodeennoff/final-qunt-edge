@@ -249,7 +249,7 @@ export default function AtasFileUpload({
           "hover:border-primary/50 group relative",
           isDragActive
             ? "border-primary bg-primary/5 scale-[0.99]"
-            : "border-border hover:bg-muted/50 ",
+            : "border-white/[0.06] hover:bg-muted/50 ",
           "cursor-pointer flex items-center justify-center",
         )}
       >

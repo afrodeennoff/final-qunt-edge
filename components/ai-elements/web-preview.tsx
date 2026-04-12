@@ -66,7 +66,7 @@ export const WebPreview = ({
     <WebPreviewContext.Provider value={contextValue}>
       <div
         className={cn(
-          "flex size-full flex-col rounded-lg border bg-card",
+          "flex size-full flex-col rounded-lg border bg-white/[0.02]",
           className
         )}
         {...props}
@@ -107,7 +107,7 @@ export const WebPreviewNavigationButton = ({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button 
-          className="h-8 w-8 p-0 hover:text-foreground"
+          className="h-8 w-8 p-0 hover:text-foreground/95"
           disabled={disabled}
           onClick={onClick}
           size="sm"
@@ -233,7 +233,7 @@ export const WebPreviewConsole = ({
                   "text-xs",
                   log.level === "error" && "text-destructive",
                   log.level === "warn" && "text-semantic-warning",
-                  log.level === "log" && "text-foreground"
+                  log.level === "log" && "text-foreground/95"
                 )}
                 key={`${log.timestamp.getTime()}-${index}`}
               >
