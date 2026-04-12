@@ -185,7 +185,7 @@ function createTablePreview(type: 'tradeTableReview' | 'consistencyTable') {
             ))}
           </div>
           {[...Array(4)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/50 rounded-md">
+            <div key={rowIndex} className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 border border-border/20 rounded-md">
               {Array(type === 'tradeTableReview' ? 4 : 5).fill(0).map((_, i) => (
                 <div key={i} className={cn(
                   "h-3 bg-muted-foreground/10 rounded",

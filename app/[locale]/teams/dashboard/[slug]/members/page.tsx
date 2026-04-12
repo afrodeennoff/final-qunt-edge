@@ -16,7 +16,7 @@ export default function TeamMembersPage() {
 
   return (
     <section className="space-y-6">
-      <header className="rounded-2xl border border-border/70 bg-card/70 p-5 sm:p-6">
+      <header className="rounded-2xl border border-border/28 bg-card/70 p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -29,7 +29,7 @@ export default function TeamMembersPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button  asChild variant="outline" className="h-10 rounded-xl border-border/70 text-[11px] font-black uppercase tracking-[0.15em]">
+            <Button  asChild variant="outline" className="h-10 rounded-xl border-border/28 text-[11px] font-black uppercase tracking-[0.15em]">
               <Link href={analyticsHref}>
                 Team Analytics
                 <ArrowRight className="h-4 w-4" />
@@ -45,7 +45,7 @@ export default function TeamMembersPage() {
         </div>
       </header>
 
-      <Card className="border-border/70 bg-card/75">
+      <Card className="border-border/28 bg-card/75">
         <CardContent className="p-2 sm:p-3">
           <TeamManagement />
         </CardContent>

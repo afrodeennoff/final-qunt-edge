@@ -32,7 +32,7 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
       <div className="space-y-12 pl-12">
         {completedMilestones.map((milestone) => (
           <div key={milestone.id} className="relative">
-            <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-border/60 bg-card/90 dark:border-border/80 dark:bg-card/95">
+            <div className="absolute -left-[44px] flex h-7 w-7 items-center justify-center rounded-full border border-border/24 bg-card/90 dark:border-border/32 dark:bg-card/95">
               <div className="h-3 w-3 rounded-full bg-muted/40 dark:bg-muted/30" />
             </div>
             

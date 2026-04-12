@@ -13,7 +13,7 @@ export default function FAQ() {
           {t("faq.heading")}
         </h2>
         <div className="max-w-3xl mx-auto space-y-6">
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question1")}
             </summary>
@@ -21,7 +21,7 @@ export default function FAQ() {
               {t("faq.answer1")}
             </p>
           </details>
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question2")}
             </summary>
@@ -29,7 +29,7 @@ export default function FAQ() {
               {t("faq.answer2")}
             </p>
           </details>
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question3")}
             </summary>
@@ -37,7 +37,7 @@ export default function FAQ() {
               {t("faq.answer3")}
             </p>
           </details>
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question4")}
             </summary>
@@ -45,7 +45,7 @@ export default function FAQ() {
               {t("faq.answer4")}
             </p>
           </details>
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question5")}
             </summary>
@@ -53,7 +53,7 @@ export default function FAQ() {
               {t("faq.answer5")}
             </p>
           </details>
-          <details className="border-b border-border/70 pb-4">
+          <details className="border-b border-border/28 pb-4">
             <summary className="cursor-pointer font-semibold text-foreground">
               {t("faq.question6")}
             </summary>

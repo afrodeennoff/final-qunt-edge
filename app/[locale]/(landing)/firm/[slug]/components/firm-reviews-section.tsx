@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import Link from 'next/link'
+import { useCurrentLocale } from '@/locales/client'
 import { createFirmReview, listFirmReviews, getFirmReviewStats, flagReview, type ReviewSortOption } from '@/server/firm-reviews'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -139,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-2xl border border-border/70 bg-card/60 p-5 transition-all duration-200 hover:border-border hover:bg-card/80">
+    <div className="group rounded-2xl border border-border/28 bg-card/60 p-5 transition-all duration-200 hover:border-border hover:bg-card/80">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
@@ -199,7 +200,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
 
 function ReviewSkeleton() {
   return (
-    <div className="rounded-2xl border border-border/70 bg-card/60 p-5">
+    <div className="rounded-2xl border border-border/28 bg-card/60 p-5">
       <div className="flex items-start gap-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex-1 gap-3">
@@ -218,6 +219,7 @@ function ReviewSkeleton() {
 }
 
 export function FirmReviewsSection({ firmId }: { firmId: string }) {
+  const locale = useCurrentLocale()
   const [title, setTitle] = React.useState('')
   const [body, setBody] = React.useState('')
   const [rating, setRating] = React.useState(0)
@@ -417,7 +419,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-border/70 bg-card/60 p-6">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-border/28 bg-card/60 p-6">
               <div className="text-5xl font-bold tracking-tight text-foreground">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
@@ -468,7 +470,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Review Form Section */}
-      <Card className="rounded-2xl border-border/70 bg-card/80">
+      <Card className="rounded-2xl border-border/28 bg-card/80">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
@@ -485,16 +487,16 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Not authenticated message */}
           {isAuthenticated === false && (
-            <div className="rounded-2xl border border-border/70 bg-card/60 p-5 text-center">
+            <div className="rounded-2xl border border-border/28 bg-card/60 p-5 text-center">
               <p className="text-sm text-muted-foreground">
-                Please <Link href="/authentication" className="text-v2-accent hover:underline">sign in</Link> to write a review
+                Please <Link href={`/${locale}/authentication`} className="text-v2-accent hover:underline">sign in</Link> to write a review
               </p>
             </div>
           )}
           
           {/* Already reviewed message */}
           {hasUserReviewed && (
-            <div className="rounded-2xl border border-border/70 bg-card/60 p-5">
+            <div className="rounded-2xl border border-border/28 bg-card/60 p-5">
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-v2-success" />
                 <p className="text-sm text-muted-foreground">
@@ -623,7 +625,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-border/70 bg-card p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl border border-border/28 bg-card p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-card/70">
@@ -670,7 +672,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       )}
       
       {/* Reviews List */}
-      <Card className="rounded-2xl border-border/70 bg-card/80">
+      <Card className="rounded-2xl border-border/28 bg-card/80">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
             <h3 className="text-lg font-semibold text-foreground">
@@ -710,7 +712,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             ) : reviews.length === 0 ? (
               // Empty state
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border/70 bg-card/60">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border/28 bg-card/60">
                   <ReviewsIcon size={28} className="text-muted-foreground" />
                 </div>
                 <p className="text-sm font-medium text-muted-foreground">No reviews yet</p>
@@ -743,7 +745,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/70 pt-4">
+            <div className="mt-6 flex items-center justify-center gap-2 border-t border-border/28 pt-4">
               <Button
                 variant="ghost"
                 size="sm"

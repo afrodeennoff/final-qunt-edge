@@ -16,6 +16,7 @@ import { PlatformTutorial } from './components/platform-tutorial'
 import { cn } from '@/lib/utils'
 import { useImportTypePreferenceStore } from '@/store/import-type-preference-store'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useIsMobile } from '@/hooks/use-mobile'
 
 export type ImportType = string
 
@@ -44,14 +45,16 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
   const [isCompareMode, setIsCompareMode] = useState(false)
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const t = useTypedI18n()
+  const isMobile = useIsMobile()
   const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
   const deferredSearchQuery = useDeferredValue(searchQuery)
   const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase()
+
+  // Stable reference — platforms array is constant, no need to rebuild
   const platformsByType = useMemo(
     () => new Map(platforms.map((platform) => [platform.type, platform])),
     []
   )
-  // useI18n() returns (key: string) => string directly — no cast needed
 
   const handlePlatformCheck = (platformType: string, checked: boolean) => {
     setSelectedPlatforms(prev => {
@@ -344,8 +347,11 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
           </div>
         )}
 
-        {selectedType && selectedPlatform && (
-          <Sheet open={!!selectedType} onOpenChange={() => setSelectedType('')}>
+        {isMobile && selectedType && selectedPlatform && (
+          <Sheet open={!!selectedType} onOpenChange={() => {
+            setSelectedType('')
+            setLastSelectedType('')
+          }}>
             <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border p-0">
               {/* Drag Handle */}
               <div className="flex justify-center py-3">

@@ -34,7 +34,8 @@ const eslintConfig = defineConfig([
   },
   {
     files: [
-      "scripts/**/*.{js,mjs,ts}",
+      "scripts/**/*.{js,mjs,ts,mts}",
+      "prisma/seeders/**/*.{js,ts}",
       "check-db.ts",
       "standalone-check-db.js",
       "test-validation-fix.ts",
@@ -55,6 +56,8 @@ const eslintConfig = defineConfig([
     "next.config.optimized.js",
     "next.config.compiled.js",
     "prisma/generated/**",
+    ".worktrees/**",
+    "components/sidebar/__tests__/**",
   ]),
 ]);
 

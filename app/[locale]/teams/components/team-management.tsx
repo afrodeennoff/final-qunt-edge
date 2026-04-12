@@ -103,42 +103,60 @@ export function TeamManagement({
   const teamsRoot = `${localePrefix}/teams`
   const dashboardRoot = `${teamsRoot}/dashboard`
   const [firstTeamId, setFirstTeamId] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const loadInitialData = async () => {
-      // If we are not yet on a team dashboard, we try to redirect to the first team
       if (!pathname.endsWith('/teams/dashboard')) {
+        setIsRedirecting(false);
         return;
       }
-      // Get user's teams
-      const teamsResult = await getUserTeams()
-      const managedResult = await getUserTeamAccess()
+      try {
+        const teamsResult = await getUserTeams()
 
-      if (teamsResult.success) {
-        // Check owned teams first
-        if (teamsResult.ownedTeams && teamsResult.ownedTeams.length > 0) {
-          setFirstTeamId(teamsResult.ownedTeams[0].id)
-          return
+        if (cancelled) return;
+
+        if (teamsResult.success) {
+          if (teamsResult.ownedTeams && teamsResult.ownedTeams.length > 0) {
+            setFirstTeamId(teamsResult.ownedTeams[0].id)
+            return
+          }
+          else if (teamsResult.joinedTeams && teamsResult.joinedTeams.length > 0) {
+            setFirstTeamId(teamsResult.joinedTeams[0].id)
+            return
+          }
         }
-        // If no owned teams, check joined teams
-        else if (teamsResult.joinedTeams && teamsResult.joinedTeams.length > 0) {
-          setFirstTeamId(teamsResult.joinedTeams[0].id)
-          return
+
+        const managedResult = await getUserTeamAccess()
+        if (cancelled) return;
+
+        if (managedResult.success && managedResult.managedTeams && managedResult.managedTeams.length > 0) {
+          setFirstTeamId(managedResult.managedTeams[0].id)
+        } else {
+          // No teams found — stop redirecting, show the management UI
+          setIsRedirecting(false);
         }
+      } catch {
+        // On error, stop redirecting and show management UI
+        setIsRedirecting(false);
       }
-
-      // If still no team found, check managed teams
-      if (!firstTeamId && managedResult.success && managedResult.managedTeams && managedResult.managedTeams.length > 0) {
-        setFirstTeamId(managedResult.managedTeams[0].id)
-      }
-
     }
     loadInitialData()
-    // If we found a team, redirect to it
-    if (firstTeamId) {
+    return () => { cancelled = true; }
+  }, [pathname])
+
+  useEffect(() => {
+    if (firstTeamId && pathname.endsWith('/teams/dashboard')) {
       router.replace(`${dashboardRoot}/${firstTeamId}`)
+      // Mark redirect as done — the route change will trigger a re-render
+      // and the first useEffect will set isRedirecting(false when the path changes)
+      const timeout = setTimeout(() => setIsRedirecting(false), 3000)
+      return () => clearTimeout(timeout)
+    } else if (!firstTeamId) {
+      setIsRedirecting(false);
     }
-  }, [dashboardRoot, firstTeamId, pathname, router])
+  }, [firstTeamId, dashboardRoot, pathname, router])
   const t = useI18n()
 
   // State
@@ -164,7 +182,7 @@ export function TeamManagement({
   const [renameTeamName, setRenameTeamName] = useState('')
   const [newTraderEmail, setNewTraderEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [pendingInvitations, setPendingInvitations] = useState<any[]>([])
+  const [pendingInvitations, setPendingInvitations] = useState<Array<{ id: string; email: string; status: string; createdAt: Date | string; expiresAt: Date | string }>>([])
 
   // Load data on component mount
   useEffect(() => {
@@ -189,10 +207,11 @@ export function TeamManagement({
         setManagedTeams(managedResult.managedTeams || [])
       }
     } catch (error) {
-      console.error('Error loading team data:', error)
+      console.warn('Error loading team data:', error)
       toast.error(t('dashboard.teams.error'))
     } finally {
       setIsLoading(false)
+      setIsRedirecting(false)
     }
   }
 
@@ -214,7 +233,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error creating team:', error)
+      console.warn('Error creating team:', error)
       toast.error(t('dashboard.teams.error'))
     } finally {
       setIsSubmitting(false)
@@ -239,7 +258,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error joining team:', error)
+      console.warn('Error joining team:', error)
       toast.error(t('dashboard.teams.error'))
     } finally {
       setIsSubmitting(false)
@@ -256,7 +275,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error leaving team:', error)
+      console.warn('Error leaving team:', error)
       toast.error(t('dashboard.teams.error'))
     }
   }
@@ -320,7 +339,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error adding manager:', error)
+      console.warn('Error adding manager:', error)
       toast.error(t('dashboard.teams.error'))
     } finally {
       setIsSubmitting(false)
@@ -370,7 +389,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error removing manager:', error)
+      console.warn('Error removing manager:', error)
       toast.error(t('dashboard.teams.error'))
     }
   }
@@ -422,7 +441,7 @@ export function TeamManagement({
         toast.error(result.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error updating manager access:', error)
+      console.warn('Error updating manager access:', error)
       toast.error(t('dashboard.teams.error'))
     }
   }
@@ -437,7 +456,7 @@ export function TeamManagement({
         toast.error(result.error || 'Failed to delete team')
       }
     } catch (error) {
-      console.error('Error deleting team:', error)
+      console.warn('Error deleting team:', error)
       toast.error('Failed to delete team')
     }
   }
@@ -489,7 +508,7 @@ export function TeamManagement({
         toast.error(result.error || t('teams.rename.error'))
       }
     } catch (error) {
-      console.error('Error renaming team:', error)
+      console.warn('Error renaming team:', error)
       toast.error(t('teams.rename.error'))
     } finally {
       setIsSubmitting(false)
@@ -514,7 +533,7 @@ export function TeamManagement({
         toast.error(result.error || t('teams.traders.add.error'))
       }
     } catch (error) {
-      console.error('Error adding trader:', error)
+      console.warn('Error adding trader:', error)
       toast.error(t('teams.traders.add.error'))
     } finally {
       setIsSubmitting(false)
@@ -530,7 +549,7 @@ export function TeamManagement({
         setPendingInvitations(result.invitations || [])
       }
     } catch (error) {
-      console.error('Error loading pending invitations:', error)
+      console.warn('Error loading pending invitations:', error)
     }
   }
 
@@ -575,7 +594,7 @@ export function TeamManagement({
         toast.error(removeResult.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error removing trader:', error)
+      console.warn('Error removing trader:', error)
       toast.error(t('dashboard.teams.error'))
     }
   }
@@ -592,7 +611,7 @@ export function TeamManagement({
         toast.error(cancelResult.error || t('dashboard.teams.error'))
       }
     } catch (error) {
-      console.error('Error canceling invitation:', error)
+      console.warn('Error canceling invitation:', error)
       toast.error(t('dashboard.teams.error'))
     }
   }
@@ -625,7 +644,7 @@ export function TeamManagement({
     }
   }
 
-  const formatDate = (date: any) => {
+  const formatDate = (date: Date | string | unknown) => {
     if (date instanceof Date) {
       return date.toLocaleDateString()
     }
@@ -659,22 +678,25 @@ export function TeamManagement({
 
   const filteredTeams = Array.from(allTeams.values())
 
-  if (isLoading) {
+  if (isLoading || isRedirecting) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <p className="text-sm text-muted-foreground">
+            {isRedirecting ? 'Loading team workspace...' : 'Loading teams...'}
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto py-8">
+    <div className="mx-auto py-4">
       {/* Header */}
-      <div className="mb-6 rounded-2xl border border-border/70 bg-card/60 p-5 sm:p-6">
-        <h1 className="text-3xl font-bold tracking-tight">{t('teams.management.component.title')}</h1>
-        <p className="text-muted-foreground mt-2">{t('teams.management.component.description')}</p>
+      <div className="mb-6 rounded-2xl border border-v2-border/50 bg-v2-bg-surface/60 p-5 sm:p-6 backdrop-blur-sm">
+        <h1 className="text-2xl font-bold tracking-tight text-v2-text-primary">{t('teams.management.component.title')}</h1>
+        <p className="text-v2-text-secondary mt-2 text-sm">{t('teams.management.component.description')}</p>
       </div>
 
 
@@ -689,10 +711,10 @@ export function TeamManagement({
 
           return (
             <Card key={team.id} className={cn(
-              "cursor-pointer transition-colors shadow-xs hover:shadow-md",
+              "cursor-pointer transition-all duration-200 border-v2-border/50 bg-v2-bg-surface/60 backdrop-blur-sm shadow-sm hover:shadow-md hover:border-v2-accent/30",
               isActive 
-                ? "border-primary ring-2 ring-primary/20" 
-                : "hover:border-primary/50"
+                ? "border-v2-accent ring-2 ring-v2-accent/20" 
+                : ""
             )}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -703,8 +725,8 @@ export function TeamManagement({
                     )} />
                     <div className="min-w-0 flex-1">
                       <CardTitle className={cn(
-                        "text-sm truncate flex items-center gap-2",
-                        isActive && "text-primary"
+                        "text-sm truncate flex items-center gap-2 text-v2-text-primary",
+                        isActive && "text-v2-accent"
                       )}>
                         {team.name}
                         {isActive && (
@@ -713,7 +735,7 @@ export function TeamManagement({
                           </Badge>
                         )}
                       </CardTitle>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-v2-text-secondary mt-1">
                         {getAccessLabel(access, isOwner)}
                       </p>
                     </div>
@@ -722,12 +744,12 @@ export function TeamManagement({
               </CardHeader>
               <CardContent className="pt-0 space-y-3">
                 <div className="flex justify-between items-baseline text-sm">
-                  <span className="text-muted-foreground">{t('dashboard.teams.traders')}</span>
+                  <span className="text-v2-text-secondary">{t('dashboard.teams.traders')}</span>
                   <span className="font-medium">{team.traderIds.length}</span>
                 </div>
 
                 <div className="flex justify-between items-baseline text-sm">
-                  <span className="text-muted-foreground">{t('teams.management.created')}</span>
+                  <span className="text-v2-text-secondary">{t('teams.management.created')}</span>
                   <span className="text-xs">{formatDate(team.createdAt)}</span>
                 </div>
 
@@ -837,7 +859,7 @@ export function TeamManagement({
         {filteredTeams.length > 0 && (
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer transition-colors shadow-xs hover:shadow-md border-dashed border-2 border-muted-foreground/25 hover:border-primary/50">
+              <Card className="cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
                 <CardContent className="flex flex-col items-center justify-center h-48 p-6">
                   <Plus className="h-12 w-12 text-muted-foreground mb-4" />
                   <CardTitle className="text-lg text-center mb-2">
@@ -883,11 +905,11 @@ export function TeamManagement({
       {/* Empty State */}
       {filteredTeams.length === 0 && (
         <div className="text-center py-12">
-          <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">
+          <Building2 className="h-12 w-12 text-v2-text-muted mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2 text-v2-text-primary">
             {t('teams.management.component.emptyStateMessage')}
           </h3>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-v2-text-secondary mb-4">
             {t('teams.management.getStarted')}
           </p>
           {(

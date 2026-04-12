@@ -138,7 +138,7 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+      <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div className="space-y-1">
             <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Admin Tools</p>
@@ -198,10 +198,10 @@ export function AdminDashboard() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="group rounded-xl border border-border/70 bg-background/60 p-4 transition-all hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-background hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]"
+                className="group rounded-xl border border-border/28 bg-background/60 p-4 transition-all hover:-translate-y-0.5 hover:border-border/30 hover:bg-background hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]"
               >
                 <div className="flex items-start gap-3">
-                  <div className="rounded-lg border border-border/60 bg-muted/60 p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
+                  <div className="rounded-lg border border-border/24 bg-muted/60 p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="space-y-1">
@@ -216,7 +216,7 @@ export function AdminDashboard() {
       </Card>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Active subscribers</p>
           <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.activeSubscribers)}</div>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -224,7 +224,7 @@ export function AdminDashboard() {
           </p>
         </Card>
 
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Paused subscribers</p>
           <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.inactiveSubscribers)}</div>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -232,7 +232,7 @@ export function AdminDashboard() {
           </p>
         </Card>
 
-        <Card className="border-border/70 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
           <p className="text-sm text-muted-foreground">Newsletter coverage</p>
           <div className="mt-2 text-3xl font-semibold">
             {userStats.totalUsers > 0
@@ -246,7 +246,7 @@ export function AdminDashboard() {
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="border border-border/70 bg-card/70 p-1 shadow-sm">
+        <TabsList className="border border-border/28 bg-card/70 p-1 shadow-sm">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -254,7 +254,7 @@ export function AdminDashboard() {
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="space-y-2 border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+            <Card className="space-y-2 border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium">Total Users</h3>
                 <Badge variant="secondary">Active</Badge>
@@ -270,7 +270,7 @@ export function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="users">
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Free Users</h3>
               <Badge variant="secondary">Active</Badge>
@@ -280,14 +280,14 @@ export function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="payments" className="space-y-6">
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Recent Transactions</h3>
             </div>
             <TransactionsTable transactions={paymentData.transactions} />
           </Card>
 
-          <Card className="border-border/70 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Active Subscriptions</h3>
             </div>

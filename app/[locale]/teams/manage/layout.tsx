@@ -10,7 +10,6 @@ import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/s
 import { SidebarRootProviders } from "@/components/providers/root-providers"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { BackgroundGlow } from "@/components/ui/background-glow"
-import { LayoutDashboard, BarChart3, TrendingUp, ArrowLeft } from "lucide-react"
 import {
     HEADER_HEIGHT,
     HEADER_Z_INDEX,
@@ -18,9 +17,10 @@ import {
     HEADER_BG,
     CONTENT_PADDING,
     CONTENT_PADDING_Y,
+    APP_SHELL_SOFT_BORDER_STYLE,
 } from "@/lib/constants/layout"
-import { MobileBottomNav } from "@/components/mobile-bottom-nav"
-import type { MobileNavItem } from "@/components/mobile-bottom-nav"
+import { DashboardProviders } from "@/components/providers/dashboard-providers"
+import { TeamsMobileBottomNav } from "../components/teams-mobile-bottom-nav"
 
 export const metadata: Metadata = {
     robots: {
@@ -74,69 +74,53 @@ export default async function TeamManageLayout({
     const pathname = `/${locale}/teams/manage`
     const { dashboardRoot, slug } = resolveTeamPathContext(pathname)
 
-    const teamsMobileItems: MobileNavItem[] = [
-        {
-            href: slug ? `${dashboardRoot}/${slug}` : dashboardRoot,
-            icon: LayoutDashboard,
-            label: "Overview",
-            exact: true,
-        },
-        {
-            href: slug ? `${dashboardRoot}/${slug}/analytics` : dashboardRoot,
-            icon: BarChart3,
-            label: "Analytics",
-            disabled: !slug,
-        },
-        {
-            href: slug ? `${dashboardRoot}/${slug}/traders` : dashboardRoot,
-            icon: TrendingUp,
-            label: "Traders",
-            disabled: !slug,
-        },
-        {
-            href: `/${locale}/dashboard`,
-            icon: ArrowLeft,
-            label: "Dashboard",
-        },
-    ]
-
     return (
-        <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout>
-            <TeamsSidebar />
+        <SidebarRootProviders
+            defaultOpen={defaultSidebarOpen}
+            withAuthTimeout
+            style={APP_SHELL_SOFT_BORDER_STYLE}
+        >
+            <DashboardProviders>
+                <TeamsSidebar />
 
-            <SidebarInset className="relative overflow-hidden selection:bg-muted selection:text-foreground">
-                <BackgroundGlow variant="default" />
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-muted selection:text-foreground">
+                    <BackgroundGlow variant="default" />
 
-                <div className="relative z-0 flex min-h-screen flex-col">
-                    <header
-                        className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
-                    >
-                        <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
-                            <div className="flex items-center gap-3">
-                                <SidebarTrigger className="-ml-1" />
-                                <div className="flex flex-col">
-                                    <h1 className="text-sm font-bold tracking-wide text-foreground">
-                                        Team Management
-                                    </h1>
-                                    <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                                        Unified Workspace
-                                    </span>
+                    <div className="relative z-0 flex h-full flex-col">
+                        <header
+                            className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+                        >
+                            <div className="flex h-full w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center gap-3">
+                                    <SidebarTrigger className="-ml-1" />
+                                    <div className="flex flex-col">
+                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
+                                            Team Management
+                                        </h1>
+                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                                            Unified Workspace
+                                        </span>
+                                    </div>
                                 </div>
+                                <Suspense fallback={<AuthProfileButtonSkeleton />}>
+                                    <AuthProfileButton />
+                                </Suspense>
                             </div>
-                            <Suspense fallback={<AuthProfileButtonSkeleton />}>
-                                <AuthProfileButton />
-                            </Suspense>
-                        </div>
-                    </header>
+                        </header>
 
-                    <main className="flex-1 overflow-y-auto">
-                        <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
-                            {children}
-                        </div>
-                    </main>
-                </div>
-                <MobileBottomNav items={teamsMobileItems} />
-            </SidebarInset>
+                        <main className="flex-1 overflow-y-auto">
+                            <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+                                {children}
+                            </div>
+                        </main>
+                    </div>
+                    <TeamsMobileBottomNav
+                        dashboardRoot={dashboardRoot}
+                        slug={slug}
+                        backHref={`/${locale}/dashboard`}
+                    />
+                </SidebarInset>
+            </DashboardProviders>
         </SidebarRootProviders>
     )
 }

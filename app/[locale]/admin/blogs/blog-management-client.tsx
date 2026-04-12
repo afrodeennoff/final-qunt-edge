@@ -68,7 +68,7 @@ export function BlogManagementClient({
   return (
     <>
       <Card variant="flat" hover>
-        <div className="border-b border-border/60 p-4">
+        <div className="border-b border-border/24 p-4">
           <div className="flex items-center gap-3">
             <Search className="h-4 w-4 text-muted-foreground" />
             <Input
@@ -93,7 +93,7 @@ export function BlogManagementClient({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border/60 text-left text-sm">
+                <tr className="border-b border-border/24 text-left text-sm">
                   <th className="p-4 font-medium text-muted-foreground">Title</th>
                   <th className="p-4 font-medium text-muted-foreground">Slug</th>
                   <th className="p-4 font-medium text-muted-foreground">Category</th>

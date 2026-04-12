@@ -45,13 +45,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
           "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm shadow-v2-accent/5 transition-all duration-200",
-          variant === "default" && "border-v2-border bg-v2-bg-surface",
-          variant === "glass" && "border-v2-border/30 bg-v2-bg-surface/20 backdrop-blur-xl shadow-lg",
-          variant === "elevated" && "border-v2-border bg-v2-bg-surface shadow-xl shadow-v2-accent/10",
-          variant === "outlined" && "border-2 border-v2-border bg-transparent shadow-none",
+          variant === "default" && "border-v2-border/22 bg-v2-bg-surface",
+          variant === "glass" && "border-v2-border/12 bg-v2-bg-surface/20 backdrop-blur-xl shadow-lg",
+          variant === "elevated" && "border-v2-border/18 bg-v2-bg-surface shadow-xl shadow-v2-accent/10",
+          variant === "outlined" && "border-2 border-v2-border/24 bg-transparent shadow-none",
           variant === "flat" && "border-0 bg-transparent shadow-none",
           variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg shadow-v2-accent/8",
-          variant === "frost" && "bg-transparent border border-[var(--frost-border)] shadow-[rgba(176,199,217,0.145)_0px_0px_0px_1px]",
+          variant === "frost" && "bg-transparent border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
           {
             "text-sm": size === "sm",
             "text-base": size === "md",
@@ -78,7 +78,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         )}
         {status && (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-v2-border/50 bg-v2-bg-base/90 backdrop-blur-md px-2 py-1 shadow-sm">
+            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-v2-border/14 bg-v2-bg-base/90 backdrop-blur-md px-2 py-1 shadow-sm">
             <div
               className={cn(
                 "status-dot size-2 rounded-full",

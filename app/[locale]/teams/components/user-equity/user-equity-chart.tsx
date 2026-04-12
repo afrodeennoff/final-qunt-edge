@@ -26,7 +26,7 @@ interface UserEquityChartProps {
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ value: number; payload?: { dailyPnL?: number; cumulativePnL?: number; tradeCount?: number; tradeNumber?: number } }>;
   label?: string | number;
   showDailyView?: boolean;
 }

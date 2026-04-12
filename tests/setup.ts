@@ -2,6 +2,13 @@ import { vi } from 'vitest'
 
 vi.mock('server-only', () => ({}))
 
+// Mock Next.js cache APIs that are unavailable in vitest
+vi.mock('next/cache', async () => ({
+  ...(await vi.importActual('next/cache')),
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}))
+
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 const eventTarget = new EventTarget()

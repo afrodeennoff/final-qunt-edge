@@ -540,11 +540,11 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                         </div>
                       </TransformComponent>
 
-                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/70 backdrop-blur-xs z-50">
+                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/28 backdrop-blur-xs z-50">
                         <Button 
                           variant="ghost"
                           size="icon"
-                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => zoomOut()}
                           disabled={scale <= 0.5}
                         >
@@ -556,7 +556,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
                         <Button 
                           variant="ghost"
                           size="icon"
-                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/60 h-7 w-7 sm:h-8 sm:w-8"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
                           onClick={() => zoomIn()}
                           disabled={scale >= 3}
                         >

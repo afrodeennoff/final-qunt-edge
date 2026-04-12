@@ -516,7 +516,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
     let totalBalance = 0
     let activeTraders = 0
-    let recentActivity: any[] = []
+    let recentActivity: Array<{ id: string; type: string; description: string; amount: number; date: Date; userEmail: string }> = []
 
     const now = new Date()
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -536,7 +536,7 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
             id: trade.id,
             type: 'TRADE_CLOSED',
             description: `${member.user.email} closed ${trade.instrument} with PnL ${trade.pnl}`,
-            amount: trade.pnl,
+            amount: Number(trade.pnl),
             date: trade.createdAt,
             userEmail: member.user.email
           })

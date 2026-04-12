@@ -146,7 +146,7 @@ export default function TickDistributionChartEmbed({
     return `hsl(var(--chart-2) / ${intensity})`;
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; payload: { ticks: string; count: number } }>; label?: string }) => {
     React.useEffect(() => {
       if (active && payload && payload.length)
         setActiveTick(payload[0].payload.ticks);

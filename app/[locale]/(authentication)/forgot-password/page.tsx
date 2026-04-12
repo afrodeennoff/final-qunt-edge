@@ -5,8 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { resetPasswordForEmail } from '@/server/auth-password'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 export default function ForgotPasswordPage() {
+  const params = useParams<{ locale: string }>()
+  const locale = params.locale || 'en'
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -34,7 +37,7 @@ export default function ForgotPasswordPage() {
           If an account exists with <strong>{email}</strong>, you will receive a password reset link shortly.
         </p>
         <Link
-          href="/authentication"
+          href={`/${locale}/authentication`}
           className="text-sm text-primary underline-offset-4 hover:underline"
         >
           Back to sign in
@@ -69,7 +72,7 @@ export default function ForgotPasswordPage() {
       </form>
 
       <Link
-        href="/authentication"
+        href={`/${locale}/authentication`}
         className="text-sm text-primary underline-offset-4 hover:underline text-center"
       >
         Back to sign in

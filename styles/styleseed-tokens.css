@@ -22,45 +22,45 @@
   --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* === SHADOW TOKENS === */
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.20);
-  --shadow-card-hover: 0 2px 6px rgba(0,0,0,0.28);
-  --shadow-elevated: 0 4px 12px rgba(0,0,0,0.30);
-  --shadow-modal: 0 8px 24px rgba(0,0,0,0.40);
+  /* === SHADOW TOKENS (Resend ring system — no traditional box-shadows on void) === */
+  --shadow-card: 0px 20px 38px -30px rgba(0, 0, 0, 0.72);
+  --shadow-card-hover: 0px 24px 44px -30px rgba(0, 0, 0, 0.76);
+  --shadow-elevated: 0px 28px 52px -34px rgba(0, 0, 0, 0.8);
+  --shadow-modal: 0px 32px 60px -34px rgba(0, 0, 0, 0.82);
 
-  /* === TEXT TOKENS (grayscale - no pure black) === */
-  /* Strongest text */
-  --text-strong: #FFFFFF;
-  /* Primary text / metrics */
-  --text-primary: #E8E8E8;
-  /* Secondary / labels */
-  --text-secondary: #9B9B9B;
-  /* Tertiary / subtitles */
-  --text-tertiary: #7A7A7A;
+  /* === TEXT TOKENS (Resend palette) === */
+  /* Strongest text — near white #f0f0f0 */
+  --text-strong: #f0f0f0;
+  /* Primary text / metrics — #e0e0e0 */
+  --text-primary: #E0E0E0;
+  /* Secondary / labels — silver #a1a4a5 */
+  --text-secondary: #a1a4a5;
+  /* Tertiary / subtitles — dark gray #7a7a7a */
+  --text-tertiary: #7a7a7a;
   /* Disabled / inactive */
   --text-disabled: #555555;
 
-  /* === SURFACE TOKENS === */
-  /* Page background */
-  --surface-page: #0A0A0A;
-  /* Card background */
-  --surface-card: oklch(0.07 0 0);
-  /* List rows / subtle warm */
-  --surface-subtle: oklch(0.12 0 0);
+  /* === SURFACE TOKENS (Resend void + frost) === */
+  /* Page background — pure black void */
+  --surface-page: #000000;
+  /* Card background — frost-tinted lift */
+  --surface-card: oklch(0.035 0.005 264);
+  /* List rows / subtle frost */
+  --surface-subtle: oklch(0.06 0.005 264);
   /* Dividers / progress track */
-  --surface-muted: oklch(0.18 0.01 270);
+  --surface-muted: oklch(0.10 0.008 264);
   /* Brand tint (selected rows) */
-  --brand-tint: oklch(0.55 0.22 264 / 0.08);
+  --brand-tint: oklch(0.62 0.19 260 / 0.08);
 
-  /* === IMPACT COLORS (small areas only) === */
-  /* Success / Up trend */
-  --impact-success: #6B9B7A;
-  /* Urgent */
-  --impact-urgent: #C85A54;
-  /* Info / In Progress */
-  --impact-info: #3B82F6;
-  /* Pending / Warning */
-  --impact-warning: #F59E0B;
-  /* Notification dot */
-  --impact-notification: #FF4444;
+  /* === IMPACT COLORS (Resend accent palette) === */
+  /* Success / Up trend — Resend green */
+  --impact-success: #11ff99;
+  /* Urgent — Resend red */
+  --impact-urgent: #ff2047;
+  /* Info / In Progress — Resend blue */
+  --impact-info: #3b9eff;
+  /* Pending / Warning — Resend gold */
+  --impact-warning: #ffc53d;
+  /* Notification dot — Resend orange */
+  --impact-notification: #ff801f;
 }

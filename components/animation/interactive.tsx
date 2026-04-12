@@ -57,7 +57,7 @@ export function InteractiveWrapper({
     setPosition({ x: 0, y: 0 })
   }, [])
 
-  const handleDragEnd = useCallback((_: any, info: PanInfo) => {
+  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
     if (prefersReducedMotion) return
 
     dragX.set(0)

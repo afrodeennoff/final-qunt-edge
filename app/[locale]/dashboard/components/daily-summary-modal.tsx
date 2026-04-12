@@ -267,8 +267,8 @@ const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'c
 const getBlurCardClass = (isActive: boolean) => cn(
     "group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all duration-700 backdrop-blur-sm cursor-pointer relative overflow-hidden",
     isActive
-        ? "bg-card/70 border-foreground/5 blur-xl scale-[0.98] select-none"
-        : "bg-card/50 border-foreground/10 hover:bg-accent/70 hover:border-foreground/20"
+        ? "bg-card/70 border-border/8 blur-xl scale-[0.98] select-none"
+        : "bg-card/50 border-border/14 hover:bg-accent/70 hover:border-border/30"
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
@@ -331,7 +331,7 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
                 <input
                     autoFocus
                     type="number"
-                    className="w-24 border-b border-foreground/40 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+                    className="w-24 border-b border-border/18 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
                     defaultValue={customTarget}
                     onBlur={(e) => {
                         const val = parseFloat(e.target.value)
@@ -454,7 +454,7 @@ export function DailySummaryModal() {
                 <motion.div
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="w-full aspect-[7/4] bg-background text-foreground rounded-3xl overflow-hidden border border-border/60 relative flex flex-col sm:shadow-2xl"
+                    className="w-full aspect-[7/4] bg-background text-foreground rounded-3xl overflow-hidden border border-border/24 relative flex flex-col sm:shadow-2xl"
                     ref={cardRef}
                 >
                     {/* Refined Background Mesh */}
@@ -465,7 +465,7 @@ export function DailySummaryModal() {
                         {/* Header */}
                         <div className="flex justify-between items-center mb-8">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-border/60 flex items-center justify-center shadow-inner">
+                                <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-border/24 flex items-center justify-center shadow-inner">
                                     <Zap className="w-5 h-5 text-foreground" />
                                 </div>
                                 <div className="flex flex-col">
@@ -481,7 +481,7 @@ export function DailySummaryModal() {
                             <div className="flex items-center gap-4">
                                 <button
                                     type="button"
-                                    className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-all hover:border-border/60 hover:bg-secondary/30"
+                                    className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-all hover:border-border/24 hover:bg-secondary/30"
                                     onClick={(e) => { e.stopPropagation(); setIsEditingHandle(true); }}
                                     aria-label="Edit handle"
                                 >
@@ -491,13 +491,13 @@ export function DailySummaryModal() {
                                         <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground uppercase tracking-wider transition-colors">@{handle}</span>
                                     )}
                                 </button>
-                                <div className="flex items-center bg-card rounded-lg p-0.5 border border-border/60">
+                                <div className="flex items-center bg-card rounded-lg p-0.5 border border-border/24">
                                     <button onClick={(e) => { e.stopPropagation(); setDisplayMode('currency'); }} className={currencyButtonClass}>$</button>
                                     <button onClick={(e) => { e.stopPropagation(); setDisplayMode('percent'); }} className={percentButtonClass}>%</button>
                                 </div>
                                 <button
                                     onClick={() => setIsOpen(false)}
-                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/60 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/24 text-muted-foreground hover:text-foreground transition-colors"
                                     aria-label="Close summary"
                                 >
                                     <X className="w-4 h-4" />
@@ -580,18 +580,18 @@ export function DailySummaryModal() {
                             {/* Secondary Stats */}
                             <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
                                 {/* Streak - Refined */}
-                                <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-foreground/10 rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-foreground/20 transition-all">
+                                <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-all">
                                     <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
                                     <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
                                     <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-card/50 border border-foreground/10 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors backdrop-blur-sm">
+                                    <div className="bg-card/50 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors backdrop-blur-sm">
                                         <div className="text-2xl font-black text-foreground/90 mb-1">{scoreVal}</div>
                                         <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Score</div>
                                     </div>
-                                    <div className="bg-card/50 border border-foreground/10 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors backdrop-blur-sm">
+                                    <div className="bg-card/50 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors backdrop-blur-sm">
                                         <div className="text-2xl font-black text-foreground/90 mb-1">{stats.winRate}%</div>
                                         <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Win Rate</div>
                                     </div>
@@ -616,7 +616,7 @@ export function DailySummaryModal() {
                                 </div>
                                 <span className={cn("text-sm font-bold", goalTextClass)}>{Math.round(totalGoalProgress)}%</span>
                             </div>
-                            <div className="h-2.5 w-full bg-muted/60 rounded-full overflow-hidden border border-foreground/5 p-[1px] relative shadow-inner">
+                            <div className="h-2.5 w-full bg-muted/60 rounded-full overflow-hidden border border-border/8 p-[1px] relative shadow-inner">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${totalGoalProgress}%` }}

@@ -267,9 +267,9 @@ export default function TradingChatAssistant({ className = "", maxMessages = 3 }
         isolation: "isolate",
       }}
     >
-      <div className="h-full w-full overflow-hidden rounded-lg border border-border/70 bg-card shadow-lg transition-all duration-500">
+      <div className="h-full w-full overflow-hidden rounded-lg border border-border/28 bg-card shadow-lg transition-all duration-500">
         <div className="p-4 h-full flex flex-col min-h-0">
-          <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border/70 pb-2 transition-colors duration-300">
+          <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border/28 pb-2 transition-colors duration-300">
             <Bot className="h-4 w-4 text-foreground transition-colors duration-300" />
             <span className="text-sm font-medium text-foreground transition-colors duration-300">
               {t('landing.features.chat-feature.title')}

@@ -17,6 +17,7 @@ import { SidebarLayoutShell } from "@/components/ui/sidebar-layout-shell";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { shouldUseServerBootstrap } from "@/lib/feature-flags";
 import type { DashboardBootstrapPayload } from "@/lib/types/bootstrap";
+import { APP_SHELL_SOFT_BORDER_STYLE } from "@/lib/constants/layout";
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
@@ -85,7 +86,12 @@ export default async function DashboardLayout({
           __html: `(function(){try{var root=document.documentElement;${themeScript};root.setAttribute('data-theme','${userTheme ?? 'blue'}')}catch(e){console.error('[Theme] Bootstrap failed',e)}})()`,
         }}
       />
-      <SidebarRootProviders defaultOpen={defaultSidebarOpen} withAuthTimeout initialTheme={userTheme}>
+      <SidebarRootProviders
+        defaultOpen={defaultSidebarOpen}
+        withAuthTimeout
+        initialTheme={userTheme}
+        style={APP_SHELL_SOFT_BORDER_STYLE}
+      >
         <DashboardProviders isAdmin={isAdmin} initialBootstrap={initialBootstrap}>
           <DashboardClientOverlays />
           <DashboardProvider>

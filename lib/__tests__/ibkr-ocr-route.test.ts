@@ -32,9 +32,9 @@ describe('ibkr ocr route', () => {
       })
     )
 
-    const payload = (await response.json()) as { code: string }
+    const payload = (await response.json()) as { error: { code: string } }
     expect(response.status).toBe(400)
-    expect(payload.code).toBe('IMPORT_FILE_MISSING')
+    expect(payload.error.code).toBe('IMPORT_FILE_MISSING')
   })
 
   it('returns 400 when non-pdf file is provided', async () => {
@@ -48,9 +48,9 @@ describe('ibkr ocr route', () => {
       })
     )
 
-    const payload = (await response.json()) as { code: string }
+    const payload = (await response.json()) as { error: { code: string } }
     expect(response.status).toBe(400)
-    expect(payload.code).toBe('IMPORT_FILE_TYPE_INVALID')
+    expect(payload.error.code).toBe('IMPORT_FILE_TYPE_INVALID')
   })
 
   it('returns 400 for empty pdf payloads', async () => {
@@ -64,8 +64,8 @@ describe('ibkr ocr route', () => {
       })
     )
 
-    const payload = (await response.json()) as { code: string }
+    const payload = (await response.json()) as { error: { code: string } }
     expect(response.status).toBe(400)
-    expect(payload.code).toBe('IMPORT_FILE_EMPTY')
+    expect(payload.error.code).toBe('IMPORT_FILE_EMPTY')
   })
 })

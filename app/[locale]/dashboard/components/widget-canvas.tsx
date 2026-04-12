@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -47,9 +47,7 @@ const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => 
     version: layout.version ?? 1,
     checksum: layout.checksum ?? null,
     deviceId: layout.deviceId ?? null,
-    desktop: layout.desktop as unknown as DashboardLayout['desktop'],
-    mobile: layout.mobile as unknown as DashboardLayout['mobile'],
-  }
+  } as unknown as DashboardLayout
 }
 
 const LAYOUT_SAVE_DEBOUNCE_MS = 250

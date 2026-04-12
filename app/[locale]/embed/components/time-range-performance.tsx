@@ -123,7 +123,7 @@ export default function TimeRangePerformanceChart({
     });
   }, [trades]);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; payload: { range: string; avgPnl: number; color: string; winRate: number; trades: number } }>; label?: string }) => {
     React.useEffect(() => {
       if (active && payload && payload.length) {
         setActiveRange(payload[0].payload.range);
@@ -149,7 +149,7 @@ export default function TimeRangePerformanceChart({
                 {t("embed.timeRangePerformance.tooltip.timeRange")}
               </span>
               <span className="font-bold text-muted-foreground">
-                {getTimeRangeLabel(label)}
+                {getTimeRangeLabel(label ?? '')}
               </span>
             </div>
             <div className="flex flex-col">

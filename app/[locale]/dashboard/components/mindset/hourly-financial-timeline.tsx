@@ -34,13 +34,13 @@ const SESSIONS: Session[] = [
     name: "London Session",
     startHour: 8,
     endHour: 16,
-    color: "bg-accent/70 border-border/60"
+    color: "bg-accent/70 border-border/24"
   },
   {
     name: "New York Session",
     startHour: 13,
     endHour: 21,
-    color: "bg-accent/70 border-border/60"
+    color: "bg-accent/70 border-border/24"
   }
 ]
 
@@ -556,7 +556,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
           className={cn(
             "border-l-4 rounded-r-md p-2 cursor-pointer transition-colors hover:opacity-90",
             trade.totalPnL > 0 
-              ? "bg-accent/70 border-border/60 text-foreground   dark:text-foreground"
+              ? "bg-accent/70 border-border/24 text-foreground   dark:text-foreground"
               : "bg-semantic-error-bg border-semantic-error-border text-semantic-error dark:bg-semantic-error-bg/30 dark:border-semantic-error-border dark:text-semantic-error"
           )}
         >

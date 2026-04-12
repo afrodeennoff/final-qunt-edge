@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 
 function NavbarSkeleton() {
   return (
-    <div className="border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+    <div className="border-b border-border/20 bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Skeleton className="h-8 w-32" />
@@ -69,7 +69,7 @@ function FeaturesSkeleton() {
 
 function StatsSkeleton() {
   return (
-    <section className="py-16 border-y border-border/50">
+    <section className="py-16 border-y border-border/20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[1, 2, 3, 4].map((i) => (
@@ -105,7 +105,7 @@ function CTASection() {
 
 function FooterSkeleton() {
   return (
-    <footer className="border-t border-border/50 py-16 bg-muted/20">
+    <footer className="border-t border-border/20 py-16 bg-muted/20">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-12">
           {[1, 2, 3, 4].map((i) => (
@@ -119,7 +119,7 @@ function FooterSkeleton() {
             </div>
           ))}
         </div>
-        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-12 pt-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4">
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-4 w-48" />
         </div>

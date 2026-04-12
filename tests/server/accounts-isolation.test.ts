@@ -71,7 +71,7 @@ import {
 describe("accounts multi-user isolation", () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    transactionMock.mockImplementation(async (callback: (tx: any) => Promise<unknown>) =>
+    transactionMock.mockImplementation(async (callback: (tx: Record<string, unknown>) => Promise<unknown>) =>
       callback({
         trade: {
           count: tradeCountMock,

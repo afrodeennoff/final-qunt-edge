@@ -153,8 +153,8 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
   }, [calendarData])
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/95 backdrop-blur-xl">
-      <div className="shrink-0 border-b border-border/60 p-3">
+    <Card className="h-full flex flex-col overflow-hidden border-border/24 bg-card/95 backdrop-blur-xl">
+      <div className="shrink-0 border-b border-border/24 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <CardTitle className="truncate text-base font-semibold capitalize">
@@ -168,10 +168,10 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Previous month">
+            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Previous month">
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/60 bg-card/92" aria-label="Next month">
+            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Next month">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>

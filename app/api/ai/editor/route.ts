@@ -97,6 +97,7 @@ export async function POST(req: NextRequest) {
     const validatedAction = ActionSchema.parse(action);
     const systemPrompt = getSystemPrompt(validatedAction, locale, date);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tools: Record<string, any> = {};
     if (validatedAction === "suggest_question") {
       tools.getCurrentDayData = getCurrentDayData;

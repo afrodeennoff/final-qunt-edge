@@ -50,7 +50,7 @@ export function SidebarUserMenu({
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl border border-sidebar-border/20 transition-colors duration-200 group-hover/user:border-sidebar-border/35">
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
                     <AvatarFallback className="rounded-xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                       {initials}
@@ -71,14 +71,14 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-xl border-sidebar-border/40 bg-sidebar/95 backdrop-blur-xl"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-xl border-sidebar-border/18 bg-sidebar/95 backdrop-blur-xl"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 px-3 py-2.5 text-left text-sm bg-gradient-to-r from-sidebar-accent/30 to-sidebar-accent/10">
-                <Avatar className="h-8 w-8 rounded-lg border border-sidebar-border/50 shadow-sm">
+                <Avatar className="h-8 w-8 rounded-lg shadow-sm">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}
@@ -94,17 +94,17 @@ export function SidebarUserMenu({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-sidebar-border/30" />
+            <DropdownMenuSeparator className="bg-sidebar-border/12" />
             {timezone && (
               <div className="px-2.5 py-2.5">
                 <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/40 px-1 mb-2">
                   Timezone
                 </p>
                 <Select value={timezone.value} onValueChange={timezone.onChange}>
-                  <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/40 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/30 data-[placeholder]:text-sidebar-foreground/40">
+                  <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/18 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/20 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
-                  <SelectContent className="bg-popover text-popover-foreground border-sidebar-border/40">
+                  <SelectContent className="bg-popover text-popover-foreground border-sidebar-border/18">
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}
@@ -114,7 +114,7 @@ export function SidebarUserMenu({
                 </Select>
               </div>
             )}
-            <DropdownMenuSeparator className="bg-sidebar-border/30" />
+            <DropdownMenuSeparator className="bg-sidebar-border/12" />
             {onLogout && (
               <DropdownMenuItem
                 onClick={onLogout}

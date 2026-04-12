@@ -30,7 +30,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
     return (
       <div
         className={cn(
-          "journal-glass-elevated mb-4 rounded-xl border border-border/70 bg-card/70 p-4 backdrop-blur-md",
+          "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
           className
         )}
       >
@@ -65,7 +65,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
   return (
     <div
       className={cn(
-        "journal-glass-elevated mb-4 rounded-xl border border-border/70 bg-card/70 p-4 backdrop-blur-md",
+        "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
         className
       )}
     >

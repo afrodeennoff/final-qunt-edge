@@ -42,7 +42,7 @@ export default async function NewBlogPostPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-border/60 bg-card/70 p-6 shadow-sm backdrop-blur-sm">
+      <div className="rounded-3xl border border-border/24 bg-card/70 p-6 shadow-sm backdrop-blur-sm">
         <BlogForm locale={locale} />
       </div>
     </div>

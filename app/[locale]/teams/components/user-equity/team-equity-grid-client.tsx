@@ -20,7 +20,7 @@ interface UserEquityData {
   userId: string
   email: string
   createdAt: string
-  trades: any[]
+  trades: Array<{ id: string; [key: string]: unknown }>
   equityCurve: {
     date: string
     pnl: number
@@ -195,7 +195,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
   if (isInitialLoading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border/70"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border/28"></div>
       </div>
     )
   }

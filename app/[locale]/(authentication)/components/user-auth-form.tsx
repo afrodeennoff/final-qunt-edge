@@ -514,7 +514,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     </div>
                     <Button
                         size="sm"
-                        className="shrink-0 bg-success/20 text-success hover:bg-success/30 border-success/30"
+                        className="shrink-0 border-success/30 bg-success/20 text-success hover:bg-success/30"
                         onClick={() => router.push(nextUrl ? withLocalePrefix(nextUrl, locale) : `/${locale}/dashboard`)}
                     >
                         Go to Dashboard
@@ -522,7 +522,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 </div>
             )}
             <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
-                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/60 bg-card/50 p-1">
+                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-border/24 bg-card/50 p-1">
                     <TabsTrigger
                         value="magic"
                         className="h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
@@ -536,7 +536,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                         <span className="truncate">{t('auth.tabs.password')}</span>
                         <Badge
                             variant="secondary"
-                            className="absolute -right-1.5 -top-1.5 border border-border/70 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
+                            className="absolute -right-1.5 -top-1.5 border border-border/28 bg-accent/70 px-1 py-0 text-[8px] text-foreground"
                         >
                             {t('auth.new')}
                         </Badge>
@@ -561,7 +561,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 autoComplete="email"
                                                 autoCorrect="off"
                                                 disabled={isLoading || (isEmailSent || authMethod === 'discord' || authMethod === 'google')}
-                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/28 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -585,7 +585,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                     <Button 
                                         type="button"
                                         variant="outline"
-                                        className="h-11 w-full rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
+                                        className="h-11 w-full rounded-xl border-border/28 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
                                         onClick={openMailClient}
                                         disabled={authMethod === 'discord' || authMethod === 'google'}
                                     >
@@ -610,7 +610,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                     </Form>
                     {showOtpInput && (
                         <Form {...otpForm}>
-                            <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/60 bg-card/40 p-4">
+                            <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-border/24 bg-card/40 p-4">
                                 <FormField
                                     control={otpForm.control}
                                     name="otp"
@@ -678,7 +678,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 autoComplete="email"
                                                 autoCorrect="off"
                                                 disabled={isLoading}
-                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/28 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -699,7 +699,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                                 type="password"
                                                 autoComplete="current-password"
                                                 disabled={isLoading}
-                                                className="h-11 rounded-xl border-border/70 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
+                                                className="h-11 rounded-xl border-border/28 bg-card/50 px-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:ring-ring/50 focus-visible:ring-offset-0"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -708,7 +708,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                                 )}
                             />
                             <Link
-                                href="/authentication/forgot-password"
+                                href={withLocalePrefix("/authentication/forgot-password", locale)}
                                 className="text-sm text-muted-foreground hover:text-primary underline-offset-4 hover:underline"
                             >
                                 Forgot your password?
@@ -730,7 +730,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
             <div className="relative py-1">
                 <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/60" />
+                    <span className="w-full border-t border-border/24" />
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
                     <span className="bg-card px-2 text-muted-foreground">
@@ -744,7 +744,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
                 onClick={onSubmitDiscord}
-                className="h-11 rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
+                className="h-11 rounded-xl border-border/28 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
             >
                 {isLoading && authMethod === 'discord' ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -758,7 +758,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 type="button"
                 disabled={isLoading || authMethod === 'email'}
                 onClick={onSubmitGoogle}
-                className="h-11 rounded-xl border-border/70 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
+                className="h-11 rounded-xl border-border/28 bg-card/50 text-foreground hover:bg-accent/70 hover:text-foreground"
             >
                 {isLoading && authMethod === 'google' ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

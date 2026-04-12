@@ -541,6 +541,7 @@ describePayment('Payment System Tests', () => {
           created_at: Date.now() / 1000,
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         vi.spyOn(webhookService as any, 'fetchMembership').mockResolvedValue({
           user: { email: 'payment@example.com', id: 'user_payment' },
           metadata: { user_id: 'user_payment', plan: 'monthly' },

@@ -227,7 +227,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
             {segments.map((segment) => (
               <div 
                 key={segment.index} 
-                className="flex items-center justify-between p-3 bg-card/30 dark:bg-card/70 rounded-lg border border-border/60"
+                className="flex items-center justify-between p-3 bg-card/30 dark:bg-card/70 rounded-lg border border-border/24"
               >
                 <div className="flex-1">
                 <div className="font-medium text-foreground">
@@ -275,7 +275,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
 
       {/* Transcription Component - Removed */}
       {segments.length > 0 && (
-        <div className="mt-6 p-4 bg-card/40 rounded-lg border border-border/60">
+        <div className="mt-6 p-4 bg-card/40 rounded-lg border border-border/24">
           <p className="text-sm text-muted-foreground">
             Transcription feature has been removed. Segments are ready for manual processing.
           </p>

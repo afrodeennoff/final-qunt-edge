@@ -39,19 +39,19 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
   return (
     <Link href={`/${locale}/firm/${slug}`} className="block group">
-      <article className="relative overflow-hidden rounded-2xl border border-border/70 bg-card/90 transition-all duration-300 hover:-translate-y-1 hover:border-foreground/20 hover:bg-card">
+      <article className="relative overflow-hidden rounded-2xl border border-border/28 bg-card/90 transition-all duration-300 hover:-translate-y-1 hover:border-border/40 hover:bg-card">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Header */}
-        <div className="border-b border-border/50 p-5 pb-4">
+        <div className="border-b border-border/20 p-5 pb-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <h3 className="truncate text-xl font-semibold tracking-tight text-foreground">
                 {name}
               </h3>
               <div className="flex items-center gap-2 mt-1.5">
-                <Badge variant="outline" className="rounded-full border-border/50 bg-muted/30 text-[10px] font-medium tracking-wide text-muted-foreground">
+                <Badge variant="outline" className="rounded-full border-border/20 bg-muted/30 text-[10px] font-medium tracking-wide text-muted-foreground">
                   {accountSizesCount} {accountSizesCount === 1 ? "Size" : "Sizes"}
                 </Badge>
                 <span className="text-[10px] text-muted-foreground/60">•</span>
@@ -74,7 +74,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         </div>
 
         {/* KPI Row */}
-        <div className="grid grid-cols-3 divide-x divide-border/40 border-b border-border/50">
+        <div className="grid grid-cols-3 divide-x divide-border/40 border-b border-border/20">
           <div className="px-4 py-3 text-center">
             <div className="mb-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground/60">
               Account Value
@@ -143,7 +143,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
         {/* Footer CTA */}
         <div className="px-5 pb-4">
-          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/50 text-xs font-medium text-muted-foreground transition-all duration-200 group-hover:border-border/60 group-hover:bg-muted/50 group-hover:text-foreground">
+          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/20 text-xs font-medium text-muted-foreground transition-all duration-200 group-hover:border-border/24 group-hover:bg-muted/50 group-hover:text-foreground">
             View Details
             <svg className="ml-1.5 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
