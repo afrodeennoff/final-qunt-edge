@@ -41,13 +41,13 @@ export function DataDebug() {
                     variant="outline"
                     size="icon"
                     onClick={() => setIsOpen(true)}
-                    className="rounded-full bg-background/80 border-foreground/10 hover:bg-foreground/10 backdrop-blur-md shadow-lg"
+                    className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 backdrop-blur-md shadow-lg"
                 >
                     <Bug className="h-4 w-4 text-primary" />
                 </Button>
             ) : (
-                <div className="w-80 bg-background/90 border border-foreground/10 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="flex items-center justify-between mb-4 border-b border-foreground/5 pb-2">
+                <div className="w-80 bg-background/90 border border-border/14 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
                         <div className="flex items-center gap-2">
                             <Bug className="h-4 w-4 text-primary" />
                             <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">Debug Dashboard</span>
@@ -96,7 +96,7 @@ export function DataDebug() {
                             size="sm"
                             onClick={() => refreshAllData({ force: true })}
                             disabled={isLoading}
-                            className="h-8 text-[9px] font-bold uppercase tracking-widest border-foreground/5 bg-foreground/5 hover:bg-foreground/10"
+                            className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/8 bg-foreground/5 hover:bg-foreground/10"
                         >
                             <RefreshCw className={cn("h-3 w-3 mr-2", isLoading && "animate-spin")} />
                             Sync Now

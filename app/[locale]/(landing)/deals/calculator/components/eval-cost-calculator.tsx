@@ -37,8 +37,8 @@ export function EvalCostCalculator() {
   }, [evaluationFee, expectedResets, resetCost, monthlyPlatformFees, targetPayout])
 
   return (
-    <section className="mt-6 rounded-3xl border border-border bg-card p-5 sm:p-6">
-      <div className="mb-4 rounded-xl border border-border bg-background/50 p-3">
+    <section className="qe-soft-panel mt-6 rounded-3xl p-5 sm:p-6">
+      <div className="qe-soft-surface mb-4 rounded-xl p-3">
         <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Planner Inputs</p>
         <p className="mt-1 text-sm text-foreground">Adjust values to simulate realistic month-one evaluation economics.</p>
       </div>
@@ -49,7 +49,7 @@ export function EvalCostCalculator() {
             value={evaluationFee}
             onChange={(event) => setEvaluationFee(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
             placeholder="149"
           />
         </label>
@@ -60,7 +60,7 @@ export function EvalCostCalculator() {
             value={expectedResets}
             onChange={(event) => setExpectedResets(event.target.value)}
             inputMode="numeric"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
             placeholder="1"
           />
         </label>
@@ -71,7 +71,7 @@ export function EvalCostCalculator() {
             value={resetCost}
             onChange={(event) => setResetCost(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
             placeholder="99"
           />
         </label>
@@ -82,7 +82,7 @@ export function EvalCostCalculator() {
             value={monthlyPlatformFees}
             onChange={(event) => setMonthlyPlatformFees(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
             placeholder="35"
           />
         </label>
@@ -93,22 +93,22 @@ export function EvalCostCalculator() {
             value={targetPayout}
             onChange={(event) => setTargetPayout(event.target.value)}
             inputMode="decimal"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
             placeholder="1200"
           />
         </label>
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <article className="rounded-xl border border-border bg-background/50 p-4">
+        <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Expected Cost</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">${values.expectedTotalCost.toFixed(0)}</p>
         </article>
-        <article className="rounded-xl border border-border bg-background/50 p-4">
+        <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Net After Costs</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">${values.netTargetAfterCosts.toFixed(0)}</p>
         </article>
-        <article className="rounded-xl border border-border bg-background/50 p-4">
+        <article className="qe-soft-surface rounded-xl p-4">
           <p className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Cost-to-Payout Ratio</p>
           <p className="mt-2 text-2xl font-semibold text-foreground">{values.minReturnNeeded.toFixed(1)}%</p>
           <p className="mt-2">

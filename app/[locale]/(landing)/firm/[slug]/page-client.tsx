@@ -423,7 +423,7 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-2xl border border-border/50 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
+    <div className="rounded-2xl border border-border/20 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/40 bg-card/35">
           <Icon className="h-4 w-4 text-v2-accent" />
@@ -441,7 +441,7 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
   return (
     <div
       className={cn(
-        'rounded-2xl border border-border/50 px-4 py-4',
+        'rounded-2xl border border-border/20 px-4 py-4',
         highlight
           ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
           : 'bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))]'
@@ -1060,7 +1060,7 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
             <div className="mt-6 grid gap-3 lg:hidden">
               {accountSizes.map(([key, size]) => (
-                <article key={key} className="rounded-2xl border border-border/70 bg-background/50 p-4">
+                <article key={key} className="rounded-2xl border border-border/28 bg-background/50 p-4">
                   <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
                   <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
                     <div>
@@ -1239,7 +1239,7 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <Card className="w-full rounded-2xl border-border/50 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+      <Card className="w-full rounded-2xl border-border/20 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
         <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
@@ -1284,7 +1284,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-border/50 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_hsl(0_0%_0%_/0.95)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-3xl border border-border/20 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_hsl(0_0%_0%_/0.95)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
@@ -1357,7 +1357,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
-          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl border border-border/50 bg-background/70 p-2 backdrop-blur">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl border border-border/20 bg-background/70 p-2 backdrop-blur">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -1373,7 +1373,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 value={value}
                 className={cn(
                   'shrink-0 rounded-2xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
-                  'hover:border-border/50 hover:bg-card/50',
+                  'hover:border-border/20 hover:bg-card/50',
                   'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
                 )}
               >

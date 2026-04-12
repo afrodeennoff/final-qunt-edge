@@ -1297,11 +1297,11 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
 
   return (
     <Card
-      className="flex h-full w-full flex-col border-border/70 bg-card/80 shadow-[0_20px_40px_-32px_hsl(var(--foreground)/0.55)] backdrop-blur-sm"
+      className="flex h-full w-full flex-col border-border/28 bg-card/80 shadow-[0_20px_40px_-32px_hsl(var(--foreground)/0.55)] backdrop-blur-sm"
       style={cardStyle}
     >
       {showHeader && (
-        <CardHeader className="h-[56px] shrink-0 border-b border-border/70 bg-muted/25 p-3 sm:p-4">
+        <CardHeader className="h-[56px] shrink-0 border-b border-border/28 bg-muted/25 p-3 sm:p-4">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-1.5">
               <CardTitle className="line-clamp-1 text-base">
@@ -1486,7 +1486,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                     <tr
                       data-state={row.getIsSelected() && "selected"}
                       className={cn(
-                        "group border-b border-border/70 transition-all duration-75 hover:bg-muted/40",
+                        "group border-b border-border/28 transition-all duration-75 hover:bg-muted/40",
                         row.getIsSelected() && "bg-accent/50 hover:bg-accent data-[state=selected]:bg-muted",
                         row.getIsExpanded()
                           ? "bg-muted/60"
@@ -1502,7 +1502,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                         <td
                           key={cell.id}
                           className={cn(
-                            "whitespace-nowrap border-r border-border/50 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-border",
+                            "whitespace-nowrap border-r border-border/20 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-border",
                             row.getIsSelected() && "border-border",
                           )}
                           style={{ width: cell.column.getSize() }}
@@ -1569,7 +1569,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId || index}
                         className={cn(
-                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold border-r border-border/50 last:border-r-0 first:border-l",
+                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold border-r border-border/20 last:border-r-0 first:border-l",
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1584,7 +1584,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId || index}
                         className={cn(
-                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/50 last:border-r-0",
+                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/20 last:border-r-0",
                         )}
                         style={{ width: column.getSize() }}
                       />
@@ -1597,7 +1597,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/50 last:border-r-0",
+                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0",
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1617,7 +1617,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/50 last:border-r-0",
+                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0",
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1631,7 +1631,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                       <td
                         key={columnId}
                         className={cn(
-                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/50 last:border-r-0",
+                          "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm font-semibold text-right border-r border-border/20 last:border-r-0",
                         )}
                         style={{ width: column.getSize() }}
                       >
@@ -1645,7 +1645,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                     <td
                       key={columnId || index}
                       className={cn(
-                        "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/50 last:border-r-0",
+                        "p-4 align-middle whitespace-nowrap px-3 py-3 text-sm border-r border-border/20 last:border-r-0",
                       )}
                       style={{ width: column.getSize() }}
                     />
@@ -1656,7 +1656,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           </table>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between border-t border-border/70 bg-background/80 px-4 py-3 backdrop-blur-sm">
+      <CardFooter className="flex items-center justify-between border-t border-border/28 bg-background/80 px-4 py-3 backdrop-blur-sm">
         <div className="text-sm text-muted-foreground">
           {t("trade-table.totalTrades", { count: totalTradeCount })}
         </div>

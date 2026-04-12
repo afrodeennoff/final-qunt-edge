@@ -157,7 +157,7 @@ const ChatBotDemo = () => {
           href={process.env.NEXT_PUBLIC_DISCORD_INVITATION || '#'}
           target="_blank"
           rel="noreferrer"
-          className="mb-6 block cursor-pointer rounded-xl border border-border/60 bg-card/70 p-4 transition-colors duration-150 hover:border-border hover:bg-card group"
+          className="mb-6 block cursor-pointer rounded-xl border border-border/28 bg-card/70 p-4 transition-colors duration-150 hover:border-border/36 hover:bg-card group"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1">

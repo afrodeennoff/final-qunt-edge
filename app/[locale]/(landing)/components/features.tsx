@@ -44,7 +44,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
       className={cn(
         "group relative overflow-hidden rounded-2xl border transition-all duration-500",
         "bg-card/80 backdrop-blur-sm",
-        "border-border/60 hover:border-border/85",
+        "border-border/24 hover:border-border/40",
         "shadow-[0_12px_34px_-24px_hsl(var(--foreground)/0.45)] hover:shadow-[0_20px_40px_-20px_hsl(var(--foreground)/0.55)]",
         "hover:-translate-y-1",
         "opacity-0 translate-y-8",
@@ -62,7 +62,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
       
       <div className="relative h-full">
-        <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/60 pb-4">
+        <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/24 pb-4">
           <CardTitle className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardTitle>
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -83,7 +83,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
             className={cn(
               "relative w-full flex justify-center items-center rounded-xl overflow-hidden",
               "border border-border/40 bg-card/50 backdrop-blur-sm",
-              "group-hover:border-border/60 group-hover:bg-card/70 transition-all duration-500",
+              "group-hover:border-border/24 group-hover:bg-card/70 transition-all duration-500",
               feature.wrapperClass ?? "h-[250px] sm:h-[300px] md:h-[350px]"
             )}
           >

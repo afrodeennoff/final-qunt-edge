@@ -81,7 +81,7 @@ export default async function FAQPage({ params }: { params: Promise<{ locale: st
                 <p className="mb-5 text-muted-foreground">We&apos;re here to help you elevate your trading execution.</p>
                 <a
                     href={`/${locale}/support`}
-                    className="inline-flex items-center justify-center rounded-full border border-border/60 bg-card px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-card/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border/60 focus-visible:ring-offset-0"
+                    className="inline-flex items-center justify-center rounded-full border border-border/24 bg-card px-8 py-3 text-xs font-bold uppercase tracking-widest text-foreground transition-colors hover:bg-card/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border/24 focus-visible:ring-offset-0"
                 >
                     Contact Support
                 </a>

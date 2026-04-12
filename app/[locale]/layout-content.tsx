@@ -1,6 +1,7 @@
 import { setStaticParamsLocale } from "next-international/server";
 import { I18nProviderClient } from "@/locales/client";
 import ConsentBannerLazy from "@/components/lazy/consent-banner-lazy";
+import { LOCALE_SOFT_BORDER_STYLE } from "@/lib/constants/layout";
 
 export default async function LocaleLayoutContent(props: {
   params: Promise<{ locale: string }>;
@@ -13,8 +14,10 @@ export default async function LocaleLayoutContent(props: {
 
   return (
     <I18nProviderClient locale={locale}>
-      <ConsentBannerLazy />
-      {children}
+      <div style={LOCALE_SOFT_BORDER_STYLE}>
+        <ConsentBannerLazy />
+        {children}
+      </div>
     </I18nProviderClient>
   );
 }

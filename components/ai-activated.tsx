@@ -26,8 +26,8 @@ export function AIBorder({ children, className, success = false }: AIBorderProps
         "relative rounded-lg overflow-hidden",
         "border-2 transition-colors duration-500",
         success
-          ? "border-foreground/20 shadow-none"
-          : "border-border shadow-none",
+          ? "border-primary/25 shadow-none"
+          : "border-border/28 shadow-none",
         "w-full h-full",
         className,
       )}
@@ -45,12 +45,12 @@ export function AIBorder({ children, className, success = false }: AIBorderProps
         {success && (
           <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
             {/* Success pulse effect */}
-            <div className="absolute inset-0 bg-foreground/10 animate-success-pulse" />
+            <div className="absolute inset-0 bg-primary/10 animate-success-pulse" />
 
 
 
             {/* Success sweep effect */}
-            <div className="absolute inset-0 bg-linear-to-r from-transparent via-foreground/20 to-transparent animate-success-sweep" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/20 to-transparent animate-success-sweep" />
           </div>
         )}
 
@@ -71,8 +71,8 @@ export function AIBorder({ children, className, success = false }: AIBorderProps
           className={cn(
             "absolute inset-[-2px] rounded-lg opacity-60",
             success
-              ? "bg-linear-to-r from-foreground/80 to-foreground animate-glow-success"
-              : "bg-linear-to-r from-foreground/50 to-foreground/20 animate-glow-subtle",
+              ? "bg-linear-to-r from-primary/65 to-primary/35 animate-glow-success"
+              : "bg-linear-to-r from-primary/30 to-primary/10 animate-glow-subtle",
           )}
         />
       </div>
@@ -81,7 +81,7 @@ export function AIBorder({ children, className, success = false }: AIBorderProps
       <div
         className={cn(
           "absolute top-0 right-0 w-2 h-2 rounded-full m-1",
-          success ? "bg-foreground/10 animate-pulse" : "bg-foreground/40 animate-pulse",
+          success ? "bg-primary/20 animate-pulse" : "bg-primary/35 animate-pulse",
         )}
       />
     </div>

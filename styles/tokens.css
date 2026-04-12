@@ -25,7 +25,7 @@
     --mk-bg-2: 214 30% 3%;
     --mk-surface: 214 40% 4%;
     --mk-surface-muted: 214 30% 6%;
-    --mk-border: 214 50% 85% / 0.04;
+    --mk-border: 214 14% 9%;
     --mk-text: 0 0% 94%;
     --mk-text-muted: 0 0% 44%;
     --mk-lime: 160 100% 53%;
@@ -53,13 +53,13 @@
     --precision-cobalt-rgb: 59 158 255;
     --precision-panel: 214 40% 2%;
     --precision-panel-elevated: 214 40% 4%;
-    --precision-panel-line: 214 50% 85% / 0.06;
+    --precision-panel-line: 214 14% 9%;
     --precision-panel-inner: oklch(0.62 0.19 260);
 
     /* ===== RESEND FROST SYSTEM (resend.com aesthetic) ===== */
-    --rs-frost-border: 214 100% 92% / 0.1;
-    --rs-frost-border-alt: 217 100% 93% / 0.07;
-    --rs-frost-ring: 214 50% 78% / 0.145;
+    --rs-frost-border: 214 14% 9%;
+    --rs-frost-border-alt: 214 12% 7%;
+    --rs-frost-ring: 214 18% 14%;
     --rs-frost-surface: 214 100% 92% / 0.02;
     --rs-frost-hover: 0 0% 100% / 0.08;
     --rs-text-strong: 0 0% 94%;
@@ -112,7 +112,8 @@
     --glass-bg-subtle: var(--bg-base) / 0.45;
     --glass-blur: blur(20px);
     --glass-blur-strong: blur(40px);
-    --glass-border: 255 255 255 / 0.08;
+    --glass-border: 214 14% 9%;
+    --glass-border-opacity: 0.18;
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 
     /* ===== INTERACTIVE STATES ===== */
@@ -267,7 +268,8 @@
     --glass-bg-subtle: 0 0% 100% / 0.4;
     --glass-blur: blur(20px);
     --glass-blur-strong: blur(40px);
-    --glass-border: 220 13% 91% / 0.5;
+    --glass-border: 220 13% 91%;
+    --glass-border-opacity: 0.5;
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   }
 }
@@ -312,19 +314,19 @@
   .glass {
     background: hsl(var(--glass-bg));
     backdrop-filter: var(--glass-blur);
-    border: 1px solid hsl(var(--glass-border));
+    border: 1px solid hsl(var(--glass-border) / var(--glass-border-opacity));
     box-shadow: var(--glass-shadow);
   }
   .glass-strong {
     background: hsl(var(--glass-bg-strong));
     backdrop-filter: var(--glass-blur-strong);
-    border: 1px solid hsl(var(--glass-border));
+    border: 1px solid hsl(var(--glass-border) / var(--glass-border-opacity));
     box-shadow: var(--glass-shadow);
   }
   .glass-subtle {
     background: hsl(var(--glass-bg-subtle));
     backdrop-filter: var(--glass-blur);
-    border: 1px solid hsl(var(--glass-border));
+    border: 1px solid hsl(var(--glass-border) / var(--glass-border-opacity));
   }
 
   .hover-lift {

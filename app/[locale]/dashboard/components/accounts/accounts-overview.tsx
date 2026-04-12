@@ -1399,7 +1399,7 @@ function AccountsOverviewComponent({
                     'border-border bg-card',
                     'border-primary/10 bg-primary/[0.01]',
                     'border-secondary bg-secondary/10',
-                    'border-foreground/10 bg-foreground/[0.02]',
+                    'border-border/14 bg-foreground/[0.02]',
                   ];
 
                   const groupColorClass = groupColors[groupIndex % groupColors.length];

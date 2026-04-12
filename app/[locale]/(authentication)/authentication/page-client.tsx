@@ -38,18 +38,18 @@ export default function AuthenticationPageClient() {
       </div>
 
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10">
-        <div className="w-full overflow-hidden rounded-2xl border border-border/60 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
+        <div className="w-full overflow-hidden rounded-2xl border border-border/24 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]">
-        <section className="p-6 sm:p-8 lg:border-r lg:border-border/60 lg:p-10">
+        <section className="p-6 sm:p-8 lg:border-r lg:border-border/24 lg:p-10">
           <div className="flex items-center justify-between">
             <Link
               href={`/${locale}`}
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-4 py-2 text-xs font-semibold tracking-wide text-foreground transition hover:bg-accent/70"
+              className="inline-flex items-center gap-2 rounded-full border border-border/28 bg-card/60 px-4 py-2 text-xs font-semibold tracking-wide text-foreground transition hover:bg-accent/70"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to website
             </Link>
-            <span className="rounded-full border border-border/60 bg-card/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="rounded-full border border-border/24 bg-card/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Secure Access
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function AuthenticationPageClient() {
             transition={{ duration: 0.55, ease: "easeOut" }}
             className="my-10 max-w-xl lg:my-14"
           >
-            <div className="mb-7 inline-flex items-center gap-3 rounded-2xl border border-border/70 bg-card/50 px-4 py-3">
+            <div className="mb-7 inline-flex items-center gap-3 rounded-2xl border border-border/28 bg-card/50 px-4 py-3">
               <Logo className="h-5 w-5 text-foreground" />
               <span className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground">Qunt Edge</span>
             </div>
@@ -77,10 +77,10 @@ export default function AuthenticationPageClient() {
               {valuePoints.map((point) => (
                 <div
                   key={point.title}
-                  className="rounded-2xl border border-border/60 bg-card/50 px-4 py-3.5"
+                  className="rounded-2xl border border-border/24 bg-card/50 px-4 py-3.5"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 rounded-lg border border-border/70 bg-accent/50 p-2">
+                    <div className="mt-0.5 rounded-lg border border-border/28 bg-accent/50 p-2">
                       <point.icon className="h-4 w-4 text-foreground" />
                     </div>
                     <div>
@@ -99,17 +99,17 @@ export default function AuthenticationPageClient() {
           </div>
         </section>
 
-        <section className="flex items-center justify-center border-t border-border/60 p-6 sm:p-8 lg:border-t-0 lg:p-10">
+        <section className="flex items-center justify-center border-t border-border/24 p-6 sm:p-8 lg:border-t-0 lg:p-10">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05, ease: "easeOut" }}
             className="w-full max-w-[560px] mx-auto"
           >
-            <div className="mb-6 rounded-2xl border border-border/60 bg-card/50 p-4">
+            <div className="mb-6 rounded-2xl border border-border/24 bg-card/50 p-4">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Account Access</p>
-                <div className="rounded-xl border border-border/70 bg-card/60 p-2.5">
+                <div className="rounded-xl border border-border/28 bg-card/60 p-2.5">
                   <LockKeyhole className="h-4 w-4 text-foreground" />
                 </div>
               </div>
@@ -117,7 +117,7 @@ export default function AuthenticationPageClient() {
               <p className="mt-1 text-xs text-muted-foreground">{t('authentication.testimonialAuthor')}</p>
             </div>
 
-            <div className="mb-6 grid gap-2 rounded-2xl border border-border/60 bg-card/40 p-3">
+            <div className="mb-6 grid gap-2 rounded-2xl border border-border/24 bg-card/40 p-3">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <CheckCircle2 className="h-3.5 w-3.5 text-foreground" />
                 <span>Magic link and password sign-in</span>

@@ -39,7 +39,7 @@ export function PublicFlowShell({
       <div className="mx-auto w-full max-w-[1280px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         {!compactHeader ? (
           <>
-            <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-5 sm:p-7">
+            <section className="qe-soft-panel relative overflow-hidden rounded-3xl p-5 sm:p-7">
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
                 <div className="absolute right-6 top-8 h-32 w-32 rounded-full bg-foreground/10 blur-2xl" />
@@ -49,7 +49,7 @@ export function PublicFlowShell({
 
               <div className="relative">
                 <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  <span className="rounded-full border border-border bg-background/80 px-2 py-1 text-foreground">
+                  <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground">
                     Qunt Edge
                   </span>
                   <span>Futures Funding Offers Hub</span>
@@ -73,7 +73,7 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border bg-background/60 text-foreground hover:bg-muted'
+                            : 'border-border/35 bg-background/60 text-foreground hover:border-border/45 hover:bg-muted'
                         )}
                       >
                         {link.label}
@@ -84,16 +84,16 @@ export function PublicFlowShell({
               </div>
             </section>
 
-            <section className="mt-4 grid gap-3 rounded-2xl border border-border bg-card/70 p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
-              <article className="rounded-xl border border-border bg-background/50 px-3 py-2">
+            <section className="qe-soft-panel mt-4 grid gap-3 rounded-2xl p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Offer Checks</p>
                 <p className="mt-1">Deal terms re-validated before listing changes are published.</p>
               </article>
-              <article className="rounded-xl border border-border bg-background/50 px-3 py-2">
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Policy Context</p>
                 <p className="mt-1">Pricing, drawdown style, and payout notes linked in one flow.</p>
               </article>
-              <article className="rounded-xl border border-border bg-background/50 px-3 py-2">
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Decision Tools</p>
                 <p className="mt-1">Compare, plan costs, and verify rules before committing capital.</p>
               </article>

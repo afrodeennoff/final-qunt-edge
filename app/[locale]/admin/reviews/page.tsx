@@ -90,7 +90,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           items.map((item) => (
             <div
               key={item.id}
-              className="rounded-2xl border border-border/70 bg-card/70 p-6"
+              className="rounded-2xl border border-border/28 bg-card/70 p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">

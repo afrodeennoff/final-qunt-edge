@@ -461,7 +461,7 @@ export default function SettingsPage() {
                 Accent Color
               </Label>
               <div className="mt-2">
-                <div className="rounded-md border border-border/50 bg-background/30 p-3">
+                <div className="rounded-md border border-border/20 bg-background/30 p-3">
                   <p className="mb-3 text-sm text-muted-foreground">Choose your dashboard accent color</p>
                   <div className="flex gap-3">
                     {VALID_DASHBOARD_THEMES.map((t) => (

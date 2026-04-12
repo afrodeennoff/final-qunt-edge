@@ -235,9 +235,9 @@ export default async function Page({ params }: PageProps) {
           prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:bg-card/70 prose-code:text-muted-foreground
           dark:prose-code:bg-card/90 dark:prose-code:text-muted-foreground/80
           prose-table:w-full prose-table:mt-6 prose-table:mb-8
-          prose-thead:border-b prose-thead:border-border/60 dark:prose-thead:border-border/80
+          prose-thead:border-b prose-thead:border-border/24 dark:prose-thead:border-border/36
           prose-th:px-6 prose-th:py-3 prose-th:text-left prose-th:font-semibold
-          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border/60 dark:prose-td:border-border/80
+          prose-td:px-6 prose-td:py-3 prose-td:border-b prose-td:border-border/24 dark:prose-td:border-border/36
           prose-tr:transition-colors prose-tr:hover:bg-card/80 dark:prose-tr:hover:bg-card/90"
           itemProp="articleBody"
         >

@@ -22,12 +22,12 @@ export function GuideLibrary({ locale }: { locale: string }) {
   return (
     <section className="mt-6 space-y-4">
       {guideCards.map((guide) => (
-        <article key={guide.title} className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+        <article key={guide.title} className="qe-soft-panel rounded-2xl p-5 sm:p-6">
           <h3 className="text-xl font-semibold text-foreground">{guide.title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{guide.summary}</p>
           <ul className="mt-4 space-y-2 text-sm text-foreground">
             {guide.steps.map((step) => (
-              <li key={step} className="rounded-lg border border-border bg-background/50 px-3 py-2">
+              <li key={step} className="qe-soft-surface rounded-lg px-3 py-2">
                 {step}
               </li>
             ))}
@@ -35,7 +35,7 @@ export function GuideLibrary({ locale }: { locale: string }) {
         </article>
       ))}
 
-      <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div className="qe-soft-panel rounded-2xl p-5 sm:p-6">
         <h3 className="text-lg font-semibold text-foreground">Next best action</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           After picking a playbook, model your expected evaluation spend and break-even path in the calculator.

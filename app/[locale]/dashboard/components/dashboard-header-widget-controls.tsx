@@ -154,7 +154,7 @@ function CustomizingControls({
               <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={removeAllWidgets}
-                className="bg-foreground/10 text-foreground hover:bg-foreground/20 border border-foreground/10"
+                className="bg-foreground/10 text-foreground hover:bg-foreground/20 border border-border/14"
               >
                 {t("widgets.confirmDeleteAll")}
               </AlertDialogAction>

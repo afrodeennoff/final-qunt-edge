@@ -154,7 +154,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
                     className={cn(
                       "pr-8",
                       !isValid && draftUrl && "border-border/65 focus-visible:ring-ring/30",
-                      showSuccess && "border-border/80 focus-visible:ring-ring",
+                      showSuccess && "border-border/36 focus-visible:ring-ring",
                       isUpdating && "border-border/65"
                     )}
                   />
