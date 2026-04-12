@@ -6,36 +6,32 @@ import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--ring))] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden",
+  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[oklch(0.65_0.22_260/0.7)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden select-none",
   {
     variants: {
       variant: {
-        // New unified variants (recommended)
-        solid: "border border-[hsl(var(--primary)/0.35)] bg-[linear-gradient(135deg,hsl(var(--primary))_0%,hsl(var(--chart-2))_100%)] text-v2-accent-foreground shadow-[0_18px_42px_-20px_hsl(var(--primary)/0.55)] hover:-translate-y-px hover:brightness-110 hover:shadow-[0_24px_54px_-22px_hsl(var(--primary)/0.62)] active:translate-y-0 active:scale-[0.985]",
-        outline: "border border-[hsl(var(--v2-border)/0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] text-v2-text-primary backdrop-blur-md hover:-translate-y-px hover:border-[hsl(var(--v2-border)/1)] hover:bg-[rgba(255,255,255,0.08)] active:translate-y-0 active:scale-[0.985]",
-        ghost: "text-v2-text-secondary hover:text-v2-text-primary hover:bg-[rgba(255,255,255,0.08)]",
-        error: "border border-[hsl(var(--destructive)/0.3)] bg-[linear-gradient(135deg,hsl(var(--destructive))_0%,rgb(244_114_182)_100%)] text-v2-accent-foreground shadow-[0_18px_42px_-20px_hsl(var(--destructive)/0.5)] hover:-translate-y-px hover:brightness-105 active:translate-y-0 active:scale-[0.985]",
-        destructive: "border border-[hsl(var(--destructive)/0.3)] bg-[linear-gradient(135deg,hsl(var(--destructive))_0%,rgb(244_114_182)_100%)] text-v2-accent-foreground shadow-[0_18px_42px_-20px_hsl(var(--destructive)/0.5)] hover:-translate-y-px hover:brightness-105 active:translate-y-0 active:scale-[0.985]",
-        link: "text-v2-accent underline-offset-4 hover:underline",
-        "gradient-primary": "border border-white/10 bg-[linear-gradient(135deg,hsl(var(--primary))_0%,rgb(168_85_247)_52%,rgb(34_211_238)_100%)] text-v2-accent-foreground shadow-[0_20px_50px_-22px_rgba(67,97,255,0.65)] hover:-translate-y-px hover:brightness-110 active:translate-y-0 active:scale-[0.985]",
-        "gradient-secondary": "border border-[hsl(var(--v2-border)/0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] text-v2-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:-translate-y-px hover:border-[hsl(var(--v2-border)/1)] active:translate-y-0 active:scale-[0.985]",
-        shimmer: "border border-[hsl(var(--primary)/0.35)] bg-[linear-gradient(135deg,hsl(var(--primary))_0%,hsl(var(--chart-2))_100%)] text-v2-accent-foreground shadow-[0_18px_42px_-20px_hsl(var(--primary)/0.55)]",
-        // Legacy variants for backward compatibility (mapped to new variants)
-        default: "border border-[hsl(var(--primary)/0.35)] bg-[linear-gradient(135deg,hsl(var(--primary))_0%,hsl(var(--chart-2))_100%)] text-v2-accent-foreground shadow-[0_18px_42px_-20px_hsl(var(--primary)/0.55)] hover:-translate-y-px hover:brightness-110 active:translate-y-0 active:scale-[0.985]",
-        secondary: "border border-[hsl(var(--v2-border)/0.8)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.94),hsl(var(--v2-bg-surface)/0.9))] text-v2-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:-translate-y-px hover:border-[hsl(var(--v2-border)/1)] hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-active)/0.96),hsl(var(--v2-bg-hover)/0.92))] active:translate-y-0 active:scale-[0.985]",
-        mono: "rounded-lg border border-[hsl(var(--v2-border)/0.92)] bg-[hsl(var(--v2-bg-surface)/0.92)] font-mono text-xs text-v2-text-primary hover:bg-[hsl(var(--v2-bg-hover)/0.92)] focus-visible:ring-offset-0",
-
-        // Resend-inspired pill variants
-        pill: "rounded-full border border-[hsl(var(--v2-border)/0.88)] bg-[rgba(255,255,255,0.03)] text-v2-text-primary hover:-translate-y-px hover:border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--primary)/0.08)] hover:text-v2-accent active:translate-y-0 active:scale-[0.985]",
-        "pill-solid": "rounded-full border border-[hsl(var(--primary)/0.35)] bg-[linear-gradient(135deg,hsl(var(--primary))_0%,hsl(var(--chart-2))_100%)] text-v2-accent-foreground shadow-[0_16px_40px_-20px_hsl(var(--primary)/0.55)] hover:-translate-y-px hover:brightness-110 active:translate-y-0 active:scale-[0.985]",
-        "pill-ghost": "rounded-full bg-transparent text-v2-text-secondary hover:bg-[rgba(255,255,255,0.08)] hover:text-v2-text-primary active:scale-[0.985]",
+        solid: "bg-[oklch(0.65_0.22_260)] text-white rounded-xl shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.5),0_4px_16px_oklch(0.65_0.22_260/0.25)] hover:bg-[oklch(0.72_0.22_260)] hover:shadow-[0_0_0_0.5px_oklch(0.72_0.22_260/0.6),0_8px_24px_oklch(0.65_0.22_260/0.38)] hover:scale-[1.015] active:scale-[0.975] active:shadow-none",
+        outline: "border border-white/[0.12] bg-white/[0.03] text-foreground rounded-xl hover:bg-white/[0.06] hover:border-white/[0.18] hover:scale-[1.01] active:scale-[0.98]",
+        ghost: "text-muted-foreground rounded-xl hover:text-foreground hover:bg-white/[0.06]",
+        error: "bg-[oklch(0.64_0.255_22)] text-white rounded-xl shadow-sm hover:bg-[oklch(0.70_0.255_22)] hover:shadow-md hover:scale-[1.01] active:scale-[0.98]",
+        destructive: "bg-[oklch(0.64_0.255_22)] text-white rounded-xl shadow-sm hover:bg-[oklch(0.70_0.255_22)] hover:shadow-md hover:scale-[1.01] active:scale-[0.98]",
+        link: "text-[oklch(0.65_0.22_260)] underline-offset-4 hover:underline rounded-sm",
+        "gradient-primary": "bg-gradient-to-r from-[oklch(0.65_0.22_260)] to-[oklch(0.60_0.20_280)] text-white rounded-xl shadow-sm hover:shadow-[0_0_24px_oklch(0.65_0.22_260/0.35)] hover:scale-[1.015] active:scale-[0.975]",
+        "gradient-secondary": "bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.10] text-foreground rounded-xl shadow-sm hover:from-white/[0.10] hover:to-white/[0.04] hover:scale-[1.01] active:scale-[0.98]",
+        shimmer: "bg-[oklch(0.65_0.22_260)] text-white rounded-xl shadow-sm",
+        default: "bg-[oklch(0.65_0.22_260)] text-white rounded-xl shadow-sm hover:bg-[oklch(0.72_0.22_260)] hover:scale-[1.015] active:scale-[0.975]",
+        secondary: "bg-white/[0.05] text-foreground border border-white/[0.10] rounded-xl shadow-sm hover:bg-white/[0.08] hover:scale-[1.01] active:scale-[0.98]",
+        mono: "font-mono rounded-lg border border-white/[0.10] bg-transparent text-foreground hover:border-white/[0.18] hover:bg-white/[0.05] focus-visible:ring-offset-0",
+        pill: "bg-transparent text-foreground border border-white/[0.12] rounded-full hover:bg-white/[0.06] active:bg-white/[0.04] active:scale-[0.98] transition-all duration-150",
+        "pill-solid": "bg-foreground text-background border-none rounded-full hover:bg-foreground/90 active:scale-[0.98] transition-all duration-150 font-semibold",
+        "pill-ghost": "bg-transparent text-muted-foreground border-none rounded-full hover:bg-white/[0.06] hover:text-foreground active:bg-white/[0.04] transition-all duration-150",
       },
       size: {
-        sm: "h-8 min-h-[32px] min-w-[32px] px-3 text-xs",
-        default: "h-10 min-h-[40px] min-w-[40px] px-4 text-sm",
-        md: "h-11 min-h-[44px] min-w-[44px] px-[var(--space-4)] py-[var(--space-2)]",
-        lg: "h-12 min-h-[48px] min-w-[48px] px-6 text-base",
-        icon: "h-10 w-10 min-h-[40px] min-w-[40px] px-0 hover:bg-v2-bg-hover hover:shadow-md",
+        sm: "h-8 min-h-[32px] min-w-[32px] px-3 text-xs rounded-lg",
+        default: "h-9 min-h-[36px] min-w-[36px] px-4 text-sm",
+        md: "h-10 min-h-[40px] min-w-[40px] px-5 text-sm",
+        lg: "h-11 min-h-[44px] min-w-[44px] px-6 text-[15px]",
+        icon: "h-9 w-9 min-h-[36px] min-w-[36px] rounded-xl hover:bg-white/[0.06]",
       },
     },
     defaultVariants: {

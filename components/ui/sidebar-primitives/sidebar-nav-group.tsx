@@ -21,9 +21,9 @@ import {
 import { DEFAULT_OPEN_GROUPS } from './use-sidebar-nav'
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
-const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground'
-const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/78'
-const ACTIVE_ITEM_CLASS = 'bg-[linear-gradient(180deg,hsl(var(--sidebar-accent)/0.94),hsl(var(--sidebar-accent)/0.8))] text-sidebar-foreground border-sidebar-border/65'
+const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-all duration-150'
+const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/60'
+const ACTIVE_ITEM_CLASS = 'bg-sidebar-accent/80 text-sidebar-accent-foreground shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.25),inset_0_0_0_0.5px_oklch(0.65_0.22_260/0.12)]'
 
 function isItemPending(
   item: UnifiedSidebarItem,
@@ -65,10 +65,10 @@ function renderItemIcon(
 
 function getItemTextClass(isItemActive: boolean) {
   return cn(
-    'ml-3 truncate group-data-[collapsible=icon]:hidden',
+    'ml-3 truncate text-[13px] group-data-[collapsible=icon]:hidden',
     isItemActive
-      ? 'font-semibold text-sidebar-foreground'
-      : 'text-sidebar-foreground'
+      ? 'font-semibold text-sidebar-foreground tracking-[-0.01em]'
+      : 'font-medium text-sidebar-foreground/80 tracking-[-0.005em]'
   )
 }
 
@@ -169,7 +169,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
             <SidebarGroup className="px-0 py-1.5">
               <CollapsibleTrigger asChild>
                 <SidebarGroupLabel
-                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/40 hover:text-sidebar-foreground/64"
+                  className="text-[10px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/30 px-3 mb-1 flex cursor-pointer items-center justify-between hover:text-sidebar-foreground/64"
                   id={`sidebar-group-${groupIndex}`}
                 >
                   <span>{groupName}</span>

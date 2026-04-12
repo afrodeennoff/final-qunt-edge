@@ -52,19 +52,19 @@ export default function Navbar() {
   const currentLayout = layouts || { desktop: [], mobile: [] }
 
   return (
-    <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none">
+    <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none [backdrop-filter:saturate(180%)_blur(8px)]">
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex flex-col rounded-3xl sm:rounded-full border border-border/24 bg-card/80 sm:shadow-xl transition-all duration-300"
+        className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-white/[0.055] bg-black/75 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_40px_-8px_rgba(0,0,0,0.75)] transition-all duration-300"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
 
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="-ml-1 text-fg-muted transition-all rounded-2xl w-10 h-10" />
-            <div className="h-6 w-px bg-border/50 hidden sm:block mx-1" />
+            <SidebarTrigger className="-ml-1 text-muted-foreground/60 hover:text-foreground transition-all rounded-xl w-9 h-9 hover:bg-white/[0.05]" />
+            <div className="h-5 w-px bg-white/[0.08] hidden sm:block mx-1" />
           </div>
 
           {/* Center: PnL Metrics (Desktop Only) */}
@@ -76,7 +76,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
 
             {/* Config Group */}
-            <div className="flex items-center gap-2 p-1.5 bg-secondary/20 backdrop-blur-xl rounded-2xl border border-border/20">
+            <div className="flex items-center gap-1.5 p-1 bg-white/[0.04] backdrop-blur-xl rounded-2xl border border-white/[0.06]">
               <Button 
                 id="customize-mode"
                 variant="ghost"
@@ -85,12 +85,12 @@ export default function Navbar() {
                 className={cn(
                   "h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-all duration-500",
                   isCustomizing
-                    ? "bg-primary text-primary-foreground shadow-none font-bold"
-                    : "text-fg-muted"
+                    ? "bg-[oklch(0.65_0.22_260)] text-white shadow-[0_0_16px_oklch(0.65_0.22_260/0.45)] font-semibold"
+                    : "text-muted-foreground/70 hover:text-foreground hover:bg-white/[0.05]"
                 )}
               >
                 <Pencil className={cn("w-3.5 h-3.5", isCustomizing && "animate-pulse")} />
-                <span className="inline text-[10px] font-black uppercase tracking-widest">
+                <span className="inline text-[10px] font-bold uppercase tracking-[0.14em]">
                   {isCustomizing ? "Lock Grid" : "Edit Layout"}
                 </span>
               </Button>

@@ -1,13 +1,33 @@
 import { cn } from "@/lib/utils";
 
 export function Logo({ className }: { className?: string }) {
-    return (
-        <svg viewBox="0 0 255 255" xmlns="http://www.w3.org/2000/svg" className={cn("", className)}>
-            <path fillRule="evenodd" clipRule="evenodd" d="M159 63L127.5 0V255H255L236.5 218H159V63Z" />
-            <path fillRule="evenodd" clipRule="evenodd" d="M-3.05176e-05 255L127.5 -5.96519e-06L127.5 255L-3.05176e-05 255ZM64 217L121 104L121 217L64 217Z" />
-        </svg>
-
-    )
+  return (
+    <svg
+      viewBox="0 0 255 255"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("", className)}
+      style={{ filter: 'drop-shadow(0 0 6px currentColor)' }}
+    >
+      <defs>
+        <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="1" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.75" />
+        </linearGradient>
+      </defs>
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M159 63L127.5 0V255H255L236.5 218H159V63Z"
+        fill="url(#logo-gradient)"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M-3.05176e-05 255L127.5 -5.96519e-06L127.5 255L-3.05176e-05 255ZM64 217L121 104L121 217L64 217Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
 }
 
 export function LogoText() {

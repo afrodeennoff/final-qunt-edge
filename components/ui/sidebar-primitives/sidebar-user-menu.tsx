@@ -46,17 +46,17 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-2xl border border-sidebar-border/40 bg-sidebar-accent/25 px-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-colors duration-200 hover:bg-sidebar-accent/40 data-[state=open]:bg-sidebar-accent/48 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-2xl px-2.5 py-1.5 transition-all duration-200 hover:bg-sidebar-accent/12 data-[state=open]:bg-sidebar-accent/18 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-10 w-10 overflow-hidden rounded-2xl">
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-[var(--radius-icon)] ring-1 ring-sidebar-primary/20">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
-                    <AvatarFallback className="rounded-2xl bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
+                    <AvatarFallback className="rounded-[var(--radius-icon)] bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-500" />
+                  <div className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-sidebar bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
                 </div>
                 <div className="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-semibold text-sidebar-foreground">

@@ -54,28 +54,43 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "group relative overflow-hidden rounded-[calc(var(--radius)+0.15rem)] border text-foreground transition-all duration-300",
-          "border-[hsl(var(--v2-border)/0.72)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
-          "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)] backdrop-blur-xl",
+          "group relative overflow-hidden text-foreground transition-all duration-200",
           accent && "border-transparent",
-          variant === "default" && "hover:border-[hsl(var(--v2-border)/0.95)]",
-          variant === "glass" && "bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] border-[hsl(var(--v2-border)/0.78)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_26px_60px_-36px_rgba(4,10,24,0.88)]",
-          variant === "elevated" && "bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.94))] border-[hsl(var(--v2-border)/0.94)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_36px_80px_-40px_rgba(4,10,24,0.92)]",
-          variant === "outlined" && "border-[hsl(var(--v2-border)/0.9)] bg-transparent shadow-none",
-          variant === "flat" && "border-0 bg-transparent shadow-none",
-          variant === "gradient-border" && `border-0 p-px bg-gradient-to-br ${accent ? accentBorderMap[accent] : "from-[hsl(var(--primary))] via-violet-400/70 to-cyan-300/70"}`,
-          variant === "frost" && "border-[hsl(var(--v2-border)/0.76)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_28px_72px_-40px_rgba(4,10,24,0.92)]",
-          {
-            "text-sm": size === "sm",
-            "text-base": size === "md",
-            "text-lg": size === "lg",
-          },
-          {
-            "cursor-pointer": isInteractive,
-            "hover:-translate-y-[2px] hover:border-[hsl(var(--v2-border)/0.96)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_40px_90px_-46px_rgba(4,10,24,0.95)]": hover || isInteractive,
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background":
-              isInteractive,
-          },
+          variant === "default" && [
+            "rounded-2xl border bg-[oklch(0.038_0.005_264)]",
+            "border-white/[0.08]",
+            "shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_4px_20px_-8px_rgba(0,0,0,0.80)]",
+          ],
+          variant === "glass" && [
+            "rounded-2xl border bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-200",
+            "border-white/[0.08]",
+            "shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
+          ],
+          variant === "elevated" && [
+            "rounded-2xl border bg-[oklch(0.055_0.006_264)]",
+            "border-white/[0.10]",
+            "shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_12px_40px_-12px_rgba(0,0,0,0.85)]",
+          ],
+          variant === "outlined" && [
+            "rounded-2xl border-2 border-white/[0.14] bg-transparent shadow-none",
+          ],
+          variant === "flat" && "border-0 bg-transparent shadow-none rounded-2xl",
+          variant === "gradient-border" && [
+            "rounded-2xl border border-white/[0.12] bg-gradient-to-br from-white/[0.05] to-transparent",
+            "shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
+            accent && `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}`,
+            !accent && "border border-white/[0.12]",
+          ],
+          variant === "frost" && [
+            "rounded-2xl bg-transparent",
+            "border border-[rgba(180,210,255,0.09)]",
+            "shadow-[0_0_0_0.5px_rgba(180,210,255,0.07),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
+          ],
+          size === "sm" && "text-sm",
+          size === "md" && "text-base",
+          size === "lg" && "text-lg",
+          hover && "hover:border-white/[0.14] hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.11),0_12px_40px_-8px_rgba(0,0,0,0.82)] hover:-translate-y-[1px]",
+          isInteractive && "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isLoading && "pointer-events-none opacity-80",
           className
         )}

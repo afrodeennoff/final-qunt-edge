@@ -63,9 +63,9 @@ export default function PropfirmCatalogueWidget() {
                              href={`/${locale}/firm/${getFirmSlugFromName(stat.propfirmName)}`}
                              className="block"
                          >
-                            <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/22 border border-border/55 hover:bg-secondary/30 transition-colors cursor-pointer">
+                            <div className="relative rounded-2xl border border-white/[0.07] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_4px_20px_-8px_rgba(0,0,0,0.80)] overflow-hidden transition-all duration-300 hover:border-white/[0.11] hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_8px_32px_-8px_rgba(0,0,0,0.85)] flex items-center justify-between p-3 cursor-pointer">
                                 <div className="flex flex-col gap-1 min-w-0">
-                                    <span className="font-bold text-sm truncate tracking-tight">{stat.propfirmName}</span>
+                                    <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35 truncate">{stat.propfirmName}</span>
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                                             <Users className="w-3 h-3 text-muted-foreground" />
@@ -78,12 +78,12 @@ export default function PropfirmCatalogueWidget() {
                                     </div>
                                 </div>
                                 <div className="text-right shrink-0">
-                                    <div className="text-[13px] font-bold text-foreground tracking-tight tabular-nums">
+                                    <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums leading-none">
                                         ${stat.payouts.paidAmount > 1000
                                             ? `${(stat.payouts.paidAmount / 1000).toFixed(1)}k`
                                             : stat.payouts.paidAmount.toLocaleString()}
                                     </div>
-                                    <div className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">
+                                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">
                                         Paid
                                     </div>
                                 </div>

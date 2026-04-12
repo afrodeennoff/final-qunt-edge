@@ -170,6 +170,14 @@ const config = {
 			},
 			// Refined Shadow Utilities
 			boxShadow: {
+				'obsidian': '0 4px 20px -8px rgba(0,0,0,0.85), 0 0 0 0.5px rgba(180,210,255,0.07)',
+				'obsidian-hover': '0 8px 32px -10px rgba(0,0,0,0.90), 0 0 0 0.5px rgba(180,210,255,0.11)',
+				'obsidian-elevated': '0 16px 52px -16px rgba(0,0,0,0.92), 0 0 0 0.5px rgba(180,210,255,0.10)',
+				'glow-cobalt': '0 0 24px oklch(0.65 0.22 260 / 0.32), 0 0 8px oklch(0.65 0.22 260 / 0.20)',
+				'glow-emerald': '0 0 20px oklch(0.82 0.185 155 / 0.28)',
+				'glow-crimson': '0 0 20px oklch(0.64 0.255 22 / 0.28)',
+				'navbar': '0 0 0 0.5px rgba(180,210,255,0.08), 0 8px 40px -8px rgba(0,0,0,0.75)',
+				'card-luxury': '0 0 0 0.5px rgba(180,210,255,0.06), 0 4px 20px -8px rgba(0,0,0,0.85)',
 				// MiniMax Shadow Tokens
 				'minimax-brand-glow': 'rgba(44, 30, 116, 0.16) 0px 0px 15px',
 				'minimax-elevated': 'rgba(36, 36, 36, 0.08) 0px 12px 16px -4px',
@@ -214,7 +222,7 @@ const config = {
 			backdropBlur: {
 				xs: '2px',
 				'3xl': '64px',
-				'4xl': '96px',
+				'4xl': '80px',
 			},
 			// MiniMax Glassmorphism Utilities (Light Mode)
 			backgroundColor: {
@@ -267,6 +275,25 @@ const config = {
 				'1000': '1000ms',
 			},
 			colors: {
+				cobalt: {
+					DEFAULT: 'oklch(0.65 0.22 260)',
+					50: 'oklch(0.95 0.05 260)',
+					100: 'oklch(0.90 0.09 260)',
+					200: 'oklch(0.82 0.14 260)',
+					300: 'oklch(0.74 0.18 260)',
+					400: 'oklch(0.68 0.20 260)',
+					500: 'oklch(0.65 0.22 260)',
+					600: 'oklch(0.58 0.22 260)',
+					700: 'oklch(0.50 0.20 260)',
+					800: 'oklch(0.38 0.16 260)',
+					900: 'oklch(0.24 0.12 260)',
+				},
+				void: {
+					DEFAULT: 'oklch(0 0 0)',
+					50: 'oklch(0.05 0.006 264)',
+					100: 'oklch(0.08 0.007 264)',
+					200: 'oklch(0.12 0.009 264)',
+				},
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {

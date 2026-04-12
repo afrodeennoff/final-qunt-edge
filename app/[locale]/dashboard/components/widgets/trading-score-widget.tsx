@@ -32,30 +32,30 @@ export default function TradingScoreWidget({ size }: { size?: string }) {
         >
             <div className="flex-1 flex flex-col items-center justify-center p-4">
                 <div className="relative flex items-center justify-center">
-                    <div className="text-4xl font-semibold tracking-tight tabular-nums mb-1">
-                        <span className={score >= 80 ? "metric-positive" : "metric-negative font-normal"}>
+                    <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums mb-1">
+                        <span className={score >= 80 ? "text-[oklch(0.82_0.185_155)]" : "text-[oklch(0.74_0.255_22)] font-normal"}>
                             {score}
                         </span>
-                        <span className="text-base text-muted-foreground ml-1">/ 100</span>
+                        <span className="text-base text-foreground/35 ml-1">/ 100</span>
                     </div>
                 </div>
                 <div className={cn(
-                    "px-2.5 py-1 rounded-full border border-border/55 bg-secondary/22 text-[11px] font-medium tracking-tight text-foreground"
+                    "inline-flex items-center gap-1 rounded-full bg-white/[0.04] px-2 py-0.5 text-[11px] font-semibold text-foreground/70 border border-white/[0.08]"
                 )}>
                     {normalizedLabel}
                 </div>
                 <div className="mt-6 grid grid-cols-3 gap-2 w-full text-center">
-                    <div className="flex flex-col p-2.5 bg-secondary/22 rounded-xl border border-border/55">
-                        <span className="text-[10px] font-medium tracking-tight text-muted-foreground">Win Rate</span>
-                        <span className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{metrics.winRate.toFixed(1)}%</span>
+                    <div className="flex flex-col p-2.5 bg-white/[0.03] rounded-2xl border border-white/[0.07]">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">Win Rate</span>
+                        <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.winRate.toFixed(1)}%</span>
                     </div>
-                    <div className="flex flex-col p-2.5 bg-secondary/22 rounded-xl border border-border/55">
-                        <span className="text-[10px] font-medium tracking-tight text-muted-foreground">P. Factor</span>
-                        <span className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{metrics.profitFactor.toFixed(2)}</span>
+                    <div className="flex flex-col p-2.5 bg-white/[0.03] rounded-2xl border border-white/[0.07]">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">P. Factor</span>
+                        <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.profitFactor.toFixed(2)}</span>
                     </div>
-                    <div className="flex flex-col p-2.5 bg-secondary/22 rounded-xl border border-border/55">
-                        <span className="text-[10px] font-medium tracking-tight text-muted-foreground">Trades</span>
-                        <span className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{metrics.totalTrades}</span>
+                    <div className="flex flex-col p-2.5 bg-white/[0.03] rounded-2xl border border-white/[0.07]">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">Trades</span>
+                        <span className="mt-0.5 text-[15px] font-semibold tracking-[-0.03em] tabular-nums text-foreground">{metrics.totalTrades}</span>
                     </div>
                 </div>
             </div>

@@ -45,7 +45,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="relative mt-10 rounded-t-[calc(var(--radius)+0.4rem)] border-t border-[var(--frost-border)] bg-card/90 px-4 pb-8 pt-6 backdrop-blur-xl sm:px-6 sm:pb-10"
+      className="border-t border-white/[0.06] bg-black py-16 sm:py-20"
     >
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
@@ -54,17 +54,17 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1240px] rounded-[calc(var(--radius)+0.4rem)] border border-[var(--frost-border)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_80px_-42px_rgba(4,10,24,0.9)] backdrop-blur-xl sm:p-8 lg:p-10"
+        className="mx-auto w-full max-w-[1240px] px-4 sm:px-6"
       >
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1.8fr]">
+        <div className="grid gap-8 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)] lg:grid-cols-[1.2fr_1.8fr] sm:p-8 lg:p-10">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--frost-border)] bg-card shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
                 <Logo className="h-5 w-5 fill-foreground" />
               </div>
               <div className="leading-none">
-                <div className="text-base font-semibold tracking-tight">Qunt Edge</div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/78">Trading Intelligence</div>
+                <div className="text-[13px] font-semibold tracking-[-0.02em] text-foreground">Qunt Edge</div>
+                <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/30">Trading Intelligence</div>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t border-[var(--frost-border)] pt-5 text-muted-foreground/90">
-          <p className="text-xs text-foreground">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
+          <p className="text-[12px] text-foreground/25 tracking-[-0.005em]">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground/70">{t('disclaimer.risk.content')}</p>
         </div>
       </motion.div>
@@ -129,7 +129,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
   const locale = useCurrentLocale()
   return (
     <div>
-      <h3 className="text-[12px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">{title}</h3>
+      <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/30 mb-4">{title}</h3>
       <ul className="mt-4 space-y-2.5">
         {links.map((item, idx) => (
           <motion.li
@@ -142,7 +142,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
             <Link
               href={`/${locale}${item.href}`}
               prefetch={false}
-              className="inline-flex rounded-full px-2 py-1 text-sm text-text-secondary transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+              className="inline-flex rounded-full px-2 py-1 text-[13px] text-foreground/50 hover:text-foreground transition-colors duration-150 tracking-[-0.005em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
             >
               {item.name}
             </Link>

@@ -109,8 +109,9 @@ function formatPlanAmount(
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
-    'marketing-panel relative flex w-full flex-col rounded-2xl border border-border/30 bg-card backdrop-blur-sm transition-all duration-300 hover:border-border/40 hover:-translate-y-1 hover:shadow-xl overflow-hidden',
-    popular && 'border-2 border-primary shadow-card before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/10 before:via-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
+    'relative flex w-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1',
+    !popular && 'rounded-2xl border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)] p-6',
+    popular && 'rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)] p-6 relative',
   )
 }
 
@@ -197,7 +198,7 @@ function FreePlanCard({
     <div className="relative">
       <Card className={getPlanCardClassName(plan.isPopular ?? false)}>
         <CardHeader>
-          <CardTitle className="text-xl">{plan.name}</CardTitle>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -210,19 +211,19 @@ function FreePlanCard({
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }}
-              className="text-4xl font-bold tracking-tight"
+              className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
             />
-            <span className="text-sm text-muted-foreground ml-1">{t('pricing.free.name')}</span>
+            <span className="ml-1 text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">{t('pricing.free.name')}</span>
           </div>
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-2">
+              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
                 {index > 2 ? (
-                  <X className="h-4 w-4 shrink-0 text-destructive mt-0.5" />
+                  <X className="size-4 shrink-0 text-[oklch(0.64_0.255_22)]" />
                 ) : (
-                  <Check className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
+                  <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
                 )}
-                <span className="text-sm text-foreground/90">{feature}</span>
+                <span>{feature}</span>
               </li>
             ))}
           </ul>
@@ -357,7 +358,7 @@ function PlusPlanCard({
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
-          <CardTitle className="text-xl">{plan.name}</CardTitle>
+          <CardTitle className="text-[15px] font-semibold tracking-[-0.02em] text-foreground">{plan.name}</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -432,10 +433,10 @@ function PlusPlanCard({
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
                     }}
-                    className="text-4xl font-bold tracking-tight"
+                    className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">
                   {t('pricing.oneTimePayment')}
                 </p>
               </div>
@@ -449,9 +450,9 @@ function PlusPlanCard({
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   }}
-                  className="text-4xl font-bold tracking-tight"
+                  className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">
                   {billingPeriod === 'monthly'
                     ? t('pricing.monthlyFlexibility')
                     : billingPeriod === 'yearly'
@@ -464,9 +465,9 @@ function PlusPlanCard({
 
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <Check className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
-                <span className="text-sm text-foreground/90">{feature}</span>
+              <li key={index} className="flex items-center gap-2.5 text-[13px] text-foreground/70 tracking-[-0.005em]">
+                <Check className="size-4 text-[oklch(0.82_0.185_155)] shrink-0" />
+                <span>{feature}</span>
               </li>
             ))}
           </ul>

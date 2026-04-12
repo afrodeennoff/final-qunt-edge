@@ -91,20 +91,29 @@ export function PnLSummary({ className }: PnLSummaryProps) {
       aria-live="polite"
       aria-label="Daily PnL quick summary"
       className={cn(
-        "grid w-full grid-cols-2 gap-4 liquid-panel p-4 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 shadow-2xl sm:grid-cols-3 lg:grid-cols-4",
+        "flex items-center gap-1 divide-x divide-white/[0.06] overflow-x-auto rounded-2xl border border-white/[0.06] bg-black/30 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60",
         className
       )}
     >
       {summaryItems.map((item) => (
-        <div key={item.label} className="flex flex-col gap-1.5 min-w-[100px] group">
-          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 group-hover:text-muted-foreground/40 transition-colors">
+        <div key={item.label} className="flex flex-col items-center px-4 gap-0.5 min-w-[110px] group">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/35">
             {item.label}
           </span>
           <div className="flex items-center gap-2">
             <item.icon
               className={cn("h-4 w-4 flex-shrink-0 transition-all group-hover:scale-110", item.accent ?? "text-muted-foreground/60")}
             />
-            <span className={cn("text-[16px] leading-none font-terminal", item.accent ?? "text-foreground/80")}>{item.value}</span>
+            <span
+              className={cn(
+                "text-[15px] font-semibold tracking-[-0.03em] tabular-nums",
+                item.accent === "metric-positive" && "text-[oklch(0.82_0.185_155)]",
+                item.accent === "metric-negative" && "text-[oklch(0.74_0.255_22)]",
+                !item.accent && "text-foreground"
+              )}
+            >
+              {item.value}
+            </span>
           </div>
         </div>
       ))}

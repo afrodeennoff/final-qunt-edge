@@ -24,7 +24,7 @@ export default function Hero({ }: HeroProps) {
   return (
     <section
       ref={ref}
-      className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-20 text-center md:py-24 lg:py-28 sm:px-6 lg:px-8"
+      className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-24 text-center md:py-32 lg:py-40 sm:px-6 lg:px-8"
     >
       <motion.div
         initial="hidden"
@@ -56,11 +56,11 @@ export default function Hero({ }: HeroProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8"
         >
-          <h1 className="mb-6 text-[40px] font-medium leading-[1.10] tracking-[-0.038em] text-foreground [font-family:var(--font-outfit),sans-serif] sm:text-[56px] md:text-[72px] lg:text-[80px]">
-            Qunt <span className="text-foreground">Edge.</span>
+          <h1 className="mb-6 text-[42px] font-[350] leading-[1.06] tracking-[-0.045em] text-foreground [font-family:var(--font-geist,sans-serif)] sm:text-[60px] md:text-[76px] lg:text-[90px]">
+            Qunt <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">Edge.</span>
           </h1>
 
-          <p className="text-base max-w-xl mx-auto mb-10 sm:mb-12 leading-relaxed font-normal px-2 text-foreground/85 [font-family:var(--font-dm-sans),sans-serif]">
+          <p className="text-[15px] max-w-lg mx-auto mb-12 leading-[1.65] font-[350] px-2 text-foreground/55 tracking-[-0.01em]">
             Stop auditing the money. Audit the execution. <br className="hidden sm:block" />
             The clinical intelligence layer for professional discretionary traders.
           </p>
@@ -74,14 +74,14 @@ export default function Hero({ }: HeroProps) {
         >
           <Link
             href={`/${locale}/authentication?next=dashboard`}
-            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-lg bg-foreground px-8 text-center text-sm font-medium text-background transition-all hover:opacity-90 sm:w-auto overflow-hidden"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-all hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] sm:w-auto shadow-[0_0_32px_rgba(255,255,255,0.15)]"
           >
             <span className="relative z-10">Start Free Audit</span>
           </Link>
 
           <Link
             href={`/${locale}/updates`}
-            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-lg border border-border bg-card px-8 text-center text-sm font-medium text-foreground transition-all hover:border-border/36 hover:bg-card/80 sm:w-auto"
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-white/[0.20] hover:bg-white/[0.07] hover:text-foreground sm:w-auto"
           >
             View Product Updates
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -92,13 +92,13 @@ export default function Hero({ }: HeroProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-16 border-t border-border px-4 pt-8 opacity-60 grayscale transition-all duration-700 hover:opacity-100 hover:grayscale-0 sm:mt-20 sm:pt-10"
+          className="mt-20 border-t border-white/[0.06] px-4 pt-10 opacity-50 transition-all duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
         >
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
-            <span className="text-sm font-black tracking-tighter text-foreground/40 transition-all duration-300 hover:text-foreground hover:scale-105 sm:text-base md:text-xl cursor-default">TRADOVATE</span>
-            <span className="text-sm font-black tracking-tighter text-foreground/40 transition-all duration-300 hover:text-foreground hover:scale-105 sm:text-base md:text-xl cursor-default">RITHMIC</span>
-            <span className="text-sm font-black tracking-tighter text-foreground/40 transition-all duration-300 hover:text-foreground hover:scale-105 sm:text-base md:text-xl cursor-default">IBKR</span>
-            <span className="text-sm font-black tracking-tighter text-foreground/40 transition-all duration-300 hover:text-foreground hover:scale-105 sm:text-base md:text-xl cursor-default">CQG</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">RITHMIC</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">IBKR</span>
+            <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">CQG</span>
           </div>
         </motion.div>
       </motion.div>

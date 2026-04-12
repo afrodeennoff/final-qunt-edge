@@ -2,9 +2,11 @@ import { Sparkles } from "lucide-react"
 
 export function TopNav({ title }: { title: string }) {
   return (
-    <div className="mb-3 flex items-center justify-between border-b border-border pb-3">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-foreground/90">{title}</h2>
-      <span className="inline-flex items-center gap-1 rounded-full border border-semantic-info-border/30 bg-semantic-info-bg/10 px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wide text-semantic-info">
+    <div className="mb-4 flex items-center justify-between pb-3 border-b border-white/[0.06]">
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">
+        {title}
+      </h2>
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.10em] text-[oklch(0.75_0.22_260)]">
         <Sparkles className="size-3" /> AI
       </span>
     </div>

@@ -38,27 +38,25 @@ export default function Navbar() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 py-3">
       <motion.div
         initial={isMobile ? false : { opacity: 0, y: -18 }}
         animate={isMobile ? undefined : { opacity: 1, y: 0 }}
         transition={isMobile ? undefined : { duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-[1320px] px-4 pt-3 sm:px-6 sm:pt-4"
+        className="w-full"
       >
         <motion.div
           className={cn(
-            'qe-v2-card flex h-[60px] items-center rounded-[calc(var(--radius)+0.4rem)] px-2.5 sm:h-[66px] sm:px-3.5',
-            'border-[var(--frost-border)] bg-background/72 supports-[backdrop-filter]:bg-background/72 backdrop-blur-xl',
-            'shadow-[0_28px_72px_-42px_rgba(4,10,24,0.9)]'
+            'w-full max-w-5xl mx-auto flex items-center justify-between h-12 px-4 rounded-full border border-white/[0.10] bg-black/70 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(180,210,255,0.07),0_8px_32px_-8px_rgba(0,0,0,0.70)]'
           )}
           whileHover={isMobile ? undefined : { y: -1 }}
           transition={isMobile ? undefined : { duration: 0.2 }}
         >
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-2xl px-2 py-1.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-[var(--frost-border)] bg-card shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
               <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
             </div>
-            <span className="hidden text-sm font-semibold tracking-tight text-[var(--text-secondary)] sm:inline-flex">Qunt Edge</span>
+            <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground">Qunt Edge</span>
           </Link>
 
           <nav className="mx-auto hidden items-center gap-1 lg:flex">
@@ -74,8 +72,8 @@ export default function Navbar() {
                   className={cn(
                     'relative rounded-2xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
                     isActive(link.href)
-                      ? 'border border-[var(--frost-border)] bg-card text-[var(--text-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                      : 'text-[var(--text-secondary)] hover:bg-card hover:text-[var(--text-primary)]'
+                      ? 'border border-white/[0.12] bg-white/[0.06] text-foreground'
+                      : 'text-[13px] font-medium text-foreground/55 hover:text-foreground transition-colors duration-150 tracking-[-0.005em]'
                   )}
                 >
                   {link.title}
@@ -87,7 +85,7 @@ export default function Navbar() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <Link
               href={`/${locale}/authentication`}
-              className="hidden rounded-2xl px-3 py-2 text-[12px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-card hover:text-[var(--text-primary)] md:inline-flex"
+              className="hidden rounded-2xl px-3 py-2 text-[13px] font-medium text-foreground/55 hover:text-foreground transition-colors duration-150 tracking-[-0.005em] md:inline-flex"
             >
               Login
             </Link>
@@ -95,7 +93,7 @@ export default function Navbar() {
               asChild
               size="sm"
               variant="default"
-              className="hidden rounded-pill px-5 text-[11px] font-semibold tracking-[0.03em] md:inline-flex"
+              className="hidden h-8 items-center px-4 rounded-full bg-white text-[12px] font-semibold text-black tracking-[-0.01em] hover:bg-white/90 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
             >
               <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
             </Button>
@@ -106,7 +104,7 @@ export default function Navbar() {
               <Button
                 asChild
                 variant="default"
-                className="w-full rounded-pill"
+                className="w-full rounded-full"
               >
                 <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
               </Button>

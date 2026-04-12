@@ -9,7 +9,7 @@
 
 @layer base {
   :root {
-    /* ===== UI ALLOCATION TOKENS (60/30/10) ===== */
+    /* ===== UI ALLOCATION (60/30/10 Obsidian) ===== */
     --ui-60-bg: var(--background);
     --ui-60-surface: var(--card);
     --ui-60-text: var(--foreground);
@@ -19,222 +19,150 @@
     --ui-10-accent: var(--primary);
     --ui-10-accent-fg: var(--primary-foreground);
 
-    /* ===== MARKETING SURFACE TOKENS (Resend Frost Theme) ===== */
+    /* ===== MARKETING SURFACES ===== */
     --mk-bg-0: 0 0% 0%;
     --mk-bg-1: 0 0% 0%;
-    --mk-bg-2: 214 30% 3%;
-    --mk-surface: 214 40% 4%;
-    --mk-surface-muted: 214 30% 6%;
-    --mk-border: 214 14% 9%;
-    --mk-text: 0 0% 94%;
-    --mk-text-muted: 0 0% 44%;
-    --mk-lime: 160 100% 53%;
-    --mk-lime-ink: 0 0% 10%;
+    --mk-bg-2: 220 30% 2%;
+    --mk-surface: 220 40% 3%;
+    --mk-surface-muted: 220 30% 4%;
+    --mk-border: 220 18% 7%;
+    --mk-text: 0 0% 96%;
+    --mk-text-muted: 0 0% 42%;
+    --mk-lime: 155 100% 58%;
+    --mk-lime-ink: 0 0% 6%;
 
-    /* ===== BACKGROUND HIERARCHY (7 levels — Resend void + frost) ===== */
-    --bg-base: 214 40% 1%;
-    --bg-elevated: 214 40% 3%;
-    --bg-card: 214 40% 4%;
-    --bg-card-hover: 214 35% 5%;
-    --bg-overlay: 214 30% 7%;
-    --bg-modal: 214 25% 9%;
-    --bg-highlight: 214 20% 11%;
+    /* ===== BACKGROUND HIERARCHY (8 levels) ===== */
+    --bg-base: 220 40% 0%;
+    --bg-elevated: 220 40% 1.5%;
+    --bg-card: 220 40% 2.5%;
+    --bg-card-hover: 220 35% 3.5%;
+    --bg-overlay: 220 30% 5%;
+    --bg-modal: 220 25% 6.5%;
+    --bg-highlight: 220 20% 8%;
+    --bg-interactive: 220 15% 9%;
 
-    /* ===== PRIMARY ACCENT (maps to --primary) ===== */
+    /* ===== PRIMARY ACCENT ===== */
     --accent-neutral: var(--primary);
-    --accent-neutral-hover: var(--primary);
-    --accent-neutral-active: var(--primary);
-    --accent-neutral-subtle: var(--primary) / 0.1;
-    --accent-neutral-glow: var(--primary) / 0.2;
-    --accent-neutral-rgb: 130 160 255;
+    --accent-neutral-hover: oklch(0.72 0.22 260);
+    --accent-neutral-active: oklch(0.58 0.22 260);
+    --accent-neutral-subtle: oklch(0.65 0.22 260 / 0.10);
+    --accent-neutral-glow: oklch(0.65 0.22 260 / 0.22);
+    --accent-neutral-rgb: 96 165 255;
 
-    /* ===== PRECISION PANEL (Resend frost borders) ===== */
-    --precision-cobalt: oklch(0.62 0.19 260);
-    --precision-cobalt-rgb: 59 158 255;
-    --precision-panel: 214 40% 2%;
-    --precision-panel-elevated: 214 40% 4%;
-    --precision-panel-line: 214 14% 9%;
-    --precision-panel-inner: oklch(0.62 0.19 260);
+    /* ===== PRECISION PANEL ===== */
+    --precision-cobalt: oklch(0.65 0.22 260);
+    --precision-cobalt-rgb: 96 165 255;
+    --precision-panel: 220 40% 1.2%;
+    --precision-panel-elevated: 220 40% 2.8%;
+    --precision-panel-line: 220 18% 7%;
+    --precision-panel-inner: oklch(0.65 0.22 260);
 
-    /* ===== RESEND FROST SYSTEM (resend.com aesthetic) ===== */
-    --rs-frost-border: 214 14% 9%;
-    --rs-frost-border-alt: 214 12% 7%;
-    --rs-frost-ring: 214 18% 14%;
-    --rs-frost-surface: 214 100% 92% / 0.02;
-    --rs-frost-hover: 0 0% 100% / 0.08;
-    --rs-text-strong: 0 0% 94%;
-    --rs-text-primary: 0 0% 88%;
-    --rs-text-secondary: 0 0% 64%;
-    --rs-text-tertiary: 0 0% 48%;
-    --rs-accent-orange: 22 100% 56%;
-    --rs-accent-orange-bg: 22 100% 56% / 0.08;
-    --rs-accent-orange-border: 22 100% 56% / 0.22;
-    --rs-accent-green: 150 100% 53%;
-    --rs-accent-green-bg: 150 100% 53% / 0.06;
-    --rs-accent-green-border: 150 100% 53% / 0.18;
-    --rs-accent-blue: 213 100% 62%;
-    --rs-accent-blue-bg: 213 100% 62% / 0.08;
-    --rs-accent-blue-border: 213 100% 62% / 0.2;
-    --rs-accent-red: 348 100% 56%;
-    --rs-accent-red-bg: 348 100% 56% / 0.08;
-    --rs-accent-red-border: 348 100% 56% / 0.2;
-    --rs-accent-gold: 42 100% 62%;
-    --rs-accent-gold-border: 42 100% 62% / 0.25;
+    /* ===== OBSIDIAN FROST SYSTEM ===== */
+    --rs-frost-border: 220 20% 7%;
+    --rs-frost-border-alt: 220 18% 5%;
+    --rs-frost-ring: 220 22% 10%;
+    --rs-frost-surface: 220 100% 90% / 0.02;
+    --rs-frost-hover: 0 0% 100% / 0.06;
+    --rs-text-strong: 0 0% 96%;
+    --rs-text-primary: 0 0% 90%;
+    --rs-text-secondary: 0 0% 60%;
+    --rs-text-tertiary: 0 0% 44%;
+    --rs-accent-cobalt: 220 100% 67%;
+    --rs-accent-cobalt-bg: 220 100% 67% / 0.08;
+    --rs-accent-cobalt-border: 220 100% 67% / 0.22;
+    --rs-accent-emerald: 155 100% 58%;
+    --rs-accent-emerald-bg: 155 100% 58% / 0.07;
+    --rs-accent-emerald-border: 155 100% 58% / 0.20;
+    --rs-accent-crimson: 22 100% 60%;
+    --rs-accent-crimson-bg: 22 100% 60% / 0.07;
+    --rs-accent-crimson-border: 22 100% 60% / 0.22;
+    --rs-accent-amber: 42 95% 65%;
+    --rs-accent-amber-border: 42 95% 65% / 0.25;
+    --rs-accent-violet: 280 80% 68%;
+    --rs-accent-violet-bg: 280 80% 68% / 0.08;
 
-    /* ===== BRAND TOKENS (maps to semantic) ===== */
+    /* ===== BRAND ===== */
     --brand-primary: var(--primary);
-    --brand-primary-strong: var(--primary);
-    --brand-secondary: var(--chart-1);
-    --brand-warm: var(--chart-5);
+    --brand-primary-strong: oklch(0.72 0.22 260);
+    --brand-secondary: oklch(0.65 0.22 260);
+    --brand-warm: oklch(0.76 0.19 45);
     --brand-ink: var(--foreground);
     --brand-soft-ink: var(--muted-foreground);
 
     /* ===== FOREGROUND EXTENSIONS ===== */
     --fg-primary: var(--foreground);
     --fg-secondary: var(--muted-foreground);
-    --fg-tertiary: var(--muted-foreground);
-    --fg-muted: var(--muted-foreground);
-    --fg-disabled: var(--muted-foreground);
+    --fg-tertiary: oklch(0.44 0.008 264);
+    --fg-muted: oklch(0.40 0.007 264);
+    --fg-disabled: oklch(0.28 0.005 264);
 
     /* ===== BORDER EXTENSIONS ===== */
     --border-default: var(--border);
-    --border-subtle: var(--border);
-    --border-strong: var(--border);
+    --border-subtle: 220 16% 6%;
+    --border-strong: 220 20% 10%;
     --border-focus: var(--ring);
     --border-error: var(--destructive);
-    --border-warning: 35 60% 50%;
-    --border-success: var(--primary);
-    --border-muted: var(--border);
+    --border-success: var(--success);
 
-    /* ===== GLASSMORPHISM TOKENS ===== */
-    --glass-bg: var(--bg-elevated) / 0.65;
-    --glass-bg-strong: var(--bg-card) / 0.85;
-    --glass-bg-subtle: var(--bg-base) / 0.45;
-    --glass-blur: blur(20px);
-    --glass-blur-strong: blur(40px);
-    --glass-border: 214 14% 9%;
-    --glass-border-opacity: 0.18;
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    /* ===== GLASSMORPHISM — Luxury grade ===== */
+    --glass-bg: 220 40% 3% / 0.70;
+    --glass-bg-strong: 220 40% 4% / 0.88;
+    --glass-bg-subtle: 220 40% 1% / 0.50;
+    --glass-blur: blur(24px) saturate(180%);
+    --glass-blur-strong: blur(48px) saturate(200%);
+    --glass-border: 220 20% 8%;
+    --glass-border-opacity: 0.14;
+    --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.65),
+                    0 0 0 0.5px rgba(180, 210, 255, 0.08);
 
     /* ===== INTERACTIVE STATES ===== */
-    --hover-overlay: 255 255 255 / 0.06;
-    --hover-accent: var(--primary) / 0.12;
-    --active-overlay: 255 255 255 / 0.1;
-    --focus-ring: var(--ring) / 0.6;
-    --focus-ring-offset: 0 0 0 2px var(--bg-base);
+    --hover-overlay: 255 255 255 / 0.05;
+    --hover-overlay-strong: 255 255 255 / 0.09;
+    --active-overlay: 255 255 255 / 0.03;
+    --focus-ring-color: oklch(0.65 0.22 260 / 0.6);
+    --focus-ring: 0 0 0 2px oklch(0 0 0), 0 0 0 4px oklch(0.65 0.22 260 / 0.6);
 
-    /* ===== SEMANTIC COLORS ===== */
-    --color-error: var(--destructive);
-    --color-error-bg: var(--destructive) / 0.12;
-    --color-warning: 35 60% 50%;
-    --color-warning-bg: 35 60% 50% / 0.1;
-    --color-success: var(--primary);
-    --color-success-bg: var(--primary) / 0.1;
-    --color-info: 220 25% 70%;
-    --color-info-bg: 220 25% 70% / 0.1;
+    /* ===== V2 COMPATIBILITY BRIDGE ===== */
+    --v2-accent: oklch(0.65 0.22 260);
+    --v2-accent-hover: oklch(0.72 0.22 260);
+    --v2-accent-foreground: oklch(1 0 0);
+    --v2-accent-subtle: oklch(0.65 0.22 260 / 0.10);
+    --v2-bg-base: oklch(0 0 0);
+    --v2-bg-surface: oklch(0.038 0.005 264);
+    --v2-bg-elevated: oklch(0.055 0.006 264);
+    --v2-bg-hover: oklch(0.095 0.008 264);
+    --v2-bg-active: oklch(0.11 0.009 264);
+    --v2-bg-overlay: oklch(0.072 0.007 264);
+    --v2-text-primary: oklch(0.97 0.003 264);
+    --v2-text-secondary: oklch(0.64 0.012 264);
+    --v2-text-muted: oklch(0.44 0.008 264);
+    --v2-text-tertiary: oklch(0.32 0.006 264);
+    --v2-border: oklch(0.15 0.010 264 / 0.50);
+    --v2-border-subtle: oklch(0.15 0.010 264 / 0.30);
+    --v2-success: oklch(0.82 0.185 155);
+    --v2-success-subtle: oklch(0.82 0.185 155 / 0.10);
+    --v2-error: oklch(0.64 0.255 22);
+    --v2-error-subtle: oklch(0.64 0.255 22 / 0.10);
+    --v2-warning: oklch(0.84 0.175 80);
+    --v2-warning-subtle: oklch(0.84 0.175 80 / 0.10);
+    --v2-accent-rgb: 96 165 255;
 
-    /* ===== SEMANTIC TOKENS (for tailwind.config) ===== */
-    --semantic-success: var(--primary);
-    --semantic-success-fg: var(--primary-foreground);
-    --semantic-success-bg: var(--primary) / 0.08;
-    --semantic-success-border: var(--primary) / 0.2;
-    --semantic-warning: 35 60% 55%;
-    --semantic-warning-fg: 35 15% 8%;
-    --semantic-warning-bg: 35 60% 55% / 0.06;
-    --semantic-warning-border: 35 60% 55% / 0.16;
+    /* ===== SEMANTIC (used in sidebar + trading UI) ===== */
+    --semantic-info: oklch(0.65 0.22 260);
+    --semantic-info-bg: oklch(0.65 0.22 260 / 0.10);
+    --semantic-info-border: oklch(0.65 0.22 260);
+    --semantic-success: var(--success);
+    --semantic-success-fg: var(--success-foreground);
+    --semantic-success-bg: oklch(0.82 0.185 155 / 0.10);
+    --semantic-success-border: oklch(0.82 0.185 155 / 0.24);
+    --semantic-warning: var(--warning);
+    --semantic-warning-fg: var(--warning-foreground);
+    --semantic-warning-bg: oklch(0.84 0.175 80 / 0.10);
+    --semantic-warning-border: oklch(0.84 0.175 80 / 0.24);
     --semantic-error: var(--destructive);
     --semantic-error-fg: var(--destructive-foreground);
-    --semantic-error-bg: var(--destructive) / 0.08;
-    --semantic-error-border: var(--destructive) / 0.16;
-    --semantic-info: 220 25% 70%;
-    --semantic-info-fg: 220 15% 8%;
-    --semantic-info-bg: 220 25% 70% / 0.07;
-    --semantic-info-border: 220 25% 70% / 0.18;
-
-    /* ===== CONTRAST-COMPLIANT TEXT TOKENS ===== */
-    --text-primary: var(--foreground);
-    --text-secondary: var(--muted-foreground);
-    --text-tertiary: var(--muted-foreground);
-    --text-disabled: var(--muted-foreground);
-
-    /* ===== SURFACE TOKENS ===== */
-    --surface-subtle: 0 0% 100% / 0.05;
-    --surface-subtle-hover: 255 255 255 / 0.08;
-    --surface-subtle-active: 255 255 255 / 0.12;
-    --surface-muted: 255 255 255 / 0.08;
-    --surface-muted-hover: 255 255 255 / 0.12;
-    --surface-elevated: 255 255 255 / 0.02;
-    --surface-elevated-hover: 255 255 255 / 0.05;
-
-    /* ===== CHART EXTENSIONS ===== */
-    --chart-positive: var(--primary);
-    --chart-negative: var(--destructive);
-    --chart-neutral: var(--muted-foreground);
-    --chart-grid: 220 15% 18%;
-    --chart-axis: 220 10% 55%;
-    --chart-tooltip: 240 6% 4%;
-    --chart-tooltip-border: 220 20% 20%;
-    --chart-loss: var(--destructive);
-    --chart-win: var(--primary);
-
-    /* ===== 4PX RHYTHM SPACING SCALE ===== */
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-5: 1.25rem;
-    --space-6: 1.5rem;
-    --space-8: 2rem;
-    --space-10: 2.5rem;
-    --space-12: 3rem;
-
-    /* ===== PRODUCT TYPO SCALE ===== */
-    --type-xs: 0.75rem;
-    --type-sm: 0.875rem;
-    --type-md: 1rem;
-    --type-lg: 1.125rem;
-    --type-xl: 1.5rem;
-
-    /* ===== RADIUS + SHADOW SYSTEM ===== */
-    --radius-sm: 0.5rem;
-    --radius-md: 0.75rem;
-    --radius-lg: 1rem;
-    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.28);
-    --shadow-md: 0 8px 18px -12px rgb(0 0 0 / 0.55);
-    --shadow-lg: 0 18px 28px -16px rgb(0 0 0 / 0.7);
-
-    /* ===== ANIMATION TIMING ===== */
-    --transition-fast: 150ms;
-    --transition-base: 200ms;
-    --transition-slow: 300ms;
-    --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
-    --easing-in: cubic-bezier(0.4, 0, 1, 1);
-    --easing-out: cubic-bezier(0, 0, 0.2, 1);
-    --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    /* ===== SPACING ARCHITECTURE (Fluid) ===== */
-    --space-3xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
-    --space-2xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
-    --space-xs: clamp(0.75rem, 0.6rem + 0.75vw, 1rem);
-    --space-sm: clamp(1rem, 0.85rem + 0.75vw, 1.5rem);
-    --space-md: clamp(1.5rem, 1.25rem + 1.25vw, 2.5rem);
-    --space-lg: clamp(2rem, 1.75rem + 1.25vw, 3.5rem);
-    --space-xl: clamp(3rem, 2.5rem + 2.5vw, 5rem);
-    --space-2xl: clamp(4rem, 3.5rem + 2.5vw, 7rem);
-    --space-3xl: clamp(5rem, 4.5rem + 2.5vw, 10rem);
-
-    /* ===== CARD DESIGN TOKENS ===== */
-    --card-radius-sm: 0.5rem;
-    --card-radius-md: 0.75rem;
-    --card-radius-lg: 1rem;
-    --card-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --card-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --card-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --card-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --card-padding-sm: var(--space-xs);
-    --card-padding-md: var(--space-sm);
-    --card-padding-lg: var(--space-md);
-    --card-padding-xl: var(--space-lg);
+    --semantic-error-bg: oklch(0.64 0.255 22 / 0.10);
+    --semantic-error-border: oklch(0.64 0.255 22 / 0.24);
   }
 
   .light {
