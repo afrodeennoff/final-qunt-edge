@@ -55,19 +55,31 @@ const faqs: FAQItem[] = [
 function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className="relative group">
-      {/* Left accent bar — visible when expanded */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-full bg-[var(--accent-blue)] opacity-0 group-data-[state=open]:opacity-100 transition-opacity duration-200" />
       <Card className={cn(
-        'overflow-hidden rounded-xl border bg-[var(--surface-card)]',
-        isOpen ? 'border-[var(--frost-border-strong)]' : 'border-[var(--frost-border)]'
+        'overflow-hidden rounded-[1.7rem] border bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] transition-all duration-300',
+        isOpen
+          ? 'border-white/[0.14] shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_50px_-36px_rgba(0,0,0,0.92)]'
+          : 'border-white/[0.08] shadow-[0_0_0_0.5px_rgba(180,210,255,0.05)]'
       )}>
         <button
           onClick={onToggle}
-          className="flex flex-1 w-full items-center justify-between gap-4 p-4 text-left rounded-xl transition-colors duration-200 hover:bg-[oklch(0.08_0_0)]"
+          className="flex w-full flex-1 items-center justify-between gap-4 p-5 text-left transition-colors duration-200 hover:bg-white/[0.04]"
           aria-expanded={isOpen}
           data-state={isOpen ? 'open' : 'closed'}
         >
-          <span className="pr-4 text-sm font-semibold [font-family:var(--home-display)]">{item.question}</span>
+          <div className="flex items-start gap-4">
+            <span className={cn(
+              'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold uppercase tracking-[0.12em]',
+              isOpen
+                ? 'border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]'
+                : 'border-white/[0.10] bg-white/[0.04] text-foreground/40'
+            )}>
+              Q
+            </span>
+            <span className="pr-4 text-[0.98rem] font-semibold leading-[1.5] [font-family:var(--home-display)]">
+              {item.question}
+            </span>
+          </div>
           <ChevronDown
             className={cn(
               'h-4 w-4 shrink-0 text-[var(--text-tertiary)] transition-transform duration-200',
@@ -82,8 +94,10 @@ function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boole
           )}
         >
           <div className="overflow-hidden">
-            <CardContent className="border-t border-[oklch(0.14_0_0/0.4)] p-4 pt-3">
-              <p className="text-sm leading-relaxed text-foreground/80 [font-family:var(--home-copy)]">{item.answer}</p>
+            <CardContent className="border-t border-white/[0.08] p-5 pt-4">
+              <p className="pl-12 text-sm leading-[1.85] text-foreground/68 [font-family:var(--home-copy)]">
+                {item.answer}
+              </p>
             </CardContent>
           </div>
         </div>
@@ -97,40 +111,65 @@ export default function FAQSection(_props: FAQSectionProps) {
 
   return (
     <section id="faq" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
-      <div className="mx-auto max-w-3xl">
-        <motion.div
-          className="mb-8 text-center"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
-            <HelpCircle className="mr-1.5 h-3 w-3" />
-            FAQ
-          </Badge>
-          <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
-            Common
-            <span className="block text-foreground">questions answered</span>
-          </h2>
-        </motion.div>
+      <div className="mx-auto max-w-[1360px]">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:gap-8">
+          <motion.div
+            className="rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-40px_rgba(0,0,0,0.95)] lg:sticky lg:top-28 lg:p-7"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <Badge variant="outline" className="border-primary/40 bg-primary/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-foreground [font-family:var(--home-copy)]">
+              <HelpCircle className="mr-1.5 h-3 w-3" />
+              FAQ
+            </Badge>
+            <h2 className="mt-5 text-[clamp(2rem,4.9vw,3.9rem)] font-[350] leading-[0.92] tracking-[-0.05em] [font-family:var(--home-display)]">
+              Clear answers for traders evaluating the platform seriously.
+            </h2>
+            <p className="mt-5 max-w-xl text-[0.96rem] leading-[1.8] text-foreground/60 [font-family:var(--home-copy)]">
+              This section is designed to remove uncertainty fast: product scope, broker support, AI behavior, security, pricing, and team usage.
+            </p>
 
-        <div className="space-y-3">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08, ease: MOTION_EASE }}
-            >
-              <FAQAccordion
-                item={faq}
-                isOpen={openIndex === index}
-                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
-              />
-            </motion.div>
-          ))}
+            <div className="mt-8 rounded-[1.6rem] border border-white/[0.08] bg-white/[0.03] p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Best for</p>
+              <p className="mt-3 text-sm leading-[1.75] text-foreground/64">
+                Discretionary futures traders, funded accounts, performance coaches, and teams that want one review system instead of scattered notes and screenshots.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] p-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_24px_60px_-40px_rgba(0,0,0,0.96)] sm:p-5"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3 px-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                Common questions
+              </p>
+              <p className="text-xs text-foreground/42">{faqs.length} answers</p>
+            </div>
+            <div className="space-y-3">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.08, ease: MOTION_EASE }}
+                >
+                  <FAQAccordion
+                    item={faq}
+                    isOpen={openIndex === index}
+                    onToggle={() => setOpenIndex(openIndex === index ? null : index)}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

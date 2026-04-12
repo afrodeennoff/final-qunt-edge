@@ -235,9 +235,9 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            "qe-v2-card flex h-full w-full flex-col bg-sidebar/95",
-            "group-data-[variant=floating]:rounded-[calc(var(--radius)+0.15rem)] group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border/55 group-data-[variant=floating]:shadow-[0_26px_70px_-40px_rgba(4,10,24,0.92)]",
-            "group-data-[variant=inset]:rounded-[calc(var(--radius)+0.15rem)] group-data-[variant=inset]:shadow-[0_26px_70px_-40px_rgba(4,10,24,0.92)]"
+            "flex h-full w-full flex-col border border-white/[0.08] bg-sidebar/92 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_28px_80px_-44px_rgba(0,0,0,0.94)] backdrop-blur-2xl",
+            "group-data-[variant=floating]:rounded-[2rem]",
+            "group-data-[variant=inset]:rounded-[2rem]"
           )}
         >
           {children}
@@ -259,7 +259,7 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-9 rounded-xl border border-[hsl(var(--v2-border)/0.72)] bg-[rgba(255,255,255,0.04)] text-v2-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]", className)}
+      className={cn("size-9 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/72 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08)] hover:border-white/[0.12] hover:bg-white/[0.08] hover:text-foreground", className)}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(event)
         toggleSidebar()

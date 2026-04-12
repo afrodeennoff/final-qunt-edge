@@ -110,8 +110,8 @@ function formatPlanAmount(
 function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1',
-    !popular && 'rounded-2xl border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)] p-6',
-    popular && 'rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)] p-6 relative',
+    !popular && 'rounded-2xl border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
+    popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -354,7 +354,7 @@ function PlusPlanCard({
 
   return (
     <div className="relative z-10 w-full">
-      <div className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-b from-primary/5 to-transparent animate-pulse-slow" />
+      <div className="absolute inset-0 -z-10 rounded-[1.5rem] bg-gradient-to-b from-primary/5 to-transparent animate-pulse-slow" />
       <Card className={getPlanCardClassName(true)}>
         <PlanPopularBadge popular={plan.isPopular ?? true} />
         <CardHeader>
@@ -362,20 +362,20 @@ function PlusPlanCard({
           <CardDescription className="text-sm text-muted-foreground">{plan.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 rounded-xl bg-muted/50 p-4 space-y-3 border border-border/30">
-            <span className="block text-center text-sm font-medium text-foreground">
+          <div className="mb-4 space-y-3 rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
+            <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
               {t('pricing.billingPeriod')}
             </span>
 
-            <div className="grid grid-cols-3 gap-1 rounded-lg border border-border/20 bg-card p-1">
+            <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-white/[0.06] bg-black/25 p-1">
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
                   className={cn(
-                    'text-xs capitalize rounded-md py-2 px-3 transition-all',
+                    'rounded-xl px-3 py-2 text-xs capitalize transition-all',
                     billingPeriod === option.key
-                      ? 'bg-primary text-primary-foreground font-medium'
-                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                      ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
+                      : 'text-foreground/46 hover:bg-white/[0.06] hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
@@ -385,13 +385,13 @@ function PlusPlanCard({
               ))}
             </div>
 
-            <div className="border-t border-border/20 pt-3">
+            <div className="border-t border-white/[0.06] pt-3">
               <button
                 className={cn(
-                  'flex w-full items-center justify-center gap-2 rounded-lg border py-2 px-3 text-xs font-medium transition-all',
+                  'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-all',
                   billingPeriod === 'lifetime'
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                    ? 'border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.75_0.22_260)]'
+                    : 'border-white/[0.08] text-foreground/54 hover:bg-white/[0.06] hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >

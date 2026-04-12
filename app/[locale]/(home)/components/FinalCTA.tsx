@@ -17,6 +17,9 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
   return (
     <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-background" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full bg-[oklch(0.65_0.22_260/0.16)] blur-[130px]" />
+      </div>
 
       <motion.div
         className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center"
@@ -25,9 +28,10 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease }}
       >
-        <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] relative overflow-hidden px-6 py-16 sm:px-12 sm:py-20">
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] px-6 py-16 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-40px_rgba(0,0,0,0.95),0_0_100px_-40px_oklch(0.65_0.22_260/0.16)] sm:px-12 sm:py-20">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.14),transparent_45%)]" />
           <div className="relative z-10">
-            <h2 className="text-[clamp(1.8rem,4.2vw,3.2rem)] font-semibold tracking-[-0.025em] mb-6 text-foreground leading-tight [font-family:var(--home-display)]">
+            <h2 className="mb-6 text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[1.02] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
               Ready to{' '}
               <span className="line-through decoration-muted-foreground/30 decoration-2">stop guessing</span>
               {' '}and{' '}
@@ -36,7 +40,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
               </span>
               ?
             </h2>
-            <p className="text-[0.95rem] sm:text-lg text-muted-foreground/75 mb-10 leading-relaxed [font-family:var(--home-copy)]">
+            <p className="mb-10 text-[0.98rem] leading-[1.7] tracking-[-0.01em] text-foreground/58 sm:text-lg [font-family:var(--home-copy)]">
               Join traders tracking their performance with Qunt Edge.
               Start your free audit today.
             </p>
@@ -51,7 +55,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-primary text-primary-foreground rounded-full font-semibold"
+                  className="rounded-full bg-white px-8 text-[13px] font-semibold tracking-[-0.01em] text-black shadow-[0_0_40px_rgba(255,255,255,0.16)] hover:bg-white/90"
                 >
                   <Link href={`/${locale}/authentication?next=dashboard`}>
                     Start Your Free Audit — No Credit Card
@@ -65,7 +69,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
             <Button
               asChild
               size="lg"
-              className="rounded-full border border-[var(--frost-border)] text-foreground hover:border-[var(--frost-border-strong)]"
+              className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground"
             >
               <Link href={`/${locale}/propfirms`}>
                 Browse Prop Firms
@@ -74,7 +78,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
             </div>
 
             <motion.p
-              className="mt-5 text-[0.78rem] text-muted-foreground/45 tracking-wide"
+              className="mt-5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-foreground/34"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}

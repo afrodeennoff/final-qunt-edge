@@ -95,13 +95,13 @@ Charts use CSS vars for colors: `hsl(var(--chart-1))` through `hsl(var(--chart-8
 - **WidgetSize prop**: All chart components accept `size?: WidgetSize`
 - **Server actions**: Data mutations through server actions → `updateTag()` for cache invalidation
 - **Mobile**: Dashboard has separate mobile layout with summary widgets
-- **V2 shell**: Dashboard pages should inherit the floating-card header, `qe-v2-app-shell` shell rhythm, and `BackgroundGlow` ambient layer.
-- **V2 motion**: Use `MotionSection`/`MotionStagger` for presentational reveal only. Never attach motion to business state transitions that affect dashboard logic.
+- **Obsidian V3 shell**: Dashboard pages should inherit the floating/frosted header rail, `qe-v2-app-shell` shell rhythm, Obsidian card surfaces, and `BackgroundGlow` ambient layer.
+- **Obsidian motion**: Use `MotionSection`/`MotionStagger` for presentational reveal only. Never attach motion to business state transitions that affect dashboard logic. Keep dashboard motion instrument-like and restrained.
 
 ## ANTI-PATTERNS
 
 - **No stacked frames** — Don't wrap card-based components inside bordered panels
-- **No mixed shell language** — New dashboard UI must use the V2 shell/card system, not reintroduce flat legacy bars or mismatched panel styles
+- **No mixed shell language** — New dashboard UI must use the Obsidian V3 shell/card system, not reintroduce flat legacy bars, old V1/V2 hybrids, or mismatched panel styles
 - **No setState in effects** — Use callback-driven resets (onOpenChange handlers)
 - **No Trading Score duplication** — Always use `lib/score-calculator.ts`
 - **No fake data** — Show honest empty states, never synthesize fallback metrics

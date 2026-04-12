@@ -184,24 +184,24 @@ type AIFeature = (typeof aiFeatures)[number]
 function ProblemCard({ problem }: { problem: Problem }) {
   const Icon = problem.icon
   return (
-    <div className="relative h-full overflow-hidden rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)] transition-colors">
-      <div className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[oklch(0.08_0_0)] border border-[var(--frost-border-alt)]">
+    <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
+      <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04] shadow-[0_0_20px_oklch(0.65_0.22_260/0.16)]">
         <Icon className="h-4 w-4 text-primary" />
       </div>
       <Badge
         variant="outline"
         size="sm"
-        className="mb-3 rounded-full border-primary/30 bg-primary/10 text-primary"
+        className="mb-4 rounded-full border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.75_0.22_260)]"
       >
         {problem.badge}
       </Badge>
-      <h3 className="text-[0.95rem] font-semibold tracking-[-0.01em] text-foreground [font-family:var(--home-display)]">
+      <h3 className="text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
         {problem.title}
       </h3>
-      <p className="mt-2 text-[0.82rem] leading-relaxed text-muted-foreground/70 [font-family:var(--home-copy)]">
+      <p className="mt-3 text-[0.9rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
         {problem.description}
       </p>
-      <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[0.76rem] font-medium text-primary">
+      <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/74">
         <ArrowRight className="w-3 h-3" />
         <span>{problem.solution}</span>
       </div>
@@ -214,11 +214,11 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
   return (
     <div
-      className={`relative h-full overflow-hidden rounded-2xl border ${feature.highlighted ? 'border-[var(--frost-border-strong)] bg-[var(--surface-card)]' : 'border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)]'} transition-colors`}
+      className={`relative h-full overflow-hidden rounded-[1.75rem] border p-6 ${feature.highlighted ? 'border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.045_0.006_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.18),0_0_40px_oklch(0.65_0.22_260/0.08),0_18px_44px_-30px_rgba(0,0,0,0.9)]' : 'border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] hover:border-white/[0.14]'} transition-all duration-300 hover:-translate-y-1`}
     >
       <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
         <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-xl border border-primary/40 bg-primary/10">
+        <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04]">
           <Icon className="w-5 h-5 text-primary" />
         </div>
       </div>
@@ -236,7 +236,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       <h3 className="relative text-lg font-medium text-gradient-primary [font-family:var(--home-display)]">
         {feature.title}
       </h3>
-      <p className="relative mt-1.5 text-[0.88rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
+      <p className="relative mt-2.5 text-[0.92rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
     </div>
@@ -247,17 +247,17 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
   const Icon = feature.icon
 
   return (
-    <div className="relative h-full overflow-hidden rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)] transition-colors">
+    <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
       <div className="relative mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl">
         <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
-        <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-primary/40 bg-primary/10">
+        <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04]">
           <Icon className="w-4 h-4 text-primary" />
         </div>
       </div>
-      <h3 className="relative text-[0.95rem] font-medium text-foreground [font-family:var(--home-display)]">
+      <h3 className="relative text-[1rem] font-medium tracking-[-0.015em] text-foreground [font-family:var(--home-display)]">
         {feature.title}
       </h3>
-      <p className="relative mt-1.5 text-[0.82rem] leading-[1.5] text-muted-foreground/72 [font-family:var(--home-copy)]">
+      <p className="relative mt-2.5 text-[0.88rem] leading-[1.65] text-foreground/58 [font-family:var(--home-copy)]">
         {feature.description}
       </p>
     </div>
@@ -277,7 +277,7 @@ export default function FeaturesBento() {
             transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
           >
             <p
-              className={`${TYPO_EYEBROW} mb-3 text-muted-foreground/62 [font-family:var(--home-copy)]`}
+              className={`${TYPO_EYEBROW} mb-3 text-foreground/34 [font-family:var(--home-copy)]`}
             >
               Platform Capabilities
             </p>
@@ -289,7 +289,7 @@ export default function FeaturesBento() {
                 trade smarter
               </span>
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-[0.95rem] leading-[1.5] text-muted-foreground/72 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-[0.98rem] leading-[1.7] tracking-[-0.01em] text-foreground/56 sm:text-lg">
               Whether you&apos;re protecting a funded account or sharpening your personal
               edge — analytics, AI coaching, and team collaboration in one platform.
             </p>
@@ -307,7 +307,7 @@ export default function FeaturesBento() {
           </MotionStagger>
 
           <div className="mb-8">
-            <Badge variant="secondary" size="sm" className="rounded-full px-3">
+            <Badge variant="secondary" size="sm" className="rounded-full border-white/[0.08] bg-white/[0.04] px-3 text-foreground/62">
               Features
             </Badge>
           </div>
@@ -327,7 +327,7 @@ export default function FeaturesBento() {
             <Badge
               variant="outline"
               size="sm"
-              className="rounded-full border-primary/35 bg-primary/10 px-3 text-primary"
+              className="rounded-full border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] px-3 text-[oklch(0.75_0.22_260)]"
             >
               AI-Powered
             </Badge>
@@ -344,15 +344,15 @@ export default function FeaturesBento() {
             ))}
           </MotionStagger>
 
-          <div className="mt-5 rounded-2xl border border-[var(--frost-border)] bg-[oklch(0.05_0_0)] p-6">
+          <div className="mt-5 rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[hsl(var(--muted-foreground)/0.85)] text-sm leading-[1.5]">
+              <p className="text-sm leading-[1.7] text-foreground/58">
                 AI decisions stay auditable with a transparent reason trail, so
                 every recommendation can be reviewed.
               </p>
               <Badge
                 variant="outline"
-                className="w-fit shrink-0 rounded-full border-primary/35 bg-primary/10 text-primary"
+                className="w-fit shrink-0 rounded-full border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.75_0.22_260)]"
               >
                 Explainable AI
               </Badge>

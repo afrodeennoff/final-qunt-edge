@@ -93,24 +93,24 @@ export default function PricingSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease }}
         >
-          <h2 className="text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold tracking-[-0.025em] mb-5 text-foreground leading-tight [font-family:var(--home-display)]">
+          <h2 className="mb-5 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] tracking-[-0.045em] text-foreground leading-tight [font-family:var(--home-display)]">
             Simple, transparent{' '}
             <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">pricing</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground/80 mb-8 leading-relaxed [font-family:var(--home-copy)]">
+          <p className="mb-8 text-base leading-[1.8] text-foreground/56 sm:text-lg [font-family:var(--home-copy)]">
             Start free. Scale as you grow.
           </p>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-[oklch(0.08_0_0)] border border-[var(--frost-border)]">
+          <div className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.04] p-1">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
               aria-pressed={!isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 !isAnnual
-                  ? 'bg-primary text-primary-foreground rounded-full'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  ? 'rounded-full bg-white text-black'
+                  : 'text-foreground/46 hover:text-foreground'
               }`}
             >
               Monthly
@@ -121,8 +121,8 @@ export default function PricingSection() {
               aria-pressed={isAnnual}
               className={`px-5 py-2.5 rounded-lg text-[0.85rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 ${
                 isAnnual
-                  ? 'bg-primary text-primary-foreground rounded-full'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  ? 'rounded-full bg-white text-black'
+                  : 'text-foreground/46 hover:text-foreground'
               }`}
             >
               Annual <span className="text-success font-semibold">-20%</span>
@@ -131,7 +131,7 @@ export default function PricingSection() {
         </motion.div>
 
         {/* Pricing Cards - Glassmorphism */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -140,37 +140,37 @@ export default function PricingSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1, ease }}
               className={`
-                relative rounded-2xl border p-7 lg:p-8 transition-all duration-300
+                relative rounded-[2rem] border p-7 lg:p-8 transition-all duration-300
                 ${
                   plan.variant === 'featured'
-                    ? 'border border-[var(--frost-border-strong)] bg-[var(--surface-card)]'
-                    : 'border border-[var(--frost-border)] bg-[var(--surface-card)] hover:border-[var(--frost-border-strong)]'
+                    ? 'border border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.045_0.006_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.18),0_0_40px_oklch(0.65_0.22_260/0.08),0_28px_80px_-44px_rgba(0,0,0,0.95)]'
+                    : 'border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] hover:-translate-y-1 hover:border-white/[0.14]'
                 }
               `}
             >
               {plan.variant === 'featured' && (
-                <div className="absolute -inset-0.5 rounded-3xl border border-[var(--accent-blue)]/20 -z-10" />
+                <div className="absolute -inset-0.5 -z-10 rounded-[2.1rem] border border-[var(--accent-blue)]/20" />
               )}
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground rounded-full px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wider">
-                    {plan.badge}
-                  </span>
-                </div>
+                    <span className="rounded-full bg-white px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-black">
+                      {plan.badge}
+                    </span>
+                  </div>
               )}
 
               {/* Plan Name */}
-              <h3 className="text-lg font-semibold text-foreground mb-2 tracking-[-0.01em] [font-family:var(--home-display)]">
+              <h3 className="mb-2 text-lg font-semibold tracking-[-0.02em] text-foreground [font-family:var(--home-display)]">
                 {plan.name}
               </h3>
 
               {/* Price */}
               <div className="mb-4">
-                  <span className="text-5xl lg:text-[3.25rem] font-bold font-mono tabular-nums tracking-tight text-white">
+                  <span className="font-mono text-5xl font-[250] tracking-[-0.05em] tabular-nums text-white lg:text-[3.25rem]">
                   {plan.pricing[billingCycle]}
                 </span>
-                <span className="text-muted-foreground/70 text-[0.9rem]">{plan.period[billingCycle]}</span>
+                <span className="text-[0.9rem] text-foreground/38">{plan.period[billingCycle]}</span>
                 {plan.name === 'Pro' && billingCycle === 'annual' && (
                   <span className="ml-2 text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-success">
                     Billed annually
@@ -179,7 +179,7 @@ export default function PricingSection() {
               </div>
 
               {/* Description */}
-              <p className="text-[0.9rem] text-muted-foreground/70 mb-7 leading-relaxed [font-family:var(--home-copy)]">
+              <p className="mb-7 text-[0.92rem] leading-[1.75] text-foreground/56 [font-family:var(--home-copy)]">
                 {plan.description}
               </p>
 
@@ -187,10 +187,10 @@ export default function PricingSection() {
               <ul className="space-y-3 mb-7">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2.5">
-                    <div className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-[var(--accent-green-subtle)] flex items-center justify-center">
+                    <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent-green-subtle)]">
                       <Check className="w-3 h-3 text-[var(--accent-green)]" />
                     </div>
-                    <span className="text-[0.875rem] text-muted-foreground/80 [font-family:var(--home-copy)]">
+                    <span className="text-[0.875rem] text-foreground/62 [font-family:var(--home-copy)]">
                       {feature}
                     </span>
                   </li>
@@ -200,7 +200,7 @@ export default function PricingSection() {
               {plan.variant === 'featured' ? (
                   <MagneticButton strength={6}>
                   <Button
-                    className="w-full rounded-full h-11 text-[0.9rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 bg-primary text-primary-foreground"
+                    className="h-11 w-full rounded-full bg-white text-[0.9rem] font-semibold text-black transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:bg-white/90"
                   >
                     {plan.cta}
                   </Button>
@@ -208,7 +208,7 @@ export default function PricingSection() {
               ) : (
                 <Button
                   variant="outline"
-                  className="w-full rounded-xl h-11 text-[0.9rem] font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 border border-[var(--frost-border)] hover:border-[var(--frost-border-strong)]"
+                  className="h-11 w-full rounded-full border border-white/[0.12] bg-white/[0.04] text-[0.9rem] font-medium text-foreground/76 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground"
                 >
                   {plan.cta}
                 </Button>

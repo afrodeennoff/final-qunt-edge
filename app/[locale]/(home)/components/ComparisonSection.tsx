@@ -60,29 +60,37 @@ const cardVariants = {
 
 export default function ComparisonSection() {
   return (
-    <section className="relative border-y border-[var(--frost-border)] bg-[var(--surface-card)] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36 overflow-hidden">
+    <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
 
       <div className="relative mx-auto max-w-6xl">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <motion.div
-          className="mb-12 text-center sm:mb-16"
+          className="rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-44px_rgba(0,0,0,0.95)] sm:p-8"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: MOTION_EASE }}
         >
-          <Badge variant="outline" className="border border-[var(--frost-border)] bg-[oklch(0.08_0_0)] px-3 py-1 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">
+          <Badge variant="outline" className="border border-white/[0.12] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 [font-family:var(--home-copy)]">
             Difference From Others
           </Badge>
-          <h2 className="mt-3 text-[clamp(1.9rem,4.9vw,3.45rem)] font-semibold leading-[0.92] tracking-[-0.025em] [font-family:var(--home-display)]">
+          <h2 className="mt-4 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] leading-[0.92] tracking-[-0.04em] [font-family:var(--home-display)]">
             Why we&apos;re different
             <span className="block text-foreground">from standard trading analytics tools</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground/80 leading-[1.75] [font-family:var(--home-copy)]">
+          <p className="mt-5 max-w-xl leading-[1.85] text-foreground/56 [font-family:var(--home-copy)]">
             See how Qunt Edge compares to traditional journaling tools and basic spreadsheet tracking.
           </p>
+          <div className="mt-8 space-y-3">
+            {['Execution-first review model', 'AI guidance with reason trails', 'Integrated workflow instead of stitched tools'].map((line) => (
+              <div key={line} className="rounded-[1.2rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-foreground/72">
+                {line}
+              </div>
+            ))}
+          </div>
         </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {differentiators.map((item, i) => {
             const Icon = item.icon
             return (
@@ -94,7 +102,7 @@ export default function ComparisonSection() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <Card variant="glass" className="group h-full rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] transition-colors duration-200 hover:border-[var(--frost-border-strong)]">
+                <Card variant="glass" className="group h-full rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
                   <CardContent className="flex flex-col gap-4 p-5">
                     <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl">
                       <div className={`absolute inset-0 rounded-xl blur-sm ${item.glowBg}`} />
@@ -104,10 +112,10 @@ export default function ComparisonSection() {
                     </div>
 
                     <div>
-                      <h3 className="text-2xl font-semibold tracking-[-0.01em] [font-family:var(--home-display)]">
+                      <h3 className="text-[1.35rem] font-semibold tracking-[-0.02em] [font-family:var(--home-display)]">
                         {item.title}
                       </h3>
-                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground/80 [font-family:var(--home-copy)]">
+                      <p className="mt-3 text-sm leading-[1.75] text-foreground/56 [font-family:var(--home-copy)]">
                         {item.description}
                       </p>
                     </div>
@@ -116,6 +124,7 @@ export default function ComparisonSection() {
               </motion.div>
             )
           })}
+        </div>
         </div>
       </div>
     </section>

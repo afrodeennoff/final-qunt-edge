@@ -107,7 +107,7 @@ export function UnifiedMobileNav({
           type="button"
           variant="ghost"
           className={cn(
-            'h-11 w-11 rounded-2xl border border-[hsl(var(--v2-border)/0.75)] bg-[rgba(255,255,255,0.04)] p-0 text-sidebar-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] lg:hidden',
+            'h-11 w-11 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-0 text-sidebar-foreground/72 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08)] lg:hidden',
             triggerClassName
           )}
           aria-label="Open navigation menu"
@@ -123,7 +123,7 @@ export function UnifiedMobileNav({
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.
         </SheetDescription>
-        <div className="qe-v2-card flex h-full flex-col overflow-y-auto rounded-[calc(var(--radius)+0.2rem)]">
+        <div className="flex h-full flex-col overflow-y-auto rounded-[2rem] border border-white/[0.08] bg-black/78 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-36px_rgba(0,0,0,0.92)] backdrop-blur-2xl">
           {showUser && (
             <>
               <div className="px-3 pt-6 pb-2">
@@ -151,10 +151,10 @@ export function UnifiedMobileNav({
                             href={link.href.startsWith('/') ? link.href : `/${locale}${link.href}`}
                             onClick={() => setOpen(false)}
                             className={cn(
-                              'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200 min-h-[44px]',
+                              'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200',
                               active
-                                ? 'bg-sidebar-primary/14 text-sidebar-foreground ring-1 ring-sidebar-primary/22'
-                                : 'text-sidebar-foreground/70 hover:bg-sidebar-primary/8 hover:text-sidebar-foreground'
+                                ? 'border border-white/[0.08] bg-white/[0.04] text-sidebar-foreground shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.16)]'
+                                : 'text-sidebar-foreground/62 hover:bg-white/[0.05] hover:text-sidebar-foreground'
                             )}
                           >
                             {link.icon && (

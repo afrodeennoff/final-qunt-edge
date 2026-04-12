@@ -55,7 +55,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
           "group relative overflow-hidden text-foreground transition-all duration-200",
-          accent && "border-transparent",
+          accent && variant !== "gradient-border" && "border-transparent",
           variant === "default" && [
             "rounded-2xl border bg-[oklch(0.038_0.005_264)]",
             "border-white/[0.08]",
@@ -76,10 +76,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           ],
           variant === "flat" && "border-0 bg-transparent shadow-none rounded-2xl",
           variant === "gradient-border" && [
-            "rounded-2xl border border-white/[0.12] bg-gradient-to-br from-white/[0.05] to-transparent",
+            "rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent",
             "shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
-            accent && `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}`,
-            !accent && "border border-white/[0.12]",
+            accent ? `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}` : "border border-white/[0.12]",
           ],
           variant === "frost" && [
             "rounded-2xl bg-transparent",
@@ -113,8 +112,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
 
         {variant === "gradient-border" && (
-          <div className="absolute inset-0 overflow-hidden rounded-[calc(0.75rem-1.5px)]">
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]" />
+          <div className="absolute inset-[1px] overflow-hidden rounded-[calc(1rem-1px)]">
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.038_0.005_264/0.98),oklch(0.055_0.006_264/0.96))]" />
           </div>
         )}
         {isLoading && (
@@ -139,7 +138,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         )}
 
-        <div className={cn("relative z-10 rounded-[inherit]", variant === "gradient-border" && "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]")}>{children}</div>
+        <div className={cn("relative z-10 rounded-[inherit]", variant === "gradient-border" && "rounded-[calc(1rem-1px)]")}>{children}</div>
       </div>
     )
   }

@@ -68,7 +68,8 @@ qunt-edge/
 - **ESLint**: `no-explicit-any` = ERROR, `no-console` = ERROR (warn/error only), complexity ≤ 10
 - **TypeScript**: Strict mode, bundler resolution, ES2017 target
 - **Dark-only theme**: No light mode exists. All surfaces are dark.
-- **V2 shell system**: Use `qe-v2-app-shell`, `qe-v2-card`, `BackgroundGlow`, and `MotionSection`/`MotionStagger` for new page shells.
+- **Obsidian V3 visual system**: Treat the current product shell as a direct-replace dark-only system built on source-owned shadcn primitives. Use `qe-v2-app-shell` as the layout hook, but prefer the Obsidian V3 tokens, frosted shell bars, luxury card surfaces, and restrained motion treatment across home, marketing, auth, dashboard, teams, admin, shared, and embed surfaces.
+- **Primitive-first visual edits**: Prefer updating shared primitives in `components/ui/**` over route-local one-offs. Keep Radix `data-*` styling, `asChild`, and existing component exports intact.
 - **State management**: Zustand with persist middleware. `useTradingDomainStore` is source of truth for trades.
 - **Data flow**: Server Components → cached functions (`use cache`) → Prisma. Mutations → server actions → `updateTag()`.
 
@@ -117,8 +118,8 @@ npm run analyze:bundle         # Bundle analysis
 - **Legacy localized import redirect**: Keep `app/[locale]/(authentication)/import` as a `page.tsx` redirect using `next/navigation`. Do not reintroduce a `route.ts` redirect there unless the full build/deploy path is reverified.
 - **Firm detail routing**: In `app/[locale]/(landing)/firm/[slug]/page.tsx`, alias slug redirects must only target canonical slugs that resolve in DB; otherwise redirect to `/${locale}/propfirms`.
 - **V2 components**: Re-exports of V1 (`CardV2 = Card`). Use V2 imports for new work: `import { CardV2 as Card } from '@/components/ui/v2'`.
-- **V2 docs**: Visual system and migration rules live in `docs/V2_VISUAL_SYSTEM_GUIDE.md`.
-- **V2 rollout**: Keep behavior unchanged while migrating visuals. Prefer shared primitive/shell upgrades over route-local one-offs.
+- **Obsidian docs**: The current visual system rules live in `docs/V2_VISUAL_SYSTEM_GUIDE.md` and define the Obsidian V3 token, shell, card, and motion language.
+- **Visual-only policy**: Keep behavior unchanged during redesign work. No route/query/API/auth/store/server contract changes are allowed in visual passes.
 - **Auth sync Prisma reads**: In `ensureUserInDatabase` and similar auth-critical user flows, never use implicit full-row Prisma reads. Always use explicit minimal `select` and add schema-mismatch fallback for `auth_user_id` lookups.
 - **Live-schema optional columns**: For production-facing Prisma reads/writes that touch optional or newly introduced columns (for example trader-profile leaderboard visibility), probe column availability first and degrade explicitly when the live DB schema does not have that column.
 - **User id resolver precedence**: Keep auth-id resolution consistent across `server/auth.ts`, `server/trades.ts`, and `server/team-membership.ts` — when `id` and `auth_user_id` diverge, prefer the `auth_user_id` mapped `User.id` row first.
@@ -135,7 +136,7 @@ npm run analyze:bundle         # Bundle analysis
 - **Dashboard chart loading**: In `server/equity-chart.ts`, keep Prisma reads minimal via explicit `select` projections. In the client chart, if the server action is slow/fails/returns empty while local trades exist, fall back to local computation instead of indefinite loading UI.
 - **Dashboard widget chrome ownership**: In `app/[locale]/dashboard/components/widget-canvas.tsx`, keep normal-mode wrappers visually transparent. Widget borders/backgrounds belong to the widget surface component (`WidgetShell`, `ChartSurface`, `StatsCard`, `Card`); only customize mode may add outer shell chrome.
 - **Dashboard header action styling**: Keep `dashboard-header` action controls on one subdued rounded-pill system with low-opacity borders/backgrounds. Do not mix heavy square outlines and pill controls in the same top bar.
-- **V2 motion**: Motion must stay presentation-only. Respect reduced motion and avoid any animation that changes data flow, navigation behavior, or layout contracts.
+- **Obsidian motion**: Motion must stay presentation-only. Respect reduced motion and avoid any animation that changes data flow, navigation behavior, or layout contracts. Favor slow ambient glow, staggered reveal, and restrained hover elevation over dramatic movement.
 - **Home page shell**: `app/[locale]/(home)/layout.tsx` must opt out of the marketing sidebar via `MarketingLayoutShell showSidebar={false}`. Do not mount `LandingSidebar` on the home page.
 - **Cached Prisma helper style**: For server read helpers that are wrapped by `'use cache'`, prefer direct `async/await` loaders returning plain objects over `Promise.all(...).then(...)` / `query.then(...)` chains. Re-verify full `npm run typecheck` after any cache-helper refactor.
 - **Server barrel exports**: In shared server barrels like `server/database.ts`, do not `export *` from modules that contain cached server loaders. Use explicit named re-exports so Next.js generated `$$RSC_SERVER_CACHE_*` internals cannot collide during build.

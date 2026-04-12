@@ -107,27 +107,27 @@ export function DashboardHeader() {
         >
             <div className="relative mx-auto max-w-[1800px]">
                 <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_32%),radial-gradient(circle_at_right,rgba(16,185,129,0.08),transparent_30%)] opacity-80" />
-                <div className="qe-v2-card relative flex min-h-[4.4rem] items-center justify-between gap-3 px-3 py-2.5 sm:gap-4 sm:px-4">
+                <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-white/[0.08] bg-black/72 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_60px_-36px_rgba(0,0,0,0.92)] backdrop-blur-2xl sm:gap-4 sm:px-4">
                     <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-                        <SidebarTrigger className="h-10 w-10 shrink-0 rounded-2xl border border-v2-border/45 bg-v2-bg-surface/78 text-v2-text-secondary shadow-[0_16px_32px_-24px_rgba(8,15,34,0.92)] transition-all duration-200 hover:border-v2-border/70 hover:bg-v2-bg-hover hover:text-v2-text-primary md:h-9 md:w-9" />
+                        <SidebarTrigger className="h-10 w-10 shrink-0 rounded-2xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground md:h-9 md:w-9" />
                         <div className="flex min-w-0 items-center gap-3">
-                            <div className="hidden h-8 w-px bg-gradient-to-b from-v2-border/0 via-v2-border/45 to-v2-border/0 sm:block" />
+                            <div className="hidden h-8 w-px bg-gradient-to-b from-white/0 via-white/[0.12] to-white/0 sm:block" />
                             <div className="min-w-0 max-w-[min(32rem,44vw)]">
                                 <div className="flex items-center gap-2.5">
                                     {showSectionLabel && (
                                         <span className={cn(
-                                            'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em]',
-                                            'border-v2-border/30 bg-v2-bg-surface/80 text-v2-text-secondary',
+                                            'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
+                                            'border-white/[0.12] bg-white/[0.04] text-foreground/34',
                                             'backdrop-blur-sm'
                                         )}>
                                             {sectionLabel}
                                         </span>
                                     )}
-                                    <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-v2-text-primary sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                                    <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
                                         {title}
                                     </h1>
                                 </div>
-                                <p className="hidden truncate pt-1 text-xs text-v2-text-secondary/85 xl:block">
+                                <p className="hidden truncate pt-1 text-xs text-foreground/46 xl:block">
                                     {subtitle}
                                 </p>
                             </div>
@@ -157,12 +157,12 @@ export function DashboardHeader() {
                                 {!isPlusUser() && (
                                     <Link href={billingHref}>
                                         <button className={cn(
-                                            'group flex h-10 items-center gap-2 rounded-full border border-v2-border/40 bg-[linear-gradient(135deg,rgba(35,52,87,0.92),rgba(16,24,42,0.9))] px-4',
-                                            'text-[10px] font-semibold uppercase tracking-[0.22em] text-v2-text-primary shadow-[0_20px_40px_-30px_rgba(37,99,235,0.86)] transition-all duration-200',
-                                            'hover:-translate-y-0.5 hover:border-v2-accent/55 hover:shadow-[0_26px_46px_-28px_rgba(37,99,235,0.8)]',
-                                            'active:translate-y-0 active:scale-[0.98]'
-                                        )}>
-                                            <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
+                                        'group flex h-10 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4',
+                                        'text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground shadow-[0_20px_40px_-30px_rgba(37,99,235,0.36)] transition-all duration-200',
+                                        'hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.08] hover:shadow-[0_26px_46px_-28px_rgba(37,99,235,0.5)]',
+                                        'active:translate-y-0 active:scale-[0.98]'
+                                    )}>
+                                        <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
                                             <span>Upgrade</span>
                                         </button>
                                     </Link>
@@ -177,7 +177,7 @@ export function DashboardHeader() {
 
             {isMobile && isDashboardRoot && isWidgetsTab ? (
                 <div className="relative mx-auto max-w-[1800px] pt-2">
-                    <div className="qe-v2-card px-2 py-2 sm:px-3">
+                    <div className="rounded-[1.75rem] border border-white/[0.08] bg-black/68 px-2 py-2 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_18px_40px_-28px_rgba(0,0,0,0.88)] backdrop-blur-2xl sm:px-3">
                         <DashboardHeaderWidgetControls isMobile={isMobile} />
                     </div>
                 </div>
@@ -188,7 +188,7 @@ export function DashboardHeader() {
                     <div className={cn(
                         'relative mx-auto max-w-[1800px] pt-2'
                     )}>
-                        <div className="qe-v2-card px-3 py-2">
+                        <div className="rounded-[1.75rem] border border-white/[0.08] bg-black/68 px-3 py-2 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_18px_40px_-28px_rgba(0,0,0,0.88)] backdrop-blur-2xl">
                             <ActiveFilterTags showAccountNumbers={true} />
                         </div>
                     </div>

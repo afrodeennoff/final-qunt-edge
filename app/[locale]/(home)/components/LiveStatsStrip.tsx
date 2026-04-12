@@ -74,10 +74,15 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="relative w-full border-y border-[var(--frost-border)] bg-[var(--surface-card)] py-10"
+      className="relative w-full py-10"
     >
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+        <div className="rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] px-5 py-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] sm:px-8">
+          <div className="mb-5 flex items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/32">Desk Pulse</span>
+            <span className="text-[11px] font-medium tracking-[-0.01em] text-foreground/46">Live activity snapshot across the platform</span>
+          </div>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
           {stats.map((stat) => (
             <motion.div
               key={stat.label}
@@ -92,6 +97,7 @@ export default function LiveStatsStrip() {
               />
             </motion.div>
           ))}
+          </div>
         </div>
       </div>
     </section>

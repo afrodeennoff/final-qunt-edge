@@ -202,13 +202,13 @@ export default function EmbedPage() {
       return (selectedCharts && filtered.length === 0 ? chartDefinitions : filtered).map((component) => (
         <div 
           key={component.key}
-          className="group relative cursor-pointer rounded-[calc(var(--radius)+0.5rem)] transition-transform duration-200 hover:-translate-y-1"
+          className="group relative cursor-pointer rounded-[2rem] transition-transform duration-200 hover:-translate-y-1"
           onClick={() => {
             sendChartClickMessage(component.key, formatChartName(component.key))
           }}
           title={`Click to add "${formatChartName(component.key)}" to selection`}
         >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-v2-border/0 transition-colors duration-200 group-hover:border-v2-border/65 group-hover:shadow-[0_26px_48px_-36px_rgba(16,185,129,0.55)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-[inherit] border border-white/[0.04] transition-colors duration-200 group-hover:border-white/[0.12] group-hover:shadow-[0_26px_48px_-36px_rgba(16,185,129,0.35)]" />
           <div className="relative">{component.render()}</div>
         </div>
       ))
@@ -239,32 +239,32 @@ export default function EmbedPage() {
           <Toaster />
           <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-5 lg:px-6 lg:pt-6">
             <MotionSection delay={0.03}>
-              <section className="qe-v2-card overflow-hidden px-5 py-5 lg:px-6">
-                <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                  <div className="space-y-2">
-                    <div className="inline-flex w-fit rounded-full border border-v2-border/30 bg-v2-bg-surface/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-v2-text-secondary">
+              <section className="overflow-hidden rounded-[2rem] border border-white/[0.08] bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-34px_rgba(0,0,0,0.9)] backdrop-blur-2xl lg:px-6">
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
+                  <div className="rounded-[1.8rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+                    <div className="inline-flex w-fit rounded-full border border-white/[0.12] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
                       Embed Library
                     </div>
-                    <div>
-                      <h1 className="text-xl font-semibold tracking-tight text-v2-text-primary lg:text-2xl">
+                    <div className="pt-4">
+                      <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
                         Qunt Edge chart modules
                       </h1>
-                      <p className="max-w-3xl pt-1 text-sm text-v2-text-secondary">
+                      <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-foreground/56">
                         Production-ready embed cards with preserved query-param theming, selection, and postMessage contracts.
                       </p>
                     </div>
                   </div>
-                  <MotionStagger className="grid gap-2 text-xs text-v2-text-secondary sm:grid-cols-2">
+                  <MotionStagger className="grid gap-2 text-xs text-foreground/50 sm:grid-cols-2 lg:grid-cols-1">
                     <MotionStaggerItem>
-                      <div className="rounded-2xl border border-v2-border/30 bg-v2-bg-surface/68 px-3 py-2">
-                        <span className="block text-[10px] uppercase tracking-[0.18em] text-v2-text-muted">Preset</span>
-                        <span className="block pt-1 text-sm font-medium text-v2-text-primary">{preset ?? 'Default'}</span>
+                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] px-3 py-2.5">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Preset</span>
+                        <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                       </div>
                     </MotionStaggerItem>
                     <MotionStaggerItem>
-                      <div className="rounded-2xl border border-v2-border/30 bg-v2-bg-surface/68 px-3 py-2">
-                        <span className="block text-[10px] uppercase tracking-[0.18em] text-v2-text-muted">Charts</span>
-                        <span className="block pt-1 text-sm font-medium text-v2-text-primary">
+                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] px-3 py-2.5">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Charts</span>
+                        <span className="block pt-1 text-sm font-medium text-foreground">
                           {selectedCharts ? Array.from(selectedCharts).length : 'All'}
                         </span>
                       </div>

@@ -33,8 +33,13 @@ const capabilityCards = [
 
 export default function Hero({ locale }: { locale: string }) {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-20 pt-[74px]">
-        <div className="absolute inset-0 bg-background" />
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-24 pt-[88px]">
+      <div className="absolute inset-0 bg-background" />
+      <div className="pointer-events-none absolute inset-0 opacity-80">
+        <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[oklch(0.65_0.22_260/0.18)] blur-[120px]" />
+        <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-[oklch(0.82_0.185_155/0.08)] blur-[130px]" />
+        <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [background-size:72px_72px] opacity-40" />
+      </div>
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
@@ -45,17 +50,17 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <Badge
               variant="outline"
-              className="mb-8 rounded-full border border-[var(--frost-border)] bg-[oklch(0.06_0_0)] px-4 py-1.5 backdrop-blur-sm"
+              className="mb-8 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)] backdrop-blur-2xl"
             >
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2" />
-              <span className="text-[0.75rem] tracking-[0.08em] text-muted-foreground">
+              <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_oklch(0.65_0.22_260/0.7)] animate-pulse" />
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/62">
                 Precision Trading Intelligence
               </span>
             </Badge>
           </motion.div>
 
           <motion.h1
-            className="max-w-4xl text-[clamp(2.45rem,6vw,4.9rem)] font-medium leading-[0.98] tracking-[-0.032em] text-foreground [font-family:var(--home-display)]"
+            className="max-w-5xl text-[clamp(3.2rem,7vw,6.6rem)] font-[350] leading-[0.94] tracking-[-0.055em] text-foreground [font-family:var(--home-display)]"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease }}
@@ -67,7 +72,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.h1>
 
           <motion.p
-            className="mx-auto mb-8 mt-6 max-w-2xl text-[clamp(1rem,2vw,1.2rem)] leading-[1.5] text-muted-foreground/90 [font-family:var(--home-copy)]"
+            className="mx-auto mb-10 mt-6 max-w-2xl text-[clamp(1rem,2vw,1.18rem)] font-[350] leading-[1.7] tracking-[-0.015em] text-foreground/58 [font-family:var(--home-copy)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3, ease }}
@@ -86,7 +91,7 @@ export default function Hero({ locale }: { locale: string }) {
               <Button
                 asChild
                 size="lg"
-                className="h-12 w-full rounded-full bg-primary px-8 text-[0.9rem] font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto"
+                className="h-12 w-full rounded-full bg-white px-8 text-[13px] font-semibold tracking-[-0.01em] text-black shadow-[0_0_40px_rgba(255,255,255,0.18)] hover:bg-white/90 sm:w-auto"
               >
                 <Link href={`/${locale}/authentication?next=dashboard`}>
                   Start Free Audit
@@ -97,7 +102,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="group h-12 w-full rounded-full border border-[var(--frost-border)] bg-transparent px-8 text-[0.9rem] text-foreground transition-all duration-200 hover:bg-white/10 sm:w-auto"
+              className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground sm:w-auto"
             >
               <a href="#how-it-works">
                 Watch Demo
@@ -107,7 +112,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.div>
 
           <motion.p
-            className="mb-10 text-[0.78rem] tracking-wide text-muted-foreground/55"
+            className="mb-12 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-foreground/38"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.45 }}
@@ -116,7 +121,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.p>
 
           <motion.div
-            className="mb-10 grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-3"
+            className="mb-12 grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-3"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.5, ease }}
@@ -124,15 +129,15 @@ export default function Hero({ locale }: { locale: string }) {
             {capabilityCards.map((card) => (
               <div
                 key={card.title}
-                className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4 text-left"
+                className="rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-4 text-left shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_16px_40px_-28px_rgba(0,0,0,0.88)]"
               >
                 <div
-                  className={`rounded-xl border border-[var(--frost-border-alt)] bg-[oklch(0.06_0_0)] px-3 py-2`}
+                  className="rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.05] to-transparent px-4 py-3"
                 >
-                  <p className="text-[0.74rem] font-medium uppercase tracking-[0.12em] text-foreground/88">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/38">
                     {card.title}
                   </p>
-                  <p className="mt-1 text-[0.82rem] leading-relaxed text-foreground/72">
+                  <p className="mt-2 text-[0.9rem] leading-relaxed tracking-[-0.01em] text-foreground/76">
                     {card.description}
                   </p>
                 </div>
@@ -159,7 +164,7 @@ export default function Hero({ locale }: { locale: string }) {
                 style={{ transformStyle: 'preserve-3d' }}
                 className="relative"
               >
-                <div className="absolute -inset-6 rounded-3xl opacity-100 blur-2xl" />
+                <div className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.16),transparent_60%)] opacity-100 blur-2xl" />
                 <DashboardPreview />
               </motion.div>
             </div>
@@ -167,12 +172,12 @@ export default function Hero({ locale }: { locale: string }) {
 
           {/* Broker logos strip */}
           <motion.div
-            className="mt-12 w-full pb-8"
+            className="mt-14 w-full pb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, ease }}
           >
-            <p className="mb-4 text-center text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground/48 [font-family:var(--home-copy)]">
+            <p className="mb-5 text-center text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-foreground/30 [font-family:var(--home-copy)]">
               Trusted broker integrations
             </p>
             <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
@@ -180,7 +185,7 @@ export default function Hero({ locale }: { locale: string }) {
                 (broker) => (
                   <span
                     key={broker}
-                    className="rounded-full border border-[var(--frost-border)] bg-[oklch(0.06_0_0)] px-3 py-1.5 text-[0.78rem] font-medium tracking-wide text-muted-foreground/65 transition-colors hover:text-foreground/90 [font-family:var(--home-display)]"
+                    className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/34 transition-all duration-300 hover:border-white/[0.14] hover:text-foreground/80 [font-family:var(--home-display)]"
                   >
                     {broker}
                   </span>

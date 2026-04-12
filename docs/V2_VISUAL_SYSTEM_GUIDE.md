@@ -1,86 +1,109 @@
-# V2 Visual System Guide
+# Obsidian V3 Visual System Guide
 
 ## Goal
 
-Qunt Edge V2 is a full visual replacement of the product shell and presentation layer. It must feel like one product across marketing, auth, dashboard, teams, admin, shared pages, and embeds while preserving the existing business behavior.
+Qunt Edge Obsidian V3 is a direct-replace visual system for the entire product. It should feel like one premium trading workspace across home, marketing, auth, dashboard, teams, admin, shared reports, and embeds while preserving every existing behavioral contract.
 
-## Non-Negotiables
+## Compatibility Policy
 
 - No behavior changes.
 - No route or query-param breakage.
-- No API, Prisma, auth, billing, team-membership, or import contract changes.
-- `NEXT_PUBLIC_UI_V2_ENABLED` remains the rollout flag.
+- No API, Prisma, auth, billing, team-membership, share-link, import, or embed contract changes.
+- No store/context/server-action rewrites as part of a visual pass.
 - Dark-only remains the product theme.
+
+## Design Language
+
+- Void-first backgrounds using near-black surfaces and layered ambient glow.
+- Frosted borders with micro-contrast, not thick panel outlines.
+- Electric cobalt as the primary accent, with emerald/crimson/amber semantic states for trading data.
+- Typography should feel cinematic but precise:
+  - thin-to-medium hero weights
+  - uppercase micro-labels for metadata
+  - tabular numerics for metrics
+- Shell chrome should feel like floating hardware, not stacked dashboard boxes.
 
 ## Shell Rules
 
-- Use `qe-v2-app-shell` for page-level surfaces.
-- Use `BackgroundGlow` for animated ambient background treatment instead of one-off page gradients.
-- Use `MotionSection`, `MotionStagger`, and `MotionStaggerItem` for scroll/entrance motion.
-- Keep headers as floating/frosted card rails, not flat bars.
+- Use `qe-v2-app-shell` as the page-level layout hook for app surfaces.
+- Use `BackgroundGlow` for ambient treatment instead of route-local gradient noise.
+- App headers should read as frosted floating rails:
+  - rounded pill or rounded-2xl geometry
+  - subtle borders
+  - black/translucent surfaces
+  - restrained shadow depth
 - Keep max content width consistent:
   - app shells: `max-w-[1800px]`
-  - marketing shells: `max-w-[1320px]`
+  - marketing/home shells: `max-w-[1320px]` to `max-w-[1360px]`
 
-## Card Rules
+## Primitive Rules
+
+- Shared shadcn source-owned primitives are the visual source of truth.
+- Prefer updating `components/ui/**` over route-local overrides whenever possible.
+- Preserve component exports, Radix `data-*` hooks, `aria-*`, and `asChild` patterns.
+- Buttons, cards, badges, inputs, dialogs, dropdowns, sidebars, and mobile nav should all read as one family.
+
+## Card Ownership Rules
 
 - Cards are the primary composition primitive.
-- Use `qe-v2-card` or the shared `Card` primitive for section framing.
+- Use the shared `Card` primitive or compatible shell surfaces for section framing.
 - Dashboard widgets own their own chrome.
 - Do not introduce double-framing around widget surfaces in normal mode.
-- Shared/public report sections may be card-based, but chart/embed/widget internals should not be wrapped in a second heavy bordered frame unless the inner component is transparent.
+- Shared/public report sections may use cards, but chart/embed/widget internals should not be wrapped in a second heavy bordered panel unless the inner component is transparent.
 
 ## Navigation Rules
 
-- Dashboard, teams, admin, and mobile nav should use the same naming tone and visual rhythm.
-- Visible labels may evolve for clarity, but technical paths must remain stable.
+- Dashboard, teams, admin, and mobile nav must share the same visual rhythm.
+- Visible labels may evolve, but technical paths must remain stable.
 - Sidebar and bottom nav should feel like the same system:
   - rounded dock behavior
-  - subdued borders
-  - active state glow/tint
-  - restrained uppercase metadata
+  - low-opacity borders
+  - active-state glow/tint
+  - compact uppercase metadata
+  - high-contrast readable active text
 
 ## Motion Rules
 
 - Motion must be presentation-only.
 - Respect reduced-motion settings.
-- Prefer:
+- Preferred motion:
   - section reveal
   - staggered card entrances
-  - slow ambient SVG motion
+  - slow ambient SVG/glow movement
   - subtle hover lift
 - Avoid:
-  - large parallax
-  - aggressive bouncing
-  - motion that changes layout behavior
+  - parallax-heavy scenes
+  - bouncey interaction language
+  - motion that changes layout or business-state timing
 
 ## Animated SVG Guidance
 
-- Use low-contrast blueprint/grid/trajectory motifs.
+- Use low-contrast grid, halo, trajectory, and instrument-panel motifs.
 - Keep SVG accents behind content and pointer-events disabled.
-- Animate opacity, path length, or slow orbital rotation only.
-- SVG motion should reinforce the trading-workspace identity, not look decorative for its own sake.
+- Animate opacity, path length, or slow orbital drift only.
+- SVG motion should reinforce the trading-workspace identity, not act as generic decoration.
 
-## Chart Rules
+## Chart And Embed Rules
 
-- Chart surfaces should inherit the V2 card language.
+- Chart surfaces should inherit the Obsidian card language.
 - Tooltips, legends, and shells should use the same surface hierarchy as cards.
-- Embed charts should keep behavior contracts unchanged:
+- Embed charts must preserve:
   - query-param theming
-  - chart filtering
-  - `postMessage` interop
+  - chart selection/filtering
+  - `postMessage` interoperability
 
-## Migration Rules
+## Implementation Guidance
 
-- New UI work must use the V2 primitives and shell patterns first.
-- Prefer upgrading shared primitives over styling one page in isolation.
-- If a route group still uses legacy styling, migrate via shell/layout first, then feature surfaces.
-- When in doubt, fix the shared primitive instead of patching a local one-off variant.
+- Prefer shell/layout upgrades before local page polish.
+- Prefer shared primitive upgrades over route-specific hacks.
+- When a surface feels outdated, fix the underlying primitive or shell first.
+- Avoid reintroducing mixed V1/V2 styling after an Obsidian pass lands.
 
 ## Production Readiness Checklist
 
 - `npm run typecheck` passes.
-- Route groups render with V2 shell rhythm.
-- Shared pages and embeds match app styling quality.
-- No legacy/V2 collisions remain in the edited surface.
+- `npm run build` passes, or any non-code env blocker is explicitly recorded.
+- Route groups render with one Obsidian V3 shell language.
+- Shared pages and embeds match the core app quality bar.
+- No legacy/V1/V2 visual collisions remain in edited surfaces.
 - No feature behavior changed during the visual pass.

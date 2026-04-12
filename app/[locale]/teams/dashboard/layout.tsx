@@ -85,20 +85,41 @@ export default async function DashboardLayout({
                             className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
                         >
                             <div className="mx-auto w-full max-w-[1800px]">
-                                <div className="qe-v2-card flex min-h-[4.25rem] items-center gap-3 px-3 py-2.5 sm:px-4">
-                                    <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-2xl border border-v2-border/45 bg-v2-bg-surface/72 text-v2-text-secondary shadow-[0_14px_32px_-24px_rgba(8,15,34,0.92)] transition-all duration-200 hover:border-v2-border/70 hover:bg-v2-bg-hover hover:text-v2-text-primary md:h-9 md:w-9" />
-                                    <div className="flex min-w-0 flex-1 flex-col">
-                                        <div className="flex items-center gap-2.5">
-                                            <span className="hidden rounded-full border border-v2-border/30 bg-v2-bg-surface/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-v2-text-secondary sm:inline-flex">
-                                                Team
+                                <div className="flex min-h-[4.5rem] flex-col gap-4 rounded-[2rem] border border-white/[0.08] bg-black/70 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_18px_44px_-28px_rgba(0,0,0,0.88)] backdrop-blur-2xl sm:px-4 lg:flex-row lg:items-center lg:justify-between">
+                                    <div className="flex min-w-0 items-center gap-3">
+                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-2xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground md:h-9 md:w-9" />
+                                        <div className="flex min-w-0 flex-1 flex-col">
+                                            <div className="flex items-center gap-2.5">
+                                                <span className="hidden rounded-full border border-white/[0.12] bg-white/[0.04] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 sm:inline-flex">
+                                                    Team
+                                                </span>
+                                                <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+                                                    Team Command
+                                                </h1>
+                                            </div>
+                                            <span className="truncate pt-1 text-xs text-foreground/46">
+                                                Unified oversight for members, performance, and operational team health.
                                             </span>
-                                            <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-v2-text-primary">
-                                                Team Command
-                                            </h1>
                                         </div>
-                                        <span className="truncate pt-1 text-xs text-v2-text-secondary">
-                                            Unified oversight for members, performance, and operational team health.
-                                        </span>
+                                    </div>
+
+                                    <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
+                                        <div className="rounded-[1.3rem] border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                                                Focus
+                                            </span>
+                                            <span className="block pt-1 text-sm text-foreground/72">
+                                                Members and process visibility
+                                            </span>
+                                        </div>
+                                        <div className="rounded-[1.3rem] border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                                                Surface
+                                            </span>
+                                            <span className="block pt-1 text-sm text-foreground/72">
+                                                Shared team operating layer
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
