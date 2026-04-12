@@ -1,5 +1,13 @@
 # Session Memory (2026-03-31)
 
+## Current Session: Localized route hard rule for no white borders (2026-04-12)
+
+### Accomplishments
+- Added a route-scoped border enforcement layer for localized pages in `app/[locale]/layout-content.tsx` with the `qe-no-white-borders` wrapper class.
+- Hardened `lib/constants/layout.ts` localized border tokens to near-black values so neutral outlines across `app/en/*` cannot render as bright white.
+- Added `qe-no-white-borders` overrides in `app/globals.css` to force neutral `border-border`, `border-v2-border`, `--mk-border`, `--frost-border`, `--glass-border`, `divide-border`, `ring-border`, and `border-foreground/*` usages to subdued dark border colors across the localized app shell.
+- Working rule recorded for future passes: on localized surfaces, white or bright neutral outlines are considered regressions and should be fixed at the shared token/scope layer first, not page by page.
+
 ## Current Session: One-shot dashboard stabilization + 24h chat cleanup (2026-04-03)
 
 ### Accomplishments

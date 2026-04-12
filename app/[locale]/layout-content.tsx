@@ -14,7 +14,7 @@ export default async function LocaleLayoutContent(props: {
 
   return (
     <I18nProviderClient locale={locale}>
-      <div style={LOCALE_SOFT_BORDER_STYLE}>
+      <div className="qe-no-white-borders" style={LOCALE_SOFT_BORDER_STYLE}>
         <ConsentBannerLazy />
         {children}
       </div>

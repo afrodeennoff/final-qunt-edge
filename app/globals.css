@@ -2801,6 +2801,32 @@
 }
 
 @layer utilities {
+  .qe-no-white-borders {
+    --qe-enforced-border: hsl(var(--border) / 0.12);
+    --qe-enforced-border-strong: hsl(var(--border) / 0.18);
+  }
+
+  .qe-no-white-borders :where(
+    [class*='border-border'],
+    [class*='divide-border'],
+    [class*='ring-border'],
+    [class*='border-v2-border'],
+    [class*='border-foreground/'],
+    [class*='--mk-border'],
+    [class*='--frost-border'],
+    [class*='--glass-border']
+  ) {
+    border-color: var(--qe-enforced-border) !important;
+  }
+
+  .qe-no-white-borders :where([class*='ring-border']) {
+    --tw-ring-color: var(--qe-enforced-border-strong) !important;
+  }
+
+  .qe-no-white-borders :where([class*='divide-border']) > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--qe-enforced-border) !important;
+  }
+
   .qe-soft-panel {
     border: 1px solid hsl(var(--border) / 0.22);
     background: hsl(var(--background));
