@@ -120,12 +120,12 @@ export function ChartSurface({
     <div
       data-chart-surface="modern"
       className={cn(
-        "relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius)+0.1rem)] border",
-        "border-[hsl(var(--v2-border)/0.72)]",
+        "relative flex h-full flex-col overflow-hidden rounded-xl border",
+        "border-white/[0.06]",
         "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)]",
-        "transition-all duration-[180ms] ease-out",
-        "hover:border-[hsl(var(--v2-border)/0.95)]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+        "transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "hover:border-white/[0.10]",
         "hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.96))]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
         className

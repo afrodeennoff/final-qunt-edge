@@ -56,7 +56,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
         }}
       />
 
-      <main className="relative z-10 mx-auto w-full max-w-[1400px]">
+      <main className="relative z-10 mx-auto w-full max-w-[1400px] scroll-smooth-butter">
         <Hero locale={locale} />
         <LiveStatsStrip />
         <FeaturesBento />

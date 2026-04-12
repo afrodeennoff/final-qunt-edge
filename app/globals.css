@@ -47,9 +47,35 @@
   select,
   [role="button"],
   [role="tab"] {
-    transition-property: opacity, color, background-color;
-    transition-timing-function: var(--easing-default);
-    transition-duration: var(--transition-base);
+    transition-property: opacity, color, background-color, border-color, box-shadow, transform, filter;
+    transition-timing-function: var(--easing-spring);
+    transition-duration: 200ms;
+  }
+
+  /* Butter-smooth scroll physics for all scroll containers */
+  .scroll-smooth-butter {
+    scroll-behavior: smooth;
+    scroll-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+    scroll-padding-top: 1rem;
+  }
+
+  /* Premium scroll momentum — iOS/macOS feel */
+  .scroll-smooth-butter {
+    scroll-snap-type: proximity;
+    scroll-padding: 0.5rem;
+  }
+
+  /* Ultra-smooth inertial scroll for main content areas */
+  main,
+  [data-slot="sidebar-content"],
+  .overflow-y-auto,
+  .overflow-auto {
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   * {
@@ -57,6 +83,44 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+    /* GPU-accelerated compositing for butter-smooth transforms */
+    -webkit-transform: translateZ(0) translate3d(0, 0, 0);
+  }
+
+  /* Ensure all animated elements use GPU layers */
+  [style*="transform"],
+  [style*="opacity"],
+  .group,
+  [data-state],
+  [data-slot],
+  [data-radix-popper-content-wrapper] {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Premium micro-interactions for all interactive elements */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a:not(:disabled),
+  [role="tab"]:not(:disabled),
+  [role="menuitem"]:not(:disabled),
+  summary {
+    transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Press state — subtle scale feedback */
+  button:active:not(:disabled),
+  [role="button"]:active:not(:disabled) {
+    transform: scale(0.97);
+    transition-duration: 80ms;
+  }
+
+  /* Focus ring — smooth animated ring */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px oklch(0 0 0), 0 0 0 4px oklch(0.65 0.22 260 / 0.50);
+    transition: box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   ::selection {
@@ -65,8 +129,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
   }
 
   ::-webkit-scrollbar-track {
@@ -76,25 +140,56 @@
   ::-webkit-scrollbar-thumb {
     background: oklch(0.20 0.010 264);
     border-radius: 9999px;
+    transition: background 200ms ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.28 0.012 264);
+    background: oklch(0.32 0.015 264);
   }
 
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
 
+  /* Premium scrollbar — thin elegant track */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.18 0.010 264 / 0.45) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: oklch(0.18 0.010 264 / 0.45);
+    border-radius: 999px;
+    transition: background 200ms ease;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.28 0.015 264 / 0.65);
+  }
+
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px oklch(0 0 0), 0 0 0 4px oklch(0.65 0.22 260 / 0.60);
+    box-shadow: 0 0 0 2px oklch(0 0 0), 0 0 0 4px oklch(0.65 0.22 260 / 0.50);
+    transition: box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   body {
     background-color: oklch(0 0 0);
     color: oklch(0.97 0.003 264);
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Butter-smooth page scroll */
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .tabular {
@@ -1720,6 +1815,327 @@
   [data-chart-surface="modern"] {
     background-clip: padding-box;
     -webkit-mask-image: none;
+  }
+}
+
+/* ===== BUTTER-SMOOTH SCROLL & PREMIUM MOTION ===== */
+
+/* Page transition system — silky smooth route changes */
+@keyframes page-enter-smooth {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.998);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes page-exit-smooth {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.998);
+    filter: blur(2px);
+  }
+}
+
+/* Content entrance — butter-smooth reveal */
+@keyframes content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Gentle float — ambient background motion */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.01);
+  }
+}
+
+/* Pulse glow — premium breathing light */
+@keyframes glow-breathe {
+  0%, 100% {
+    opacity: 0.4;
+    filter: blur(60px);
+  }
+  50% {
+    opacity: 0.7;
+    filter: blur(80px);
+  }
+}
+
+/* Shimmer sweep — premium loading state */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Elastic bounce — playful micro-interaction */
+@keyframes elastic-bounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.95); }
+  60% { transform: scale(1.02); }
+  80% { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+
+/* Ripple — premium touch feedback */
+@keyframes ripple-premium {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Fade up stagger — scroll-triggered reveals */
+@keyframes fade-up-smooth {
+  from {
+    opacity: 0;
+    transform: translateY(16px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+/* Scale reveal — for cards and widgets */
+@keyframes scale-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateZ(0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+    filter: blur(0);
+  }
+}
+
+/* ===== PREMIUM MICRO-INTERACTION CLASSES ===== */
+@layer utilities {
+  /* Page transitions */
+  .animate-page-enter {
+    animation: page-enter-smooth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-page-exit {
+    animation: page-exit-smooth 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Content reveal */
+  .animate-content-reveal {
+    animation: content-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Gentle float for decorative elements */
+  .animate-float-gentle {
+    animation: float-gentle 6s ease-in-out infinite;
+  }
+
+  /* Glow breathe for ambient light effects */
+  .animate-glow-breathe {
+    animation: glow-breathe 4s ease-in-out infinite;
+  }
+
+  /* Premium shimmer */
+  .animate-shimmer-sweep {
+    animation: shimmer-sweep 2.5s ease-in-out infinite;
+  }
+
+  /* Elastic bounce micro-interaction */
+  .animate-elastic-bounce {
+    animation: elastic-bounce 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Premium ripple effect */
+  .animate-ripple-premium {
+    animation: ripple-premium 0.6s ease-out forwards;
+  }
+
+  /* Smooth fade-up for scroll reveals */
+  .animate-fade-up-smooth {
+    animation: fade-up-smooth 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Scale reveal for widgets/cards */
+  .animate-scale-reveal {
+    animation: scale-reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ===== PREMIUM HOVER EFFECTS ===== */
+
+  /* Subtle lift on hover — cards, list items */
+  .hover-lift-smooth {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-lift-smooth:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Glow hover — primary accent */
+  .hover-glow-smooth {
+    transition: box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-glow-smooth:hover {
+    box-shadow: 0 0 24px -4px oklch(0.65 0.22 260 / 0.25);
+  }
+
+  /* Scale hover — buttons, icons */
+  .hover-scale-smooth {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-scale-smooth:hover {
+    transform: scale(1.03) translateZ(0);
+  }
+
+  /* Brighten hover — images, icons */
+  .hover-brighten-smooth {
+    transition: filter 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  }
+  .hover-brighten-smooth:hover {
+    filter: brightness(1.08);
+    opacity: 0.95;
+  }
+
+  /* Border glow hover — inputs, cards */
+  .hover-border-glow {
+    transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hover-border-glow:hover {
+    border-color: oklch(0.65 0.22 260 / 0.3);
+    box-shadow: 0 0 0 1px oklch(0.65 0.22 260 / 0.1), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  /* ===== SCROLL-TRIGGERED STAGGER REVEALS ===== */
+  .stagger-reveal-smooth > * {
+    opacity: 0;
+    animation: fade-up-smooth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .stagger-reveal-smooth > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-reveal-smooth > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger-reveal-smooth > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-reveal-smooth > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-reveal-smooth > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-reveal-smooth > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-reveal-smooth > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-reveal-smooth > *:nth-child(8) { animation-delay: 420ms; }
+
+  /* ===== PREMIUM WIDGET/CHART ENTRANCE ===== */
+  .widget-enter-smooth {
+    animation: scale-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.05s;
+  }
+
+  /* ===== BUTTER-SMOOTH SCROLL CONTAINER ===== */
+  .scroll-smooth-butter {
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+    scroll-padding-top: 1rem;
+  }
+
+  /* ===== PREMIUM TRANSITION TOKENS ===== */
+  .transition-butter {
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .transition-butter-fast {
+    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .transition-butter-slow {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Spring-like bounce transitions */
+  .transition-elastic {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .transition-elastic-subtle {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* ===== RESPECT REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-page-enter,
+    .animate-page-exit,
+    .animate-content-reveal,
+    .animate-float-gentle,
+    .animate-glow-breathe,
+    .animate-shimmer-sweep,
+    .animate-elastic-bounce,
+    .animate-ripple-premium,
+    .animate-fade-up-smooth,
+    .animate-scale-reveal,
+    .widget-enter-smooth {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    .hover-lift-smooth:hover,
+    .hover-scale-smooth:hover {
+      transform: none !important;
+    }
+
+    .hover-glow-smooth:hover,
+    .hover-border-glow:hover {
+      box-shadow: none !important;
+    }
+
+    .stagger-reveal-smooth > * {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+
+    .transition-butter,
+    .transition-butter-fast,
+    .transition-butter-slow,
+    .transition-elastic,
+    .transition-elastic-subtle,
+    .hover-lift-smooth,
+    .hover-glow-smooth,
+    .hover-scale-smooth,
+    .hover-brighten-smooth,
+    .hover-border-glow {
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 

@@ -55,9 +55,9 @@ export default function AuthenticationPageClient() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="my-10 max-w-xl lg:my-14"
           >
             <div className="mb-7 inline-flex items-center gap-3 rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] px-4 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06)]">
@@ -101,9 +101,9 @@ export default function AuthenticationPageClient() {
 
         <section className="flex items-center justify-center border-t border-white/[0.06] p-6 sm:p-8 lg:border-t-0 lg:p-10">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05, ease: "easeOut" }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-[560px] mx-auto"
           >
             <div className="mb-6 rounded-[1.6rem] border border-white/[0.08] bg-white/[0.04] p-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_18px_40px_-28px_rgba(0,0,0,0.9)]">

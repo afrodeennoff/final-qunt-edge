@@ -43,7 +43,7 @@ export function BotMessage({ children, status }: { children: React.ReactNode, st
       className="flex w-full mb-3"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="flex flex-col gap-2">
         <div className="text-pretty wrap-break-word max-w-[95%] bg-secondary/30 p-5 rounded-lg border border-border/40 shadow-none backdrop-blur-sm">

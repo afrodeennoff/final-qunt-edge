@@ -1,5 +1,7 @@
 # Dashboard — Authenticated Trading Analytics
 
+
+**Visual Redesign (2026-04-12):** Complete ultra-premium visual overhaul applied. All dashboard components (widgets, charts, header, sidebar, stats cards, dialogs, tabs) use Electric Obsidian glass-morphism design system. Widget shells use `widget-enter-smooth` entrance animation. Chart surfaces use `transition-butter` spring physics. See root AGENTS.md "VISUAL REDESIGN STATUS" for full details.
 **Parent:** [Root AGENTS.md](../../../AGENTS.md)
 
 ## OVERVIEW

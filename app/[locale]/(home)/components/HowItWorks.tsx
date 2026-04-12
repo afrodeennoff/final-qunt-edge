@@ -34,7 +34,7 @@ export default function HowItWorks() {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
             className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_70px_-42px_rgba(0,0,0,0.96)] lg:sticky lg:top-28 lg:p-7"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, ease }}

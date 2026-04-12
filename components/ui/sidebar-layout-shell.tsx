@@ -34,8 +34,14 @@ export function SidebarLayoutShell({
         <BackgroundGlow variant={backgroundVariant} />
         <div className="relative z-0 flex h-full flex-col">
           {header}
-          <main className="flex-1 overflow-y-auto overscroll-y-contain">
-            <MotionSection className={cn('w-full', CONTENT_PADDING, CONTENT_PADDING_Y)} delay={0.04}>
+          <main
+            className="flex-1 overflow-y-auto overscroll-y-contain scroll-smooth-butter"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              scrollBehavior: 'smooth',
+            }}
+          >
+            <MotionSection className={cn('w-full', CONTENT_PADDING, CONTENT_PADDING_Y)} delay={0.02}>
               {children}
             </MotionSection>
           </main>

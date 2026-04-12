@@ -16,7 +16,7 @@ return (
       <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="rounded-[1.9rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6"
@@ -25,7 +25,7 @@ return (
               Optimization Pipeline
             </p>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground/95 sm:text-4xl lg:text-5xl"
@@ -49,7 +49,7 @@ return (
               initial={{ width: 0 }}
               whileInView={{ width: '84%' }}
               viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
+              transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
               className="hidden lg:block absolute top-8 left-[8%] h-px z-0 bg-gradient-to-r from-white/[0.08] via-primary/40 to-white/[0.08]"
             />
 

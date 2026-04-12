@@ -54,7 +54,7 @@ export default function AnalysisDemo() {
   return (
     <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: MOTION_EASE }}

@@ -107,7 +107,7 @@ export function DashboardHeader() {
         >
             <div className="relative mx-auto max-w-[1800px]">
                 <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_32%),radial-gradient(circle_at_right,rgba(16,185,129,0.08),transparent_30%)] opacity-80" />
-                <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-white/[0.08] bg-black/72 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_60px_-36px_rgba(0,0,0,0.92)] backdrop-blur-2xl sm:gap-4 sm:px-4">
+                <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-2xl border border-white/[0.06] bg-black/80 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_60px_-32px_rgba(0,0,0,0.9)] backdrop-blur-2xl transition-all duration-300 sm:gap-4 sm:px-4">
                     <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
                         <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95 md:h-9 md:w-9" />
                         <div className="flex min-w-0 items-center gap-3">

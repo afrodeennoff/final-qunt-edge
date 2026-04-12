@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
 import DashboardPreview from './DashboardPreview'
 
-const ease = [0.25, 0.46, 0.45, 0.94]
+const ease = [0.22, 1, 0.36, 1] as const
 
 const capabilityCards = [
   {
@@ -46,7 +46,7 @@ export default function Hero({ locale }: { locale: string }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0, ease }}
+            transition={{ duration: 0.7, delay: 0, ease }}
           >
             <Badge
               variant="outline"
@@ -61,9 +61,9 @@ export default function Hero({ locale }: { locale: string }) {
 
           <motion.h1
             className="max-w-5xl text-[clamp(3.2rem,7vw,6.6rem)] font-[350] leading-[0.94] tracking-[-0.055em] text-foreground/95 [font-family:var(--home-display)]"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease }}
+            initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, delay: 0.1, ease }}
           >
             Audit execution quality.
             <span className="mt-1 block bg-gradient-to-r from-primary via-primary/90 to-[hsl(var(--accent)/0.92)] bg-clip-text text-transparent">
@@ -73,9 +73,9 @@ export default function Hero({ locale }: { locale: string }) {
 
           <motion.p
             className="mx-auto mb-10 mt-6 max-w-2xl text-[clamp(1rem,2vw,1.18rem)] font-[350] leading-[1.7] tracking-[-0.015em] text-foreground/58 [font-family:var(--home-copy)]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3, ease }}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: 0.3, ease }}
           >
             Qunt Edge turns scattered trade data into a clear execution story, so you can
             review decisions faster, coach better, and trade with tighter discipline.
@@ -83,9 +83,9 @@ export default function Hero({ locale }: { locale: string }) {
 
           <motion.div
             className="mb-2 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4"
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4, ease }}
+            transition={{ duration: 0.6, delay: 0.4, ease }}
           >
             <MagneticButton strength={6}>
               <Button
@@ -122,9 +122,9 @@ export default function Hero({ locale }: { locale: string }) {
 
           <motion.div
             className="mb-12 grid w-full max-w-5xl grid-cols-1 gap-3 sm:grid-cols-3"
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.5, ease }}
+            transition={{ duration: 0.6, delay: 0.5, ease }}
           >
             {capabilityCards.map((card) => (
               <div
@@ -147,9 +147,9 @@ export default function Hero({ locale }: { locale: string }) {
 
           <motion.div
             className="w-full"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.6, ease }}
+            initial={{ opacity: 0, scale: 0.98, filter: "blur(6px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1.0, delay: 0.6, ease }}
           >
             <div
               className="relative"
@@ -158,9 +158,9 @@ export default function Hero({ locale }: { locale: string }) {
               }}
             >
               <motion.div
-                initial={{ rotateX: 2 }}
+                initial={{ rotateX: 3 }}
                 animate={{ rotateX: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, ease }}
+                transition={{ duration: 1.0, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 style={{ transformStyle: 'preserve-3d' }}
                 className="relative"
               >

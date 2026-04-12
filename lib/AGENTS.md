@@ -1,5 +1,7 @@
 # lib/ — Shared Utilities & Module Map
 
+
+**Visual Redesign (2026-04-12):** Lib utilities were NOT modified during the visual redesign. No business logic, type definitions, or utility functions were altered. Only CSS class references in shared constants may have been updated.
 **Parent:** [Root AGENTS.md](../../AGENTS.md)
 
 ## OVERVIEW

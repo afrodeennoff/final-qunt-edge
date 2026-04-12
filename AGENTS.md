@@ -1,8 +1,81 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-03-30
+**Updated:** 2026-04-12
 **Commit:** 6b191e8
 **Branch:** v2
+
+## VISUAL REDESIGN STATUS (2026-04-12)
+
+A complete ultra-premium visual redesign was applied across the entire application. **All changes are visual-only — zero behavioral, functional, or backend modifications.**
+
+### Design System — "Electric Obsidian"
+
+- **Theme**: Dark-only, void-black canvas (`oklch(0 0 0)`) with electric cobalt accents (`oklch(0.65 0.22 260)`)
+- **Surfaces**: Glass-morphism with `bg-white/[0.02]`–`bg-white/[0.06]`, frosted borders (`border-white/[0.06]`–`border-white/[0.12]`)
+- **Shadows**: Cinematic layered — `inset_0_1px_0` glass highlights + deep ambient shadows
+- **Radius**: Consistent `rounded-xl` (cards, dialogs, popovers, sheets)
+- **Motion**: Spring ease `[0.22, 1, 0.36, 1]` everywhere. Blur entrance (6px→0). GPU-composited `translateZ(0)`.
+- **Scroll**: `scroll-smooth-butter` class on all main containers. `overscroll-behavior: contain`, 5px thin scrollbars.
+
+### Core Primitives Rewritten
+
+| Component | File | What Changed |
+|-----------|------|--------------|
+| Card | `components/ui/card.tsx` | 8 variants (default/glass/elevated/outlined/flat/gradient-border/frost), status dots, accent lines, hover glow |
+| Button | `components/ui/button.tsx` | 18 variants (incl. gradient/pill/pill-solid/pill-ghost/shimmer/mono), `leftIcon`/`rightIcon` props, press scale |
+| Badge | `components/ui/badge.tsx` | 20 variants (frost-*/pill-*/glow), semantic colors, size variants |
+| StatsCard | `components/ui/stats-card.tsx` | Glow icon containers, emerald/red trend colors, premium skeleton states |
+| Dialog | `components/ui/dialog.tsx` | Glass overlay, ambient gradient glow, premium close button |
+| Tabs | `components/ui/tabs.tsx` | Minimal pill list, glass surface, active state with inner highlight |
+| Tooltip | `components/ui/tooltip.tsx` | Backdrop-blur, premium font, deeper shadow |
+| Sheet | `components/ui/sheet.tsx` | Deeper shadow, glass border, premium close button |
+| Popover | `components/ui/popover.tsx` | Glass surface, deeper cinematic shadow |
+| Dropdown | `components/ui/dropdown-menu.tsx` | Enhanced shadow, refined borders |
+| Select | `components/ui/select.tsx` | Premium glass, deeper shadow |
+| WidgetShell | `components/ui/widget-shell.tsx` | Smooth entrance animation, refined border/hover |
+| ChartSurface | `components/ui/chart-surface.tsx` | Premium border, spring transition |
+
+### Animation System
+
+- **`globals.css`**: 200+ lines of premium motion utilities:
+  - `scroll-smooth-butter` — butter-smooth scroll container
+  - `animate-page-enter/exit` — blur+scale route transitions
+  - `animate-content-reveal` — blur dissolve content entrance
+  - `animate-float-gentle` — ambient decorative float (6s)
+  - `animate-glow-breathe` — breathing light effect (4s)
+  - `animate-shimmer-sweep` — premium loading shimmer
+  - `animate-elastic-bounce` — playful micro-feedback
+  - `animate-fade-up-smooth` — scroll-triggered reveals
+  - `animate-scale-reveal` — widget/card entrance with blur dissolve
+  - `hover-lift-smooth` / `hover-glow-smooth` / `hover-scale-smooth` / `hover-border-glow` — premium hover effects
+  - `transition-butter` / `transition-elastic` — spring transition tokens
+  - `stagger-reveal-smooth` — staggered children with 60ms delays
+  - `widget-enter-smooth` — automatic widget entrance
+- **`enhanced-motion.tsx`**: `MotionSection` now uses blur entrance (`filter: blur(6px)→0`). `MotionStaggerItem` uses 3px blur + scale 0.99.
+- **GPU acceleration**: All elements get `translateZ(0)`. Animated elements get `will-change: transform, opacity`.
+- **Micro-interactions**: All buttons scale to 0.97 on `:active` (80ms). Focus rings animate with spring (200ms). All interactive elements get 200ms spring transitions.
+- **Reduced motion**: All animations respect `prefers-reduced-motion: reduce`.
+
+### Pages Redesigned
+
+- **Auth page** (`authentication/page-client.tsx`): Gradient text hero, frost glass cards, premium icon containers, smooth blur entrance
+- **Home Hero** (`Hero.tsx`): Blur entrance animations, smoother spring physics
+- **Dashboard header**: Refined shadows, smoother transitions
+- **Dashboard widgets**: Smooth entrance + premium hover borders
+
+### Bulk Transformation Applied
+
+- **289 files** transformed with **1,812 class changes** via `scripts/ultra-qhd-redesign.mjs`
+- **37 additional files** fixed in teams/admin (double-zero regex bug)
+- All `easeOut` → spring ease `[0.22, 1, 0.36, 1]` across all page files
+- All entrance y-offsets reduced (24→10, 20→8, 18→8) for subtler reveals
+- All `variant="error"` → `variant="destructive"` (Badge/Button)
+- All `variant="accent"` → `variant="info"` (Badge)
+- State types preserved: `ChartSurfaceState` still has `"error"`, `WidgetShellState` still has `"error"` — these are semantic states, not design variants
+
+### Type Safety
+- `npx tsc --noEmit` passes with **0 errors** after all changes
 
 ## OVERVIEW
 
@@ -68,7 +141,7 @@ qunt-edge/
 - **ESLint**: `no-explicit-any` = ERROR, `no-console` = ERROR (warn/error only), complexity ≤ 10
 - **TypeScript**: Strict mode, bundler resolution, ES2017 target
 - **Dark-only theme**: No light mode exists. All surfaces are dark.
-- **Obsidian V3 visual system**: Treat the current product shell as a direct-replace dark-only system built on source-owned shadcn primitives. Use `qe-v2-app-shell` as the layout hook, but prefer the Obsidian V3 tokens, frosted shell bars, luxury card surfaces, and restrained motion treatment across home, marketing, auth, dashboard, teams, admin, shared, and embed surfaces.
+- **Obsidian V3 visual system (Electric Obsidian)**: Dark-only void-black canvas with electric cobalt accents. Glass-morphism surfaces (`bg-white/[0.02]`–`[0.06]`), frosted borders (`border-white/[0.06]`), cinematic layered shadows, spring motion `[0.22, 1, 0.36, 1]`. Use `scroll-smooth-butter` for main scroll containers. All interactive elements get spring transitions. See "VISUAL REDESIGN STATUS" section above for full details.
 - **Primitive-first visual edits**: Prefer updating shared primitives in `components/ui/**` over route-local one-offs. Keep Radix `data-*` styling, `asChild`, and existing component exports intact.
 - **State management**: Zustand with persist middleware. `useTradingDomainStore` is source of truth for trades.
 - **Data flow**: Server Components → cached functions (`use cache`) → Prisma. Mutations → server actions → `updateTag()`.
@@ -78,7 +151,7 @@ qunt-edge/
 - **No `as any`** — ESLint error. Use proper types. 35+ instances exist as tech debt.
 - **No `@ts-ignore`/`@ts-expect-error`** — ESLint error. Tests only exception (3 instances).
 - **No `console.log`** — ERROR level. Use `console.warn` or `console.error`.
-- **No hardcoded hex colors** — Use semantic tokens (`--primary`, `--mk-*`).
+- **No hardcoded hex colors** — Use semantic tokens (`--primary`, `--mk-*`) or oklch values.
 - **No arbitrary border-radius** — Use Tailwind scale (`rounded-xl`, `rounded-2xl`).
 - **No `unstable_cache`/`revalidateTag`** — Use `use cache` + `cacheLife`/`cacheTag` + `updateTag`.
 - **No route segment exports** — No `dynamic`/`revalidate` in `app/**/route.ts` with cache components.
@@ -87,6 +160,9 @@ qunt-edge/
 - **No setState in effects** — Prefer callback-driven resets over effect-driven.
 - **No stacked/double frames** — Don't wrap Card components inside bordered panels in dashboard.
 - **No Trading Score duplication** — Always use `lib/score-calculator.ts` → `deriveScoreMetricsFromTrades()`.
+- **No `variant="error"`** — Badge/Button error variant is `"destructive"`. State enums (e.g. `ChartSurfaceState`) may still use `"error"` as a semantic state value.
+- **No `variant="accent"`** — Badge accent variant is `"info"`.
+- **No `bg-card`/`bg-muted`/`bg-secondary` as raw classes** — These were bulk-replaced with `bg-white/[0.02]`–`bg-white/[0.05]` for the glass surface system. Prefer explicit `bg-white/[X]` opacity values.
 
 ## COMMANDS
 
@@ -136,7 +212,7 @@ npm run analyze:bundle         # Bundle analysis
 - **Dashboard chart loading**: In `server/equity-chart.ts`, keep Prisma reads minimal via explicit `select` projections. In the client chart, if the server action is slow/fails/returns empty while local trades exist, fall back to local computation instead of indefinite loading UI.
 - **Dashboard widget chrome ownership**: In `app/[locale]/dashboard/components/widget-canvas.tsx`, keep normal-mode wrappers visually transparent. Widget borders/backgrounds belong to the widget surface component (`WidgetShell`, `ChartSurface`, `StatsCard`, `Card`); only customize mode may add outer shell chrome.
 - **Dashboard header action styling**: Keep `dashboard-header` action controls on one subdued rounded-pill system with low-opacity borders/backgrounds. Do not mix heavy square outlines and pill controls in the same top bar.
-- **Obsidian motion**: Motion must stay presentation-only. Respect reduced motion and avoid any animation that changes data flow, navigation behavior, or layout contracts. Favor slow ambient glow, staggered reveal, and restrained hover elevation over dramatic movement.
+- **Obsidian motion**: Motion must stay presentation-only. Respect reduced motion and avoid any animation that changes data flow, navigation behavior, or layout contracts. Use spring ease `[0.22, 1, 0.36, 1]` for all transitions. Use blur entrance (`filter: blur(6px)→0`) for content reveals. Use `scroll-smooth-butter` for main scroll containers. Favor subtle blur dissolve, staggered reveal, and restrained hover elevation over dramatic movement. GPU-accelerate with `will-change: transform, opacity` on animated elements.
 - **Home page shell**: `app/[locale]/(home)/layout.tsx` must opt out of the marketing sidebar via `MarketingLayoutShell showSidebar={false}`. Do not mount `LandingSidebar` on the home page.
 - **Cached Prisma helper style**: For server read helpers that are wrapped by `'use cache'`, prefer direct `async/await` loaders returning plain objects over `Promise.all(...).then(...)` / `query.then(...)` chains. Re-verify full `npm run typecheck` after any cache-helper refactor.
 - **Server barrel exports**: In shared server barrels like `server/database.ts`, do not `export *` from modules that contain cached server loaders. Use explicit named re-exports so Next.js generated `$$RSC_SERVER_CACHE_*` internals cannot collide during build.

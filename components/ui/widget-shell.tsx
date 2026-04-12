@@ -87,16 +87,13 @@ export function WidgetShell({
     <Card
       data-widget-shell="v2"
       className={cn(
-        "relative overflow-hidden rounded-[calc(var(--radius)+0.1rem)] border",
-        "border-v2-border/70",
-        "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)]",
-        "transition-all duration-[180ms] ease-out",
-        "hover:border-v2-border/95",
-        "hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.96))]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
-        "h-full shadow-none",
-        variant === "hoverable" && "hover:shadow-[var(--v2-glow-ambient)]",
+        "widget-enter-smooth relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+        "transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "hover:border-white/[0.10] hover:bg-white/[0.03]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "h-full",
+        variant === "hoverable" && "hover:shadow-[0_0_24px_-4px_oklch(0.65_0.22_260/0.12)]",
         className
       )}
     >

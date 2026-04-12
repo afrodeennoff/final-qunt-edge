@@ -50,7 +50,7 @@ export default function Footer() {
       <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}

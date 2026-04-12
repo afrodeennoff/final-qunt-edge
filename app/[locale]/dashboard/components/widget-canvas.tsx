@@ -646,7 +646,7 @@ export default function WidgetCanvas() {
                           delay: Math.min(0.03 * index, 0.3),
                           type: "tween",
                           duration: 0.25,
-                          ease: "easeOut",
+                          ease: [0.22, 1, 0.36, 1],
                         }
                         : undefined
                     }

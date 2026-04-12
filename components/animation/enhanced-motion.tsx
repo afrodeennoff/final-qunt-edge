@@ -85,7 +85,7 @@ export function MotionSection({
   className,
   delay = 0,
   spring = SPRING_GENTLE,
-  threshold = 0.1,
+  threshold = 0.05,
 }: MotionSectionProps) {
   const ref = useRef<HTMLElement>(null)
   const prefersReducedMotion = useReducedMotion()
@@ -99,12 +99,12 @@ export function MotionSection({
     <motion.section
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+      animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(4px)" }}
       transition={{
-        duration: MOTION_DURATION.normal / 1000,
+        duration: 0.5,
         delay,
-        ease: ENTRANCE_EASE,
+        ease: [0.22, 1, 0.36, 1],
         ...spring,
       }}
     >
@@ -186,14 +186,15 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
         blur
           ? BLUR_ENTRANCE
           : {
-              hidden: { opacity: 0, y: 20, scale: 0.98 },
+              hidden: { opacity: 0, y: 10, scale: 0.99, filter: "blur(3px)" },
               visible: {
                 opacity: 1,
                 y: 0,
                 scale: 1,
+                filter: "blur(0px)",
                 transition: {
-                  duration: 0.5,
-                  ease: ENTRANCE_EASE,
+                  duration: 0.45,
+                  ease: [0.22, 1, 0.36, 1],
                 },
               },
             }

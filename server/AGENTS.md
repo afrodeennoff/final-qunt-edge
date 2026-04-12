@@ -1,5 +1,7 @@
 # server/ — Server-Side Business Logic
 
+
+**Visual Redesign (2026-04-12):** Server code was NOT modified during the visual redesign. All changes were purely CSS/TSX visual class updates. No server actions, API routes, Prisma queries, or data flow was altered.
 **Parent:** [Root AGENTS.md](../AGENTS.md)
 
 ## OVERVIEW

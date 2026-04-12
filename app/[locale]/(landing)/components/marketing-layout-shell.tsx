@@ -25,7 +25,7 @@ export default function MarketingLayoutShell({
   className,
 }: MarketingLayoutShellProps) {
   return (
-    <div className={cn('marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden', className)}>
+    <div className={cn('marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden scroll-smooth-butter', className)}>
       <BackgroundGlow variant="accent" />
       <div className="pointer-events-none fixed inset-0 hidden qe-v2-grid opacity-[0.14] sm:block" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.14),transparent_36%),radial-gradient(circle_at_bottom_right,oklch(0.82_0.185_155/0.07),transparent_34%)]" />
