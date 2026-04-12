@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function Qualification() {
  return (
- <section className="border-t border-white/[0.08] bg-background px-6 py-32">
+ <section className="classes "">
  <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
  <div className="max-w-6xl mx-auto">
  <div className="grid md:grid-cols-2 gap-2 bg-white/[0.010] border border-white/[0.06] p-2 rounded-sm overflow-hidden">

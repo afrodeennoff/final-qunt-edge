@@ -60,7 +60,7 @@ const cardVariants = {
 
 export default function ComparisonSection() {
  return (
- <section className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
+ <section className="classes "">
 
  <div className="relative mx-auto max-w-6xl">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">

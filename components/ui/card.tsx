@@ -53,7 +53,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  role={isInteractive ?"button" : undefined}
  tabIndex={isInteractive ? 0 : undefined}
  onKeyDown={isInteractive ? handleKeyDown : undefined}
- className={cn("group relative overflow-hidden text-foreground/95 transition-all duration-200",
+ className={cn("group relative overflow-hidden text-foreground/95 ",
  accent && variant !=="gradient-border" &&"border-transparent",
  variant ==="default" && ["rounded-xl border bg-[oklch(0.038_0.005_264)]","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_4px_20px_-8px_rgba(0,0,0,0.80)]",
  ],
@@ -92,7 +92,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
  {/* Ambient glow on hover */}
  {(hover || isInteractive) && (
- <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+ <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 group-hover:opacity-100" />
  )}
 
  {variant ==="gradient-border" && (

@@ -165,7 +165,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  <CardHeader size={size} className="flex-row items-center justify-between pb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
  {renderIcon() && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 transition-colors duration-200" aria-hidden="true">
+ <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 " aria-hidden="true">
  {renderIcon()}
  </div>
  )}
@@ -201,7 +201,7 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  ? trend.isPositive
  ?"text-emerald-400"
  :"text-red-400"
- :"text-foreground/95","transition-colors duration-200"
+ :"text-foreground/95"
  )}
  aria-label={`Value: ${displayValue}`}
  >
@@ -298,9 +298,9 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  role={onClick ?"button" : undefined}
  tabIndex={onClick ? 0 : undefined}
  onClick={onClick}
- className={cn("group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] transition-all duration-200","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+ className={cn("group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] ","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
  glass &&"bg-white/[0.03]",
- !!onClick &&"cursor-pointer hover:border-white/[0.10] hover:bg-white/[0.035] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
+ !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
  config.padding,
  className
  )}
@@ -310,13 +310,13 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
  
  {/* Hover glow */}
- <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+ <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 " />
 
  {(title || trend) && (
  <div className="relative flex items-center justify-between gap-3 mb-2">
  <div className="flex items-center gap-2 flex-1 min-w-0">
  {renderIcon() && (
- <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 transition-colors duration-200" aria-hidden="true">
+ <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 border border-primary/15 text-primary group-hover:bg-primary/15 " aria-hidden="true">
  {renderIcon()}
  </div>
  )}
@@ -349,7 +349,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  ? trend.isPositive
  ?"text-emerald-400"
  :"text-red-400"
- :"text-foreground/95","transition-colors duration-200"
+ :"text-foreground/95"
  )}
  aria-label={`Value: ${displayValue}`}
  >

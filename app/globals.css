@@ -2081,6 +2081,25 @@
   }
 }
 
+/* ===== SCROLL PERFORMANCE — content-visibility ===== */
+@layer utilities {
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+
+  /* Dashboard widgets: skip content-visibility (small, need immediate paint) */
+  [data-widget-shell="v2"] {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 200px;
+  }
+
+  /* Charts: skip content-visibility (Recharts needs dimensions) */
+  [data-chart-surface] {
+    content-visibility: visible;
+  }
+}
+
 /* ===== HOME PAGE ANIMATIONS ===== */
 @keyframes fade-in {
   from {

@@ -26,7 +26,7 @@ export default function FilterChips({ filters, onFilterChange, totalCount, filte
  filters.platform !== 'All' || filters.challengeType !== 'All' || filters.drawdown !== 'All'
 
  return (
- <section className="py-5">
+ <section className="classes "">
  <div className="rounded-2xl border border-[var(--frost-border)] bg-[var(--surface-card)] p-4 sm:p-5">
  <div className="flex flex-col gap-4">
  <div className="flex items-center justify-between gap-3">

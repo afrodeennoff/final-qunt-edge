@@ -436,8 +436,6 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  initial={{ scale: 0, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
  exit={{ scale: 0, opacity: 0 }}
- whileHover={{ scale: 1.1 }}
- whileTap={{ scale: 0.95 }}
  transition={{
  duration: 0.2,
  ease: [0.25, 0.46, 0.45, 0.94],

@@ -33,7 +33,7 @@ const capabilityCards = [
 
 export default function Hero({ locale }: { locale: string }) {
  return (
- <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-24 pt-[88px]">
+ <section className="classes "">
  <div className="absolute inset-0 bg-background" />
  <div className="pointer-events-none absolute inset-0 opacity-80">
  <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[oklch(0.65_0.22_260/0.18)] blur-[120px]" />

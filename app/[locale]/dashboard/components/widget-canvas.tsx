@@ -639,7 +639,6 @@ export default function WidgetCanvas() {
  }
  : undefined
  }
- whileHover={shouldAnimateWidget ? { scale: 1.01 } : undefined}
  >
  <WidgetWrapper
  onRemove={() => removeWidget(widget.i)}

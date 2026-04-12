@@ -12,7 +12,7 @@ export default function HowItWorks() {
  ];
 
 return (
- <section id="how-it-works" className="relative overflow-hidden border-t border-white/[0.08] bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+ <section id="how-it-works" className="classes "">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
  <motion.div

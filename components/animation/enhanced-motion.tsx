@@ -39,30 +39,16 @@ const BLUR_ENTRANCE: Variants = {
 }
 
 export const blurIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.95,
- },
+ hidden: { opacity: 0 },
  visible: {
- opacity: 1,
- scale: 1,
- transition: {
- duration: 0.5,
- ease: MOTION_EASE.entrance as unknown as number[],
- },
- },
+    opacity: 1,
+    transition: { duration: 0.15 }
+  },
 }
 
 export const scaleIn: Variants = {
- hidden: {
- opacity: 0,
- scale: 0.8,
- },
- visible: {
- opacity: 1,
- scale: 1,
- transition: SPRING_GENTLE,
- },
+ hidden: { opacity: 0 },
+ visible: { opacity: 1, transition: { duration: 0.15 } },
 }
 
 // ============================================================================
@@ -96,8 +82,8 @@ export function MotionSection({
  <motion.section
  ref={ref}
  className={className}
- initial={{ opacity: 0, y: 12 }}
- animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+ initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
  transition={{
  duration: 0.5,
  delay,
@@ -183,7 +169,7 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
  blur
  ? BLUR_ENTRANCE
  : {
- hidden: { opacity: 0, y: 10, scale: 0.99 },
+ hidden: { opacity: 0 },
  visible: {
  opacity: 1,
  y: 0,
@@ -302,7 +288,7 @@ export function AnimatedCounter({
  const ref = useRef<HTMLSpanElement>(null)
  const isInView = useInView(ref, { once: true, margin:"-10%" })
 
- const spring = useSpring(0, { stiffness: 100, damping: 30 })
+ const [displayValue, setDisplayValue] = React.useState("0")
  const [displayValue, setDisplayValue] = useState("0")
 
  useEffect(() => {
@@ -410,8 +396,8 @@ export function FloatingOrbs({
  return (
  <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
  {orbs.map((orb, index) => {
- const parallaxX = enableParallax ? mousePosition.x * 20 * (index + 1) : 0
- const parallaxY = enableParallax ? mousePosition.y * 20 * (index + 1) : 0
+ const parallaxX = 0
+ const parallaxY = 0
 
  return (
  <motion.div
