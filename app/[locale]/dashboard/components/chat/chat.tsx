@@ -68,6 +68,7 @@ type ChatToolState =
   | "partial-call"
   | "result"
   | "output-available"
+  | "error"
   | "destructive";
 
 type GenericToolPart = {

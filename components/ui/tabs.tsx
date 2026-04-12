@@ -28,7 +28,7 @@ const TabsList = React.forwardRef<
       ref={ref}
       data-slot="tabs-list"
       className={cn(
-        "inline-flex h-10 items-center justify-center rounded-md bg-white/[0.03] p-1 text-muted-foreground",
+        "inline-flex min-h-11 items-center justify-center rounded-2xl border border-[hsl(var(--v2-border)/0.85)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.9),hsl(var(--v2-bg-surface)/0.9))] p-1 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
         className
       )}
       {...props}
@@ -44,7 +44,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     data-slot="tabs-trigger"
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-v2-accent/10 data-[state=active]:text-v2-accent data-[state=active]:border data-[state=active]:border-white/[0.06] hover:bg-white/[0.04]",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-xl px-3.5 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border data-[state=active]:border-[hsl(var(--v2-border)/0.9)] data-[state=active]:bg-[linear-gradient(180deg,hsl(var(--v2-bg-active)/0.95),hsl(var(--v2-bg-hover)/0.92))] data-[state=active]:text-v2-text-primary data-[state=active]:shadow-[0_18px_40px_-26px_rgba(4,10,24,0.75)] hover:bg-[rgba(255,255,255,0.06)]",
       className
     )}
     {...props}

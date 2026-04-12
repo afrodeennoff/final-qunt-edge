@@ -11,7 +11,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   accent?: "primary" | "success" | "warning" | "destructive" | "info"
 }
 
-export type CardStatusTone = "live" | "synced" | "idle" | "error"
+export type CardStatusTone = "live" | "synced" | "idle" | "destructive" | "error"
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
@@ -40,12 +40,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     }
 
     const accentBorderMap = {
-      primary: "from-primary to-violet-400",
-      success: "from-emerald-400 to-teal-500",
-      warning: "from-amber-400 to-orange-500",
-      destructive: "from-red-400 to-rose-500",
-      info: "from-blue-400 to-cyan-500",
-    }
+      primary: "from-[hsl(var(--primary))] to-[hsl(var(--chart-2))]",
+      success: "from-[hsl(var(--success))] to-emerald-300",
+      warning: "from-[hsl(var(--warning))] to-amber-300",
+      destructive: "from-[hsl(var(--destructive))] to-rose-300",
+      info: "from-sky-400 to-cyan-300",
+    } satisfies Record<NonNullable<CardProps["accent"]>, string>
 
     return (
       <div
@@ -54,16 +54,17 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
         className={cn(
-          "group relative overflow-hidden rounded-xl border border-white/[0.06] bg-background/60 backdrop-blur-md text-foreground transition-all duration-300",
-          "shadow-[inset_0_1px_0_hsl(var(--foreground)/0.04)]",
-          accent && "border-0 bg-gradient-to-b from-white/[0.03] to-background/80",
-          variant === "default" && "border-white/[0.06]",
-          variant === "glass" && "border-white/[0.08] bg-white/[0.03] backdrop-blur-xl shadow-[inset_0_1px_0_hsl(var(--foreground)/0.06),0_8px_32px_-12px_hsl(var(--primary)/0.06)]",
-          variant === "elevated" && "border-white/[0.10] bg-white/[0.04] shadow-[inset_0_1px_0_hsl(var(--foreground)/0.08),0_12px_40px_-16px_hsl(var(--primary)/0.12)]",
-          variant === "outlined" && "border-[1.5px] border-white/[0.12] bg-transparent shadow-none",
+          "group relative overflow-hidden rounded-[calc(var(--radius)+0.15rem)] border text-foreground transition-all duration-300",
+          "border-[hsl(var(--v2-border)/0.72)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
+          "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(4,10,24,0.9)] backdrop-blur-xl",
+          accent && "border-transparent",
+          variant === "default" && "hover:border-[hsl(var(--v2-border)/0.95)]",
+          variant === "glass" && "bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] border-[hsl(var(--v2-border)/0.78)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_26px_60px_-36px_rgba(4,10,24,0.88)]",
+          variant === "elevated" && "bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.98),hsl(var(--v2-bg-surface)/0.94))] border-[hsl(var(--v2-border)/0.94)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_36px_80px_-40px_rgba(4,10,24,0.92)]",
+          variant === "outlined" && "border-[hsl(var(--v2-border)/0.9)] bg-transparent shadow-none",
           variant === "flat" && "border-0 bg-transparent shadow-none",
-          variant === "gradient-border" && `border-0 p-[1.5px] bg-gradient-to-br ${accent ? accentBorderMap[accent] : "from-primary/60 via-violet-500/40 to-cyan-500/30"}`,
-          variant === "frost" && "border-[1.5px] border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-transparent backdrop-blur-xl shadow-[inset_0_0_0_1px_hsl(var(--background)/0.4),0_8px_28px_-12px_rgba(0,0,0,0.5)]",
+          variant === "gradient-border" && `border-0 p-px bg-gradient-to-br ${accent ? accentBorderMap[accent] : "from-[hsl(var(--primary))] via-violet-400/70 to-cyan-300/70"}`,
+          variant === "frost" && "border-[hsl(var(--v2-border)/0.76)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_28px_72px_-40px_rgba(4,10,24,0.92)]",
           {
             "text-sm": size === "sm",
             "text-base": size === "md",
@@ -71,7 +72,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           },
           {
             "cursor-pointer": isInteractive,
-            "hover:-translate-y-[3px] hover:shadow-[inset_0_1px_0_hsl(var(--foreground)/0.06),0_16px_48px_-16px_hsl(var(--primary)/0.15)] hover:border-white/[0.12]": hover || isInteractive,
+            "hover:-translate-y-[2px] hover:border-[hsl(var(--v2-border)/0.96)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_40px_90px_-46px_rgba(4,10,24,0.95)]": hover || isInteractive,
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background":
               isInteractive,
           },
@@ -83,22 +84,22 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       >
         {/* Top accent line (all variants except flat) */}
         {variant !== "flat" && !accent && (
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         )}
         
         {/* Accent line at top when accent prop is set */}
         {accent && variant !== "flat" && variant !== "gradient-border" && (
-          <div className={`absolute inset-x-3 top-0 h-[2px] rounded-b-full bg-gradient-to-r ${accentBorderMap[accent]} opacity-70`} />
+          <div className={`absolute inset-x-4 top-0 h-[2px] rounded-b-full bg-gradient-to-r ${accentBorderMap[accent]} opacity-80`} />
         )}
 
         {/* Ambient glow on hover */}
         {(hover || isInteractive) && (
-          <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         )}
 
         {variant === "gradient-border" && (
           <div className="absolute inset-0 overflow-hidden rounded-[calc(0.75rem-1.5px)]">
-            <div className="absolute inset-0 bg-background/95" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]" />
           </div>
         )}
         {isLoading && (
@@ -114,7 +115,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 status === "live" && "bg-emerald-400 animate-pulse shadow-[0_0_8px_hsl(160_70%_55%)]",
                 status === "synced" && "bg-primary shadow-[0_0_6px_hsl(var(--primary)/0.5)]",
                 status === "idle" && "bg-muted-foreground/40",
-                status === "error" && "bg-red-400 shadow-[0_0_6px_hsl(0_80%_60%/0.5)]"
+                (status === "destructive" || status === "error") && "bg-red-400 shadow-[0_0_6px_hsl(0_80%_60%/0.5)]"
               )}
             />
             <span className="text-[0.6rem] font-bold uppercase leading-none tracking-[0.12em] text-muted-foreground/80">
@@ -123,7 +124,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           </div>
         )}
 
-        <div className={cn("relative z-10 rounded-[inherit]", variant === "gradient-border" && "bg-background/95")}>{children}</div>
+        <div className={cn("relative z-10 rounded-[inherit]", variant === "gradient-border" && "bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]")}>{children}</div>
       </div>
     )
   }
@@ -172,7 +173,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
           tone === "live" && "bg-emerald-400 animate-pulse",
           tone === "synced" && "bg-primary",
           tone === "idle" && "bg-muted-foreground/40",
-          tone === "error" && "bg-red-400",
+          (tone === "destructive" || tone === "error") && "bg-red-400",
           className
         )}
         aria-hidden
@@ -227,7 +228,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm leading-relaxed text-muted-foreground/80", className)}
+    className={cn("text-sm leading-relaxed text-muted-foreground/88", className)}
     {...props}
   />
 ))

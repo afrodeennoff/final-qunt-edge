@@ -8,7 +8,7 @@ const Table = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     data-slot="table-container"
-    className="relative w-full overflow-auto overscroll-x-contain"
+    className="relative w-full overflow-auto overscroll-x-contain rounded-[calc(var(--radius)+0.1rem)] border border-[hsl(var(--v2-border)/0.7)] bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_22px_50px_-34px_rgba(4,10,24,0.84)]"
   >
     <table
       ref={ref}
@@ -28,8 +28,8 @@ const TableHeader = React.forwardRef<
     ref={ref}
     data-slot="table-header"
     className={cn(
-      "border-b border-white/[0.06] [&_tr]:border-b [&_tr]:border-white/[0.06]",
-      "bg-white/[0.03]",
+      "border-b border-[hsl(var(--v2-border)/0.72)] [&_tr]:border-b [&_tr]:border-[hsl(var(--v2-border)/0.72)]",
+      "bg-[rgba(255,255,255,0.04)]",
       className
     )}
     {...props}
@@ -58,7 +58,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     data-slot="table-footer"
     className={cn(
-      "border-t border-white/[0.06] bg-white/[0.03] font-medium last:[&>tr]:border-b-0",
+      "border-t border-[hsl(var(--v2-border)/0.72)] bg-[rgba(255,255,255,0.04)] font-medium last:[&>tr]:border-b-0",
       className
     )}
     {...props}
@@ -74,7 +74,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     data-slot="table-row"
     className={cn(
-      "border-b border-white/[0.06] transition-colors hover:bg-v2-bg-hover data-[state=selected]:bg-v2-bg-hover",
+      "border-b border-[hsl(var(--v2-border)/0.72)] transition-colors hover:bg-[hsl(var(--v2-bg-hover)/0.55)] data-[state=selected]:bg-[hsl(var(--v2-bg-hover)/0.65)]",
       className
     )}
     {...props}
@@ -90,7 +90,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     data-slot="table-head"
     className={cn(
-      "h-10 px-3 text-left align-middle text-xs font-medium text-muted-foreground sm:h-12 sm:px-4 sm:text-sm [&:has([role=checkbox])]:pr-0",
+      "h-11 px-3.5 text-left align-middle text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:h-12 sm:px-4 sm:text-xs [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -106,7 +106,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     data-slot="table-cell"
     className={cn(
-      "p-3 align-middle text-sm sm:p-4 border-b border-white/[0.06] [&:has([role=checkbox])]:pr-0",
+      "border-b border-[hsl(var(--v2-border)/0.72)] p-3.5 align-middle text-sm sm:p-4 [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}

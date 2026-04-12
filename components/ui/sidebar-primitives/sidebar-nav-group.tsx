@@ -21,9 +21,9 @@ import {
 import { DEFAULT_OPEN_GROUPS } from './use-sidebar-nav'
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
-const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-md font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground'
+const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground'
 const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/78'
-const ACTIVE_ITEM_CLASS = 'bg-sidebar-accent text-sidebar-accent-foreground'
+const ACTIVE_ITEM_CLASS = 'bg-[linear-gradient(180deg,hsl(var(--sidebar-accent)/0.94),hsl(var(--sidebar-accent)/0.8))] text-sidebar-foreground border-sidebar-border/65'
 
 function isItemPending(
   item: UnifiedSidebarItem,
@@ -169,7 +169,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
             <SidebarGroup className="px-0 py-1.5">
               <CollapsibleTrigger asChild>
                 <SidebarGroupLabel
-                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-sidebar-foreground/40 hover:text-sidebar-foreground/60"
+                  className="mb-1.5 flex cursor-pointer items-center justify-between pl-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/40 hover:text-sidebar-foreground/64"
                   id={`sidebar-group-${groupIndex}`}
                 >
                   <span>{groupName}</span>
@@ -193,7 +193,7 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
                           className="relative"
                         >
                           {itemIsActive && (
-                            <div className="absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
+                            <div className="absolute left-0 top-1/2 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary shadow-[0_0_14px_hsl(var(--sidebar-primary)/0.65)]" />
                           )}
                           {href ? (
                             <SidebarMenuButton
