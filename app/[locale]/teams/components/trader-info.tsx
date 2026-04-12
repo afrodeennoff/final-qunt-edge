@@ -40,22 +40,22 @@ export async function TraderInfo({ slug }: { slug: string }) {
 
         {summary ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.070] p-3">
+            <div className="rounded-lg border border-white/[0.8] bg-white/[0.070] p-3">
               <p className="text-xs font-medium text-muted-foreground">Hist VaR 95%</p>
               <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist95.amount)}</p>
               <p className="text-xs text-muted-foreground">{formatPercent(summary.hist95.percent)}</p>
             </div>
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.070] p-3">
+            <div className="rounded-lg border border-white/[0.8] bg-white/[0.070] p-3">
               <p className="text-xs font-medium text-muted-foreground">Hist VaR 99%</p>
               <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.hist99.amount)}</p>
               <p className="text-xs text-muted-foreground">{formatPercent(summary.hist99.percent)}</p>
             </div>
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.070] p-3">
+            <div className="rounded-lg border border-white/[0.8] bg-white/[0.070] p-3">
               <p className="text-xs font-medium text-muted-foreground">Param VaR 95%</p>
               <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param95.amount)}</p>
               <p className="text-xs text-muted-foreground">{formatPercent(summary.param95.percent)}</p>
             </div>
-            <div className="rounded-lg border border-white/[0.08] bg-white/[0.070] p-3">
+            <div className="rounded-lg border border-white/[0.8] bg-white/[0.070] p-3">
               <p className="text-xs font-medium text-muted-foreground">Param VaR 99%</p>
               <p className="mt-1 text-lg font-semibold">{formatCurrency(summary.param99.amount)}</p>
               <p className="text-xs text-muted-foreground">{formatPercent(summary.param99.percent)}</p>

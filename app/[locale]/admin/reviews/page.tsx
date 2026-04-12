@@ -72,7 +72,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               status === option.value
                 ? 'bg-v2-accent text-v2-accent-foreground'
-                : 'bg-white/[0.080] text-muted-foreground hover:bg-white/[0.02]'
+                : 'bg-white/[0.080] text-muted-foreground hover:bg-white/[0.2]'
             }`}
           >
             {option.label}
@@ -90,7 +90,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           items.map((item) => (
             <div
               key={item.id}
-              className="rounded-xl border border-white/[0.08] bg-white/[0.070] p-6"
+              className="rounded-xl border border-white/[0.8] bg-white/[0.070] p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -108,7 +108,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                   </div>
                   
                   {/* The flagged review */}
-                  <div className="mb-4 rounded-xl bg-white/[0.02] p-4">
+                  <div className="mb-4 rounded-xl bg-white/[0.2] p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-medium">
                         {item.review.propFirm.name}
@@ -215,7 +215,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
         <div className="flex items-center justify-center gap-2 mt-6">
           <Link
             href={`/${locale}/admin/reviews?page=${Math.max(1, currentPage - 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.02]'}`}
+            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.2]'}`}
           >
             <ChevronLeft className="h-5 w-5" />
           </Link>
@@ -224,7 +224,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           </span>
           <Link
             href={`/${locale}/admin/reviews?page=${Math.min(totalPages, currentPage + 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.02]'}`}
+            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.2]'}`}
           >
             <ChevronRight className="h-5 w-5" />
           </Link>

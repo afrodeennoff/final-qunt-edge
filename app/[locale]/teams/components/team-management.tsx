@@ -626,7 +626,7 @@ export function TeamManagement({
       case 'viewer':
         return 'bg-surface-subtle' // Green for viewer
       default:
-        return 'bg-white/[0.03]'
+        return 'bg-white/[0.3]'
     }
   }
 

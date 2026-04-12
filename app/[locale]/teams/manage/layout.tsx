@@ -83,7 +83,7 @@ export default async function TeamManageLayout({
             <DashboardProviders>
                 <TeamsSidebar />
 
-                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-white/[0.03] selection:text-foreground/95">
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-white/[0.3] selection:text-foreground/95">
                     <BackgroundGlow variant="default" />
 
                     <div className="relative z-0 flex h-full flex-col">

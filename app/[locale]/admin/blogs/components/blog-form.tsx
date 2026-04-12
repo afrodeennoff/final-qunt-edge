@@ -227,7 +227,7 @@ export function BlogForm({ post, locale }: Props) {
         )}
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.06]">
+      <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.6]">
         <Button
           type="button"
           variant="outline"

@@ -195,7 +195,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
   if (isInitialLoading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/[0.08]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/[0.8]"></div>
       </div>
     )
   }

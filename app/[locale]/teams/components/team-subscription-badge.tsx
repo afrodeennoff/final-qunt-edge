@@ -27,7 +27,7 @@ export async function TeamSubscriptionBadge({
         variant="secondary"
         className={cn(
           "px-2 py-0.5 text-xs whitespace-nowrap",
-          "bg-white/[0.04] text-secondary-foreground",
+          "bg-white/[0.4] text-secondary-foreground",
           className
         )}
       >
@@ -129,7 +129,7 @@ export async function TeamSubscriptionBadge({
                 badge.variant === 'trial' && "bg-semantic-info-bg text-primary-foreground dark:bg-semantic-info-bg hover:bg-semantic-info-bg dark:hover:bg-semantic-info-bg",
                 badge.variant === 'expiring' && "bg-destructive text-destructive-foreground hover:bg-destructive/90",
                 badge.variant === 'expired' && "bg-destructive/80 text-destructive-foreground hover:bg-destructive/70",
-                badge.variant === 'normal' && "bg-white/[0.04] text-secondary-foreground hover:bg-secondary/80",
+                badge.variant === 'normal' && "bg-white/[0.4] text-secondary-foreground hover:bg-secondary/80",
                 className
               )}
             >

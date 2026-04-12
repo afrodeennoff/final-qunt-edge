@@ -70,7 +70,7 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.06]">
+                <tr className="border-b border-white/[0.6]">
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
@@ -89,7 +89,7 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                   </tr>
                 ) : (
                   firms.map((f) => (
-                    <tr key={f.id} className="border-b border-white/[0.06] last:border-0">
+                    <tr key={f.id} className="border-b border-white/[0.6] last:border-0">
                       <td className="py-3 pr-4 font-medium">{f.name}</td>
                       <td className="py-3 pr-4 text-muted-foreground">{f.category ?? '—'}</td>
                       <td className="py-3 pr-4 text-muted-foreground">{f.platform ?? '—'}</td>
