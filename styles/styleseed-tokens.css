@@ -40,17 +40,17 @@
   --shadow-glow-crimson: 0 0 24px oklch(0.64 0.255 22 / 0.25);
 
   /* TEXT TOKENS */
-  --text-strong: oklch(0.97 0.003 264);
-  --text-primary: oklch(0.88 0.006 264);
-  --text-secondary: oklch(0.62 0.012 264);
-  --text-tertiary: oklch(0.46 0.008 264);
-  --text-disabled: oklch(0.30 0.006 264);
+  --text-strong: oklch(0.97 0 0);
+  --text-primary: oklch(0.88 0 0);
+  --text-secondary: oklch(0.62 0 0);
+  --text-tertiary: oklch(0.46 0 0);
+  --text-disabled: oklch(0.30 0 0);
 
   /* SURFACE TOKENS */
   --surface-page: oklch(0 0 0);
-  --surface-card: oklch(0.038 0.005 264);
-  --surface-subtle: oklch(0.058 0.006 264);
-  --surface-muted: oklch(0.085 0.007 264);
+  --surface-card: oklch(0.038 0 0);
+  --surface-subtle: oklch(0.058 0 0);
+  --surface-muted: oklch(0.085 0 0);
   --brand-tint: oklch(0.65 0.22 260 / 0.08);
 
   /* IMPACT COLORS (Trading P&L) */

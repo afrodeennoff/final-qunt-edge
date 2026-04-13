@@ -119,7 +119,7 @@ export default function AIFeatures() {
  viewport={{ once: true }}
  transition={{ duration: 0.5, ease }}
  >
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.65_0.22_260/0.12),transparent_45%),radial-gradient(circle_at_bottom_right,oklch(0.82_0.185_155/0.06),transparent_34%)]" />
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
  <div className="relative">
  <p className={`${TYPO_EYEBROW} mb-4 text-muted-foreground/46 [font-family:var(--home-copy)]`}>
  AI-Powered
@@ -132,13 +132,13 @@ export default function AIFeatures() {
  </p>
 
  <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Reason trail</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
  Recommendations stay explainable, reviewable, and easy to challenge.
  </p>
  </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Live context</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
  Signals inherit your rules, risk shape, and execution patterns instead of generic advice.

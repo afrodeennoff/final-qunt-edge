@@ -36,7 +36,7 @@ export default function Hero({ locale }: { locale: string }) {
  <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-32 pt-[88px]">
  <div className="absolute inset-0 bg-background" />
  <div className="pointer-events-none absolute inset-0 opacity-80">
- <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[oklch(0.65_0.22_260/0.18)] blur-[120px]" />
+ <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[rgba(255,255,255,0.08)] blur-[120px]" />
  <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-[oklch(0.82_0.185_155/0.08)] blur-[130px]" />
  <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [background-size:72px_72px] opacity-40" />
  </div>
@@ -50,9 +50,9 @@ export default function Hero({ locale }: { locale: string }) {
  >
  <Badge
  variant="outline"
- className="mb-8 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
+ className="mb-8 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
  >
- <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_oklch(0.65_0.22_260/0.7)] animate-pulse" />
+ <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,255,255,0.4)] animate-pulse" />
  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/62">
  Precision Trading Intelligence
  </span>
@@ -102,7 +102,7 @@ export default function Hero({ locale }: { locale: string }) {
  asChild
  size="lg"
  variant="outline"
- className="group h-12 w-full rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
+ className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
  >
  <a href="#how-it-works">
  Watch Demo
@@ -163,7 +163,7 @@ export default function Hero({ locale }: { locale: string }) {
  style={{ transformStyle: 'preserve-3d' }}
  className="relative"
  >
- <div className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.16),transparent_60%)] opacity-100 blur-2xl" />
+ <div className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_60%)] opacity-100 blur-2xl" />
  <DashboardPreview />
  </motion.div>
  </div>
@@ -184,7 +184,7 @@ export default function Hero({ locale }: { locale: string }) {
  (broker) => (
  <span
  key={broker}
- className="rounded-full border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/34 transition-all duration-300 hover:border-white/[0.14] hover:text-foreground/80 [font-family:var(--home-display)]"
+ className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/34 transition-all duration-300 hover:border-white/[0.14] hover:text-foreground/80 [font-family:var(--home-display)]"
  >
  {broker}
  </span>

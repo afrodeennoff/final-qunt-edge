@@ -18,7 +18,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
  <section className="relative py-24 sm:py-24 lg:py-24 overflow-hidden">
  <div className="pointer-events-none absolute inset-0 bg-background" />
  <div className="pointer-events-none absolute inset-0">
- <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full bg-[oklch(0.65_0.22_260/0.16)] blur-[130px]" />
+ <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full bg-[rgba(255,255,255,0.08)] blur-[130px]" />
  </div>
 
  <motion.div
@@ -28,8 +28,8 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
  viewport={{ once: true }}
  transition={{ duration: 0.6, ease }}
  >
- <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] px-6 py-16 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-40px_rgba(0,0,0,0.95),0_0_100px_-40px_oklch(0.65_0.22_260/0.16)] sm:px-12 sm:py-20">
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.14),transparent_45%)]" />
+ <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] px-6 py-16 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-40px_rgba(0,0,0,0.95),0_0_100px_-40px_rgba(255,255,255,0.08)] sm:px-12 sm:py-20">
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_45%)]" />
  <div className="relative z-10">
  <h2 className="mb-6 text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[1.02] tracking-[-0.05em] text-foreground/95 [font-family:var(--home-display)]">
  Ready to{' '}
@@ -69,7 +69,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
  <Button
  asChild
  size="lg"
- className="rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
+ className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
  >
  <Link href={`/${locale}/propfirms`}>
  Browse Prop Firms

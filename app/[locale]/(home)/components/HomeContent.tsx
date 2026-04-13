@@ -47,7 +47,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
  <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.12] sm:block" />
  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_340px_at_10%_20%,hsl(var(--foreground)/0.03),transparent_70%),radial-gradient(700px_320px_at_92%_6%,hsl(var(--foreground)/0.02),transparent_70%)]" />
  <div className="pointer-events-none absolute inset-0 bg-mesh-animated opacity-20" />
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.14),transparent_30%),radial-gradient(circle_at_90%_70%,oklch(0.82_0.185_155/0.06),transparent_24%)]" />
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_90%_70%,rgba(255,255,255,0.03),transparent_24%)]" />
  <div
  className="pointer-events-none absolute inset-0 opacity-[0.03] z-0"
  style={{

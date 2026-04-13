@@ -22,24 +22,24 @@
     /* ===== MARKETING SURFACES ===== */
     --mk-bg-0: 0 0% 0%;
     --mk-bg-1: 0 0% 0%;
-    --mk-bg-2: 220 30% 2%;
-    --mk-surface: 220 40% 3%;
-    --mk-surface-muted: 220 30% 4%;
-    --mk-border: 220 18% 7%;
+    --mk-bg-2: 0 0% 2%;
+    --mk-surface: 0 0% 3%;
+    --mk-surface-muted: 0 0% 4%;
+    --mk-border: 0 0% 7%;
     --mk-text: 0 0% 96%;
     --mk-text-muted: 0 0% 42%;
     --mk-lime: 155 100% 58%;
     --mk-lime-ink: 0 0% 6%;
 
     /* ===== BACKGROUND HIERARCHY (8 levels) ===== */
-    --bg-base: 220 40% 0%;
-    --bg-elevated: 220 40% 1.5%;
-    --bg-card: 220 40% 2.5%;
-    --bg-card-hover: 220 35% 3.5%;
-    --bg-overlay: 220 30% 5%;
-    --bg-modal: 220 25% 6.5%;
-    --bg-highlight: 220 20% 8%;
-    --bg-interactive: 220 15% 9%;
+    --bg-base: 0 0% 0%;
+    --bg-elevated: 0 0% 1.5%;
+    --bg-card: 0 0% 2.5%;
+    --bg-card-hover: 0 0% 3.5%;
+    --bg-overlay: 0 0% 5%;
+    --bg-modal: 0 0% 6.5%;
+    --bg-highlight: 0 0% 8%;
+    --bg-interactive: 0 0% 9%;
 
     /* ===== PRIMARY ACCENT ===== */
     --accent-neutral: var(--primary);
@@ -52,16 +52,16 @@
     /* ===== PRECISION PANEL ===== */
     --precision-cobalt: oklch(0.65 0.22 260);
     --precision-cobalt-rgb: 96 165 255;
-    --precision-panel: 220 40% 1.2%;
-    --precision-panel-elevated: 220 40% 2.8%;
-    --precision-panel-line: 220 18% 7%;
+    --precision-panel: 0 0% 1.2%;
+    --precision-panel-elevated: 0 0% 2.8%;
+    --precision-panel-line: 0 0% 7%;
     --precision-panel-inner: oklch(0.65 0.22 260);
 
     /* ===== OBSIDIAN FROST SYSTEM ===== */
-    --rs-frost-border: 220 20% 7%;
-    --rs-frost-border-alt: 220 18% 5%;
-    --rs-frost-ring: 220 22% 10%;
-    --rs-frost-surface: 220 100% 90% / 0.02;
+    --rs-frost-border: 0 0% 7%;
+    --rs-frost-border-alt: 0 0% 5%;
+    --rs-frost-ring: 0 0% 10%;
+    --rs-frost-surface: 0 0% 90% / 0.02;
     --rs-frost-hover: 0 0% 100% / 0.06;
     --rs-text-strong: 0 0% 96%;
     --rs-text-primary: 0 0% 90%;
@@ -92,25 +92,25 @@
     /* ===== FOREGROUND EXTENSIONS ===== */
     --fg-primary: var(--foreground);
     --fg-secondary: var(--muted-foreground);
-    --fg-tertiary: oklch(0.44 0.008 264);
-    --fg-muted: oklch(0.40 0.007 264);
-    --fg-disabled: oklch(0.28 0.005 264);
+    --fg-tertiary: oklch(0.44 0 0);
+    --fg-muted: oklch(0.40 0 0);
+    --fg-disabled: oklch(0.28 0 0);
 
     /* ===== BORDER EXTENSIONS ===== */
     --border-default: var(--border);
-    --border-subtle: 220 16% 6%;
-    --border-strong: 220 20% 10%;
+    --border-subtle: 0 0% 6%;
+    --border-strong: 0 0% 10%;
     --border-focus: var(--ring);
     --border-error: var(--destructive);
     --border-success: var(--success);
 
     /* ===== GLASSMORPHISM — Luxury grade ===== */
-    --glass-bg: 220 40% 3% / 0.70;
-    --glass-bg-strong: 220 40% 4% / 0.88;
-    --glass-bg-subtle: 220 40% 1% / 0.50;
+    --glass-bg: 0 0% 3% / 0.70;
+    --glass-bg-strong: 0 0% 4% / 0.88;
+    --glass-bg-subtle: 0 0% 1% / 0.50;
     --glass-blur: blur(24px) saturate(180%);
     --glass-blur-strong: blur(48px) saturate(200%);
-    --glass-border: 220 20% 8%;
+    --glass-border: 0 0% 8%;
     --glass-border-opacity: 0.14;
     --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.65),
                     0 0 0 0.5px rgba(180, 210, 255, 0.08);
@@ -128,17 +128,17 @@
     --v2-accent-foreground: oklch(1 0 0);
     --v2-accent-subtle: oklch(0.65 0.22 260 / 0.10);
     --v2-bg-base: oklch(0 0 0);
-    --v2-bg-surface: oklch(0.038 0.005 264);
-    --v2-bg-elevated: oklch(0.055 0.006 264);
-    --v2-bg-hover: oklch(0.095 0.008 264);
-    --v2-bg-active: oklch(0.11 0.009 264);
-    --v2-bg-overlay: oklch(0.072 0.007 264);
-    --v2-text-primary: oklch(0.97 0.003 264);
-    --v2-text-secondary: oklch(0.64 0.012 264);
-    --v2-text-muted: oklch(0.44 0.008 264);
-    --v2-text-tertiary: oklch(0.32 0.006 264);
-    --v2-border: oklch(0.15 0.010 264 / 0.50);
-    --v2-border-subtle: oklch(0.15 0.010 264 / 0.30);
+    --v2-bg-surface: oklch(0.038 0 0);
+    --v2-bg-elevated: oklch(0.055 0 0);
+    --v2-bg-hover: oklch(0.095 0 0);
+    --v2-bg-active: oklch(0.11 0 0);
+    --v2-bg-overlay: oklch(0.072 0 0);
+    --v2-text-primary: oklch(0.97 0 0);
+    --v2-text-secondary: oklch(0.64 0 0);
+    --v2-text-muted: oklch(0.44 0 0);
+    --v2-text-tertiary: oklch(0.32 0 0);
+    --v2-border: oklch(0.15 0 0 / 0.50);
+    --v2-border-subtle: oklch(0.15 0 0 / 0.30);
     --v2-success: oklch(0.82 0.185 155);
     --v2-success-subtle: oklch(0.82 0.185 155 / 0.10);
     --v2-error: oklch(0.64 0.255 22);

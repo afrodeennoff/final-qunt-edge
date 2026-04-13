@@ -39,7 +39,7 @@ export default function HowItWorks() {
  viewport={{ once: true }}
  transition={{ duration: 0.55, ease }}
  >
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.65_0.22_260/0.12),transparent_44%),radial-gradient(circle_at_bottom_right,oklch(0.82_0.185_155/0.06),transparent_34%)]" />
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_44%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
  <div className="relative">
  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-foreground/40 [font-family:var(--home-copy)]">
  How It Works
@@ -52,13 +52,13 @@ export default function HowItWorks() {
  </p>
 
  <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Signal</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
  Every session is translated into visible rules, drift, and compliance data.
  </p>
  </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Cadence</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
  The workflow stays lightweight enough to run every day, not just after drawdowns.
@@ -105,7 +105,7 @@ export default function HowItWorks() {
  transition={{ duration: 0.5, ease, delay: i * 0.1 }}
  >
  <div className="mb-8 flex items-center justify-between gap-3">
- <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-black/55 shadow-[0_0_18px_oklch(0.65_0.22_260/0.16)]">
+ <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-black/55 shadow-[0_0_18px_rgba(255,255,255,0.08)]">
  <span className="text-sm font-bold font-mono text-[var(--accent-blue)]">
  0{i + 1}
  </span>

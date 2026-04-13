@@ -102,7 +102,7 @@ export default function PricingSection() {
  </p>
 
  {/* Billing Toggle */}
- <div className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] p-1">
+ <div className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.04] p-1">
  <button
  type="button"
  onClick={() => setIsAnnual(false)}
@@ -143,7 +143,7 @@ export default function PricingSection() {
  relative rounded-[2rem] border p-7 lg:p-8 transition-all duration-300
  ${
  plan.variant === 'featured'
- ? 'border border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.045_0.006_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.18),0_0_40px_oklch(0.65_0.22_260/0.08),0_28px_80px_-44px_rgba(0,0,0,0.95)]'
+ ? 'border border-white/[0.12] bg-[oklch(0.045_0.006_264)] shadow-[0_0_0_0.5px_rgba(255,255,255,0.08),0_0_40px_rgba(255,255,255,0.04),0_28px_80px_-44px_rgba(0,0,0,0.95)]'
  : 'border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] hover:-translate-y-1 hover:border-white/[0.14]'
  }
  `}
@@ -208,7 +208,7 @@ export default function PricingSection() {
  ) : (
  <Button
  variant="outline"
- className="h-11 w-full rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] text-[0.9rem] font-medium text-foreground/76 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95"
+ className="h-11 w-full rounded-full border border-white/[0.12] bg-white/[0.04] text-[0.9rem] font-medium text-foreground/76 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95"
  >
  {plan.cta}
  </Button>

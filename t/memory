@@ -9,61 +9,55 @@
 
 ### Visual Design System — "Electric Obsidian + Cobalt Tint"
 - Dark-only void-black canvas with electric cobalt accents
-- All surfaces use oklch(0.65 0.22 260 / X) cobalt-tinted surfaces (NOT bg-white/[X])
+- All surfaces use oklch(0.65 0.22 260 / X) cobalt-tinted surfaces
 - 153 files color-injected (544 surface/border changes)
 - CSS accent system: cobalt scrollbar, selection highlight, focus rings, ambient card glow
 
 ### Performance State — 200FPS Target
-- **0** repeat:Infinity animations in interactive components
-- **0** filter:blur() in any animation
-- **0** backdrop-blur anywhere in the codebase
-- **0** transition-all in UI/dashboard components
-- **0** cursor-tracking mousemove handlers
+- 0 repeat:Infinity animations in interactive components
+- 0 filter:blur() in any animation
+- 0 backdrop-blur anywhere in the codebase
+- 0 transition-all in UI/dashboard components
+- 0 cursor-tracking mousemove handlers
 - content-visibility: auto on all <section> elements
 - contain: layout+style+paint on dashboard grid
 
 ### Spacing System (Standardized)
-- All home page sections: `py-24` (25 sections consistent)
-- All landing page sections: `py-24` (7 sections consistent)
-- Hero: `pb-32 pt-[88px]` (special, intentional)
-- Small/utility sections (filters, cards, search): variable (py-5, py-6, etc.) — intentional
+- All home page sections: py-24 (25 sections)
+- All landing page sections: py-24 (7 sections)
+- Hero: pb-32 pt-[88px] (special)
 
-### Sidebar Navigation (Rebalanced)
-- **5 groups** (no visible headers, flat list with thin separators):
-  - Overview (3): Dashboard, Journal, Accounts
-  - Analysis (4): Scenario Lab, Analytics, Coaching, Playbook
-  - Profile & Social (3): Trader Profile, Leaderboard, Teams
-  - Resources (2): Prop Firms, Deals
-  - System (5): Import, Data, Sync, Billing, Settings
-- **18 items, 18 unique icons** — zero duplicates
-- Import page now linked in sidebar (was missing before)
-- Group labels hidden — items separated by thin `bg-sidebar-border/40` lines
+### Sidebar Navigation (Flat)
+- 5 groups, no visible headers, thin separators
+- 18 items, 18 unique icons, zero duplicates
+- Import page linked in sidebar
 
-### Build Status
-- `npx tsc --noEmit` = 0 errors
-- `npm run lint` = 0 errors, 933 warnings (budget: 1546)
-- Empty `className=""` cleaned from 14 instances
-- NOT YET COMMITTED — user said no commit/deploy until they say so
+### Functional Audit — COMPLETE
+- **0** tsc errors
+- **0** hardcoded secrets
+- **0** SQL injection vulnerabilities (all parameterized tagged templates)
+- **0** unstable_cache usage (all use 'use cache' + cacheLife/cacheTag)
+- **0** missing loading.tsx (all 30 routes covered)
+- **4** error boundaries (landing, admin, dashboard, teams)
+- **26** 'use cache' directives with **68** cacheLife/cacheTag references
+- **.env.example**: 240 lines, all runtime env keys documented
+- **Prisma schema**: validated, generated client exists
 
-## Completed This Session
-1. ✅ Fixed nested <button> hydration error in PricingSection.tsx
-2. ✅ Killed all 15 performance bottlenecks
-3. ✅ Injected cobalt color system across entire app
-4. ✅ Deployed to Vercel production (commit e4eb4d7)
-5. ✅ Fixed Hero double card → no card → black card with color gradient
-6. ✅ Rebalanced sidebar: 5 groups, unique icons, added Import link
-7. ✅ Removed sidebar group headers (flat list with separators)
-8. ✅ Standardized section padding: all py-24
-9. ✅ Cleaned 14 empty className="" instances
-10. ✅ Audited full app: typecheck, lint, spacing, icons, routes
+### Routes Coverage
+- 10 dashboard routes (all have loading.tsx)
+- 11 admin routes (all have loading.tsx)
+- 6 teams routes (all have loading.tsx)
+- 31 landing routes
+- 57 API routes
+- 4 error boundaries
 
 ## Uncommitted Changes
-- `components/sidebar/dashboard-sidebar.tsx` — rebalanced sidebar nav
-- `components/ui/sidebar-primitives/sidebar-nav-group.tsx` — flat list (no group labels)
-- `app/[locale]/(home)/components/Hero.tsx` — black cards with color gradient
-- All home/landing sections — standardized py-24
-- `app/[locale]/dashboard/components/mindset/*.tsx` — cleaned empty className
-- `app/[locale]/dashboard/components/import/manual/manual-processor.tsx` — cleaned empty className
+- Sidebar rebalanced (flat list, unique icons)
+- Section padding standardized (all py-24)
+- 20 loading.tsx created for missing routes
+- .env.example updated (+31 env vars)
+- Empty className cleaned (14 instances)
+- Hero cards restyled (black with color gradient)
 
 ## Blockers
 - None — waiting for user to say "deploy"

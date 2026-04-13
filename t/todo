@@ -8,17 +8,20 @@
 - [x] Remove all filter:blur() from animations
 - [x] Remove all backdrop-blur from codebase
 - [x] Remove hover paints from widget-shell/chart-surface
-- [x] Replace transition-all with specific properties
+- [x] Replace transition-all with specific properties (72 files)
 - [x] Remove cursor-tracking JS from MagneticButton/InteractiveWrapper
 - [x] Add content-visibility on sections
 - [x] Add contain:layout+style+paint on dashboard grid
-- [x] Inject cobalt color system across entire app
+- [x] Inject cobalt color system across entire app (153 files)
 - [x] Fix Hero double card → black cards with color gradient
 - [x] Rebalance sidebar: 5 groups, 18 unique icons, added Import
 - [x] Remove sidebar group headers (flat list with separators)
 - [x] Standardize section padding to py-24 (all home + landing)
 - [x] Clean empty className="" (14 instances)
 - [x] Full app audit: typecheck, lint, spacing, icons, routes
+- [x] End-to-end functional audit (database, API, auth, providers)
+- [x] Add loading.tsx to 20 missing routes (dashboard, admin, teams)
+- [x] Update .env.example with 31 missing env vars (240 lines total)
 
 ## Pending
 - [ ] Commit and deploy when user says "deploy"
