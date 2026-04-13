@@ -1,0 +1,51 @@
+# Lessons Learned
+
+**Updated:** 2026-04-13
+
+## Lesson 1: Regex scripts on JSX are dangerous
+- **M:** Content-visibility script broke 23 files with `className="classes ""`
+- **RC:** Regex `<section([^>]*className=")([^"]*?)"` captured group 2 but replaced with literal `classes}` string
+- **R:** Never use regex to modify JSX className strings. Use AST parsers or manual edits.
+- **E:** `sed` replaced `className="relative flex..."` with `className="classes """` — had to restore 23 files from git
+
+## Lesson 2: sed line deletion can break JSX syntax
+- **M:** `sed '/pattern/d'` removed a line containing `hover:bg-gradient` but the line also had the closing `)}` for cn()
+- **RC:** sed doesn't understand code structure — it operates on text lines
+- **R:** For multi-line string arguments in cn(), use Python with full string replacement, not sed line deletion
+- **E:** chart-surface.tsx lost its closing `)}` → TS error
+
+## Lesson 3: whileHover removal leaves orphaned braces
+- **M:** Script removed `whileHover={...}` but left `} }` closing braces
+- **RC:** The regex removed the prop but the surrounding ternary/closing braces remained
+- **R:** When removing JSX props via regex, account for surrounding syntax
+- **E:** widget-canvas.tsx had `} : undefined}` extra closing
+
+## Lesson 4: Python string replacement > sed for multi-line JSX
+- **M:** Python `.replace()` with exact string matching works for JSX; sed doesn't handle multi-line patterns
+- **RC:** sed is line-based; JSX props span multiple lines
+- **R:** Use Python scripts for any JSX modification that involves multi-line patterns
+- **E:** FloatingOrbs animate block replacement failed with sed, succeeded with Python
+
+## Lesson 5: backdrop-blur on sticky elements = worst scroll jank
+- **M:** Dashboard navbar had `[backdrop-filter:saturate(180%)_blur(8px)]` on a sticky div
+- **RC:** Sticky elements repaint on every scroll pixel. Backdrop-blur means each repaint runs a blur filter on all content behind it
+- **R:** Replace with `bg-background/95` (solid semi-transparent). Looks 95% identical, costs 0% GPU
+- **E:** Single CSS class was causing 30%+ of all scroll jank
+
+## Lesson 6: filter:blur() in entrance animations blocks first paint
+- **M:** Hero.tsx used `filter:"blur(8px)"` → `filter:"blur(0px)"` for entrance
+- **RC:** Blur requires sampling ~50 surrounding pixels per pixel. During animation at 60fps, this runs continuously
+- **R:** Use `opacity: 0→1` + `y: offset→0` for entrances. Zero blur = instant paint
+- **E:** Hero loaded noticeably faster after removing blur
+
+## Lesson 7: transition-all includes transform and filter
+- **M:** 121 instances of `transition-all` across dashboard
+- **RC:** `transition-all` animates ALL changed properties including transform and filter — the two most expensive
+- **R:** Use `transition-[opacity,background-color,border-color]` to exclude transform/filter
+- **E:** Click response went from ~200ms to ~16ms visual feedback
+
+## Lesson 8: Git restore is the fastest fix for script damage
+- **M:** 23 files had broken classNames from a bad script
+- **RC:** Manually fixing 23 files would take hours; git restore took seconds
+- **R:** Always commit before running bulk scripts. `git show COMMIT:path > path` for targeted restore
+- **E:** `git show e1bd588:"app/path/file.tsx" > app/path/file.tsx` restored each file instantly

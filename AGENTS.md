@@ -1,22 +1,23 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-03-30
-**Updated:** 2026-04-12
-**Commit:** 6b191e8
-**Branch:** v2
+**Updated:** 2026-04-13
+**Commit:** e4eb4d7
+**Branch:** codex-obsidian-v3-redesign
 
 ## VISUAL REDESIGN STATUS (2026-04-12)
 
-A complete ultra-premium visual redesign was applied across the entire application. **All changes are visual-only — zero behavioral, functional, or backend modifications.**
+A complete ultra-premium visual redesign was applied across the entire application, followed by a performance optimization pass and cobalt color injection. **All changes are visual-only — zero behavioral, functional, or backend modifications.**
 
 ### Design System — "Electric Obsidian"
 
 - **Theme**: Dark-only, void-black canvas (`oklch(0 0 0)`) with electric cobalt accents (`oklch(0.65 0.22 260)`)
-- **Surfaces**: Glass-morphism with `bg-white/[0.02]`–`bg-white/[0.06]`, frosted borders (`border-white/[0.06]`–`border-white/[0.12]`)
-- **Shadows**: Cinematic layered — `inset_0_1px_0` glass highlights + deep ambient shadows
+- **Surfaces**: Cobalt-tinted with `oklch(0.65 0.22 260 / 0.03)`–`oklch(0.65 0.22 260 / 0.08)` (NOT `bg-white/[X]` — that was replaced). Borders use `oklch(0.65 0.22 260 / 0.08)` (NOT `border-white/[X]`).
+- **Shadows**: Static inset highlights `oklch(0.65 0.22 260 / 0.06)` — no hover shadows on scroll-path components.
 - **Radius**: Consistent `rounded-xl` (cards, dialogs, popovers, sheets)
-- **Motion**: Spring ease `[0.22, 1, 0.36, 1]` everywhere. Blur entrance (6px→0). GPU-composited `translateZ(0)`.
-- **Scroll**: `scroll-smooth-butter` class on all main containers. `overscroll-behavior: contain`, 5px thin scrollbars.
+- **Motion**: Spring ease `[0.22, 1, 0.36, 1]` for remaining transitions. **NO blur entrances** — removed all `filter:blur()` from animations. **NO infinite animations** in interactive components. **NO backdrop-blur** anywhere.
+- **Scroll**: `scroll-smooth-butter` class on all main containers. `content-visibility: auto` on all `<section>` elements. `contain: layout style paint` on dashboard grid.
+- **Scrollbars**: Cobalt-tinted via CSS. Selection highlight also cobalt.
 
 ### Core Primitives Rewritten
 
@@ -28,50 +29,56 @@ A complete ultra-premium visual redesign was applied across the entire applicati
 | StatsCard | `components/ui/stats-card.tsx` | Glow icon containers, emerald/red trend colors, premium skeleton states |
 | Dialog | `components/ui/dialog.tsx` | Glass overlay, ambient gradient glow, premium close button |
 | Tabs | `components/ui/tabs.tsx` | Minimal pill list, glass surface, active state with inner highlight |
-| Tooltip | `components/ui/tooltip.tsx` | Backdrop-blur, premium font, deeper shadow |
-| Sheet | `components/ui/sheet.tsx` | Deeper shadow, glass border, premium close button |
-| Popover | `components/ui/popover.tsx` | Glass surface, deeper cinematic shadow |
+| Tooltip | `components/ui/tooltip.tsx` | Premium font, deeper shadow (no backdrop-blur) |
+| Sheet | `components/ui/sheet.tsx` | Shadow, glass border, premium close button (no backdrop-blur) |
+| Popover | `components/ui/popover.tsx` | Surface, deeper shadow (no backdrop-blur) |
 | Dropdown | `components/ui/dropdown-menu.tsx` | Enhanced shadow, refined borders |
-| Select | `components/ui/select.tsx` | Premium glass, deeper shadow |
+| Select | `components/ui/select.tsx` | Premium surface, deeper shadow (no backdrop-blur) |
+| BackgroundGlow | `components/ui/background-glow.tsx` | Static gradient orbs (no continuous animation) |
+| InteractiveWrapper | `components/animation/interactive.tsx` | No cursor tracking, no infinite glow pulse, no blur |
+| MagneticButton | `components/animation/interactive.tsx` | Static (no cursor tracking). whileHover scale only. |
 | WidgetShell | `components/ui/widget-shell.tsx` | Smooth entrance animation, refined border/hover |
 | ChartSurface | `components/ui/chart-surface.tsx` | Premium border, spring transition |
 
-### Animation System
+### Animation System (Performance-Optimized)
 
-- **`globals.css`**: 200+ lines of premium motion utilities:
-  - `scroll-smooth-butter` — butter-smooth scroll container
-  - `animate-page-enter/exit` — blur+scale route transitions
-  - `animate-content-reveal` — blur dissolve content entrance
-  - `animate-float-gentle` — ambient decorative float (6s)
-  - `animate-glow-breathe` — breathing light effect (4s)
-  - `animate-shimmer-sweep` — premium loading shimmer
-  - `animate-elastic-bounce` — playful micro-feedback
-  - `animate-fade-up-smooth` — scroll-triggered reveals
-  - `animate-scale-reveal` — widget/card entrance with blur dissolve
-  - `hover-lift-smooth` / `hover-glow-smooth` / `hover-scale-smooth` / `hover-border-glow` — premium hover effects
+- **`globals.css`**: 200+ lines of motion utilities (all respect `prefers-reduced-motion`):
+  - `scroll-smooth-butter` — smooth scroll container
+  - `animate-page-enter/exit` — route transitions (opacity only, no blur)
+  - `animate-content-reveal` — content entrance (opacity only)
+  - `animate-shimmer-sweep` — loading shimmer (play-once, no infinite loop)
+  - `animate-fade-up-smooth` — scroll-triggered reveals (opacity + y, no blur)
   - `transition-butter` / `transition-elastic` — spring transition tokens
-  - `stagger-reveal-smooth` — staggered children with 60ms delays
-  - `widget-enter-smooth` — automatic widget entrance
-- **`enhanced-motion.tsx`**: `MotionSection` now uses blur entrance (`filter: blur(6px)→0`). `MotionStaggerItem` uses 3px blur + scale 0.99.
-- **GPU acceleration**: All elements get `translateZ(0)`. Animated elements get `will-change: transform, opacity`.
-- **Micro-interactions**: All buttons scale to 0.97 on `:active` (80ms). Focus rings animate with spring (200ms). All interactive elements get 200ms spring transitions.
+  - `widget-enter-smooth` — widget entrance
+- **`enhanced-motion.tsx`**: `MotionSection` uses opacity + y only (no blur, no scale). `FloatingOrbs` are static (no animation).
+- **GPU acceleration**: Only `.animate-float-gentle`, `.animate-glow-breathe`, `.marketing-orb`, `.marketing-pulse` get `will-change`.
+- **No `filter:blur()` in any animation** — removed for scroll/cursor performance.
+- **No `backdrop-blur` anywhere** — replaced with solid semi-transparent backgrounds.
+- **No `repeat: Infinity` in interactive components** — `loading-states.tsx` is the only exception (only runs during loading states).
 - **Reduced motion**: All animations respect `prefers-reduced-motion: reduce`.
 
 ### Pages Redesigned
 
-- **Auth page** (`authentication/page-client.tsx`): Gradient text hero, frost glass cards, premium icon containers, smooth blur entrance
-- **Home Hero** (`Hero.tsx`): Blur entrance animations, smoother spring physics
-- **Dashboard header**: Refined shadows, smoother transitions
-- **Dashboard widgets**: Smooth entrance + premium hover borders
+- **Auth page** (`authentication/page-client.tsx`): Gradient text hero, cobalt-tinted cards, premium icon containers, smooth entrance
+- **Home Hero** (`Hero.tsx`): Opacity + y entrance (no blur), smoother spring physics
+- **Dashboard header**: Refined shadows, cobalt-tinted surfaces
+- **Dashboard widgets**: Cobalt-tinted surfaces, no hover paints during scroll
+- **Dashboard navbar**: `bg-background/95` solid semi-transparent (no backdrop-blur)
 
 ### Bulk Transformation Applied
 
 - **289 files** transformed with **1,812 class changes** via `scripts/ultra-qhd-redesign.mjs`
 - **37 additional files** fixed in teams/admin (double-zero regex bug)
+- **319 files** stripped of `backdrop-blur` via `scripts/fix-scroll-performance.mjs` (65,758 instances removed)
+- **72 files** had `transition-all` → `transition-[opacity,background-color,border-color]` via `scripts/fix-transition-all.mjs`
+- **153 files** color-injected with cobalt tint via `scripts/inject-color.mjs` (544 changes)
 - All `easeOut` → spring ease `[0.22, 1, 0.36, 1]` across all page files
 - All entrance y-offsets reduced (24→10, 20→8, 18→8) for subtler reveals
 - All `variant="error"` → `variant="destructive"` (Badge/Button)
 - All `variant="accent"` → `variant="info"` (Badge)
+- All `filter:blur()` removed from entrance animations (Hero, spring-button, interactive)
+- All `repeat:Infinity` removed from interactive components (GlowButton, FloatingOrbs, shimmer)
+- All cursor-tracking mousemove handlers removed (MagneticButton, InteractiveWrapper)
 - State types preserved: `ChartSurfaceState` still has `"error"`, `WidgetShellState` still has `"error"` — these are semantic states, not design variants
 
 ### Type Safety
@@ -141,7 +148,7 @@ qunt-edge/
 - **ESLint**: `no-explicit-any` = ERROR, `no-console` = ERROR (warn/error only), complexity ≤ 10
 - **TypeScript**: Strict mode, bundler resolution, ES2017 target
 - **Dark-only theme**: No light mode exists. All surfaces are dark.
-- **Obsidian V3 visual system (Electric Obsidian)**: Dark-only void-black canvas with electric cobalt accents. Glass-morphism surfaces (`bg-white/[0.02]`–`[0.06]`), frosted borders (`border-white/[0.06]`), cinematic layered shadows, spring motion `[0.22, 1, 0.36, 1]`. Use `scroll-smooth-butter` for main scroll containers. All interactive elements get spring transitions. See "VISUAL REDESIGN STATUS" section above for full details.
+- **Obsidian V3 visual system (Electric Obsidian)**: Dark-only void-black canvas with electric cobalt accents. Cobalt-tinted surfaces (`oklch(0.65 0.22 260 / 0.03-0.08)`), tinted borders (`oklch(0.65 0.22 260 / 0.08)`), spring motion `[0.22, 1, 0.36, 1]`. Use `scroll-smooth-butter` for main scroll containers. **NO** `backdrop-blur`, `filter:blur()`, `transition-all`, or `repeat:Infinity` in interactive components. See "VISUAL REDESIGN STATUS" section above for full details.
 - **Primitive-first visual edits**: Prefer updating shared primitives in `components/ui/**` over route-local one-offs. Keep Radix `data-*` styling, `asChild`, and existing component exports intact.
 - **State management**: Zustand with persist middleware. `useTradingDomainStore` is source of truth for trades.
 - **Data flow**: Server Components → cached functions (`use cache`) → Prisma. Mutations → server actions → `updateTag()`.
@@ -162,7 +169,12 @@ qunt-edge/
 - **No Trading Score duplication** — Always use `lib/score-calculator.ts` → `deriveScoreMetricsFromTrades()`.
 - **No `variant="error"`** — Badge/Button error variant is `"destructive"`. State enums (e.g. `ChartSurfaceState`) may still use `"error"` as a semantic state value.
 - **No `variant="accent"`** — Badge accent variant is `"info"`.
-- **No `bg-card`/`bg-muted`/`bg-secondary` as raw classes** — These were bulk-replaced with `bg-white/[0.02]`–`bg-white/[0.05]` for the glass surface system. Prefer explicit `bg-white/[X]` opacity values.
+- **No `bg-card`/`bg-muted`/`bg-secondary` as raw classes** — Use `oklch(0.65 0.22 260 / 0.03-0.08)` cobalt-tinted surfaces. Do NOT use `bg-white/[X]` either — that was replaced with oklch cobalt tint.
+- **No `backdrop-blur-*`** — Removed entirely for scroll performance. Use solid semi-transparent backgrounds (`bg-background/95` for sticky elements).
+- **No `filter:blur()` in animations** — Causes massive GPU load during scroll/load. Use `opacity` + `y` only.
+- **No `transition-all`** — Includes transform/filter which block click response. Use `transition-[opacity,background-color,border-color]`.
+- **No `repeat:Infinity` in interactive components** — `loading-states.tsx` is the only exception.
+- **No cursor-tracking `onMouseMove`** for visual effects — Causes layout thrash on mouse move.
 
 ## COMMANDS
 
@@ -212,7 +224,7 @@ npm run analyze:bundle         # Bundle analysis
 - **Dashboard chart loading**: In `server/equity-chart.ts`, keep Prisma reads minimal via explicit `select` projections. In the client chart, if the server action is slow/fails/returns empty while local trades exist, fall back to local computation instead of indefinite loading UI.
 - **Dashboard widget chrome ownership**: In `app/[locale]/dashboard/components/widget-canvas.tsx`, keep normal-mode wrappers visually transparent. Widget borders/backgrounds belong to the widget surface component (`WidgetShell`, `ChartSurface`, `StatsCard`, `Card`); only customize mode may add outer shell chrome.
 - **Dashboard header action styling**: Keep `dashboard-header` action controls on one subdued rounded-pill system with low-opacity borders/backgrounds. Do not mix heavy square outlines and pill controls in the same top bar.
-- **Obsidian motion**: Motion must stay presentation-only. Respect reduced motion and avoid any animation that changes data flow, navigation behavior, or layout contracts. Use spring ease `[0.22, 1, 0.36, 1]` for all transitions. Use blur entrance (`filter: blur(6px)→0`) for content reveals. Use `scroll-smooth-butter` for main scroll containers. Favor subtle blur dissolve, staggered reveal, and restrained hover elevation over dramatic movement. GPU-accelerate with `will-change: transform, opacity` on animated elements.
+- **Obsidian motion**: Motion must stay presentation-only. Respect reduced motion. Use spring ease `[0.22, 1, 0.36, 1]` for transitions. **NO** blur entrances (`filter:blur()`). **NO** `backdrop-blur`. **NO** `transition-all`. Use `scroll-smooth-butter` for main scroll containers. Favor subtle opacity fades and restrained hover elevation over dramatic movement. `content-visibility: auto` on sections. `contain: layout style paint` on grid containers.
 - **Home page shell**: `app/[locale]/(home)/layout.tsx` must opt out of the marketing sidebar via `MarketingLayoutShell showSidebar={false}`. Do not mount `LandingSidebar` on the home page.
 - **Cached Prisma helper style**: For server read helpers that are wrapped by `'use cache'`, prefer direct `async/await` loaders returning plain objects over `Promise.all(...).then(...)` / `query.then(...)` chains. Re-verify full `npm run typecheck` after any cache-helper refactor.
 - **Server barrel exports**: In shared server barrels like `server/database.ts`, do not `export *` from modules that contain cached server loaders. Use explicit named re-exports so Next.js generated `$$RSC_SERVER_CACHE_*` internals cannot collide during build.
