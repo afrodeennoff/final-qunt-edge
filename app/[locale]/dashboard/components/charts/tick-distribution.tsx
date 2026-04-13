@@ -253,7 +253,7 @@ export default React.memo(function TickDistributionChart({
  dataKey="count"
  radius={[2, 2, 2, 2]}
  maxBarSize={size ==="small" ? 25 : 40}
- className="transition-all duration-300 ease-in-out"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out"
  cursor="pointer"
  >
  {chartData.map((entry) => (
@@ -274,7 +274,7 @@ export default React.memo(function TickDistributionChart({
  stroke="hsl(var(--chart-axis))"
  strokeOpacity={0.55}
  strokeWidth={1}
- className={cn("hover:fill-opacity-100 transition-all duration-300",
+ className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",
  parseInt(entry.ticks) >= 0 ?"chart-positive-emphasis" :"chart-negative-muted"
  )}
  />

@@ -141,7 +141,7 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
  <Badge
  variant="outline"
  className={cn("h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1",
- badgeStyles[highestImportance as keyof typeof badgeStyles],"transition-all duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
+ badgeStyles[highestImportance as keyof typeof badgeStyles],"transition-[opacity,background-color,border-color] duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
  )}
  onClick={(e) => e.stopPropagation()}
  >
@@ -178,7 +178,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  <PopoverTrigger asChild>
  <Badge
  variant="outline"
- className={cn("h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1","bg-secondary/22 text-foreground/95 border-border/55 hover:bg-secondary/30 dark:bg-secondary/22 dark:text-foreground/95 dark:border-border/55 dark:hover:bg-secondary/30","transition-all duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
+ className={cn("h-4 px-1.5 text-[8px] sm:text-[9px] font-medium cursor-pointer relative z-0 w-auto justify-center items-center gap-1","bg-secondary/22 text-foreground/95 border-border/55 hover:bg-secondary/30 dark:bg-secondary/22 dark:text-foreground/95 dark:border-border/55 dark:hover:bg-secondary/30","transition-[opacity,background-color,border-color] duration-200 ease-in-out","hover:scale-110 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]","active:scale-95"
  )}
  onClick={(e) => e.stopPropagation()}
  >
@@ -210,7 +210,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  {renewals.map((account, index) => (
  <div
  key={account.id}
- className="group relative p-3 sm:p-4 rounded-lg border border-border/55 bg-secondary/22 hover:bg-secondary/30 hover:border-border/55 transition-all duration-200 hover:shadow-xs"
+ className="group relative p-3 sm:p-4 rounded-lg border border-border/55 bg-secondary/22 hover:bg-secondary/30 hover:border-border/55 transition-[opacity,background-color,border-color] duration-200 hover:shadow-xs"
  >
  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3">
  {/* Account Info */}
@@ -635,7 +635,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  <React.Fragment key={dateString}>
  <button
  type="button"
- className={cn("group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-all duration-200","hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
+ className={cn("group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-[opacity,background-color,border-color] duration-200","hover:-translate-y-[1px] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
  !dayData &&"bg-white/[0.086] border-white/[0.04]",
  dayPnl > 0 &&"bg-semantic-success-bg/10 border-semantic-success-border/30",
  dayPnl < 0 &&"bg-semantic-error-bg/10 border-semantic-error-border/30",
@@ -717,7 +717,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  return (
  <button
  type="button"
- className={cn("flex h-full cursor-pointer items-center justify-center rounded-lg border border-white/[0.04] bg-white/[0.086] px-1 transition-all","hover:bg-secondary/50 hover:border-primary/40",
+ className={cn("flex h-full cursor-pointer items-center justify-center rounded-lg border border-white/[0.04] bg-white/[0.086] px-1 transition-[opacity,background-color,border-color]","hover:bg-secondary/50 hover:border-primary/40",
  index === 6 &&"rounded-tr-xl",
  index === 41 &&"rounded-br-xl"
  )}

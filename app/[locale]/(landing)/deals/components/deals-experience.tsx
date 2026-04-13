@@ -103,7 +103,7 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-[68px] z-40 bg-[hsl(var(--background)/0.82)] backdrop-blur">
+    <nav className="sticky top-[68px] z-40 bg-[hsl(var(--background)/0.82)]">
       <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
         <div className="my-2 flex gap-1.5 overflow-x-auto rounded-full bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
           {TABS.map((tab) => (

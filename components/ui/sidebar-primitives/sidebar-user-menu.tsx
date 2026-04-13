@@ -46,7 +46,7 @@ export function SidebarUserMenu({
  <DropdownMenuTrigger asChild>
  <SidebarMenuButton
  size="lg"
- className="group/user w-full rounded-xl px-2.5 py-1.5 transition-all duration-200 hover:bg-sidebar-accent/12 data-[state=open]:bg-sidebar-accent/18 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+ className="group/user w-full rounded-xl px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:bg-sidebar-accent/12 data-[state=open]:bg-sidebar-accent/18 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
  >
  <div className="flex w-full items-center gap-2.5">
  <div className="relative shrink-0">
@@ -118,7 +118,7 @@ export function SidebarUserMenu({
  {onLogout && (
  <DropdownMenuItem
  onClick={onLogout}
- className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-all duration-200 hover:bg-destructive/10"
+ className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer my-1.5 mx-1.5 rounded-lg transition-[opacity,background-color,border-color] duration-200 hover:bg-destructive/10"
  >
  <LogOut className="mr-2 size-4" />
  <span className="font-medium">Log out</span>

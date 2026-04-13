@@ -123,7 +123,7 @@ export function UnifiedMobileNav({
         <SheetDescription className="sr-only">
           Primary site navigation. Use links to navigate to different sections.
         </SheetDescription>
-        <div className="flex h-full flex-col overflow-y-auto rounded-[2rem] border border-white/[0.08] bg-black/78 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-36px_rgba(0,0,0,0.92)] backdrop-blur-2xl">
+        <div className="flex h-full flex-col overflow-y-auto rounded-[2rem] border border-white/[0.08] bg-black/78 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-36px_rgba(0,0,0,0.92)]">
           {showUser && (
             <>
               <div className="px-3 pt-6 pb-2">

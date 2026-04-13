@@ -42,7 +42,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  </div>
 
  <div
- className="absolute inset-0 flex origin-bottom items-center justify-center transition-all duration-500 ease-out"
+ className="absolute inset-0 flex origin-bottom items-center justify-center transition-[opacity,background-color,border-color] duration-500 ease-out"
  style={{ transform: `rotate(${rotation}deg)` }}
  >
  <div

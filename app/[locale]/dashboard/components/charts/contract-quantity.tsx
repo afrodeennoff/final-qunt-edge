@@ -224,7 +224,7 @@ export default React.memo(function ContractQuantityChart({
  dataKey="totalQuantity"
  radius={[2, 2, 2, 2]}
  maxBarSize={size ==="small" ? 25 : 40}
- className="transition-all duration-300 ease-in-out"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out"
  >
  {chartData.map((entry, index) => (
  <Cell
@@ -234,7 +234,7 @@ export default React.memo(function ContractQuantityChart({
  stroke="hsl(var(--chart-axis))"
  strokeOpacity={0.55}
  strokeWidth={1}
- className="hover:fill-opacity-100 transition-all duration-300"
+ className="hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300"
  />
  ))}
  </Bar>

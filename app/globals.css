@@ -2100,6 +2100,17 @@
   }
 }
 
+/* Dashboard grid: contain layout/paint to prevent reflow cascading */
+.react-grid-layout {
+  contain: layout style paint;
+}
+
+/* Lazy-loaded images: skip layout until visible */
+img[loading="lazy"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
+}
+
 /* ===== HOME PAGE ANIMATIONS ===== */
 @keyframes fade-in {
   from {

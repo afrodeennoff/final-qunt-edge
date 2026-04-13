@@ -91,7 +91,7 @@ function SessionIndicator({ session, hourElements, containerRef }: {
 
  return (
  <div 
- className={cn("absolute left-0 w-1 border-l cursor-pointer transition-all hover:w-2 hover:opacity-100",
+ className={cn("absolute left-0 w-1 border-l cursor-pointer transition-[opacity,background-color,border-color] hover:w-2 hover:opacity-100",
  session.color,"opacity-60"
  )}
  style={{

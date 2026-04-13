@@ -101,7 +101,7 @@ const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
  return (
  <div 
  ref={ref}
- className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-white/[0.06] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-all duration-150 ease-in-out",
+ className={cn("cursor-pointer rounded-xl relative group m-1 w-full overflow-hidden border border-white/[0.06] bg-white/[0.060] px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)]","active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 ease-in-out",
  className
  )}
  style={style}

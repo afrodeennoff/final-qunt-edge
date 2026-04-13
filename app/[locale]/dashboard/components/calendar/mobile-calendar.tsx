@@ -216,7 +216,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  <button
  type="button"
  key={dateString} // Key is the timezone-correct date string
- className={cn("relative flex cursor-pointer flex-col justify-between rounded-lg border p-1 transition-all",
+ className={cn("relative flex cursor-pointer flex-col justify-between rounded-lg border p-1 transition-[opacity,background-color,border-color]",
  dayData ?"border-border/55" :"border-border/55 bg-white/[0.092]",
  dayPnl > 0 &&"border-semantic-success-border/40",
  dayPnl < 0 &&"border-semantic-error-border/40",

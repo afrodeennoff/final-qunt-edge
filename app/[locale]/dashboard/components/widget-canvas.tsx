@@ -649,7 +649,7 @@ export default function WidgetCanvas() {
  >
  <ErrorBoundary fallback={<WidgetErrorFallback widgetId={widget.i} />}>
  <div
- className={cn("relative h-full w-full overflow-hidden rounded-xl transition-all duration-300 group/widget",
+ className={cn("relative h-full w-full overflow-hidden rounded-xl transition-[opacity,background-color,border-color] duration-300 group/widget",
  isCustomizing
  ?"border border-v2-accent/30 bg-v2-bg-surface/95 shadow-[var(--v2-glow-ambient)]"
  :"border border-transparent bg-transparent"

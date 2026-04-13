@@ -19,7 +19,7 @@ const SelectTrigger = React.forwardRef<
  <SelectPrimitive.Trigger
  ref={ref}
  data-slot="select-trigger"
- className={cn("flex h-10 w-full items-center justify-between rounded-md border border-white/[0.06] bg-transparent px-3 py-2 text-sm shadow-none transition-all duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50","focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
+ className={cn("flex h-10 w-full items-center justify-between rounded-md border border-white/[0.06] bg-transparent px-3 py-2 text-sm shadow-none transition-[opacity,background-color,border-color] duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50","focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
  error &&"border-v2-error focus-visible:border-v2-error focus-visible:ring-v2-error/50",
  className
  )}
@@ -116,7 +116,7 @@ const SelectItem = React.forwardRef<
  <SelectPrimitive.Item
  ref={ref}
  data-slot="select-item"
- className={cn("relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--space-2)] pl-[var(--space-6)] pr-[var(--space-2)] text-sm outline-hidden transition-all duration-150 focus:bg-v2-bg-hover focus:text-foreground/95 hover:bg-v2-bg-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-v2-accent/10 data-[state=checked]:bg-v2-accent/10 data-[state=checked]:text-v2-accent data-disabled:pointer-events-none data-disabled:opacity-50",
+ className={cn("relative flex w-full cursor-default select-none items-center rounded-sm py-[var(--space-2)] pl-[var(--space-6)] pr-[var(--space-2)] text-sm outline-hidden transition-[opacity,background-color,border-color] duration-150 focus:bg-v2-bg-hover focus:text-foreground/95 hover:bg-v2-bg-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-v2-accent/10 data-[state=checked]:bg-v2-accent/10 data-[state=checked]:text-v2-accent data-disabled:pointer-events-none data-disabled:opacity-50",
  className
  )}
  {...props}

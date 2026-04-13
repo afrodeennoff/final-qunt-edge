@@ -367,7 +367,7 @@ export default function NinjaTraderPerformanceProcessor({ headers, csvData, setP
  trades.map((trade) => (
  <TableRow
  key={trade.id}
- className="border-b border-white/[0.06] transition-all duration-75 hover:bg-muted/40"
+ className="border-b border-white/[0.06] transition-[opacity,background-color,border-color] duration-75 hover:bg-muted/40"
  >
  <TableCell className="whitespace-nowrap px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l">
  {trade.accountNumber}

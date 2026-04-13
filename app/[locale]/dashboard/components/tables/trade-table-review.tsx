@@ -1483,7 +1483,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  <React.Fragment key={row.id}>
  <tr
  data-state={row.getIsSelected() &&"selected"}
- className={cn("group border-b border-white/[0.08] transition-all duration-75 hover:bg-muted/40",
+ className={cn("group border-b border-white/[0.08] transition-[opacity,background-color,border-color] duration-75 hover:bg-muted/40",
  row.getIsSelected() &&"bg-accent/50 hover:bg-white/[0.05] data-[state=selected]:bg-white/[0.03]",
  row.getIsExpanded()
  ?"bg-muted/60"

@@ -196,7 +196,7 @@ export function GlowButton({
  transition={prefersReducedMotion ? undefined : { duration: 0.2 }}
  style={{
  background: glowColor,
- filter:"blur(12px)",
+ 
  zIndex: -1,
  }}
  />

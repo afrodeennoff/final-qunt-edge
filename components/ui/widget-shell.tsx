@@ -86,8 +86,8 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"," ","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
- variant ==="hoverable" &&"hover:shadow-[0_0_24px_-4px_oklch(0.65_0.22_260/0.12)]",
+ className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
+ variant ==="hoverable" &&
  className
  )}
  >

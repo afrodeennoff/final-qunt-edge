@@ -52,7 +52,7 @@ export function ImportDialogHeader({ step, importType }: ImportDialogHeaderProps
  <div className="space-y-2 pt-1">
  <div className="h-1.5 w-full overflow-hidden rounded-full bg-v2-bg-hover">
  <div
- className="h-full rounded-full bg-v2-accent transition-all duration-500 ease-out"
+ className="h-full rounded-full bg-v2-accent transition-[opacity,background-color,border-color] duration-500 ease-out"
  style={{ width: `${progress}%` }}
  />
  </div>

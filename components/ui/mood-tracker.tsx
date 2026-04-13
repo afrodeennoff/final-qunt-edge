@@ -49,7 +49,7 @@ const Block = ({
  onClick={() => onClick(index)}
  >
  <div
- className={cn("size-full rounded-sm transition-all duration-300",
+ className={cn("size-full rounded-sm transition-[opacity,background-color,border-color] duration-300",
  blockColor,
  hoverEffect ?"hover:opacity-80" :"",
  shouldAnimate &&"animate-pulse",

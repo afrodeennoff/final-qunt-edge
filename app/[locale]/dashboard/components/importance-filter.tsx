@@ -99,7 +99,7 @@ export function ImportanceFilter({ value, onValueChange, className }: Importance
  return (
  <TooltipProvider>
  <div
- className={cn("inline-flex items-center gap-1 p-2 rounded-md transition-all duration-300",
+ className={cn("inline-flex items-center gap-1 p-2 rounded-md transition-[opacity,background-color,border-color] duration-300",
  className,
  )}
  role="group"
@@ -109,7 +109,7 @@ export function ImportanceFilter({ value, onValueChange, className }: Importance
  <Tooltip key={level}>
  <TooltipTrigger asChild>
  <button
- className={cn("relative p-1 rounded-full transition-all duration-200",
+ className={cn("relative p-1 rounded-full transition-[opacity,background-color,border-color] duration-200",
  (value.includes(level) || hoverLevel === level) &&"scale-110","focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-primary","hover:bg-semantic-warning-bg dark:hover:bg-semantic-warning-bg/20",
  )}
  onClick={() => handleClick(level)}

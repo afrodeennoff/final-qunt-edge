@@ -585,7 +585,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  alt={`Thumbnail ${index + 1}`}
  width={40}
  height={40}
- className={cn("object-cover w-12 h-12 rounded-md transition-all",
+ className={cn("object-cover w-12 h-12 rounded-md transition-[opacity,background-color,border-color]",
  selectedImageIndex === index
  ?"ring-2 ring-primary"
  :"hover:ring-2 hover:ring-primary/50",
@@ -671,7 +671,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  setShowDeleteConfirm(false);
  }
  }}
- className="flex-shrink-0 h-9 gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 transition-all duration-200 touch-action-manipulation"
+ className="flex-shrink-0 h-9 gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 transition-[opacity,background-color,border-color] duration-200 touch-action-manipulation"
  aria-label={`Delete image ${index + 1}`}
  >
  <X className="h-4 w-4" />

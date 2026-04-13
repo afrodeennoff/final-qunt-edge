@@ -316,7 +316,7 @@ export default function FileUpload({
  <div className="space-y-4 w-full h-full p-8 flex flex-col items-center justify-center">
  <div 
  {...getRootProps()} 
- className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-all duration-300 ease-in-out","hover:border-primary/50 group relative",
+ className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
  isDragActive 
  ?"border-primary bg-primary/5 scale-[0.99]" 
  :"border-v2-border hover:bg-v2-bg-hover","cursor-pointer flex items-center justify-center"
@@ -325,7 +325,7 @@ export default function FileUpload({
  <input {...getInputProps()} />
  <div className="flex flex-col items-center gap-4">
  <ArrowUpCircle 
- className={cn("h-14 w-14 transition-all duration-300 ease-bounce",
+ className={cn("h-14 w-14 transition-[opacity,background-color,border-color] duration-300 ease-bounce",
  isDragActive 
  ?"text-primary scale-110 -translate-y-2" 
  :"text-v2-text-muted group-hover:text-primary group-hover:scale-110 group-hover:-translate-y-2"
@@ -359,7 +359,7 @@ export default function FileUpload({
  {uploadedFiles.map((file, index) => (
  <div 
  key={index} 
- className={cn("flex items-center justify-between","bg-v2-bg-base rounded-lg","p-3 hover:bg-v2-bg-hover","transition-all duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
+ className={cn("flex items-center justify-between","bg-v2-bg-base rounded-lg","p-3 hover:bg-v2-bg-hover","transition-[opacity,background-color,border-color] duration-200 ease-in-out","animate-in slide-in-from-bottom fade-in","group"
  )}
  style={{ animationDelay: `${index * 100}ms` }}
  >

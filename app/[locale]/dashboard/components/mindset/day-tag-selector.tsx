@@ -234,7 +234,7 @@ export function DayTagSelector({ trades, date, onApplyTagToAll }: DayTagSelector
  <TooltipTrigger asChild>
  <Badge
  variant="secondary"
- className={cn("cursor-pointer transition-all hover:scale-105",
+ className={cn("cursor-pointer transition-[opacity,background-color,border-color] hover:scale-105",
  isComplete &&"opacity-100",
  !isComplete &&"opacity-70 hover:opacity-100"
  )}

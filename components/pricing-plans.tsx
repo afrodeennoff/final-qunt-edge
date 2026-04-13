@@ -127,7 +127,7 @@ function PlanPopularBadge({ popular }: { popular: boolean }) {
   if (!popular) return null
 
   return (
-    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary backdrop-blur-sm shadow-lg shadow-primary/10">
+    <div className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary shadow-lg shadow-primary/10">
       <Sparkles className="h-3 w-3" />
       <span>Popular</span>
     </div>

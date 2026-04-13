@@ -101,7 +101,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
  </span>
  <div className="flex items-center gap-2">
  <item.icon
- className={cn("h-4 w-4 flex-shrink-0 transition-all group-hover:scale-110", item.accent ??"text-muted-foreground/60")}
+ className={cn("h-4 w-4 flex-shrink-0 transition-[opacity,background-color,border-color] group-hover:scale-110", item.accent ??"text-muted-foreground/60")}
  />
  <span
  className={cn("text-[15px] font-semibold tracking-[-0.03em] tabular-nums",

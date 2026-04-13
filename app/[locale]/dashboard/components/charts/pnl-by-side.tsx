@@ -221,7 +221,7 @@ export default React.memo(function PnLBySideChart({
  key={`cell-${index}`}
  fill={entry.color}
  fillOpacity={entry.side ==="Long" ? 0.94 : 0.84}
- className="transition-all duration-300 ease-in-out hover:fill-opacity-100"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:fill-opacity-100"
  />
  ))}
  <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central">

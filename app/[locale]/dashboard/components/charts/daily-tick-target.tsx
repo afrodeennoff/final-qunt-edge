@@ -206,7 +206,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <TooltipTrigger asChild>
  <div className="flex items-center gap-1.5 p-1 rounded-md bg-secondary/22 border border-border/55">
  <span
- className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
+ className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-[opacity,background-color,border-color]",
  displayMode ==="ticks" ?"text-foreground/95 drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
  )}
  onClick={() => setDisplayMode("ticks")}
@@ -215,7 +215,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  </span>
  <div className="h-2.5 w-[1px] bg-secondary/30" />
  <span
- className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-all",
+ className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-[opacity,background-color,border-color]",
  displayMode ==="points" ?"text-foreground/95 drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
  )}
  onClick={() => setDisplayMode("points")}
@@ -283,7 +283,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  value={targetValue}
  onChange={(e) => setTargetValue(e.target.value)}
  placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
- className="bg-secondary/22 border-border/55 text-foreground/95 placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-all"
+ className="bg-secondary/22 border-border/55 text-foreground/95 placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-[opacity,background-color,border-color]"
  />
  </div>
  <div className="flex justify-end gap-2">
@@ -406,7 +406,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  {t("widgets.dailyTickTarget.progress")}
  </span>
  <span
- className={cn("font-black tabular-nums transition-all",
+ className={cn("font-black tabular-nums transition-[opacity,background-color,border-color]",
  isOverTarget ?"text-foreground/95 text-lg scale-110 drop-shadow-none" :"text-muted-foreground",
  size ==="small" ?"text-xs" :"text-sm"
  )}
@@ -419,7 +419,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  className={cn("h-1.5 bg-secondary/22",
  isOverTarget ?"bg-secondary/30" :""
  )}
- indicatorClassName={cn("transition-all duration-700",
+ indicatorClassName={cn("transition-[opacity,background-color,border-color] duration-700",
  isOverTarget ?"bg-white/[0.02] shadow-none" :"bg-white/[0.040]"
  )}
  />

@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
  {/* Ambient glow */}
  <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/[0.02] to-transparent pointer-events-none" />
  {children}
- <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-1.5 opacity-60 ring-offset-background transition-all duration-200 hover:bg-white/[0.08] hover:opacity-100 hover:border-white/[0.12] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
+ <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg border border-white/[0.08] bg-white/[0.03] p-1.5 opacity-60 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:bg-white/[0.08] hover:opacity-100 hover:border-white/[0.12] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
  </DialogPrimitive.Close>
  </DialogPrimitive.Content>

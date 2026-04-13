@@ -32,30 +32,9 @@ export function InteractiveWrapper({
 }: InteractiveWrapperProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLDivElement>(null)
- const [position, setPosition] = useState({ x: 0, y: 0 })
  const dragX = useMotionValue(0)
  const dragY = useMotionValue(0)
 
- const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
- if (prefersReducedMotion || !magnetic || !ref.current) return
-
- const rect = ref.current.getBoundingClientRect()
- const centerX = rect.left + rect.width / 2
- const centerY = rect.top + rect.height / 2
-
- const mouseX = e.clientX - centerX
- const mouseY = e.clientY - centerY
-
- const maxDistance = 12
- const distanceX = Math.min(Math.max(mouseX / 6, -maxDistance), maxDistance)
- const distanceY = Math.min(Math.max(mouseY / 6, -maxDistance), maxDistance)
-
- setPosition({ x: distanceX, y: distanceY })
- }, [magnetic, prefersReducedMotion])
-
- const handleMouseLeave = useCallback(() => {
- setPosition({ x: 0, y: 0 })
- }, [])
 
  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
  if (prefersReducedMotion) return
@@ -96,15 +75,13 @@ export function InteractiveWrapper({
  <motion.div
  ref={ref}
  className={cn("relative", className)}
- onMouseMove={handleMouseMove}
- onMouseLeave={handleMouseLeave}
  drag={draggable}
  dragConstraints={draggable ? { left: -50, right: 50, top: -50, bottom: 50 } : false}
  dragElastic={draggable ? 0.1 : undefined}
  onDragEnd={handleDragEnd}
  style={
  magnetic
- ? { x: position.x, y: position.y }
+ ? undefined
  : draggable
  ? { x: dragX, y: dragY }
  : undefined
@@ -118,12 +95,12 @@ export function InteractiveWrapper({
  className="absolute inset-0 rounded-lg pointer-events-none"
  style={{
  background: glowColor,
- filter:"blur(16px)",
+
  opacity: 0,
  zIndex: -1,
  }}
- animate={hover ==="glow" ? { opacity: [0, 0.6, 0] } : { opacity: draggable ? 0.4 : 0 }}
- transition={hover ==="glow" ? { duration: 2, repeat: Infinity, ease:"easeInOut" } : {}}
+ animate={{ opacity: draggable ? 0.4 : 0 }}
+ transition={{}}
  />
  )}
  {children}
@@ -148,27 +125,7 @@ export function MagneticButton({
 }: MagneticButtonProps) {
  const prefersReducedMotion = useReducedMotion()
  const ref = useRef<HTMLButtonElement>(null)
- const [position, setPosition] = useState({ x: 0, y: 0 })
 
- const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
- if (prefersReducedMotion || !ref.current) return
-
- const rect = ref.current.getBoundingClientRect()
- const centerX = rect.left + rect.width / 2
- const centerY = rect.top + rect.height / 2
-
- const mouseX = e.clientX - centerX
- const mouseY = e.clientY - centerY
-
- const distanceX = Math.min(Math.max(mouseX / 5, -strength), strength)
- const distanceY = Math.min(Math.max(mouseY / 5, -strength), strength)
-
- setPosition({ x: distanceX, y: distanceY })
- }, [strength, prefersReducedMotion])
-
- const handleMouseLeave = useCallback(() => {
- setPosition({ x: 0, y: 0 })
- }, [])
 
  if (prefersReducedMotion) {
  return (
@@ -182,11 +139,9 @@ export function MagneticButton({
  <motion.button
  ref={ref}
  className={className}
- onMouseMove={handleMouseMove}
- onMouseLeave={handleMouseLeave}
  onClick={onClick}
  disabled={disabled}
- animate={{ x: position.x, y: position.y }}
+ 
  transition={SPRING_PRESETS.gentle}
  whileHover={{ scale: 1.02 }}
  whileTap={{ scale: 0.98 }}

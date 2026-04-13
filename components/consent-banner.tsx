@@ -129,7 +129,7 @@ export function ConsentBanner() {
           ease: [0.32, 0.72, 0, 1]
         }}
       >
-        <div className="bg-background/80 backdrop-blur-lg border-t border-border/50 p-4 shadow-lg pointer-events-auto">
+        <div className="bg-background/80 border-t border-border/50 p-4 shadow-lg pointer-events-auto">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex-1">
@@ -173,7 +173,7 @@ export function ConsentBanner() {
 
         {isDesktop ? (
           <>
-            {showDetails && <div className="fixed inset-0 z-[98] bg-foreground/20 backdrop-blur-xs" />}
+            {showDetails && <div className="fixed inset-0 z-[98] bg-foreground/20" />}
             <Dialog open={showDetails} onOpenChange={setShowDetails}>
               <DialogContent className="fixed left-[50%] top-[50%] z-[99] max-h-[80vh] w-[90vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] overflow-hidden rounded-lg border border-border bg-card shadow-xl">
                 <DialogHeader className="p-6 pb-4">

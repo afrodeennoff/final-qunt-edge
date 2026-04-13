@@ -162,7 +162,7 @@ export default React.memo(function TradeDistributionChart({ size = 'medium' }: T
  key={`cell-${index}`}
  fill={entry.color}
  fillOpacity={0.92}
- className={cn("transition-all duration-300 ease-in-out hover:fill-opacity-100",
+ className={cn("transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:fill-opacity-100",
  entry.color ==="hsl(var(--chart-1))" ?"chart-positive-emphasis" :"chart-negative-muted"
  )}
  />

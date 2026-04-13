@@ -139,7 +139,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {/* Left Side: Grid of options */}
  <div className="flex flex-col gap-4 h-full min-h-0 relative">
  {/* Header & Filter */}
- <div className="p-4 border-b border-v2-border bg-v2-bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-v2-bg-surface/60 sticky top-0 z-10">
+ <div className="p-4 border-b border-v2-border bg-v2-bg-surface/95 sticky top-0 z-10">
  <div className="flex items-center gap-3">
  <div className="relative flex-1">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-v2-text-muted" />
@@ -147,7 +147,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  placeholder={String(t('import.type.search'))}
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-all"
+ className="pl-9 bg-v2-bg-hover/50 border-transparent hover:bg-v2-bg-hover/80 focus:bg-v2-bg-surface transition-[opacity,background-color,border-color]"
  />
  </div>
  <Button
@@ -229,7 +229,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {isCompareMode && selectedPlatforms.length >= 2 && (
  <div className="absolute bottom-4 left-4 right-4 z-20"
  >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 backdrop-blur border border-v2-border shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
+ <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 border border-v2-border shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
  <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
  <span>{selectedPlatforms.length} platforms selected</span>
  </div>

@@ -417,18 +417,7 @@ export function FloatingOrbs({
  <motion.div
  key={index}
  className={cn("absolute rounded-full blur-3xl", orb.color)}
- animate={{
- x: [0, 30 + index * 10, -20 - index * 5, 0 + parallaxX],
- y: [0, -20 - index * 8, 30 + index * 12, 0 + parallaxY],
- scale: [1, 1.1, 0.95, 1],
- }}
- transition={{
- duration: orb.duration,
- delay: orb.delay,
- repeat: Infinity,
- repeatType:"reverse" as const,
- ease:"easeInOut",
- }}
+
  style={{
  width: orb.size,
  height: orb.size,

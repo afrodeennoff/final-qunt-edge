@@ -48,7 +48,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
 
  return (
  <Card
- className={cn("flex flex-col cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl liquid-panel-premium liquid-panel-hover overflow-hidden",
+ className={cn("flex flex-col cursor-pointer transition-[opacity,background-color,border-color] duration-300 shadow-xs hover:shadow-xl liquid-panel-premium liquid-panel-hover overflow-hidden",
  size === 'small' || size === 'small-long' ?"w-72" :"w-96"
  )}
  onClick={onClick}
@@ -120,7 +120,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
  className={cn("bg-white/[0.04]",
  size === 'small' || size === 'small-long' ?"h-1" :"h-1.5"
  )}
- indicatorClassName={cn("transition-all duration-500 bg-primary",
+ indicatorClassName={cn("transition-[opacity,background-color,border-color] duration-500 bg-primary",
  progress <= 20 ?"opacity-20 shadow-none" :
  progress <= 40 ?"opacity-40 shadow-none" :
  progress <= 60 ?"opacity-60 shadow-none" :
@@ -146,7 +146,7 @@ export function AccountCard({ account, onClick, size = 'large' }: AccountCardPro
  className={cn("bg-white/[0.04]",
  size === 'small' || size === 'small-long' ?"h-1" :"h-1.5"
  )}
- indicatorClassName={cn("transition-all duration-500 bg-primary/50",
+ indicatorClassName={cn("transition-[opacity,background-color,border-color] duration-500 bg-primary/50",
  drawdownProgress <= 40 ?"opacity-90 chart-positive-emphasis" :
  drawdownProgress <= 70 ?"opacity-50" :"opacity-100 chart-negative-muted"
  )}

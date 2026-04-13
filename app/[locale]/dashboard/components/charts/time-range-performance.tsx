@@ -286,7 +286,7 @@ export default React.memo(function TimeRangePerformanceChart({ size = 'medium' }
  dataKey="avgPnl"
  radius={[2, 2, 2, 2]}
  maxBarSize={size === 'small' ? 25 : 40}
- className="transition-all duration-300 ease-in-out"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out"
  >
  {chartData.map((entry) => (
  <Cell

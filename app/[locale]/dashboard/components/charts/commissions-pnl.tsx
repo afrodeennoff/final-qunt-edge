@@ -196,7 +196,7 @@ export default React.memo(function CommissionsPnLChart({
  key={`cell-${index}`}
  fill={entry.name ==="NET P/L" ?"hsl(var(--chart-1))" :"hsl(var(--chart-4))"}
  fillOpacity={entry.name ==="NET P/L" ? 0.94 : 0.84}
- className={cn("transition-all duration-300 ease-in-out hover:fill-opacity-100",
+ className={cn("transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:fill-opacity-100",
  entry.name ==="NET P/L" ?"chart-positive-emphasis" :"chart-negative-muted"
  )}
  />

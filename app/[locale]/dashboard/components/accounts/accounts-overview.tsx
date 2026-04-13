@@ -1396,7 +1396,7 @@ function AccountsOverviewComponent({
  <div
  key={group.id}
  className={cn("relative border-l-4 rounded-r-lg",
- groupColorClass,"transition-all duration-200 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]"
+ groupColorClass,"transition-[opacity,background-color,border-color] duration-200 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]"
  )}
  >
  {/* Group header with subtle styling */}
@@ -1449,7 +1449,7 @@ function AccountsOverviewComponent({
 
  return (
  <div
- className={cn("relative border-l-4 border-white/[0.06] bg-secondary/5 rounded-r-lg","transition-all duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:bg-secondary/10"
+ className={cn("relative border-l-4 border-white/[0.06] bg-secondary/5 rounded-r-lg","transition-[opacity,background-color,border-color] duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:bg-secondary/10"
  )}
  >
  {/* Ungrouped header */}

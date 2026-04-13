@@ -113,7 +113,7 @@ export function GlobalSyncButton() {
  <DropdownMenuTrigger asChild>
  <button
  type="button"
- className={cn("group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-all duration-200",
+ className={cn("group relative flex h-9 items-center gap-2 rounded-full border px-3.5 transition-[opacity,background-color,border-color] duration-200",
  isAnySyncing
  ?"cursor-wait border-v2-accent/20 bg-v2-accent/10 text-v2-text-primary"
  :"border-transparent bg-transparent text-v2-text-secondary hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
@@ -192,7 +192,7 @@ export function GlobalSyncButton() {
  type="button"
  onClick={handleGlobalSync}
  disabled={isAnySyncing}
- className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-v2-border/20 bg-v2-bg-base/70 text-[10px] font-bold uppercase tracking-[0.18em] text-v2-text-primary transition-all hover:border-v2-border/35 hover:bg-v2-bg-hover disabled:opacity-50"
+ className="flex h-9 w-full items-center justify-center gap-2 rounded-full border border-v2-border/20 bg-v2-bg-base/70 text-[10px] font-bold uppercase tracking-[0.18em] text-v2-text-primary transition-[opacity,background-color,border-color] hover:border-v2-border/35 hover:bg-v2-bg-hover disabled:opacity-50"
  >
  <RefreshCw className={cn("w-3.5 h-3.5", isAnySyncing &&"animate-spin")} />
  <span>Force Sync Now</span>

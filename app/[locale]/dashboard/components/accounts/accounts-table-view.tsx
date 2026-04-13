@@ -343,7 +343,7 @@ function AccountsTableSection({
  return (
  <tr
  key={row.id}
- className={cn("border-b border-white/[0.06] transition-all duration-75 hover:bg-white/[0.040]",
+ className={cn("border-b border-white/[0.06] transition-[opacity,background-color,border-color] duration-75 hover:bg-white/[0.040]",
  rowIndex % 2 === 1 &&"bg-white/[0.05]",
  row.getCanExpand() &&"bg-white/[0.010] font-medium",
  isDrawdownBreached(row.original) &&"opacity-50",

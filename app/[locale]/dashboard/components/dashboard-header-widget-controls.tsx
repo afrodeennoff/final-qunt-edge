@@ -195,7 +195,7 @@ function getHeaderWrapperClass() {
 }
 
 function getCustomizeButtonClasses(isMobile: boolean, isCustomizing: boolean) {
- return cn("relative group flex items-center gap-2 rounded-lg transition-all duration-200",
+ return cn("relative group flex items-center gap-2 rounded-lg transition-[opacity,background-color,border-color] duration-200",
  isMobile ?"h-11 w-11 justify-center px-0" :"h-9 px-3.5",
  isCustomizing
  ?"border border-transparent bg-v2-accent/12 text-v2-text-primary ring-1 ring-v2-accent/15"

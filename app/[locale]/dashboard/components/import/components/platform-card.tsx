@@ -70,7 +70,7 @@ function PlatformCardInner({
  hover={isInteractive}
  size="sm"
  onClick={isInteractive ? handleSelect : undefined}
- className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-v2-border/70 bg-v2-bg-surface/75 text-left transition-all duration-300",
+ className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-v2-border/70 bg-v2-bg-surface/75 text-left transition-[opacity,background-color,border-color] duration-300",
  isSelected &&"border-v2-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
  (platform.isDisabled || platform.isComingSoon) &&"cursor-not-allowed opacity-60 grayscale-[0.5]"
  )}
@@ -85,13 +85,13 @@ function PlatformCardInner({
  <Checkbox
  checked={isChecked}
  onCheckedChange={handleCheckChange}
- className="h-5 w-5 border-2 border-v2-border data-[state=checked]:bg-v2-accent data-[state=checked]:border-v2-accent data-[state=checked]:text-v2-bg-base transition-all"
+ className="h-5 w-5 border-2 border-v2-border data-[state=checked]:bg-v2-accent data-[state=checked]:border-v2-accent data-[state=checked]:text-v2-bg-base transition-[opacity,background-color,border-color]"
  />
  </div>
  )}
 
  <div
- className={cn("absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all",
+ className={cn("absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-[opacity,background-color,border-color]",
  isSelected
  ?"border-v2-accent bg-v2-accent shadow-[0_0_16px_rgba(var(--v2-accent-rgb),0.4)]"
  :"border-v2-border/50 group-hover:border-v2-accent/50 group-hover:shadow-[0_0_12px_rgba(var(--v2-accent-rgb),0.2)]","opacity-0 group-hover:opacity-100",

@@ -1357,7 +1357,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
-          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border/20 bg-background/70 p-2 backdrop-blur">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border/20 bg-background/70 p-2">
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],

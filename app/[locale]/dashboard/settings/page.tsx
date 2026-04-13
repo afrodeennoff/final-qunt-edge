@@ -474,7 +474,7 @@ export default function SettingsPage() {
                         aria-pressed={theme === t}
                       >
                         <span
-                          className={`h-8 w-8 rounded-full transition-all ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
+                          className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                           style={{
                             backgroundColor: t === 'blue' ? 'oklch(0.55 0.22 264)'
                               : t === 'violet' ? 'oklch(0.60 0.22 290)'

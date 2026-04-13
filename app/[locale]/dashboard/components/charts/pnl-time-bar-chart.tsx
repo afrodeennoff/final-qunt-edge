@@ -245,7 +245,7 @@ export default React.memo(function TimeOfDayTradeChart({
  dataKey="avgPnl"
  radius={[2, 2, 2, 2]}
  maxBarSize={size ==="small" ? 25 : 40}
- className="transition-all duration-300 ease-in-out"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out"
  >
  {chartData.map((entry) => (
  <Cell
@@ -266,7 +266,7 @@ export default React.memo(function TimeOfDayTradeChart({
  ? 0.2
  : 0.35
  }
- className={cn("hover:fill-opacity-100 transition-all duration-300",
+ className={cn("hover:fill-opacity-100 transition-[opacity,background-color,border-color] duration-300",
  entry.avgPnl >= 0 ?"chart-positive-emphasis" :"chart-negative-muted"
  )}
  />

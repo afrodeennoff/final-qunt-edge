@@ -160,7 +160,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  <Popover key={`${weekStart.toISOString()}-${weekIndex}`}>
  <PopoverTrigger asChild>
  <div
- className={cn("flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 cursor-pointer","transition-all duration-200 hover:scale-[1.02] hover:shadow-xs",
+ className={cn("flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 cursor-pointer","transition-[opacity,background-color,border-color] duration-200 hover:scale-[1.02] hover:shadow-xs",
  pnl > 0 
  ?"bg-secondary/30 dark:bg-secondary/22 text-foreground/95 dark:text-foreground/95 border-border/65 dark:border-border/55" 
  : pnl < 0 

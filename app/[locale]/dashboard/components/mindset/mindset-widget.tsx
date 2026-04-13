@@ -360,7 +360,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  >
  {/* Timeline with animation */}
  <div
- className={cn("relative transition-all duration-300 ease-out-quart",
+ className={cn("relative transition-[opacity,background-color,border-color] duration-300 ease-out-quart",
  isTimelineVisible ?"w-auto" :"w-0 overflow-hidden"
  )}
  >

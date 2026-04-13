@@ -624,7 +624,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       
       {/* Flag Report Dialog */}
       {showFlagDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
           <div className="w-full max-w-md rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground/95">Report Review</h3>

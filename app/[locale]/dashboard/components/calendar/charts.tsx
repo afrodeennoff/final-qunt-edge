@@ -256,7 +256,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
  <Cell
  key={`cell-${index}`}
  fill={entry.pnl >= 0 ? 'hsl(var(--foreground))' : 'hsl(var(--foreground) / 0.35)'}
- className="transition-all duration-300 ease-in-out hover:opacity-70"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:opacity-70"
  />
  ))}
  </Bar>
@@ -344,7 +344,7 @@ export function Charts({ dayData, isWeekly = false }: ChartsProps) {
  <Cell
  key={`cell-${index}`}
  fill={entry.value >= 0 ? colors[index % colors.length] : `hsl(var(--foreground) / 0.35)`}
- className="transition-all duration-300 ease-in-out hover:opacity-80"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out hover:opacity-80"
  />
  ))}
  </Bar>

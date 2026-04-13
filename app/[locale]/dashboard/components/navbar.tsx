@@ -52,18 +52,18 @@ export default function Navbar() {
  const currentLayout = layouts || { desktop: [], mobile: [] }
 
  return (
- <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none [backdrop-filter:saturate(180%)_blur(8px)]">
+ <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none bg-background/95">
  <motion.nav
  initial={{ y: -20, opacity: 0 }}
  animate={{ y: 0, opacity: 1 }}
  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
- className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-white/[0.055] bg-black/75 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_40px_-8px_rgba(0,0,0,0.75)] transition-all duration-300"
+ className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-white/[0.055] bg-black/75 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_40px_-8px_rgba(0,0,0,0.75)] transition-[opacity,background-color,border-color] duration-300"
  >
  <div className="flex items-center justify-between px-4 sm:px-6 h-14">
 
  {/* Left Side: Sidebar Toggle & Brand */}
  <div className="flex items-center gap-4">
- <SidebarTrigger className="-ml-1 text-muted-foreground/60 hover:text-foreground/95 transition-all rounded-xl w-9 h-9 hover:bg-white/[0.05]" />
+ <SidebarTrigger className="-ml-1 text-muted-foreground/60 hover:text-foreground/95 transition-[opacity,background-color,border-color] rounded-xl w-9 h-9 hover:bg-white/[0.05]" />
  <div className="h-5 w-px bg-white/[0.08] hidden sm:block mx-1" />
  </div>
 
@@ -82,7 +82,7 @@ export default function Navbar() {
  variant="ghost"
  size="sm"
  onClick={toggleCustomizing}
- className={cn("h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-all duration-500",
+ className={cn("h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500",
  isCustomizing
  ?"bg-[oklch(0.65_0.22_260)] text-white shadow-[0_0_16px_oklch(0.65_0.22_260/0.45)] font-semibold"
  :"text-muted-foreground/70 hover:text-foreground/95 hover:bg-white/[0.05]"
@@ -99,7 +99,7 @@ export default function Navbar() {
  variant="ghost"
  size="sm"
  onClick={flushPendingSaves}
- className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground/95 transition-all border border-white/[0.06]"
+ className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground/95 transition-[opacity,background-color,border-color] border border-white/[0.06]"
  >
  <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
  <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -132,7 +132,7 @@ export default function Navbar() {
  <Button 
  variant="ghost" 
  size="sm" 
- className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-white/[0.06] text-foreground/95 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 shadow-none hover:bg-secondary/35"
+ className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-white/[0.06] text-foreground/95 text-[10px] font-black uppercase tracking-[0.2em] transition-[opacity,background-color,border-color] duration-500 shadow-none hover:bg-secondary/35"
  aria-label="Upgrade to Elite plan"
  >
  <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
@@ -151,7 +151,7 @@ export default function Navbar() {
  size="icon"
  onClick={handleRefresh}
  disabled={isLoading}
- className="h-8 w-8 rounded-xl text-fg-muted transition-all active:scale-90"
+ className="h-8 w-8 rounded-xl text-fg-muted transition-[opacity,background-color,border-color] active:scale-90"
  aria-label="Refresh dashboard data"
  >
  <RefreshCw className={cn("w-3.5 h-3.5 transition-transform duration-1000", (isRefreshing || isLoading) &&"animate-spin")} />

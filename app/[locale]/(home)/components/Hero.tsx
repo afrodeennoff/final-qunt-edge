@@ -61,8 +61,8 @@ export default function Hero({ locale }: { locale: string }) {
 
  <motion.h1
  className="max-w-5xl text-[clamp(3.2rem,7vw,6.6rem)] font-[350] leading-[0.94] tracking-[-0.055em] text-foreground/95 [font-family:var(--home-display)]"
- initial={{ opacity: 0, y: 16, filter:"blur(8px)" }}
- animate={{ opacity: 1, y: 0, filter:"blur(0px)" }}
+ initial={{ opacity: 0, y: 16 }}
+ animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.9, delay: 0.1, ease }}
  >
  Audit execution quality.
@@ -73,8 +73,8 @@ export default function Hero({ locale }: { locale: string }) {
 
  <motion.p
  className="mx-auto mb-10 mt-6 max-w-2xl text-[clamp(1rem,2vw,1.18rem)] font-[350] leading-[1.7] tracking-[-0.015em] text-foreground/58 [font-family:var(--home-copy)]"
- initial={{ opacity: 0, filter:"blur(4px)" }}
- animate={{ opacity: 1, filter:"blur(0px)" }}
+ initial={{ opacity: 0 }}
+ animate={{ opacity: 1 }}
  transition={{ duration: 0.7, delay: 0.3, ease }}
  >
  Qunt Edge turns scattered trade data into a clear execution story, so you can
@@ -147,8 +147,8 @@ export default function Hero({ locale }: { locale: string }) {
 
  <motion.div
  className="w-full"
- initial={{ opacity: 0, scale: 0.98, filter:"blur(6px)" }}
- animate={{ opacity: 1, scale: 1, filter:"blur(0px)" }}
+ initial={{ opacity: 0, scale: 0.98 }}
+ animate={{ opacity: 1, scale: 1 }}
  transition={{ duration: 1.0, delay: 0.6, ease }}
  >
  <div

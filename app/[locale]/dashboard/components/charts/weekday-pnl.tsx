@@ -274,7 +274,7 @@ export default React.memo(function WeekdayPNLChart({
  dataKey="pnl"
  radius={[2, 2, 2, 2]}
  maxBarSize={size ==="small" ? 25 : 40}
- className="transition-all duration-300 ease-in-out"
+ className="transition-[opacity,background-color,border-color] duration-300 ease-in-out"
  >
  {weekdayData.map((entry) => (
  <Cell

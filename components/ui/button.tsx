@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const buttonVariants = cva("cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[oklch(0.65_0.22_260/0.7)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden select-none",
+const buttonVariants = cva("cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-[opacity,background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[oklch(0.65_0.22_260/0.7)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden select-none",
  {
  variants: {
  variant: {
@@ -19,7 +19,7 @@ const buttonVariants = cva("cursor-pointer inline-flex items-center justify-cent
  default:"bg-[oklch(0.65_0.22_260)] text-white rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.72_0.22_260)] hover:scale-[1.015] active:scale-[0.975]",
  secondary:"bg-white/[0.05] text-foreground/95 border border-white/[0.10] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-white/[0.08] hover:scale-[1.01] active:scale-[0.98]",
  mono:"font-mono rounded-lg border border-white/[0.10] bg-transparent text-foreground/95 hover:border-white/[0.18] hover:bg-white/[0.05] focus-visible:ring-offset-0",
- pill:"bg-transparent text-foreground/95 border border-white/[0.12] rounded-full hover:bg-white/[0.06] active:bg-white/[0.04] active:scale-[0.98] transition-all duration-150","pill-solid":"bg-foreground text-background border-none rounded-full hover:bg-foreground/90 active:scale-[0.98] transition-all duration-150 font-semibold","pill-ghost":"bg-transparent text-muted-foreground border-none rounded-full hover:bg-white/[0.06] hover:text-foreground/95 active:bg-white/[0.04] transition-all duration-150",
+ pill:"bg-transparent text-foreground/95 border border-white/[0.12] rounded-full hover:bg-white/[0.06] active:bg-white/[0.04] active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150","pill-solid":"bg-foreground text-background border-none rounded-full hover:bg-foreground/90 active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 font-semibold","pill-ghost":"bg-transparent text-muted-foreground border-none rounded-full hover:bg-white/[0.06] hover:text-foreground/95 active:bg-white/[0.04] transition-[opacity,background-color,border-color] duration-150",
  },
  size: {
  sm:"h-8 min-h-[32px] min-w-[32px] px-3 text-xs rounded-lg",

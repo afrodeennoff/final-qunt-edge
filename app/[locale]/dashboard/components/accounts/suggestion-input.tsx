@@ -207,7 +207,7 @@ export default function EnhancedInput({
  <div ref={containerRef} className={cn("relative w-full max-w-xs", className)}>
  {label && <label className="mb-2 block text-sm font-medium text-foreground/80">{label}</label>}
  <div
- className={cn("relative flex items-center rounded-md border transition-all","border-input bg-background",
+ className={cn("relative flex items-center rounded-md border transition-[opacity,background-color,border-color]","border-input bg-background",
  confirmed && value ?"scale-[1.02] duration-300" :"",
  isValid === false ?"border-destructive" :"",
  isValid === true ?"border-semantic-success/40" :"",

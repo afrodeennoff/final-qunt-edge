@@ -41,7 +41,7 @@ export function TimeframeControls({ timeframeLabel, timeframeOptions }: Timefram
       <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
         <SelectTrigger
           id="timeframe-select"
-          className="w-[200px] border border-white/[0.08] bg-white/[0.080] text-foreground/95 shadow-none backdrop-blur-sm hover:bg-white/[0.02] focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+          className="w-[200px] border border-white/[0.08] bg-white/[0.080] text-foreground/95 shadow-none hover:bg-white/[0.02] focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>

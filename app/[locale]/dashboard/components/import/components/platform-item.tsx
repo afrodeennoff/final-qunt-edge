@@ -37,7 +37,7 @@ export function PlatformItem({
  onSelect={() => !platform.isDisabled && onSelect(platform.type)}
  onMouseEnter={() => onHover(platform.category)}
  onMouseLeave={onLeave}
- className={cn("data-[selected='true']:bg-transparent","flex items-stretch gap-4 ml-6 border-l-2 border-muted pl-4 transition-all duration-200 rounded-none",
+ className={cn("data-[selected='true']:bg-transparent","flex items-stretch gap-4 ml-6 border-l-2 border-muted pl-4 transition-[opacity,background-color,border-color] duration-200 rounded-none",
  platform.isDisabled &&"opacity-50 select-none",
  !platform.isDisabled &&"cursor-pointer",
  isSelected &&"border-l-primary bg-primary/5",

@@ -77,7 +77,7 @@ export function UnifiedPageHeader({
   return (
     <header
       className={cn(
-        "mb-8 rounded-[calc(var(--radius)+0.5rem)] border px-5 py-6 shadow-sm backdrop-blur-xl sm:px-6",
+        "mb-8 rounded-[calc(var(--radius)+0.5rem)] border px-5 py-6 shadow-sm sm:px-6",
         "transition-all duration-300 ease-out",
         variant === "default" && [
           "border-v2-border/70 bg-[linear-gradient(180deg,hsl(var(--v2-bg-hover)/0.95),hsl(var(--v2-bg-surface)/0.94))]",
@@ -142,11 +142,11 @@ export function UnifiedSurface({
         "rounded-[calc(var(--radius)+0.45rem)] border p-4 shadow-sm sm:p-6",
         "transition-all duration-300 ease-out",
         variant === "default" && [
-          "border-v2-border/70 bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))] backdrop-blur-xl",
+          "border-v2-border/70 bg-[linear-gradient(180deg,hsl(var(--v2-bg-surface)/0.98),hsl(var(--v2-bg-elevated)/0.96))]",
           "hover:border-v2-border/95 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]",
         ],
         variant === "glass" && [
-          "border-v2-border/65 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] backdrop-blur-2xl",
+          "border-v2-border/65 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))]",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
           "hover:border-v2-border/90 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]",
         ],
@@ -159,11 +159,11 @@ export function UnifiedSurface({
           "hover:before:from-v2-accent/40 hover:before:to-v2-accent/20",
         ],
         variant === "elevated" && [
-          "border-v2-border/80 bg-[linear-gradient(180deg,hsl(var(--v2-bg-active)/0.98),hsl(var(--v2-bg-hover)/0.94))] backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_34px_80px_-42px_rgba(4,10,24,0.92)]",
+          "border-v2-border/80 bg-[linear-gradient(180deg,hsl(var(--v2-bg-active)/0.98),hsl(var(--v2-bg-hover)/0.94))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_34px_80px_-42px_rgba(4,10,24,0.92)]",
           "hover:border-v2-border/95 hover:bg-[linear-gradient(180deg,hsl(var(--v2-bg-active)/1),hsl(var(--v2-bg-hover)/0.96))] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_42px_92px_-44px_rgba(4,10,24,0.96)] hover:-translate-y-1",
         ],
         variant === "subtle" && [
-          "border-v2-border/60 bg-[rgba(255,255,255,0.03)] backdrop-blur-sm shadow-none",
+          "border-v2-border/60 bg-[rgba(255,255,255,0.03)] shadow-none",
           "hover:border-v2-border/85 hover:bg-[rgba(255,255,255,0.05)]",
         ],
         className,

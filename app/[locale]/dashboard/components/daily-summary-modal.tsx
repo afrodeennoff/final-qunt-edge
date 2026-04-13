@@ -259,11 +259,11 @@ const getSignSymbol = (isPositive: boolean): string => (isPositive ? '+' : '-')
 const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground/95" :"text-foreground/60")
 const getHeroSignClass = (isPositive: boolean): string => (isPositive ?"text-foreground/70" :"text-foreground/45")
 
-const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn("px-2.5 py-1 rounded-sm text-[10px] font-bold transition-all",
+const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn("px-2.5 py-1 rounded-sm text-[10px] font-bold transition-[opacity,background-color,border-color]",
  mode === currentMode ?"bg-secondary/35 text-foreground/95 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]" :"text-muted-foreground hover:text-foreground/95"
 )
 
-const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all duration-700 cursor-pointer relative overflow-hidden",
+const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
  isActive
  ?"bg-white/[0.070] border-border/8 blur-xl scale-[0.98] select-none"
  :"bg-white/[0.050] border-border/14 hover:bg-accent/70 hover:border-border/30"
@@ -478,7 +478,7 @@ export function DailySummaryModal() {
  <div className="flex items-center gap-4">
  <button
  type="button"
- className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-all hover:border-white/[0.06] hover:bg-secondary/30"
+ className="group flex items-center gap-2 cursor-pointer rounded-lg border border-transparent px-3 py-1.5 transition-[opacity,background-color,border-color] hover:border-white/[0.06] hover:bg-secondary/30"
  onClick={(e) => { e.stopPropagation(); setIsEditingHandle(true); }}
  aria-label="Edit handle"
  >
@@ -576,7 +576,7 @@ export function DailySummaryModal() {
  {/* Secondary Stats */}
  <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
  {/* Streak - Refined */}
- <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-all">
+ <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
  <div className="text-6xl font-black tracking-tighter text-foreground/95 mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
@@ -616,14 +616,14 @@ export function DailySummaryModal() {
  <motion.div
  initial={{ width: 0 }}
  animate={{ width: `${totalGoalProgress}%` }}
- className={cn("h-full rounded-full relative transition-all duration-700 ease-out",
+ className={cn("h-full rounded-full relative transition-[opacity,background-color,border-color] duration-700 ease-out",
  goalBarClass
  )}
  >
  {/* Premium Shimmer Overlay */}
  <motion.div
  animate={{ x: ['-100%', '200%'] }}
- transition={{ duration: 3, repeat: Infinity, ease:"linear" }}
+ transition={{ duration: 0.6, repeat: 0, ease:"easeOut" }}
  className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/30 to-transparent w-[50%] skew-x-[-30deg]"
  />
 

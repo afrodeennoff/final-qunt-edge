@@ -26,7 +26,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
 >(({ className, inset, children, ...props }, ref) => (
  <DropdownMenuPrimitive.SubTrigger
  ref={ref}
- className={cn("flex cursor-default select-none items-center rounded-xl px-2.5 py-2 text-[13px] font-medium text-foreground/72 outline-hidden transition-all duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=open]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=open]:text-[oklch(0.75_0.22_260)]",
+ className={cn("flex cursor-default select-none items-center rounded-xl px-2.5 py-2 text-[13px] font-medium text-foreground/72 outline-hidden transition-[opacity,background-color,border-color] duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=open]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=open]:text-[oklch(0.75_0.22_260)]",
  inset &&"pl-8",
  className
  )}
@@ -78,7 +78,7 @@ const DropdownMenuItem = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
  <DropdownMenuPrimitive.Item
  ref={ref}
- className={cn("relative flex cursor-default select-none items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] font-medium text-foreground/75 outline-none transition-all duration-120 focus:bg-white/[0.06] focus:text-foreground/95 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-white/[0.06] hover:text-foreground/95",
+ className={cn("relative flex cursor-default select-none items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] font-medium text-foreground/75 outline-none transition-[opacity,background-color,border-color] duration-120 focus:bg-white/[0.06] focus:text-foreground/95 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-white/[0.06] hover:text-foreground/95",
  inset &&"pl-8",
  className
  )}
@@ -93,7 +93,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 >(({ className, children, checked, ...props }, ref) => (
  <DropdownMenuPrimitive.CheckboxItem
  ref={ref}
- className={cn("relative flex cursor-default select-none items-center rounded-xl py-2 pl-8 pr-2.5 text-[13px] font-medium text-foreground/72 outline-hidden transition-all duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=checked]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=checked]:text-[oklch(0.75_0.22_260)] data-disabled:pointer-events-none data-disabled:opacity-50",
+ className={cn("relative flex cursor-default select-none items-center rounded-xl py-2 pl-8 pr-2.5 text-[13px] font-medium text-foreground/72 outline-hidden transition-[opacity,background-color,border-color] duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=checked]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=checked]:text-[oklch(0.75_0.22_260)] data-disabled:pointer-events-none data-disabled:opacity-50",
  className
  )}
  checked={checked}
@@ -116,7 +116,7 @@ const DropdownMenuRadioItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
  <DropdownMenuPrimitive.RadioItem
  ref={ref}
- className={cn("relative flex cursor-default select-none items-center rounded-xl py-2 pl-8 pr-2.5 text-[13px] font-medium text-foreground/72 outline-hidden transition-all duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=checked]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=checked]:text-[oklch(0.75_0.22_260)] data-disabled:pointer-events-none data-disabled:opacity-50",
+ className={cn("relative flex cursor-default select-none items-center rounded-xl py-2 pl-8 pr-2.5 text-[13px] font-medium text-foreground/72 outline-hidden transition-[opacity,background-color,border-color] duration-150 focus:bg-white/[0.06] focus:text-foreground/95 hover:bg-white/[0.06] hover:text-foreground/95 data-[state=checked]:bg-[oklch(0.65_0.22_260/0.10)] data-[state=checked]:text-[oklch(0.75_0.22_260)] data-disabled:pointer-events-none data-disabled:opacity-50",
  className
  )}
  {...props}
