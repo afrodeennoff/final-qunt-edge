@@ -28,7 +28,7 @@ export default function HowItWorks() {
  return (
  <section
  id="how-it-works"
- className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32"
+ className="relative px-4 py-24 sm:px-6 sm:py-24 lg:px-8 lg:py-24"
  >
  <div className="mx-auto max-w-[1360px]">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">

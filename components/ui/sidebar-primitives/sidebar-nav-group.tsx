@@ -1,23 +1,17 @@
 import React, { useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/locales/client'
 import {
  SidebarGroup,
  SidebarGroupContent,
- SidebarGroupLabel,
  SidebarMenu,
  SidebarMenuBadge,
  SidebarMenuButton,
  SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import {
- Collapsible,
- CollapsibleContent,
- CollapsibleTrigger,
-} from '@/components/ui/collapsible'
 import { DEFAULT_OPEN_GROUPS } from './use-sidebar-nav'
 import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
@@ -83,56 +77,68 @@ interface SidebarNavGroupProps {
  isActive: (href: string, exact?: boolean) => boolean
 }
 
-interface GroupedData {
- groups: Record<string, UnifiedSidebarItem[]>
- order: string[]
-}
-
-function computeGroupedItems(items: UnifiedSidebarItem[]): GroupedData {
- const order: string[] = []
- const groups: Record<string, UnifiedSidebarItem[]> = {}
-
- items.forEach((item) => {
- const group = item.group || 'Settings'
- if (!groups[group]) {
- groups[group] = []
- order.push(group)
- }
- groups[group].push(item)
- })
-
- const sortedOrder = order.sort((a, b) => {
- const topGroups = [
+// Ordered flat list — group property controls sort order only, no visual headers
+const GROUP_ORDER = [
  'Overview',
+ 'Analysis',
+ 'Profile & Social',
+ 'Resources',
+ 'System',
+ 'Workspace',
+ 'Performance',
+ 'Network',
+ 'Control',
  'Main',
  'Inventory',
  'Trading',
  'Team Overview',
  'Team Management',
  'Admin Panel',
- ]
- const bottomGroups = ['System', 'Settings', 'Support', 'Admin']
+ 'Settings',
+ 'Support',
+ 'Admin',
+]
 
- const aIdxTop = topGroups.indexOf(a)
- const bIdxTop = topGroups.indexOf(b)
- if (aIdxTop !== -1 && bIdxTop !== -1) return aIdxTop - bIdxTop
- if (aIdxTop !== -1) return -1
- if (bIdxTop !== -1) return 1
+function computeFlatOrderedItems(items: UnifiedSidebarItem[]): { items: UnifiedSidebarItem[]; separators: Set<number> } {
+ const byGroup: Record<string, UnifiedSidebarItem[]> = {}
+ const groupOrder: string[] = []
 
- const aIdxBot = bottomGroups.indexOf(a)
- const bIdxBot = bottomGroups.indexOf(b)
- if (aIdxBot !== -1 && bIdxBot !== -1) return aIdxBot - bIdxBot
- if (aIdxBot !== -1) return 1
- if (bIdxBot !== -1) return -1
+ items.forEach((item) => {
+ const group = item.group || 'Settings'
+ if (!byGroup[group]) {
+ byGroup[group] = []
+ groupOrder.push(group)
+ }
+ byGroup[group].push(item)
+ })
 
+ // Sort groups by predefined order, then alphabetically
+ const sortedGroups = groupOrder.sort((a, b) => {
+ const aIdx = GROUP_ORDER.indexOf(a)
+ const bIdx = GROUP_ORDER.indexOf(b)
+ if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx
+ if (aIdx !== -1) return -1
+ if (bIdx !== -1) return 1
  return a.localeCompare(b)
  })
 
- return { groups, order: sortedOrder }
+ const flatItems: UnifiedSidebarItem[] = []
+ const separators = new Set<number>()
+
+ for (const groupName of sortedGroups) {
+ if (byGroup[groupName].length === 0) continue
+ // Add separator before each group (except the first)
+ if (flatItems.length > 0) {
+ separators.add(flatItems.length)
+ }
+ flatItems.push(...byGroup[groupName])
+ }
+
+ return { items: flatItems, separators }
 }
 
 const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
- items,
+ items: allItems,
  openGroups,
  onGroupOpenChange,
  pendingNavigation,
@@ -144,54 +150,30 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
  const t = useI18n()
  const translate = t as unknown as (key: string) => string
 
- const groupedItems = useMemo(
- () => computeGroupedItems(items),
- [items]
+ const { items: flatItems, separators } = useMemo(
+ () => computeFlatOrderedItems(allItems),
+ [allItems]
  )
 
- const handleGroupToggle = useCallback((groupName: string) => (isOpen: boolean) => {
- onGroupOpenChange(groupName, isOpen)
- }, [onGroupOpenChange])
-
  return (
- <>
- {groupedItems.order.map((groupName, groupIndex) => {
- const isGroupOpen = openGroups[groupName] ?? DEFAULT_OPEN_GROUPS.has(groupName)
- const groupItems = groupedItems.groups[groupName]
-
- return (
- <Collapsible
- key={groupName}
- open={isGroupOpen}
- onOpenChange={handleGroupToggle(groupName)}
- className="group/collapsible"
- >
  <SidebarGroup className="px-0 py-1.5">
- <CollapsibleTrigger asChild>
- <SidebarGroupLabel
- className="text-[10px] font-bold uppercase tracking-[0.18em] text-sidebar-foreground/30 px-3 mb-1 flex cursor-pointer items-center justify-between hover:text-sidebar-foreground/64"
- id={`sidebar-group-${groupIndex}`}
- >
- <span>{groupName}</span>
- <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
- </SidebarGroupLabel>
- </CollapsibleTrigger>
- <CollapsibleContent>
  <SidebarGroupContent>
- <SidebarMenu aria-labelledby={`sidebar-group-${groupIndex}`}>
- {groupItems.map((item, index) => {
+ <SidebarMenu>
+ {flatItems.map((item, index) => {
  const label = item.i18nKey ? translate(item.i18nKey) : item.label
  const href = item.href
  const isItemDisabled = Boolean(item.disabled)
  const itemIsActive =
  !isItemDisabled && !!href && isActive(href, item.exact)
  const isPendingItem = isItemPending(item, pendingNavigation, currentRouteKey, itemIsActive)
+ const showSeparator = separators.has(index)
 
  return (
- <SidebarMenuItem
- key={`${groupName}-${item.label}-${index}`}
- className="relative"
- >
+ <React.Fragment key={`${item.label}-${index}`}>
+ {showSeparator && (
+ <div className="mx-3 my-1.5 h-px bg-sidebar-border/40" />
+ )}
+ <SidebarMenuItem className="relative">
  {itemIsActive && (
  <div className="absolute left-0 top-1/2 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary shadow-[0_0_14px_hsl(var(--sidebar-primary)/0.65)]" />
  )}
@@ -244,16 +226,12 @@ const SidebarNavGroupInner = React.memo(function SidebarNavGroupInner({
  </SidebarMenuBadge>
  )}
  </SidebarMenuItem>
+ </React.Fragment>
  )
  })}
  </SidebarMenu>
  </SidebarGroupContent>
- </CollapsibleContent>
  </SidebarGroup>
- </Collapsible>
- )
- })}
- </>
  )
 })
 

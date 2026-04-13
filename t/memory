@@ -2,14 +2,14 @@
 
 **Updated:** 2026-04-13
 **Branch:** codex-obsidian-v3-redesign
-**Last Commit:** e4eb4d7
+**Last Commit:** 11720f1 (local only, not pushed)
 **Production URL:** https://qunt-edge.vercel.app
 
 ## Current State
 
 ### Visual Design System — "Electric Obsidian + Cobalt Tint"
 - Dark-only void-black canvas with electric cobalt accents
-- All surfaces now use oklch(0.65 0.22 260 / X) cobalt-tinted surfaces instead of grayscale bg-white/[X]
+- All surfaces use oklch(0.65 0.22 260 / X) cobalt-tinted surfaces (NOT bg-white/[X])
 - 153 files color-injected (544 surface/border changes)
 - CSS accent system: cobalt scrollbar, selection highlight, focus rings, ambient card glow
 
@@ -17,45 +17,53 @@
 - **0** repeat:Infinity animations in interactive components
 - **0** filter:blur() in any animation
 - **0** backdrop-blur anywhere in the codebase
-- **0** transition-all in UI/dashboard components (replaced with specific property transitions)
-- **0** cursor-tracking mousemove handlers (MagneticButton/InteractiveWrapper)
+- **0** transition-all in UI/dashboard components
+- **0** cursor-tracking mousemove handlers
 - content-visibility: auto on all <section> elements
 - contain: layout+style+paint on dashboard grid
 
+### Spacing System (Standardized)
+- All home page sections: `py-24` (25 sections consistent)
+- All landing page sections: `py-24` (7 sections consistent)
+- Hero: `pb-32 pt-[88px]` (special, intentional)
+- Small/utility sections (filters, cards, search): variable (py-5, py-6, etc.) — intentional
+
+### Sidebar Navigation (Rebalanced)
+- **5 groups** (no visible headers, flat list with thin separators):
+  - Overview (3): Dashboard, Journal, Accounts
+  - Analysis (4): Scenario Lab, Analytics, Coaching, Playbook
+  - Profile & Social (3): Trader Profile, Leaderboard, Teams
+  - Resources (2): Prop Firms, Deals
+  - System (5): Import, Data, Sync, Billing, Settings
+- **18 items, 18 unique icons** — zero duplicates
+- Import page now linked in sidebar (was missing before)
+- Group labels hidden — items separated by thin `bg-sidebar-border/40` lines
+
 ### Build Status
 - `npx tsc --noEmit` = 0 errors
-- Vercel production deployment: successful
-- Branch pushed to origin: codex-obsidian-v3-redesign
-
-## Previous Sessions
-1. ✅ Fixed nested <button> hydration error in PricingSection.tsx (added `asChild`)
-2. ✅ Killed all 15 performance bottlenecks (GPU killers, scroll jank, cursor delay)
-3. ✅ Injected cobalt color system across entire app (153 files)
-4. ✅ Deployed to Vercel production
+- `npm run lint` = 0 errors, 933 warnings (budget: 1546)
+- Empty `className=""` cleaned from 14 instances
+- NOT YET COMMITTED — user said no commit/deploy until they say so
 
 ## Completed This Session
-1. ✅ Removed white borders from PayoutPill rows in propfirms catalogue cards (`catalogue-experience.tsx`)
+1. ✅ Fixed nested <button> hydration error in PricingSection.tsx
+2. ✅ Killed all 15 performance bottlenecks
+3. ✅ Injected cobalt color system across entire app
+4. ✅ Deployed to Vercel production (commit e4eb4d7)
+5. ✅ Fixed Hero double card → no card → black card with color gradient
+6. ✅ Rebalanced sidebar: 5 groups, unique icons, added Import link
+7. ✅ Removed sidebar group headers (flat list with separators)
+8. ✅ Standardized section padding: all py-24
+9. ✅ Cleaned 14 empty className="" instances
+10. ✅ Audited full app: typecheck, lint, spacing, icons, routes
 
-## Files Modified This Session
-- `components/animation/interactive.tsx` — removed cursor tracking, infinite pulse, blur
-- `components/animation/enhanced-motion.tsx` — FloatingOrbs now static
-- `components/animation/spring-button.tsx` — removed blur(12px)
-- `components/ui/background-glow.tsx` — rewritten static (no animations)
-- `components/ui/widget-shell.tsx` — removed hover paints, added cobalt tint
-- `components/ui/chart-surface.tsx` — removed hover gradient, added cobalt tint
-- `components/ui/card.tsx` — cobalt tint injected
-- `components/ui/stats-card.tsx` — cobalt tint injected
-- `app/[locale]/dashboard/components/navbar.tsx` — solid bg (no blur), cobalt tint
-- `app/[locale]/dashboard/components/daily-summary-modal.tsx` — shimmer play-once
-- `app/[locale]/(home)/components/Hero.tsx` — removed blur entrances, cobalt tint
-- `app/globals.css` — color accent system, scroll performance rules
-- 141 other files — color injection via script
-
-## Key Scripts
-- `scripts/inject-color.mjs` — cobalt color injection (153 files)
-- `scripts/fix-transition-all.mjs` — transition-all replacement (72 files)
-- `scripts/fix-200fps.mjs` — initial performance pass (32 files)
-- `scripts/fix-scroll-performance.mjs` — bulk backdrop-blur removal (319 files)
+## Uncommitted Changes
+- `components/sidebar/dashboard-sidebar.tsx` — rebalanced sidebar nav
+- `components/ui/sidebar-primitives/sidebar-nav-group.tsx` — flat list (no group labels)
+- `app/[locale]/(home)/components/Hero.tsx` — black cards with color gradient
+- All home/landing sections — standardized py-24
+- `app/[locale]/dashboard/components/mindset/*.tsx` — cleaned empty className
+- `app/[locale]/dashboard/components/import/manual/manual-processor.tsx` — cleaned empty className
 
 ## Blockers
-- None
+- None — waiting for user to say "deploy"

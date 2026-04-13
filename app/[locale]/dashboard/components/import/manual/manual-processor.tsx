@@ -279,7 +279,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  </DialogTitle>
  </DialogHeader>
  <div className="grid grid-cols-2 gap-4 py-4">
- <div className="">
+ <div>
  <Label htmlFor="instrument">{t('import.manual.instrument')} *</Label>
  <Input
  id="instrument"
@@ -288,7 +288,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  placeholder="ES"
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="side">{t('import.manual.side')} *</Label>
  <Select
  value={formData.side}
@@ -303,7 +303,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  </SelectContent>
  </Select>
  </div>
- <div className="">
+ <div>
  <Label htmlFor="quantity">{t('import.manual.quantity')} *</Label>
  <Input
  id="quantity"
@@ -313,7 +313,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, quantity: parseFloat(e.target.value) || 0 })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="entryPrice">{t('import.manual.entryPrice')} *</Label>
  <Input
  id="entryPrice"
@@ -323,7 +323,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, entryPrice: parseFloat(e.target.value) || 0 })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="closePrice">{t('import.manual.closePrice')}</Label>
  <Input
  id="closePrice"
@@ -333,7 +333,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, closePrice: e.target.value ? parseFloat(e.target.value) : null })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="pnl">{t('import.manual.pnl')}</Label>
  <Input
  id="pnl"
@@ -343,7 +343,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, pnl: parseFloat(e.target.value) || 0 })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="entryDate">{t('import.manual.entryDate')} *</Label>
  <Input
  id="entryDate"
@@ -352,7 +352,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, entryDate: e.target.value })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="closeDate">{t('import.manual.closeDate')}</Label>
  <Input
  id="closeDate"
@@ -361,7 +361,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, closeDate: e.target.value || null })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="timeInPosition">{t('import.manual.timeInPosition')} (seconds)</Label>
  <Input
  id="timeInPosition"
@@ -371,7 +371,7 @@ export default function ManualProcessor({ processedTrades, setProcessedTrades, a
  onChange={(e) => setFormData({ ...formData, timeInPosition: e.target.value ? parseInt(e.target.value) : null })}
  />
  </div>
- <div className="">
+ <div>
  <Label htmlFor="commission">{t('import.manual.commission')}</Label>
  <Input
  id="commission"

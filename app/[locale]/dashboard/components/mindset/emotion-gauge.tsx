@@ -30,7 +30,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
 
  return (
  <div className="journal-glass mb-4 rounded-xl border border-white/[0.08] bg-white/[0.070] p-4">
- <div className="">
+ <div>
  <div className="text-center">
  <p className="text-sm font-medium text-foreground/95">{t("mindset.emotion.title")}</p>
  <p className="mt-1 text-xs text-muted-foreground">{getEmotionLabel(percentage)}</p>

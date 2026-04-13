@@ -1,6 +1,6 @@
 # Lessons Learned
 
-**Updated:** 2026-04-13
+**Updated:** 2026-04-14
 
 ## Lesson 1: Regex scripts on JSX are dangerous
 - **M:** Content-visibility script broke 23 files with `className="classes ""`
@@ -49,3 +49,9 @@
 - **RC:** Manually fixing 23 files would take hours; git restore took seconds
 - **R:** Always commit before running bulk scripts. `git show COMMIT:path > path` for targeted restore
 - **E:** `git show e1bd588:"app/path/file.tsx" > app/path/file.tsx` restored each file instantly
+
+## Lesson 9: Public UI docs drift quickly when route composition changes
+- **M:** Public UI guidance pointed to older home/landing composition files that are no longer the live route wiring.
+- **RC:** Shared shell files stayed active while page composition moved into `HomeContent.tsx` and `UnifiedPageShell`-based route pages, but docs were not updated in the same pass.
+- **R:** Before editing public UI, trace from the route `page.tsx`/`layout.tsx` imports into the live composition tree instead of assuming every file under `(landing)/components` or `(home)/components` is mounted.
+- **E:** `public/AGENTS.md` references `DeferredHomeSections.tsx`, but the live home page composes sections directly in `app/[locale]/(home)/components/HomeContent.tsx`.

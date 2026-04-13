@@ -31,3 +31,23 @@
 - BackgroundGlow: static gradient orbs (no motion)
 - Hero entrance: opacity + y only (no blur)
 - Dashboard navbar: `bg-background/95` (no backdrop-filter)
+
+## Sidebar Rules
+- 5 groups: Overview, Analysis, Profile & Social, Resources, System
+- NO visible group headers — flat list with thin separator lines between groups
+- Every nav item must have a unique icon
+- Import page must be linked in sidebar
+
+## Spacing System
+- All home/landing page sections: `py-24`
+- Hero: `pb-32 pt-[88px]` (special)
+- Small inline sections (filters, cards): variable — OK
+- No empty `className=""` — remove the attribute entirely
+
+## Public UI Architecture
+- Home route `app/[locale]/(home)/page.tsx` is a dedicated long-form marketing page composed in `app/[locale]/(home)/components/HomeContent.tsx`.
+- Home and landing routes both share `app/[locale]/(landing)/components/marketing-layout-shell.tsx` for the global navbar, rolling banner, footer, and ambient shell background.
+- Many public landing routes use `components/layout/unified-page-shell.tsx` and `UnifiedSurface` for page composition. Do not assume every file in `app/[locale]/(landing)/components/` is part of the live route tree.
+- The active public shell comes from `(landing)/components/navbar.tsx` and `footer.tsx`; home-local `Navigation.tsx` and `Footer.tsx` are not part of the current route wiring.
+- When auditing or editing public UI, trace from route `page.tsx`/`layout.tsx` imports first, then edit the shared primitive or section that is actually mounted.
+- `public/AGENTS.md` can lag behind the live home composition. Treat `HomeContent.tsx` as the source of truth for current home section order.

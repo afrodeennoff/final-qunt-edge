@@ -52,7 +52,7 @@ export default function AnalysisDemo() {
  const activeLog = isMobile ? logs[0] : logs[logIndex]
 
  return (
- <section className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
+ <section className="relative px-4 py-24 sm:px-6 sm:py-24 lg:px-8 lg:py-24">
  <motion.div
  initial={{ opacity: 0, y: 10 }}
  whileInView={{ opacity: 1, y: 0 }}

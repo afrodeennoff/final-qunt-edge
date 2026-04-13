@@ -6,7 +6,7 @@ export default function FAQ() {
  const t = useI18n();
 
  return (
- <section className="py-16">
+ <section className="py-24">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="container mx-auto px-4">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">

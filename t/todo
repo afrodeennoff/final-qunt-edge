@@ -13,6 +13,14 @@
 - [x] Add content-visibility on sections
 - [x] Add contain:layout+style+paint on dashboard grid
 - [x] Inject cobalt color system across entire app
-- [x] Deploy to Vercel production
+- [x] Fix Hero double card → black cards with color gradient
+- [x] Rebalance sidebar: 5 groups, 18 unique icons, added Import
+- [x] Remove sidebar group headers (flat list with separators)
+- [x] Standardize section padding to py-24 (all home + landing)
+- [x] Clean empty className="" (14 instances)
+- [x] Full app audit: typecheck, lint, spacing, icons, routes
 
-## No pending tasks
+## Pending
+- [ ] Commit and deploy when user says "deploy"
+
+## No other pending tasks

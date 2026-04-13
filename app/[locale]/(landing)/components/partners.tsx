@@ -6,7 +6,7 @@ export default function Partners() {
  const t = useI18n()
 
  return (
- <section className="py-16 px-6">
+ <section className="py-24 px-6">
  <div className="mx-auto max-w-6xl space-y-6">
  <div className="flex flex-col items-center gap-6 text-center">
  <div className="gap-4">
