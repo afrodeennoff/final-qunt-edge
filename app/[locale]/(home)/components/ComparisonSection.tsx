@@ -71,7 +71,7 @@ export default function ComparisonSection() {
  viewport={{ once: true }}
  transition={{ duration: 0.5, ease: MOTION_EASE }}
  >
- <Badge variant="outline" className="border border-white/[0.12] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 [font-family:var(--home-copy)]">
+ <Badge variant="outline" className="border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 [font-family:var(--home-copy)]">
  Difference From Others
  </Badge>
  <h2 className="mt-4 text-[clamp(1.9rem,4.9vw,3.45rem)] font-[350] leading-[0.92] tracking-[-0.04em] [font-family:var(--home-display)]">
@@ -83,7 +83,7 @@ export default function ComparisonSection() {
  </p>
  <div className="mt-8 space-y-3">
  {['Execution-first review model', 'AI guidance with reason trails', 'Integrated workflow instead of stitched tools'].map((line) => (
- <div key={line} className="rounded-[1.2rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-foreground/72">
+ <div key={line} className="rounded-[1.2rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-4 py-3 text-sm text-foreground/72">
  {line}
  </div>
  ))}

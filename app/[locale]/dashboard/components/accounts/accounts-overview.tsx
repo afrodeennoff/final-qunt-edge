@@ -210,8 +210,8 @@ function SortRuleItem({
  <div
  ref={setNodeRef}
  style={style}
- className={cn("flex items-center gap-2 rounded-md border-white/[0.06] bg-background px-2 py-1.5 text-sm",
- isDragging &&"opacity-70 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]"
+ className={cn("flex items-center gap-2 rounded-md border-[oklch(0.65_0.22_260/0.08)] bg-background px-2 py-1.5 text-sm",
+ isDragging &&"opacity-70 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]"
  )}
  >
  <button
@@ -468,7 +468,7 @@ function PayoutDialog({
  </div>
 
  {/* Selected Date Display */}
- <div className="p-3 bg-muted/30 rounded-md border-white/[0.06]">
+ <div className="p-3 bg-muted/30 rounded-md border-[oklch(0.65_0.22_260/0.08)]">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm font-medium">{t('propFirm.payout.selectedDate')}</p>
@@ -481,7 +481,7 @@ function PayoutDialog({
  </div>
 
  {/* Inline Calendar with Custom Header */}
- <div className="border-white/[0.06] rounded-md bg-background max-h-[400px] flex flex-col">
+ <div className="border-[oklch(0.65_0.22_260/0.08)] rounded-md bg-background max-h-[400px] flex flex-col">
  {/* Custom Month/Year Header */}
  <div className="p-3 border-b bg-muted/20 shrink-0">
  <div className="flex items-center justify-between">
@@ -494,7 +494,7 @@ function PayoutDialog({
  newDate.setMonth(newDate.getMonth() - 1)
  setDate(newDate)
  }}
- className="h-7 w-7 p-0 hover:bg-white/[0.03]"
+ className="h-7 w-7 p-0 hover:bg-[oklch(0.65_0.22_260/0.045)]"
  disabled={isProcessing}
  >
  <ChevronLeft className="h-3 w-3" />
@@ -512,7 +512,7 @@ function PayoutDialog({
  newDate.setMonth(newDate.getMonth() + 1)
  setDate(newDate)
  }}
- className="h-7 w-7 p-0 hover:bg-white/[0.03]"
+ className="h-7 w-7 p-0 hover:bg-[oklch(0.65_0.22_260/0.045)]"
  disabled={isProcessing}
  >
  <ChevronRight className="h-3 w-3" />
@@ -535,7 +535,7 @@ function PayoutDialog({
  }
  setDate(newDate)
  }}
- className="h-7 w-7 p-0 hover:bg-white/[0.03]"
+ className="h-7 w-7 p-0 hover:bg-[oklch(0.65_0.22_260/0.045)]"
  disabled={isProcessing}
  >
  <ChevronLeft className="h-3 w-3" />
@@ -557,7 +557,7 @@ function PayoutDialog({
  }
  setDate(newDate)
  }}
- className="h-7 w-7 p-0 hover:bg-white/[0.03]"
+ className="h-7 w-7 p-0 hover:bg-[oklch(0.65_0.22_260/0.045)]"
  disabled={isProcessing}
  >
  <ChevronRight className="h-3 w-3" />
@@ -1313,7 +1313,7 @@ function AccountsOverviewComponent({
 
  {/* Unconfigured accounts banner */}
  {(unconfiguredAccounts.length > 0 && !isLoading) && (
- <div className="border-b border-white/[0.06] bg-secondary/20">
+ <div className="border-b border-[oklch(0.65_0.22_260/0.08)] bg-secondary/20">
  <div className="px-4 py-2 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="flex items-center gap-2">
@@ -1326,7 +1326,7 @@ function AccountsOverviewComponent({
  {unconfiguredAccounts.map((accountNumber, index) => (
  <div
  key={accountNumber}
- className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border border-white/[0.06]"
+ className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-background border border-[oklch(0.65_0.22_260/0.08)]"
  >
  <span className="text-[10px] font-bold text-foreground/95">
  {accountNumber}
@@ -1334,7 +1334,7 @@ function AccountsOverviewComponent({
  <Button 
  variant="ghost"
  size="sm"
- className="h-5 w-5 p-0 hover:bg-white/[0.03]"
+ className="h-5 w-5 p-0 hover:bg-[oklch(0.65_0.22_260/0.045)]"
  onClick={() => {
  // Create a minimal account object for configuration
  const tempAccount = {
@@ -1383,8 +1383,8 @@ function AccountsOverviewComponent({
  // Generate a consistent color for each group based on group index
  const groupColors = [
  'border-primary/20 bg-primary/[0.02]',
- 'border-muted-foreground/20 bg-white/[0.03]-foreground/[0.02]',
- 'border-white/[0.06] bg-white/[0.02]',
+ 'border-muted-foreground/20 bg-[oklch(0.65_0.22_260/0.045)]-foreground/[0.02]',
+ 'border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]',
  'border-primary/10 bg-primary/[0.01]',
  'border-secondary bg-secondary/10',
  'border-border/14 bg-foreground/[0.02]',
@@ -1449,7 +1449,7 @@ function AccountsOverviewComponent({
 
  return (
  <div
- className={cn("relative border-l-4 border-white/[0.06] bg-secondary/5 rounded-r-lg","transition-[opacity,background-color,border-color] duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:bg-secondary/10"
+ className={cn("relative border-l-4 border-[oklch(0.65_0.22_260/0.08)] bg-secondary/5 rounded-r-lg","transition-[opacity,background-color,border-color] duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:bg-secondary/10"
  )}
  >
  {/* Ungrouped header */}

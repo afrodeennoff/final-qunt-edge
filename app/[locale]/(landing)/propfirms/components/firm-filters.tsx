@@ -69,7 +69,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
-          className="h-12 rounded-xl border-white/[0.06] bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/20"
+          className="h-12 rounded-xl border-[oklch(0.65_0.22_260/0.08)] bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/20"
         />
       </div>
 

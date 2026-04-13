@@ -170,7 +170,7 @@ export function EtpSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void })
  muted
  controls
  playsInline
- className="rounded-lg border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
+ className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
  >
  <source src="/videos/etp-tutorial.mp4" type="video/mp4" />
  <track

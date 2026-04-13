@@ -28,12 +28,12 @@ export default function Navigation({ locale }: NavigationProps) {
  </div>
  </Link>
 
- <div className="hidden rounded-full border border-white/[0.06] bg-white/[0.03] p-1 md:flex md:items-center md:gap-1">
+ <div className="hidden rounded-full border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.045)] p-1 md:flex md:items-center md:gap-1">
  {navLinks.map((link) => (
  <Link
  key={link.href}
  href={link.href}
- className="rounded-full px-4 py-2 text-[13px] font-medium tracking-[-0.01em] text-foreground/52 transition-all duration-200 hover:bg-white/[0.06] hover:text-foreground/95 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+ className="rounded-full px-4 py-2 text-[13px] font-medium tracking-[-0.01em] text-foreground/52 transition-all duration-200 hover:bg-[oklch(0.65_0.22_260/0.08)] hover:text-foreground/95 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
  >
  {link.label}
  </Link>
@@ -53,7 +53,7 @@ export default function Navigation({ locale }: NavigationProps) {
  groups={[{ links: navLinks }]}
  footer={
  <div className="flex flex-col gap-3">
- <Button variant="outline" size="lg" className="w-full rounded-full border-white/[0.12] bg-white/[0.04]">
+ <Button variant="outline" size="lg" className="w-full rounded-full border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)]">
  Login
  </Button>
  <Button size="lg" className="w-full rounded-full bg-white text-black hover:bg-white/90">

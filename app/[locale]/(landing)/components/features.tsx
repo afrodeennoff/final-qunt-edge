@@ -56,7 +56,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
  
  <div className="relative h-full">
- <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-white/[0.06] pb-4">
+ <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-[oklch(0.65_0.22_260/0.08)] pb-4">
  <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground/95 sm:text-lg">{feature.title}</CardTitle>
  <div className="relative">
  <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -74,7 +74,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  </p>
  </div>
  <div
- className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-[1.25rem]","border border-white/[0.06] bg-white/[0.03]","group-hover:border-white/[0.10] group-hover:bg-white/[0.05] transition-all duration-500",
+ className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-[1.25rem]","border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.045)]","group-hover:border-white/[0.10] group-hover:bg-white/[0.05] transition-all duration-500",
  feature.wrapperClass ??"h-[250px] sm:h-[300px] md:h-[350px]"
  )}
  >
@@ -208,7 +208,7 @@ export default function Features() {
  transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
  }}
  >
- <div className="mb-4 flex size-8 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04]">
+ <div className="mb-4 flex size-8 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)]">
  {feature.icon}
  </div>
  <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/72">

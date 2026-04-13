@@ -64,7 +64,7 @@ export function AccountTable({
  if (!isConfigured) {
  return (
  <div className="space-y-4">
- <div className="rounded-md border-white/[0.06]">
+ <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -309,7 +309,7 @@ export function AccountTable({
  <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
  {t('propFirm.beforeReset')}
  </div>
- <div className="rounded-md border-white/[0.06]">
+ <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
  <Table>
  {renderTableHeader()}
  <TableBody>
@@ -328,7 +328,7 @@ export function AccountTable({
  )}
 
  {resetDate && (
- <div className="rounded-md border border-white/[0.06] bg-secondary/20 p-4">
+ <div className="rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-secondary/20 p-4">
  <div className="flex items-center justify-between">
  <div>
  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('propFirm.resetDate.label')}</div>
@@ -348,7 +348,7 @@ export function AccountTable({
  {t('propFirm.afterReset')}
  </div>
  )}
- <div className="rounded-md border-white/[0.06]">
+ <div className="rounded-md border-[oklch(0.65_0.22_260/0.08)]">
  <Table>
  {renderTableHeader()}
  <TableBody>

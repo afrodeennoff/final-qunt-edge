@@ -6,8 +6,8 @@ const badgeVariants = cva("inline-flex items-center justify-center gap-1 rounded
  {
  variants: {
  variant: {
- default:"border-white/[0.12] bg-white/[0.06] text-foreground/95",
- secondary:"border-white/[0.08] bg-white/[0.04] text-muted-foreground",
+ default:"border-white/[0.12] bg-[oklch(0.65_0.22_260/0.08)] text-foreground/95",
+ secondary:"border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground",
  outline:"border-white/[0.14] bg-transparent text-foreground/95",
  destructive:"border-[oklch(0.64_0.255_22/0.30)] bg-[oklch(0.64_0.255_22/0.10)] text-[oklch(0.74_0.255_22)]",
  accent:"border-[oklch(0.65_0.22_260/0.30)] bg-[oklch(0.65_0.22_260/0.10)] text-[oklch(0.75_0.22_260)]",

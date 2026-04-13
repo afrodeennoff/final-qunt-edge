@@ -277,7 +277,7 @@ export function PropFirmCatalogueExperience({
                 <Link
                   key={firm.key}
                   href={`/${locale}/firm/${firm.slug}`}
-                  className="group rounded-xl p-4 bg-white/[0.02] shadow-card transition-all hover:-translate-y-0.5 hover:border-primary/25"
+                  className="group rounded-xl p-4 bg-[oklch(0.65_0.22_260/0.03)] shadow-card transition-all hover:-translate-y-0.5 hover:border-primary/25"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -335,7 +335,7 @@ export function PropFirmCatalogueExperience({
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-white/[0.06] bg-background/65 p-8 text-center text-sm text-muted-foreground">
+            <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/65 p-8 text-center text-sm text-muted-foreground">
               No firms match the current search and filter stack.
             </div>
           )}
@@ -552,7 +552,7 @@ function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-white/[0.06] bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/60 px-4 py-6 text-sm text-muted-foreground">
             No account registrations available yet.
           </div>
         )}

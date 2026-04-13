@@ -86,7 +86,7 @@ export function FirmComparisonGrid({ firms }: FirmComparisonGridProps) {
           <tbody>
             {firms.map((firm) => (
               <tr key={firm.id} className="border-b border-white/[0.04] transition-colors hover:bg-background/50 last:border-b-0">
-                <td className="sticky left-0 bg-white/[0.02] px-3 py-4 font-semibold text-foreground/95">{firm.name}</td>
+                <td className="sticky left-0 bg-[oklch(0.65_0.22_260/0.03)] px-3 py-4 font-semibold text-foreground/95">{firm.name}</td>
                 <td className="px-3 py-4 text-muted-foreground">
                   {formatChallengeFee(getLowestChallengeFee(firm))}
                 </td>

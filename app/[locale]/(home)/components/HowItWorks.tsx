@@ -52,13 +52,13 @@ export default function HowItWorks() {
  </p>
 
  <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Signal</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
  Every session is translated into visible rules, drift, and compliance data.
  </p>
  </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Cadence</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
  The workflow stays lightweight enough to run every day, not just after drawdowns.

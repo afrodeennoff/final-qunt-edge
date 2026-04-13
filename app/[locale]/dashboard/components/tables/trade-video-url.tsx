@@ -212,7 +212,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  </p>
  )}
  {draftUrl && isValid && (
- <div className="rounded-lg overflow-hidden border bg-white/[0.03]">
+ <div className="rounded-lg overflow-hidden border bg-[oklch(0.65_0.22_260/0.045)]">
  <div className="aspect-video w-full relative">
  <iframe
  src={getEmbedUrl(draftUrl)}

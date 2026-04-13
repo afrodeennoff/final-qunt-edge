@@ -94,7 +94,7 @@ function TestimonialCard({
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: index * 0.1, ease }}
  >
- <div className="mb-5 inline-flex w-fit rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/38">
+ <div className="mb-5 inline-flex w-fit rounded-full border border-white/[0.10] bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/38">
  Trader voice
  </div>
  <MessageSquare className="mb-4 h-5 w-5 text-[var(--accent-blue)] opacity-40" />
@@ -102,7 +102,7 @@ function TestimonialCard({
  &ldquo;{testimonial.quote}&rdquo;
  </blockquote>
  <div className="flex items-center gap-3">
- <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-white/[0.04] text-xs font-bold text-primary [font-family:var(--home-display)]">
+ <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-[oklch(0.65_0.22_260/0.06)] text-xs font-bold text-primary [font-family:var(--home-display)]">
  {testimonial.initials}
  </div>
  <div>
@@ -183,7 +183,7 @@ export default function SocialProof() {
 
  <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6">
  <div className="lg:col-span-5">
- <div className="mb-4 rounded-[1.8rem] border border-white/[0.08] bg-white/[0.03] p-5">
+ <div className="mb-4 rounded-[1.8rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-5">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">On-the-desk feedback</p>
  <p className="mt-3 text-sm leading-[1.8] text-foreground/60">
  Review quality only matters if traders and managers keep coming back to it. These quotes reflect how the system changes routines, not just dashboards.
@@ -197,7 +197,7 @@ export default function SocialProof() {
  </div>
 
  <div className="lg:col-span-7">
- <div className="mb-4 rounded-[1.8rem] border border-white/[0.08] bg-white/[0.03] p-5">
+ <div className="mb-4 rounded-[1.8rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-5">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Trust foundation</p>
  <p className="mt-3 text-sm leading-[1.8] text-foreground/60">
  The product is opinionated about security, data ownership, and operational reliability because trading review software only works when it earns long-term trust.

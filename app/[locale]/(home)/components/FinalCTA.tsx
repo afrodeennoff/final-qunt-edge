@@ -69,7 +69,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
  <Button
  asChild
  size="lg"
- className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
+ className="rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
  >
  <Link href={`/${locale}/propfirms`}>
  Browse Prop Firms

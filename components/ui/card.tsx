@@ -57,7 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  accent && variant !=="gradient-border" &&"border-transparent",
  variant ==="default" && ["rounded-xl border bg-[oklch(0.038_0.005_264)]","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_4px_20px_-8px_rgba(0,0,0,0.80)]",
  ],
- variant ==="glass" && ["rounded-xl border bg-white/[0.03] backdrop-saturate-200","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
+ variant ==="glass" && ["rounded-xl border bg-[oklch(0.65_0.22_260/0.045)] backdrop-saturate-200","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
  ],
  variant ==="elevated" && ["rounded-xl border bg-[oklch(0.055_0.006_264)]","border-white/[0.10]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_12px_40px_-12px_rgba(0,0,0,0.85)]",
  ],
@@ -106,12 +106,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  </div>
  )}
  {status && (
- <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <div
  className={cn("h-1.5 w-1.5 rounded-full",
  status ==="live" &&"bg-emerald-400 animate-pulse shadow-[0_0_8px_hsl(160_70%_55%)]",
  status ==="synced" &&"bg-primary shadow-[0_0_6px_hsl(var(--primary)/0.5)]",
- status ==="idle" &&"bg-white/[0.03]-foreground/40",
+ status ==="idle" &&"bg-[oklch(0.65_0.22_260/0.045)]-foreground/40",
  (status ==="destructive" || status ==="error") &&"bg-red-400 shadow-[0_0_6px_hsl(0_80%_60%/0.5)]"
  )}
  />
@@ -164,7 +164,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
  className={cn("h-1.5 w-1.5 rounded-full",
  tone ==="live" &&"bg-emerald-400 animate-pulse",
  tone ==="synced" &&"bg-primary",
- tone ==="idle" &&"bg-white/[0.03]-foreground/40",
+ tone ==="idle" &&"bg-[oklch(0.65_0.22_260/0.045)]-foreground/40",
  (tone ==="destructive" || tone ==="error") &&"bg-red-400",
  className
  )}

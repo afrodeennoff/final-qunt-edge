@@ -667,8 +667,8 @@ export default function AtasProcessor({
  return (
  <Card
  key={account}
- className={cn("p-6 cursor-pointer hover:border-white/[0.06] transition-colors relative group",
- isSelected ?"border-white/[0.06] bg-white/[0.090]" :"border-border/40 bg-white/[0.020]"
+ className={cn("p-6 cursor-pointer hover:border-[oklch(0.65_0.22_260/0.08)] transition-colors relative group",
+ isSelected ?"border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.090]" :"border-border/40 bg-white/[0.020]"
  )}
  onClick={() => {
  if (isSelected) {
@@ -742,7 +742,7 @@ export default function AtasProcessor({
  onChange={(e) =>
  handleCommissionChange(pair, e.target.value)
  }
- className="w-24 bg-background/60 border-white/[0.06] text-foreground/95"
+ className="w-24 bg-background/60 border-[oklch(0.65_0.22_260/0.08)] text-foreground/95"
  />
  </div>
  );

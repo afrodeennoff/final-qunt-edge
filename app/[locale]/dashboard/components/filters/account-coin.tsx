@@ -110,7 +110,7 @@ export function AccountCoin({
  onDragEnd={handleDragEnd}
  onMouseEnter={onMouseEnter}
  onMouseLeave={onMouseLeave}
- className={cn("relative flex min-w-0 w-full max-w-full items-center gap-3 rounded-lg border bg-white/[0.02] px-3 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]","sm:w-full sm:min-w-[120px] sm:max-w-full","transition-[opacity,background-color,border-color] duration-200 ease-out",
+ className={cn("relative flex min-w-0 w-full max-w-full items-center gap-3 rounded-lg border bg-[oklch(0.65_0.22_260/0.03)] px-3 py-2 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]","sm:w-full sm:min-w-[120px] sm:max-w-full","transition-[opacity,background-color,border-color] duration-200 ease-out",
  draggableEnabled && !disabled &&"cursor-grab active:cursor-grabbing","hover:border-primary/50 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]",
  isDragging &&"opacity-60 ring-2 ring-primary/60 ring-offset-2 ring-offset-background",
  isAnimating &&"transition-none",

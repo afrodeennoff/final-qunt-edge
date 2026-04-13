@@ -229,7 +229,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  {isCompareMode && selectedPlatforms.length >= 2 && (
  <div className="absolute bottom-4 left-4 right-4 z-20"
  >
- <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 border border-v2-border shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
+ <div className="flex items-center justify-center gap-3 p-3 rounded-xl bg-v2-bg-surface/95 border border-v2-border shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-bg-base/50">
  <div className="flex items-center gap-2 text-sm text-v2-text-secondary">
  <span>{selectedPlatforms.length} platforms selected</span>
  </div>

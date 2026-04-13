@@ -71,7 +71,7 @@ function PlatformCardInner({
  size="sm"
  onClick={isInteractive ? handleSelect : undefined}
  className={cn("group relative flex h-full min-h-[13.5rem] flex-col items-start gap-3 rounded-xl border-v2-border/70 bg-v2-bg-surface/75 text-left transition-[opacity,background-color,border-color] duration-300",
- isSelected &&"border-v2-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
+ isSelected &&"border-v2-accent shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-v2-accent/20",
  (platform.isDisabled || platform.isComingSoon) &&"cursor-not-allowed opacity-60 grayscale-[0.5]"
  )}
  >
@@ -107,7 +107,7 @@ function PlatformCardInner({
  </div>
 
  <CardHeader size="sm" className="p-0 gap-3">
- <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/50 bg-v2-bg-base/80 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] transition-transform group-hover:scale-105">
+ <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/50 bg-v2-bg-base/80 p-2 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] transition-transform group-hover:scale-105">
  {platform.logo.path && (
  <div className="relative h-full w-full">
  <Image

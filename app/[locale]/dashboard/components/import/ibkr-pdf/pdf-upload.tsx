@@ -159,7 +159,7 @@ export default function PdfUpload({
  {t('import.upload.selectedFiles')}
  </h3>
  </div>
- <ScrollArea className="h-[calc(100%-2rem)] rounded-md border-white/[0.06]">
+ <ScrollArea className="h-[calc(100%-2rem)] rounded-md border-[oklch(0.65_0.22_260/0.08)]">
  <div className="p-2 space-y-1">
  {files.map((file, index) => (
  <div
@@ -194,7 +194,7 @@ export default function PdfUpload({
  <DialogTitle>{t('import.upload.rawOcrData')}</DialogTitle>
  </DialogHeader>
  <ScrollArea className="h-[60vh]">
- <pre className="p-4 bg-white/[0.03] rounded-lg overflow-x-auto">
+ <pre className="p-4 bg-[oklch(0.65_0.22_260/0.045)] rounded-lg overflow-x-auto">
  {rawOcrData}
  </pre>
  </ScrollArea>

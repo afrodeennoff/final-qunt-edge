@@ -14,7 +14,7 @@ export default function ProblemStatement() {
  transition={{ duration: 0.8 }}
  className="sticky top-20 rounded-[1.9rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 lg:top-32"
  >
- <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.12] bg-white/[0.04] mb-6 sm:mb-8">
+ <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] mb-6 sm:mb-8">
  <div className="w-1.5 h-1.5 rounded-full bg-foreground/60 animate-pulse"></div>
  <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-fg-secondary">System Failure Detected</span>
  </div>

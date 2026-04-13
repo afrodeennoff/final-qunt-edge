@@ -83,7 +83,7 @@ const COLOR_SCALE = ["bg-[hsl(var(--chart-8))]","bg-[hsl(var(--chart-7))]","bg-[
 
 const Tracker = React.forwardRef<HTMLDivElement, TrackerProps>(
  (
- { data = [], defaultBackgroundColor ="bg-white/[0.03]", className, hoverEffect, onSelectionChange, valueIndex, ...props },
+ { data = [], defaultBackgroundColor ="bg-[oklch(0.65_0.22_260/0.045)]", className, hoverEffect, onSelectionChange, valueIndex, ...props },
  forwardedRef,
  ) => {
  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null)

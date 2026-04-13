@@ -41,7 +41,7 @@ export default function ExpectancyWidget({ size }: { size?: string }) {
  ?"bg-[oklch(0.82_0.185_155/0.10)] text-[oklch(0.82_0.185_155)] border-[oklch(0.82_0.185_155/0.20)]"
  : expectancy < 0
  ?"bg-[oklch(0.64_0.255_22/0.10)] text-[oklch(0.74_0.255_22)] border-[oklch(0.64_0.255_22/0.20)]"
- :"bg-white/[0.04] text-foreground/70 border-white/[0.08]"
+ :"bg-[oklch(0.65_0.22_260/0.06)] text-foreground/70 border-white/[0.08]"
  )}>
  {expectancy > 0 ?"Positive edge" : expectancy < 0 ?"Negative edge" :"Neutral"}
  </div>

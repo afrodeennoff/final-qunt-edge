@@ -324,7 +324,7 @@ function AccountsTableSection({
  return (
  <tr
  key={entry.summary.id}
- className="border-b border-white/[0.06] bg-white/[0.090] font-semibold"
+ className="border-b border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.090] font-semibold"
  >
  {table.getVisibleLeafColumns().map((column) => (
  <td
@@ -343,7 +343,7 @@ function AccountsTableSection({
  return (
  <tr
  key={row.id}
- className={cn("border-b border-white/[0.06] transition-[opacity,background-color,border-color] duration-75 hover:bg-white/[0.040]",
+ className={cn("border-b border-[oklch(0.65_0.22_260/0.08)] transition-[opacity,background-color,border-color] duration-75 hover:bg-white/[0.040]",
  rowIndex % 2 === 1 &&"bg-white/[0.05]",
  row.getCanExpand() &&"bg-white/[0.010] font-medium",
  isDrawdownBreached(row.original) &&"opacity-50",
@@ -379,7 +379,7 @@ function AccountsTableSection({
  </div>
  {showScrollHint && (
  <div className="pointer-events-none absolute bottom-2 right-2">
- <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-white/[0.06] bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <span className="max-w-[220px] leading-snug">
  {t("accounts.table.scrollHint")}
  </span>

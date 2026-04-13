@@ -123,7 +123,7 @@ export default function PrivacyPolicy() {
           </p>
         </section>
 
-        <p className="border-t border-white/[0.06] pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
+        <p className="border-t border-[oklch(0.65_0.22_260/0.08)] pt-5 text-xs uppercase tracking-[0.12em] text-fg-muted">
           Last updated: {LAST_UPDATED}
         </p>
       </UnifiedSurface>

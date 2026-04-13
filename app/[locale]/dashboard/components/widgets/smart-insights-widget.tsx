@@ -157,7 +157,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  </div>
  </div>
  {insight.confidence && (
- <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-white/[0.04] border-white/[0.08] text-foreground/70">
+ <Badge variant="secondary" className="text-[10px] h-5 px-1.5 bg-[oklch(0.65_0.22_260/0.06)] border-white/[0.08] text-foreground/70">
  {insight.confidence}% Conf.
  </Badge>
  )}

@@ -94,7 +94,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
  </p>
  </div>
  <div className="mt-6 space-y-3">
- <div className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3">
+ <div className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-4 py-3">
  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/34">Live view</p>
  <p className="mt-1 text-sm text-foreground/64">{filteredFirms.length} firms in the current shortlist</p>
  </div>
@@ -131,7 +131,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
  </div>
  <Link
  href={`/${locale}/propfirms`}
- className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.04] px-5 py-3 text-sm font-medium text-foreground/95 transition-colors hover:border-white/[0.18] hover:bg-white/[0.08]"
+ className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-5 py-3 text-sm font-medium text-foreground/95 transition-colors hover:border-white/[0.18] hover:bg-white/[0.08]"
  >
  Explore all firms
  <ArrowRight className="h-4 w-4" />

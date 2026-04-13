@@ -132,13 +132,13 @@ export default function AIFeatures() {
  </p>
 
  <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Reason trail</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
  Recommendations stay explainable, reviewable, and easy to challenge.
  </p>
  </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <div className="rounded-[1.5rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Live context</p>
  <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
  Signals inherit your rules, risk shape, and execution patterns instead of generic advice.

@@ -190,7 +190,7 @@ export default React.memo(function PnLBySideChart({
  <Switch
  checked={showAverage}
  onCheckedChange={setShowAverage}
- className="data-[state=checked]:bg-white/[0.02]"
+ className="data-[state=checked]:bg-[oklch(0.65_0.22_260/0.03)]"
  />
  </div>
  </div>

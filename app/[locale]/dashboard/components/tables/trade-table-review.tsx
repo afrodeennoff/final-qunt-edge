@@ -736,7 +736,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  <div className="flex items-center gap-1">
  <Popover>
  <PopoverTrigger asChild>
- <div className="flex items-center justify-center w-fit min-w-6 px-2 h-6 rounded-full bg-white/[0.03] text-xs font-medium cursor-pointer hover:bg-muted/80 transition-colors">
+ <div className="flex items-center justify-center w-fit min-w-6 px-2 h-6 rounded-full bg-[oklch(0.65_0.22_260/0.045)] text-xs font-medium cursor-pointer hover:bg-muted/80 transition-colors">
  {accounts.length === 1
  ? `${accounts[0].slice(0, 2)}${accounts[0].slice(-2)}`
  : `+${accounts.length}`}
@@ -1447,12 +1447,12 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  {table.getHeaderGroups().map((headerGroup) => (
  <tr
  key={headerGroup.id}
- className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-white/[0.03]"
+ className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-[oklch(0.65_0.22_260/0.045)]"
  >
  {headerGroup.headers.map((header) => (
  <th
  key={header.id}
- className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-white/[0.06] last:border-r-0 first:border-l h-12 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+ className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-muted/90 border-r border-[oklch(0.65_0.22_260/0.08)] last:border-r-0 first:border-l h-12 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
  style={{ width: header.getSize() }}
  >
  {header.isPlaceholder
@@ -1484,7 +1484,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  <tr
  data-state={row.getIsSelected() &&"selected"}
  className={cn("group border-b border-white/[0.08] transition-[opacity,background-color,border-color] duration-75 hover:bg-muted/40",
- row.getIsSelected() &&"bg-accent/50 hover:bg-white/[0.05] data-[state=selected]:bg-white/[0.03]",
+ row.getIsSelected() &&"bg-accent/50 hover:bg-white/[0.05] data-[state=selected]:bg-[oklch(0.65_0.22_260/0.045)]",
  row.getIsExpanded()
  ?"bg-muted/60"
  : row.getCanExpand()
@@ -1497,8 +1497,8 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  {row.getVisibleCells().map((cell) => (
  <td
  key={cell.id}
- className={cn("whitespace-nowrap border-r border-border/20 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-white/[0.06]",
- row.getIsSelected() &&"border-white/[0.06]",
+ className={cn("whitespace-nowrap border-r border-border/20 px-3 py-2 text-sm align-middle [&:has([role=checkbox])]:pr-0 first:border-l last:border-r-0 group-hover:border-[oklch(0.65_0.22_260/0.08)]",
+ row.getIsSelected() &&"border-[oklch(0.65_0.22_260/0.08)]",
  )}
  style={{ width: cell.column.getSize() }}
  >
@@ -1544,7 +1544,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
  </tr>
  )}
  </tbody>
- <tfoot className="sticky bottom-0 z-10 border-t border-white/[0.06] bg-background/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]">
+ <tfoot className="sticky bottom-0 z-10 border-t border-[oklch(0.65_0.22_260/0.08)] bg-background/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)]">
  <tr className="border-b transition-colors">
  {visibleColumns.map((column, index) => {
  const columnId = column.id || (column as ColumnAccessor).accessorKey;

@@ -34,13 +34,13 @@ const SESSIONS: Session[] = [
  name:"London Session",
  startHour: 8,
  endHour: 16,
- color:"bg-accent/70 border-white/[0.06]"
+ color:"bg-accent/70 border-[oklch(0.65_0.22_260/0.08)]"
  },
  {
  name:"New York Session",
  startHour: 13,
  endHour: 21,
- color:"bg-accent/70 border-white/[0.06]"
+ color:"bg-accent/70 border-[oklch(0.65_0.22_260/0.08)]"
  }
 ]
 
@@ -107,7 +107,7 @@ function SessionIndicator({ session, hourElements, containerRef }: {
 
 function SessionLegend({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
  return (
- <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+ <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-center gap-4 text-xs">
  {SESSIONS.map((session) => (
  <button
@@ -455,7 +455,7 @@ function FinancialEventCard({ event, onClick, timezone, dateLocale, expanded = f
  case"LOW":
  return"bg-semantic-info-bg border-semantic-info-border text-semantic-info dark:bg-semantic-info-bg/30 dark:border-semantic-info-border dark:text-semantic-info"
  default:
- return"bg-white/[0.03] border-white/[0.06] text-foreground/95 dark:text-muted-foreground"
+ return"bg-[oklch(0.65_0.22_260/0.045)] border-[oklch(0.65_0.22_260/0.08)] text-foreground/95 dark:text-muted-foreground"
  }
  }
 
@@ -552,7 +552,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  <div
  className={cn("border-l-4 rounded-r-md p-2 cursor-pointer transition-colors hover:opacity-90",
  trade.totalPnL > 0 
- ?"bg-accent/70 border-white/[0.06] text-foreground/95 dark:text-foreground/95"
+ ?"bg-accent/70 border-[oklch(0.65_0.22_260/0.08)] text-foreground/95 dark:text-foreground/95"
  :"bg-semantic-error-bg border-semantic-error-border text-semantic-error dark:bg-semantic-error-bg/30 dark:border-semantic-error-border dark:text-semantic-error"
  )}
  >

@@ -127,7 +127,7 @@ function CustomTooltip({
   const value = payload[0]?.value ?? 0
 
   return (
-    <div className="rounded-xl border border-white/[0.8] bg-popover/95 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+    <div className="rounded-xl border border-white/[0.8] bg-popover/95 p-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
         {new Date(label).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
       </p>

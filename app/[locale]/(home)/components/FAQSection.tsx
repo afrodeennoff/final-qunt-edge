@@ -63,7 +63,7 @@ function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boole
  )}>
  <button
  onClick={onToggle}
- className="flex w-full flex-1 items-center justify-between gap-4 p-5 text-left transition-colors duration-200 hover:bg-white/[0.04]"
+ className="flex w-full flex-1 items-center justify-between gap-4 p-5 text-left transition-colors duration-200 hover:bg-[oklch(0.65_0.22_260/0.06)]"
  aria-expanded={isOpen}
  data-state={isOpen ? 'open' : 'closed'}
  >
@@ -72,7 +72,7 @@ function FAQAccordion({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boole
  'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold uppercase tracking-[0.12em]',
  isOpen
  ? 'border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]'
- : 'border-white/[0.10] bg-white/[0.04] text-foreground/40'
+ : 'border-white/[0.10] bg-[oklch(0.65_0.22_260/0.06)] text-foreground/40'
  )}>
  Q
  </span>
@@ -131,7 +131,7 @@ export default function FAQSection(_props: FAQSectionProps) {
  This section is designed to remove uncertainty fast: product scope, broker support, AI behavior, security, pricing, and team usage.
  </p>
 
- <div className="mt-8 rounded-[1.6rem] border border-white/[0.08] bg-white/[0.03] p-5">
+ <div className="mt-8 rounded-[1.6rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-5">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Best for</p>
  <p className="mt-3 text-sm leading-[1.75] text-foreground/64">
  Discretionary futures traders, funded accounts, performance coaches, and teams that want one review system instead of scattered notes and screenshots.

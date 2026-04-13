@@ -185,7 +185,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
  const Icon = problem.icon
  return (
  <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
- <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04] shadow-[0_0_20px_oklch(0.65_0.22_260/0.16)]">
+ <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] shadow-[0_0_20px_oklch(0.65_0.22_260/0.16)]">
  <Icon className="h-4 w-4 text-primary" />
  </div>
  <Badge
@@ -201,7 +201,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
  <p className="mt-3 text-[0.9rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
  {problem.description}
  </p>
- <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/74">
+ <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/74">
  <ArrowRight className="w-3 h-3" />
  <span>{problem.solution}</span>
  </div>
@@ -218,7 +218,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
  >
  <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
  <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
- <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04]">
+ <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)]">
  <Icon className="w-5 h-5 text-primary" />
  </div>
  </div>
@@ -250,7 +250,7 @@ function AIFeatureCard({ feature }: { feature: AIFeature }) {
  <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
  <div className="relative mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl">
  <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
- <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04]">
+ <div className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)]">
  <Icon className="w-4 h-4 text-primary" />
  </div>
  </div>
@@ -307,7 +307,7 @@ export default function FeaturesBento() {
  </MotionStagger>
 
  <div className="mb-8">
- <Badge variant="secondary" size="sm" className="rounded-full border-white/[0.08] bg-white/[0.04] px-3 text-foreground/62">
+ <Badge variant="secondary" size="sm" className="rounded-full border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] px-3 text-foreground/62">
  Features
  </Badge>
  </div>

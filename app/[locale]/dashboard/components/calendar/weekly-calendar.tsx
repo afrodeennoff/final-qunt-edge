@@ -149,7 +149,7 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  return (
  <div
  key={weekIndex}
- className="flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
+ className="flex flex-col items-center justify-center border-[oklch(0.65_0.22_260/0.08)] rounded p-1 min-h-12 flex-1 bg-muted/10 dark:bg-muted/5"
  />
  )
  }
@@ -160,12 +160,12 @@ function WeeklyCalendarPnlComponent({ calendarData, year }: WeeklyCalendarPnlPro
  <Popover key={`${weekStart.toISOString()}-${weekIndex}`}>
  <PopoverTrigger asChild>
  <div
- className={cn("flex flex-col items-center justify-center border-white/[0.06] rounded p-1 min-h-12 flex-1 cursor-pointer","transition-[opacity,background-color,border-color] duration-200 hover:scale-[1.02] hover:shadow-xs",
+ className={cn("flex flex-col items-center justify-center border-[oklch(0.65_0.22_260/0.08)] rounded p-1 min-h-12 flex-1 cursor-pointer","transition-[opacity,background-color,border-color] duration-200 hover:scale-[1.02] hover:shadow-xs",
  pnl > 0 
  ?"bg-secondary/30 dark:bg-secondary/22 text-foreground/95 dark:text-foreground/95 border-border/65 dark:border-border/55" 
  : pnl < 0 
  ?"bg-semantic-error-bg/60 dark:bg-semantic-error-bg/30 text-semantic-error dark:text-semantic-error/90 border-semantic-error-border/80 dark:border-semantic-error-border/40" 
- :"bg-muted/20 dark:bg-muted/10 text-muted-foreground border-white/[0.06]"
+ :"bg-muted/20 dark:bg-muted/10 text-muted-foreground border-[oklch(0.65_0.22_260/0.08)]"
  )}
  >
  <div className="text-[10px] font-medium opacity-80">{t('calendar.week')} {getWeek(weekStart, { locale: dateLocale })}</div>

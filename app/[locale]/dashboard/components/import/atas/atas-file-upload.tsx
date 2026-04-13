@@ -234,7 +234,7 @@ export default function AtasFileUpload({
  className={cn("h-80 w-full max-w-2xl border-2 border-dashed rounded-lg p-12 text-center transition-[opacity,background-color,border-color] duration-300 ease-in-out","hover:border-primary/50 group relative",
  isDragActive
  ?"border-primary bg-primary/5 scale-[0.99]"
- :"border-white/[0.06] hover:bg-muted/50","cursor-pointer flex items-center justify-center",
+ :"border-[oklch(0.65_0.22_260/0.08)] hover:bg-muted/50","cursor-pointer flex items-center justify-center",
  )}
  >
  <input {...getInputProps()} />

@@ -76,7 +76,7 @@ export default function Navbar() {
  <div className="flex items-center gap-3">
 
  {/* Config Group */}
- <div className="flex items-center gap-1.5 p-1 bg-white/[0.04] rounded-xl border border-white/[0.06]">
+ <div className="flex items-center gap-1.5 p-1 bg-[oklch(0.65_0.22_260/0.06)] rounded-xl border border-[oklch(0.65_0.22_260/0.08)]">
  <Button 
  id="customize-mode"
  variant="ghost"
@@ -99,7 +99,7 @@ export default function Navbar() {
  variant="ghost"
  size="sm"
  onClick={flushPendingSaves}
- className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground/95 transition-[opacity,background-color,border-color] border border-white/[0.06]"
+ className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground/95 transition-[opacity,background-color,border-color] border border-[oklch(0.65_0.22_260/0.08)]"
  >
  <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
  <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -132,7 +132,7 @@ export default function Navbar() {
  <Button 
  variant="ghost" 
  size="sm" 
- className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-white/[0.06] text-foreground/95 text-[10px] font-black uppercase tracking-[0.2em] transition-[opacity,background-color,border-color] duration-500 shadow-none hover:bg-secondary/35"
+ className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-[oklch(0.65_0.22_260/0.08)] text-foreground/95 text-[10px] font-black uppercase tracking-[0.2em] transition-[opacity,background-color,border-color] duration-500 shadow-none hover:bg-secondary/35"
  aria-label="Upgrade to Elite plan"
  >
  <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />

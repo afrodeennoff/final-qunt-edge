@@ -23,7 +23,7 @@ export default function FAQ() {
  </div>
  <div className="rounded-[1.9rem] border border-white/[0.08] bg-black/20 p-5">
  <div className="space-y-4">
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question1")}
  </summary>
@@ -31,7 +31,7 @@ export default function FAQ() {
  {t("faq.answer1")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question2")}
  </summary>
@@ -39,7 +39,7 @@ export default function FAQ() {
  {t("faq.answer2")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question3")}
  </summary>
@@ -47,7 +47,7 @@ export default function FAQ() {
  {t("faq.answer3")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question4")}
  </summary>
@@ -55,7 +55,7 @@ export default function FAQ() {
  {t("faq.answer4")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question5")}
  </summary>
@@ -63,7 +63,7 @@ export default function FAQ() {
  {t("faq.answer5")}
  </p>
  </details>
- <details className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.03] p-4">
+ <details className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] p-4">
  <summary className="cursor-pointer font-semibold text-foreground/95">
  {t("faq.question6")}
  </summary>

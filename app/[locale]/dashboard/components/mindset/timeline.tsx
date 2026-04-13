@@ -111,7 +111,7 @@ export function Timeline({ onSelectDate, selectedDate, moodHistory, className, o
  onClick={handleTodayClick}
  >
  <div className="flex flex-col items-center justify-center gap-1 min-w-10">
- <div className="w-2 h-2 rounded-full bg-white/[0.03]-foreground/50" />
+ <div className="w-2 h-2 rounded-full bg-[oklch(0.65_0.22_260/0.045)]-foreground/50" />
  </div>
  <div className="flex-1 text-left min-w-0 flex items-center">
  <p className="text-sm font-medium text-muted-foreground">

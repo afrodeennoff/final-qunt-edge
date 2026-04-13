@@ -236,7 +236,7 @@ const EquityChartTooltip = React.memo(
  });
 
  return (
- <div className="rounded-lg border-white/[0.06] bg-background p-2 shadow-xs">
+ <div className="rounded-lg border-[oklch(0.65_0.22_260/0.08)] bg-background p-2 shadow-xs">
  <div className="grid gap-2">
  <div className="flex flex-col">
  <span className="text-[0.70rem] uppercase text-muted-foreground">

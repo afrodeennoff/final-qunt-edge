@@ -88,7 +88,7 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
-      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
@@ -322,7 +322,7 @@ export default function BillingManagement() {
 
       {/* Subscription Management */}
       {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
-        <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+        <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
           <CardContent className="px-0">
             <div className="flex flex-col gap-4">
               {!subscription.cancel_at_period_end && (
@@ -443,7 +443,7 @@ export default function BillingManagement() {
       )}
 
       {/* Available Plans */}
-      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.availablePlans')}</CardTitle>
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
@@ -454,7 +454,7 @@ export default function BillingManagement() {
       </Card>
 
       {/* Payment History */}
-      <Card className="rounded-2xl border border-white/[0.06] bg-white/[0.080] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.paymentHistory')}</CardTitle>
           <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>

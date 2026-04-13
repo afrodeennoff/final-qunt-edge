@@ -422,7 +422,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <Input
  readOnly
  value={shareUrl}
- className="pr-24 font-mono text-sm bg-white/[0.03] text-center"
+ className="pr-24 font-mono text-sm bg-[oklch(0.65_0.22_260/0.045)] text-center"
  />
  <div className="absolute right-0 top-0 h-full flex items-center gap-1 pr-2">
  <Button 
@@ -548,7 +548,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.startDateLabel")}</Label>
- <div className="border-white/[0.06] rounded-lg bg-white/[0.02] p-2">
+ <div className="border-[oklch(0.65_0.22_260/0.08)] rounded-lg bg-[oklch(0.65_0.22_260/0.03)] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.from}
@@ -570,7 +570,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <div className="flex-1">
  <div className="space-y-2">
  <Label>{t("share.endDateLabel")}</Label>
- <div className="border-white/[0.06] rounded-lg bg-white/[0.02] p-2">
+ <div className="border-[oklch(0.65_0.22_260/0.08)] rounded-lg bg-[oklch(0.65_0.22_260/0.03)] p-2">
  <Calendar
  mode="single"
  selected={selectedDateRange.to}

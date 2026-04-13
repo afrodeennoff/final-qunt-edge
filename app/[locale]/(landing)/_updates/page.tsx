@@ -53,7 +53,7 @@ export default async function UpdatesPage(props: PageProps) {
           <h2 className="mb-6 text-2xl font-semibold text-fg-primary">
               {t('updates.weeklyVideo')}
           </h2>
-          <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+          <div className="overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]">
             <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
               <iframe
                 className="absolute left-0 top-0 h-full w-full"

@@ -16,7 +16,7 @@ export default function AdminError({
 
   return (
     <main className="flex min-h-[60vh] items-center justify-center p-6">
-      <section className="w-full max-w-lg rounded-lg border bg-background p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <section className="w-full max-w-lg rounded-lg border bg-background p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <h1 className="text-lg font-semibold">Admin panel failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || 'An admin error occurred.'}

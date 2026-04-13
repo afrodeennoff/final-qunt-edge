@@ -90,7 +90,7 @@ export function PnLSummary({ className }: PnLSummaryProps) {
  <div
  aria-live="polite"
  aria-label="Daily PnL quick summary"
- className={cn("flex items-center gap-1 divide-x divide-white/[0.06] overflow-x-auto rounded-xl border border-white/[0.06] bg-black/30 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60",
+ className={cn("flex items-center gap-1 divide-x divide-white/[0.06] overflow-x-auto rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/30 px-2 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/60",
  className
  )}
  >

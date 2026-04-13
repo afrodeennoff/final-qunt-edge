@@ -290,7 +290,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
  {t("common.cancel")}
  </Button>
- <Button onClick={handleSaveTarget} className="bg-white/[0.02] hover:bg-white/[0.090] text-foreground/95 font-bold">
+ <Button onClick={handleSaveTarget} className="bg-[oklch(0.65_0.22_260/0.03)] hover:bg-white/[0.090] text-foreground/95 font-bold">
  {t("common.save")}
  </Button>
  </div>
@@ -420,7 +420,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  isOverTarget ?"bg-secondary/30" :""
  )}
  indicatorClassName={cn("transition-[opacity,background-color,border-color] duration-700",
- isOverTarget ?"bg-white/[0.02] shadow-none" :"bg-white/[0.040]"
+ isOverTarget ?"bg-[oklch(0.65_0.22_260/0.03)] shadow-none" :"bg-white/[0.040]"
  )}
  />
  </div>

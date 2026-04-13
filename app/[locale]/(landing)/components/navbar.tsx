@@ -53,7 +53,7 @@ export default function Navbar() {
  transition={isMobile ? undefined : { duration: 0.2 }}
  >
  <Link href={`/${locale}`} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
- <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
+ <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
  <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
  </div>
  <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground/95">Qunt Edge</span>
@@ -72,7 +72,7 @@ export default function Navbar() {
  className={cn(
  'relative rounded-xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
  isActive(link.href)
- ? 'border border-white/[0.12] bg-white/[0.06] text-foreground/95'
+ ? 'border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.08)] text-foreground/95'
  : 'text-[13px] font-medium text-foreground/55 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em]'
  )}
  >

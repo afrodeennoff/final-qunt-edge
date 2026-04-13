@@ -321,7 +321,7 @@ export function MindsetWidget({ size }: MindsetWidgetProps) {
  className={cn("h-1.5 w-1.5 rounded-full transition-colors",
  current === index
  ?"bg-primary"
- :"bg-white/[0.03]"
+ :"bg-[oklch(0.65_0.22_260/0.045)]"
  )}
  />
  ))}

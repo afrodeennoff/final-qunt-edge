@@ -1159,7 +1159,7 @@ function PayoutProofSection({ firm }: { firm: FirmData }) {
           </div>
         ) : (
           <div className="mt-6 flex flex-col items-center justify-center py-8 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.03]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[oklch(0.65_0.22_260/0.045)]">
               <Award className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="mt-4 text-base font-medium text-foreground/95">No payout proof yet</p>
@@ -1289,7 +1289,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-5">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-white/[0.010] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-white/[0.010] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}

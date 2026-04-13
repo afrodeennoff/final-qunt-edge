@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react"
 
 export function TopNav({ title }: { title: string }) {
  return (
- <div className="mb-4 flex items-center justify-between pb-3 border-b border-white/[0.06]">
+ <div className="mb-4 flex items-center justify-between pb-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
  <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/35">
  {title}
  </h2>

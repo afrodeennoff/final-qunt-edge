@@ -2111,6 +2111,50 @@ img[loading="lazy"] {
   contain-intrinsic-size: auto 200px;
 }
 
+/* ===== COLOR ACCENT SYSTEM ===== */
+
+/* Tinted selection highlights */
+::selection {
+  background: oklch(0.65 0.22 260 / 0.30);
+  color: white;
+}
+
+/* Scrollbar with cobalt tint */
+::-webkit-scrollbar-thumb {
+  background: oklch(0.65 0.22 260 / 0.18);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0.22 260 / 0.30);
+}
+
+/* Focus rings — cobalt instead of default */
+*:focus-visible {
+  outline-color: oklch(0.65 0.22 260 / 0.50);
+}
+
+/* Subtle cobalt ambient glow on cards (static, no performance cost) */
+[data-widget-shell="v2"] {
+  background: linear-gradient(
+    180deg,
+    oklch(0.65 0.22 260 / 0.025) 0%,
+    oklch(0.65 0.22 260 / 0.008) 100%
+  );
+}
+
+[data-chart-surface] {
+  background: linear-gradient(
+    180deg,
+    oklch(0.65 0.22 260 / 0.025) 0%,
+    oklch(0.65 0.22 260 / 0.005) 100%
+  );
+}
+
+/* Active nav items — cobalt indicator */
+[data-sidebar="menu-item"][data-active="true"]::before {
+  background: oklch(0.65 0.22 260 / 0.60);
+}
+
 /* ===== HOME PAGE ANIMATIONS ===== */
 @keyframes fade-in {
   from {

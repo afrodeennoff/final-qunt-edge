@@ -62,7 +62,7 @@ export function CalendarFeaturePreview() {
  const calendarData = useMemo(() => buildDemoCalendarData(), [])
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <Calendar className="size-[18px] text-primary" strokeWidth={2} />
@@ -71,7 +71,7 @@ export function CalendarFeaturePreview() {
  Daily Calendar
  </p>
  </div>
- <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-white/[0.02] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none lg:min-h-[440px]">
+ <div className="h-full min-h-[380px] w-full overflow-hidden rounded-xl border bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] pointer-events-none lg:min-h-[440px]">
  <DesktopCalendarPnl calendarData={calendarData} hideFiltersOnMobile />
  </div>
  </div>

@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 export default function Qualification() {
  return (
  <section className="border-t border-white/[0.08] bg-background px-6 py-32">
- <div className="mx-6 rounded-xl p-6 bg-white/[0.02] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
  <div className="max-w-6xl mx-auto">
- <div className="grid md:grid-cols-2 gap-2 bg-white/[0.010] border border-white/[0.06] p-2 rounded-sm overflow-hidden">
+ <div className="grid md:grid-cols-2 gap-2 bg-white/[0.010] border border-[oklch(0.65_0.22_260/0.08)] p-2 rounded-sm overflow-hidden">
  <motion.div 
  initial={{ opacity: 0, x: -20 }}
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
- className="p-16 bg-white/[0.02]"
+ className="p-16 bg-[oklch(0.65_0.22_260/0.03)]"
  >
  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/95 mb-10 mono">Ideal Candidate</h3>
  <ul className="space-y-6">

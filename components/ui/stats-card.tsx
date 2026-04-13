@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]","shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
+ className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
  config.padding,
  className
  )}
@@ -265,7 +265,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  if (isLoading) {
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+ className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)]","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
  config.padding,
  className
  )}
@@ -298,9 +298,9 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  role={onClick ?"button" : undefined}
  tabIndex={onClick ? 0 : undefined}
  onClick={onClick}
- className={cn("group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] ","shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
- glass &&"bg-white/[0.03]",
- !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
+ className={cn("group relative overflow-hidden rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] ","shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06)]",
+ glass &&"bg-[oklch(0.65_0.22_260/0.045)]",
+ !!onClick &&"cursor-pointer hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_8px_24px_-8px_rgba(0,0,0,0.3)]",
  config.padding,
  className
  )}

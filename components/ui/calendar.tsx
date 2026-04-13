@@ -38,7 +38,7 @@ function Calendar({
  weekday:"w-9 text-center text-[0.8rem] font-normal text-muted-foreground",
  weeks:"text-sm",
  week:"",
- day: cn("relative h-9 w-9 overflow-hidden rounded-md p-0 text-center align-middle","focus-within:z-20 focus-within:shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]"
+ day: cn("relative h-9 w-9 overflow-hidden rounded-md p-0 text-center align-middle","focus-within:z-20 focus-within:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]"
  ),
  day_button: cn(
  buttonVariants({ variant:"ghost" }),"h-9 w-9 p-0 font-normal","aria-selected:bg-primary aria-selected:text-primary-foreground aria-selected:opacity-100","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"

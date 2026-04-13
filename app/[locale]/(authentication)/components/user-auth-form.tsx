@@ -522,7 +522,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </div>
  )}
  <Tabs value={tab} onValueChange={(v) => { setTab(v as 'magic' | 'password'); setLastAuthPreference(v as 'magic' | 'password'); }}>
- <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-white/[0.06] bg-white/[0.050] p-1">
+ <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.050] p-1">
  <TabsTrigger
  value="magic"
  className="h-9 rounded-lg text-xs font-semibold text-muted-foreground data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
@@ -573,7 +573,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button 
  disabled={isLoading || countdown > 0 || authMethod === 'discord' || authMethod === 'google'}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -610,7 +610,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  </Form>
  {showOtpInput && (
  <Form {...otpForm}>
- <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.040] p-4">
+ <form onSubmit={otpForm.handleSubmit(onSubmitOtp)} className="mt-4 space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.040] p-4">
  <FormField
  control={otpForm.control}
  name="otp"
@@ -716,7 +716,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  <Button 
  disabled={isLoading}
  type="submit"
- className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
+ className="h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-primary/90"
  >
  {isLoading && authMethod === 'email' && (
  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -730,10 +730,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
  <div className="relative py-1">
  <div className="absolute inset-0 flex items-center">
- <span className="w-full border-t border-white/[0.06]" />
+ <span className="w-full border-t border-[oklch(0.65_0.22_260/0.08)]" />
  </div>
  <div className="relative flex justify-center text-[10px] uppercase tracking-[0.14em]">
- <span className="bg-white/[0.02] px-2 text-muted-foreground">
+ <span className="bg-[oklch(0.65_0.22_260/0.03)] px-2 text-muted-foreground">
  {t('auth.continueWith')}
  </span>
  </div>

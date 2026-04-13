@@ -246,7 +246,7 @@ export function AdminDashboard() {
  </div>
 
  <Tabs defaultValue="overview" className="w-full">
- <TabsList className="border border-white/[0.8] bg-white/[0.070] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <TabsList className="border border-white/[0.8] bg-white/[0.070] p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <TabsTrigger value="overview">Overview</TabsTrigger>
  <TabsTrigger value="users">Users</TabsTrigger>
  <TabsTrigger value="payments">Payments</TabsTrigger>

@@ -73,7 +73,7 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border/35 bg-background/60 text-foreground/95 hover:border-border/45 hover:bg-white/[0.03]'
+                            : 'border-border/35 bg-background/60 text-foreground/95 hover:border-border/45 hover:bg-[oklch(0.65_0.22_260/0.045)]'
                         )}
                       >
                         {link.label}

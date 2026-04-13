@@ -50,7 +50,7 @@ export default function Hero({ locale }: { locale: string }) {
  >
  <Badge
  variant="outline"
- className="mb-8 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
+ className="mb-8 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
  >
  <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_oklch(0.65_0.22_260/0.7)] animate-pulse" />
  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/62">
@@ -102,7 +102,7 @@ export default function Hero({ locale }: { locale: string }) {
  asChild
  size="lg"
  variant="outline"
- className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
+ className="group h-12 w-full rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
  >
  <a href="#how-it-works">
  Watch Demo
@@ -185,7 +185,7 @@ export default function Hero({ locale }: { locale: string }) {
  (broker) => (
  <span
  key={broker}
- className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/34 transition-all duration-300 hover:border-white/[0.14] hover:text-foreground/80 [font-family:var(--home-display)]"
+ className="rounded-full border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.18em] text-foreground/34 transition-all duration-300 hover:border-white/[0.14] hover:text-foreground/80 [font-family:var(--home-display)]"
  >
  {broker}
  </span>

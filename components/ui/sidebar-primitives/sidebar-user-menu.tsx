@@ -78,7 +78,7 @@ export function SidebarUserMenu({
  >
  <DropdownMenuLabel className="p-0 font-normal">
  <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-accent/32 to-sidebar-accent/12 px-3 py-2.5 text-left text-sm">
- <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <AvatarImage src={user?.avatar_url} alt={displayName} />
  <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
  {initials}
@@ -104,7 +104,7 @@ export function SidebarUserMenu({
  <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/18 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/20 data-[placeholder]:text-sidebar-foreground/40">
  <SelectValue placeholder="Select timezone" />
  </SelectTrigger>
- <SelectContent className="bg-white/[0.04] text-popover-foreground border-sidebar-border/18">
+ <SelectContent className="bg-[oklch(0.65_0.22_260/0.06)] text-popover-foreground border-sidebar-border/18">
  {timezone.options.map((tz) => (
  <SelectItem key={tz} value={tz}>
  {tz}

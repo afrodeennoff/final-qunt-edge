@@ -145,7 +145,7 @@ export function GlobalSyncButton() {
  {isAnySyncing ? (
  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] animate-pulse">Syncing...</Badge>
  ) : (
- <Badge variant="outline" className="bg-white/[0.03] text-muted-foreground border-white/[0.06] text-[8px]">Standby</Badge>
+ <Badge variant="outline" className="bg-[oklch(0.65_0.22_260/0.045)] text-muted-foreground border-[oklch(0.65_0.22_260/0.08)] text-[8px]">Standby</Badge>
  )}
  </DropdownMenuLabel>
 

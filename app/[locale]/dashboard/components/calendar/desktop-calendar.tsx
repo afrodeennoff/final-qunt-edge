@@ -130,9 +130,9 @@ function EventBadge({ events, impactLevels }: { events: FinancialEvent[], impact
  }, 0)
 
  const badgeStyles = {
- 2:"bg-background text-foreground/95 border-white/[0.06] hover:bg-white/[0.05]",
- 1:"bg-background text-foreground/95 border-white/[0.06] hover:bg-white/[0.05]",
- 0:"bg-background text-foreground/95 border-white/[0.06] hover:bg-white/[0.05]"
+ 2:"bg-background text-foreground/95 border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.05]",
+ 1:"bg-background text-foreground/95 border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.05]",
+ 0:"bg-background text-foreground/95 border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.05]"
  }
 
  return (
@@ -187,7 +187,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  </Badge>
  </PopoverTrigger>
  <PopoverContent
- className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_16px_48px_-16px_rgba(0,0,0,0.5)] bg-white/[0.096] border-border/55"
+ className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] bg-white/[0.096] border-border/55"
  align="start"
  side="right"
  sideOffset={8}
@@ -525,9 +525,9 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  }, [calendarData, currentDate, viewMode])
 
  return (
- <Card className="h-full flex flex-col overflow-hidden border-white/[0.06] bg-white/[0.095]">
+ <Card className="h-full flex flex-col overflow-hidden border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.095]">
  <CardHeader
- className="shrink-0 border-b border-white/[0.06] px-4 py-3 sm:px-5 sm:py-4"
+ className="shrink-0 border-b border-[oklch(0.65_0.22_260/0.08)] px-4 py-3 sm:px-5 sm:py-4"
  >
  <div className="flex items-start justify-between gap-4">
  <div className="min-w-0 space-y-1">
@@ -537,7 +537,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  ? formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })
  : formatInTimeZone(currentDate, timezone, 'yyyy', { locale: dateLocale })}
  </CardTitle>
- <span className="rounded-md border border-white/[0.06] bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+ <span className="rounded-md border border-[oklch(0.65_0.22_260/0.08)] bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
  {viewMode === 'daily' ? 'PnL Month' : 'PnL Year'}
  </span>
  </div>
@@ -572,7 +572,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  variant="outline"
  size="icon"
  onClick={() => viewMode === 'daily' ? handlePrevMonth() : setCurrentDate(new Date(getYear(currentDate) - 1, 0, 1))}
- className="h-8 w-8 border-white/[0.06] bg-white/[0.092] hover:bg-secondary/50"
+ className="h-8 w-8 border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.092] hover:bg-secondary/50"
  aria-label={viewMode === 'daily' ?"Previous month" :"Previous year"}
  >
  <ChevronLeft className="h-4 w-4" />
@@ -581,7 +581,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  variant="outline"
  size="icon"
  onClick={() => viewMode === 'daily' ? handleNextMonth() : setCurrentDate(new Date(getYear(currentDate) + 1, 0, 1))}
- className="h-8 w-8 border-white/[0.06] bg-white/[0.092] hover:bg-secondary/50"
+ className="h-8 w-8 border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.092] hover:bg-secondary/50"
  aria-label={viewMode === 'daily' ?"Next month" :"Next year"}
  >
  <ChevronRight className="h-4 w-4" />
@@ -764,14 +764,14 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  calendarData={calendarData}
  isLoading={isLoading}
  />
- <CardFooter className="flex justify-end border-t border-white/[0.06] bg-background/30 px-3 py-2">
+ <CardFooter className="flex justify-end border-t border-[oklch(0.65_0.22_260/0.08)] bg-background/30 px-3 py-2">
  {/* View Mode Toggle */}
- <div className="flex items-center gap-1 rounded-lg border border-white/[0.06] bg-secondary/30 p-1">
+ <div className="flex items-center gap-1 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-secondary/30 p-1">
  <Button 
  variant={viewMode === 'daily' ? 'default' : 'ghost'}
  size="sm"
  className={cn("h-7 px-3 transition-colors",
- viewMode === 'daily' &&"bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] font-semibold"
+ viewMode === 'daily' &&"bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] font-semibold"
  )}
  onClick={() => setViewMode('daily')}
  >
@@ -782,7 +782,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  variant={viewMode === 'weekly' ? 'default' : 'ghost'}
  size="sm"
  className={cn("h-7 px-3 transition-colors",
- viewMode === 'weekly' &&"bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)] font-semibold"
+ viewMode === 'weekly' &&"bg-primary text-primary-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] font-semibold"
  )}
  onClick={() => setViewMode('weekly')}
  >

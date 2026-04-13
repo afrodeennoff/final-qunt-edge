@@ -140,7 +140,7 @@ function formatRelativeTime(date: Date): string {
 
 function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFlag: (id: string) => void; canFlag: boolean }) {
   return (
-    <div className="group rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 transition-all duration-200 hover:border-white/[0.06] hover:bg-white/[0.080]">
+    <div className="group rounded-xl border border-white/[0.08] bg-white/[0.060] p-5 transition-all duration-200 hover:border-[oklch(0.65_0.22_260/0.08)] hover:bg-white/[0.080]">
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-v2-accent/20 to-v2-accent/5 border border-v2-accent/20">
           <span className="text-sm font-semibold text-v2-accent">
@@ -625,7 +625,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
-          <div className="w-full max-w-md rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.03)] p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground/95">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-white/[0.070]">
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-2.5 text-sm text-foreground/95 placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
+                  className="w-full rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-4 py-2.5 text-sm text-foreground/95 placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-sm text-foreground/95 focus:border-v2-accent focus:outline-none"
+                className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] px-3 py-1.5 text-sm text-foreground/95 focus:border-v2-accent focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>

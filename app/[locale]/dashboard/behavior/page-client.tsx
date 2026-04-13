@@ -23,17 +23,17 @@ import type { BehaviorInsights } from "@/lib/behavior-insights"
 
 const MindsetWidget = dynamic(
   () => import("../components/mindset/mindset-widget").then((m) => ({ default: m.MindsetWidget })),
-  { loading: () => <div className="h-full w-full animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.060]" /> }
+  { loading: () => <div className="h-full w-full animate-pulse rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.060]" /> }
 )
 
 const AnalysisOverview = dynamic(
   () => import("../components/analysis/analysis-overview").then((m) => ({ default: m.AnalysisOverview })),
-  { loading: () => <div className="h-80 w-full animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.060]" /> }
+  { loading: () => <div className="h-80 w-full animate-pulse rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.060]" /> }
 )
 
 const ChatWidget = dynamic(
   () => import("../components/chat/chat"),
-  { loading: () => <div className="h-full w-full animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.060]" /> }
+  { loading: () => <div className="h-full w-full animate-pulse rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.060]" /> }
 )
 
 export default function DashboardBehaviorPage() {
@@ -160,7 +160,7 @@ export default function DashboardBehaviorPage() {
 
   return (
     <div className="w-full space-y-6 p-3 sm:p-4 lg:p-6">
-      <Card className="rounded-xl border border-white/[0.06] bg-white/[0.02] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <CardHeader className="pb-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-2">
@@ -410,7 +410,7 @@ export default function DashboardBehaviorPage() {
               <div className="space-y-2">
                 {insights?.recommendationsDetailed?.length ? (
                   insights.recommendationsDetailed.map((recommendation, index) => (
-                    <div key={`${recommendation.text}-${index}`} className="rounded-lg border border-white/[0.06] p-3 bg-background/50">
+                    <div key={`${recommendation.text}-${index}`} className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] p-3 bg-background/50">
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm text-muted-foreground">{recommendation.text}</p>
                         <Badge

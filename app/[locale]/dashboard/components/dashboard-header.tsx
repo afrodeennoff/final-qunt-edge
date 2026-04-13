@@ -106,9 +106,9 @@ export function DashboardHeader() {
  >
  <div className="relative mx-auto max-w-[1800px]">
  <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_32%),radial-gradient(circle_at_right,rgba(16,185,129,0.08),transparent_30%)] opacity-80" />
- <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-2xl border border-white/[0.06] bg-black/80 px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
+ <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-black/80 px-3 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
  <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
- <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.04] text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95 md:h-9 md:w-9" />
+ <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-white/[0.14] hover:bg-white/[0.08] hover:text-foreground/95 md:h-9 md:w-9" />
  <div className="flex min-w-0 items-center gap-3">
  <div className="hidden h-8 w-px bg-gradient-to-b from-white/0 via-white/[0.12] to-white/0 sm:block" />
  <div className="min-w-0 max-w-[min(32rem,44vw)]">
@@ -116,7 +116,7 @@ export function DashboardHeader() {
  {showSectionLabel && (
  <span className={cn(
  'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
- 'border-white/[0.12] bg-white/[0.04] text-foreground/34',
+ 'border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] text-foreground/34',
  ''
  )}>
  {sectionLabel}
@@ -156,7 +156,7 @@ export function DashboardHeader() {
  {!isPlusUser() && (
  <Link href={billingHref}>
  <button className={cn(
- 'group flex h-10 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4',
+ 'group flex h-10 items-center gap-2 rounded-full border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] px-4',
  'text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/95 shadow-[0_20px_40px_-30px_rgba(37,99,235,0.36)] transition-[opacity,background-color,border-color] duration-200',
  'hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.08] hover:shadow-[0_26px_46px_-28px_rgba(37,99,235,0.5)]',
  'active:translate-y-0 active:scale-[0.98]'
