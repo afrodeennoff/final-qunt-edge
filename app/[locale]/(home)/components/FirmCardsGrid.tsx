@@ -11,7 +11,7 @@ interface FirmCardsGridProps {
 export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
  if (firms.length === 0) {
  return (
- <section className="classes "">
+ <section className="pb-3">
  <div className="flex min-h-[16rem] flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--frost-border)] bg-[var(--surface-card)] px-6 text-center">
  <p className="text-sm font-medium text-foreground/95">No firms match these filters.</p>
  <p className="mt-2 max-w-md text-sm text-muted-foreground">
@@ -23,7 +23,7 @@ export default function FirmCardsGrid({ firms, locale }: FirmCardsGridProps) {
  }
 
  return (
- <section className="classes "">
+ <section className="pb-2">
  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
  {firms.map((firm) => (
  <FirmCard key={firm.id} firm={firm} locale={locale} />

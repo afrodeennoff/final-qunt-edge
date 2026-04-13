@@ -55,7 +55,7 @@ function ProblemCard({ problem }: { problem: Problem }) {
 
 export default function ProblemStatement() {
  return (
- <section className="classes "">
+ <section className="relative px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
  <div className="mx-auto max-w-[1360px]">
  <div className="grid grid-cols-1 gap-10 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.03_0.004_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-44px_rgba(0,0,0,0.95)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 lg:p-8">
  <motion.div

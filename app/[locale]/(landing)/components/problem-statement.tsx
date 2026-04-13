@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function ProblemStatement() {
  return (
- <section id="problem" className="classes "">
+ <section id="problem" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-background border-t border-border/30 relative">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-start">
  <motion.div

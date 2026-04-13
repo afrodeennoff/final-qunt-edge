@@ -177,7 +177,7 @@ export default function Features() {
  <section 
  id="features" 
  ref={sectionRef}
- className="classes ""
+ className="relative px-6 py-16 sm:py-20"
  >
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />

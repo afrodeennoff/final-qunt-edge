@@ -377,9 +377,9 @@ function PayoutPill({
   variant: 'paid' | 'pending' | 'refused'
 }) {
   const borderStyles = {
-    paid: 'border-success/30 bg-[linear-gradient(135deg,hsl(var(--success)/0.12),hsl(var(--mk-surface-muted)/0.72))]',
-    pending: 'border-warning/30 bg-[linear-gradient(135deg,hsl(var(--warning)/0.1),hsl(var(--mk-surface-muted)/0.72))]',
-    refused: 'border-semantic-error-border bg-[linear-gradient(135deg,hsl(var(--semantic-error-bg)),hsl(var(--mk-surface-muted)/0.72))]',
+    paid: 'bg-[linear-gradient(135deg,hsl(var(--success)/0.12),hsl(var(--mk-surface-muted)/0.72))]',
+    pending: 'bg-[linear-gradient(135deg,hsl(var(--warning)/0.1),hsl(var(--mk-surface-muted)/0.72))]',
+    refused: 'bg-[linear-gradient(135deg,hsl(var(--semantic-error-bg)),hsl(var(--mk-surface-muted)/0.72))]',
   }
 
   const labelStyles = {
@@ -404,7 +404,7 @@ function PayoutPill({
   const countLabel = count === 0 ? 'No payouts' : `${count} payout${count === 1 ? '' : 's'}`
 
   return (
-    <div className={`rounded-2xl border px-4 py-3 shadow-[0_14px_26px_-22px_hsl(var(--foreground)/0.85)] ${borderStyles[variant]}`}>
+    <div className={`rounded-2xl px-4 py-3 ${borderStyles[variant]}`}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className={`text-base font-medium ${labelStyles[variant]}`}>{label}</p>

@@ -24,7 +24,7 @@ export default function Hero({ }: HeroProps) {
  return (
  <section
  ref={ref}
- className="classes ""
+ className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-24 text-center md:py-32 lg:py-40 sm:px-6 lg:px-8"
  >
  <motion.div
  initial="hidden"

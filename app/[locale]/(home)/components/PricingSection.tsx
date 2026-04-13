@@ -83,7 +83,7 @@ export default function PricingSection() {
  const billingCycle: BillingCycle = isAnnual ? 'annual' : 'monthly'
 
  return (
- <section id="pricing" className="classes "">
+ <section id="pricing" className="py-20 sm:py-28 lg:py-32">
  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Header */}
  <motion.div

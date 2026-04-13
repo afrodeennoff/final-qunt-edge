@@ -74,7 +74,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
  }, [deferredQuery, filters, firms])
 
  return (
- <section className="classes "">
+ <section className="overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] p-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-44px_rgba(0,0,0,0.96)] sm:p-6 lg:p-8">
  <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_320px]">
  <SearchHero
  searchQuery={searchQuery}

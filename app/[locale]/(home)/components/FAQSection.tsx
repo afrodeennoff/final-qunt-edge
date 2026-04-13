@@ -110,7 +110,7 @@ export default function FAQSection(_props: FAQSectionProps) {
  const [openIndex, setOpenIndex] = useState<number | null>(0)
 
  return (
- <section id="faq" className="classes "">
+ <section id="faq" className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
  <div className="mx-auto max-w-[1360px]">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:gap-8">
  <motion.div
