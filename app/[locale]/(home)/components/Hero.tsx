@@ -127,17 +127,14 @@ export default function Hero({ locale }: { locale: string }) {
  transition={{ duration: 0.6, delay: 0.5, ease }}
  >
  {capabilityCards.map((card) => (
- <div
- key={card.title}
- className="rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-4 text-left shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_16px_40px_-28px_rgba(0,0,0,0.88)]"
- >
+ <>
  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/38">
  {card.title}
  </p>
  <p className="mt-2 text-[0.9rem] leading-relaxed tracking-[-0.01em] text-foreground/76">
  {card.description}
  </p>
- </div>
+ </>
  ))}
  </motion.div>
 
