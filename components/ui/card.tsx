@@ -40,11 +40,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  }
 
  const accentBorderMap = {
- primary:"from-[hsl(var(--primary))] to-[hsl(var(--chart-2))]",
+ primary:"from-[oklch(0.82_0.10_82)] to-[oklch(0.62_0.14_42)]",
  success:"from-[hsl(var(--success))] to-emerald-300",
  warning:"from-[hsl(var(--warning))] to-amber-300",
  destructive:"from-[hsl(var(--destructive))] to-rose-300",
- info:"from-sky-400 to-cyan-300",
+ info:"from-[oklch(0.82_0.10_82)] to-[oklch(0.62_0.14_42)]",
  } satisfies Record<NonNullable<CardProps["accent"]>, string>
 
  return (
@@ -55,24 +55,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  onKeyDown={isInteractive ? handleKeyDown : undefined}
  className={cn("group relative overflow-hidden text-foreground/95 ",
  accent && variant !=="gradient-border" &&"border-transparent",
- variant ==="default" && ["rounded-xl border bg-[oklch(0.038_0.005_264)]","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_4px_20px_-8px_rgba(0,0,0,0.80)]",
+ variant ==="default" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(18,14,9,0.98),rgba(8,6,4,0.96))]","border-[rgba(232,206,150,0.12)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_6px_22px_-10px_rgba(0,0,0,0.82)]",
  ],
- variant ==="glass" && ["rounded-xl border bg-[oklch(0.65_0.22_260/0.045)] backdrop-saturate-200","border-white/[0.08]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
+ variant ==="glass" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(232,206,150,0.08),rgba(255,255,255,0.02))] backdrop-saturate-200","border-[rgba(232,206,150,0.12)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
  ],
- variant ==="elevated" && ["rounded-xl border bg-[oklch(0.055_0.006_264)]","border-white/[0.10]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.09),0_12px_40px_-12px_rgba(0,0,0,0.85)]",
+ variant ==="elevated" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(22,16,10,0.98),rgba(10,7,4,0.96))]","border-[rgba(232,206,150,0.14)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.10),0_14px_42px_-14px_rgba(0,0,0,0.86)]",
  ],
  variant ==="outlined" && ["rounded-xl border-2 border-white/[0.14] bg-transparent shadow-none",
  ],
  variant ==="flat" &&"border-0 bg-transparent shadow-none rounded-xl",
- variant ==="gradient-border" && ["rounded-xl bg-gradient-to-br from-white/[0.05] to-transparent","shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
+ variant ==="gradient-border" && ["rounded-xl bg-gradient-to-br from-[rgba(232,206,150,0.08)] to-transparent","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
  accent ? `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}` :"border border-white/[0.12]",
  ],
- variant ==="frost" && ["rounded-xl bg-transparent","border border-[rgba(180,210,255,0.09)]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.07),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
+ variant ==="frost" && ["rounded-xl bg-transparent","border border-[rgba(232,206,150,0.10)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
  ],
  size ==="sm" &&"text-sm",
  size ==="md" &&"text-base",
  size ==="lg" &&"text-lg",
- hover &&"hover:border-white/[0.14] hover:shadow-[0_0_0_0.5px_rgba(180,210,255,0.11),0_12px_40px_-8px_rgba(0,0,0,0.82)] hover:-translate-y-[1px]",
+ hover &&"hover:border-[rgba(232,206,150,0.18)] hover:shadow-[0_0_0_0.5px_rgba(232,206,150,0.12),0_12px_40px_-8px_rgba(0,0,0,0.82)] hover:-translate-y-[1px]",
  isInteractive &&"cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  isLoading &&"pointer-events-none opacity-80",
  className
@@ -92,12 +92,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
  {/* Ambient glow on hover */}
  {(hover || isInteractive) && (
- <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 group-hover:opacity-100" />
+ <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(232,206,150,0.10),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 group-hover:opacity-100" />
  )}
 
  {variant ==="gradient-border" && (
  <div className="absolute inset-[1px] overflow-hidden rounded-[calc(1rem-1px)]">
- <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.038_0.005_264/0.98),oklch(0.055_0.006_264/0.96))]" />
+ <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,14,9,0.98),rgba(10,7,4,0.96))]" />
  </div>
  )}
  {isLoading && (
@@ -106,7 +106,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  </div>
  )}
  {status && (
- <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_rgba(232,206,150,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <div
  className={cn("h-1.5 w-1.5 rounded-full",
  status ==="live" &&"bg-emerald-400 animate-pulse shadow-[0_0_8px_hsl(160_70%_55%)]",

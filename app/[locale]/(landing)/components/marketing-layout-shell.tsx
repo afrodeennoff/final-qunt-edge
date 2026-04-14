@@ -44,7 +44,7 @@ export default function MarketingLayoutShell({
  {shellVariant === 'accent' ? <BackgroundGlow variant="accent" /> : null}
  <div className={cn('pointer-events-none fixed inset-0 hidden qe-v2-grid sm:block', shellVariant === 'black' ? 'opacity-[0.08]' : 'opacity-[0.14]')} />
  {shellVariant === 'accent' ? (
- <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_34%)]" />
+ <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,oklch(0.80_0.12_82/0.14),transparent_36%),radial-gradient(circle_at_bottom_right,oklch(0.54_0.08_20/0.10),transparent_34%)]" />
  ) : null}
  <div className="flex min-h-screen w-full">
  {/* Full-width content: no sidebar column */}

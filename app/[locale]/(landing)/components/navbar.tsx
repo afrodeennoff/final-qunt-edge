@@ -47,13 +47,13 @@ export default function Navbar() {
  >
  <motion.div
  className={cn(
- 'w-full max-w-5xl mx-auto flex items-center justify-between h-12 px-4 rounded-full border border-white/[0.10] bg-black/70 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.70)]'
+ 'w-full max-w-5xl mx-auto flex items-center justify-between h-12 px-4 rounded-full border border-[rgba(232,206,150,0.12)] bg-black/70 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.70)]'
 )}
  whileHover={isMobile ? undefined : { y: -1 }}
  transition={isMobile ? undefined : { duration: 0.2 }}
  >
  <Link href={`/${locale}`} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
- <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.85)]">
+ <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[rgba(232,206,150,0.12)] bg-[rgba(232,206,150,0.06)] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.85)]">
  <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
  </div>
  <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground/95">Qunt Edge</span>
@@ -72,7 +72,7 @@ export default function Navbar() {
  className={cn(
  'relative rounded-xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
  isActive(link.href)
- ? 'border border-white/[0.12] bg-white/[0.06] text-foreground/95'
+ ? 'border border-[rgba(232,206,150,0.16)] bg-[rgba(232,206,150,0.10)] text-foreground/95 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08)]'
  : 'text-[13px] font-medium text-foreground/55 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em]'
  )}
  >
@@ -93,7 +93,7 @@ export default function Navbar() {
  asChild
  size="sm"
  variant="default"
- className="hidden h-8 items-center px-4 rounded-full bg-white text-[12px] font-semibold text-black tracking-[-0.01em] hover:bg-white/90 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
+ className="hidden h-8 items-center px-4 rounded-full text-[12px] font-semibold tracking-[-0.01em] transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] md:inline-flex"
  >
  <Link href={`/${locale}/authentication`}>Start Free Audit</Link>
  </Button>

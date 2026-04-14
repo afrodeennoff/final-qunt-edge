@@ -68,14 +68,26 @@
 - **R:** Keep hero backgrounds translucent enough to inherit the shell atmosphere, and align major public content widths with the shared shell unless there is a strong reason not to.
 - **E:** `app/[locale]/(home)/components/Hero.tsx` now uses a blended gradient backdrop and `HomeContent.tsx` uses `max-w-[1320px]` to match the shared public shell rhythm.
 
+## Lesson 12: Home shell color should be switchable independently of public shell structure
+- **M:** The user wanted the home page shell black, not cobalt-tinted, while keeping the shared layout structure intact.
+- **RC:** The shared public shell bundled layout structure and accent atmosphere together, so route-level color changes were awkward.
+- **R:** Keep shell structure shared, but expose a route-level shell color variant so visual tone can change without duplicating layout code or altering behavior.
+- **E:** `MarketingLayoutShell` now supports `shellVariant="black"` and the home layout uses it to remove cobalt ambient gradients while preserving navbar/footer/content structure.
+
 ## Lesson 13: Turbopack cache corruption causes 'Module not found' for files that exist
 - **M:** Build error `Can't resolve './dev/on-demand-entries-client'` + `Failed to restore task data (TaskId 517435))` SST file errors
 - **RC:** `.next` Turbopack cache had corrupted `.sst`/`.meta` files (stale from previous build). The module exists in `node_modules` but Turbopack's cached resolver couldn't find it.
 - **R:** `rm -rf .next` clears the corruption. Always delete `.next` before debugging 'module not found' errors where the file clearly exists in `node_modules`.
 - **E:** `on-demand-entries-client.js` exists at `node_modules/next/dist/client/dev/` but Turbopack's SST index was corrupted.
 
-## Lesson 12: Home shell color should be switchable independently of public shell structure
-- **M:** The user wanted the home page shell black, not cobalt-tinted, while keeping the shared layout structure intact.
-- **RC:** The shared public shell bundled layout structure and accent atmosphere together, so route-level color changes were awkward.
-- **R:** Keep shell structure shared, but expose a route-level shell color variant so visual tone can change without duplicating layout code or altering behavior.
-- **E:** `MarketingLayoutShell` now supports `shellVariant="black"` and the home layout uses it to remove cobalt ambient gradients while preserving navbar/footer/content structure.
+## Lesson 14: Prisma 7.x requires Node 22+ — Node 20.18 crashes with ERR_REQUIRE_ESM
+- **M:** `bunx prisma generate` and `bun install` crashed with `ERR_REQUIRE_ESM: require() of ES Module zeptomatch`
+- **RC:** Prisma 7.x uses `@prisma/dev` which requires `zeptomatch` (ESM-only). Node <20.19 cannot `require()` ESM modules. Node 22.12+ works.
+- **R:** Pin Node to >=22.12.0 in `.nvmrc`, `package.json engines`, and Vercel `functions.runtime`. Use `nvm use 22` locally.
+- **E:** GitHub issue prisma/prisma#28805 — upgrading from Node 20.18.1 to Node 22.22.2 fixed all Prisma CLI issues instantly.
+
+## Lesson 15: Bun build SIGKILL on 16GB machines — lower heap size
+- **M:** `bun run build` with `--max-old-space-size=8192` gets SIGKILL (OOM killer) on 16GB machines
+- **RC:** 8GB heap + Next.js webpack compilation + 176 static pages + OS overhead exceeds available RAM
+- **R:** Use `--max-old-space-size=4096` on 16GB machines. 1 CPU worker. Build still completes in ~5 min.
+- **E:** Build with 4GB heap: compiles in 90s, generates 176 pages in 2.5 min, zero errors.

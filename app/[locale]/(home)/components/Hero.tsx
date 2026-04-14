@@ -15,19 +15,19 @@ const capabilityCards = [
  title: 'Execution Audits',
  description: 'Spot quality drift before it hits your PnL',
  tone:
- 'rgba(255,255,255,0.08), rgba(255,255,255,0.04), rgba(255,255,255,0.015)',
+ 'rgba(232,206,150,0.14), rgba(164,109,54,0.08), rgba(255,255,255,0.02)',
  },
  {
  title: 'AI Debriefs',
  description: 'Session-level insights with actionable next steps',
  tone:
- 'rgba(255,255,255,0.065), rgba(255,255,255,0.035), rgba(255,255,255,0.012)',
+ 'rgba(232,206,150,0.10), rgba(112,50,36,0.08), rgba(255,255,255,0.015)',
  },
  {
  title: 'Team Coaching',
  description: 'Review setups, process, and risk with your desk',
  tone:
- 'rgba(255,255,255,0.07), rgba(255,255,255,0.03), rgba(255,255,255,0.01)',
+ 'rgba(171,110,56,0.10), rgba(92,40,28,0.08), rgba(255,255,255,0.012)',
  },
 ] as const
 
@@ -36,8 +36,8 @@ export default function Hero({ locale }: { locale: string }) {
  <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-32 pt-[88px]">
  <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.08)_28%,rgba(0,0,0,0.28)_100%)]" />
  <div className="pointer-events-none absolute inset-0 opacity-80">
- <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-white/[0.04] blur-[120px]" />
- <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-white/[0.03] blur-[130px]" />
+ <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[oklch(0.80_0.12_82/0.12)] blur-[120px]" />
+ <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-[oklch(0.54_0.08_20/0.10)] blur-[130px]" />
  <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [background-size:72px_72px] opacity-40" />
  </div>
 
@@ -50,9 +50,9 @@ export default function Hero({ locale }: { locale: string }) {
  >
  <Badge
  variant="outline"
- className="mb-8 rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
+ className="mb-8 rounded-full border border-[rgba(232,206,150,0.18)] bg-[rgba(232,206,150,0.08)] px-4 py-1.5 text-foreground/75 shadow-[0_0_0_0.5px_rgba(232,206,150,0.10),0_16px_48px_-28px_rgba(0,0,0,0.82)]"
  >
- <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,255,255,0.4)] animate-pulse" />
+ <span className="mr-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_oklch(0.78_0.12_82/0.45)] animate-pulse" />
  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/62">
  Precision Trading Intelligence
  </span>
@@ -66,7 +66,7 @@ export default function Hero({ locale }: { locale: string }) {
  transition={{ duration: 0.9, delay: 0.1, ease }}
  >
  Audit execution quality.
- <span className="mt-1 block bg-gradient-to-r from-foreground via-foreground/90 to-foreground/45 bg-clip-text text-transparent">
+ <span className="mt-1 block bg-gradient-to-r from-[oklch(0.84_0.10_82)] via-[oklch(0.74_0.12_68)] to-[oklch(0.58_0.10_28)] bg-clip-text text-transparent">
  Compound your edge.
  </span>
  </motion.h1>
@@ -91,7 +91,7 @@ export default function Hero({ locale }: { locale: string }) {
  <Button
  asChild
  size="lg"
- className="h-12 w-full rounded-full bg-white px-8 text-[13px] font-semibold tracking-[-0.01em] text-black shadow-[0_0_40px_rgba(255,255,255,0.18)] hover:bg-white/90 sm:w-auto"
+ className="h-12 w-full rounded-full bg-primary px-8 text-[13px] font-semibold tracking-[-0.01em] text-primary-foreground shadow-[0_0_40px_oklch(0.78_0.12_82/0.18)] hover:bg-[oklch(0.84_0.10_82)] sm:w-auto"
  >
  <Link href={`/${locale}/authentication?next=dashboard`}>
  Start Free Audit
@@ -102,7 +102,7 @@ export default function Hero({ locale }: { locale: string }) {
  asChild
  size="lg"
  variant="outline"
- className="group h-12 w-full rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-white/[0.18] hover:bg-white/[0.08] hover:text-foreground/95 sm:w-auto"
+ className="group h-12 w-full rounded-full border border-[rgba(232,206,150,0.16)] bg-[rgba(232,206,150,0.06)] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 transition-all duration-200 hover:border-[rgba(232,206,150,0.22)] hover:bg-[rgba(232,206,150,0.10)] hover:text-foreground/95 sm:w-auto"
  >
  <a href="#how-it-works">
  Watch Demo
@@ -129,7 +129,7 @@ export default function Hero({ locale }: { locale: string }) {
  {capabilityCards.map((card) => (
  <div
  key={card.title}
- className="relative overflow-hidden rounded-2xl border border-white/[0.08] px-5 py-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_18px_44px_-32px_rgba(0,0,0,0.86)]"
+ className="relative overflow-hidden rounded-2xl border border-[rgba(232,206,150,0.14)] px-5 py-4 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_18px_44px_-32px_rgba(0,0,0,0.86)]"
  style={{ background: `linear-gradient(135deg, ${card.tone})` }}
  >
  <div className="relative z-10 rounded-xl bg-[linear-gradient(180deg,rgba(8,10,18,0.8),rgba(8,10,18,0.62))] px-4 py-3">

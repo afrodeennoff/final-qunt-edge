@@ -21,7 +21,7 @@ const BackgroundGlow = React.forwardRef<HTMLDivElement, BackgroundGlowProps>(
             className
           )}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_82%_54%_at_50%_-16%,rgba(255,255,255,0.08),transparent_52%),radial-gradient(ellipse_64%_44%_at_85%_105%,rgba(255,255,255,0.05),transparent_52%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_82%_54%_at_50%_-16%,oklch(0.80_0.12_82/0.18),transparent_52%),radial-gradient(ellipse_64%_44%_at_85%_105%,oklch(0.54_0.08_20/0.14),transparent_52%)]" />
           <div className="absolute inset-0 opacity-[0.035]">
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[length:48px_48px]" />
           </div>
@@ -38,8 +38,8 @@ const BackgroundGlow = React.forwardRef<HTMLDivElement, BackgroundGlowProps>(
           className
         )}
       >
-        <div className="absolute left-[-10%] top-[-10%] h-[48%] w-[48%] rounded-full bg-white/[0.035] blur-[140px]" />
-        <div className="absolute bottom-[-12%] right-[-10%] h-[44%] w-[44%] rounded-full bg-white/[0.025] blur-[140px]" />
+        <div className="absolute left-[-10%] top-[-10%] h-[48%] w-[48%] rounded-full bg-[oklch(0.80_0.12_82/0.10)] blur-[140px]" />
+        <div className="absolute bottom-[-12%] right-[-10%] h-[44%] w-[44%] rounded-full bg-[oklch(0.54_0.08_20/0.08)] blur-[140px]" />
         <div className="absolute inset-0 opacity-[0.028] qe-v2-grid" />
       </div>
     )

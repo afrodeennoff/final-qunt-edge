@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
  <input
  id={inputId}
  type={type}
- className={cn("flex h-9 w-full rounded-xl border border-white/[0.10] bg-[oklch(0.65_0.22_260/0.045)] px-3.5 py-2 text-[13px] font-medium tracking-[-0.005em] text-foreground/95 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.65_0.22_260/0.55)] focus-visible:border-[oklch(0.65_0.22_260/0.40)] disabled:cursor-not-allowed disabled:opacity-50 transition-[opacity,background-color,border-color] duration-150 hover:border-white/[0.16]",
+ className={cn("flex h-9 w-full rounded-xl border border-[rgba(232,206,150,0.14)] bg-[rgba(232,206,150,0.06)] px-3.5 py-2 text-[13px] font-medium tracking-[-0.005em] text-foreground/95 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.78_0.12_82/0.55)] focus-visible:border-[oklch(0.78_0.12_82/0.40)] disabled:cursor-not-allowed disabled:opacity-50 transition-[opacity,background-color,border-color] duration-150 hover:border-[rgba(232,206,150,0.22)]",
  leftIcon &&"pl-10",
  rightIcon &&"pr-10",
  error &&"border-[oklch(0.64_0.255_22/0.45)] focus-visible:border-[oklch(0.64_0.255_22/0.55)] focus-visible:ring-[oklch(0.64_0.255_22/0.30)]",

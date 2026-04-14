@@ -222,7 +222,7 @@ function Sidebar({
  <div
  data-sidebar="sidebar"
  data-slot="sidebar-inner"
- className={cn("flex h-full w-full flex-col border border-white/[0.08] bg-sidebar/92 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_28px_80px_-44px_rgba(0,0,0,0.94)]","group-data-[variant=floating]:rounded-[2rem]","group-data-[variant=inset]:rounded-[2rem]"
+ className={cn("flex h-full w-full flex-col border border-[rgba(232,206,150,0.12)] bg-sidebar/92 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_28px_80px_-44px_rgba(0,0,0,0.94)]","group-data-[variant=floating]:rounded-[2rem]","group-data-[variant=inset]:rounded-[2rem]"
  )}
  >
  {children}
@@ -244,7 +244,7 @@ function SidebarTrigger({
  data-slot="sidebar-trigger"
  variant="ghost"
  size="icon"
- className={cn("size-9 rounded-xl border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.06)] text-foreground/72 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08)] hover:border-white/[0.12] hover:bg-white/[0.08] hover:text-foreground/95", className)}
+ className={cn("size-9 rounded-xl border border-[rgba(232,206,150,0.12)] bg-[rgba(232,206,150,0.08)] text-foreground/72 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08)] hover:border-[rgba(232,206,150,0.18)] hover:bg-[rgba(232,206,150,0.12)] hover:text-foreground/95", className)}
  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
  onClick?.(event)
  toggleSidebar()

@@ -1,6 +1,6 @@
 # Todo
 
-**Updated:** 2026-04-13
+**Updated:** 2026-04-14
 
 ## Done ✅
 - [x] Kill nested `<button>` hydration error (PricingSection.tsx)
@@ -22,12 +22,14 @@
 - [x] End-to-end functional audit (database, API, auth, providers)
 - [x] Add loading.tsx to 20 missing routes (dashboard, admin, teams)
 - [x] Update .env.example with 31 missing env vars (240 lines total)
+- [x] Fix Turbopack cache corruption (rm -rf .next)
+- [x] Upgrade to Node 22 (required for Prisma 7.x)
+- [x] Configure Bun build (vercel.json, .nvmrc, package.json)
+- [x] Remove cobalt tint from homepage (neutral white surfaces)
+- [x] Full bun build passes: 176 pages, 0 errors
 
 ## Pending
-- [x] Fix Turbopack cache corruption (rm -rf .next)
-- [x] Unify shared app shells to a clean black backdrop across public and authenticated pages
-- [x] Remove cobalt/emerald ambient gradients from public page wrappers and hero shells
-- [x] Verify visual shell cleanup with typecheck and persist the rule in project notes
+- [ ] Replace the current app accent palette with the tweakcn-inspired custom theme tokens and restore missing accent vars
+- [ ] Unify dashboard theme overrides with the shared custom palette so hydration does not revert colors
+- [ ] Clean up remaining home/public components that still depend on broken legacy accent references and verify the pass
 - [ ] Commit and deploy when user says "deploy"
-
-## No other pending tasks
