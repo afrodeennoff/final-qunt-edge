@@ -3,8 +3,6 @@ import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import FeaturesBento from './FeaturesBento'
 import ProblemStatement from './ProblemStatement'
-import DashboardPreview from './DashboardPreview'
-import ComparisonSection from './ComparisonSection'
 import RollingAdBanner from './RollingAdBanner'
 import PropFirmsExplorer from './PropFirmsExplorer'
 import FinalCTA from './FinalCTA'
@@ -56,15 +54,13 @@ export default function HomeContent({ locale }: HomeContentProps) {
  <main className="relative z-10 mx-auto w-full max-w-[1320px]">
  <Hero locale={locale} />
  <LiveStatsStrip />
- <FeaturesBento />
  <ProblemStatement />
- <DashboardPreview />
  <LazyHowItWorks />
+ <FeaturesBento />
  <LazyAnalysisDemo />
- <LazyAudienceSegmentation />
  <LazyAIFeatures />
+ <LazyAudienceSegmentation />
  <LazySocialProof />
- <ComparisonSection />
  <RollingAdBanner />
  <PropFirmsExplorer locale={locale} />
  <LazyPricingSection />

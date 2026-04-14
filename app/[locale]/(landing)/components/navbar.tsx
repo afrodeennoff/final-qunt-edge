@@ -47,13 +47,13 @@ export default function Navbar() {
  >
  <motion.div
  className={cn(
- 'w-full max-w-5xl mx-auto flex items-center justify-between h-12 px-4 rounded-full border border-[rgba(232,206,150,0.12)] bg-black/70 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.70)]'
+ 'w-full max-w-5xl mx-auto flex items-center justify-between h-12 px-4 rounded-full border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.1249_0.0104_301.6956/0.78)] backdrop-saturate-200 shadow-[0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.10),0_8px_32px_-8px_rgba(0,0,0,0.70)]'
 )}
  whileHover={isMobile ? undefined : { y: -1 }}
  transition={isMobile ? undefined : { duration: 0.2 }}
  >
  <Link href={`/${locale}`} className="flex items-center gap-2 rounded-xl px-2 py-1.5">
- <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[rgba(232,206,150,0.12)] bg-[rgba(232,206,150,0.06)] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.85)]">
+ <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.08)] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.85)]">
  <Logo className="h-4.5 w-4.5 fill-[var(--text-secondary)]" />
  </div>
  <span className="hidden sm:inline-flex text-[13px] font-semibold tracking-[-0.02em] text-foreground/95">Qunt Edge</span>
@@ -72,7 +72,7 @@ export default function Navbar() {
  className={cn(
  'relative rounded-xl px-3.5 py-2 text-[13px] font-medium tracking-[0.01em] transition-all duration-200',
  isActive(link.href)
- ? 'border border-[rgba(232,206,150,0.16)] bg-[rgba(232,206,150,0.10)] text-foreground/95 shadow-[0_0_0_0.5px_rgba(232,206,150,0.08)]'
+ ? 'border border-[oklch(0.6083_0.2172_297.1153/0.22)] bg-[oklch(0.6083_0.2172_297.1153/0.12)] text-foreground/95 shadow-[0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.08)]'
  : 'text-[13px] font-medium text-foreground/55 hover:text-foreground/95 transition-colors duration-150 tracking-[-0.005em]'
  )}
  >

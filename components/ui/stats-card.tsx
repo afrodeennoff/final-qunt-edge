@@ -85,7 +85,7 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
 
  return (
  <div
- className={cn("relative overflow-hidden rounded-xl border border-[rgba(232,206,150,0.14)] bg-[rgba(232,206,150,0.05)]","shadow-[inset_0_1px_0_rgba(232,206,150,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
+ className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
  config.padding,
  className
  )}

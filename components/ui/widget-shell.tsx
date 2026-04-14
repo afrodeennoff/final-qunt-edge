@@ -86,13 +86,13 @@ export function WidgetShell({
  return (
  <Card
  data-widget-shell="v2"
- className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-[rgba(232,206,150,0.14)] bg-[rgba(232,206,150,0.05)]","shadow-[inset_0_1px_0_rgba(232,206,150,0.08)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
+ className={cn("widget-enter-smooth relative overflow-hidden rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08)]","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background","h-full",
  variant ==="hoverable" &&
  className
  )}
  >
  {(title || actions || icon || description) && (
- <CardHeader className="border-b border-[rgba(232,206,150,0.10)] bg-[rgba(232,206,150,0.04)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
+ <CardHeader className="border-b border-[oklch(0.2505_0.0293_299.5707/0.8)] bg-[oklch(0.6083_0.2172_297.1153/0.05)] px-[var(--space-4)] py-[var(--space-3)] sm:px-[var(--space-4)] sm:py-[var(--space-3)]">
  <div className="flex items-start justify-between gap-[var(--space-3)]">
  <div className="min-w-0 gap-[var(--space-2)]">
  {(title || icon) && (

@@ -91,3 +91,9 @@
 - **RC:** 8GB heap + Next.js webpack compilation + 176 static pages + OS overhead exceeds available RAM
 - **R:** Use `--max-old-space-size=4096` on 16GB machines. 1 CPU worker. Build still completes in ~5 min.
 - **E:** Build with 4GB heap: compiles in 90s, generates 176 pages in 2.5 min, zero errors.
+
+## Lesson 16: Dashboard theme overrides can silently undo a global palette change
+- **M:** A global tweakcn theme pass updated shared tokens and component chrome, but the dashboard could still boot with the old accent.
+- **RC:** The authenticated shell applies accent overrides from `lib/constants/dashboard-themes.ts`, `context/theme-provider.tsx`, and the inline bootstrap script in `app/[locale]/dashboard/layout.tsx`, so changing only `app/globals.css` is incomplete.
+- **R:** For any app-wide palette change, update globals, extended token files, shared primitives, dashboard theme palettes, the dashboard default theme, and the server bootstrap fallback together.
+- **E:** The Deep Purple pass only became consistent after `THEME_PALETTES.violet`, `DEFAULT_THEME`, and the dashboard layout bootstrap fallback were all aligned to the same palette.

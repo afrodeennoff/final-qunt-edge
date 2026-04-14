@@ -40,11 +40,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  }
 
  const accentBorderMap = {
- primary:"from-[oklch(0.82_0.10_82)] to-[oklch(0.62_0.14_42)]",
+ primary:"from-[oklch(0.7001_0.1882_313.2907)] to-[oklch(0.4865_0.2423_291.8661)]",
  success:"from-[hsl(var(--success))] to-emerald-300",
  warning:"from-[hsl(var(--warning))] to-amber-300",
  destructive:"from-[hsl(var(--destructive))] to-rose-300",
- info:"from-[oklch(0.82_0.10_82)] to-[oklch(0.62_0.14_42)]",
+ info:"from-[oklch(0.7001_0.1882_313.2907)] to-[oklch(0.4865_0.2423_291.8661)]",
  } satisfies Record<NonNullable<CardProps["accent"]>, string>
 
  return (
@@ -55,24 +55,24 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  onKeyDown={isInteractive ? handleKeyDown : undefined}
  className={cn("group relative overflow-hidden text-foreground/95 ",
  accent && variant !=="gradient-border" &&"border-transparent",
- variant ==="default" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(18,14,9,0.98),rgba(8,6,4,0.96))]","border-[rgba(232,206,150,0.12)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_6px_22px_-10px_rgba(0,0,0,0.82)]",
+ variant ==="default" && ["rounded-xl border bg-[linear-gradient(180deg,oklch(0.1486_0.014_299.9811/0.98),oklch(0.1091_0.0091_301.6956/0.96))]","border-[oklch(0.2505_0.0293_299.5707/0.9)]","shadow-[0_0_0_0.5px_rgba(145,108,255,0.08),0_6px_22px_-10px_rgba(0,0,0,0.82)]",
  ],
- variant ==="glass" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(232,206,150,0.08),rgba(255,255,255,0.02))] backdrop-saturate-200","border-[rgba(232,206,150,0.12)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
+ variant ==="glass" && ["rounded-xl border bg-[linear-gradient(180deg,oklch(0.6083_0.2172_297.1153/0.08),rgba(255,255,255,0.02))] backdrop-saturate-200","border-[oklch(0.6083_0.2172_297.1153/0.18)]","shadow-[0_0_0_0.5px_rgba(145,108,255,0.10),0_8px_32px_-8px_rgba(0,0,0,0.75)]",
  ],
- variant ==="elevated" && ["rounded-xl border bg-[linear-gradient(180deg,rgba(22,16,10,0.98),rgba(10,7,4,0.96))]","border-[rgba(232,206,150,0.14)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.10),0_14px_42px_-14px_rgba(0,0,0,0.86)]",
+ variant ==="elevated" && ["rounded-xl border bg-[linear-gradient(180deg,oklch(0.2363_0.0582_299.6364/0.78),oklch(0.1376_0.0118_301.0607/0.98))]","border-[oklch(0.6083_0.2172_297.1153/0.20)]","shadow-[0_0_0_0.5px_rgba(145,108,255,0.12),0_14px_42px_-14px_rgba(0,0,0,0.86)]",
  ],
  variant ==="outlined" && ["rounded-xl border-2 border-white/[0.14] bg-transparent shadow-none",
  ],
  variant ==="flat" &&"border-0 bg-transparent shadow-none rounded-xl",
- variant ==="gradient-border" && ["rounded-xl bg-gradient-to-br from-[rgba(232,206,150,0.08)] to-transparent","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
+ variant ==="gradient-border" && ["rounded-xl bg-gradient-to-br from-[oklch(0.6083_0.2172_297.1153/0.10)] to-transparent","shadow-[0_0_0_0.5px_rgba(145,108,255,0.08),0_8px_32px_-8px_rgba(0,0,0,0.80)]",
  accent ? `border-0 p-px bg-gradient-to-br ${accentBorderMap[accent]}` :"border border-white/[0.12]",
  ],
- variant ==="frost" && ["rounded-xl bg-transparent","border border-[rgba(232,206,150,0.10)]","shadow-[0_0_0_0.5px_rgba(232,206,150,0.08),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
+ variant ==="frost" && ["rounded-xl bg-transparent","border border-[oklch(0.6083_0.2172_297.1153/0.18)]","shadow-[0_0_0_0.5px_rgba(145,108,255,0.08),0_18px_48px_-20px_rgba(0,0,0,0.88)]",
  ],
  size ==="sm" &&"text-sm",
  size ==="md" &&"text-base",
  size ==="lg" &&"text-lg",
- hover &&"hover:border-[rgba(232,206,150,0.18)] hover:shadow-[0_0_0_0.5px_rgba(232,206,150,0.12),0_12px_40px_-8px_rgba(0,0,0,0.82)] hover:-translate-y-[1px]",
+ hover &&"hover:border-[oklch(0.6083_0.2172_297.1153/0.28)] hover:shadow-[0_0_0_0.5px_rgba(145,108,255,0.14),0_12px_40px_-8px_rgba(0,0,0,0.82)] hover:-translate-y-[1px]",
  isInteractive &&"cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  isLoading &&"pointer-events-none opacity-80",
  className
@@ -92,12 +92,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
  {/* Ambient glow on hover */}
  {(hover || isInteractive) && (
- <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(232,206,150,0.10),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 group-hover:opacity-100" />
+ <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.6083_0.2172_297.1153/0.12),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)] opacity-0 group-hover:opacity-100" />
  )}
 
  {variant ==="gradient-border" && (
  <div className="absolute inset-[1px] overflow-hidden rounded-[calc(1rem-1px)]">
- <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,14,9,0.98),rgba(10,7,4,0.96))]" />
+ <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.1486_0.014_299.9811/0.98),oklch(0.1091_0.0091_301.6956/0.96))]" />
  </div>
  )}
  {isLoading && (
@@ -106,7 +106,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
  </div>
  )}
  {status && (
- <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_rgba(232,206,150,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-white/[0.08] bg-background/80 px-2.5 py-1 shadow-[inset_0_1px_0_rgba(145,108,255,0.10),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <div
  className={cn("h-1.5 w-1.5 rounded-full",
  status ==="live" &&"bg-emerald-400 animate-pulse shadow-[0_0_8px_hsl(160_70%_55%)]",

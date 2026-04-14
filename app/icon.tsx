@@ -19,7 +19,7 @@ export default function Icon() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'linear-gradient(145deg, #0a0a14 0%, #000000 50%, #06060f 100%)',
+                    background: 'linear-gradient(145deg, #130f1d 0%, #0d0915 50%, #09060f 100%)',
                     borderRadius: '22%',
                     position: 'relative',
                     overflow: 'hidden',
@@ -29,7 +29,7 @@ export default function Icon() {
                     style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'radial-gradient(ellipse at 40% 35%, oklch(0.65 0.22 260 / 0.18) 0%, transparent 65%)',
+                        background: 'radial-gradient(ellipse at 40% 35%, oklch(0.6083 0.2172 297.1153 / 0.18) 0%, transparent 65%)',
                         borderRadius: '22%',
                     }}
                 />
@@ -39,7 +39,7 @@ export default function Icon() {
                     width={18}
                     height={18}
                     fill="white"
-                    style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 0 4px rgba(96,165,255,0.6))' }}
+                    style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 0 4px rgba(145,108,255,0.6))' }}
                 >
                     <path fillRule="evenodd" clipRule="evenodd" d="M159 63L127.5 0V255H255L236.5 218H159V63Z" />
                     <path fillRule="evenodd" clipRule="evenodd" d="M-3.05176e-05 255L127.5 -5.96519e-06L127.5 255L-3.05176e-05 255ZM64 217L121 104L121 217L64 217Z" />

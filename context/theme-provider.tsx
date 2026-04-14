@@ -10,7 +10,7 @@ type ThemeContextType = {
   toggleTheme: () => void
 }
 
-const DEFAULT_THEME: DashboardTheme = 'blue'
+const DEFAULT_THEME: DashboardTheme = 'violet'
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: DEFAULT_THEME,

@@ -43,19 +43,19 @@
 
     /* ===== PRIMARY ACCENT ===== */
     --accent-neutral: var(--primary);
-    --accent-neutral-hover: oklch(0.84 0.10 82);
-    --accent-neutral-active: oklch(0.68 0.12 70);
-    --accent-neutral-subtle: oklch(0.78 0.12 82 / 0.10);
-    --accent-neutral-glow: oklch(0.78 0.12 82 / 0.22);
-    --accent-neutral-rgb: 214 180 116;
+    --accent-neutral-hover: oklch(0.7001 0.1882 313.2907);
+    --accent-neutral-active: oklch(0.4865 0.2423 291.8661);
+    --accent-neutral-subtle: oklch(0.6083 0.2172 297.1153 / 0.10);
+    --accent-neutral-glow: oklch(0.6083 0.2172 297.1153 / 0.22);
+    --accent-neutral-rgb: 145 108 255;
 
     /* ===== PRECISION PANEL ===== */
-    --precision-cobalt: oklch(0.78 0.12 82);
-    --precision-cobalt-rgb: 214 180 116;
+    --precision-cobalt: oklch(0.6083 0.2172 297.1153);
+    --precision-cobalt-rgb: 145 108 255;
     --precision-panel: 0 0% 1.2%;
     --precision-panel-elevated: 0 0% 2.8%;
     --precision-panel-line: 0 0% 7%;
-    --precision-panel-inner: oklch(0.65 0.22 260);
+    --precision-panel-inner: oklch(0.7001 0.1882 313.2907);
 
     /* ===== OBSIDIAN FROST SYSTEM ===== */
     --rs-frost-border: 0 0% 7%;
@@ -67,9 +67,9 @@
     --rs-text-primary: 0 0% 90%;
     --rs-text-secondary: 0 0% 60%;
     --rs-text-tertiary: 0 0% 44%;
-    --rs-accent-cobalt: 42 62% 66%;
-    --rs-accent-cobalt-bg: 42 62% 66% / 0.08;
-    --rs-accent-cobalt-border: 42 62% 66% / 0.22;
+    --rs-accent-cobalt: 274 84% 67%;
+    --rs-accent-cobalt-bg: 274 84% 67% / 0.08;
+    --rs-accent-cobalt-border: 274 84% 67% / 0.22;
     --rs-accent-emerald: 155 100% 58%;
     --rs-accent-emerald-bg: 155 100% 58% / 0.07;
     --rs-accent-emerald-border: 155 100% 58% / 0.20;
@@ -83,9 +83,9 @@
 
     /* ===== BRAND ===== */
     --brand-primary: var(--primary);
-    --brand-primary-strong: oklch(0.72 0.22 260);
-    --brand-secondary: oklch(0.78 0.12 82);
-    --brand-warm: oklch(0.62 0.14 42);
+    --brand-primary-strong: oklch(0.7001 0.1882 313.2907);
+    --brand-secondary: oklch(0.4865 0.2423 291.8661);
+    --brand-warm: oklch(0.3410 0.1625 292.9477);
     --brand-ink: var(--foreground);
     --brand-soft-ink: var(--muted-foreground);
 
@@ -113,20 +113,20 @@
     --glass-border: 0 0% 8%;
     --glass-border-opacity: 0.14;
     --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.65),
-                    0 0 0 0.5px rgba(232, 206, 150, 0.08);
+                    0 0 0 0.5px rgba(145, 108, 255, 0.10);
 
     /* ===== INTERACTIVE STATES ===== */
     --hover-overlay: 255 255 255 / 0.05;
     --hover-overlay-strong: 255 255 255 / 0.09;
     --active-overlay: 255 255 255 / 0.03;
-    --focus-ring-color: oklch(0.78 0.12 82 / 0.6);
-    --focus-ring: 0 0 0 2px oklch(0 0 0), 0 0 0 4px oklch(0.78 0.12 82 / 0.6);
+    --focus-ring-color: oklch(0.6083 0.2172 297.1153 / 0.6);
+    --focus-ring: 0 0 0 2px oklch(0.1091 0.0091 301.6956), 0 0 0 4px oklch(0.6083 0.2172 297.1153 / 0.6);
 
     /* ===== V2 COMPATIBILITY BRIDGE ===== */
-    --v2-accent: oklch(0.78 0.12 82);
-    --v2-accent-hover: oklch(0.84 0.10 82);
-    --v2-accent-foreground: oklch(0.14 0.02 85);
-    --v2-accent-subtle: oklch(0.78 0.12 82 / 0.10);
+    --v2-accent: oklch(0.6083 0.2172 297.1153);
+    --v2-accent-hover: oklch(0.7001 0.1882 313.2907);
+    --v2-accent-foreground: oklch(0.1091 0.0091 301.6956);
+    --v2-accent-subtle: oklch(0.6083 0.2172 297.1153 / 0.10);
     --v2-bg-base: oklch(0 0 0);
     --v2-bg-surface: oklch(0.038 0 0);
     --v2-bg-elevated: oklch(0.055 0 0);
@@ -145,12 +145,12 @@
     --v2-error-subtle: oklch(0.64 0.255 22 / 0.10);
     --v2-warning: oklch(0.84 0.175 80);
     --v2-warning-subtle: oklch(0.84 0.175 80 / 0.10);
-    --v2-accent-rgb: 214 180 116;
+    --v2-accent-rgb: 145 108 255;
 
     /* ===== SEMANTIC (used in sidebar + trading UI) ===== */
-    --semantic-info: oklch(0.78 0.12 82);
-    --semantic-info-bg: oklch(0.78 0.12 82 / 0.10);
-    --semantic-info-border: oklch(0.78 0.12 82);
+    --semantic-info: oklch(0.6083 0.2172 297.1153);
+    --semantic-info-bg: oklch(0.6083 0.2172 297.1153 / 0.10);
+    --semantic-info-border: oklch(0.6083 0.2172 297.1153);
     --semantic-success: var(--success);
     --semantic-success-fg: var(--success-foreground);
     --semantic-success-bg: oklch(0.82 0.185 155 / 0.10);

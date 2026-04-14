@@ -50,7 +50,7 @@ export function UnifiedPageShell({
         densityClasses,
         variant !== "minimal" && [
           "before:absolute before:inset-0 before:pointer-events-none before:z-0",
-          "before:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.80_0.12_82/0.12),transparent)]",
+          "before:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.7001_0.1882_313.2907/0.12),transparent)]",
           "after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0",
           "after:bg-gradient-to-r after:from-transparent after:via-v2-border/8 after:to-transparent",
         ],
@@ -145,7 +145,7 @@ export function UnifiedSurface({
           "hover:border-v2-border/95 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]",
         ],
         variant === "glass" && [
-          "border-v2-border/65 bg-[linear-gradient(180deg,rgba(232,206,150,0.08),rgba(255,255,255,0.02))]",
+          "border-v2-border/65 bg-[linear-gradient(180deg,oklch(0.6083_0.2172_297.1153/0.10),rgba(255,255,255,0.02))]",
           "shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]",
           "hover:border-v2-border/90 hover:shadow-[0_28px_72px_-40px_rgba(4,10,24,0.9)]",
         ],

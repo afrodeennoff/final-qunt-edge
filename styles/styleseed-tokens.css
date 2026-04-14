@@ -1,9 +1,9 @@
 /* StyleSeed Design Engine Tokens */
-/* Brand: Qunt Edge Precision Blue preserved */
+/* Brand: tweakcn Deep Purple aligned */
 @property --brand {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(0.55 0.22 264);
+  initial-value: oklch(0.6083 0.2172 297.1153);
 }
 
 :root {
@@ -27,15 +27,15 @@
 
   /* SHADOWS (obsidian grade) */
   --shadow-card: 0 4px 20px -8px rgba(0,0,0,0.85),
-                 0 0 0 0.5px rgba(180,210,255,0.07);
+                 0 0 0 0.5px rgba(145,108,255,0.08);
   --shadow-card-hover: 0 8px 32px -10px rgba(0,0,0,0.90),
-                       0 0 0 0.5px rgba(180,210,255,0.11);
+                       0 0 0 0.5px rgba(145,108,255,0.12);
   --shadow-elevated: 0 16px 52px -16px rgba(0,0,0,0.92),
-                     0 0 0 0.5px rgba(180,210,255,0.10);
+                     0 0 0 0.5px rgba(145,108,255,0.10);
   --shadow-modal: 0 32px 80px -24px rgba(0,0,0,0.96),
-                  0 0 0 0.5px rgba(180,210,255,0.12);
-  --shadow-glow-cobalt: 0 0 32px oklch(0.65 0.22 260 / 0.30),
-                        0 0 8px oklch(0.65 0.22 260 / 0.20);
+                  0 0 0 0.5px rgba(145,108,255,0.12);
+  --shadow-glow-cobalt: 0 0 32px oklch(0.6083 0.2172 297.1153 / 0.30),
+                        0 0 8px oklch(0.6083 0.2172 297.1153 / 0.20);
   --shadow-glow-emerald: 0 0 24px oklch(0.82 0.185 155 / 0.25);
   --shadow-glow-crimson: 0 0 24px oklch(0.64 0.255 22 / 0.25);
 
@@ -51,12 +51,12 @@
   --surface-card: oklch(0.038 0 0);
   --surface-subtle: oklch(0.058 0 0);
   --surface-muted: oklch(0.085 0 0);
-  --brand-tint: oklch(0.65 0.22 260 / 0.08);
+  --brand-tint: oklch(0.6083 0.2172 297.1153 / 0.08);
 
   /* IMPACT COLORS (Trading P&L) */
   --impact-success: oklch(0.82 0.185 155);
   --impact-urgent: oklch(0.64 0.255 22);
-  --impact-info: oklch(0.65 0.22 260);
+  --impact-info: oklch(0.6083 0.2172 297.1153);
   --impact-warning: oklch(0.84 0.175 80);
   --impact-notification: oklch(0.76 0.19 45);
 }

@@ -17,7 +17,7 @@ import type { UnifiedSidebarItem, PendingNavigation } from './types'
 
 const ITEM_BUTTON_CLASS = 'pointer-events-auto rounded-xl font-medium hover:text-sidebar-foreground data-[active=true]:text-sidebar-foreground transition-[opacity,background-color,border-color] duration-150'
 const INACTIVE_ITEM_CLASS = 'text-sidebar-foreground/60'
-const ACTIVE_ITEM_CLASS = 'bg-sidebar-accent/80 text-sidebar-accent-foreground shadow-[0_0_0_0.5px_oklch(0.78_0.12_82/0.22),inset_0_0_0_0.5px_oklch(0.78_0.12_82/0.12)]'
+const ACTIVE_ITEM_CLASS = 'bg-sidebar-accent/80 text-sidebar-accent-foreground shadow-[0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.22),inset_0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.12)]'
 
 function isItemPending(
  item: UnifiedSidebarItem,

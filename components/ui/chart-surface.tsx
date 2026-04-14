@@ -119,14 +119,14 @@ export function ChartSurface({
  return (
  <div
  data-chart-surface="modern"
- className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border","border-[rgba(232,206,150,0.14)]","bg-[linear-gradient(180deg,rgba(18,14,9,0.98),rgba(10,7,4,0.96))]","shadow-[inset_0_1px_0_rgba(232,206,150,0.08)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
+ className={cn("relative flex h-full flex-col overflow-hidden rounded-xl border","border-[oklch(0.2505_0.0293_299.5707/0.9)]","bg-[linear-gradient(180deg,oklch(0.1486_0.014_299.9811/0.98),oklch(0.1091_0.0091_301.6956/0.96))]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08)]","","focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))_/_0.5] focus-visible:ring-offset-2 focus-visible:ring-offset-[hsl(var(--background))]",
  className
  )}
  style={height ? { height } : undefined}
  >
  {hasHeader && (
  <div
- className={cn("flex shrink-0 items-center border-b border-[rgba(232,206,150,0.10)] bg-[rgba(232,206,150,0.04)]",
+ className={cn("flex shrink-0 items-center border-b border-[oklch(0.2505_0.0293_299.5707/0.8)] bg-[oklch(0.6083_0.2172_297.1153/0.05)]",
  isSmall ?"h-10 px-2.5" :"h-12 px-3.5",
  headerClassName
  )}
@@ -161,7 +161,7 @@ export function ChartSurface({
  </div>
  {hasFooter && (
  <div
- className={cn("flex shrink-0 items-center border-t border-[rgba(232,206,150,0.10)]",
+ className={cn("flex shrink-0 items-center border-t border-[oklch(0.2505_0.0293_299.5707/0.8)]",
  isSmall ?"h-8 px-2.5" :"h-10 px-3.5",
  footerClassName
  )}

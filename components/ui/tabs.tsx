@@ -27,7 +27,7 @@ const TabsList = React.forwardRef<
  <TabsPrimitive.List
  ref={ref}
  data-slot="tabs-list"
- className={cn("inline-flex min-h-10 items-center justify-center rounded-lg border border-[rgba(232,206,150,0.14)] bg-[rgba(232,206,150,0.05)] p-1 text-muted-foreground shadow-[inset_0_1px_0_rgba(232,206,150,0.08)]",
+ className={cn("inline-flex min-h-10 items-center justify-center rounded-lg border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)] p-1 text-muted-foreground shadow-[inset_0_1px_0_rgba(145,108,255,0.08)]",
  className
  )}
  {...props}
@@ -42,7 +42,7 @@ const TabsTrigger = React.forwardRef<
  <TabsPrimitive.Trigger
  ref={ref}
  data-slot="tabs-trigger"
- className={cn("inline-flex items-center justify-center whitespace-nowrap rounded-md px-3.5 py-2 text-sm font-medium ring-offset-background transition-[opacity,background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[oklch(0.78_0.12_82/0.14)] data-[state=active]:text-foreground data-[state=active]:shadow-[inset_0_1px_0_rgba(232,206,150,0.10),0_2px_8px_-2px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.78_0.12_82/0.08)] hover:text-foreground/80",
+ className={cn("inline-flex items-center justify-center whitespace-nowrap rounded-md px-3.5 py-2 text-sm font-medium ring-offset-background transition-[opacity,background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[oklch(0.6083_0.2172_297.1153/0.16)] data-[state=active]:text-foreground data-[state=active]:shadow-[inset_0_1px_0_rgba(145,108,255,0.12),0_2px_8px_-2px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.6083_0.2172_297.1153/0.08)] hover:text-foreground/80",
  className
  )}
  {...props}

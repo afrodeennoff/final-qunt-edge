@@ -11,14 +11,15 @@
 - `contain: layout style paint` on `.react-grid-layout`
 
 ## Color System
-- Base shell: clean black canvas with restrained champagne-gold and copper atmosphere
-- Shared accent tokens should come from `app/globals.css` and `styles/tokens.css`, not page-local one-offs
-- Surfaces: warm black with subtle gold/copper tinting — avoid both raw `bg-white/[...]` and old cobalt-heavy fills
-- Borders and inset highlights: warm gold/copper low-opacity values, not blue/cobalt lines
-- Scrollbar: warm gold tinted
-- Selection: warm gold highlight
-- Focus rings: warm gold
-- Public-facing shells should stay black-first. Do not reintroduce cobalt/emerald page-scale gradients unless the user explicitly asks for them.
+- Base shell: dark plum-black canvas with tweakcn `Deep Purple` accents
+- Shared accent tokens should come from `app/globals.css`, `styles/tokens.css`, and `styles/styleseed-tokens.css`, not page-local one-offs
+- Dashboard accent overrides also live in `lib/constants/dashboard-themes.ts`; palette passes are incomplete unless dashboard theme palettes and default/fallback theme wiring are updated too
+- Surfaces: dark neutral/plum with restrained purple tinting — avoid raw `bg-white/[...]`, legacy gold fills, and older cobalt-heavy fills
+- Borders and inset highlights: low-opacity purple derived from the shared primary/border tokens
+- Scrollbar: Deep Purple tinted
+- Selection: Deep Purple highlight
+- Focus rings: Deep Purple
+- Public-facing shells should stay dark-first. Use purple atmosphere sparingly and keep shared shell structure configurable rather than forking layouts.
 - For app-wide color passes, update shared primitives first: `button.tsx`, `card.tsx`, `badge.tsx`, `input.tsx`, `tabs.tsx`, `widget-shell.tsx`, `chart-surface.tsx`, sidebar chrome, and shell wrappers.
 
 ## Script Safety
