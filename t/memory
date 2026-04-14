@@ -1,11 +1,18 @@
 # Project Memory
 
-**Updated:** 2026-04-13
+**Updated:** 2026-04-14
 **Branch:** codex-obsidian-v3-redesign
 **Last Commit:** 11720f1 (local only, not pushed)
 **Production URL:** https://qunt-edge.vercel.app
 
 ## Current State
+
+### Home Shell Status
+- Home page no longer needs the shared top banner strip under the navbar.
+- `app/[locale]/(landing)/components/marketing-layout-shell.tsx` now supports route-level banner/spacing toggles.
+- `app/[locale]/(home)/layout.tsx` disables the rolling banner and top strip so the hero starts directly under the navbar.
+- Home now opts into a black public-shell variant instead of the cobalt ambient shell treatment.
+- `HomeContent.tsx` and `Hero.tsx` were stripped of cobalt/green ambient overlays so the home background reads black with only subtle neutral contrast.
 
 ### Visual Design System — "Electric Obsidian + Cobalt Tint"
 - Dark-only void-black canvas with electric cobalt accents
@@ -51,6 +58,12 @@
 - 57 API routes
 - 4 error boundaries
 
+### Build Status
+- `npx tsc --noEmit` = 0 errors
+- `npm run dev` = starts clean (Turbopack)
+- `npm run build` = passes clean
+- Turbopack cache corruption fix: `rm -rf .next` resolves stale SST/meta errors
+
 ## Uncommitted Changes
 - Sidebar rebalanced (flat list, unique icons)
 - Section padding standardized (all py-24)
@@ -58,6 +71,8 @@
 - .env.example updated (+31 env vars)
 - Empty className cleaned (14 instances)
 - Hero cards restyled (black with color gradient)
+- Home top strip removed by making `MarketingLayoutShell` configurable and disabling the shared banner on the home layout
+- Home shell color unified by making the hero background translucent and aligning home content width with the shared public shell
 
 ## Blockers
-- None — waiting for user to say "deploy"
+- None

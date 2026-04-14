@@ -8,8 +8,8 @@ export default function TeamsPageClient() {
 
   return (
     <main className="qe-v2-app-shell mx-auto w-full max-w-[1360px] px-4 py-20 sm:px-6 lg:px-8">
-      <section className="relative overflow-hidden rounded-[2.2rem] border border-white/[0.8] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_30px_80px_-44px_rgba(0,0,0,0.95),0_0_100px_-40px_oklch(0.65_0.22_260/0.16)] sm:p-8 lg:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(0.65_0.22_260/0.12),transparent_42%),radial-gradient(circle_at_bottom_right,oklch(0.82_0.185_155/0.06),transparent_30%)]" />
+      <section className="relative overflow-hidden rounded-[2.2rem] border border-white/[0.8] bg-[oklch(0.038_0_0)] p-6 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_30px_80px_-44px_rgba(0,0,0,0.95)] sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.07),transparent_42%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.04),transparent_30%)]" />
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_360px] lg:gap-8">
           <div className="relative">
             <p className="inline-flex rounded-full border border-white/[0.12] bg-white/[0.4] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/38">

@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm install --no-audit --no-fund",
-  "buildCommand": "npm run build",
+  "installCommand": "bun install --ignore-scripts && npx prisma generate",
+  "buildCommand": "bun run build",
   "crons": [
     {
       "path": "/api/cron/investing?lang=fr&db=true",

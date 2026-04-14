@@ -45,7 +45,7 @@ export default function Footer() {
  return (
  <footer
  aria-labelledby="footer-heading"
- className="border-t border-[oklch(0.65_0.22_260/0.08)] bg-black py-16 sm:py-20"
+ className="border-t border-white/[0.08] bg-black py-16 sm:py-20"
  >
  <h2 id="footer-heading" className="sr-only">{t('footer.heading')}</h2>
 
@@ -56,10 +56,10 @@ export default function Footer() {
  transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
  className="mx-auto w-full max-w-[1240px] px-4 sm:px-6"
  >
- <div className="grid gap-8 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)] lg:grid-cols-[1.2fr_1.8fr] sm:p-8 lg:p-10">
+ <div className="grid gap-8 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.038_0_0)] p-6 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.80)] lg:grid-cols-[1.2fr_1.8fr] sm:p-8 lg:p-10">
  <div className="space-y-5">
  <div className="flex items-center gap-3">
- <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--frost-border)] bg-[oklch(0.65_0.22_260/0.03)] shadow-[0_18px_36px_-24px_rgba(4,10,24,0.85)]">
+ <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--frost-border)] bg-white/[0.03] shadow-[0_18px_36px_-24px_rgba(0,0,0,0.85)]">
  <Logo className="h-5 w-5 fill-foreground" />
  </div>
  <div className="leading-none">

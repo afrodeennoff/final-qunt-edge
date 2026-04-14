@@ -15,29 +15,29 @@ const capabilityCards = [
  title: 'Execution Audits',
  description: 'Spot quality drift before it hits your PnL',
  tone:
- 'from-[hsl(var(--primary)/0.3)] via-[hsl(var(--primary)/0.16)] to-[hsl(var(--primary)/0.03)]',
+ 'rgba(255,255,255,0.08), rgba(255,255,255,0.04), rgba(255,255,255,0.015)',
  },
  {
  title: 'AI Debriefs',
  description: 'Session-level insights with actionable next steps',
  tone:
- 'from-[hsl(var(--accent)/0.34)] via-[hsl(var(--primary)/0.15)] to-[hsl(var(--mk-surface-muted)/0.35)]',
+ 'rgba(255,255,255,0.065), rgba(255,255,255,0.035), rgba(255,255,255,0.012)',
  },
  {
  title: 'Team Coaching',
  description: 'Review setups, process, and risk with your desk',
  tone:
- 'from-[hsl(var(--chart-2)/0.3)] via-[hsl(var(--primary)/0.12)] to-[hsl(var(--mk-surface-muted)/0.3)]',
+ 'rgba(255,255,255,0.07), rgba(255,255,255,0.03), rgba(255,255,255,0.01)',
  },
 ] as const
 
 export default function Hero({ locale }: { locale: string }) {
  return (
  <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-32 pt-[88px]">
- <div className="absolute inset-0 bg-background" />
+ <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.08)_28%,rgba(0,0,0,0.28)_100%)]" />
  <div className="pointer-events-none absolute inset-0 opacity-80">
- <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-[rgba(255,255,255,0.08)] blur-[120px]" />
- <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-[oklch(0.82_0.185_155/0.08)] blur-[130px]" />
+ <div className="absolute left-[8%] top-[8%] h-72 w-72 rounded-full bg-white/[0.04] blur-[120px]" />
+ <div className="absolute bottom-[6%] right-[10%] h-80 w-80 rounded-full bg-white/[0.03] blur-[130px]" />
  <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] [background-size:72px_72px] opacity-40" />
  </div>
 
@@ -66,7 +66,7 @@ export default function Hero({ locale }: { locale: string }) {
  transition={{ duration: 0.9, delay: 0.1, ease }}
  >
  Audit execution quality.
- <span className="mt-1 block bg-gradient-to-r from-primary via-primary/90 to-[hsl(var(--accent)/0.92)] bg-clip-text text-transparent">
+ <span className="mt-1 block bg-gradient-to-r from-foreground via-foreground/90 to-foreground/45 bg-clip-text text-transparent">
  Compound your edge.
  </span>
  </motion.h1>
@@ -129,10 +129,10 @@ export default function Hero({ locale }: { locale: string }) {
  {capabilityCards.map((card) => (
  <div
  key={card.title}
- className="relative overflow-hidden rounded-2xl bg-black/60 border border-white/[0.05] px-5 py-4"
+ className="relative overflow-hidden rounded-2xl border border-white/[0.08] px-5 py-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_18px_44px_-32px_rgba(0,0,0,0.86)]"
  style={{ background: `linear-gradient(135deg, ${card.tone})` }}
  >
- <div className="relative z-10 rounded-xl bg-black/80 px-4 py-3">
+ <div className="relative z-10 rounded-xl bg-[linear-gradient(180deg,rgba(8,10,18,0.8),rgba(8,10,18,0.62))] px-4 py-3">
  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
  {card.title}
  </p>

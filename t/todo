@@ -24,6 +24,10 @@
 - [x] Update .env.example with 31 missing env vars (240 lines total)
 
 ## Pending
+- [x] Fix Turbopack cache corruption (rm -rf .next)
+- [x] Unify shared app shells to a clean black backdrop across public and authenticated pages
+- [x] Remove cobalt/emerald ambient gradients from public page wrappers and hero shells
+- [x] Verify visual shell cleanup with typecheck and persist the rule in project notes
 - [ ] Commit and deploy when user says "deploy"
 
 ## No other pending tasks

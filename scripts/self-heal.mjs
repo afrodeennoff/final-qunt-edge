@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process"
 
 const run = (label, args) => {
   console.log(`\n[Self-Heal] ${label}`)
-  const result = spawnSync("npm", args, {
+  const result = spawnSync("bun", args, {
     stdio: "inherit",
     shell: process.platform === "win32",
     env: process.env,

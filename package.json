@@ -11,14 +11,14 @@
   },
   "scripts": {
     "dev": "next dev",
-    "dev:bun": "bun run dev",
+    "dev:bun": "bun --bun next dev",
     "dev:npm": "npm run dev",
     "clean:build-artifacts": "node scripts/clean-build-artifacts.mjs",
     "self-heal": "node scripts/self-heal.mjs",
     "prebuild": "node scripts/clean-build-artifacts.mjs && tsx scripts/generate-routes.ts",
     "db:sync": "node scripts/sync-stack.mjs",
     "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
-    "build:bun": "bun run build",
+    "build:bun": "bun run scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} bun run scripts/robust-next-build.mjs",
     "build:npm": "npm run build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
     "start:bun": "bun run start",
@@ -48,7 +48,8 @@
     "perf:headers": "node scripts/perf-header-check.mjs",
     "perf:baseline": "node scripts/perf-baseline.mjs",
     "perf:capture-baseline": "node scripts/perf-capture-baseline.mjs",
-    "perf:ci": "npm run check:dead-code && npm run check:route-security && npm run check:route-budgets && npm run analyze:bundle && PERF_HEADER_STRICT=true npm run perf:headers && npm run perf:baseline && npm run perf:dashboard-runtime && npm run perf:lighthouse"
+    "perf:ci": "npm run check:dead-code && npm run check:route-security && npm run check:route-budgets && npm run analyze:bundle && PERF_HEADER_STRICT=true npm run perf:headers && npm run perf:baseline && npm run perf:dashboard-runtime && npm run perf:lighthouse",
+    "typecheck:bun": "bun run scripts/clean-build-artifacts.mjs && bun run scripts/robust-typecheck.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.10",

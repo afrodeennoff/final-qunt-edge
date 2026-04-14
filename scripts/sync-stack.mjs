@@ -68,7 +68,7 @@ function baselineAllMigrations() {
   info(`[sync-stack] Baseline mode: marking ${migrationNames.length} migrations as applied`);
 
   for (const name of migrationNames) {
-    run("npx", ["prisma", "migrate", "resolve", "--applied", name]);
+    run("bunx", ["prisma", "migrate", "resolve", "--applied", name]);
   }
 }
 
@@ -139,7 +139,7 @@ const shouldForcePrismaGenerate = process.env.PRISMA_GENERATE_STRICT === "true";
 if (hasGeneratedPrismaClient() && !shouldForcePrismaGenerate) {
   info("[sync-stack] Using existing generated Prisma client");
 } else {
-  const prismaGenerateResult = runCapture("npx", ["prisma", "generate"]);
+  const prismaGenerateResult = runCapture("bunx", ["prisma", "generate"]);
 
   if (prismaGenerateResult.status !== 0) {
     if (isPrismaCliInteropFailure(prismaGenerateResult.output) && hasGeneratedPrismaClient()) {
@@ -171,7 +171,7 @@ const baselineMode = process.env.SYNC_STACK_BASELINE === "true";
 if (baselineMode) {
   baselineAllMigrations();
 } else if (applyMigrations) {
-  const result = runCapture("npx", ["prisma", "migrate", "deploy"]);
+  const result = runCapture("bunx", ["prisma", "migrate", "deploy"]);
 
   if (result.status !== 0) {
     const failedMigration = parseFailedMigrationName(result.output);
@@ -192,7 +192,7 @@ if (baselineMode) {
       `[sync-stack] Skipping Prisma migrate status: ${dbCheck.reason}. Continuing build.`,
     );
   } else {
-    const migrationStatusResult = runCapture("npx", ["prisma", "migrate", "status"]);
+    const migrationStatusResult = runCapture("bunx", ["prisma", "migrate", "status"]);
 
     if (migrationStatusResult.status !== 0) {
       if (isPrismaCliInteropFailure(migrationStatusResult.output)) {

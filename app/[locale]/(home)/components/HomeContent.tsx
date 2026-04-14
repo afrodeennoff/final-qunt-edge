@@ -42,12 +42,10 @@ interface HomeContentProps {
 
 export default function HomeContent({ locale }: HomeContentProps) {
  return (
- <div className="home-borderless relative overflow-x-hidden bg-background selection:bg-primary/30 selection:text-foreground/95">
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_480px_at_50%_-10%,hsl(var(--foreground)/0.04),transparent_68%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.2)_36%,hsl(var(--background))_100%)]" />
- <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.12] sm:block" />
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_340px_at_10%_20%,hsl(var(--foreground)/0.03),transparent_70%),radial-gradient(700px_320px_at_92%_6%,hsl(var(--foreground)/0.02),transparent_70%)]" />
- <div className="pointer-events-none absolute inset-0 bg-mesh-animated opacity-20" />
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_30%),radial-gradient(circle_at_90%_70%,rgba(255,255,255,0.03),transparent_24%)]" />
+ <div className="home-borderless relative overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground/95">
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_480px_at_50%_-10%,rgba(255,255,255,0.035),transparent_68%),linear-gradient(180deg,rgba(255,255,255,0.01)_0%,transparent_36%,rgba(255,255,255,0.01)_100%)]" />
+ <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.08] sm:block" />
+ <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_340px_at_10%_20%,rgba(255,255,255,0.02),transparent_70%),radial-gradient(700px_320px_at_92%_6%,rgba(255,255,255,0.015),transparent_70%)]" />
  <div
  className="pointer-events-none absolute inset-0 opacity-[0.03] z-0"
  style={{
@@ -55,7 +53,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
  }}
  />
 
- <main className="relative z-10 mx-auto w-full max-w-[1400px]">
+ <main className="relative z-10 mx-auto w-full max-w-[1320px]">
  <Hero locale={locale} />
  <LiveStatsStrip />
  <FeaturesBento />

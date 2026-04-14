@@ -439,7 +439,7 @@ function DealsBoard({
   const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(900px_280px_at_15%_0%,hsl(var(--primary)/0.11),transparent_72%),radial-gradient(860px_260px_at_85%_2%,hsl(var(--accent)/0.1),transparent_72%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.22)_26%,hsl(var(--background))_100%)]">
+    <div className="min-h-screen bg-[radial-gradient(900px_280px_at_15%_0%,rgba(255,255,255,0.06),transparent_72%),radial-gradient(860px_260px_at_85%_2%,rgba(255,255,255,0.04),transparent_72%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_26%,hsl(var(--background))_100%)]">
       <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
       </div>

@@ -25,7 +25,14 @@ export default function HomeLayout({
 }>) {
   return (
     <PublicRootProviders>
-      <MarketingLayoutShell className="home-borderless-shell dark" contentClassName="w-full">
+      <MarketingLayoutShell
+        className="home-borderless-shell dark"
+        contentClassName="w-full"
+        showRollingBanner={false}
+        topSpacingClassName=""
+        contentSpacingClassName="pb-safe"
+        shellVariant="black"
+      >
         <div className="pb-safe">
           {children}
         </div>

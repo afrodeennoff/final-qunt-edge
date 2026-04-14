@@ -55,3 +55,27 @@
 - **RC:** Shared shell files stayed active while page composition moved into `HomeContent.tsx` and `UnifiedPageShell`-based route pages, but docs were not updated in the same pass.
 - **R:** Before editing public UI, trace from the route `page.tsx`/`layout.tsx` imports into the live composition tree instead of assuming every file under `(landing)/components` or `(home)/components` is mounted.
 - **E:** `public/AGENTS.md` references `DeferredHomeSections.tsx`, but the live home page composes sections directly in `app/[locale]/(home)/components/HomeContent.tsx`.
+
+## Lesson 10: Shared public shell spacing should be configurable
+- **M:** The home page showed an unwanted strip below the navbar.
+- **RC:** Shared banner spacing was hardcoded in `MarketingLayoutShell`, so the home route inherited layout space meant for other public pages.
+- **R:** Add a small route-level shell option instead of forking navbar/footer layout code.
+- **E:** `app/[locale]/(home)/layout.tsx` now disables the shared rolling banner through shell props instead of introducing a separate home-only shell.
+
+## Lesson 11: Public hero sections should blend with the route shell
+- **M:** The home hero read like a separate black panel instead of part of the public page shell.
+- **RC:** `Hero.tsx` painted a full opaque background while `HomeContent.tsx` used a wider content width than the shared landing shell.
+- **R:** Keep hero backgrounds translucent enough to inherit the shell atmosphere, and align major public content widths with the shared shell unless there is a strong reason not to.
+- **E:** `app/[locale]/(home)/components/Hero.tsx` now uses a blended gradient backdrop and `HomeContent.tsx` uses `max-w-[1320px]` to match the shared public shell rhythm.
+
+## Lesson 13: Turbopack cache corruption causes 'Module not found' for files that exist
+- **M:** Build error `Can't resolve './dev/on-demand-entries-client'` + `Failed to restore task data (TaskId 517435))` SST file errors
+- **RC:** `.next` Turbopack cache had corrupted `.sst`/`.meta` files (stale from previous build). The module exists in `node_modules` but Turbopack's cached resolver couldn't find it.
+- **R:** `rm -rf .next` clears the corruption. Always delete `.next` before debugging 'module not found' errors where the file clearly exists in `node_modules`.
+- **E:** `on-demand-entries-client.js` exists at `node_modules/next/dist/client/dev/` but Turbopack's SST index was corrupted.
+
+## Lesson 12: Home shell color should be switchable independently of public shell structure
+- **M:** The user wanted the home page shell black, not cobalt-tinted, while keeping the shared layout structure intact.
+- **RC:** The shared public shell bundled layout structure and accent atmosphere together, so route-level color changes were awkward.
+- **R:** Keep shell structure shared, but expose a route-level shell color variant so visual tone can change without duplicating layout code or altering behavior.
+- **E:** `MarketingLayoutShell` now supports `shellVariant="black"` and the home layout uses it to remove cobalt ambient gradients while preserving navbar/footer/content structure.

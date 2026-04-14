@@ -50,7 +50,7 @@ export function UnifiedPageShell({
         densityClasses,
         variant !== "minimal" && [
           "before:absolute before:inset-0 before:pointer-events-none before:z-0",
-          "before:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(41,98,255,0.08),transparent)]",
+          "before:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,255,255,0.05),transparent)]",
           "after:absolute after:inset-x-0 after:top-0 after:h-px after:pointer-events-none after:z-0",
           "after:bg-gradient-to-r after:from-transparent after:via-v2-border/8 after:to-transparent",
         ],
@@ -105,9 +105,8 @@ export function UnifiedPageHeader({
             "font-semibold tracking-tight text-v2-text-primary sm:tracking-tight",
             "text-3xl sm:text-4xl",
             variant === "gradient" && [
-              "bg-gradient-to-br from-v2-text-primary via-v2-text-primary to-v2-text-secondary bg-clip-text text-transparent",
-              "bg-gradient-to-r from-v2-text-primary via-v2-accent to-v2-text-primary bg-clip-text text-transparent",
-              "bg-[length:200%_auto] animate-shimmer bg-gradient-to-r from-v2-text-primary via-v2-accent to-v2-text-primary",
+              "bg-gradient-to-r from-v2-text-primary via-white/90 to-v2-text-secondary bg-clip-text text-transparent",
+              "bg-[length:200%_auto] animate-shimmer bg-gradient-to-r from-v2-text-primary via-white/90 to-v2-text-secondary",
             ]
           )}>
             {title}

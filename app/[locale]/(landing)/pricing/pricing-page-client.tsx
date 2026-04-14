@@ -5,9 +5,9 @@ import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 export function PricingPageClient() {
   return (
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
-      <section className="relative overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.92),hsl(var(--background)/0.7))] p-5 shadow-[0_36px_80px_-62px_hsl(var(--foreground)/0.95)] sm:p-8 lg:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,hsl(var(--primary)/0.18),transparent_72%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,hsl(var(--accent)/0.16),transparent_74%)]" />
+      <section className="relative overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_36px_80px_-62px_hsl(var(--foreground)/0.95)] sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
 
         <header className="relative mb-8 space-y-4 lg:mb-10">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">

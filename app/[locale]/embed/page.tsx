@@ -217,7 +217,7 @@ export default function EmbedPage() {
     return (
       <I18nProviderClient locale={lang}>
         <div className="qe-v2-app-shell relative min-h-screen w-full pb-20">
-          <BackgroundGlow variant="accent" />
+          <BackgroundGlow variant="default" />
           {/*Dismiss cookie consent banner*/}
           <Script id="embed-autoconsent" strategy="beforeInteractive">
           {`try {
@@ -239,10 +239,10 @@ export default function EmbedPage() {
           <Toaster />
           <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-5 lg:px-6 lg:pt-6">
             <MotionSection delay={0.03}>
-              <section className="overflow-hidden rounded-[2rem] border border-white/[0.08] bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
+              <section className="overflow-hidden rounded-[2rem] border border-white/[0.08] bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
                   <div className="rounded-[1.8rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
-                    <div className="inline-flex w-fit rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
+                    <div className="inline-flex w-fit rounded-full border border-white/[0.12] bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
                       Embed Library
                     </div>
                     <div className="pt-4">
@@ -256,13 +256,13 @@ export default function EmbedPage() {
                   </div>
                   <MotionStagger className="grid gap-2 text-xs text-foreground/50 sm:grid-cols-2 lg:grid-cols-1">
                     <MotionStaggerItem>
-                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-3 py-2.5">
+                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
                         <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Preset</span>
                         <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                       </div>
                     </MotionStaggerItem>
                     <MotionStaggerItem>
-                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.045)] px-3 py-2.5">
+                      <div className="rounded-[1.4rem] border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
                         <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Charts</span>
                         <span className="block pt-1 text-sm font-medium text-foreground">
                           {selectedCharts ? Array.from(selectedCharts).length : 'All'}
