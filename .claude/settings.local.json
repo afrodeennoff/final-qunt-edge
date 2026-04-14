@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm:*)",
       "Bash(grep:*)",
-      "Bash(grep -rn \"const t = useI18n\\(\\)\" app/[locale]/\\\\\\(home\\\\\\)/components/)"
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(find /Users/timon/Downloads/qunt-edge/app/[locale]/\\\\\\(home\\\\\\)/ -type f)",
+      "Bash(npm run:*)"
     ]
   },
   "model": "sonnet",
