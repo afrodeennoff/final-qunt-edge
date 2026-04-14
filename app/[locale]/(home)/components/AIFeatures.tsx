@@ -22,13 +22,13 @@ export default function AIFeatures() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       {/* Atmospheric glow orbs */}
       <div className="pointer-events-none absolute -left-32 top-1/4 h-[420px] w-[420px] rounded-full bg-accent/[0.04] blur-[120px]" />
       <div className="pointer-events-none absolute right-0 bottom-1/4 h-[380px] w-[380px] rounded-full bg-primary/[0.03] blur-[120px]" />
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
         <motion.div
-          className="rounded-lg border-border/60 bg-card/80 p-6 shadow-sm md:p-8"
+          className="rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -45,19 +45,19 @@ export default function AIFeatures() {
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-md border-border/60 bg-background/60 p-4">
+            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.reasonTrailTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.ai.reasonTrailDescription')}
               </p>
             </div>
-            <div className="rounded-md border-border/60 bg-background/60 p-4">
+            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.liveContextTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.ai.liveContextDescription')}
               </p>
             </div>
@@ -75,11 +75,11 @@ export default function AIFeatures() {
               const Icon = feature.icon
               return (
                 <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
-                  <article className="flex h-full flex-col rounded-lg border-border/60 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+                  <article className="flex h-full flex-col rounded-lg border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
                     <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="mt-4 inline-flex w-fit items-center rounded-full border-border/60 bg-background/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="mt-4 inline-flex w-fit items-center rounded-full border-white/[0.06] bg-background/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
                       {t('landing.home.ai.capabilityLabel')}
                     </span>
                     <h3 className="type-h4 mt-4 text-foreground">{feature.title}</h3>
@@ -97,7 +97,7 @@ export default function AIFeatures() {
           </MotionStagger>
 
           <motion.div
-            className="rounded-lg border-border/60 bg-card/70 p-5 shadow-sm"
+            className="rounded-lg border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

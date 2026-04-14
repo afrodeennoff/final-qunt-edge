@@ -15,7 +15,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
   const t = useI18n()
 
   return (
-    <section className="relative px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <section className="relative bg-muted/20 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       <motion.div
         className="mx-auto max-w-4xl"
         initial={{ opacity: 0, y: 10 }}
@@ -23,8 +23,8 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="rounded-lg border border-border/50 bg-card/80 px-6 py-14 text-center shadow-md md:px-10 md:py-16">
-          <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[0.98] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
+        <div className="rounded-lg border border-white/[0.06] bg-card/80 px-6 py-14 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:px-10 md:py-16">
+          <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.6rem)] font-bold leading-[1.08] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
             {t('landing.home.finalCta.titlePrefix')}{' '}
             <span className="line-through decoration-muted-foreground/40 decoration-2">
               {t('landing.home.finalCta.titleStrike')}
@@ -36,7 +36,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
             {t('landing.home.finalCta.titleSuffix')}
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
             {t('landing.home.finalCta.description')}
           </p>
 
@@ -54,7 +54,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
               asChild
               size="lg"
               variant="outline"
-              className="h-11 rounded-full border-border/60 bg-background/70 px-8 text-sm font-medium text-foreground hover:bg-background"
+              className="h-11 rounded-full border-white/[0.06] bg-background/70 px-8 text-sm font-medium text-foreground hover:bg-background"
             >
               <Link href={`/${locale}/propfirms`}>{t('landing.home.finalCta.secondary')}</Link>
             </Button>

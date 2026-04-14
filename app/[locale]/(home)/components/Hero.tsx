@@ -37,7 +37,7 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <Badge
               variant="outline"
-              className="mb-6 rounded-full border-border/60 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="mb-6 rounded-full border-white/[0.06] bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]"
             >
               {t('landing.hero.badge')}
             </Badge>
@@ -86,7 +86,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="group h-11 w-full rounded-full border-border/60 bg-background/70 px-8 text-sm font-medium text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/80 hover:bg-background sm:w-auto"
+              className="group h-11 w-full rounded-full border-white/[0.06] bg-background/70 px-8 text-sm font-medium text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12] hover:bg-background sm:w-auto"
             >
               <a href="#how-it-works">
                 {t('landing.hero.ctaSecondary')}
@@ -115,7 +115,7 @@ export default function Hero({ locale }: { locale: string }) {
             {capabilityCards.map((card) => (
               <div
                 key={String(card.title)}
-                className="rounded-lg border-border/60 bg-card/80 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md"
+                className="rounded-lg border-white/[0.06] bg-card/80 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]"
               >
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
                   {card.title}
@@ -126,7 +126,7 @@ export default function Hero({ locale }: { locale: string }) {
               </div>
             ))}
 
-            <div className="rounded-lg border border-border/50 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+            <div className="rounded-lg border border-white/[0.04] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                 {t('landing.home.hero.integrationsTitle')}
               </p>
@@ -134,7 +134,7 @@ export default function Hero({ locale }: { locale: string }) {
                 {integrations.map((integration) => (
                   <span
                     key={String(integration)}
-                    className="rounded-full border-border/60 bg-background/70 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/80"
+                    className="rounded-full border-white/[0.06] bg-background/70 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12]"
                   >
                     {integration}
                   </span>

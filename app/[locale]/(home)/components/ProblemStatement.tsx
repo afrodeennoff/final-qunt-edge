@@ -16,12 +16,12 @@ export default function ProblemStatement() {
   }))
 
   return (
-    <section className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <section className="relative overflow-hidden px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute -right-48 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/[0.04] blur-[120px]" />
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
         <motion.div
-          className="rounded-lg border-border/60 bg-card/80 p-6 shadow-sm md:p-8"
+          className="rounded-lg border border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -40,7 +40,7 @@ export default function ProblemStatement() {
             {t('landing.home.problem.description')}
           </p>
 
-          <div className="mt-8 rounded-md border border-primary/25 bg-primary/10 p-5">
+          <div className="mt-8 rounded-md border border-white/[0.06] bg-primary/[0.06] p-5">
             <div className="flex items-start gap-3">
               <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-primary" />
               <div>
@@ -61,7 +61,7 @@ export default function ProblemStatement() {
             return (
               <motion.article
                 key={String(problem.title)}
-                className="rounded-lg border-border/60 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md"
+                className="rounded-lg border border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]"
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

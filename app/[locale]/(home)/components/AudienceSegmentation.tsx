@@ -37,7 +37,7 @@ export default function AudienceSegmentation() {
   ]
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute -left-40 bottom-1/4 h-[440px] w-[440px] rounded-full bg-primary/[0.05] blur-[120px]" />
       <div className="mx-auto max-w-[1360px]">
@@ -64,7 +64,7 @@ export default function AudienceSegmentation() {
             const Icon = audience.icon
             return (
               <MotionStaggerItem key={String(audience.title)}>
-                <article className="flex h-full flex-col rounded-lg border-border/60 bg-card/80 p-6 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+                <article className="flex h-full flex-col rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
                       <Badge
@@ -89,7 +89,7 @@ export default function AudienceSegmentation() {
                     {audience.features.map((feature) => (
                       <li key={String(feature)} className="flex items-start gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                        <span className="text-sm leading-relaxed text-foreground/80">
+                        <span className="text-sm leading-relaxed text-foreground/90">
                           {feature}
                         </span>
                       </li>

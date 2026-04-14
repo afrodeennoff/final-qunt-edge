@@ -51,15 +51,15 @@ export default function HomeContent({ locale }: HomeContentProps) {
 
       <main className="relative z-10 mx-auto w-full max-w-[1360px]">
         <Hero locale={locale} />
-        <ProblemStatement />
-        <LazyHowItWorks />
-        <FeaturesBento />
-        <LazyAnalysisDemo />
-        <LazyAIFeatures />
-        <LazyAudienceSegmentation />
-        <PropFirmsExplorer locale={locale} />
         <LiveStatsStrip />
         <LazySocialProof />
+        <ProblemStatement />
+        <FeaturesBento />
+        <LazyAIFeatures />
+        <LazyHowItWorks />
+        <LazyAnalysisDemo />
+        <LazyAudienceSegmentation />
+        <PropFirmsExplorer locale={locale} />
         <LazyPricingSection locale={locale} />
         <LazyFAQSection />
         <FinalCTA locale={locale} />

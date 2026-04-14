@@ -33,7 +33,7 @@ export default function FeaturesBento() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <MotionSection className="relative overflow-hidden px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       {/* Atmospheric glow orbs */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
       <div className="mx-auto max-w-[1360px]">
@@ -63,14 +63,14 @@ export default function FeaturesBento() {
             const Icon = issue.icon
             return (
               <MotionStaggerItem key={String(issue.title)}>
-                <article className="h-full rounded-lg border-border/60 bg-card/70 p-6 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+                <article className="h-full rounded-lg border-white/[0.06] bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
                   <div className="flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <Badge
                     variant="outline"
                     size="sm"
-                    className="mt-4 rounded-full border-border/60 bg-background/70 text-primary"
+                    className="mt-4 rounded-full border-white/[0.06] bg-background/70 text-primary"
                   >
                     {issue.badge}
                   </Badge>
@@ -78,7 +78,7 @@ export default function FeaturesBento() {
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                     {issue.description}
                   </p>
-                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border-border/60 bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/80">
+                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border-white/[0.06] bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/90 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12]">
                     <ArrowRight className="h-3 w-3" />
                     <span>{issue.solution}</span>
                   </div>
@@ -100,10 +100,10 @@ export default function FeaturesBento() {
             return (
               <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
                 <article
-                  className={`h-full rounded-lg border p-6 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-md ${
+                  className={`h-full rounded-lg border p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)] ${
                     feature.highlighted
-                      ? 'border-primary/30 bg-card shadow-sm hover:border-primary/40'
-                      : 'border-border/60 bg-card/70 shadow-sm hover:border-border/80'
+                      ? 'border-primary/20 bg-card hover:border-primary/30'
+                      : 'border-white/[0.06] bg-card/70 hover:border-white/[0.12]'
                   }`}
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
@@ -114,7 +114,7 @@ export default function FeaturesBento() {
                     <Badge
                       variant="outline"
                       size="sm"
-                      className="mt-4 rounded-full border-primary/30 bg-primary/10 text-primary"
+                      className="mt-4 rounded-full border-primary/20 bg-primary/10 text-primary"
                     >
                       {t('landing.home.features.feature2Badge')}
                     </Badge>

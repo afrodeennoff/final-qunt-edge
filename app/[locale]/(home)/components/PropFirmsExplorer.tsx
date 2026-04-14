@@ -80,8 +80,8 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
   }, [deferredQuery, filters, firms])
 
   return (
-    <section className="px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
-      <div className="mx-auto rounded-lg border border-border/50 bg-card/80 p-5 shadow-sm md:max-w-[1360px] md:p-6 lg:p-8">
+    <section className="px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+      <div className="mx-auto rounded-lg border border-white/[0.06] bg-card/80 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:max-w-[1360px] md:p-6 lg:p-8">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_320px]">
           <SearchHero
             searchQuery={searchQuery}
@@ -90,7 +90,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
             filteredCount={filteredFirms.length}
           />
 
-          <div className="flex h-full flex-col justify-between rounded-lg border border-border/50 bg-background/70 p-5 shadow-sm">
+          <div className="flex h-full flex-col justify-between rounded-lg border border-white/[0.06] bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.explorer.explorerBriefTitle')}
@@ -98,17 +98,17 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
               <h3 className="mt-4 text-2xl font-semibold tracking-tight text-foreground [font-family:var(--home-display)]">
                 {t('landing.home.explorer.explorerBriefHeading')}
               </h3>
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {t('landing.home.explorer.explorerBriefDescription')}
               </p>
             </div>
 
             <div className="mt-6 space-y-3">
-              <div className="rounded-md border border-border/50 bg-card/70 px-4 py-3">
+              <div className="rounded-md border border-white/[0.06] bg-card/70 px-4 py-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t('landing.home.explorer.liveViewTitle')}
                 </p>
-                <p className="mt-1 text-sm text-foreground/80">
+                <p className="mt-1 text-sm text-foreground/90">
                   {t('landing.home.explorer.liveViewCount', {
                     count: filteredFirms.length,
                   })}
@@ -116,7 +116,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
               </div>
               <Link
                 href={`/${locale}/propfirms`}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:brightness-110"
               >
                 {t('landing.home.explorer.openFullCatalogue')}
                 <ArrowRight className="h-4 w-4" />
@@ -135,7 +135,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
         <FirmCardsGrid firms={filteredFirms} locale={locale} />
 
         <div className="pt-6">
-          <div className="flex flex-col gap-4 rounded-lg border border-border/50 bg-background/70 p-5 shadow-sm md:flex-row md:items-end md:justify-between md:p-6">
+          <div className="flex flex-col gap-4 rounded-lg border border-white/[0.06] bg-background/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:flex-row md:items-end md:justify-between md:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                 {t('landing.home.explorer.needFullBoardTitle')}
@@ -143,13 +143,13 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
               <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground [font-family:var(--home-display)]">
                 {t('landing.home.explorer.needFullBoardHeading')}
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 {t('landing.home.explorer.needFullBoardDescription')}
               </p>
             </div>
             <Link
               href={`/${locale}/propfirms`}
-              className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/70 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-card"
+              className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-card/70 px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-card"
             >
               {t('landing.home.explorer.exploreAll')}
               <ArrowRight className="h-4 w-4" />

@@ -25,8 +25,8 @@ function FAQAccordion({
   return (
     <Card
       className={cn(
-        'overflow-hidden rounded-lg border bg-card/80 shadow-sm transition-colors',
-        isOpen ? 'border-primary/30' : 'border-border/50',
+        'overflow-hidden rounded-lg border bg-card/80 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-colors',
+        isOpen ? 'border-primary/30' : 'border-white/[0.06]',
       )}
     >
       <button
@@ -41,7 +41,7 @@ function FAQAccordion({
               'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold uppercase tracking-[0.12em]',
               isOpen
                 ? 'border-primary/30 bg-primary/10 text-primary'
-                : 'border-border/50 bg-background/70 text-muted-foreground',
+                : 'border-white/[0.06] bg-background/70 text-muted-foreground',
             )}
           >
             Q
@@ -62,8 +62,8 @@ function FAQAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <CardContent className="border-t border-border/50 p-5 pt-4">
-            <p className="pl-12 text-sm leading-7 text-muted-foreground">{item.answer}</p>
+          <CardContent className="border-t border-white/[0.06] p-5 pt-4">
+            <p className="pl-12 text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
           </CardContent>
         </div>
       </div>
@@ -81,10 +81,10 @@ export default function FAQSection() {
   }))
 
   return (
-    <section id="faq" className="px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <section id="faq" className="px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
         <motion.div
-          className="rounded-lg border border-border/50 bg-card/80 p-6 shadow-sm lg:sticky lg:top-28"
+          className="rounded-lg border border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] lg:sticky lg:top-28"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -100,22 +100,22 @@ export default function FAQSection() {
           <h2 className="type-h2 mt-5 text-balance text-foreground lg:text-h1">
             {t('landing.home.faq.title')}
           </h2>
-          <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
             {t('landing.home.faq.description')}
           </p>
 
-          <div className="mt-8 rounded-md border border-border/50 bg-background/70 p-5">
+          <div className="mt-8 rounded-md border border-white/[0.06] bg-background/70 p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.bestForTitle')}
             </p>
-            <p className="mt-3 text-sm leading-7 text-foreground/80">
+            <p className="mt-3 text-sm leading-relaxed text-foreground/90">
               {t('landing.home.faq.bestForDescription')}
             </p>
           </div>
         </motion.div>
 
         <motion.div
-          className="rounded-lg border border-border/50 bg-card/70 p-4 shadow-sm sm:p-5"
+          className="rounded-lg border border-white/[0.06] bg-card/70 p-4 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] sm:p-5"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

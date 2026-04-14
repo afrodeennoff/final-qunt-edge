@@ -53,7 +53,7 @@ function StatItem({
   const count = useAnimatedCounter(value, inView, reducedMotion)
 
   return (
-    <div className="rounded-lg border-border/60 bg-card/70 p-5 text-center shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+    <div className="rounded-lg border-white/[0.06] bg-card/70 p-5 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
       <p className="tabular-nums text-3xl font-bold text-foreground">
         {prefix}
         {value >= 1000 ? count.toLocaleString() : count}
@@ -82,12 +82,12 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24"
+      className="relative overflow-hidden bg-muted/20 px-4 py-20 sm:px-6 sm:py-24 md:px-6 lg:px-8 lg:py-32"
     >
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
-      <div className="mx-auto max-w-[1360px] rounded-lg border-border/60 bg-card/80 p-6 shadow-sm md:p-8">
-        <div className="mb-6 flex flex-col gap-3 border-b border-border/60 pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto max-w-[1360px] rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
+        <div className="mb-6 flex flex-col gap-3 border-b border-white/[0.04] pb-5 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
               {t('landing.home.liveStats.heading')}

@@ -61,7 +61,7 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+    <section id="pricing" className="bg-muted/30 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
       <div className="mx-auto max-w-[1360px]">
         <motion.div
           className="mb-10 text-center md:mb-14"
@@ -75,11 +75,11 @@ export default function PricingSection({ locale }: { locale: string }) {
               highlight: t('landing.pricingNew.highlight'),
             })}
           </h2>
-          <p className="mt-4 text-base leading-8 text-muted-foreground">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             {t('landing.pricingNew.subheadline')}
           </p>
 
-          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/50 bg-card/70 p-1 shadow-sm">
+          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-white/[0.06] bg-card/70 p-1 shadow-sm">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
@@ -124,8 +124,8 @@ export default function PricingSection({ locale }: { locale: string }) {
               }}
               className={`relative flex h-full flex-col rounded-lg border p-6 ${
                 plan.featured
-                  ? 'border-primary/30 bg-card shadow-md'
-                  : 'border-border/50 bg-card/70 shadow-sm'
+                  ? 'border-primary/30 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]'
+                  : 'border-white/[0.06] bg-card/70 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]'
               }`}
             >
               {plan.badge ? (
@@ -139,7 +139,7 @@ export default function PricingSection({ locale }: { locale: string }) {
               <h3 className="type-h4 text-foreground">{plan.name}</h3>
 
               <div className="mt-4">
-                <span className="tabular-nums text-5xl font-semibold tracking-tight text-foreground">
+                <span className="tabular-nums text-5xl font-bold tracking-tight text-foreground">
                   {plan.price}
                 </span>
                 <span className="ml-2 text-sm text-muted-foreground">{plan.period}</span>
@@ -150,7 +150,7 @@ export default function PricingSection({ locale }: { locale: string }) {
                 ) : null}
               </div>
 
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">{plan.description}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{plan.description}</p>
 
               <ul className="mt-6 grid flex-1 gap-3">
                 {plan.features.map((feature) => (
@@ -158,7 +158,7 @@ export default function PricingSection({ locale }: { locale: string }) {
                     <span className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-3 w-3" />
                     </span>
-                    <span className="text-sm leading-7 text-foreground/80">{feature}</span>
+                    <span className="text-sm leading-relaxed text-foreground/90">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -173,7 +173,7 @@ export default function PricingSection({ locale }: { locale: string }) {
                 <Button
                   asChild
                   variant="outline"
-                  className="mt-6 h-11 w-full rounded-full border-border/60 bg-background/70 text-sm font-medium text-foreground hover:bg-background"
+                  className="mt-6 h-11 w-full rounded-full border-white/[0.06] bg-background/70 text-sm font-medium text-foreground hover:bg-background"
                 >
                   <Link href={plan.href}>{plan.cta}</Link>
                 </Button>
