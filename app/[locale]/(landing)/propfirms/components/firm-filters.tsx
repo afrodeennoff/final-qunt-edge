@@ -48,7 +48,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
-    <div className="space-y-4 rounded-xl border border-white/[0.08] bg-white/[0.060] p-4 sm:p-5">
+    <div className="space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.040] p-4 sm:p-5">
       {/* Search Bar */}
       <div className="relative">
         <svg
@@ -69,7 +69,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
-          className="h-12 rounded-xl border-[oklch(0.65_0.22_260/0.08)] bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/20"
+          className="h-12 rounded-xl border-white/[0.08] bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
         />
       </div>
 
@@ -87,7 +87,7 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
               size="sm"
               onClick={() => updateParams("payout", value)}
               className={cn(
-                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200",
+                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 payoutFilter === value
                   ? "border-primary/40 bg-primary/10 text-foreground/95"
                   : "border-transparent text-muted-foreground hover:text-foreground/95 hover:bg-muted/50"
@@ -112,13 +112,13 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
             { value: "refusedPayout", label: "Refused" },
             { value: "accountValue", label: "Value" },
           ].map(({ value, label }) => (
-            <Button 
+            <Button
               key={value}
               variant="ghost"
               size="sm"
               onClick={() => updateParams("sort", value)}
               className={cn(
-                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200",
+                "h-8 rounded-full border px-3 text-[11px] font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 sort === value
                   ? "border-primary/40 bg-primary/10 text-foreground/95"
                   : "border-transparent text-muted-foreground hover:text-foreground/95 hover:bg-muted/50"

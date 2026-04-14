@@ -3,70 +3,67 @@ import Hero from './Hero'
 import LiveStatsStrip from './LiveStatsStrip'
 import FeaturesBento from './FeaturesBento'
 import ProblemStatement from './ProblemStatement'
-import RollingAdBanner from './RollingAdBanner'
 import PropFirmsExplorer from './PropFirmsExplorer'
 import FinalCTA from './FinalCTA'
 
 const SectionSkeleton = () => (
- <div className="min-h-24 w-full animate-pulse rounded-xl bg-muted/20" />
+  <div className="min-h-24 w-full animate-pulse rounded-lg bg-muted/20" />
 )
 
 const LazyHowItWorks = dynamic(() => import('./HowItWorks'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
 const LazyAnalysisDemo = dynamic(() => import('./AnalysisDemo'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
-const LazyAudienceSegmentation = dynamic(
- () => import('./AudienceSegmentation'),
- { loading: SectionSkeleton }
-)
+const LazyAudienceSegmentation = dynamic(() => import('./AudienceSegmentation'), {
+  loading: SectionSkeleton,
+})
 const LazyAIFeatures = dynamic(() => import('./AIFeatures'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
 const LazySocialProof = dynamic(() => import('./SocialProof'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
 const LazyPricingSection = dynamic(() => import('./PricingSection'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
 const LazyFAQSection = dynamic(() => import('./FAQSection'), {
- loading: SectionSkeleton,
+  loading: SectionSkeleton,
 })
 
 interface HomeContentProps {
- locale: string
+  locale: string
 }
 
 export default function HomeContent({ locale }: HomeContentProps) {
- return (
- <div className="home-borderless relative overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground/95">
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1200px_480px_at_50%_-10%,rgba(255,255,255,0.035),transparent_68%),linear-gradient(180deg,rgba(255,255,255,0.01)_0%,transparent_36%,rgba(255,255,255,0.01)_100%)]" />
- <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.08] sm:block" />
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_340px_at_10%_20%,rgba(255,255,255,0.02),transparent_70%),radial-gradient(700px_320px_at_92%_6%,rgba(255,255,255,0.015),transparent_70%)]" />
- <div
- className="pointer-events-none absolute inset-0 opacity-[0.03] z-0"
- style={{
- backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")',
- }}
- />
+  return (
+    <div className="home-borderless relative overflow-x-hidden bg-transparent selection:bg-primary/30 selection:text-foreground/95">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 via-background/0 to-background/0" />
+      <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-[0.05] md:block" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+      {/* Atmospheric glow orbs for depth */}
+      <div className="pointer-events-none absolute left-[15%] top-[40%] h-[560px] w-[560px] rounded-full bg-primary/[0.03] blur-[120px]" />
+      <div className="pointer-events-none absolute right-[10%] top-[65%] h-[480px] w-[480px] rounded-full bg-accent/[0.03] blur-[120px]" />
+      <div className="pointer-events-none absolute left-1/2 top-[85%] h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-primary/[0.02] blur-[120px]" />
+      {/* Bottom gradient fade */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent via-transparent to-background/80" />
 
- <main className="relative z-10 mx-auto w-full max-w-[1320px]">
- <Hero locale={locale} />
- <LiveStatsStrip />
- <ProblemStatement />
- <LazyHowItWorks />
- <FeaturesBento />
- <LazyAnalysisDemo />
- <LazyAIFeatures />
- <LazyAudienceSegmentation />
- <LazySocialProof />
- <RollingAdBanner />
- <PropFirmsExplorer locale={locale} />
- <LazyPricingSection />
- <LazyFAQSection />
- <FinalCTA locale={locale} />
- </main>
- </div>
- )
+      <main className="relative z-10 mx-auto w-full max-w-[1360px]">
+        <Hero locale={locale} />
+        <ProblemStatement />
+        <LazyHowItWorks />
+        <FeaturesBento />
+        <LazyAnalysisDemo />
+        <LazyAIFeatures />
+        <LazyAudienceSegmentation />
+        <PropFirmsExplorer locale={locale} />
+        <LiveStatsStrip />
+        <LazySocialProof />
+        <LazyPricingSection locale={locale} />
+        <LazyFAQSection />
+        <FinalCTA locale={locale} />
+      </main>
+    </div>
+  )
 }

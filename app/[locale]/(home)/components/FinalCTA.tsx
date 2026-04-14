@@ -5,90 +5,66 @@ import { ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
-import { MOTION_EASE } from './_constants'
-
-const ease = MOTION_EASE as unknown as number[]
+import { useI18n } from '@/locales/client'
 
 interface FinalCTAProps {
- locale: string
+  locale: string
 }
 
 export default function FinalCTA({ locale }: FinalCTAProps) {
- return (
- <section className="relative py-24 sm:py-24 lg:py-24 overflow-hidden">
- <div className="pointer-events-none absolute inset-0 bg-background" />
- <div className="pointer-events-none absolute inset-0">
- <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full bg-[rgba(255,255,255,0.08)] blur-[130px]" />
- </div>
+  const t = useI18n()
 
- <motion.div
- className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center"
- initial={{ opacity: 0, y: 10 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.6, ease }}
- >
- <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] px-6 py-16 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-40px_rgba(0,0,0,0.95),0_0_100px_-40px_rgba(255,255,255,0.08)] sm:px-12 sm:py-20">
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_45%)]" />
- <div className="relative z-10">
- <h2 className="mb-6 text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[1.02] tracking-[-0.05em] text-foreground/95 [font-family:var(--home-display)]">
- Ready to{' '}
- <span className="line-through decoration-muted-foreground/30 decoration-2">stop guessing</span>
- {' '}and{' '}
- <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
- start knowing
- </span>
- ?
- </h2>
- <p className="mb-10 text-[0.98rem] leading-[1.7] tracking-[-0.01em] text-foreground/58 sm:text-lg [font-family:var(--home-copy)]">
- Join traders tracking their performance with Qunt Edge.
- Start your free audit today.
- </p>
+  return (
+    <section className="relative px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+      <motion.div
+        className="mx-auto max-w-4xl"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="rounded-lg border border-border/50 bg-card/80 px-6 py-14 text-center shadow-md md:px-10 md:py-16">
+          <h2 className="text-balance text-[clamp(2.2rem,4.6vw,3.6rem)] font-[350] leading-[0.98] tracking-[-0.05em] text-foreground [font-family:var(--home-display)]">
+            {t('landing.home.finalCta.titlePrefix')}{' '}
+            <span className="line-through decoration-muted-foreground/40 decoration-2">
+              {t('landing.home.finalCta.titleStrike')}
+            </span>{' '}
+            {t('landing.home.finalCta.titleBridge')}{' '}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t('landing.home.finalCta.titleHighlight')}
+            </span>
+            {t('landing.home.finalCta.titleSuffix')}
+          </h2>
 
- <motion.div
- initial={{ opacity: 0, scale: 0.95 }}
- whileInView={{ opacity: 1, scale: 1 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, ease, delay: 0.2 }}
- >
- <MagneticButton strength={8}>
- <Button
- asChild
- size="lg"
- className="rounded-full bg-white px-8 text-[13px] font-semibold tracking-[-0.01em] text-black shadow-[0_0_40px_rgba(255,255,255,0.16)] hover:bg-white/90"
- >
- <Link href={`/${locale}/authentication?next=dashboard`}>
- Start Your Free Audit — No Credit Card
- <ArrowRight className="ml-2 h-5 w-5" />
- </Link>
- </Button>
- </MagneticButton>
- </motion.div>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">
+            {t('landing.home.finalCta.description')}
+          </p>
 
- <div className="mt-4">
- <Button
- asChild
- size="lg"
- className="rounded-full border border-white/[0.12] bg-white/[0.04] px-8 text-[13px] font-medium tracking-[-0.01em] text-foreground/78 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-foreground/95"
- >
- <Link href={`/${locale}/propfirms`}>
- Browse Prop Firms
- </Link>
- </Button>
- </div>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <MagneticButton strength={8}>
+              <Button asChild size="lg" className="h-11 rounded-full px-8 text-sm font-semibold">
+                <Link href={`/${locale}/authentication?next=dashboard`}>
+                  {t('landing.home.finalCta.primary')}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </MagneticButton>
 
- <motion.p
- className="mt-5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-foreground/34"
- initial={{ opacity: 0 }}
- whileInView={{ opacity: 1 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, delay: 0.4 }}
- >
- No credit card required · Setup in 2 minutes · Cancel anytime
- </motion.p>
- </div>
- </div>
- </motion.div>
- </section>
- )
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-11 rounded-full border-border/60 bg-background/70 px-8 text-sm font-medium text-foreground hover:bg-background"
+            >
+              <Link href={`/${locale}/propfirms`}>{t('landing.home.finalCta.secondary')}</Link>
+            </Button>
+          </div>
+
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            {t('landing.home.finalCta.footnote')}
+          </p>
+        </div>
+      </motion.div>
+    </section>
+  )
 }

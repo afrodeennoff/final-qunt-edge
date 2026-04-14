@@ -1,252 +1,135 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import {
- BarChart3,
- Brain,
- Users,
- Download,
- FileText,
- Shield,
- ArrowRight,
-} from 'lucide-react'
+import { ArrowRight, BarChart3, Brain, Download, FileText, Shield, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
- MotionSection,
- MotionStagger,
- MotionStaggerItem,
+  MotionSection,
+  MotionStagger,
+  MotionStaggerItem,
 } from '@/components/animation/enhanced-motion'
-import {
- MOTION_EASE,
- STAGGER_CARD,
- BORDER_SECTION,
- TYPO_MINOR,
- TYPO_EYEBROW,
-} from './_constants'
+import { useTypedI18n } from '@/locales/client'
 
-const problems = [
- {
- badge: 'Data Fragmentation',
- icon: BarChart3,
- title: 'Where are your trades, really?',
- description:
- 'Scattered across brokers, spreadsheets, and memory — never analysis.',
- solution: 'Advanced Analytics',
- tone:
- 'from-[hsl(var(--primary)/0.16)] via-[hsl(var(--mk-surface-muted)/0.35)] to-transparent',
- },
- {
- badge: 'Repeating Mistakes',
- icon: Brain,
- title: 'Why the same errors, again?',
- description:
- 'No structured review means no improvement loop. Patterns stay invisible.',
- solution: 'AI Insights',
- tone:
- 'from-[hsl(var(--accent)/0.18)] via-[hsl(var(--primary)/0.14)] to-transparent',
- },
- {
- badge: 'Team Isolation',
- icon: Users,
- title: 'Can your coach see what you see?',
- description:
- 'Siloed data makes performance gaps invisible until they cost you.',
- solution: 'Team Sync',
- tone:
- 'from-[hsl(var(--chart-2)/0.16)] via-[hsl(var(--primary)/0.12)] to-transparent',
- },
-] as const
-
-type Problem = (typeof problems)[number]
-
-const features = [
- {
- icon: BarChart3,
- title: 'Advanced Analytics',
- description:
- 'Decile analysis, heatmaps, and custom metrics that expose what PnL hides.',
- colSpan: 'lg:col-span-2',
- highlighted: false,
- tone:
- 'from-[hsl(var(--primary)/0.18)] via-[hsl(var(--mk-surface-muted)/0.4)] to-transparent',
- },
- {
- icon: Brain,
- title: 'AI Insights',
- description:
- 'Pattern recognition, behavioral analysis, and explainable AI that turns raw trades into a coaching system.',
- colSpan: 'lg:col-span-2',
- highlighted: true,
- tone:
- 'from-[hsl(var(--accent)/0.2)] via-[hsl(var(--primary)/0.16)] to-transparent',
- },
- {
- icon: Users,
- title: 'Team Sync',
- description:
- 'Share layouts, compare performance, and accelerate improvement together.',
- colSpan: 'lg:col-span-1',
- highlighted: false,
- tone:
- 'from-[hsl(var(--chart-2)/0.16)] via-[hsl(var(--mk-surface-muted)/0.34)] to-transparent',
- },
- {
- icon: Download,
- title: 'Multi-Broker Import',
- description:
- 'Connect Tradovate, Rithmic, IBKR, or import CSV. Your data, your way.',
- colSpan: 'lg:col-span-3',
- highlighted: false,
- tone:
- 'from-[hsl(var(--primary)/0.16)] via-[hsl(var(--mk-surface-muted)/0.36)] to-transparent',
- },
- {
- icon: FileText,
- title: 'Coach-Ready Exports',
- description:
- 'PDF briefs and shareable reports for structured mentorship sessions.',
- colSpan: 'lg:col-span-2',
- highlighted: false,
- tone:
- 'from-[hsl(var(--accent)/0.16)] via-[hsl(var(--mk-surface-muted)/0.3)] to-transparent',
- },
- {
- icon: Shield,
- title: 'Enterprise Security',
- description:
- 'Bank-grade encryption and SOC2 compliance protect every trade you upload.',
- colSpan: 'lg:col-span-2',
- highlighted: false,
- tone:
- 'from-[hsl(var(--chart-2)/0.14)] via-[hsl(var(--primary)/0.08)] to-transparent',
- },
-] as const
-
-type Feature = (typeof features)[number]
-
-function ProblemCard({ problem }: { problem: Problem }) {
- const Icon = problem.icon
- return (
- <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14]">
- <div className="relative mb-4 flex h-11 w-11 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04] shadow-[0_0_20px_rgba(255,255,255,0.08)]">
- <Icon className="h-4 w-4 text-primary" />
- </div>
- <Badge
- variant="outline"
- size="sm"
- className="mb-4 rounded-full border-white/[0.12] bg-white/[0.06] text-primary"
- >
- {problem.badge}
- </Badge>
- <h3 className="text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
- {problem.title}
- </h3>
- <p className="mt-3 text-[0.9rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
- {problem.description}
- </p>
- <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/74">
- <ArrowRight className="w-3 h-3" />
- <span>{problem.solution}</span>
- </div>
- </div>
- )
-}
-
-function FeatureCard({ feature }: { feature: Feature }) {
- const Icon = feature.icon
-
- return (
- <div
- className={`relative h-full overflow-hidden rounded-[1.75rem] border p-6 ${feature.highlighted ? 'border-white/[0.12] bg-[oklch(0.045_0.006_264)] shadow-[0_0_0_0.5px_rgba(255,255,255,0.08),0_0_40px_rgba(255,255,255,0.04),0_18px_44px_-30px_rgba(0,0,0,0.9)]' : 'border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-30px_rgba(0,0,0,0.88)] hover:border-white/[0.14]'} transition-all duration-300 hover:-translate-y-1`}
- >
- <div className="relative mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
- <div className="absolute inset-0 rounded-xl bg-primary/15 blur-sm" />
- <div className="relative inline-flex h-12 w-12 items-center justify-center rounded-[1rem] border border-white/[0.08] bg-white/[0.04]">
- <Icon className="w-5 h-5 text-primary" />
- </div>
- </div>
-
- {feature.highlighted && (
- <Badge
- variant="outline"
- size="sm"
- className="mb-2 rounded-full border-primary/38 bg-primary/10 text-primary"
- >
- AI-Powered
- </Badge>
- )}
-
- <h3 className="relative text-lg font-medium text-gradient-primary [font-family:var(--home-display)]">
- {feature.title}
- </h3>
- <p className="relative mt-2.5 text-[0.92rem] leading-[1.7] text-foreground/60 [font-family:var(--home-copy)]">
- {feature.description}
- </p>
- </div>
- )
-}
+const issueIcons = [BarChart3, Brain, Users]
+const featureIcons = [BarChart3, Brain, Users, Download, FileText, Shield]
 
 export default function FeaturesBento() {
- return (
- <div id="features">
- <MotionSection className={BORDER_SECTION}>
- <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
- <motion.div
- className="mb-14 text-center lg:mb-20"
- initial={{ opacity: 0, y: 16 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, ease: MOTION_EASE as unknown as number[] }}
- >
- <p
- className={`${TYPO_EYEBROW} mb-3 text-foreground/34 [font-family:var(--home-copy)]`}
- >
- Platform Capabilities
- </p>
- <h2
- className={`${TYPO_MINOR} text-foreground/95 leading-tight [font-family:var(--home-display)]`}
- >
- Everything you need to{' '}
- <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
- trade smarter
- </span>
- </h2>
- <p className="mx-auto mt-4 max-w-2xl text-[0.98rem] leading-[1.7] tracking-[-0.01em] text-foreground/56 sm:text-lg">
- Whether you&apos;re protecting a funded account or sharpening your personal
- edge, this is the execution workflow layer that keeps your review process,
- broker data, and team context in one place.
- </p>
- </motion.div>
+  const t = useTypedI18n()
 
- <MotionStagger
- className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 mb-16"
- delay={STAGGER_CARD}
- >
- {problems.map((problem) => (
- <MotionStaggerItem key={problem.title}>
- <ProblemCard problem={problem} />
- </MotionStaggerItem>
- ))}
- </MotionStagger>
+  const issues = [1, 2, 3].map((index) => ({
+    badge: t(`landing.home.features.issue${index}Badge`),
+    title: t(`landing.home.features.issue${index}Title`),
+    description: t(`landing.home.features.issue${index}Description`),
+    solution: t(`landing.home.features.issue${index}Solution`),
+    icon: issueIcons[index - 1],
+  }))
 
- <div className="mb-8">
- <Badge variant="secondary" size="sm" className="rounded-full border-white/[0.08] bg-white/[0.04] px-3 text-foreground/62">
- Features
- </Badge>
- </div>
+  const features = [1, 2, 3, 4, 5, 6].map((index) => ({
+    title: t(`landing.home.features.feature${index}Title`),
+    description: t(`landing.home.features.feature${index}Description`),
+    icon: featureIcons[index - 1],
+    highlighted: index === 2,
+    colSpan: index === 4 ? 'lg:col-span-2' : index <= 2 || index >= 5 ? 'lg:col-span-1' : '',
+  }))
 
- <MotionStagger
- className="grid grid-cols-1 lg:grid-cols-4 gap-3 lg:gap-4"
- delay={STAGGER_CARD}
- >
- {features.map((feature) => (
- <MotionStaggerItem key={feature.title} className={feature.colSpan}>
- <FeatureCard feature={feature} />
- </MotionStaggerItem>
- ))}
- </MotionStagger>
- </div>
- </MotionSection>
- </div>
- )
+  return (
+    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+      {/* Atmospheric glow orbs */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
+      <div className="mx-auto max-w-[1360px]">
+        <motion.div
+          className="mb-10 text-center md:mb-14"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            {t('landing.home.features.eyebrow')}
+          </p>
+          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+            {t('landing.home.features.title')}{' '}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t('landing.home.features.highlight')}
+            </span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            {t('landing.home.features.description')}
+          </p>
+        </motion.div>
+
+        <MotionStagger className="grid gap-4 md:grid-cols-3" delay={0.08}>
+          {issues.map((issue) => {
+            const Icon = issue.icon
+            return (
+              <MotionStaggerItem key={String(issue.title)}>
+                <article className="h-full rounded-lg border-border/60 bg-card/70 p-6 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <Badge
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 rounded-full border-border/60 bg-background/70 text-primary"
+                  >
+                    {issue.badge}
+                  </Badge>
+                  <h3 className="type-h4 mt-4 text-foreground">{issue.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {issue.description}
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border-border/60 bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/80">
+                    <ArrowRight className="h-3 w-3" />
+                    <span>{issue.solution}</span>
+                  </div>
+                </article>
+              </MotionStaggerItem>
+            )
+          })}
+        </MotionStagger>
+
+        <div className="mt-10 mb-5">
+          <Badge variant="secondary" size="sm" className="rounded-full px-3 text-foreground/70">
+            {t('landing.home.features.listLabel')}
+          </Badge>
+        </div>
+
+        <MotionStagger className="grid gap-4 lg:grid-cols-4" delay={0.08}>
+          {features.map((feature) => {
+            const Icon = feature.icon
+            return (
+              <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
+                <article
+                  className={`h-full rounded-lg border p-6 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-md ${
+                    feature.highlighted
+                      ? 'border-primary/30 bg-card shadow-sm hover:border-primary/40'
+                      : 'border-border/60 bg-card/70 shadow-sm hover:border-border/80'
+                  }`}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
+
+                  {feature.highlighted ? (
+                    <Badge
+                      variant="outline"
+                      size="sm"
+                      className="mt-4 rounded-full border-primary/30 bg-primary/10 text-primary"
+                    >
+                      {t('landing.home.features.feature2Badge')}
+                    </Badge>
+                  ) : null}
+
+                  <h3 className="type-h4 mt-4 text-foreground">{feature.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </article>
+              </MotionStaggerItem>
+            )
+          })}
+        </MotionStagger>
+      </div>
+    </MotionSection>
+  )
 }

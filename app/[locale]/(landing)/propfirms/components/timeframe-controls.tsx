@@ -35,17 +35,17 @@ export function TimeframeControls({ timeframeLabel, timeframeOptions }: Timefram
 
   return (
     <div className="flex items-center gap-2">
-      <Label htmlFor="timeframe-select" className="text-xs font-semibold tracking-wide text-[hsl(var(--mk-text))]">
+      <Label htmlFor="timeframe-select" className="text-xs font-semibold tracking-wide text-foreground/60">
         {timeframeLabel}
       </Label>
       <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
         <SelectTrigger
           id="timeframe-select"
-          className="w-[200px] border border-white/[0.08] bg-white/[0.080] text-foreground/95 shadow-none hover:bg-[oklch(0.65_0.22_260/0.03)] focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+          className="w-[200px] border border-white/[0.08] bg-white/[0.040] text-foreground/95 shadow-none transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.060] focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent className="border border-white/[0.08] bg-[oklch(0.65_0.22_260/0.03)] text-foreground/95 shadow-xl">
+        <SelectContent className="border border-white/[0.08] bg-background text-foreground/95 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
           <SelectItem value="currentMonth">{timeframeOptions.currentMonth}</SelectItem>
           <SelectItem value="last3Months">{timeframeOptions.last3Months}</SelectItem>
           <SelectItem value="last6Months">{timeframeOptions.last6Months}</SelectItem>

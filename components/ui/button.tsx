@@ -1,120 +1,126 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Loader2 } from "lucide-react"
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils'
 
-const buttonVariants = cva("cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-[opacity,background-color,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[oklch(0.6083_0.2172_297.1153/0.7)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden select-none",
- {
-variants: {
-variant: {
- solid:"bg-[oklch(0.6083_0.2172_297.1153)] text-[oklch(0.1091_0.0091_301.6956)] rounded-xl shadow-[0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.45),0_6px_18px_oklch(0.6083_0.2172_297.1153/0.22)] hover:bg-[oklch(0.7001_0.1882_313.2907)] hover:shadow-[0_0_0_0.5px_oklch(0.7001_0.1882_313.2907/0.55),0_10px_28px_oklch(0.6083_0.2172_297.1153/0.30)] hover:scale-[1.015] active:scale-[0.975] active:shadow-none",
- outline:"border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.10)] text-foreground/95 rounded-xl hover:bg-[oklch(0.6083_0.2172_297.1153/0.14)] hover:border-[oklch(0.6083_0.2172_297.1153/0.30)] hover:scale-[1.01] active:scale-[0.98]",
- ghost:"text-muted-foreground rounded-xl hover:text-foreground/95 hover:bg-[oklch(0.6083_0.2172_297.1153/0.10)]",
- error:"bg-[oklch(0.64_0.255_22)] text-white rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.70_0.255_22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:scale-[1.01] active:scale-[0.98]",
- destructive:"bg-[oklch(0.64_0.255_22)] text-white rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.70_0.255_22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:scale-[1.01] active:scale-[0.98]",
- link:"text-[oklch(0.6083_0.2172_297.1153)] underline-offset-4 hover:underline rounded-sm","gradient-primary":"bg-gradient-to-r from-[oklch(0.7001_0.1882_313.2907)] to-[oklch(0.4865_0.2423_291.8661)] text-[oklch(0.1091_0.0091_301.6956)] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_10px_26px_-10px_oklch(0.4865_0.2423_291.8661/0.35)] hover:shadow-[0_0_28px_oklch(0.6083_0.2172_297.1153/0.28)] hover:scale-[1.015] active:scale-[0.975]","gradient-secondary":"bg-gradient-to-br from-[oklch(0.6083_0.2172_297.1153/0.12)] to-[rgba(255,255,255,0.02)] border border-[oklch(0.6083_0.2172_297.1153/0.18)] text-foreground/95 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:from-[oklch(0.6083_0.2172_297.1153/0.16)] hover:to-[rgba(255,255,255,0.04)] hover:scale-[1.01] active:scale-[0.98]",
- shimmer:"bg-[oklch(0.6083_0.2172_297.1153)] text-[oklch(0.1091_0.0091_301.6956)] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_6px_18px_-6px_oklch(0.6083_0.2172_297.1153/0.24)]",
- default:"bg-[oklch(0.6083_0.2172_297.1153)] text-[oklch(0.1091_0.0091_301.6956)] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_6px_18px_-6px_oklch(0.6083_0.2172_297.1153/0.24)] hover:bg-[oklch(0.7001_0.1882_313.2907)] hover:scale-[1.015] active:scale-[0.975]",
- secondary:"bg-[oklch(0.6083_0.2172_297.1153/0.08)] text-foreground/95 border border-[oklch(0.6083_0.2172_297.1153/0.16)] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:bg-[oklch(0.6083_0.2172_297.1153/0.12)] hover:scale-[1.01] active:scale-[0.98]",
- mono:"font-mono rounded-lg border border-white/[0.10] bg-transparent text-foreground/95 hover:border-white/[0.18] hover:bg-white/[0.05] focus-visible:ring-offset-0",
- pill:"bg-transparent text-foreground/95 border border-[oklch(0.2505_0.0293_299.5707/0.9)] rounded-full hover:bg-[oklch(0.6083_0.2172_297.1153/0.08)] active:bg-[oklch(0.6083_0.2172_297.1153/0.06)] active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150","pill-solid":"bg-[oklch(0.6083_0.2172_297.1153)] text-[oklch(0.1091_0.0091_301.6956)] border-none rounded-full hover:bg-[oklch(0.7001_0.1882_313.2907)] active:scale-[0.98] transition-[opacity,background-color,border-color] duration-150 font-semibold","pill-ghost":"bg-transparent text-muted-foreground border-none rounded-full hover:bg-[oklch(0.6083_0.2172_297.1153/0.08)] hover:text-foreground/95 active:bg-[oklch(0.6083_0.2172_297.1153/0.06)] transition-[opacity,background-color,border-color] duration-150",
- },
- size: {
- sm:"h-8 min-h-[32px] min-w-[32px] px-3 text-xs rounded-lg",
- default:"h-9 min-h-[36px] min-w-[36px] px-4 text-sm",
- md:"h-10 min-h-[40px] min-w-[40px] px-5 text-sm",
- lg:"h-11 min-h-[44px] min-w-[44px] px-6 text-[15px]",
- icon:"h-9 w-9 min-h-[36px] min-w-[36px] rounded-xl hover:bg-[oklch(0.6083_0.2172_297.1153/0.08)]",
- },
- },
- defaultVariants: {
- variant:"solid",
- size:"default",
- },
- }
+const buttonVariants = cva(
+  'type-label font-sans inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap border border-transparent select-none transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  {
+    variants: {
+      variant: {
+        solid:
+          'rounded-md bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90 active:scale-[0.98]',
+        outline:
+          'rounded-md border-border bg-background/70 text-foreground shadow-sm hover:bg-muted/70 hover:shadow-md active:scale-[0.98]',
+        ghost: 'rounded-md text-muted-foreground hover:bg-muted/70 hover:text-foreground',
+        error:
+          'rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:scale-[0.98]',
+        destructive:
+          'rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:scale-[0.98]',
+        link: 'rounded-md text-primary underline-offset-4 hover:underline',
+        'gradient-primary':
+          'rounded-md bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+        'gradient-secondary':
+          'rounded-md border-border bg-gradient-to-r from-background to-muted/60 text-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+        shimmer:
+          'rounded-md bg-primary text-primary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+        default:
+          'rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98]',
+        secondary:
+          'rounded-md border-border bg-secondary text-secondary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+        mono: 'rounded-md border-border bg-background text-foreground shadow-sm hover:bg-muted/70 font-mono',
+        pill: 'rounded-full border-border bg-background/70 text-foreground shadow-sm hover:bg-muted/70 active:scale-[0.98]',
+        'pill-solid':
+          'rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98]',
+        'pill-ghost': 'rounded-full text-muted-foreground hover:bg-muted/70 hover:text-foreground',
+      },
+      size: {
+        sm: 'h-8 min-h-[32px] min-w-[32px] px-3 rounded-md',
+        default: 'h-9 min-h-[36px] min-w-[36px] px-4 rounded-md',
+        md: 'h-10 min-h-[40px] min-w-[40px] px-5 rounded-md',
+        lg: 'h-11 min-h-[44px] min-w-[44px] px-6 text-sm rounded-md',
+        icon: 'h-9 w-9 min-h-[36px] min-w-[36px] rounded-md',
+      },
+    },
+    defaultVariants: {
+      variant: 'solid',
+      size: 'default',
+    },
+  },
 )
 
 export interface ButtonProps
- extends React.ButtonHTMLAttributes<HTMLButtonElement>,
- VariantProps<typeof buttonVariants> {
- asChild?: boolean
- isLoading?: boolean
- loadingText?: string
- leftIcon?: React.ReactNode
- rightIcon?: React.ReactNode
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+  isLoading?: boolean
+  loadingText?: string
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
- (
- {
- className,
- variant,
- size,
- asChild = false,
- isLoading = false,
- loadingText,
- leftIcon,
- rightIcon,
- children,
- disabled,
- ...props
- },
- ref
- ) => {
- const isShimmer = variant ==="shimmer"
- 
- const content = (
- <>
- {isShimmer && isLoading && (
- <div className="absolute inset-0 overflow-hidden">
- <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-v2-accent-foreground/20 to-transparent" />
- </div>
- )}
- {leftIcon && !isLoading && <span className="shrink-0">{leftIcon}</span>}
- {isLoading ? (
- <>
- <Loader2 className="size-4 animate-spin" aria-hidden="true" />
- <span>{loadingText ?? children}</span>
- </>
- ) : (
- children
- )}
- {rightIcon && !isLoading && <span className="shrink-0">{rightIcon}</span>}
- </>
- )
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading = false,
+      loadingText,
+      leftIcon,
+      rightIcon,
+      children,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const isShimmer = variant === 'shimmer'
 
- if (asChild) {
- return (
- <Slot
- className={cn(buttonVariants({ variant, size, className }))}
- ref={ref}
- {...props}
- >
- <span className="inline-flex items-center justify-center gap-2">
- {content}
- </span>
- </Slot>
- )
- }
+    const content = (
+      <>
+        {isShimmer && isLoading ? (
+          <span className="absolute inset-0 overflow-hidden rounded-[inherit]">
+            <span className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+          </span>
+        ) : null}
+        {leftIcon && !isLoading ? <span className="shrink-0">{leftIcon}</span> : null}
+        {isLoading ? (
+          <>
+            <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            <span>{loadingText ?? children}</span>
+          </>
+        ) : (
+          children
+        )}
+        {rightIcon && !isLoading ? <span className="shrink-0">{rightIcon}</span> : null}
+      </>
+    )
 
- return (
- <button
- className={cn(buttonVariants({ variant, size, className }))}
- ref={ref}
- disabled={isLoading || disabled}
- aria-busy={isLoading || undefined}
- {...props}
- >
- {content}
- </button>
- )
- }
+    if (asChild) {
+      return (
+        <Slot className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+          <span className="inline-flex items-center justify-center gap-2">{content}</span>
+        </Slot>
+      )
+    }
+
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={isLoading || disabled}
+        aria-busy={isLoading || undefined}
+        {...props}
+      >
+        {content}
+      </button>
+    )
+  },
 )
-Button.displayName ="Button"
+Button.displayName = 'Button'
 
 export { Button, buttonVariants }
-
-// For backward compatibility: ButtonV2 is an alias for Button
 export { Button as ButtonV2 }

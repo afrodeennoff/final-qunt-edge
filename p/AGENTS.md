@@ -60,3 +60,10 @@
 - The active public shell comes from `(landing)/components/navbar.tsx` and `footer.tsx`; home-local `Navigation.tsx` and `Footer.tsx` are not part of the current route wiring.
 - When auditing or editing public UI, trace from route `page.tsx`/`layout.tsx` imports first, then edit the shared primitive or section that is actually mounted.
 - `public/AGENTS.md` can lag behind the live home composition. Treat `HomeContent.tsx` as the source of truth for current home section order.
+- Keep the home page narrative linear. Do not mount `DashboardPreview` both inside `Hero.tsx` and again in `HomeContent.tsx`; the hero owns the product showcase.
+- Avoid stacking multiple home sections that all restate AI or differentiation claims. If `AIFeatures.tsx` is mounted, keep `FeaturesBento.tsx` focused on core workflow/platform capabilities and avoid reintroducing a second AI feature grid or a duplicate compare block.
+- For public-facing spotlight/carousel sections, prefer auto-rotation built with a resettable `setTimeout` keyed to the active slide, and pause that motion on hover/focus so CTAs and copy actions remain comfortable to use.
+- For home/marketing pages, put mounted copy in locale dictionaries first. The active home route reads from `locales/*/landing.ts` under `landing.home.*`, while shared navbar/footer chrome uses `landing.navbar.*` and `landing.footerNew.*`.
+- Once the shared type scale exists in globals, mounted marketing sections should use the shared utilities (`type-h1`, `type-h2`, `type-h3`, `type-h4`, `type-body-lg`, `type-body`, `type-body-sm`, `type-label`, `type-overline`) instead of route-local clamp headings or ad-hoc display font classes.
+- Dashboard account collections should use `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch gap-4`; account cards should be full-height flex columns with bottom actions anchored via `mt-auto`.
+- Numeric trading/account/table values should prefer `tabular-nums` plus `font-medium`/`font-semibold` so dashboard columns and cards stay aligned as values change.

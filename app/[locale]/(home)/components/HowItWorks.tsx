@@ -2,131 +2,92 @@
 
 import { motion } from 'framer-motion'
 import { InteractiveWrapper } from '@/components/animation/interactive'
-import { MOTION_EASE } from './_constants'
-
-const steps = [
- { name: 'Sync Data', text: 'Ingest broker fills, account history, and journal context into one timeline.' },
- { name: 'Define Rules', text: 'Capture your setup criteria, risk constraints, and expected behavior standards.' },
- { name: 'Review Session', text: 'Compare planned intent versus real execution to expose decision-quality gaps.' },
- { name: 'Detect Drift', text: 'Flag emotional, sizing, and discipline drift before it compounds.' },
- { name: 'Improve Weekly', text: 'Turn findings into clear interventions and measure compliance momentum.' },
-]
-
-const lineGradient =
- 'linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary)/0.7), transparent)'
-const lineMask =
- 'linear-gradient(90deg, black 0%, black 80%, transparent 100%)'
-
-const lineGradientVertical =
- 'linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary)/0.7), transparent)'
-const lineMaskVertical =
- 'linear-gradient(180deg, black 0%, black 80%, transparent 100%)'
-
-const ease = MOTION_EASE as unknown as number[]
+import { useTypedI18n } from '@/locales/client'
 
 export default function HowItWorks() {
- return (
- <section
- id="how-it-works"
- className="relative px-4 py-24 sm:px-6 sm:py-24 lg:px-8 lg:py-24"
- >
- <div className="mx-auto max-w-[1360px]">
- <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
- <motion.div
- className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_70px_-42px_rgba(0,0,0,0.96)] lg:sticky lg:top-28 lg:p-7"
- initial={{ opacity: 0, y: 8 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.55, ease }}
- >
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_44%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
- <div className="relative">
- <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-foreground/40 [font-family:var(--home-copy)]">
- How It Works
- </p>
- <h2 className="mt-4 text-[clamp(2.1rem,4.8vw,4rem)] font-[350] leading-[0.92] tracking-[-0.05em] text-foreground/95 [font-family:var(--home-display)]">
- A precision loop for traders who want repeatable improvement.
- </h2>
- <p className="mt-5 max-w-xl text-[0.96rem] leading-[1.8] text-foreground/58 [font-family:var(--home-copy)]">
- Qunt Edge turns disconnected trade logs, emotional hindsight, and broker noise into a single operating rhythm.
- </p>
+  const t = useTypedI18n()
 
- <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
- <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Signal</p>
- <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
- Every session is translated into visible rules, drift, and compliance data.
- </p>
- </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
- <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Cadence</p>
- <p className="mt-2 text-sm leading-[1.7] text-foreground/66">
- The workflow stays lightweight enough to run every day, not just after drawdowns.
- </p>
- </div>
- </div>
- </div>
- </motion.div>
+  const steps = [1, 2, 3, 4, 5].map((index) => ({
+    name: t(`landing.home.workflow.step${index}Name`),
+    description: t(`landing.home.workflow.step${index}Description`),
+  }))
 
- <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[oklch(0.035_0.005_264)] p-4 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05),0_24px_60px_-40px_rgba(0,0,0,0.96)] sm:p-5 lg:p-6">
- <motion.div
- className="pointer-events-none absolute left-8 right-8 top-10 hidden h-px origin-left lg:block"
- style={{
- background: lineGradient,
- mask: lineMask,
- WebkitMask: lineMask,
- }}
- initial={{ scaleX: 0 }}
- whileInView={{ scaleX: 1 }}
- viewport={{ once: true }}
- transition={{ duration: 0.8, ease, delay: 0.15 }}
- />
- <motion.div
- className="pointer-events-none absolute bottom-8 left-8 top-8 w-px origin-top lg:hidden"
- style={{
- background: lineGradientVertical,
- mask: lineMaskVertical,
- WebkitMask: lineMaskVertical,
- }}
- initial={{ scaleY: 0 }}
- whileInView={{ scaleY: 1 }}
- viewport={{ once: true }}
- transition={{ duration: 0.8, ease, delay: 0.15 }}
- />
+  return (
+    <section
+      id="how-it-works"
+      className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24"
+    >
+      {/* Atmospheric glow orb */}
+      <div className="pointer-events-none absolute -left-48 bottom-0 h-[440px] w-[440px] rounded-full bg-accent/[0.04] blur-[120px]" />
+      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-8">
+        <motion.div
+          className="rounded-lg border-border/60 bg-card/80 p-6 shadow-sm lg:sticky lg:top-28"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            {t('landing.home.workflow.eyebrow')}
+          </p>
+          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+            {t('landing.home.workflow.title')}
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+            {t('landing.home.workflow.description')}
+          </p>
 
- <div className="relative grid gap-3 lg:grid-cols-5">
- {steps.map((step, i) => (
- <InteractiveWrapper key={step.name} hover="scale">
- <motion.article
- className="relative h-full rounded-[1.75rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 transition-all duration-300 hover:border-white/[0.14] hover:bg-white/[0.05]"
- initial={{ opacity: 0, x: -20 }}
- whileInView={{ opacity: 1, x: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, ease, delay: i * 0.1 }}
- >
- <div className="mb-8 flex items-center justify-between gap-3">
- <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border border-white/[0.10] bg-black/55 shadow-[0_0_18px_rgba(255,255,255,0.08)]">
- <span className="text-sm font-bold font-mono text-[var(--accent-blue)]">
- 0{i + 1}
- </span>
- </div>
- <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/28">
- Stage {i + 1}
- </span>
- </div>
- <h3 className="text-[0.88rem] font-semibold uppercase tracking-[0.14em] text-foreground/86 [font-family:var(--home-copy)]">
- {step.name}
- </h3>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/62 [font-family:var(--home-copy)]">
- {step.text}
- </p>
- </motion.article>
- </InteractiveWrapper>
- ))}
- </div>
- </div>
- </div>
- </div>
- </section>
- )
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-md border-border/60 bg-background/60 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                {t('landing.home.workflow.signalTitle')}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                {t('landing.home.workflow.signalDescription')}
+              </p>
+            </div>
+            <div className="rounded-md border-border/60 bg-background/60 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                {t('landing.home.workflow.cadenceTitle')}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                {t('landing.home.workflow.cadenceDescription')}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-5">
+          {steps.map((step, index) => (
+            <InteractiveWrapper key={String(step.name)} hover="scale">
+              <motion.article
+                className="flex h-full flex-col rounded-lg border-border/60 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.45,
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className="mb-6 flex items-center justify-between gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-sm font-semibold text-primary">
+                    0{index + 1}
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                    {t('landing.home.workflow.stage')} {index + 1}
+                  </span>
+                </div>
+                <h3 className="type-label text-foreground/90">{step.name}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {step.description}
+                </p>
+              </motion.article>
+            </InteractiveWrapper>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
 }

@@ -97,3 +97,27 @@
 - **RC:** The authenticated shell applies accent overrides from `lib/constants/dashboard-themes.ts`, `context/theme-provider.tsx`, and the inline bootstrap script in `app/[locale]/dashboard/layout.tsx`, so changing only `app/globals.css` is incomplete.
 - **R:** For any app-wide palette change, update globals, extended token files, shared primitives, dashboard theme palettes, the dashboard default theme, and the server bootstrap fallback together.
 - **E:** The Deep Purple pass only became consistent after `THEME_PALETTES.violet`, `DEFAULT_THEME`, and the dashboard layout bootstrap fallback were all aligned to the same palette.
+
+## Lesson 17: Home marketing sections should each own a single job
+- **M:** The home page repeated the dashboard product mock and stacked multiple sections that all re-pitched differentiation and AI value in slightly different ways.
+- **RC:** `Hero.tsx`, `DashboardPreview.tsx`, `FeaturesBento.tsx`, and `ComparisonSection.tsx` evolved independently, so the live `HomeContent.tsx` composition started repeating the same story beats instead of moving the user forward.
+- **R:** Audit the mounted section order from `HomeContent.tsx` and keep one section per narrative role: one hero product mock, one core workflow/capability section, one dedicated AI section, one proof section.
+- **E:** The cleanup removed the standalone `DashboardPreview`, deleted `ComparisonSection.tsx`, and trimmed repeated AI cards from `FeaturesBento.tsx` so `AIFeatures.tsx` is the only dedicated AI explainer.
+
+## Lesson 18: Client hooks in public sections must stay above empty-state returns
+- **M:** The deals spotlight auto-slide patch initially triggered a React hooks lint warning.
+- **RC:** `useEffect` was added after `if (deals.length === 0) return null`, which makes hook order conditional even when the logic feels harmless.
+- **R:** In client-rendered marketing/public components, declare hooks first, derive simple counts, and only return early after hook registration.
+- **E:** `BiggestDealsCarousel` was fixed by introducing `dealsCount`, moving the auto-slide `useEffect` above the empty-state return, and then deriving the active deal afterward.
+
+## Lesson 19: Shared typography only works if route sections stop freelancing their headings
+- **M:** The home redesign had a documented type scale in globals, but several section headings still used bespoke clamp sizes and ad-hoc font-family classes.
+- **RC:** Adding tokens alone does not create consistency if route-level sections keep custom heading recipes.
+- **R:** After defining a global type scale, do a second pass through mounted sections and replace one-off heading styles with shared utilities like `.type-h1`, `.type-h2`, `.type-h3`, `.type-h4`, and responsive `text-*` overrides only where necessary.
+- **E:** `Hero.tsx`, `ProblemStatement.tsx`, `HowItWorks.tsx`, `FeaturesBento.tsx`, `AnalysisDemo.tsx`, `AIFeatures.tsx`, `AudienceSegmentation.tsx`, `SocialProof.tsx`, `PricingSection.tsx`, and `FAQSection.tsx` were normalized onto the shared type classes.
+
+## Lesson 20: Public copy extraction must include every active locale, not just the primary two
+- **M:** The home restructuring moved a large amount of marketing copy into locale dictionaries.
+- **RC:** It is easy to update `en` and `fr` while forgetting secondary locales that still compile and ship.
+- **R:** When extracting public copy into i18n, update every locale entry point in the repo during the same pass. If full translation is not available, wire temporary English fallbacks explicitly so no locale crashes on missing keys.
+- **E:** `locales/en/landing.ts` and `locales/fr/landing.ts` received the new `landing.home.*` tree, while `locales/es.ts`, `locales/hi.ts`, `locales/it.ts`, and `locales/ja.ts` were kept compiling through the shared English fallback spread.

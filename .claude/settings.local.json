@@ -1,18 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git:*)",
-      "Bash(node:*)",
-      "Bash(ls:*)",
-      "Bash(for:*)",
-      "Bash(rm:*)",
       "Bash(npm:*)",
-      "Bash(which:*)",
-      "Bash(echo:*)",
-      "Bash(cp:*)",
-      "Bash(ln:*)"
+      "Bash(grep:*)",
+      "Bash(grep -rn \"const t = useI18n\\(\\)\" app/[locale]/\\\\\\(home\\\\\\)/components/)"
     ]
   },
+  "model": "sonnet",
+  "availableModels": [
+    "opus",
+    "sonnet",
+    "haiku"
+  ],
   "hooks": {
     "SessionStart": [
       {

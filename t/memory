@@ -1,6 +1,6 @@
 # Project Memory
 
-**Updated:** 2026-04-14
+**Updated:** 2026-04-15
 **Branch:** codex-obsidian-v3-redesign
 **Production URL:** https://qunt-edge.vercel.app
 
@@ -21,6 +21,30 @@
 - Core dark tokens now use plum-black backgrounds with purple accents (`--primary: oklch(0.6083 0.2172 297.1153)`)
 - Dashboard default theme is now `violet`, and `THEME_PALETTES.violet` maps to the same Deep Purple palette used by global tokens
 - Legacy gold/sage/cobalt hardcodes targeted in app code were removed from the shared theme path
+
+### Typography System
+- `app/layout.tsx` keeps `Geist` as the global sans font and mounts it through `--font-sans` with the fallback stack `system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`
+- `app/globals.css` is now the source of truth for the shared type tokens: `--type-display-*`, `--type-h1-*`, `--type-h2-*`, `--type-h3-*`, `--type-h4-*`, `--type-body-lg-*`, `--type-body-*`, `--type-body-sm-*`, `--type-label-*`, and `--type-overline-*`
+- The reusable utility classes are `.type-display`, `.type-h1`, `.type-h2`, `.type-h3`, `.type-h4`, `.type-body-lg`, `.type-body`, `.type-body-sm`, `.type-label`, and `.type-overline`
+- Home marketing sections now use the shared type classes instead of one-off clamp heading sizes, and dashboard/account/table numerics use `tabular-nums`
+
+### Home Page Structure
+- The live home route now keeps a single dashboard product mock inside `Hero.tsx`; the duplicate standalone `DashboardPreview` mount was removed from `HomeContent.tsx`
+- `ComparisonSection.tsx` was deleted because its differentiation copy overlapped with the live social-proof/capability sequence
+- Home section order now flows: Hero → ProblemStatement → HowItWorks → FeaturesBento → AnalysisDemo → AIFeatures → AudienceSegmentation → PropFirmsExplorer → LiveStatsStrip → SocialProof → Pricing → FAQ → FinalCTA
+- `FeaturesBento.tsx` now focuses on core workflow/platform capabilities only; the repeated AI feature grid was removed so `AIFeatures.tsx` remains the single dedicated AI pitch on the page
+- The mounted home copy and page metadata now come from locale dictionaries instead of hardcoded strings, with the main source of truth living under `locales/*/landing.ts`
+
+### Dashboard Surface Pattern
+- `dashboard-tab-shell.tsx` now acts as a simpler embedded shell instead of adding an extra decorative frame outside the mounted content
+- Accounts overview card groups now render as `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch gap-4`
+- `account-card.tsx` is now a full-height flex column surface with `mt-auto` on the action/footer block so rows stay aligned even when card content lengths differ
+- `trade-table-review.tsx` keeps the flatter screenshot-inspired shell and applies `tabular-nums` to financial columns
+
+### Deals Page Spotlight
+- `app/[locale]/(landing)/deals/components/deals-experience.tsx` now auto-rotates the “Today’s Biggest & Largest Deals!” spotlight every 5 seconds
+- Spotlight rotation pauses on hover and focus so copy buttons, CTAs, and arrows remain easy to use without fighting the timer
+- Manual dot indicators were added below the spotlight so users can jump directly to a specific featured deal
 
 ### Performance State — 200FPS Target
 - 0 repeat:Infinity, 0 filter:blur, 0 backdrop-blur, 0 transition-all, 0 cursor-tracking
@@ -44,7 +68,10 @@
 - `bun run build` = passes (176 static pages, ~5 min)
 - `bun run dev` = starts clean
 - `npm run typecheck` = passes after the Deep Purple theme pass
-- `npm run lint` = passes with 941 pre-existing warnings, 0 errors
+- direct verification of `node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/next typegen && node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/tsc --noEmit` = passes after the home-page structure cleanup
+- direct verification of `node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/next typegen && node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/tsc --noEmit` = passes after the deals spotlight auto-slide update
+- `npm run typecheck` = passes after the home/i18n/typography/dashboard layout pass
+- `npm run lint` = passes with 918 pre-existing warnings, 0 errors
 
 ## Uncommitted Changes
 - Bun build configuration (vercel.json, .nvmrc, package.json engines)
@@ -55,6 +82,11 @@
 - Sidebar rebalanced (flat list, unique icons)
 - Section padding standardized (all py-24)
 - Deep Purple theme applied across `app/globals.css`, `styles/tokens.css`, `styles/styleseed-tokens.css`, shared UI primitives, public chrome, and dashboard theme defaults
+- Home page narrative cleanup in `app/[locale]/(home)/components/HomeContent.tsx` and `FeaturesBento.tsx`, plus deletion of `app/[locale]/(home)/components/ComparisonSection.tsx`
+- Deals spotlight auto-slide update in `app/[locale]/(landing)/deals/components/deals-experience.tsx`
+- Home page copy extraction/i18n sync in `app/[locale]/(home)/**`, `app/[locale]/(landing)/components/{navbar,footer}.tsx`, and `locales/*/landing.ts`
+- Shared typography scale rollout across `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts`, and `components/ui/**`
+- Dashboard account/table shell cleanup in `dashboard-tab-shell.tsx`, `accounts-overview.tsx`, `account-card.tsx`, and `trade-table-review.tsx`
 
 ## Blockers
 - None — waiting for user to say "deploy"

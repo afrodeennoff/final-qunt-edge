@@ -34,7 +34,7 @@ export default async function LeaderboardPage({
   const entries = await getLeaderboardData(sortKey)
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1120px] px-6 py-20 sm:px-8">
         <Suspense fallback={<LeaderboardTableSkeleton />}>
           <LeaderboardContent initialEntries={entries} locale={locale} />

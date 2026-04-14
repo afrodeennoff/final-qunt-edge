@@ -1,120 +1,88 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { AlertTriangle, Brain, RotateCcw, ArrowRight } from 'lucide-react'
-import {
- MOTION_EASE,
- STAGGER_CARD,
- TYPO_MINOR,
- TYPO_EYEBROW,
-} from './_constants'
+import { AlertTriangle, ArrowRight, Brain, RotateCcw } from 'lucide-react'
+import { useTypedI18n } from '@/locales/client'
 
-const problems = [
- {
- icon: AlertTriangle,
- title: 'False Confidence',
- description:
- 'Positive PnL on a bad process is luck, not skill. Without execution auditing, winners reinforce bad habits.',
- },
- {
- icon: Brain,
- title: 'Decision Drift',
- description:
- 'Subtle shifts in risk, timing, and setup discipline compound silently until they become unrecoverable drawdowns.',
- },
- {
- icon: RotateCcw,
- title: 'No Performance Loop',
- description:
- 'Reviewing outcomes without auditing decisions means you never identify the root cause of underperformance.',
- },
-] as const
-
-type Problem = (typeof problems)[number]
-
-function ProblemCard({ problem }: { problem: Problem }) {
- const Icon = problem.icon
- return (
- <motion.div
- className="rounded-[1.75rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_18px_44px_-32px_rgba(0,0,0,0.9)]"
- whileHover={{ borderColor: 'var(--frost-border-strong)' }}
- transition={{ duration: 0.2 }}
- >
- <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[var(--accent-red)]/30 bg-[rgba(255,32,71,0.06)]">
- <Icon className="h-4 w-4 text-[var(--accent-red)]" />
- </div>
- <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
- {problem.title}
- </h3>
- <p className="mt-3 text-[0.88rem] leading-[1.7] text-foreground/58 [font-family:var(--home-copy)]">
- {problem.description}
- </p>
- </motion.div>
- )
-}
+const problemIcons = [AlertTriangle, Brain, RotateCcw]
 
 export default function ProblemStatement() {
- return (
- <section className="relative px-4 py-24 sm:px-6 sm:py-24 lg:px-8 lg:py-24">
- <div className="mx-auto max-w-[1360px]">
- <div className="grid grid-cols-1 gap-10 rounded-[2rem] border border-white/[0.08] bg-[oklch(0.03_0.004_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_80px_-44px_rgba(0,0,0,0.95)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 lg:p-8">
- <motion.div
- className="flex flex-col justify-center rounded-[1.75rem] border border-white/[0.06] bg-white/[0.03] p-6"
- initial={{ opacity: 0, x: -24 }}
- whileInView={{ opacity: 1, x: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.6, ease: MOTION_EASE as unknown as number[] }}
- >
- <p className={`${TYPO_EYEBROW} text-foreground/34 mb-3 [font-family:var(--home-copy)]`}>
- The Gap
- </p>
- <h2 className={`${TYPO_MINOR} text-foreground/95 leading-tight [font-family:var(--home-display)]`}>
- Results tell you if you were paid,{' '}
- <span className="bg-gradient-to-r from-foreground/60 to-foreground/30 bg-clip-text text-transparent">
- not if you were good.
- </span>
- </h2>
- <p className="mt-5 max-w-lg text-[0.98rem] leading-[1.8] tracking-[-0.01em] text-foreground/56 [font-family:var(--home-copy)]">
- Average traders celebrate outcomes. Elite traders audit decisions.
- The difference between a lucky streak and a sustainable edge is
- execution discipline — and most traders have no way to measure it.
- </p>
+  const t = useTypedI18n()
 
- <div className="mt-6 rounded-[1.5rem] border border-primary/25 bg-primary/10 p-5">
- <div className="flex items-start gap-3">
- <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
- <div>
- <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-primary mb-1">
- Mindset Upgrade
- </p>
- <p className="text-[0.88rem] leading-[1.7] text-foreground/78 [font-family:var(--home-copy)]">
- Promote process to first-class data. When execution quality is
- visible, improvement becomes inevitable.
- </p>
- </div>
- </div>
- </div>
- </motion.div>
+  const problems = [1, 2, 3].map((index) => ({
+    icon: problemIcons[index - 1],
+    title: t(`landing.home.problem.card${index}Title`),
+    description: t(`landing.home.problem.card${index}Description`),
+  }))
 
- <div className="flex flex-col gap-3">
- {problems.map((problem, i) => (
- <motion.div
- key={problem.title}
- initial={{ opacity: 0, y: 16 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{
- duration: 0.5,
- delay: i * 0.08,
- ease: MOTION_EASE as unknown as number[],
- }}
- >
- <ProblemCard problem={problem} />
- </motion.div>
- ))}
- </div>
- </div>
- </div>
- </section>
- )
+  return (
+    <section className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+      {/* Atmospheric glow orb */}
+      <div className="pointer-events-none absolute -right-48 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/[0.04] blur-[120px]" />
+      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
+        <motion.div
+          className="rounded-lg border-border/60 bg-card/80 p-6 shadow-sm md:p-8"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            {t('landing.home.problem.eyebrow')}
+          </p>
+          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+            {t('landing.home.problem.title')}{' '}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t('landing.home.problem.accent')}
+            </span>
+          </h2>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            {t('landing.home.problem.description')}
+          </p>
+
+          <div className="mt-8 rounded-md border border-primary/25 bg-primary/10 p-5">
+            <div className="flex items-start gap-3">
+              <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-primary" />
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
+                  {t('landing.home.problem.mindsetEyebrow')}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                  {t('landing.home.problem.mindsetDescription')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid gap-4">
+          {problems.map((problem, index) => {
+            const Icon = problem.icon
+            return (
+              <motion.article
+                key={String(problem.title)}
+                className="rounded-lg border-border/60 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md"
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.45,
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-md border border-destructive/20 bg-destructive/10 text-destructive">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <h3 className="type-h4 mt-4 text-foreground">{problem.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {problem.description}
+                </p>
+              </motion.article>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
 }

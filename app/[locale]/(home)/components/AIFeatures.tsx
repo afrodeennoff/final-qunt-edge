@@ -1,189 +1,119 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Brain, Radar, ShieldAlert, Sparkles, ArrowRight } from 'lucide-react'
 import {
- Brain,
- Radar,
- Sparkles,
- ShieldAlert,
- ArrowRight,
-} from 'lucide-react'
-import {
- MotionSection,
- MotionStagger,
- MotionStaggerItem,
+  MotionSection,
+  MotionStagger,
+  MotionStaggerItem,
 } from '@/components/animation/enhanced-motion'
-import {
- MOTION_EASE,
- STAGGER_CARD,
- BORDER_SECTION,
- TYPO_MINOR,
- TYPO_EYEBROW,
-} from './_constants'
+import { useTypedI18n } from '@/locales/client'
 
-const ease = MOTION_EASE as unknown as number[]
-
-const aiFeatures = [
- {
- icon: Brain,
- title: 'AI Session Debrief',
- description:
- 'Creates concise recaps of what worked, what broke, and what to adjust next session — turning raw trades into coaching feedback.',
- colSpan: 'md:col-span-2',
- accent: 'blue' as const,
- },
- {
- icon: Radar,
- title: 'Behavior Drift Radar',
- description:
- 'Flags subtle shifts in risk behavior and setup quality before they become costly drawdowns.',
- colSpan: 'md:col-span-1',
- accent: 'green' as const,
- },
- {
- icon: ShieldAlert,
- title: 'Risk Assessment',
- description:
- 'Real-time risk scoring that evaluates sizing, frequency, and emotional variance against your personal thresholds.',
- colSpan: 'md:col-span-1',
- accent: 'orange' as const,
- },
- {
- icon: Sparkles,
- title: 'Smart Insights & Briefs',
- description:
- 'Auto-compiles weekly performance reports, playbook templates, and intervention alerts for structured self-review and mentorship.',
- colSpan: 'md:col-span-2',
- accent: 'blue' as const,
- },
-] as const
-
-type AIFeature = (typeof aiFeatures)[number]
-
-const ACCENT_MAP = {
- blue: {
- badge: 'border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]',
- icon: 'bg-[var(--accent-blue-subtle)] border-[var(--accent-blue-border)] text-[var(--accent-blue)]',
- },
- green: {
- badge: 'border-[var(--accent-green-border)] bg-[var(--accent-green-subtle)] text-[var(--accent-green)]',
- icon: 'bg-[var(--accent-green-subtle)] border-[var(--accent-green-border)] text-[var(--accent-green)]',
- },
- orange: {
- badge: 'border-[var(--accent-orange-border)] bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)]',
- icon: 'bg-[var(--accent-orange-subtle)] border-[var(--accent-orange-border)] text-[var(--accent-orange)]',
- },
-} as const
-
-function AIFeatureCard({ feature }: { feature: AIFeature }) {
- const Icon = feature.icon
- const accent = ACCENT_MAP[feature.accent]
-
- return (
- <div className="relative h-full overflow-hidden rounded-[1.8rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 transition-all duration-300 hover:border-white/[0.14] hover:bg-white/[0.05]">
- <div className="mb-5 inline-flex items-center justify-center rounded-xl w-12 h-12">
- <div className="absolute inset-0 rounded-xl bg-[oklch(0.08_0_0)] blur-sm" />
- <div className={`relative inline-flex items-center justify-center rounded-[1rem] w-12 h-12 border ${accent.icon}`}>
- <Icon className="w-5 h-5" />
- </div>
- </div>
-
- <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${accent.badge}`}>
- Capability
- </span>
-
- <h3 className="mt-4 text-[1.1rem] font-semibold tracking-[-0.02em] text-foreground/95 [font-family:var(--home-display)]">
- {feature.title}
- </h3>
- <p className="mt-3 text-[0.92rem] leading-[1.75] text-muted-foreground/70 [font-family:var(--home-copy)]">
- {feature.description}
- </p>
-
- <div className="mt-6 flex items-center gap-1.5 text-[0.74rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground/54 transition-colors hover:text-foreground/95">
- <ArrowRight className="w-3.5 h-3.5" />
- <span>Inspect signal</span>
- </div>
- </div>
- )
-}
+const icons = [Brain, Radar, ShieldAlert, Sparkles]
 
 export default function AIFeatures() {
- return (
- <MotionSection className={BORDER_SECTION}>
- <div className="mx-auto max-w-[1360px] px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
- <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
- <motion.div
- className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_26px_70px_-44px_rgba(0,0,0,0.96)] lg:p-7"
- initial={{ opacity: 0, y: 16 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, ease }}
- >
- <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.06),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
- <div className="relative">
- <p className={`${TYPO_EYEBROW} mb-4 text-muted-foreground/46 [font-family:var(--home-copy)]`}>
- AI-Powered
- </p>
- <h2 className={`${TYPO_MINOR} text-foreground/95 leading-[0.94] [font-family:var(--home-display)]`}>
- A private analyst layer that studies every trade like a desk review.
- </h2>
- <p className="mt-5 max-w-xl text-[0.98rem] leading-[1.8] text-muted-foreground/70">
- Qunt Edge uses AI as a structured review engine, not a gimmick. Every recommendation is built to support a more disciplined process, stronger feedback loops, and clearer weekly decisions.
- </p>
+  const t = useTypedI18n()
 
- <div className="mt-8 grid gap-3 sm:grid-cols-2">
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
- <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Reason trail</p>
- <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
- Recommendations stay explainable, reviewable, and easy to challenge.
- </p>
- </div>
- <div className="rounded-[1.5rem] border border-white/[0.08] bg-white/[0.03] p-4">
- <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Live context</p>
- <p className="mt-2 text-sm leading-[1.7] text-foreground/60">
- Signals inherit your rules, risk shape, and execution patterns instead of generic advice.
- </p>
- </div>
- </div>
+  const features = [1, 2, 3, 4].map((index) => ({
+    icon: icons[index - 1],
+    title: t(`landing.home.ai.feature${index}Title`, {}),
+    description: t(`landing.home.ai.feature${index}Description`, {}),
+    colSpan: index === 1 || index === 4 ? 'md:col-span-2' : 'md:col-span-1',
+  }))
 
- <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent-blue)]">
- <Sparkles className="h-3.5 w-3.5" />
- Explainable AI, tuned for traders
- </div>
- </div>
- </motion.div>
+  return (
+    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-20 lg:px-8 xl:py-24">
+      {/* Atmospheric glow orbs */}
+      <div className="pointer-events-none absolute -left-32 top-1/4 h-[420px] w-[420px] rounded-full bg-accent/[0.04] blur-[120px]" />
+      <div className="pointer-events-none absolute right-0 bottom-1/4 h-[380px] w-[380px] rounded-full bg-primary/[0.03] blur-[120px]" />
+      <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
+        <motion.div
+          className="rounded-lg border-border/60 bg-card/80 p-6 shadow-sm md:p-8"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            {t('landing.home.ai.eyebrow')}
+          </p>
+          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+            {t('landing.home.ai.title')}
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+            {t('landing.home.ai.description')}
+          </p>
 
- <div className="space-y-4">
- <MotionStagger
- className="grid grid-cols-1 gap-3 md:grid-cols-3 lg:gap-4"
- delay={STAGGER_CARD}
- >
- {aiFeatures.map((feature) => (
- <MotionStaggerItem key={feature.title} className={feature.colSpan}>
- <AIFeatureCard feature={feature} />
- </MotionStaggerItem>
- ))}
- </MotionStagger>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-md border-border/60 bg-background/60 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                {t('landing.home.ai.reasonTrailTitle')}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                {t('landing.home.ai.reasonTrailDescription')}
+              </p>
+            </div>
+            <div className="rounded-md border-border/60 bg-background/60 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                {t('landing.home.ai.liveContextTitle')}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/80">
+                {t('landing.home.ai.liveContextDescription')}
+              </p>
+            </div>
+          </div>
 
- <motion.div
- className="rounded-[1.8rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-5 shadow-[0_0_0_0.5px_rgba(180,210,255,0.05)] sm:p-6"
- initial={{ opacity: 0, y: 12 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, ease, delay: 0.4 }}
- >
- <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
- <p className="text-sm leading-[1.8] text-muted-foreground/68">
- AI decisions stay anchored to a transparent reason trail, so every intervention can be reviewed alongside the raw trade evidence.
- </p>
- <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-[var(--accent-blue-border)] bg-[var(--accent-blue-subtle)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--accent-blue)]">
- Explainable AI
- </span>
- </div>
- </motion.div>
- </div>
- </div>
- </div>
- </MotionSection>
- )
+          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/40 hover:brightness-110">
+            <Sparkles className="h-3.5 w-3.5" />
+            {t('landing.home.ai.badge')}
+          </div>
+        </motion.div>
+
+        <div className="space-y-4">
+          <MotionStagger className="grid grid-cols-1 gap-4 md:grid-cols-3" delay={0.08}>
+            {features.map((feature) => {
+              const Icon = feature.icon
+              return (
+                <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
+                  <article className="flex h-full flex-col rounded-lg border-border/60 bg-card/70 p-5 shadow-sm transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="mt-4 inline-flex w-fit items-center rounded-full border-border/60 bg-background/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                      {t('landing.home.ai.capabilityLabel')}
+                    </span>
+                    <h3 className="type-h4 mt-4 text-foreground">{feature.title}</h3>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                      {feature.description}
+                    </p>
+                    <div className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-primary transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-primary/80">
+                      <ArrowRight className="h-3.5 w-3.5" />
+                      {t('landing.home.ai.inspectSignal')}
+                    </div>
+                  </article>
+                </MotionStaggerItem>
+              )
+            })}
+          </MotionStagger>
+
+          <motion.div
+            className="rounded-lg border-border/60 bg-card/70 p-5 shadow-sm"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {t('landing.home.ai.footerDescription')}
+              </p>
+              <span className="inline-flex w-fit shrink-0 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/40 hover:brightness-110">
+                {t('landing.home.ai.footerBadge')}
+              </span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </MotionSection>
+  )
 }

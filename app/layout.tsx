@@ -1,5 +1,5 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next'
+import './globals.css'
 import {
   Cormorant_Garamond,
   Geist,
@@ -8,189 +8,182 @@ import {
   Outfit,
   Poppins,
   Roboto,
-} from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import ScrollLockFixLazy from "@/components/lazy/scroll-lock-fix-lazy";
-import { shouldEnforceDarkOnlySurfaces } from "@/lib/feature-flags";
-import { getUiVariant } from "@/lib/ui-v2";
-import { getSiteOrigin } from "@/lib/site-url";
+} from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import ScrollLockFixLazy from '@/components/lazy/scroll-lock-fix-lazy'
+import { shouldEnforceDarkOnlySurfaces } from '@/lib/feature-flags'
+import { getUiVariant } from '@/lib/ui-v2'
+import { getSiteOrigin } from '@/lib/site-url'
 
-const siteOrigin = getSiteOrigin();
+const siteOrigin = getSiteOrigin()
 const ROOT_DESCRIPTION =
-  "Qunt Edge is a trading journal and analytics platform for discretionary traders, with structured post-session review, performance breakdowns, and team workflows.";
+  'Qunt Edge is a trading journal and analytics platform for discretionary traders, with structured post-session review, performance breakdowns, and team workflows.'
 
 const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
   preload: true,
-  fallback: ["system-ui", "sans-serif"],
-});
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+})
 
 const fontSerif = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-serif',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
   preload: false,
-  fallback: ["Georgia", "serif"],
-});
+  fallback: ['Georgia', 'serif'],
+})
 
 const fontMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
   preload: true,
-  fallback: ["Menlo", "monospace"],
-});
+  fallback: ['Menlo', 'monospace'],
+})
 
 const fontDmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-dm-sans",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
   preload: false,
-  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-});
+  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+})
 
 const fontOutfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["500", "600"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  weight: ['500', '600'],
+  display: 'swap',
   preload: false,
-  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-});
+  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+})
 
 const fontPoppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-poppins",
-  weight: ["500"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
   preload: false,
-  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-});
+  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+})
 
 const fontRoboto = Roboto({
-  subsets: ["latin"],
-  variable: "--font-roboto",
-  weight: ["400", "500", "600"],
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-roboto',
+  weight: ['400', '500', '600'],
+  display: 'swap',
   preload: false,
-  fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-});
+  fallback: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+})
 
 const siteMetadata: Metadata = {
   metadataBase: new URL(siteOrigin),
   title: {
-    default: "Qunt Edge",
-    template: "%s | Qunt Edge",
+    default: 'Qunt Edge',
+    template: '%s | Qunt Edge',
   },
-  description:
-    ROOT_DESCRIPTION,
+  description: ROOT_DESCRIPTION,
   keywords: [
-    "trading journal",
-    "best trading journal",
-    "trading analytics",
-    "prop firm journal",
-    "trading performance review",
-    "Qunt Edge",
+    'trading journal',
+    'best trading journal',
+    'trading analytics',
+    'prop firm journal',
+    'trading performance review',
+    'Qunt Edge',
   ],
   alternates: {
     canonical: siteOrigin,
     languages: {
-      "en-US": siteOrigin,
-      "fr-FR": `${siteOrigin}/fr`,
+      'en-US': siteOrigin,
+      'fr-FR': `${siteOrigin}/fr`,
     },
   },
   openGraph: {
-    title: "Qunt Edge",
-    description:
-      ROOT_DESCRIPTION,
+    title: 'Qunt Edge',
+    description: ROOT_DESCRIPTION,
     url: siteOrigin,
-    siteName: "Qunt Edge",
-    type: "website",
-    locale: "en-US",
+    siteName: 'Qunt Edge',
+    type: 'website',
+    locale: 'en-US',
     images: [
       {
         url: `${siteOrigin}/opengraph-image.png`,
         width: 1200,
         height: 630,
-        alt: "Qunt Edge Open Graph Image",
+        alt: 'Qunt Edge Open Graph Image',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Qunt Edge",
-    description:
-      ROOT_DESCRIPTION,
+    card: 'summary_large_image',
+    title: 'Qunt Edge',
+    description: ROOT_DESCRIPTION,
     images: [`${siteOrigin}/twitter-image.png`],
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
     ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
     other: [
-      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "black" },
+      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: 'black' },
       {
-        rel: "android-chrome",
-        sizes: "192x192",
-        url: "/android-chrome-192x192.png",
+        rel: 'android-chrome',
+        sizes: '192x192',
+        url: '/android-chrome-192x192.png',
       },
       {
-        rel: "android-chrome",
-        sizes: "512x512",
-        url: "/android-chrome-512x512.png",
+        rel: 'android-chrome',
+        sizes: '512x512',
+        url: '/android-chrome-512x512.png',
       },
     ],
   },
-  manifest: "/manifest.json",
+  manifest: '/manifest.json',
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  other: { google: "notranslate" },
-  authors: [{ name: "Qunt Edge Team" }],
-  creator: "Qunt Edge",
-  publisher: "Qunt Edge",
+  other: { google: 'notranslate' },
+  authors: [{ name: 'Qunt Edge Team' }],
+  creator: 'Qunt Edge',
+  publisher: 'Qunt Edge',
   formatDetection: { email: false, address: false, telephone: false },
-};
+}
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  viewportFit: "cover",
-  themeColor: "black",
-};
-
-export async function generateMetadata(): Promise<Metadata> {
-  return siteMetadata;
+  viewportFit: 'cover',
+  themeColor: 'black',
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const isProduction = process.env.NODE_ENV === "production";
-  const isVercelRuntime = process.env.VERCEL === "1";
-  const enableVercelInsights = isProduction && isVercelRuntime;
-  const uiVariant = getUiVariant();
-  const darkRootClass = shouldEnforceDarkOnlySurfaces() ? "dark" : "";
+export async function generateMetadata(): Promise<Metadata> {
+  return siteMetadata
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const isProduction = process.env.NODE_ENV === 'production'
+  const isVercelRuntime = process.env.VERCEL === '1'
+  const enableVercelInsights = isProduction && isVercelRuntime
+  const uiVariant = getUiVariant()
+  const darkRootClass = shouldEnforceDarkOnlySurfaces() ? 'dark' : ''
 
   return (
     <html
@@ -228,24 +221,19 @@ export default async function RootLayout({
           </Script>
         )}*/}
 
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link
           rel="apple-touch-icon-precomposed"
           sizes="180x180"
           href="/apple-touch-icon-precomposed.png"
         />
-
       </head>
       <body
-        className="bg-background font-sans antialiased text-foreground"
+        className="bg-background font-sans type-body antialiased text-foreground"
         data-ui-variant={uiVariant}
       >
-        <a 
-          href="#main-content" 
+        <a
+          href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
         >
           Skip to main content
@@ -253,10 +241,8 @@ export default async function RootLayout({
         <ScrollLockFixLazy />
         {enableVercelInsights ? <SpeedInsights /> : null}
         {enableVercelInsights ? <Analytics /> : null}
-        <main id="main-content">
-          {children}
-        </main>
+        <main id="main-content">{children}</main>
       </body>
     </html>
-  );
+  )
 }

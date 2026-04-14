@@ -8,10 +8,10 @@ import type { LeaderboardEntry } from '../data/leaderboard-query'
 
 /* ─── Shared constants ─── */
 
-const FB = 'border-[hsl(var(--border)/0.36)]' // frost border
-const FA = 'border-[hsl(var(--border)/0.28)]' // frost border alt (row dividers)
-const FS = 'bg-[hsl(var(--card)/0.34)]' // frost surface
-const FR = { boxShadow: '0 24px 48px -32px rgba(0, 0, 0, 0.72)' } // panel shadow
+const FB = 'border-white/[0.08]' // frost border
+const FA = 'border-white/[0.06]' // frost border alt (row dividers)
+const FS = 'bg-white/[0.040]' // frost surface
+const FR = { boxShadow: '0 1px 2px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.28), 0 20px 48px -8px rgba(0,0,0,0.85)' } // panel shadow
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -32,10 +32,10 @@ function profileHref(locale: string, userId: string): string {
 }
 
 function rankClasses(rank: number): string {
-  if (rank === 1) return 'border-[rgba(255,128,31,0.35)] bg-[rgba(255,128,31,0.1)] text-[#ff801f]'
-  if (rank === 2) return 'border-[hsl(var(--border)/0.4)] bg-[hsl(var(--card)/0.42)] text-[#a1a4a5]'
-  if (rank === 3) return 'border-[rgba(255,197,61,0.3)] bg-[rgba(255,197,61,0.08)] text-[#ffc53d]'
-  return `${FB} ${FS} text-[#a1a4a5]`
+  if (rank === 1) return 'border-orange-500/35 bg-orange-500/10 text-orange-400'
+  if (rank === 2) return 'border-white/[0.10] bg-white/[0.050] text-muted-foreground'
+  if (rank === 3) return 'border-amber-500/30 bg-amber-500/8 text-amber-400'
+  return `${FB} ${FS} text-muted-foreground`
 }
 
 /* ─── Skeleton ─── */
@@ -69,7 +69,7 @@ export function LeaderboardTableSkeleton() {
         <table className="min-w-[1060px] w-full border-separate border-spacing-0">
           <thead>
             <tr>{['Rank', 'Trader', 'Monthly PnL', 'Win rate', 'Return', 'Trades', 'Accounts', 'Profile'].map((h) => (
-              <th key={h} className={`border-b ${FA} px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]`}>{h}</th>
+              <th key={h} className={`border-b ${FA} px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70`}>{h}</th>
             ))}</tr>
           </thead>
           <tbody>
@@ -103,18 +103,18 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
     <div className={`overflow-hidden rounded-2xl border ${FB} bg-black`} style={FR}>
       <div className={`flex flex-wrap items-end justify-between gap-4 border-b ${FA} px-6 py-6`}>
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]">Leaderboard table</p>
-          <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#f0f0f0]">All visible traders</h3>
-          <p className="mt-2 max-w-2xl text-[13px] leading-[1.5] text-[#a1a4a5]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">Leaderboard table</p>
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-foreground/95">All visible traders</h3>
+          <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
             Every public trader in a single list — easy to scan, each row links to the full trader profile.
           </p>
         </div>
-        {isLoading ? <span className="text-[13px] text-[#7a7a7a]">Updating…</span> : null}
+        {isLoading ? <span className="text-[13px] text-muted-foreground/70">Updating…</span> : null}
       </div>
 
       {entries.length === 0 ? (
         <div className="px-6 py-12">
-          <div className={`rounded-xl border border-dashed ${FB} ${FS} p-8 text-center text-[13px] text-[#a1a4a5]`}>
+          <div className={`rounded-xl border border-dashed ${FB} ${FS} p-8 text-center text-[13px] text-muted-foreground`}>
             No public traders are available yet. Once users opt in from Trader Profile, they will appear here.
           </div>
         </div>
@@ -132,7 +132,7 @@ export const LeaderboardTable = React.memo(function LeaderboardTable({
             <table className="min-w-[1060px] w-full border-separate border-spacing-0">
               <thead>
                 <tr>{['Rank', 'Trader', 'Monthly PnL', 'Win rate', 'Return', 'Trades', 'Accounts', 'Profile'].map((h) => (
-                  <th key={h} className={`border-b ${FA} px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]`}>{h}</th>
+                  <th key={h} className={`border-b ${FA} px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70`}>{h}</th>
                 ))}</tr>
               </thead>
               <tbody>
@@ -162,13 +162,13 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             #{entry.rank}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold tracking-[-0.02em] text-[#f0f0f0]">{entry.username}</p>
-            <p className="truncate text-[11px] uppercase tracking-[0.16em] text-[#7a7a7a]">
+            <p className="truncate text-[15px] font-semibold tracking-tight text-foreground/95">{entry.username}</p>
+            <p className="truncate text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
               Top instrument {entry.topInstrument ?? '—'}
             </p>
           </div>
         </div>
-        <p className={`text-sm font-semibold ${positive ? 'text-[#11ff99]' : 'text-[#ff2047]'}`}>
+        <p className={`text-sm font-semibold ${positive ? 'text-emerald-400' : 'text-red-400'}`}>
           {positive ? '+' : ''}{formatCurrency(entry.monthlyPnl)}
         </p>
       </div>
@@ -181,15 +181,15 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
           ['Accounts', `${entry.accountCount}`],
         ].map(([label, val]) => (
           <div key={label} className={`rounded-lg border ${FB} ${FS} px-3 py-2.5`}>
-            <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#7a7a7a]">{label}</dt>
-            <dd className="mt-1 text-[14px] font-medium text-[#f0f0f0]">{val}</dd>
+            <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground/70">{label}</dt>
+            <dd className="mt-1 text-[14px] font-medium text-foreground/95">{val}</dd>
           </div>
         ))}
       </dl>
 
       <Link
         href={profileLink}
-        className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border ${FB} bg-transparent px-3 py-2 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+        className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border ${FB} bg-transparent px-3 py-2 text-[13px] font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/55`}
         aria-label={`View ${entry.username} profile`}
       >
         View profile
@@ -206,27 +206,27 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
   const profileLink = profileHref(locale, entry.userId)
 
   return (
-    <tr className="group transition-colors hover:bg-accent/35">
+    <tr className="group transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/35">
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
         <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold ${rankClasses(entry.rank)}`}>
           #{entry.rank}
         </span>
       </td>
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
-        <p className="text-[15px] font-semibold tracking-[-0.02em] text-[#f0f0f0]">{entry.username}</p>
-        <p className="text-[11px] uppercase tracking-[0.16em] text-[#7a7a7a]">Top instrument {entry.topInstrument ?? '—'}</p>
+        <p className="text-[15px] font-semibold tracking-tight text-foreground/95">{entry.username}</p>
+        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">Top instrument {entry.topInstrument ?? '—'}</p>
       </td>
-      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-semibold ${positive ? 'text-[#11ff99]' : 'text-[#ff2047]'}`}>
+      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-semibold ${positive ? 'text-emerald-400' : 'text-red-400'}`}>
         {positive ? '+' : ''}{formatCurrency(entry.monthlyPnl)}
       </td>
-      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-[#f0f0f0]`}>{entry.winRate}%</td>
-      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-[#f0f0f0]`}>{entry.returnPct}%</td>
-      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-[#f0f0f0]`}>{entry.totalTrades}</td>
-      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-[#f0f0f0]`}>{entry.accountCount}</td>
+      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-foreground/95`}>{entry.winRate}%</td>
+      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-foreground/95`}>{entry.returnPct}%</td>
+      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-foreground/95`}>{entry.totalTrades}</td>
+      <td className={`border-b ${FA} px-6 py-4 align-middle text-sm font-medium text-foreground/95`}>{entry.accountCount}</td>
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
         <Link
           href={profileLink}
-          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-[5px] text-[13px] font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/55`}
           aria-label={`View ${entry.username} profile`}
         >
           View profile
