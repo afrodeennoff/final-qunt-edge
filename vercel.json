@@ -22,10 +22,5 @@
       "path": "/api/cron/chat-retention",
       "schedule": "0 3 * * *"
     }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs24.x"
-    }
-  }
+  ]
 }
