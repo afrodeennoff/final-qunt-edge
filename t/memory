@@ -13,7 +13,7 @@
 - **Prisma**: 7.7.0
 - **Build**: `bun run build` → sync-stack → robust-next-build
 - **Vercel**: `installCommand: bun install`, `buildCommand: bun run build`, Node 24.x (project settings auto-detect)
-- **Heap**: 4096MB max on 16GB local machines (8192 causes SIGKILL)
+- **Heap**: 4096MB max on 16GB machines (8192 causes SIGKILL)
 - **Workers**: 1 CPU for local builds (2 CPUs on Vercel with more RAM)
 
 ### Visual Design System — "Deep Purple"
@@ -34,9 +34,7 @@
 - Home section order now flows: Hero → ProblemStatement → HowItWorks → FeaturesBento → AnalysisDemo → AIFeatures → AudienceSegmentation → PropFirmsExplorer → LiveStatsStrip → SocialProof → Pricing → FAQ → FinalCTA
 - `FeaturesBento.tsx` now focuses on core workflow/platform capabilities only; the repeated AI feature grid was removed so `AIFeatures.tsx` remains the single dedicated AI pitch on the page
 - The mounted home copy and page metadata now come from locale dictionaries instead of hardcoded strings, with the main source of truth living under `locales/*/landing.ts`
-- `Hero.tsx` now uses a cleaner split layout: editorial copy and capability cards on the left, framed `DashboardPreview` on the right, and broker integrations promoted into a compact preview-adjacent tray
 - `Hero.tsx` now follows a more restrained product-first launch layout: centered headline and CTA block first, then an asymmetrical hero card stage with the large `DashboardPreview` anchored on the left and stacked support cards on the right
-- The Cal.com-inspired hero pass intentionally kept Qunt Edge's existing palette, but borrowed the calmer composition, generous whitespace, tighter display treatment, softer card containment, and screenshot-first hierarchy
 
 ### Dashboard Surface Pattern
 - `dashboard-tab-shell.tsx` now acts as a simpler embedded shell instead of adding an extra decorative frame outside the mounted content
@@ -45,7 +43,7 @@
 - `trade-table-review.tsx` keeps the flatter screenshot-inspired shell and applies `tabular-nums` to financial columns
 
 ### Deals Page Spotlight
-- `app/[locale]/(landing)/deals/components/deals-experience.tsx` now auto-rotates the “Today’s Biggest & Largest Deals!” spotlight every 5 seconds
+- `app/[locale]/(landing)/deals/components/deals-experience.tsx` now auto-rotates the "Today's Biggest & Largest Deals!" spotlight every 5 seconds
 - Spotlight rotation pauses on hover and focus so copy buttons, CTAs, and arrows remain easy to use without fighting the timer
 - Manual dot indicators were added below the spotlight so users can jump directly to a specific featured deal
 
@@ -57,6 +55,21 @@
 - Navbar no longer has entrance animation — renders immediately for reliability
 - `loading.tsx` now shows a visible spinner instead of `null` during soft navigation transitions
 - All hero entrance classes respect `prefers-reduced-motion: reduce`
+
+### Import Trade Save Path — Audited & Functional
+- `saveTradesAction` in `server/trades.ts` has proper Zod validation, deterministic UUID dedup, account creation, and cache invalidation
+- CSV/manual/Tradovate/Thor/MT5/IBKR PDF all flow through `saveTradesForResolvedUser`
+- `resolveWritableUserId` handles legacy auth mapping divergence (prefers `auth_user_id` mapped row)
+- Common failure modes: future dates (rejected), missing account numbers (falls back to single known account), duplicate trades (returns `DUPLICATE_TRADES`)
+- 16 import platforms registered in `config/platforms.tsx`: 3 direct sync, 2 intelligent, 9 CSV, 1 manual
+
+### Admin Panel — Coupon/Deal Management (EXPANDED)
+- `PropFirmCouponInput` type expanded from 2 fields to 11: `code`, `discountPercent`, `challengeFee`, `claimUrl`, `description`, `drawdownType`, `payoutModel`, `platform`, `isActive`, `startsAt`, `expiresAt`
+- Admin coupon forms on both `/admin/propfirms/[id]` and `/admin/coupons` now expose all schema fields
+- Deals data mapping (`server/deals.ts`) now uses coupon-level overrides for platform/payoutModel/drawdownType when set, falling back to firm-level values
+- Admin can now fully manage: prop firm CRUD (all fields), coupon/deal CRUD (all fields including discount %, coupon code, claim/affiliate URL, challenge fee, dates, active toggle)
+- Blog CRUD fully functional (no rich text editor)
+- Review moderation fully functional
 
 ### Performance State — 200FPS Target
 - 0 repeat:Infinity, 0 filter:blur, 0 backdrop-blur, 0 transition-all, 0 cursor-tracking
@@ -79,31 +92,11 @@
 - `npx tsc --noEmit` = 0 errors
 - `bun run build` = passes (176 static pages, ~5 min)
 - `bun run dev` = starts clean
-- `npm run typecheck` = passes after the Deep Purple theme pass
-- direct verification of `node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/next typegen && node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/tsc --noEmit` = passes after the home-page structure cleanup
-- direct verification of `node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/next typegen && node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/tsc --noEmit` = passes after the deals spotlight auto-slide update
-- `npm run typecheck` = passes after the home/i18n/typography/dashboard layout pass
-- `npm run lint` = passes with 918 pre-existing warnings, 0 errors
-- `npm run typecheck` = passes after the dashboard chrome cleanup
-- targeted ESLint on dashboard chrome + major subpage shell files = 0 errors, complexity warnings only
+- `npm run typecheck` = passes
+- `npm run lint` = passes with pre-existing complexity warnings, 0 errors
 
 ## Uncommitted Changes
-- Bun build configuration (vercel.json, .nvmrc, package.json engines)
-- Node 22 upgrade (required for Prisma 7.x)
-- 20 loading.tsx created for missing routes
-- .env.example updated (+31 env vars)
-- Home page cobalt tint removed (neutral white surfaces)
-- Sidebar rebalanced (flat list, unique icons)
-- Section padding standardized (all py-24)
-- Deep Purple theme applied across `app/globals.css`, `styles/tokens.css`, `styles/styleseed-tokens.css`, shared UI primitives, public chrome, and dashboard theme defaults
-- Home page narrative cleanup in `app/[locale]/(home)/components/HomeContent.tsx` and `FeaturesBento.tsx`, plus deletion of `app/[locale]/(home)/components/ComparisonSection.tsx`
-- Deals spotlight auto-slide update in `app/[locale]/(landing)/deals/components/deals-experience.tsx`
-- Home page copy extraction/i18n sync in `app/[locale]/(home)/**`, `app/[locale]/(landing)/components/{navbar,footer}.tsx`, and `locales/*/landing.ts`
-- Shared typography scale rollout across `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts`, and `components/ui/**`
-- Dashboard account/table shell cleanup in `dashboard-tab-shell.tsx`, `accounts-overview.tsx`, `account-card.tsx`, and `trade-table-review.tsx`
-- Hero layout refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx`
-- Cal.com/Xtract-inspired hero refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx` with centered composition, reduced decorative atmosphere, and a card-led hero stage using the existing loaded font stack
-- Dashboard chrome cleanup across shared sidebar primitives, dashboard header/navbar, and `PnLSummary`, plus darker border/surface cleanup in `dashboard/behavior`, `dashboard/settings`, and `dashboard/billing`
+- (none — all committed)
 
 ## Blockers
-- None — waiting for user to say "deploy"
+- None

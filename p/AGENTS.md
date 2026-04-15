@@ -75,3 +75,11 @@
 - Dashboard shell chrome should avoid bright `white/[...]` borders and fills. For sidebar/header/navbar/summary chrome, prefer `border-border/35-45`, `bg-background/55-80`, and restrained `bg-primary/6-12` accents instead of white-tinted pills.
 - When dashboard visuals feel inconsistent, patch shared chrome first: `components/ui/sidebar.tsx`, `components/ui/unified-sidebar.tsx`, `components/ui/sidebar-primitives/**`, `dashboard-header.tsx`, `navbar.tsx`, and shared summary bars before touching route-local widgets.
 - Major dashboard subpages that still use legacy `border-white/[...]`, `bg-white/[...]`, or bright `border-[oklch(...)]` card recipes should be normalized toward `border-border/35-45` and `bg-card/50-60` so they match the shell.
+
+## Admin Panel Patterns
+- Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.
+- `PropFirmCouponInput` in `server/prop-firms.ts` is the canonical admin input type for coupons/deals. It maps to all 11 editable fields on the `PropFirmCoupon` Prisma model.
+- Coupon forms exist in two locations: inline on `/admin/propfirms/[id]` (CouponsSection component) and standalone on `/admin/coupons` (CouponEditCard component). Both must stay in sync when fields change.
+- When a coupon has override fields (platform, payoutModel, drawdownType), the deals data mapping (`server/deals.ts`) uses coupon-level values first, falling back to firm-level values: `coupon.platform || coupon.propFirm.platform || 'Default'`.
+- Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
+- Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.

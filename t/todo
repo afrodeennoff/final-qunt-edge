@@ -27,28 +27,29 @@
 - [x] Configure Bun build (vercel.json, .nvmrc, package.json)
 - [x] Remove cobalt tint from homepage (neutral white surfaces)
 - [x] Full bun build passes: 176 pages, 0 errors
-- [x] Apply the tweakcn Deep Purple theme tokens to the shared global design system and remove conflicting accent overrides
-- [x] Update shared primitives and shell chrome so buttons, cards, tabs, sidebars, widgets, and nav surfaces use the purple palette everywhere
-- [x] Sweep remaining route-level hardcoded accent colors and verify the theme pass with targeted searches and typecheck/lint where feasible
-- [x] Audit duplicated home page sections and trace the live composition from `app/[locale]/(home)/components/HomeContent.tsx`
-- [x] Remove the repeated standalone `DashboardPreview` and delete the redundant `ComparisonSection` block from the home route
-- [x] Restructure the home page narrative so core workflow, live analysis, AI review, audience fit, proof, and prop-firm exploration each appear once in a cleaner order
-- [x] Add auto-slide behavior to the deals page "Today's Biggest & Largest Deals!" spotlight
-- [x] Pause the deals spotlight auto-rotation on hover/focus and add manual slide indicators
+- [x] Apply the tweakcn Deep Purple theme tokens to the shared global design system
+- [x] Update shared primitives and shell chrome so buttons, cards, tabs, sidebars, widgets, and nav surfaces use the purple palette
+- [x] Sweep remaining route-level hardcoded accent colors and verify theme pass
+- [x] Audit duplicated home page sections and trace the live composition
+- [x] Remove the repeated standalone `DashboardPreview` and delete `ComparisonSection`
+- [x] Restructure the home page narrative so each section has one job
+- [x] Add auto-slide behavior to the deals page spotlight
+- [x] Pause the deals spotlight auto-rotation on hover/focus and add manual indicators
 - [x] Re-verify the deals spotlight with targeted ESLint and full TypeScript checks
-- [x] Map the mounted home page tree end-to-end, move mounted home copy to locale dictionaries, and reshape the home narrative into hero → value props → feature highlights → proof → CTA with cleaner spacing
-- [x] Define and apply a shared typography scale from global tokens and layout fonts through `components/ui/**`, then push tabular numeric treatment into dashboard and data-heavy surfaces
-- [x] Rework dashboard tab shells and account/table surfaces to match the premium reference spacing, even grid/card structure, and consistent chrome; then run polish, verification, and note sync
+- [x] Map mounted home page tree, move copy to locale dictionaries, reshape home narrative
+- [x] Define and apply shared typography scale from global tokens through components
+- [x] Rework dashboard tab shells and account/table surfaces
 - [x] Comprehensive spacing audit + fix across entire app
-- [x] Eliminated gap-5/7/9, space-y-2.5, mb-7/9, mt-7/9, arbitrary px
-- [x] Standardized section padding: py-16 sm:py-20 lg:py-24 (responsive)
-- [x] Responsive spacing applied to all home + landing sections
-- [x] SPACING_SYSTEM.md documented
 - [x] Commit and deploy to Vercel production (completed 2026-04-15)
-- [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper from MarketingLayoutShell
-- [x] Fix home page blank on soft navigation — loading.tsx z-50 overlay (Lesson 23)
-- [x] Fix home page blank on soft navigation — replace Framer Motion opacity:0 with CSS animations in Hero + Navbar
-- [x] Remove bright white dashboard chrome borders from shared sidebar/header/navbar surfaces and normalize major dashboard subpages back to the dark card system
+- [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper
+- [x] Fix home page blank on soft navigation — loading.tsx z-50 overlay
+- [x] Fix home page blank on soft navigation — replace Framer Motion with CSS animations
+- [x] Remove bright white dashboard chrome borders and normalize subpages
+- [x] Audit import trade save path — saveTradesAction fully functional with Zod validation, dedup, account creation
+- [x] Expand PropFirmCouponInput from 2 fields to 11 (code, discount%, challengeFee, claimUrl, description, platform/payout/drawdown overrides, isActive, startsAt, expiresAt)
+- [x] Rebuild admin coupon forms on both /admin/propfirms/[id] and /admin/coupons with all schema fields
+- [x] Fix deals data mapping to use coupon-level overrides when set
+- [x] Verify admin coupon/deal changes flow through to public deals page
 
 ## In Progress
 - [ ] None
