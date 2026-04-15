@@ -11,38 +11,41 @@ interface PageProps {
   searchParams: Promise<{ page?: string; status?: string }>
 }
 
+async function moderateAction(formData: FormData) {
+  'use server'
+  const moderationId = formData.get('moderationId')
+  const action = formData.get('action')
+  const locale = formData.get('locale')
+  const status = formData.get('status')
+  const page = formData.get('page')
+
+  if (!moderationId || typeof moderationId !== 'string') {
+    throw new Error('Missing moderation ID')
+  }
+  if (!action || !['upheld', 'dismissed', 'warning_issued'].includes(action as string)) {
+    throw new Error('Invalid moderation action')
+  }
+
+  await moderateReview({ moderationId, action: action as 'upheld' | 'dismissed' | 'warning_issued' })
+  redirect(`/${locale || 'en'}/admin/reviews?status=${status || 'all'}&page=${page || '1'}`)
+}
+
 export default async function ReviewsModerationPage({ params, searchParams }: PageProps) {
   const { locale } = await params
   const resolvedSearchParams = await searchParams
-  
+
   // Check admin access
   try {
     await assertAdminAccess()
   } catch {
     redirect(`/${locale}/authentication`)
   }
-  
+
   const currentPage = parseInt(resolvedSearchParams.page || '1', 10)
   const status = resolvedSearchParams.status || 'all'
-  
+
   const { items, total, totalPages } = await getReviewModerationQueue(currentPage, status)
   const flaggedCount = await getFlaggedReviewCount()
-  
-  async function moderateAction(formData: FormData) {
-    'use server'
-    const moderationId = formData.get('moderationId')
-    const action = formData.get('action')
-
-    if (!moderationId || typeof moderationId !== 'string') {
-      throw new Error('Missing moderation ID')
-    }
-    if (!action || !['upheld', 'dismissed', 'warning_issued'].includes(action as string)) {
-      throw new Error('Invalid moderation action')
-    }
-
-    await moderateReview({ moderationId, action: action as 'upheld' | 'dismissed' | 'warning_issued' })
-    redirect(`/${locale}/admin/reviews?status=${status}&page=${currentPage}`)
-  }
   
   const statusOptions = [
     { value: 'all', label: 'All' },
@@ -174,6 +177,9 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                 {item.status === 'pending' && (
                   <form action={moderateAction} className="flex flex-col gap-2 shrink-0">
                     <input type="hidden" name="moderationId" value={item.id} />
+                    <input type="hidden" name="locale" value={locale} />
+                    <input type="hidden" name="status" value={status} />
+                    <input type="hidden" name="page" value={String(currentPage)} />
                     <Button
                       type="submit"
                       name="action"
