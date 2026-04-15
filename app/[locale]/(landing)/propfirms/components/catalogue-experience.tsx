@@ -156,7 +156,7 @@ export function PropFirmCatalogueExperience({
 
   return (
     <div className="min-h-screen bg-[radial-gradient(860px_290px_at_14%_4%,rgba(255,255,255,0.06),transparent_72%),radial-gradient(760px_260px_at_85%_4%,rgba(255,255,255,0.04),transparent_74%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-[1320px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto flex max-w-[1320px] flex-col gap-6 lg:gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <section className="grid gap-6 rounded-2xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-6 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">

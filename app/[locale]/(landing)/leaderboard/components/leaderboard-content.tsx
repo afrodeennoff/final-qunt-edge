@@ -101,7 +101,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
                 key={item.key}
                 type="button"
                 onClick={() => updateSort(item.key)}
-                className={`rounded-full border px-4 py-[5px] text-[13px] font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`rounded-full border px-4 py-1.5 text-[13px] font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   currentSort === item.key
                     ? 'border-transparent bg-foreground/95 text-background shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28)]'
                     : `${FB} bg-transparent text-muted-foreground hover:bg-accent/55 hover:text-foreground/95`

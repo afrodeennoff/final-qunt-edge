@@ -15,7 +15,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden bg-muted/30 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32"
+      className="relative overflow-hidden bg-muted/30 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8"
     >
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute -left-48 bottom-0 h-[440px] w-[440px] rounded-full bg-accent/[0.04] blur-[120px]" />

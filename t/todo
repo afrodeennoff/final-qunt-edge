@@ -41,7 +41,7 @@
 - [x] Rework dashboard tab shells and account/table surfaces to match the premium reference spacing, even grid/card structure, and consistent chrome; then run polish, verification, and note sync
 
 ## Pending
-- [ ] Commit and deploy when user says "deploy"
+- [x] Commit and deploy to Vercel production (completed 2026-04-15)
 
 ## In Progress
 - [ ] None

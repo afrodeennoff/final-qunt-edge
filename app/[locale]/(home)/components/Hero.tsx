@@ -22,7 +22,7 @@ export default function Hero({ locale }: { locale: string }) {
   const integrations = [1, 2, 3, 4, 5].map((index) => t(`landing.home.hero.integration${index}`))
 
   return (
-    <section className="relative overflow-hidden px-4 pb-16 pt-28 sm:px-6 md:pb-20 md:pt-32 lg:px-8 xl:pb-24">
+    <section className="relative overflow-hidden px-4 pb-16 sm:pb-20 lg:pb-24 pt-[88px] sm:px-6 md:pt-32 lg:px-8">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 via-background/0 to-background/0" />
       {/* Atmospheric glow orbs */}
       <div className="pointer-events-none absolute -left-40 top-20 h-[480px] w-[480px] rounded-full bg-primary/[0.04] blur-[120px]" />

@@ -177,7 +177,7 @@ export default function Features() {
  <section 
  id="features" 
  ref={sectionRef}
- className="relative px-6 py-24 sm:py-24"
+ className="relative px-6 py-16 sm:py-20 lg:py-24"
  >
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -218,7 +218,7 @@ export default function Features() {
  ))}
  </div>
  </div>
- <div className="grid grid-cols-1 gap-5 lg:grid-cols-8">
+ <div className="grid grid-cols-1 gap-6 lg:grid-cols-8">
  {features.map((feature, index) => (
  <FeatureCard key={`${feature.id}-detail`} feature={feature} index={index} isVisible={isVisible} />
  ))}

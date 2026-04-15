@@ -82,7 +82,7 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden bg-muted/20 px-4 py-20 sm:px-6 sm:py-24 md:px-6 lg:px-8 lg:py-32"
+      className="relative overflow-hidden bg-muted/20 px-4 py-4 sm:py-6 md:px-6 lg:px-8"
     >
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />

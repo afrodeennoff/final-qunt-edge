@@ -226,7 +226,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
       <td className={`border-b ${FA} px-6 py-4 align-middle`}>
         <Link
           href={profileLink}
-          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-[5px] text-[13px] font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/55`}
+          className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-3.5 py-1.5 text-[13px] font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-accent/55`}
           aria-label={`View ${entry.username} profile`}
         >
           View profile

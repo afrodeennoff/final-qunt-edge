@@ -12,7 +12,7 @@
 - **Next.js**: 16.1.6 (webpack, Cache Components)
 - **Prisma**: 7.7.0
 - **Build**: `bun run build` → sync-stack → robust-next-build
-- **Vercel**: `installCommand: bun install`, `buildCommand: bun run build`, `functions: nodejs22.x`
+- **Vercel**: `installCommand: bun install`, `buildCommand: bun run build`, Node 24.x (project settings auto-detect)
 - **Heap**: 4096MB max on 16GB local machines (8192 causes SIGKILL)
 - **Workers**: 1 CPU for local builds (2 CPUs on Vercel with more RAM)
 

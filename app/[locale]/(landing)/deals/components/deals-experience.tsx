@@ -105,7 +105,7 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-[68px] z-40 bg-[hsl(var(--background)/0.82)]">
+    <nav className="sticky top-16 z-40 bg-[hsl(var(--background)/0.82)]">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
         <div className="my-2 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
           {TABS.map((tab) => (
@@ -442,14 +442,14 @@ function DealsBoard({
 
   return (
     <div className="min-h-screen overflow-hidden bg-[radial-gradient(900px_280px_at_15%_0%,rgba(255,255,255,0.06),transparent_72%),radial-gradient(860px_260px_at_85%_2%,rgba(255,255,255,0.04),transparent_72%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_26%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-6 sm:px-6 md:px-8 lg:px-12 lg:py-10">
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-6 lg:gap-8 px-4 py-6 sm:px-6 md:px-8 lg:px-12 lg:py-10">
         <DealsHero localePrefix={localePrefix} overview={overview} />
       </div>
 
       <DealsTabBar activeTab={activeTab} onTabClick={scrollToTab} />
 
       <section id="deals-board" className="scroll-mt-[120px] overflow-hidden">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-4 py-8 sm:px-6 md:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-6 lg:gap-8 px-4 py-8 sm:px-6 md:px-8 lg:px-12">
           {spotlightDeals.length > 0 ? (
             <BiggestDealsCarousel
               locale={locale}
@@ -743,7 +743,7 @@ function BiggestDealsCarousel({
           <div className="absolute left-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))]">
             <Flame className="h-4 w-4" />
           </div>
-          <div className="grid gap-7 lg:grid-cols-[0.97fr_auto_1.03fr] lg:items-center">
+          <div className="grid gap-6 lg:gap-8 lg:grid-cols-[0.97fr_auto_1.03fr] lg:items-center">
             <div className="flex flex-col items-center text-center">
               <div className="relative mt-4 h-36 w-36">
                 <div className="absolute -inset-7 rounded-full bg-[radial-gradient(circle,rgba(190,218,255,0.34)_0%,rgba(20,39,70,0.08)_60%,transparent_100%)] blur-2xl" />
@@ -751,7 +751,7 @@ function BiggestDealsCarousel({
                 <div className="absolute inset-0 rounded-full shadow-[inset_-20px_-20px_36px_rgba(0,0,0,0.82)]" />
                 <div className="absolute -left-2 top-1 h-10 w-10 rounded-full bg-[hsl(var(--mk-text)/0.52)] blur-xl" />
               </div>
-              <p className="mt-9 font-mono text-[1.9rem] font-bold tracking-tighter text-[hsl(var(--mk-text))] sm:text-[2.1rem]">
+              <p className="mt-8 font-mono text-[1.9rem] font-bold tracking-tighter text-[hsl(var(--mk-text))] sm:text-[2.1rem]">
                 {activeDeal.firmName}
               </p>
               <div className="mt-3 flex items-center gap-1.5 text-[hsl(var(--chart-3))]">
@@ -773,7 +773,7 @@ function BiggestDealsCarousel({
               <button
                 type="button"
                 onClick={() => onCopyCode(activeDeal.couponCode)}
-                className="mt-7 text-[1.35rem] font-bold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[hsl(var(--chart-3)/0.82)] hover:brightness-110"
+                className="mt-8 text-[1.35rem] font-bold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[hsl(var(--chart-3)/0.82)] hover:brightness-110"
               >
                 {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy_Code:_ ${activeDeal.couponCode}`}
               </button>

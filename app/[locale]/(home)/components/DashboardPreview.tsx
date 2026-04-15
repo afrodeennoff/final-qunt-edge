@@ -136,7 +136,7 @@ export default function DashboardPreview() {
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               {t('landing.home.preview.recentTrades')}
             </p>
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {trades.map((trade) => (
                 <div
                   key={`${trade.symbol}-${trade.time}`}

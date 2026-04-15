@@ -54,7 +54,7 @@ export default function FilterChips({
     filters.platform !== 'All' || filters.challengeType !== 'All' || filters.drawdown !== 'All'
 
   return (
-    <section className="py-5">
+    <section className="py-4 sm:py-6">
       <div className="rounded-lg border border-border/50 bg-card/80 p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

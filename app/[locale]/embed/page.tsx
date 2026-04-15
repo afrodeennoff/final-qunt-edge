@@ -237,7 +237,7 @@ export default function EmbedPage() {
           </Script>
 
           <Toaster />
-          <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-5 lg:px-6 lg:pt-6">
+          <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col gap-4 px-4 pt-4 lg:gap-6 lg:px-6 lg:pt-6">
             <MotionSection delay={0.03}>
               <section className="overflow-hidden rounded-[2rem] border border-white/[0.08] bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
@@ -275,7 +275,7 @@ export default function EmbedPage() {
             </MotionSection>
 
             <MotionSection delay={0.08}>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-5">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
                 {chartsToRender}
               </div>
             </MotionSection>

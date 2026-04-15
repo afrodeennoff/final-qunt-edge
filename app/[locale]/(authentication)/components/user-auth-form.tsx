@@ -498,7 +498,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
  }
 
  return (
- <div className={cn("grid gap-5", className)} {...props}>
+ <div className={cn("grid gap-6", className)} {...props}>
  {alreadySignedIn && (
  <div className="flex items-center justify-between gap-3 rounded-xl border border-success/30 bg-success/10 px-4 py-3">
  <div className="flex items-center gap-3">

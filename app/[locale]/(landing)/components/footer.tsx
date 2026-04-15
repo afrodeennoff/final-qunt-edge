@@ -49,7 +49,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/50 bg-black py-16 md:py-20"
+      className="border-t border-border/50 bg-black py-12 sm:py-16 sm:py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -149,7 +149,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
       <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
         {title}
       </h3>
-      <ul className="space-y-2.5">
+      <ul className="space-y-3">
         {links.map((item, index) => (
           <motion.li
             key={item.name}

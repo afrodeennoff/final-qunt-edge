@@ -15,7 +15,7 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
   const t = useI18n()
 
   return (
-    <section className="relative bg-muted/20 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <section className="relative bg-muted/20 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       <motion.div
         className="mx-auto max-w-4xl"
         initial={{ opacity: 0, y: 10 }}

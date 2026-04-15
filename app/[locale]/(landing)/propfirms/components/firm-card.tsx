@@ -102,7 +102,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
         </div>
 
         {/* Payout Breakdown */}
-        <div className="space-y-2.5 p-4">
+        <div className="space-y-3 p-4">
           {/* Paid */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

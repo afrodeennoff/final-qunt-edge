@@ -31,10 +31,10 @@ const socialLinks = [
 export default function Footer() {
  return (
  <footer className="border-t border-border/20 bg-white/[0.030]">
- <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
- <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-14">
+ <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+ <div className="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-10 mb-10">
  <div className="col-span-2">
- <Link href="/" className="flex items-center gap-2.5 mb-5 group">
+ <Link href="/" className="flex items-center gap-2.5 mb-4 group">
  <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_16px_-4px_hsl(var(--primary)/0.5)] transition-shadow duration-300 group-hover:shadow-[0_0_24px_-4px_hsl(var(--primary)/0.65)]">
  <span className="text-primary-foreground font-bold text-sm">Q</span>
  </div>
@@ -47,7 +47,7 @@ export default function Footer() {
 
  <div>
  <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Product</h4>
- <ul className="space-y-2.5">
+ <ul className="space-y-3">
  {footerLinks.product.map((link) => (
  <li key={link.href}>
  <Link
@@ -63,7 +63,7 @@ export default function Footer() {
 
  <div>
  <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Resources</h4>
- <ul className="space-y-2.5">
+ <ul className="space-y-3">
  {footerLinks.resources.map((link) => (
  <li key={link.href}>
  <Link
@@ -79,7 +79,7 @@ export default function Footer() {
 
  <div>
  <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Company</h4>
- <ul className="space-y-2.5">
+ <ul className="space-y-3">
  {footerLinks.company.map((link) => (
  <li key={link.href}>
  <Link
@@ -97,7 +97,7 @@ export default function Footer() {
  <p className="text-[0.8rem] text-muted-foreground/60">
  © 2026 Qunt Edge. All rights reserved.
  </p>
- <div className="flex items-center gap-5 mt-4 md:mt-0">
+ <div className="flex items-center gap-6 mt-4 md:mt-0">
  {socialLinks.map((social) => {
  const Icon = social.icon
  return (

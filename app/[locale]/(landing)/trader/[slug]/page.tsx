@@ -101,14 +101,14 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
           <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-1.5 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-[#ffffff] px-4 py-[5px] text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+              className="inline-flex items-center rounded-full bg-[#ffffff] px-4 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
             >
               Manage profile
             </Link>
@@ -160,7 +160,7 @@ export default async function TraderProfilePage({
         <section className="space-y-6">
           {/* Header */}
           <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8`} style={FR}>
-            <div className="flex items-start gap-5">
+            <div className="flex items-start gap-6">
               <Avatar className={`h-20 w-20 border ${FB} ${FS}`} style={FR}>
                 <AvatarFallback className={`${FS} text-lg font-semibold text-[#f0f0f0]`}>
                   {snapshot.username.slice(0, 2).toUpperCase()}
@@ -256,14 +256,14 @@ export default async function TraderProfilePage({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
-              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-1.5 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
-              className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-[5px] text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+              className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
             >
               Manage profile
             </Link>

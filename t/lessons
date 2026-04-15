@@ -121,3 +121,9 @@
 - **RC:** It is easy to update `en` and `fr` while forgetting secondary locales that still compile and ship.
 - **R:** When extracting public copy into i18n, update every locale entry point in the repo during the same pass. If full translation is not available, wire temporary English fallbacks explicitly so no locale crashes on missing keys.
 - **E:** `locales/en/landing.ts` and `locales/fr/landing.ts` received the new `landing.home.*` tree, while `locales/es.ts`, `locales/hi.ts`, `locales/it.ts`, and `locales/ja.ts` were kept compiling through the shared English fallback spread.
+
+## Lesson 21: Vercel `functions.runtime` config must match supported Node runtimes
+- **M:** `vercel --prod` failed with `Function Runtimes must have a valid version, for example now-php@1.0.0`
+- **RC:** `vercel.json` had `"functions": { "api/**/*.ts": { "runtime": "nodejs22.x" } }` but the Vercel project settings use Node 24.x. The `nodejs22.x` runtime string was rejected by Vercel's build system (CLI 51.2.1).
+- **R:** Remove the explicit `functions` runtime override from `vercel.json` and let Vercel auto-detect the Node version from project settings. Only specify `functions` config for Edge runtimes or when you need per-route overrides.
+- **E:** Removed the `functions` block entirely; Vercel now auto-detects Node 24.x and builds succeed.

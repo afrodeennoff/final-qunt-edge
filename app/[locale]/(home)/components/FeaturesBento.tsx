@@ -33,7 +33,7 @@ export default function FeaturesBento() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <MotionSection className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       {/* Atmospheric glow orbs */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
       <div className="mx-auto max-w-[1360px]">

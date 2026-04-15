@@ -61,7 +61,7 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="bg-muted/30 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <section id="pricing" className="bg-muted/30 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       <div className="mx-auto max-w-[1360px]">
         <motion.div
           className="mb-10 text-center md:mb-14"

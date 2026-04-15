@@ -60,7 +60,7 @@ export default function AuthenticationPageClient() {
  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
  className="my-10 max-w-xl lg:my-14"
  >
- <div className="mb-7 inline-flex items-center gap-3 rounded-[1.4rem] border border-white/[0.06] bg-white/[0.04] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28)]">
+ <div className="mb-8 inline-flex items-center gap-3 rounded-[1.4rem] border border-white/[0.06] bg-white/[0.04] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28)]">
  <Logo className="h-5 w-5 text-foreground/95" />
  <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/72">Qunt Edge</span>
  </div>
@@ -133,7 +133,7 @@ export default function AuthenticationPageClient() {
 
  <UserAuthForm />
 
- <p className="mt-7 text-center text-[11px] leading-relaxed text-foreground/42">
+ <p className="mt-8 text-center text-[11px] leading-relaxed text-foreground/42">
  {t('authentication.termsAndPrivacy.prefix')} {""}
  <Link href={`/${locale}/terms`} className="text-foreground/95 underline decoration-border/80 underline-offset-4 hover:text-foreground/95">
  {t('authentication.termsAndPrivacy.terms')}

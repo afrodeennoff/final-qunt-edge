@@ -22,7 +22,7 @@ export default function AIFeatures() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       {/* Atmospheric glow orbs */}
       <div className="pointer-events-none absolute -left-32 top-1/4 h-[420px] w-[420px] rounded-full bg-accent/[0.04] blur-[120px]" />
       <div className="pointer-events-none absolute right-0 bottom-1/4 h-[380px] w-[380px] rounded-full bg-primary/[0.03] blur-[120px]" />

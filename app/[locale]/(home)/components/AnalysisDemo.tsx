@@ -47,7 +47,7 @@ export default function AnalysisDemo() {
   const activeLog = isMobile ? logs[0] : logs[logIndex]
 
   return (
-    <section className="relative overflow-hidden px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute right-0 top-1/3 h-[460px] w-[460px] rounded-full bg-primary/[0.04] blur-[120px]" />
       <motion.div

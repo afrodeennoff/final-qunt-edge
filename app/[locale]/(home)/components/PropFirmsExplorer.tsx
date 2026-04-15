@@ -80,7 +80,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
   }, [deferredQuery, filters, firms])
 
   return (
-    <section className="px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <section className="px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       <div className="mx-auto rounded-lg border border-white/[0.06] bg-card/80 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:max-w-[1360px] md:p-6 lg:p-8">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_320px]">
           <SearchHero

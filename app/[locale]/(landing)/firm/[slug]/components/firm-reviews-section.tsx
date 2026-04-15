@@ -432,7 +432,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
             </div>
             
             {/* Rating Distribution */}
-            <div className="space-y-2.5 py-2">
+            <div className="space-y-3 py-2">
               <p className="mb-3 text-xs uppercase tracking-[0.12em] text-muted-foreground">Rating Distribution</p>
               {[5, 4, 3, 2, 1].map((rating) => (
                 <RatingDistributionBar

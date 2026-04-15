@@ -202,7 +202,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
  </div>
  </CardHeader>
  <CardContent className="flex-1 p-4 pt-2">
- <div className="space-y-2.5">
+ <div className="space-y-3">
  <div className="flex items-center gap-2 text-muted-foreground/90">
  <Calendar className="h-3.5 w-3.5 shrink-0" />
  <span className="text-xs">

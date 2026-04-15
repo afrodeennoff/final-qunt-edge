@@ -475,7 +475,7 @@ function ReferralCTA({ referralUrl }: { referralUrl: string }) {
 
   return (
     <Card className="rounded-xl border-border/40 bg-white/[0.05]">
-      <CardContent className="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Referral link</p>
           <CardTitle className="mt-3 text-2xl text-foreground/95">Open the official company site.</CardTitle>
@@ -1288,7 +1288,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
-          <div className="flex items-start gap-5">
+          <div className="flex items-start gap-6">
             <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-white/[0.010] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
@@ -1356,7 +1356,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
       <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
           <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border/20 bg-background/70 p-2">
             {[
               ['overview', 'Overview'],

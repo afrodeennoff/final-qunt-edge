@@ -16,7 +16,7 @@ export default function ProblemStatement() {
   }))
 
   return (
-    <section className="relative overflow-hidden px-4 py-20 sm:py-24 md:px-6 lg:px-8 lg:py-32">
+    <section className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
       {/* Atmospheric glow orb */}
       <div className="pointer-events-none absolute -right-48 top-1/4 h-[500px] w-[500px] rounded-full bg-primary/[0.04] blur-[120px]" />
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
