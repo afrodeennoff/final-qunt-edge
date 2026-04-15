@@ -7,7 +7,9 @@
       "Bash(find:*)",
       "Bash(python3:*)",
       "Bash(npx:*)",
-      "Bash(npx tsc:*)"
+      "Bash(bun:*)",
+      "Bash(git:*)",
+      "Bash(head:*)"
     ]
   },
   "model": "sonnet",

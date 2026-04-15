@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useInView, useReducedMotion } from 'framer-motion'
 import { useI18n } from '@/locales/client'
 
 function useAnimatedCounter(target: number, inView: boolean, reducedMotion: boolean) {
@@ -53,13 +53,13 @@ function StatItem({
   const count = useAnimatedCounter(value, inView, reducedMotion)
 
   return (
-    <div className="rounded-lg border-white/[0.06] bg-card/70 p-5 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-      <p className="tabular-nums text-3xl font-bold text-foreground">
+    <div className="rounded-md border border-border/60 bg-card/50 p-4 text-left shadow-sm transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/80 hover:bg-card/65">
+      <p className="tabular-nums text-2xl font-semibold text-foreground sm:text-3xl">
         {prefix}
         {value >= 1000 ? count.toLocaleString() : count}
         {suffix}
       </p>
-      <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <p className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </p>
     </div>
@@ -82,12 +82,10 @@ export default function LiveStatsStrip() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden bg-muted/20 px-4 py-4 sm:py-6 md:px-6 lg:px-8"
+      className="px-4 py-8 sm:py-10 md:px-6 lg:px-8"
     >
-      {/* Atmospheric glow orb */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
-      <div className="mx-auto max-w-[1360px] rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8">
-        <div className="mb-6 flex flex-col gap-3 border-b border-white/[0.04] pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto grid max-w-[1360px] gap-6 border-y border-border/60 py-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-end">
+        <div>
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
               {t('landing.home.liveStats.heading')}
@@ -98,23 +96,17 @@ export default function LiveStatsStrip() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map((stat, index) => (
-            <motion.div
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          {stats.map((stat) => (
+            <StatItem
               key={stat.label}
-              initial={{ opacity: 0, y: 12 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-              transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <StatItem
-                label={stat.label}
-                value={stat.value}
-                prefix={stat.prefix}
-                suffix={stat.suffix}
-                inView={isInView}
-                reducedMotion={reducedMotion}
-              />
-            </motion.div>
+              label={stat.label}
+              value={stat.value}
+              prefix={stat.prefix}
+              suffix={stat.suffix}
+              inView={isInView}
+              reducedMotion={reducedMotion}
+            />
           ))}
         </div>
       </div>
