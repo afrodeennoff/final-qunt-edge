@@ -95,11 +95,16 @@
 - `npm run typecheck` = passes
 - `npm run lint` = passes with pre-existing complexity warnings, 0 errors
 
-### Auth Page Soft Navigation Fix
-- Removed `dynamic({ ssr: false })` from `layout-shell.tsx` and `page-shell.tsx` — replaced with direct imports
-- Replaced Framer Motion `motion.div` entrance animations with CSS `@keyframes auth-entrance` in `page-client.tsx`
-- Added `error.tsx` with retry button to the auth route group
-- Root cause: triple-layer invisible chain (blank dynamic loading div → blank dynamic loading div → motion opacity:0)
+### Home Page Soft Navigation Fix
+- `[locale]/loading.tsx` changed from `return null` to visible spinner
+- Auth page: removed `dynamic({ssr:false})` wrappers, replaced `motion.div` with CSS `@keyframes auth-entrance`, added `error.tsx`
+- RollingAdBanner wrapped in `<Suspense fallback={null}>` to prevent blocking the entire layout when DB is slow
+- `showRollingBanner={true}` enabled on home page
+- Community post loading.tsx: removed z-50
+- Landing loading.tsx: removed z-50 and 'use client'
+- Added error.tsx to shared/[slug]/ and embed/ routes
+- Added loading.tsx to embed/ route
+- Admin parseOptionalDate: returns null on empty input (allows clearing dates)
 
 ## Uncommitted Changes
 - (none — all committed)

@@ -92,12 +92,14 @@ export function MotionSection({
  return <section className={className}>{children}</section>
  }
 
+ // CSS animation handles entrance — content is always visible even if FM never hydrates.
+ // initial={false} prevents FM from setting inline opacity:0 which causes blank pages.
  return (
  <motion.section
  ref={ref}
- className={className}
- initial={{ opacity: 0, y: 12 }}
- animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+ className={cn('animate-fade-up-smooth', className)}
+ initial={false}
+ animate={isInView ? { opacity: 1, y: 0 } : undefined}
  transition={{
  duration: 0.5,
  delay,
@@ -137,12 +139,13 @@ export function MotionStagger({
  return <div className={className}>{children}</div>
  }
 
+ // CSS entrance instead of FM initial — content always visible
  return (
  <motion.div
  ref={ref}
- className={className}
- initial="hidden"
- animate={isInView ?"visible" :"hidden"}
+ className={cn('animate-fade-up-smooth', className)}
+ initial={false}
+ animate={isInView ? "visible" : undefined}
  variants={{
  hidden: { opacity: 0 },
  visible: {
@@ -222,12 +225,13 @@ export function MotionOrchestrated({
  return <div className={className}>{children}</div>
  }
 
+ // CSS entrance instead of FM initial — content always visible
  return (
  <motion.div
  ref={ref}
- className={className}
- initial="hidden"
- animate={isInView ?"visible" :"hidden"}
+ className={cn('animate-fade-up-smooth', className)}
+ initial={false}
+ animate={isInView ? "visible" : undefined}
  variants={{
  hidden: { opacity: 0 },
  visible: {

@@ -10,7 +10,8 @@ import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-prof
 
 async function handleDelete(formData: FormData) {
   'use server'
-  const id = formData.get('id') as string
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') throw new Error('Missing firm ID')
   await softDeletePropFirm(id)
 }
 
@@ -70,7 +71,7 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.6]">
+                <tr className="border-b border-[oklch(0.65_0.22_260/0.08)]">
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
                   <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
@@ -89,7 +90,7 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                   </tr>
                 ) : (
                   firms.map((f) => (
-                    <tr key={f.id} className="border-b border-white/[0.6] last:border-0">
+                    <tr key={f.id} className="border-b border-[oklch(0.65_0.22_260/0.08)] last:border-0">
                       <td className="py-3 pr-4 font-medium">{f.name}</td>
                       <td className="py-3 pr-4 text-muted-foreground">{f.category ?? '—'}</td>
                       <td className="py-3 pr-4 text-muted-foreground">{f.platform ?? '—'}</td>

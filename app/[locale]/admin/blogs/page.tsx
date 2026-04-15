@@ -19,16 +19,22 @@ export async function generateMetadata({ params }: PageProps) {
 
 async function handleDelete(formData: FormData) {
   'use server'
-  const id = formData.get('id') as string
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') throw new Error('Missing post ID')
+  const locale = formData.get('locale')
+  if (!locale || typeof locale !== 'string') throw new Error('Missing locale')
   await deleteBlogPost(id)
-  redirect('/admin/blogs')
+  redirect(`/${locale}/admin/blogs`)
 }
 
 async function handleTogglePublish(formData: FormData) {
   'use server'
-  const id = formData.get('id') as string
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') throw new Error('Missing post ID')
+  const locale = formData.get('locale')
+  if (!locale || typeof locale !== 'string') throw new Error('Missing locale')
   await togglePublish(id)
-  redirect('/admin/blogs')
+  redirect(`/${locale}/admin/blogs`)
 }
 
 export default async function AdminBlogsPage({ params }: PageProps) {
@@ -44,7 +50,7 @@ export default async function AdminBlogsPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 border-b border-white/[0.6] pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 border-b border-[oklch(0.65_0.22_260/0.08)] pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
             Admin Content

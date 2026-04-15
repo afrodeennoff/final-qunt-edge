@@ -53,3 +53,12 @@
 
 ## In Progress
 - [x] Fix auth page blank on soft navigation — removed double dynamic({ssr:false}) + Framer Motion opacity:0
+- [x] Fix home page blank on soft navigation — loading.tsx now shows spinner instead of null
+- [x] Fix RollingAdBanner blocking entire layout — wrapped in Suspense
+- [x] Enable scrolling ad banner on home page
+- [x] Remove z-50 blocking overlays from loading.tsx files
+- [x] Add error.tsx to shared/[slug]/ and embed/ routes
+- [x] Add loading.tsx to embed/ route
+- [x] Fix parseOptionalDate — returns null on empty so dates can be cleared
+- [x] Fix community/post loading.tsx — removed z-50 and 'use client'
+- [x] Fix (landing)/loading.tsx — removed z-50 and 'use client'

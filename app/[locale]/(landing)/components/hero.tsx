@@ -27,10 +27,10 @@ export default function Hero({ }: HeroProps) {
  className="relative isolate flex flex-col items-center justify-center overflow-hidden bg-background px-4 py-24 text-center md:py-24 lg:py-40 sm:px-6 lg:px-8"
  >
  <motion.div
- initial="hidden"
+ initial={false}
  animate="visible"
  style={{ scale }}
- className="max-w-3xl mx-auto relative z-10 w-full"
+ className="max-w-3xl mx-auto relative z-10 w-full animate-fade-up-smooth"
  >
  <MotionStagger className="space-y-6" delay={0.12} staggerSpeed={1}>
  <MotionStaggerItem blur>
@@ -51,7 +51,7 @@ export default function Hero({ }: HeroProps) {
  </MotionStagger>
 
  <motion.div
- initial={{ opacity: 0, y: 8 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6, delay: 0.4 }}
  className="mt-8"
@@ -67,7 +67,7 @@ export default function Hero({ }: HeroProps) {
  </motion.div>
 
  <motion.div
- initial={{ opacity: 0, y: 8 }}
+ initial={false}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.6, delay: 0.5 }}
  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full"

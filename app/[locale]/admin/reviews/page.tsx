@@ -30,14 +30,18 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
   
   async function moderateAction(formData: FormData) {
     'use server'
-    const moderationId = formData.get('moderationId') as string
-    const action = formData.get('action') as 'upheld' | 'dismissed' | 'warning_issued'
-    
-    try {
-      await moderateReview({ moderationId, action })
-    } catch (err) {
-      console.error('Moderation failed:', err)
+    const moderationId = formData.get('moderationId')
+    const action = formData.get('action')
+
+    if (!moderationId || typeof moderationId !== 'string') {
+      throw new Error('Missing moderation ID')
     }
+    if (!action || !['upheld', 'dismissed', 'warning_issued'].includes(action as string)) {
+      throw new Error('Invalid moderation action')
+    }
+
+    await moderateReview({ moderationId, action: action as 'upheld' | 'dismissed' | 'warning_issued' })
+    redirect(`/${locale}/admin/reviews?status=${status}&page=${currentPage}`)
   }
   
   const statusOptions = [
@@ -71,8 +75,8 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
             href={`/${locale}/admin/reviews?status=${option.value}`}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               status === option.value
-                ? 'bg-v2-accent text-v2-accent-foreground'
-                : 'bg-white/[0.080] text-muted-foreground hover:bg-white/[0.2]'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.12)]'
             }`}
           >
             {option.label}
@@ -90,7 +94,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           items.map((item) => (
             <div
               key={item.id}
-              className="rounded-xl border border-white/[0.8] bg-white/[0.070] p-6"
+              className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -108,7 +112,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                   </div>
                   
                   {/* The flagged review */}
-                  <div className="mb-4 rounded-xl bg-white/[0.2] p-4">
+                  <div className="mb-4 rounded-xl bg-[oklch(0.65_0.22_260/0.08)] p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-medium">
                         {item.review.propFirm.name}
@@ -145,7 +149,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                   {item.status === 'resolved' && (
                     <div className="flex items-center gap-2 text-sm">
                       {item.resolution === 'upheld' ? (
-                        <Badge variant="error" size="sm">
+                        <Badge variant="destructive" size="sm">
                           <XCircle className="h-3 w-3 mr-1" />
                           Removed
                         </Badge>
@@ -174,7 +178,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       type="submit"
                       name="action"
                       value="upheld"
-                      variant="error"
+                      variant="destructive"
                       size="sm"
                       className="w-32"
                     >
@@ -215,7 +219,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
         <div className="flex items-center justify-center gap-2 mt-6">
           <Link
             href={`/${locale}/admin/reviews?page=${Math.max(1, currentPage - 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.2]'}`}
+            className={`rounded-lg p-2 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-[oklch(0.65_0.22_260/0.12)]'}`}
           >
             <ChevronLeft className="h-5 w-5" />
           </Link>
@@ -224,7 +228,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           </span>
           <Link
             href={`/${locale}/admin/reviews?page=${Math.min(totalPages, currentPage + 1)}&status=${status}`}
-            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-white/[0.2]'}`}
+            className={`rounded-lg p-2 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-[oklch(0.65_0.22_260/0.12)]'}`}
           >
             <ChevronRight className="h-5 w-5" />
           </Link>

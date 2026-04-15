@@ -573,30 +573,46 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
   }
 
   const now = new Date()
-  const [catalogue, firms] = await Promise.all([
-    getPropfirmCatalogueData('allTime'),
-    prisma.propFirm.findMany({
-      where: { isActive: true },
-      include: {
-        coupons: {
-          where: {
-            isActive: true,
-            OR: [
-              { expiresAt: null },
-              { expiresAt: { gte: now } },
+  let catalogue: Awaited<ReturnType<typeof getPropfirmCatalogueData>>
+  let firms: FirmRecord[]
+
+  try {
+    const [cat, firmRows] = await Promise.all([
+      getPropfirmCatalogueData('allTime'),
+      prisma.propFirm.findMany({
+        where: { isActive: true },
+        include: {
+          coupons: {
+            where: {
+              isActive: true,
+              OR: [
+                { expiresAt: null },
+                { expiresAt: { gte: now } },
+              ],
+            },
+            orderBy: [
+              { challengeFee: 'asc' },
+              { discountPercent: 'desc' },
             ],
           },
-          orderBy: [
-            { challengeFee: 'asc' },
-            { discountPercent: 'desc' },
-          ],
+          reviews: { select: { id: true, rating: true, status: true } },
+          _count: { select: { reviews: true, coupons: true } },
         },
-        reviews: { select: { id: true, rating: true, status: true } },
-        _count: { select: { reviews: true, coupons: true } },
-      },
-      orderBy: { name: 'asc' },
-    }),
-  ])
+        orderBy: { name: 'asc' },
+      }),
+    ])
+    catalogue = cat
+    firms = firmRows as FirmRecord[]
+  } catch (error) {
+    if (!isPrismaUnavailableError(error)) {
+      throw error
+    }
+
+    markPrismaTableUnavailable(DEALS_UNIFIED_FIRMS_COOLDOWN_KEY)
+    console.warn('[Deals] Prisma unavailable for unified firms, returning empty')
+    return []
+  }
+
   const catalogueMap = new Map(
     catalogue.stats.map((entry) => [normalizeFirmName(entry.propfirmName), entry])
   )

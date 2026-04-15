@@ -21,12 +21,17 @@ import { APP_SHELL_SOFT_BORDER_STYLE } from "@/lib/constants/layout";
 
 const DashboardHeader = dynamic(
   () => import("./components/dashboard-header").then((m) => m.DashboardHeader),
-  { loading: () => null }
+  { loading: () => (
+    <div className="flex h-16 items-center justify-between px-4">
+      <div className="h-8 w-32 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.08)]" />
+      <div className="h-8 w-24 animate-pulse rounded-lg bg-[oklch(0.65_0.22_260/0.08)]" />
+    </div>
+  ) }
 );
 
 const DashboardClientOverlays = dynamic(
   () => import("./components/dashboard-client-overlays").then((m) => m.DashboardClientOverlays),
-  { loading: () => null }
+  { loading: () => <div /> }
 );
 
 export const metadata: Metadata = {

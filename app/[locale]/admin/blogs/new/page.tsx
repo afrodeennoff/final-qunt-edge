@@ -42,7 +42,7 @@ export default async function NewBlogPostPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/[0.6] bg-white/[0.070] p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <div className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)] p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
         <BlogForm locale={locale} />
       </div>
     </div>

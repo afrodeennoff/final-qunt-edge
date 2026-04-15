@@ -187,3 +187,15 @@
 - **RC:** During soft navigation, the client must fetch and evaluate JavaScript chunks. `dynamic({ ssr: false })` shows the `loading` fallback until the chunk loads. If the fallback is a blank div, the user sees nothing during that window. If chunk loading fails silently, the blank is permanent.
 - **R:** Reserve `ssr: false` for individual interactive widgets (charts, maps, editors) with visible skeleton loading states. NEVER use it for page-level shells, layouts, or route wrappers.
 - **E:** Dashboard widget registry uses `ssr: false` with `widgetFallback` skeletons — safe. Auth page layout used it with a blank div — caused blank page.
+
+## Lesson 32: Async Server Components in layouts must be wrapped in Suspense
+- **M:** After enabling the RollingAdBanner on the home page, the entire page went blank during soft navigation.
+- **RC:** RollingAdBanner is an async Server Component that `await`s database queries. It's rendered inside MarketingLayoutShell (the layout for ALL public pages). Without a Suspense boundary, it suspends the entire layout until data resolves. If the DB is slow or unavailable, the whole page is blank.
+- **R:** Any async Server Component rendered inside a layout must be wrapped in `<Suspense fallback={...}>`. The fallback can be `null` if the component is optional (like a banner), or a skeleton if it's critical content.
+- **E:** `<Suspense fallback={null}><RollingAdBanner /></Suspense>` in marketing-layout-shell.tsx prevents the banner from blocking the entire page.
+
+## Lesson 33: loading.tsx must never return null — it's the Suspense fallback for route transitions
+- **M:** Home page showed blank during soft navigation (clicking links to `/`), but worked on hard refresh.
+- **RC:** `app/[locale]/loading.tsx` returned `null`. During soft navigation between route groups, Next.js shows this Suspense fallback — which was nothing (black screen on dark background).
+- **R:** Every `loading.tsx` must render visible content (at minimum a spinner). Returning `null` causes a blank flash during route transitions.
+- **E:** Changed `loading.tsx` from `return null` to a visible spinner. Same pattern caused the auth page blank issue (Lesson 26).

@@ -282,6 +282,7 @@ export async function createPropFirm(data: PropFirmCreateInput) {
   await assertAdminAccess()
   const result = await prisma.propFirm.create({ data })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -289,6 +290,7 @@ export async function updatePropFirm(id: string, data: PropFirmUpdateInput) {
   await assertAdminAccess()
   const result = await prisma.propFirm.update({ where: { id }, data })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -296,6 +298,7 @@ export async function deletePropFirm(id: string) {
   await assertAdminAccess()
   const result = await prisma.propFirm.delete({ where: { id } })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -306,6 +309,7 @@ export async function softDeletePropFirm(id: string) {
     data: { isActive: false },
   })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -322,6 +326,7 @@ export async function createPropFirmReview(propFirmId: string, data: PropFirmRev
     data: { propFirmId, ...data },
   })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -332,6 +337,7 @@ export async function updatePropFirmReview(id: string, data: PropFirmReviewInput
     data,
   })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -339,6 +345,7 @@ export async function deletePropFirmReview(id: string) {
   await assertAdminAccess()
   const result = await prisma.propFirmReview.delete({ where: { id } })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -362,6 +369,7 @@ export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCou
     data: { propFirmId, ...data },
   })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -372,6 +380,7 @@ export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput
     data,
   })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }
 
@@ -379,5 +388,6 @@ export async function deletePropFirmCoupon(id: string) {
   await assertAdminAccess()
   const result = await prisma.propFirmCoupon.delete({ where: { id } })
   updateTag('prop-firms')
+  updateTag('deals')
   return result
 }

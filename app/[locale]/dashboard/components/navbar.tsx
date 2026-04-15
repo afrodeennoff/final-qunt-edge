@@ -48,10 +48,10 @@ export default function Navbar() {
   return (
     <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none bg-background/95">
       <motion.nav
-        initial={{ y: -20, opacity: 0 }}
+        initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-border/45 bg-background/72 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300"
+        className="animate-fade-up-smooth pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-border/45 bg-background/72 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300"
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
