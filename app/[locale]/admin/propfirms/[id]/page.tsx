@@ -21,6 +21,164 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
 
+// ---------------------------------------------------------------------------
+// Shared helpers (module scope — no closure capture)
+// ---------------------------------------------------------------------------
+
+function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
+  const text = value?.toString().trim()
+  return text ? text : undefined
+}
+
+function requireText(value: FormDataEntryValue | null, fallback = ''): string {
+  return value?.toString().trim() || fallback
+}
+
+function parseOptionalNumber(value: FormDataEntryValue | null): number | undefined {
+  const text = value?.toString().trim()
+  if (!text) return undefined
+  const parsed = Number.parseFloat(text)
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
+  const text = value?.toString().trim()
+  if (!text) return null
+  const parsed = new Date(text)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
+function requireFormString(formData: FormData, key: string): string {
+  const val = formData.get(key)
+  if (!val || typeof val !== 'string') throw new Error(`Missing required field: ${key}`)
+  return val
+}
+
+// ---------------------------------------------------------------------------
+// Server actions (module scope — read locale from FormData, not closure)
+// ---------------------------------------------------------------------------
+
+async function handleAction(formData: FormData) {
+  'use server'
+  const locale = requireFormString(formData, 'locale')
+  const firmId = formData.get('id')?.toString()
+  const isUpdating = firmId && firmId !== 'new'
+
+  const data = {
+    name: requireText(formData.get('name')),
+    slug: requireText(formData.get('slug')),
+    category: requireText(formData.get('category')),
+    description: normalizeOptionalText(formData.get('description')),
+    shortDesc: normalizeOptionalText(formData.get('shortDesc')),
+    platform: normalizeOptionalText(formData.get('platform')),
+    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+    profitSplit: normalizeOptionalText(formData.get('profitSplit')),
+    maxAllocation: normalizeOptionalText(formData.get('maxAllocation')),
+    referralUrl: normalizeOptionalText(formData.get('referralUrl')),
+    logoUrl: normalizeOptionalText(formData.get('logoUrl')),
+    isActive: formData.has('isActive'),
+  }
+
+  if (isUpdating) {
+    await updatePropFirm(firmId!, data)
+  } else {
+    await createPropFirm(data)
+  }
+
+  redirect(`/${locale}/admin/propfirms`)
+}
+
+async function handleCreateReview(formData: FormData) {
+  'use server'
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await createPropFirmReview(propFirmId, {
+    rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
+    title: normalizeOptionalText(formData.get('title')),
+    content: normalizeOptionalText(formData.get('content')),
+    isVerified: formData.has('isVerified'),
+  })
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+async function handleUpdateReview(formData: FormData) {
+  'use server'
+  const reviewId = requireFormString(formData, 'reviewId')
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await updatePropFirmReview(reviewId, {
+    rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
+    title: normalizeOptionalText(formData.get('title')),
+    content: normalizeOptionalText(formData.get('content')),
+    isVerified: formData.has('isVerified'),
+  })
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+async function handleDeleteReview(formData: FormData) {
+  'use server'
+  const reviewId = requireFormString(formData, 'reviewId')
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await deletePropFirmReview(reviewId)
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+async function handleCreateCoupon(formData: FormData) {
+  'use server'
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await createPropFirmCoupon(propFirmId, {
+    code: requireText(formData.get('code')),
+    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+    description: normalizeOptionalText(formData.get('description')),
+    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+    platform: normalizeOptionalText(formData.get('platform')),
+    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+    isActive: formData.has('couponIsActive'),
+    startsAt: parseOptionalDate(formData.get('startsAt')),
+    expiresAt: parseOptionalDate(formData.get('expiresAt')),
+  })
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+async function handleUpdateCoupon(formData: FormData) {
+  'use server'
+  const couponId = requireFormString(formData, 'couponId')
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await updatePropFirmCoupon(couponId, {
+    code: requireText(formData.get('code')),
+    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+    description: normalizeOptionalText(formData.get('description')),
+    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+    platform: normalizeOptionalText(formData.get('platform')),
+    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+    isActive: formData.has('couponIsActive'),
+    startsAt: parseOptionalDate(formData.get('startsAt')),
+    expiresAt: parseOptionalDate(formData.get('expiresAt')),
+  })
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+async function handleDeleteCoupon(formData: FormData) {
+  'use server'
+  const couponId = requireFormString(formData, 'couponId')
+  const propFirmId = requireFormString(formData, 'propFirmId')
+  const locale = requireFormString(formData, 'locale')
+  await deletePropFirmCoupon(couponId)
+  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+}
+
+// ---------------------------------------------------------------------------
+// Data types
+// ---------------------------------------------------------------------------
+
 type PropFirmData = {
   id: string
   slug: string
@@ -61,38 +219,6 @@ type PropFirmData = {
   }[]
 }
 
-interface ReviewsSectionProps {
-  firm: PropFirmData
-  locale: string
-  onCreateReview: (formData: FormData) => Promise<void>
-  onUpdateReview: (formData: FormData) => Promise<void>
-  onDeleteReview: (formData: FormData) => Promise<void>
-}
-
-interface CouponsSectionProps {
-  firm: PropFirmData
-  locale: string
-  onCreateCoupon: (formData: FormData) => Promise<void>
-  onUpdateCoupon: (formData: FormData) => Promise<void>
-  onDeleteCoupon: (formData: FormData) => Promise<void>
-}
-
-function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
-  const text = value?.toString().trim()
-  return text ? text : undefined
-}
-
-function requireText(value: FormDataEntryValue | null, fallback = ''): string {
-  return value?.toString().trim() || fallback
-}
-
-function parseOptionalNumber(value: FormDataEntryValue | null): number | undefined {
-  const text = value?.toString().trim()
-  if (!text) return undefined
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
 function buildFallbackFirm(id: string): PropFirmData | null {
   const fallbackKey = id.startsWith('fallback-') ? id.slice('fallback-'.length) : id
   const firm = propFirms[fallbackKey]
@@ -119,7 +245,10 @@ function buildFallbackFirm(id: string): PropFirmData | null {
   }
 }
 
-// This page intentionally co-locates the related server actions for one admin workflow.
+// ---------------------------------------------------------------------------
+// Page (Server Component — no function props passed to client boundaries)
+// ---------------------------------------------------------------------------
+
 // eslint-disable-next-line complexity
 export default async function PropFirmEditPage({
   params,
@@ -146,129 +275,12 @@ export default async function PropFirmEditPage({
     }
   }
 
-  async function handleAction(formData: FormData) {
-    'use server'
-    const firmId = formData.get('id')?.toString()
-    const isUpdating = firmId && firmId !== 'new'
-
-    const data = {
-      name: requireText(formData.get('name')),
-      slug: requireText(formData.get('slug')),
-      category: requireText(formData.get('category')),
-      description: normalizeOptionalText(formData.get('description')),
-      shortDesc: normalizeOptionalText(formData.get('shortDesc')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      profitSplit: normalizeOptionalText(formData.get('profitSplit')),
-      maxAllocation: normalizeOptionalText(formData.get('maxAllocation')),
-      referralUrl: normalizeOptionalText(formData.get('referralUrl')),
-      logoUrl: normalizeOptionalText(formData.get('logoUrl')),
-      isActive: formData.has('isActive'),
-    }
-
-    if (isUpdating) {
-      await updatePropFirm(firmId!, data)
-    } else {
-      await createPropFirm(data)
-    }
-
-    redirect(`/${locale}/admin/propfirms`)
-  }
-
-  async function handleCreateReview(formData: FormData) {
-    'use server'
-    const propFirmId = formData.get('propFirmId') as string
-    await createPropFirmReview(propFirmId, {
-      rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
-      title: normalizeOptionalText(formData.get('title')),
-      content: normalizeOptionalText(formData.get('content')),
-      isVerified: formData.has('isVerified'),
-    })
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
-  async function handleUpdateReview(formData: FormData) {
-    'use server'
-    const reviewId = formData.get('reviewId') as string
-    const propFirmId = formData.get('propFirmId') as string
-    await updatePropFirmReview(reviewId, {
-      rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
-      title: normalizeOptionalText(formData.get('title')),
-      content: normalizeOptionalText(formData.get('content')),
-      isVerified: formData.has('isVerified'),
-    })
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
-  async function handleDeleteReview(formData: FormData) {
-    'use server'
-    const reviewId = formData.get('reviewId') as string
-    const propFirmId = formData.get('propFirmId') as string
-    await deletePropFirmReview(reviewId)
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
-  function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
-    const text = value?.toString().trim()
-    if (!text) return null
-    const parsed = new Date(text)
-    return Number.isNaN(parsed.getTime()) ? undefined : parsed
-  }
-
-  async function handleCreateCoupon(formData: FormData) {
-    'use server'
-    const propFirmId = formData.get('propFirmId') as string
-    await createPropFirmCoupon(propFirmId, {
-      code: requireText(formData.get('code')),
-      discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      description: normalizeOptionalText(formData.get('description')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('couponIsActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
-    })
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
-  async function handleUpdateCoupon(formData: FormData) {
-    'use server'
-    const couponId = formData.get('couponId') as string
-    const propFirmId = formData.get('propFirmId') as string
-    await updatePropFirmCoupon(couponId, {
-      code: requireText(formData.get('code')),
-      discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      description: normalizeOptionalText(formData.get('description')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('couponIsActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
-    })
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
-  async function handleDeleteCoupon(formData: FormData) {
-    'use server'
-    const couponId = formData.get('couponId') as string
-    const propFirmId = formData.get('propFirmId') as string
-    await deletePropFirmCoupon(couponId)
-    redirect(`/${locale}/admin/propfirms/${propFirmId}`)
-  }
-
   const fieldClass = 'grid gap-2'
 
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
-        <Button  variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild>
           <Link href={`/${locale}/admin/propfirms`}>← Back</Link>
         </Button>
         <h1 className="text-2xl font-semibold tracking-tight">
@@ -282,6 +294,7 @@ export default async function PropFirmEditPage({
             <CardTitle>Firm Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <input type="hidden" name="locale" value={locale} />
             {firm && <input type="hidden" name="id" value={id} />}
 
             <div className={fieldClass}>
@@ -369,10 +382,10 @@ export default async function PropFirmEditPage({
             </p>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button  variant="outline" asChild>
+              <Button variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
               </Button>
-              <Button  type="submit">{isNew ? 'Create' : 'Save Changes'}</Button>
+              <Button type="submit">{isNew ? 'Create' : 'Save Changes'}</Button>
             </div>
           </CardContent>
         </Card>
@@ -380,39 +393,26 @@ export default async function PropFirmEditPage({
 
       {!isNew && firm && (
         <>
-          <ReviewsSection
-            firm={firm}
-            locale={locale}
-            onCreateReview={handleCreateReview}
-            onUpdateReview={handleUpdateReview}
-            onDeleteReview={handleDeleteReview}
-          />
-
-          <CouponsSection
-            firm={firm}
-            locale={locale}
-            onCreateCoupon={handleCreateCoupon}
-            onUpdateCoupon={handleUpdateCoupon}
-            onDeleteCoupon={handleDeleteCoupon}
-          />
+          <ReviewsSection firm={firm} locale={locale} />
+          <CouponsSection firm={firm} locale={locale} />
         </>
       )}
     </div>
   )
 }
 
-function ReviewsSection({
-  firm,
-  onCreateReview,
-  onUpdateReview,
-  onDeleteReview,
-}: ReviewsSectionProps) {
+// ---------------------------------------------------------------------------
+// Section components (Server Components — use module-scope actions directly)
+// ---------------------------------------------------------------------------
+
+function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Reviews ({firm.reviews.length})</CardTitle>
-        <form action={onCreateReview}>
+        <form action={handleCreateReview}>
           <input type="hidden" name="propFirmId" value={firm.id} />
+          <input type="hidden" name="locale" value={locale} />
           <div className="flex items-center gap-2">
             <Input name="title" placeholder="Review title" className="w-40" />
             <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
@@ -421,7 +421,7 @@ function ReviewsSection({
               <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
               Verified
             </label>
-            <Button  type="submit" size="sm" variant="outline">
+            <Button type="submit" size="sm" variant="outline">
               <Plus className="w-4 h-4 mr-1" /> Add
             </Button>
           </div>
@@ -433,11 +433,12 @@ function ReviewsSection({
         ) : (
           <div className="space-y-3">
             {firm.reviews.map((review) => (
-              <div key={review.id} className="flex items-start gap-3 p-3 rounded-lg border border-white/[0.6]">
+              <div key={review.id} className="flex items-start gap-3 p-3 rounded-lg border border-[oklch(0.65_0.22_260/0.08)]">
                 <div className="flex-1 gap-2">
-                  <form action={onUpdateReview} className="space-y-2">
+                  <form action={handleUpdateReview} className="space-y-2">
                     <input type="hidden" name="reviewId" value={review.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
+                    <input type="hidden" name="locale" value={locale} />
                     <div className="flex items-center gap-2">
                       <Input name="title" defaultValue={review.title ?? ''} placeholder="Title" className="w-40" />
                       <Input name="rating" type="number" min="0" max="5" defaultValue={review.rating} className="w-20" />
@@ -445,7 +446,7 @@ function ReviewsSection({
                         <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
                         Verified
                       </label>
-                      <Button  type="submit" size="sm" variant="outline">Save</Button>
+                      <Button type="submit" size="sm" variant="outline">Save</Button>
                     </div>
                     <Textarea
                       name="content"
@@ -458,10 +459,11 @@ function ReviewsSection({
                     Created: {new Date(review.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <form action={onDeleteReview}>
+                <form action={handleDeleteReview}>
                   <input type="hidden" name="reviewId" value={review.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <Button  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <input type="hidden" name="locale" value={locale} />
+                  <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </form>
@@ -474,12 +476,7 @@ function ReviewsSection({
   )
 }
 
-function CouponsSection({
-  firm,
-  onCreateCoupon,
-  onUpdateCoupon,
-  onDeleteCoupon,
-}: CouponsSectionProps) {
+function CouponsSection({ firm, locale }: { firm: PropFirmData; locale: string }) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -487,8 +484,9 @@ function CouponsSection({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Create new coupon form */}
-        <form action={onCreateCoupon} className="space-y-4 rounded-lg border border-white/[0.6] p-4">
+        <form action={handleCreateCoupon} className="space-y-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] p-4">
           <input type="hidden" name="propFirmId" value={firm.id} />
+          <input type="hidden" name="locale" value={locale} />
           <p className="text-sm font-medium">Add New Coupon</p>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
@@ -560,11 +558,12 @@ function CouponsSection({
         ) : (
           <div className="space-y-4">
             {firm.coupons.map((coupon) => (
-              <div key={coupon.id} className="flex items-start gap-3 p-4 rounded-lg border border-white/[0.6]">
+              <div key={coupon.id} className="flex items-start gap-3 p-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)]">
                 <div className="flex-1 gap-2">
-                  <form action={onUpdateCoupon} className="space-y-3">
+                  <form action={handleUpdateCoupon} className="space-y-3">
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
+                    <input type="hidden" name="locale" value={locale} />
 
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
@@ -645,10 +644,11 @@ function CouponsSection({
                     Created: {new Date(coupon.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                <form action={onDeleteCoupon}>
+                <form action={handleDeleteCoupon}>
                   <input type="hidden" name="couponId" value={coupon.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
-                  <Button  type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <input type="hidden" name="locale" value={locale} />
+                  <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </form>

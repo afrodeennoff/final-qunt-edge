@@ -41,6 +41,64 @@ function parseOptionalDate(value: FormDataEntryValue | null): Date | null | unde
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
+function requireFormString(formData: FormData, key: string): string {
+  const val = formData.get(key)
+  if (!val || typeof val !== 'string') throw new Error(`Missing required field: ${key}`)
+  return val
+}
+
+// ---------------------------------------------------------------------------
+// Server actions (module scope — read locale from FormData, not closure)
+// ---------------------------------------------------------------------------
+
+async function handleCreateCoupon(formData: FormData) {
+  'use server'
+  const locale = requireFormString(formData, 'locale')
+  const propFirmId = requireText(formData.get('propFirmId'))
+  await createPropFirmCoupon(propFirmId, {
+    code: requireText(formData.get('code')),
+    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+    description: normalizeOptionalText(formData.get('description')),
+    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+    platform: normalizeOptionalText(formData.get('platform')),
+    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+    isActive: formData.has('couponIsActive'),
+    startsAt: parseOptionalDate(formData.get('startsAt')),
+    expiresAt: parseOptionalDate(formData.get('expiresAt')),
+  })
+  redirect(`/${locale}/admin/coupons`)
+}
+
+async function handleUpdateCoupon(formData: FormData) {
+  'use server'
+  const locale = requireFormString(formData, 'locale')
+  const couponId = requireText(formData.get('couponId'))
+  await updatePropFirmCoupon(couponId, {
+    code: requireText(formData.get('code')),
+    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+    description: normalizeOptionalText(formData.get('description')),
+    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+    platform: normalizeOptionalText(formData.get('platform')),
+    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+    isActive: formData.has('couponIsActive'),
+    startsAt: parseOptionalDate(formData.get('startsAt')),
+    expiresAt: parseOptionalDate(formData.get('expiresAt')),
+  })
+  redirect(`/${locale}/admin/coupons`)
+}
+
+async function handleDeleteCoupon(formData: FormData) {
+  'use server'
+  const locale = requireFormString(formData, 'locale')
+  const couponId = requireText(formData.get('couponId'))
+  await deletePropFirmCoupon(couponId)
+  redirect(`/${locale}/admin/coupons`)
+}
+
 async function loadCoupons() {
   if (!hasConfiguredDatabaseConnection) {
     return []
@@ -140,13 +198,9 @@ function StatCard({
 function CouponEditCard({
   coupon,
   locale,
-  onUpdateCoupon,
-  onDeleteCoupon,
 }: {
   coupon: Awaited<ReturnType<typeof loadCoupons>>[number]
   locale: string
-  onUpdateCoupon: (formData: FormData) => Promise<void>
-  onDeleteCoupon: (formData: FormData) => Promise<void>
 }) {
   const active = coupon.isActive
   const expiringSoon = isExpiringSoon(coupon.expiresAt)
@@ -178,9 +232,10 @@ function CouponEditCard({
       </CardHeader>
 
       <CardContent size="sm" className="space-y-4 pt-4">
-        <form action={onUpdateCoupon} className="space-y-3">
+        <form action={handleUpdateCoupon} className="space-y-3">
           <input type="hidden" name="couponId" value={coupon.id} />
           <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
+          <input type="hidden" name="locale" value={locale} />
 
           <div className="grid gap-3 md:grid-cols-2">
             <div className="space-y-1">
@@ -289,9 +344,10 @@ function CouponEditCard({
           <div className="text-xs text-muted-foreground">
             Updated {new Date(coupon.updatedAt).toLocaleString()}
           </div>
-          <form action={onDeleteCoupon}>
+          <form action={handleDeleteCoupon}>
             <input type="hidden" name="couponId" value={coupon.id} />
             <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
+            <input type="hidden" name="locale" value={locale} />
             <Button
               type="submit"
               size="sm"
@@ -318,51 +374,6 @@ export default async function AdminCouponsPage({
   const { locale } = await params
 
   const [firms, coupons] = await Promise.all([loadFirms(), loadCoupons()])
-
-  async function handleCreateCoupon(formData: FormData) {
-    'use server'
-    const propFirmId = requireText(formData.get('propFirmId'))
-    await createPropFirmCoupon(propFirmId, {
-      code: requireText(formData.get('code')),
-      discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      description: normalizeOptionalText(formData.get('description')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('couponIsActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
-    })
-    redirect(`/${locale}/admin/coupons`)
-  }
-
-  async function handleUpdateCoupon(formData: FormData) {
-    'use server'
-    const couponId = requireText(formData.get('couponId'))
-    await updatePropFirmCoupon(couponId, {
-      code: requireText(formData.get('code')),
-      discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-      description: normalizeOptionalText(formData.get('description')),
-      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-      platform: normalizeOptionalText(formData.get('platform')),
-      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-      isActive: formData.has('couponIsActive'),
-      startsAt: parseOptionalDate(formData.get('startsAt')),
-      expiresAt: parseOptionalDate(formData.get('expiresAt')),
-    })
-    redirect(`/${locale}/admin/coupons`)
-  }
-
-  async function handleDeleteCoupon(formData: FormData) {
-    'use server'
-    const couponId = requireText(formData.get('couponId'))
-    await deletePropFirmCoupon(couponId)
-    redirect(`/${locale}/admin/coupons`)
-  }
 
   const activeCount = coupons.filter((coupon) => coupon.isActive).length
   const inactiveCount = coupons.length - activeCount
@@ -421,6 +432,7 @@ export default async function AdminCouponsPage({
             </p>
           ) : (
             <form action={handleCreateCoupon} className="space-y-4">
+              <input type="hidden" name="locale" value={locale} />
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
                   <Label htmlFor="propFirmId">Prop firm</Label>
@@ -518,8 +530,6 @@ export default async function AdminCouponsPage({
               key={coupon.id}
               coupon={coupon}
               locale={locale}
-              onUpdateCoupon={handleUpdateCoupon}
-              onDeleteCoupon={handleDeleteCoupon}
             />
           ))
         )}
