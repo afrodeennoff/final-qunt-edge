@@ -218,7 +218,11 @@
 - **R:** Pass `locale` via a hidden form input (`<input name="locale" value={locale} />`) and read it with `formData.get('locale')` in the server action.
 - **E:** Blog page now has `formData.append('locale', locale)` in the client component, and server actions read it before redirect.
 
-## Lesson 37: Dynamic imports with `loading: () => null` cause blank flashes during soft navigation
+## Lesson 38: Server actions MUST be at module scope — never inside component closures
+- **M:** Admin pages for propfirms/[id], coupons, and reviews crashed in production with "Functions cannot be passed directly to Client Components" and "e.useState is not a function" errors.
+- **RC**: Server actions defined inside component functions (e.g., `async function handleCreate(formData) { 'use server'; ... redirect(`/${locale}/...`) }`) capture the `locale` variable from the component scope. Next.js cannot serialize this closure across the server/client boundary — it tries to serialize the entire scope including the function and its captured variables.
+- **R**: Always define server actions at module scope. Pass dynamic values like `locale`, `id`, `status`, `page` via hidden form inputs (`<input type="hidden" name="locale" value={locale}>`) and read them with `formData.get()`.
+- **E**: All 10 admin server actions extracted to module scope with `requireFormString(formData, 'locale')` helper.
 - **M:** Dashboard header disappeared momentarily during soft navigation.
 - **RC:** `dynamic(() => import(...), { loading: () => null })` renders nothing while the chunk loads. During soft navigation, this creates a visible blank flash.
 - **R:** Use a skeleton matching the component's layout as the loading fallback. Even a simple `div` with `animate-pulse` is better than `null`.

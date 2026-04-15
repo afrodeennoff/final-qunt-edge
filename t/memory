@@ -95,6 +95,15 @@
 - `npm run typecheck` = passes
 - `npm run lint` = passes with pre-existing complexity warnings, 0 errors
 
+### SSR/CSR Fix — Server Actions Module Scope (2026-04-15)
+- **CRITICAL**: Server actions defined inside component closures crash at runtime with "Functions cannot be passed directly to Client Components" error
+- All 10 admin server actions (7 in propfirms/[id], 3 in coupons) extracted to module scope
+- `locale` passed via hidden `<input name="locale">` instead of closure capture
+- `requireFormString()` helper added for validated form field reads
+- Reviews `moderateAction` also extracted to module scope with locale/status/page hidden inputs
+- `CouponEditCard` no longer receives function props — uses module-scope actions directly
+- 0 `tsc` errors after all changes
+
 ### Audit-Fix Pass (2026-04-15)
 
 #### Critical Fixes
