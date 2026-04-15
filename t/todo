@@ -46,6 +46,7 @@
 - [x] Responsive spacing applied to all home + landing sections
 - [x] SPACING_SYSTEM.md documented
 - [x] Commit and deploy to Vercel production (completed 2026-04-15)
+- [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper from MarketingLayoutShell
 
 ## In Progress
 - [ ] None

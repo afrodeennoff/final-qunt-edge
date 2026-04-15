@@ -122,8 +122,26 @@
 - **R:** When extracting public copy into i18n, update every locale entry point in the repo during the same pass. If full translation is not available, wire temporary English fallbacks explicitly so no locale crashes on missing keys.
 - **E:** `locales/en/landing.ts` and `locales/fr/landing.ts` received the new `landing.home.*` tree, while `locales/es.ts`, `locales/hi.ts`, `locales/it.ts`, and `locales/ja.ts` were kept compiling through the shared English fallback spread.
 
+## Lesson 21: Home hero redesigns work better when support chrome moves next to the preview
+- **M:** The hero felt busy when broker integrations and capability cards were all stacked below a centered intro.
+- **RC:** Supporting UI was competing with the primary product preview instead of framing it.
+- **R:** Keep the hero in a split layout: editorial copy and capability cards on one side, preview on the other, and move compact trust/integration chrome into a shallow tray above or beside the preview.
+- **E:** `Hero.tsx` now places integrations in a compact tray above `DashboardPreview`, which lets the preview read as the main focal point without losing supporting context.
+
+## Lesson 22: Cal.com-style hero inspiration works best as composition, not as a full-theme transplant
+- **M:** The user wanted the Cal.com design language implemented while explicitly excluding the grayscale color system.
+- **RC:** Copying the palette would fight the app's established purple theme, but the composition, typography density, restraint, and product-first layout are portable.
+- **R:** When adapting a strong external design reference, isolate the transferable primitives first: centered editorial structure, generous whitespace, shadow-contained surfaces, screenshot-first hierarchy, and restrained decoration. Keep palette and brand accents local when requested.
+- **E:** The updated home `Hero.tsx` dropped the ambient glow-heavy split layout in favor of a centered launch-page composition while preserving Qunt Edge's existing tokens.
+
 ## Lesson 21: Vercel `functions.runtime` config must match supported Node runtimes
 - **M:** `vercel --prod` failed with `Function Runtimes must have a valid version, for example now-php@1.0.0`
 - **RC:** `vercel.json` had `"functions": { "api/**/*.ts": { "runtime": "nodejs22.x" } }` but the Vercel project settings use Node 24.x. The `nodejs22.x` runtime string was rejected by Vercel's build system (CLI 51.2.1).
 - **R:** Remove the explicit `functions` runtime override from `vercel.json` and let Vercel auto-detect the Node version from project settings. Only specify `functions` config for Edge runtimes or when you need per-route overrides.
 - **E:** Removed the `functions` block entirely; Vercel now auto-detects Node 24.x and builds succeed.
+
+## Lesson 22: MotionStagger at page-level opacity:0 blocks first paint
+- **M:** Home page showed blank until force reload
+- **RC:** `MarketingLayoutShell` wrapped ALL children in `<MotionStagger>` which starts at `opacity: 0` and only becomes visible when `useInView` fires. After new deployments, stale chunk caches or slow JS hydration could prevent IntersectionObserver from firing, leaving the entire page invisible.
+- **R:** Never wrap an entire page's content in a motion container that starts invisible. Use per-section animations instead. The page shell must be immediately visible.
+- **E:** Removed `MotionStagger`/`MotionStaggerItem` wrapper from `MarketingLayoutShell`. Content renders immediately; individual sections handle their own entrance animations.

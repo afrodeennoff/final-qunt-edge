@@ -22,14 +22,9 @@ export default function Hero({ locale }: { locale: string }) {
   const integrations = [1, 2, 3, 4, 5].map((index) => t(`landing.home.hero.integration${index}`))
 
   return (
-    <section className="relative overflow-hidden px-4 pb-16 sm:pb-20 lg:pb-24 pt-[88px] sm:px-6 md:pt-32 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 via-background/0 to-background/0" />
-      {/* Atmospheric glow orbs */}
-      <div className="pointer-events-none absolute -left-40 top-20 h-[480px] w-[480px] rounded-full bg-primary/[0.04] blur-[120px]" />
-      <div className="pointer-events-none absolute -right-32 top-40 h-[400px] w-[400px] rounded-full bg-accent/[0.03] blur-[120px]" />
-
-      <div className="relative mx-auto flex w-full max-w-[1360px] flex-col gap-12">
-        <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+    <section className="relative overflow-hidden px-4 pb-20 pt-[88px] sm:px-6 sm:pt-28 md:pb-24 md:pt-32 lg:px-8 xl:pb-28">
+      <div className="relative mx-auto max-w-[1200px] [--hero-copy:var(--font-dm-sans)] [--hero-display:var(--font-outfit)]">
+        <div className="mx-auto max-w-[860px] text-center">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -37,14 +32,14 @@ export default function Hero({ locale }: { locale: string }) {
           >
             <Badge
               variant="outline"
-              className="mb-6 rounded-full border-white/[0.06] bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="mb-6 rounded-full border-border/60 bg-card/70 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80"
             >
               {t('landing.hero.badge')}
             </Badge>
           </motion.div>
 
           <motion.h1
-            className="type-h1 max-w-5xl text-balance text-foreground lg:text-display"
+            className="mx-auto max-w-[820px] text-balance text-[clamp(2.75rem,7vw,4.75rem)] leading-[1.05] tracking-[-0.055em] text-foreground [font-family:var(--hero-display)] font-semibold"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease }}
@@ -56,7 +51,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.h1>
 
           <motion.p
-            className="mx-auto mt-6 max-w-3xl text-balance text-base leading-relaxed text-muted-foreground md:text-lg"
+            className="mx-auto mt-6 max-w-[700px] text-balance text-[1rem] leading-[1.55] text-muted-foreground md:text-[1.125rem] [font-family:var(--hero-copy)]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.3, ease }}
@@ -65,7 +60,7 @@ export default function Hero({ locale }: { locale: string }) {
           </motion.p>
 
           <motion.div
-            className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4"
+            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4, ease }}
@@ -74,7 +69,7 @@ export default function Hero({ locale }: { locale: string }) {
               <Button
                 asChild
                 size="lg"
-                className="h-11 w-full rounded-full px-8 text-sm font-bold transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:brightness-110 sm:w-auto"
+                className="h-11 w-full rounded-md px-8 text-sm font-semibold sm:w-auto"
               >
                 <Link href={`/${locale}/authentication?next=dashboard`}>
                   {t('landing.hero.ctaPrimary')}
@@ -86,7 +81,7 @@ export default function Hero({ locale }: { locale: string }) {
               asChild
               size="lg"
               variant="outline"
-              className="group h-11 w-full rounded-full border-white/[0.06] bg-background/70 px-8 text-sm font-medium text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12] hover:bg-background sm:w-auto"
+              className="group h-11 w-full rounded-md border-border/60 bg-background/70 px-8 text-sm font-semibold text-foreground/80 hover:border-border/80 hover:bg-background sm:w-auto"
             >
               <a href="#how-it-works">
                 {t('landing.hero.ctaSecondary')}
@@ -95,64 +90,84 @@ export default function Hero({ locale }: { locale: string }) {
             </Button>
           </motion.div>
 
-          <motion.p
-            className="mt-4 text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground"
+          <motion.div
+            className="mt-6 flex flex-wrap items-center justify-center gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.45 }}
           >
-            {t('landing.hero.noCreditCard')} · {t('landing.hero.firstAudit')}
-          </motion.p>
+            <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
+              {t('landing.hero.noCreditCard')}
+            </span>
+            <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
+              {t('landing.hero.firstAudit')}
+            </span>
+          </motion.div>
         </div>
 
         <motion.div
-          className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-end"
-          initial={{ opacity: 0, y: 10 }}
+          className="mt-12"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease }}
+          transition={{ duration: 0.7, delay: 0.55, ease }}
         >
-          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
-            {capabilityCards.map((card) => (
-              <div
-                key={String(card.title)}
-                className="rounded-lg border-white/[0.06] bg-card/80 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]"
-              >
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-                  {card.title}
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)] xl:gap-5">
+            <div className="overflow-hidden rounded-lg border border-border/60 bg-card/70 p-3 shadow-sm sm:p-4 lg:row-span-2">
+              <div className="mb-4 flex flex-col gap-3 rounded-lg border border-border/60 bg-background/60 px-4 py-3 md:flex-row md:items-center md:justify-between">
+                <p className="type-label text-muted-foreground">
+                  {t('landing.home.hero.integrationsTitle')}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {card.description}
-                </p>
+                <div className="flex flex-wrap gap-2">
+                  {integrations.map((integration) => (
+                    <span
+                      key={String(integration)}
+                      className="type-label rounded-full border border-border/60 bg-card/80 px-3 py-1 text-foreground/80"
+                    >
+                      {integration}
+                    </span>
+                  ))}
+                </div>
               </div>
-            ))}
 
-            <div className="rounded-lg border border-white/[0.04] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                {t('landing.home.hero.integrationsTitle')}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {integrations.map((integration) => (
-                  <span
-                    key={String(integration)}
-                    className="rounded-full border-white/[0.06] bg-background/70 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12]"
+              <DashboardPreview />
+            </div>
+
+            <article className="rounded-lg border border-border/60 bg-card/70 p-5 text-left shadow-sm">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <p className="type-label text-muted-foreground">{t('landing.hero.badge')}</p>
+                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+              </div>
+              <div className="space-y-4">
+                {capabilityCards.map((card, index) => (
+                  <div
+                    key={String(card.title)}
+                    className={`${
+                      index < capabilityCards.length - 1 ? 'border-b border-border/60 pb-4' : ''
+                    }`}
                   >
-                    {integration}
-                  </span>
+                    <p className="text-[1rem] leading-[1.2] tracking-[0.2px] text-foreground [font-family:var(--hero-display)] font-semibold">
+                      {card.title}
+                    </p>
+                    <p className="mt-2 text-[0.875rem] leading-[1.5] text-muted-foreground [font-family:var(--hero-copy)]">
+                      {card.description}
+                    </p>
+                  </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </article>
 
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, scale: 0.985 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.6, ease }}
-          >
-            <div className="pointer-events-none absolute inset-0 rounded-lg border border-primary/20 bg-gradient-to-b from-primary/10 via-background/0 to-background/0" />
-            <div className="pointer-events-none absolute -inset-8 rounded-full bg-primary/[0.03] blur-[120px]" />
-            <DashboardPreview />
-          </motion.div>
+            <article className="rounded-lg border border-border/60 bg-card/70 p-5 text-left shadow-sm">
+              <p className="type-label text-muted-foreground">{t('landing.home.hero.integrationsTitle')}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="rounded-md border border-border/60 bg-background/60 px-4 py-3">
+                  <p className="type-label text-foreground/70">{t('landing.hero.noCreditCard')}</p>
+                </div>
+                <div className="rounded-md border border-border/60 bg-background/60 px-4 py-3">
+                  <p className="type-label text-foreground/70">{t('landing.hero.firstAudit')}</p>
+                </div>
+              </div>
+            </article>
+          </div>
         </motion.div>
       </div>
     </section>
