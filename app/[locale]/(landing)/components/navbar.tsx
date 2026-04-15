@@ -8,7 +8,6 @@ import { UnifiedMobileNav } from '@/components/mobile-nav'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
-import { useIsMobile } from '@/hooks/use-mobile'
 
 type NavLink = { title: string; href: string }
 
@@ -16,7 +15,6 @@ export default function Navbar() {
   const t = useI18n()
   const pathname = usePathname()
   const locale = useCurrentLocale()
-  const isMobile = useIsMobile()
 
   const links: NavLink[] = [
     { title: String(t('landing.navbar.features')), href: '/#features' },

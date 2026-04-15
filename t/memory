@@ -49,6 +49,15 @@
 - Spotlight rotation pauses on hover and focus so copy buttons, CTAs, and arrows remain easy to use without fighting the timer
 - Manual dot indicators were added below the spotlight so users can jump directly to a specific featured deal
 
+### Hero Entrance Animation — CSS-Driven (Soft Navigation Fix)
+- Replaced all Framer Motion `initial={{ opacity: 0 }}` entrance animations in `Hero.tsx` and `Navbar.tsx` with CSS `@keyframes hero-entrance` animations
+- CSS animations fire on DOM insertion via browser compositor — no JS chunk dependency
+- 6 hero entrance tiers with staggered delays (0s, 0.1s, 0.25s, 0.35s, 0.4s, 0.5s)
+- `animation-fill-mode: both` keeps elements invisible during delay, visible after animation
+- Navbar no longer has entrance animation — renders immediately for reliability
+- `loading.tsx` now shows a visible spinner instead of `null` during soft navigation transitions
+- All hero entrance classes respect `prefers-reduced-motion: reduce`
+
 ### Performance State — 200FPS Target
 - 0 repeat:Infinity, 0 filter:blur, 0 backdrop-blur, 0 transition-all, 0 cursor-tracking
 
@@ -75,6 +84,8 @@
 - direct verification of `node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/next typegen && node scripts/ensure-next-type-stubs.mjs && ./node_modules/.bin/tsc --noEmit` = passes after the deals spotlight auto-slide update
 - `npm run typecheck` = passes after the home/i18n/typography/dashboard layout pass
 - `npm run lint` = passes with 918 pre-existing warnings, 0 errors
+- `npm run typecheck` = passes after the dashboard chrome cleanup
+- targeted ESLint on dashboard chrome + major subpage shell files = 0 errors, complexity warnings only
 
 ## Uncommitted Changes
 - Bun build configuration (vercel.json, .nvmrc, package.json engines)
@@ -92,6 +103,7 @@
 - Dashboard account/table shell cleanup in `dashboard-tab-shell.tsx`, `accounts-overview.tsx`, `account-card.tsx`, and `trade-table-review.tsx`
 - Hero layout refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx`
 - Cal.com/Xtract-inspired hero refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx` with centered composition, reduced decorative atmosphere, and a card-led hero stage using the existing loaded font stack
+- Dashboard chrome cleanup across shared sidebar primitives, dashboard header/navbar, and `PnLSummary`, plus darker border/surface cleanup in `dashboard/behavior`, `dashboard/settings`, and `dashboard/billing`
 
 ## Blockers
 - None — waiting for user to say "deploy"

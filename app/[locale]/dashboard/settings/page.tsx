@@ -20,7 +20,6 @@ import {
   Bell,
   Shield,
   Globe,
-  Moon,
   Clock,
   CreditCard,
   Database,
@@ -38,11 +37,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { leaveTeam, getUserTeams } from './actions'

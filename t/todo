@@ -47,12 +47,8 @@
 - [x] Commit and deploy to Vercel production (completed 2026-04-15)
 - [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper from MarketingLayoutShell
 - [x] Fix home page blank on soft navigation — loading.tsx z-50 overlay (Lesson 23)
+- [x] Fix home page blank on soft navigation — replace Framer Motion opacity:0 with CSS animations in Hero + Navbar
+- [x] Remove bright white dashboard chrome borders from shared sidebar/header/navbar surfaces and normalize major dashboard subpages back to the dark card system
 
 ## In Progress
-- [ ] Diagnose and fix homepage blank black screen during soft navigation (clicking Link) vs hard refresh
-
-## Plan — Homepage Soft Navigation Blank Screen Fix
-1. **Replace Framer Motion `initial={{ opacity: 0 }}` with CSS animations** in Hero.tsx and Navbar.tsx — CSS animations fire immediately on DOM insertion, no JS dependency
-2. **Improve `loading.tsx`** to show a visible skeleton instead of `null`
-3. **Add CSS safety net** in globals.css for content visibility after timeout
-4. **Verify** with typecheck
+- [ ] None

@@ -33,7 +33,8 @@
 - InteractiveWrapper: magnetic mode disabled (no position tracking). Draggable still works.
 - FloatingOrbs: static positions (no animation)
 - BackgroundGlow: static gradient orbs (no motion)
-- Hero entrance: opacity + y only (no blur)
+- Hero entrance: CSS `@keyframes` via `.hero-entrance` classes (NOT Framer Motion). CSS animations fire on DOM insertion regardless of JS chunk state.
+- Navbar: renders immediately, no entrance animation (removed Framer Motion wrapper)
 - Dashboard navbar: `bg-background/95` (no backdrop-filter)
 
 ## Sidebar Rules
@@ -71,3 +72,6 @@
 - For reference-driven hero redesigns, it is acceptable to use a local display/body pairing with fonts already loaded in the app instead of introducing a new global font dependency, as long as the hierarchy clearly separates display text from explanatory copy.
 - Dashboard account collections should use `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch gap-4`; account cards should be full-height flex columns with bottom actions anchored via `mt-auto`.
 - Numeric trading/account/table values should prefer `tabular-nums` plus `font-medium`/`font-semibold` so dashboard columns and cards stay aligned as values change.
+- Dashboard shell chrome should avoid bright `white/[...]` borders and fills. For sidebar/header/navbar/summary chrome, prefer `border-border/35-45`, `bg-background/55-80`, and restrained `bg-primary/6-12` accents instead of white-tinted pills.
+- When dashboard visuals feel inconsistent, patch shared chrome first: `components/ui/sidebar.tsx`, `components/ui/unified-sidebar.tsx`, `components/ui/sidebar-primitives/**`, `dashboard-header.tsx`, `navbar.tsx`, and shared summary bars before touching route-local widgets.
+- Major dashboard subpages that still use legacy `border-white/[...]`, `bg-white/[...]`, or bright `border-[oklch(...)]` card recipes should be normalized toward `border-border/35-45` and `bg-card/50-60` so they match the shell.
