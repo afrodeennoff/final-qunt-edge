@@ -173,23 +173,9 @@ export function PublicRootProviders({
 }: {
     children: React.ReactNode
 }) {
-    const enablePublicMotion = process.env.NEXT_PUBLIC_ENABLE_PUBLIC_MOTION === "true";
-
-    if (!enablePublicMotion) {
-        return (
-            <RootProviders themeScope="fixed-blue">
-                <SidebarProvider defaultOpen={true}>
-                    {children}
-                </SidebarProvider>
-            </RootProviders>
-        );
-    }
-
     return (
         <RootProviders themeScope="fixed-blue">
-            <SidebarProvider defaultOpen={true}>
-                {children}
-            </SidebarProvider>
+            {children}
         </RootProviders>
     );
 }
