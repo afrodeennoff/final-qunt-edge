@@ -1,15 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MagneticButton } from '@/components/animation/interactive'
 import { useTypedI18n } from '@/locales/client'
 import DashboardPreview from './DashboardPreview'
-
-const ease = [0.22, 1, 0.36, 1] as const
 
 export default function Hero({ locale }: { locale: string }) {
   const t = useTypedI18n()
@@ -25,46 +22,27 @@ export default function Hero({ locale }: { locale: string }) {
     <section className="relative overflow-hidden px-4 pb-20 pt-[88px] sm:px-6 sm:pt-28 md:pb-24 md:pt-32 lg:px-8 xl:pb-28">
       <div className="relative mx-auto max-w-[1200px] [--hero-copy:var(--font-dm-sans)] [--hero-display:var(--font-outfit)]">
         <div className="mx-auto max-w-[860px] text-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, ease }}
-          >
+          <div className="hero-entrance">
             <Badge
               variant="outline"
               className="mb-6 rounded-full border-border/60 bg-card/70 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80"
             >
               {t('landing.hero.badge')}
             </Badge>
-          </motion.div>
+          </div>
 
-          <motion.h1
-            className="mx-auto max-w-[820px] text-balance text-[clamp(2.75rem,7vw,4.75rem)] leading-[1.05] tracking-[-0.055em] text-foreground [font-family:var(--hero-display)] font-semibold"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.1, ease }}
-          >
+          <h1 className="hero-entrance hero-entrance-d1 mx-auto max-w-[820px] text-balance text-[clamp(2.75rem,7vw,4.75rem)] leading-[1.05] tracking-[-0.055em] text-foreground [font-family:var(--hero-display)] font-semibold">
             {t('landing.hero.headline')}
             <span className="mt-2 block bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
               {t('landing.hero.headlineAccent')}
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className="mx-auto mt-6 max-w-[700px] text-balance text-[1rem] leading-[1.55] text-muted-foreground md:text-[1.125rem] [font-family:var(--hero-copy)]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.3, ease }}
-          >
+          <p className="hero-entrance hero-entrance-d2 mx-auto mt-6 max-w-[700px] text-balance text-[1rem] leading-[1.55] text-muted-foreground md:text-[1.125rem] [font-family:var(--hero-copy)]">
             {t('landing.hero.subheadline')}
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease }}
-          >
+          <div className="hero-entrance hero-entrance-d3 mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <MagneticButton strength={6}>
               <Button
                 asChild
@@ -88,29 +66,19 @@ export default function Hero({ locale }: { locale: string }) {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" />
               </a>
             </Button>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="mt-6 flex flex-wrap items-center justify-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.45 }}
-          >
+          <div className="hero-entrance hero-entrance-d4 mt-6 flex flex-wrap items-center justify-center gap-3">
             <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
               {t('landing.hero.noCreditCard')}
             </span>
             <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
               {t('landing.hero.firstAudit')}
             </span>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          className="mt-12"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55, ease }}
-        >
+        <div className="hero-entrance hero-entrance-d5 mt-12">
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)] xl:gap-5">
             <div className="overflow-hidden rounded-lg border border-border/60 bg-card/70 p-3 shadow-sm sm:p-4 lg:row-span-2">
               <div className="mb-4 flex flex-col gap-3 rounded-lg border border-border/60 bg-background/60 px-4 py-3 md:flex-row md:items-center md:justify-between">
@@ -170,7 +138,7 @@ export default function Hero({ locale }: { locale: string }) {
               </div>
             </article>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

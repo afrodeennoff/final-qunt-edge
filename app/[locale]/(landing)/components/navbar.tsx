@@ -3,7 +3,6 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
 import { Logo } from '@/components/logo'
@@ -40,12 +39,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
-      <motion.div
-        initial={isMobile ? false : { opacity: 0, y: -18 }}
-        animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-        transition={isMobile ? undefined : { duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto w-full max-w-6xl"
-      >
+      <div className="mx-auto w-full max-w-6xl">
         <div className="flex h-14 items-center justify-between rounded-full border border-border/60 bg-background/90 px-4 shadow-sm">
           <Link href={`/${locale}`} className="flex items-center gap-2 rounded-md px-2 py-1.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
@@ -99,7 +93,7 @@ export default function Navbar() {
             />
           </div>
         </div>
-      </motion.div>
+      </div>
     </header>
   )
 }
