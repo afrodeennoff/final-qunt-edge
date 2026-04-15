@@ -175,3 +175,15 @@
 - **RC:** The `_getActiveDeals` mapping in `server/deals.ts` only read from `coupon.propFirm.*`, never checking if the coupon itself had override values for those fields.
 - **R:** When coupon rows have nullable override columns (platform, payoutModel, drawdownType), map them with coupon-level priority: `coupon.platform || coupon.propFirm.platform || 'Default'`.
 - **E:** `server/deals.ts` now uses coupon-level overrides when set, falling back to firm-level values.
+
+## Lesson 30: Never wrap a page-level layout or shell in dynamic({ ssr: false }) with a blank loading fallback
+- **M:** Auth page showed blank black on soft navigation (Link click), but worked on hard refresh.
+- **RC:** `layout-shell.tsx` used `dynamic({ ssr: false })` rendering `<div class="min-h-screen bg-background" />` during loading — a blank black div with NO `{children}`. Then `page-shell.tsx` had the same pattern. Then `page-client.tsx` had `motion.div` with `initial={{ opacity: 0 }}`. Three invisible layers meant any soft-navigation chunk loading delay = permanently blank page.
+- **R:** Never use `dynamic({ ssr: false })` on page-level layouts or shells with a loading fallback that doesn't render `{children}`. Use direct imports instead. If client-only code is needed, use `'use client'` directive — it still renders during SSR via hydration.
+- **E:** Replaced both auth `dynamic({ ssr: false })` wrappers with direct imports, replaced `motion.div` entrance with CSS `@keyframes auth-entrance`, added `error.tsx`.
+
+## Lesson 31: dynamic({ ssr: false }) on page shells is a blank-page landmine during soft navigation
+- **M:** Same blank-page pattern can happen on any route that uses `dynamic({ ssr: false })` at the page/shell level.
+- **RC:** During soft navigation, the client must fetch and evaluate JavaScript chunks. `dynamic({ ssr: false })` shows the `loading` fallback until the chunk loads. If the fallback is a blank div, the user sees nothing during that window. If chunk loading fails silently, the blank is permanent.
+- **R:** Reserve `ssr: false` for individual interactive widgets (charts, maps, editors) with visible skeleton loading states. NEVER use it for page-level shells, layouts, or route wrappers.
+- **E:** Dashboard widget registry uses `ssr: false` with `widgetFallback` skeletons — safe. Auth page layout used it with a blank div — caused blank page.

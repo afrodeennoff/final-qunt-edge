@@ -95,6 +95,12 @@
 - `npm run typecheck` = passes
 - `npm run lint` = passes with pre-existing complexity warnings, 0 errors
 
+### Auth Page Soft Navigation Fix
+- Removed `dynamic({ ssr: false })` from `layout-shell.tsx` and `page-shell.tsx` — replaced with direct imports
+- Replaced Framer Motion `motion.div` entrance animations with CSS `@keyframes auth-entrance` in `page-client.tsx`
+- Added `error.tsx` with retry button to the auth route group
+- Root cause: triple-layer invisible chain (blank dynamic loading div → blank dynamic loading div → motion opacity:0)
+
 ## Uncommitted Changes
 - (none — all committed)
 

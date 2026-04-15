@@ -52,4 +52,4 @@
 - [x] Verify admin coupon/deal changes flow through to public deals page
 
 ## In Progress
-- [ ] None
+- [x] Fix auth page blank on soft navigation — removed double dynamic({ssr:false}) + Framer Motion opacity:0
