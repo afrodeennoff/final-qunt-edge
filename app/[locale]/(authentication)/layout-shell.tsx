@@ -1,11 +1,6 @@
 'use client'
 
-import dynamic from "next/dynamic"
-
-const AuthenticationClientLayout = dynamic(() => import("./client-layout"), {
- ssr: false,
- loading: () => <div className="min-h-screen bg-background" />,
-})
+import AuthenticationClientLayout from './client-layout'
 
 export default function AuthenticationLayoutShell({
  children,

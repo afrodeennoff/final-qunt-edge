@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { ArrowLeft, LockKeyhole, ShieldCheck, Sparkles, Workflow, Gauge, CheckCircle2 } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { UserAuthForm } from "../components/user-auth-form"
@@ -54,12 +53,7 @@ export default function AuthenticationPageClient() {
  </span>
  </div>
 
- <motion.div
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
- className="my-10 max-w-xl lg:my-14"
- >
+ <div className="auth-entrance-1 my-10 max-w-xl lg:my-14">
  <div className="mb-8 inline-flex items-center gap-3 rounded-[1.4rem] border border-white/[0.06] bg-white/[0.04] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28)]">
  <Logo className="h-5 w-5 text-foreground/95" />
  <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/72">Qunt Edge</span>
@@ -91,7 +85,7 @@ export default function AuthenticationPageClient() {
  </div>
  ))}
  </div>
- </motion.div>
+ </div>
 
  <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/34">
  <Sparkles className="h-3.5 w-3.5" />
@@ -100,12 +94,7 @@ export default function AuthenticationPageClient() {
  </section>
 
  <section className="flex items-center justify-center border-t border-white/[0.06] p-6 sm:p-8 lg:border-t-0 lg:p-10">
- <motion.div
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
- className="w-full max-w-[560px] mx-auto"
- >
+ <div className="auth-entrance-2 w-full max-w-[560px] mx-auto">
  <div className="mb-6 rounded-[1.6rem] border border-white/[0.06] bg-white/[0.04] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
  <div className="mb-3 flex items-center justify-between gap-3">
  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Account Access</p>
@@ -143,7 +132,7 @@ export default function AuthenticationPageClient() {
  {t('authentication.termsAndPrivacy.privacy')}
  </Link>
  </p>
- </motion.div>
+ </div>
  </section>
  </div>
  </div>

@@ -2353,6 +2353,35 @@
   .hero-entrance-d4 { animation-delay: 0.4s; }
   .hero-entrance-d5 { animation-delay: 0.5s; }
 
+  /* ===== AUTH PAGE ENTRANCE ===== */
+  @keyframes auth-entrance {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .auth-entrance-1 {
+    animation: auth-entrance 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .auth-entrance-2 {
+    animation: auth-entrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .auth-entrance-1,
+    .auth-entrance-2 {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* ===== PREMIUM HOVER EFFECTS ===== */
 
   /* Subtle lift on hover — cards, list items */
