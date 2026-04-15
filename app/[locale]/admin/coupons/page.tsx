@@ -36,7 +36,7 @@ function normalizeOptionalText(value: FormDataEntryValue | null): string | undef
 
 function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
   const text = value?.toString().trim()
-  if (!text) return undefined
+  if (!text) return null
   const parsed = new Date(text)
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
