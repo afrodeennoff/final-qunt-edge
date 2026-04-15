@@ -28,7 +28,7 @@ export default function HomeLayout({
       <MarketingLayoutShell
         className="home-borderless-shell dark"
         contentClassName="w-full"
-        showRollingBanner={false}
+        showRollingBanner={true}
         topSpacingClassName=""
         contentSpacingClassName="pb-safe"
         shellVariant="black"
