@@ -95,16 +95,33 @@
 - `npm run typecheck` = passes
 - `npm run lint` = passes with pre-existing complexity warnings, 0 errors
 
-### Home Page Soft Navigation Fix
-- `[locale]/loading.tsx` changed from `return null` to visible spinner
-- Auth page: removed `dynamic({ssr:false})` wrappers, replaced `motion.div` with CSS `@keyframes auth-entrance`, added `error.tsx`
-- RollingAdBanner wrapped in `<Suspense fallback={null}>` to prevent blocking the entire layout when DB is slow
-- `showRollingBanner={true}` enabled on home page
-- Community post loading.tsx: removed z-50
-- Landing loading.tsx: removed z-50 and 'use client'
-- Added error.tsx to shared/[slug]/ and embed/ routes
-- Added loading.tsx to embed/ route
-- Admin parseOptionalDate: returns null on empty input (allows clearing dates)
+### Audit-Fix Pass (2026-04-15)
+
+#### Critical Fixes
+- Blog server actions: added locale to all redirects (was `/admin/blogs`, now `/${locale}/admin/blogs`)
+- Deals cache: added `updateTag('deals')` alongside every `updateTag('prop-firms')` in coupon/firm mutations — deactivated coupons were visible for up to 2 hours
+- MotionSection: replaced `initial={{ opacity: 0 }}` with `initial={false}` + CSS `animate-fade-up-smooth` — eliminates blank-page risk when FM fails to hydrate
+- Hero: replaced `initial={{ opacity: 0, y: 8 }}` with `initial={false}` + CSS animation on all motion.div wrappers
+- Dashboard navbar: replaced `initial={{ y: -20, opacity: 0 }}` with `initial={false}` + CSS animation
+- MotionStagger and MotionOrchestrated: also replaced `initial="hidden"` with `initial={false}` + CSS animation
+
+#### High Severity Fixes
+- Reviews page: `moderateAction` now validates inputs, redirects after success, and throws errors instead of swallowing them
+- Reviews page: `variant="error"` → `variant="destructive"` on Badge and Button
+- Prop firms: validate `formData.get('id')` before passing to `softDeletePropFirm`
+- Dashboard layout: `DashboardHeader` dynamic import now has a visible skeleton instead of `loading: () => null`
+- Dashboard layout: `DashboardClientOverlays` dynamic import now has `<div />` instead of `loading: () => null`
+- `_getUnifiedFirms`: try/catch now wraps the entire `Promise.all` (including DB query), not just `firms.map()`
+- Admin dashboard: added `assertAdminAccess()` for defense-in-depth
+- Blog management: pass `locale` in FormData for server actions
+
+#### Visual System Compliance
+- All `border-white/[0.6]` and `border-white/[0.8]` replaced with `border-[oklch(0.65_0.22_260/0.08)]`
+- All `bg-white/[0.070-0.3]` replaced with oklch cobalt-tinted surfaces
+- `transition-all` in admin dashboard replaced with explicit `transition-[opacity,background-color,border-color,transform,box-shadow]`
+
+#### Type Safety
+- All changes pass `npx tsc --noEmit` with 0 errors
 
 ## Uncommitted Changes
 - (none — all committed)
