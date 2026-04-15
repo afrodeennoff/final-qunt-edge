@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { MagneticButton } from '@/components/animation/interactive'
 import { useTypedI18n } from '@/locales/client'
 
 type BillingCycle = 'monthly' | 'annual'
@@ -164,11 +163,9 @@ export default function PricingSection({ locale }: { locale: string }) {
               </ul>
 
               {plan.featured ? (
-                <MagneticButton strength={6}>
-                  <Button asChild className="mt-6 h-11 w-full rounded-full text-sm font-semibold">
-                    <Link href={plan.href}>{plan.cta}</Link>
-                  </Button>
-                </MagneticButton>
+                <Button asChild className="mt-6 h-11 w-full rounded-full text-sm font-semibold">
+                  <Link href={plan.href}>{plan.cta}</Link>
+                </Button>
               ) : (
                 <Button
                   asChild

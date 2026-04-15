@@ -351,13 +351,13 @@ export async function deletePropFirmReview(id: string) {
 
 export type PropFirmCouponInput = {
   code: string
-  discountPercent?: number
-  description?: string
-  challengeFee?: number
-  drawdownType?: string
-  payoutModel?: string
-  platform?: string
-  claimUrl?: string
+  discountPercent?: number | null
+  description?: string | null
+  challengeFee?: number | null
+  drawdownType?: string | null
+  payoutModel?: string | null
+  platform?: string | null
+  claimUrl?: string | null
   isActive?: boolean
   startsAt?: Date | null
   expiresAt?: Date | null

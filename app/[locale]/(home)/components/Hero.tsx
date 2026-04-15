@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MagneticButton } from '@/components/animation/interactive'
 import { useTypedI18n } from '@/locales/client'
 import DashboardPreview from './DashboardPreview'
 
@@ -43,17 +42,15 @@ export default function Hero({ locale }: { locale: string }) {
           </p>
 
           <div className="hero-entrance hero-entrance-d3 mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <MagneticButton strength={6}>
-              <Button
-                asChild
-                size="lg"
-                className="h-11 w-full rounded-md px-8 text-sm font-semibold sm:w-auto"
-              >
-                <Link href={`/${locale}/authentication?next=dashboard`}>
-                  {t('landing.hero.ctaPrimary')}
-                </Link>
-              </Button>
-            </MagneticButton>
+            <Button
+              asChild
+              size="lg"
+              className="h-11 w-full rounded-md px-8 text-sm font-semibold sm:w-auto"
+            >
+              <Link href={`/${locale}/authentication?next=dashboard`}>
+                {t('landing.hero.ctaPrimary')}
+              </Link>
+            </Button>
 
             <Button
               asChild

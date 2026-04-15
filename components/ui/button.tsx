@@ -77,6 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    const Comp = asChild ? Slot : 'button'
     const isShimmer = variant === 'shimmer'
 
     const content = (
@@ -99,24 +100,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       </>
     )
 
-    if (asChild) {
-      return (
-        <Slot className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-          <span className="inline-flex items-center justify-center gap-2">{content}</span>
-        </Slot>
-      )
-    }
-
     return (
-      <button
+      <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        disabled={isLoading || disabled}
+        disabled={asChild ? undefined : isLoading || disabled}
         aria-busy={isLoading || undefined}
         {...props}
       >
         {content}
-      </button>
+      </Comp>
     )
   },
 )

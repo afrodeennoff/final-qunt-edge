@@ -52,17 +52,19 @@ export default function MarketingLayoutShell({
       ) : null}
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
-        <div className="flex-1 min-h-0 bg-transparent">
+        <div className="flex-1 min-h-0 min-w-0 bg-transparent">
           <MiniMaxNavbarWrapper>
             <Navbar />
           </MiniMaxNavbarWrapper>
-          <div className={cn('relative z-10', topSpacingClassName)}>
+          <div className={cn('relative z-10 min-w-0', topSpacingClassName)}>
             {showRollingBanner ? (
               <Suspense fallback={null}>
                 <RollingAdBanner />
               </Suspense>
             ) : null}
-            <div className={cn(contentSpacingClassName, contentClassName)}>{children}</div>
+            <div className={cn('min-w-0', contentSpacingClassName, contentClassName)}>
+              {children}
+            </div>
           </div>
           <Footer />
         </div>

@@ -41,11 +41,23 @@ function parseOptionalNumber(value: FormDataEntryValue | null): number | undefin
   return Number.isFinite(parsed) ? parsed : undefined
 }
 
+function parseOptionalNumberForUpdate(value: FormDataEntryValue | null): number | null | undefined {
+  const text = value?.toString().trim()
+  if (!text) return null
+  const parsed = Number.parseFloat(text)
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
 function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
   const text = value?.toString().trim()
   if (!text) return null
   const parsed = new Date(text)
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
+function normalizeOptionalTextForUpdate(value: FormDataEntryValue | null): string | null | undefined {
+  const text = value?.toString().trim()
+  return typeof text === 'string' ? (text ? text : null) : undefined
 }
 
 function requireFormString(formData: FormData, key: string): string {
@@ -152,13 +164,13 @@ async function handleUpdateCoupon(formData: FormData) {
   const locale = requireFormString(formData, 'locale')
   await updatePropFirmCoupon(couponId, {
     code: requireText(formData.get('code')),
-    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-    description: normalizeOptionalText(formData.get('description')),
-    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-    platform: normalizeOptionalText(formData.get('platform')),
-    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+    discountPercent: parseOptionalNumberForUpdate(formData.get('discountPercent')),
+    description: normalizeOptionalTextForUpdate(formData.get('description')),
+    challengeFee: parseOptionalNumberForUpdate(formData.get('challengeFee')),
+    drawdownType: normalizeOptionalTextForUpdate(formData.get('drawdownType')),
+    payoutModel: normalizeOptionalTextForUpdate(formData.get('payoutModel')),
+    platform: normalizeOptionalTextForUpdate(formData.get('platform')),
+    claimUrl: normalizeOptionalTextForUpdate(formData.get('claimUrl')),
     isActive: formData.has('couponIsActive'),
     startsAt: parseOptionalDate(formData.get('startsAt')),
     expiresAt: parseOptionalDate(formData.get('expiresAt')),

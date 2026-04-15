@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { MagneticButton } from '@/components/animation/interactive'
 import { useI18n } from '@/locales/client'
 
 interface FinalCTAProps {
@@ -41,14 +40,12 @@ export default function FinalCTA({ locale }: FinalCTAProps) {
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <MagneticButton strength={8}>
-              <Button asChild size="lg" className="h-11 rounded-full px-8 text-sm font-semibold">
-                <Link href={`/${locale}/authentication?next=dashboard`}>
-                  {t('landing.home.finalCta.primary')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </MagneticButton>
+            <Button asChild size="lg" className="h-11 rounded-full px-8 text-sm font-semibold">
+              <Link href={`/${locale}/authentication?next=dashboard`}>
+                {t('landing.home.finalCta.primary')}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
 
             <Button
               asChild

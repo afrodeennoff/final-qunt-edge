@@ -1,6 +1,6 @@
 # Todo
 
-**Updated:** 2026-04-15
+**Updated:** 2026-04-16
 
 ## Done ✅
 - [x] Kill nested `<button>` hydration error (PricingSection.tsx)
@@ -50,11 +50,11 @@
 - [x] Rebuild admin coupon forms on both /admin/propfirms/[id] and /admin/coupons with all schema fields
 - [x] Fix deals data mapping to use coupon-level overrides when set
 - [x] Verify admin coupon/deal changes flow through to public deals page
+- [x] Audit home route SSR/CSR reveal path and remove any full-page client boundary that leaves the hero behind a fallback
+- [x] Fix admin coupon edit flow so code, discount percent, and claim link can be updated from both admin coupon surfaces
+- [x] Re-verify with targeted runtime checks plus typecheck/lint and persist the findings in project notes
 
-## In Progress
-- [ ] Audit home route SSR/CSR reveal path and remove any full-page client boundary that leaves the hero behind a fallback
-- [ ] Fix admin coupon edit flow so code, discount percent, and claim link can be updated from both admin coupon surfaces
-- [ ] Re-verify with targeted runtime checks plus typecheck/lint and persist the findings in project notes
+## Recently Closed
 - [x] Fix auth page blank on soft navigation — removed double dynamic({ssr:false}) + Framer Motion opacity:0
 - [x] Fix home page blank on soft navigation — loading.tsx now shows spinner instead of null
 - [x] Fix RollingAdBanner blocking entire layout — wrapped in Suspense
@@ -65,3 +65,6 @@
 - [x] Fix parseOptionalDate — returns null on empty so dates can be cleared
 - [x] Fix community/post loading.tsx — removed z-50 and 'use client'
 - [x] Fix (landing)/loading.tsx — removed z-50 and 'use client'
+
+## In Progress
+- [ ] None

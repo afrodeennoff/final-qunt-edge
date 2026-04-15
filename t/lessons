@@ -1,6 +1,6 @@
 # Lessons Learned
 
-**Updated:** 2026-04-15
+**Updated:** 2026-04-16
 
 ## Lesson 1: Regex scripts on JSX are dangerous
 - **M:** Content-visibility script broke 23 files with `className="classes ""`
@@ -218,16 +218,32 @@
 - **R:** Pass `locale` via a hidden form input (`<input name="locale" value={locale} />`) and read it with `formData.get('locale')` in the server action.
 - **E:** Blog page now has `formData.append('locale', locale)` in the client component, and server actions read it before redirect.
 
-## Lesson 38: Server actions MUST be at module scope — never inside component closures
-- **M:** Admin pages for propfirms/[id], coupons, and reviews crashed in production with "Functions cannot be passed directly to Client Components" and "e.useState is not a function" errors.
-- **RC**: Server actions defined inside component functions (e.g., `async function handleCreate(formData) { 'use server'; ... redirect(`/${locale}/...`) }`) capture the `locale` variable from the component scope. Next.js cannot serialize this closure across the server/client boundary — it tries to serialize the entire scope including the function and its captured variables.
-- **R**: Always define server actions at module scope. Pass dynamic values like `locale`, `id`, `status`, `page` via hidden form inputs (`<input type="hidden" name="locale" value={locale}>`) and read them with `formData.get()`.
-- **E**: All 10 admin server actions extracted to module scope with `requireFormString(formData, 'locale')` helper.
-- **M:** Dashboard header disappeared momentarily during soft navigation.
-- **RC:** `dynamic(() => import(...), { loading: () => null })` renders nothing while the chunk loads. During soft navigation, this creates a visible blank flash.
-- **R:** Use a skeleton matching the component's layout as the loading fallback. Even a simple `div` with `animate-pulse` is better than `null`.
-- **E:** Dashboard header now has a skeleton fallback with `animate-pulse` divs matching the header layout.
-- **M:** Home page showed blank during soft navigation (clicking links to `/`), but worked on hard refresh.
-- **RC:** `app/[locale]/loading.tsx` returned `null`. During soft navigation between route groups, Next.js shows this Suspense fallback — which was nothing (black screen on dark background).
-- **R:** Every `loading.tsx` must render visible content (at minimum a spinner). Returning `null` causes a blank flash during route transitions.
-- **E:** Changed `loading.tsx` from `return null` to a visible spinner. Same pattern caused the auth page blank issue (Lesson 26).
+## Lesson 37: A marquee inside a flex shell can make a page look blank without breaking SSR
+- **M:** The home page looked blank even though the navbar rendered and production HTML contained the full hero.
+- **RC:** `RollingAdBanner` expanded the shared marketing shell to max-content width inside a flex layout, pushing the hero several thousand pixels off-screen instead of failing render.
+- **R:** When a scrolling banner/marquee lives inside a shared flex shell, constrain the shell with `min-w-0` and the banner with `w-full max-w-full overflow-hidden` so it cannot determine page width.
+- **E:** `MarketingLayoutShell` plus `RollingAdBanner` produced an ~8222px-wide home page until `min-w-0` and width containment were added.
+
+## Lesson 38: `asChild` interactive primitives must slot children directly and stay out of nested button wrappers
+- **M:** Public CTAs on the home page rendered invalid nested interactive markup and increased hydration/layout risk.
+- **RC:** `components/ui/button.tsx` wrapped slotted `asChild` content in an extra wrapper, and `MagneticButton` was wrapping `Button asChild` links in a second interactive control.
+- **R:** For `asChild` primitives, render the slotted child directly with `Slot`; do not add extra interactive wrappers around already-interactive children like anchor CTAs.
+- **E:** Fixing `Button asChild` and removing `MagneticButton` around home CTA links eliminated nested `button a` markup.
+
+## Lesson 39: Admin update forms need `null` semantics for clearing optional Prisma fields
+- **M:** Editing a coupon from the admin UI could change values, but blanking optional fields like claim link or discount often left the old value behind.
+- **RC:** Update handlers passed `undefined` for cleared optional fields, which Prisma treats as "leave unchanged" rather than "clear this column".
+- **R:** For admin update flows, normalize empty optional text/number/date fields to `null` when the intent is to clear persisted data.
+- **E:** Coupon edit flows on `/admin/coupons` and `/admin/propfirms/[id]` now use nullable update helpers for `claimUrl`, `discountPercent`, `challengeFee`, dates, and override fields.
+
+## Lesson 40: Server actions must stay at module scope in App Router admin surfaces
+- **M:** Admin pages for `propfirms/[id]`, coupons, and reviews crashed in production with "Functions cannot be passed directly to Client Components" and related serialization errors.
+- **RC:** Server actions defined inside component closures captured route variables like `locale`, which Next.js could not safely serialize across the server/client boundary.
+- **R:** Keep server actions at module scope and pass dynamic values like `locale`, `id`, `status`, and `page` through hidden form inputs.
+- **E:** Extracting all admin server actions to module scope with `requireFormString(formData, 'locale')` removed the runtime crash.
+
+## Lesson 41: Dynamic shell imports need visible loading fallbacks
+- **M:** Shared dashboard chrome briefly disappeared during soft navigation.
+- **RC:** `dynamic(() => import(...), { loading: () => null })` rendered nothing while the chunk loaded, creating a visible blank flash.
+- **R:** Use a skeleton or layout-matching placeholder for shell-level dynamic imports instead of `null`.
+- **E:** `DashboardHeader` now uses a simple `animate-pulse` skeleton instead of a blank fallback.

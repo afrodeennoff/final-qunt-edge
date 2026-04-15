@@ -55,6 +55,8 @@
 - Keep `MarketingLayoutShell` configurable from route layouts. If only one public route needs different top spacing or banner behavior, prefer shell props over copying the shell.
 - Keep shell color treatment configurable too. If a route needs a black shell instead of the accent/cobalt atmosphere, use a shell variant prop rather than duplicating layout structure.
 - The current default for shared public shell tone is black. `MarketingLayoutShell` should stay neutral unless a route intentionally opts into a different atmosphere.
+- If a public page looks blank but SSR HTML still contains the content, inspect the shared shell width before assuming hydration/data failure. A marquee or max-content child can push the main content far off-canvas.
+- `MarketingLayoutShell` flex/content wrappers should keep `min-w-0`, and shared rolling/marquee sections must be width-contained with `w-full max-w-full overflow-hidden`.
 - For public hero sections, avoid fully opaque slab backgrounds that visually detach the first section from the shared shell. Let the shell atmosphere show through unless the page is intentionally using a card/panel treatment.
 - When shifting shell tone, also update repeated chrome surfaces such as navbar, footer, FAQ wrappers, embed headers, and shared-report shells so they stay visually consistent with the chosen shell.
 - Many public landing routes use `components/layout/unified-page-shell.tsx` and `UnifiedSurface` for page composition. Do not assume every file in `app/[locale]/(landing)/components/` is part of the live route tree.
@@ -70,6 +72,8 @@
 - If the design reference is a restrained SaaS launch page (for example Cal.com), adapt the layout language before the palette: center the editorial block, let the product screenshot dominate, reduce decorative atmosphere, and keep support chrome shallow and secondary.
 - If the reference also has strong card-led hero placement (for example `xtract.framer.ai`), stage the hero in two beats: centered copy first, then an asymmetrical card grid with one dominant product card and smaller stacked support cards.
 - For reference-driven hero redesigns, it is acceptable to use a local display/body pairing with fonts already loaded in the app instead of introducing a new global font dependency, as long as the hierarchy clearly separates display text from explanatory copy.
+- `HomeContent.tsx` should stay a direct mounted composition for the home route unless there is a compelling reason to hide whole sections behind client-only dynamics. Full-page client reveal boundaries on the home route are a blank-page risk.
+- `components/ui/button.tsx` `asChild` usage must slot the child directly. Do not wrap `Button asChild` links in `MagneticButton` or any wrapper that renders another interactive element.
 - Dashboard account collections should use `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch gap-4`; account cards should be full-height flex columns with bottom actions anchored via `mt-auto`.
 - Numeric trading/account/table values should prefer `tabular-nums` plus `font-medium`/`font-semibold` so dashboard columns and cards stay aligned as values change.
 - Dashboard shell chrome should avoid bright `white/[...]` borders and fills. For sidebar/header/navbar/summary chrome, prefer `border-border/35-45`, `bg-background/55-80`, and restrained `bg-primary/6-12` accents instead of white-tinted pills.
@@ -83,3 +87,4 @@
 - When a coupon has override fields (platform, payoutModel, drawdownType), the deals data mapping (`server/deals.ts`) uses coupon-level values first, falling back to firm-level values: `coupon.platform || coupon.propFirm.platform || 'Default'`.
 - Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
 - Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.
+- For admin update forms, blank optional coupon fields should normalize to `null`, not `undefined`, so Prisma actually clears persisted values when an admin removes a discount, claim URL, fee override, or date.

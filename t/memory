@@ -1,6 +1,6 @@
 # Project Memory
 
-**Updated:** 2026-04-15
+**Updated:** 2026-04-16
 **Branch:** codex-obsidian-v3-redesign
 **Production URL:** https://qunt-edge.vercel.app
 
@@ -35,6 +35,9 @@
 - `FeaturesBento.tsx` now focuses on core workflow/platform capabilities only; the repeated AI feature grid was removed so `AIFeatures.tsx` remains the single dedicated AI pitch on the page
 - The mounted home copy and page metadata now come from locale dictionaries instead of hardcoded strings, with the main source of truth living under `locales/*/landing.ts`
 - `Hero.tsx` now follows a more restrained product-first launch layout: centered headline and CTA block first, then an asymmetrical hero card stage with the large `DashboardPreview` anchored on the left and stacked support cards on the right
+- `HomeContent.tsx` is back to a direct Server Component composition for the core home route instead of a client-only dynamic reveal chain; this keeps the full home tree visible during SSR and removes a fragile full-page client boundary
+- `RollingAdBanner.tsx` must stay width-contained with `w-full max-w-full overflow-hidden`, and `MarketingLayoutShell` must keep `min-w-0` on the flex/content wrappers so the marquee cannot push the hero off-canvas
+- `components/ui/button.tsx` now slots `asChild` content directly; public CTA links should not be wrapped in `MagneticButton` or other wrappers that render a second interactive element
 
 ### Dashboard Surface Pattern
 - `dashboard-tab-shell.tsx` now acts as a simpler embedded shell instead of adding an extra decorative frame outside the mounted content
@@ -70,6 +73,8 @@
 - Admin can now fully manage: prop firm CRUD (all fields), coupon/deal CRUD (all fields including discount %, coupon code, claim/affiliate URL, challenge fee, dates, active toggle)
 - Blog CRUD fully functional (no rich text editor)
 - Review moderation fully functional
+- Coupon update flows now normalize blank optional values to `null` instead of `undefined`, so admins can actually clear and modify `discountPercent`, `claimUrl`, `challengeFee`, overrides, dates, and description from both `/admin/coupons` and `/admin/propfirms/[id]`
+- `server/prop-firms.ts` accepts nullable optional coupon fields in `PropFirmCouponInput`, which keeps Prisma update semantics aligned with the admin forms
 
 ### Performance State — 200FPS Target
 - 0 repeat:Infinity, 0 filter:blur, 0 backdrop-blur, 0 transition-all, 0 cursor-tracking
@@ -94,6 +99,8 @@
 - `bun run dev` = starts clean
 - `npm run typecheck` = passes
 - `npm run lint` = passes with pre-existing complexity warnings, 0 errors
+- `npx eslint app/'[locale]'/'(home)'/components/HomeContent.tsx app/'[locale]'/'(landing)'/components/marketing-layout-shell.tsx app/'[locale]'/'(home)'/components/RollingAdBanner.tsx app/'[locale]'/'(home)'/components/Hero.tsx app/'[locale]'/'(home)'/components/PricingSection.tsx app/'[locale]'/'(home)'/components/FinalCTA.tsx components/ui/button.tsx app/'[locale]'/admin/coupons/page.tsx app/'[locale]'/admin/propfirms/'[id]'/page.tsx server/prop-firms.ts` = 0 errors, warnings only
+- Local browser verification on `http://localhost:3000/en` after the fix showed `scrollWidth=1440`, the hero back in the viewport, and zero nested `button a` CTA markup
 
 ### SSR/CSR Fix — Server Actions Module Scope (2026-04-15)
 - **CRITICAL**: Server actions defined inside component closures crash at runtime with "Functions cannot be passed directly to Client Components" error
@@ -132,8 +139,15 @@
 #### Type Safety
 - All changes pass `npx tsc --noEmit` with 0 errors
 
+### Home Route Visibility Audit (2026-04-16)
+- Production SSR for `https://qunt-edge.vercel.app/en` already contained the full home hero/content HTML; the blank-page symptom was not caused by missing server render
+- The real root cause was layout width expansion: the rolling banner/marquee expanded the shared marketing shell to ~8222px wide, pushing the hero several thousand pixels off-screen to the right
+- The durable fix was three-part: keep the public shell wrappers `min-w-0`, constrain the banner to `w-full max-w-full overflow-hidden`, and remove the full-page client boundary by making `HomeContent.tsx` a direct Server Component composition
+- A secondary cleanup fixed invalid interactive markup on home CTAs by correcting `Button asChild` slot behavior and removing `MagneticButton` wrappers around `Button asChild` links
+- Production Playwright also surfaced a CSP inline-script warning, but that was not the main cause of the home route appearing blank
+
 ## Uncommitted Changes
-- (none — all committed)
+- Home route SSR/CSR audit fixes and admin coupon update-path fixes are currently local and uncommitted
 
 ## Blockers
 - None
