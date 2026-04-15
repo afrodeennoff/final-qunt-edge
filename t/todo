@@ -52,6 +52,9 @@
 - [x] Verify admin coupon/deal changes flow through to public deals page
 
 ## In Progress
+- [ ] Audit home route SSR/CSR reveal path and remove any full-page client boundary that leaves the hero behind a fallback
+- [ ] Fix admin coupon edit flow so code, discount percent, and claim link can be updated from both admin coupon surfaces
+- [ ] Re-verify with targeted runtime checks plus typecheck/lint and persist the findings in project notes
 - [x] Fix auth page blank on soft navigation — removed double dynamic({ssr:false}) + Framer Motion opacity:0
 - [x] Fix home page blank on soft navigation — loading.tsx now shows spinner instead of null
 - [x] Fix RollingAdBanner blocking entire layout — wrapped in Suspense
