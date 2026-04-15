@@ -40,7 +40,11 @@
 - [x] Define and apply a shared typography scale from global tokens and layout fonts through `components/ui/**`, then push tabular numeric treatment into dashboard and data-heavy surfaces
 - [x] Rework dashboard tab shells and account/table surfaces to match the premium reference spacing, even grid/card structure, and consistent chrome; then run polish, verification, and note sync
 
-## Pending
+- [x] Comprehensive spacing audit + fix across entire app
+- [x] Eliminated gap-5/7/9, space-y-2.5, mb-7/9, mt-7/9, arbitrary px
+- [x] Standardized section padding: py-16 sm:py-20 lg:py-24 (responsive)
+- [x] Responsive spacing applied to all home + landing sections
+- [x] SPACING_SYSTEM.md documented
 - [x] Commit and deploy to Vercel production (completed 2026-04-15)
 
 ## In Progress
