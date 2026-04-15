@@ -498,6 +498,7 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
     const coupons = await prisma.propFirmCoupon.findMany({
       where: {
         isActive: true,
+        propFirm: { isActive: true },
         OR: [
           { expiresAt: null },
           { expiresAt: { gte: now } },
