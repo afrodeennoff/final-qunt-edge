@@ -157,7 +157,9 @@ export default function Hero({ locale }: { locale: string }) {
             </article>
 
             <article className="rounded-lg border border-border/60 bg-card/70 p-5 text-left shadow-sm">
-              <p className="type-label text-muted-foreground">{t('landing.home.hero.integrationsTitle')}</p>
+              <p className="type-label text-muted-foreground">
+                {t('landing.home.hero.integrationsTitle')}
+              </p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                 <div className="rounded-md border border-border/60 bg-background/60 px-4 py-3">
                   <p className="type-label text-foreground/70">{t('landing.hero.noCreditCard')}</p>
