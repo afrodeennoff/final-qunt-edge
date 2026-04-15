@@ -239,10 +239,7 @@ const DashboardActionsContext = createContext<DashboardActions | undefined>(
 
 // Add this hook before the UserDataProvider component
 function useIsMobileDetection() {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
-  });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

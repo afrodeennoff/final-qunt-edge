@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useRef } from 'react'
 
 const SCROLL_THRESHOLD = 150

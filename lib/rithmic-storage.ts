@@ -56,7 +56,7 @@ async function getOrCreateEncryptionKey(): Promise<CryptoKey> {
   }
 
   // Fallback: try existing localStorage key (migration path)
-  const existingKeyBase64 = localStorage.getItem(CREDENTIAL_KEY_NAME)
+  const existingKeyBase64 = typeof window !== 'undefined' ? localStorage.getItem(CREDENTIAL_KEY_NAME) : null
   if (existingKeyBase64) {
     try {
       const keyBytes = Uint8Array.from(atob(existingKeyBase64), (c) => c.charCodeAt(0))

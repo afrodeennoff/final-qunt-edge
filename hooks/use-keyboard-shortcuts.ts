@@ -1,3 +1,4 @@
+"use client"
 import { useEffect } from 'react';
 import hotkeys from 'hotkeys-js';
 import { useRouter } from 'next/navigation';

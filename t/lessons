@@ -134,6 +134,12 @@
 - **R:** When adapting a strong external design reference, isolate the transferable primitives first: centered editorial structure, generous whitespace, shadow-contained surfaces, screenshot-first hierarchy, and restrained decoration. Keep palette and brand accents local when requested.
 - **E:** The updated home `Hero.tsx` dropped the ambient glow-heavy split layout in favor of a centered launch-page composition while preserving Qunt Edge's existing tokens.
 
+## Lesson 23: Xtract-style hero placement works best as a staged card grid, not a flat stack
+- **M:** The user wanted the hero card placement to feel closer to `xtract.framer.ai`.
+- **RC:** The reference reads as a centered editorial intro followed by a card-led product stage, where one dominant visual is supported by smaller utility cards instead of every card competing equally.
+- **R:** For SaaS-style hero references with strong card placement, keep the copy centered first, then build a second-row stage with one dominant media/product card and smaller stacked support cards beside it.
+- **E:** `Hero.tsx` now uses a large left-anchored `DashboardPreview` card with two smaller right-side support cards instead of placing every hero card in a uniform row below the screenshot.
+
 ## Lesson 21: Vercel `functions.runtime` config must match supported Node runtimes
 - **M:** `vercel --prod` failed with `Function Runtimes must have a valid version, for example now-php@1.0.0`
 - **RC:** `vercel.json` had `"functions": { "api/**/*.ts": { "runtime": "nodejs22.x" } }` but the Vercel project settings use Node 24.x. The `nodejs22.x` runtime string was rejected by Vercel's build system (CLI 51.2.1).
@@ -145,3 +151,9 @@
 - **RC:** `MarketingLayoutShell` wrapped ALL children in `<MotionStagger>` which starts at `opacity: 0` and only becomes visible when `useInView` fires. After new deployments, stale chunk caches or slow JS hydration could prevent IntersectionObserver from firing, leaving the entire page invisible.
 - **R:** Never wrap an entire page's content in a motion container that starts invisible. Use per-section animations instead. The page shell must be immediately visible.
 - **E:** Removed `MotionStagger`/`MotionStaggerItem` wrapper from `MarketingLayoutShell`. Content renders immediately; individual sections handle their own entrance animations.
+
+## Lesson 23: loading.tsx with z-50 blocks content during client navigation
+- **M:** Home page showed black screen when clicking a link to navigate, but worked on force reload
+- **RC:** `loading.tsx` had `z-50` overlay with a nearly-invisible spinner (`border-border/20` on `bg-background` which is black). During client-side navigation, Next.js shows this loading state. If chunk loading was slow or stale after a deployment, the overlay covered the entire page indefinitely. Additionally: (1) `PublicRootProviders` wrapped public pages in `SidebarProvider` causing unnecessary hydration conflicts during layout transitions; (2) No `error.tsx` at the home route meant errors caused blank page with no recovery; (3) `HomeContent` was a server component forcing RSC bailout overhead for all-client children
+- **R**: (1) Replace `loading.tsx` with `return null` to prevent blocking overlay; (2) Remove `SidebarProvider` from `PublicRootProviders`; (3) Add `error.tsx` with retry button; (4) Add `'use client'` to `HomeContent` since all children are client components
+- **E:** `app/[locale]/(home)/loading.tsx` returned null; page now renders immediately on client navigation

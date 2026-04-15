@@ -35,7 +35,7 @@
 - `FeaturesBento.tsx` now focuses on core workflow/platform capabilities only; the repeated AI feature grid was removed so `AIFeatures.tsx` remains the single dedicated AI pitch on the page
 - The mounted home copy and page metadata now come from locale dictionaries instead of hardcoded strings, with the main source of truth living under `locales/*/landing.ts`
 - `Hero.tsx` now uses a cleaner split layout: editorial copy and capability cards on the left, framed `DashboardPreview` on the right, and broker integrations promoted into a compact preview-adjacent tray
-- `Hero.tsx` now follows a more restrained product-first launch layout: centered headline and CTA block, a large framed preview beneath it, integrations in a shallow trust tray, and compact capability cards below the preview instead of floating as primary chrome
+- `Hero.tsx` now follows a more restrained product-first launch layout: centered headline and CTA block first, then an asymmetrical hero card stage with the large `DashboardPreview` anchored on the left and stacked support cards on the right
 - The Cal.com-inspired hero pass intentionally kept Qunt Edge's existing palette, but borrowed the calmer composition, generous whitespace, tighter display treatment, softer card containment, and screenshot-first hierarchy
 
 ### Dashboard Surface Pattern
@@ -91,7 +91,7 @@
 - Shared typography scale rollout across `app/layout.tsx`, `app/globals.css`, `tailwind.config.ts`, and `components/ui/**`
 - Dashboard account/table shell cleanup in `dashboard-tab-shell.tsx`, `accounts-overview.tsx`, `account-card.tsx`, and `trade-table-review.tsx`
 - Hero layout refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx`
-- Cal.com-inspired hero refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx` with centered composition, reduced decorative atmosphere, and local display/body font pairing using existing loaded fonts
+- Cal.com/Xtract-inspired hero refinement in `app/[locale]/(home)/components/Hero.tsx` and `DashboardPreview.tsx` with centered composition, reduced decorative atmosphere, and a card-led hero stage using the existing loaded font stack
 
 ## Blockers
 - None — waiting for user to say "deploy"

@@ -5,8 +5,9 @@
       "Bash(grep:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
-      "Bash(find /Users/timon/Downloads/qunt-edge/app/[locale]/\\\\\\(home\\\\\\)/ -type f)",
-      "Bash(npm run:*)"
+      "Bash(python3:*)",
+      "Bash(npx:*)",
+      "Bash(npx tsc:*)"
     ]
   },
   "model": "sonnet",
