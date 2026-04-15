@@ -29,6 +29,18 @@ function parseOptionalNumber(value: FormDataEntryValue | null): number | undefin
   return Number.isFinite(parsed) ? parsed : undefined
 }
 
+function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
+  const text = value?.toString().trim()
+  return text ? text : undefined
+}
+
+function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
+  const text = value?.toString().trim()
+  if (!text) return undefined
+  const parsed = new Date(text)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
 async function loadCoupons() {
   if (!hasConfiguredDatabaseConnection) {
     return []
@@ -166,16 +178,16 @@ function CouponEditCard({
       </CardHeader>
 
       <CardContent size="sm" className="space-y-4 pt-4">
-        <form action={onUpdateCoupon} className="space-y-4">
+        <form action={onUpdateCoupon} className="space-y-3">
           <input type="hidden" name="couponId" value={coupon.id} />
           <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
 
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-            <div className="space-y-2">
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
               <Label htmlFor={`code-${coupon.id}`}>Code</Label>
               <Input id={`code-${coupon.id}`} name="code" defaultValue={coupon.code} required />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor={`discountPercent-${coupon.id}`}>Discount %</Label>
               <Input
                 id={`discountPercent-${coupon.id}`}
@@ -188,10 +200,85 @@ function CouponEditCard({
             </div>
           </div>
 
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor={`challengeFee-${coupon.id}`}>Challenge Fee</Label>
+              <Input
+                id={`challengeFee-${coupon.id}`}
+                name="challengeFee"
+                type="number"
+                step="0.01"
+                defaultValue={coupon.challengeFee ?? ''}
+                placeholder="149"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`claimUrl-${coupon.id}`}>Claim / Affiliate URL</Label>
+              <Input
+                id={`claimUrl-${coupon.id}`}
+                name="claimUrl"
+                type="url"
+                defaultValue={coupon.claimUrl ?? ''}
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor={`description-${coupon.id}`}>Description</Label>
+            <Input
+              id={`description-${coupon.id}`}
+              name="description"
+              defaultValue={coupon.description ?? ''}
+              placeholder="Coupon description"
+            />
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="space-y-1">
+              <Label>Platform Override</Label>
+              <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Auto" />
+            </div>
+            <div className="space-y-1">
+              <Label>Payout Override</Label>
+              <Input name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Auto" />
+            </div>
+            <div className="space-y-1">
+              <Label>Drawdown Override</Label>
+              <Input name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Auto" />
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Starts At</Label>
+              <Input
+                name="startsAt"
+                type="datetime-local"
+                defaultValue={coupon.startsAt ? new Date(coupon.startsAt).toISOString().slice(0, 16) : ''}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Expires At</Label>
+              <Input
+                name="expiresAt"
+                type="datetime-local"
+                defaultValue={coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().slice(0, 16) : ''}
+              />
+            </div>
+          </div>
+
           <div className="flex items-center justify-between gap-4">
-            <p className="text-xs text-muted-foreground">
-              Only coupon code and discount percentage are editable here.
-            </p>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="couponIsActive"
+                value="1"
+                defaultChecked={coupon.isActive}
+                className="h-4 w-4 rounded border-input accent-primary"
+              />
+              <span className="text-sm">Active</span>
+            </div>
             <Button type="submit" variant="outline" size="sm">
               Save coupon
             </Button>
@@ -205,7 +292,7 @@ function CouponEditCard({
           <form action={onDeleteCoupon}>
             <input type="hidden" name="couponId" value={coupon.id} />
             <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
-            <Button 
+            <Button
               type="submit"
               size="sm"
               variant="ghost"
@@ -238,6 +325,15 @@ export default async function AdminCouponsPage({
     await createPropFirmCoupon(propFirmId, {
       code: requireText(formData.get('code')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+      description: normalizeOptionalText(formData.get('description')),
+      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+      platform: normalizeOptionalText(formData.get('platform')),
+      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/coupons`)
   }
@@ -248,6 +344,15 @@ export default async function AdminCouponsPage({
     await updatePropFirmCoupon(couponId, {
       code: requireText(formData.get('code')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+      description: normalizeOptionalText(formData.get('description')),
+      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+      platform: normalizeOptionalText(formData.get('platform')),
+      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/coupons`)
   }
@@ -316,8 +421,8 @@ export default async function AdminCouponsPage({
             </p>
           ) : (
             <form action={handleCreateCoupon} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <div className="space-y-2 md:col-span-2 xl:col-span-1">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
                   <Label htmlFor="propFirmId">Prop firm</Label>
                   <select
                     id="propFirmId"
@@ -341,10 +446,56 @@ export default async function AdminCouponsPage({
                   <Input id="new-discountPercent" name="discountPercent" type="number" step="0.01" placeholder="20" />
                 </div>
               </div>
-
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="new-challengeFee">Challenge Fee</Label>
+                  <Input id="new-challengeFee" name="challengeFee" type="number" step="0.01" placeholder="149" />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="new-claimUrl">Claim / Affiliate URL</Label>
+                  <Input id="new-claimUrl" name="claimUrl" type="url" placeholder="https://..." />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="new-description">Description</Label>
+                <Input id="new-description" name="description" placeholder="20% off all challenges" />
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="new-platform">Platform Override</Label>
+                  <Input id="new-platform" name="platform" placeholder="Auto" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-payoutModel">Payout Override</Label>
+                  <Input id="new-payoutModel" name="payoutModel" placeholder="Auto" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-drawdownType">Drawdown Override</Label>
+                  <Input id="new-drawdownType" name="drawdownType" placeholder="Auto" />
+                </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="new-startsAt">Starts At</Label>
+                  <Input id="new-startsAt" name="startsAt" type="datetime-local" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-expiresAt">Expires At</Label>
+                  <Input id="new-expiresAt" name="expiresAt" type="datetime-local" />
+                </div>
+              </div>
               <div className="flex items-center justify-between gap-4">
-                <p className="text-xs text-muted-foreground">Only coupon code and discount percentage are editable here.</p>
-                <Button  type="submit">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="couponIsActive"
+                    value="1"
+                    defaultChecked
+                    className="h-4 w-4 rounded border-input accent-primary"
+                  />
+                  <span className="text-sm">Active</span>
+                </div>
+                <Button type="submit">
                   <Plus className="h-4 w-4" />
                   Create coupon
                 </Button>

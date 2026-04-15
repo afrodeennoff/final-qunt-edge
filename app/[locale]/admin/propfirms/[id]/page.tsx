@@ -209,12 +209,28 @@ export default async function PropFirmEditPage({
     redirect(`/${locale}/admin/propfirms/${propFirmId}`)
   }
 
+  function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
+    const text = value?.toString().trim()
+    if (!text) return undefined
+    const parsed = new Date(text)
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed
+  }
+
   async function handleCreateCoupon(formData: FormData) {
     'use server'
     const propFirmId = formData.get('propFirmId') as string
     await createPropFirmCoupon(propFirmId, {
       code: requireText(formData.get('code')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+      description: normalizeOptionalText(formData.get('description')),
+      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+      platform: normalizeOptionalText(formData.get('platform')),
+      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/propfirms/${propFirmId}`)
   }
@@ -226,6 +242,15 @@ export default async function PropFirmEditPage({
     await updatePropFirmCoupon(couponId, {
       code: requireText(formData.get('code')),
       discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+      description: normalizeOptionalText(formData.get('description')),
+      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+      platform: normalizeOptionalText(formData.get('platform')),
+      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
     })
     redirect(`/${locale}/admin/propfirms/${propFirmId}`)
   }
@@ -459,38 +484,164 @@ function CouponsSection({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Coupons ({firm.coupons.length})</CardTitle>
-        <form action={onCreateCoupon}>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Create new coupon form */}
+        <form action={onCreateCoupon} className="space-y-4 rounded-lg border border-white/[0.6] p-4">
           <input type="hidden" name="propFirmId" value={firm.id} />
+          <p className="text-sm font-medium">Add New Coupon</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="new-code">Code *</Label>
+              <Input id="new-code" name="code" placeholder="SAVE20" required />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-discount">Discount %</Label>
+              <Input id="new-discount" name="discountPercent" type="number" step="0.01" placeholder="20" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-fee">Challenge Fee</Label>
+              <Input id="new-fee" name="challengeFee" type="number" step="0.01" placeholder="149" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-claim">Claim / Affiliate URL</Label>
+              <Input id="new-claim" name="claimUrl" type="url" placeholder="https://..." />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="new-desc">Description</Label>
+            <Input id="new-desc" name="description" placeholder="20% off all challenges" />
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="new-platform">Platform Override</Label>
+              <Input id="new-platform" name="platform" placeholder="Auto" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-payout">Payout Override</Label>
+              <Input id="new-payout" name="payoutModel" placeholder="Auto" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-dd">Drawdown Override</Label>
+              <Input id="new-dd" name="drawdownType" placeholder="Auto" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="new-starts">Starts At</Label>
+              <Input id="new-starts" name="startsAt" type="datetime-local" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-expires">Expires At</Label>
+              <Input id="new-expires" name="expiresAt" type="datetime-local" />
+            </div>
+          </div>
           <div className="flex items-center gap-2">
-            <Input name="code" placeholder="Code" className="w-32" required />
-            <Input name="discountPercent" type="number" step="0.01" placeholder="Discount %" className="w-28" />
-            <Button  type="submit" size="sm" variant="outline">
-              <Plus className="w-4 h-4 mr-1" /> Add
+            <input
+              type="checkbox"
+              id="new-active"
+              name="couponIsActive"
+              value="1"
+              defaultChecked
+              className="h-4 w-4 rounded border-input accent-primary"
+            />
+            <Label htmlFor="new-active" className="font-normal cursor-pointer">Active</Label>
+          </div>
+          <div className="flex justify-end">
+            <Button type="submit" size="sm">
+              <Plus className="w-4 h-4 mr-1" /> Add Coupon
             </Button>
           </div>
         </form>
-      </CardHeader>
-      <CardContent>
+
+        {/* Existing coupons */}
         {firm.coupons.length === 0 ? (
           <p className="text-sm text-muted-foreground">No coupons yet.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {firm.coupons.map((coupon) => (
-              <div key={coupon.id} className="flex items-start gap-3 p-3 rounded-lg border border-white/[0.6]">
+              <div key={coupon.id} className="flex items-start gap-3 p-4 rounded-lg border border-white/[0.6]">
                 <div className="flex-1 gap-2">
-                  <form action={onUpdateCoupon} className="space-y-2">
+                  <form action={onUpdateCoupon} className="space-y-3">
                     <input type="hidden" name="couponId" value={coupon.id} />
                     <input type="hidden" name="propFirmId" value={firm.id} />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
-                      <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="Discount %" />
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Label>Code *</Label>
+                        <Input name="code" defaultValue={coupon.code} placeholder="Code" required />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Discount %</Label>
+                        <Input name="discountPercent" type="number" step="0.01" defaultValue={coupon.discountPercent ?? ''} placeholder="0" />
+                      </div>
                     </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Label>Challenge Fee</Label>
+                        <Input name="challengeFee" type="number" step="0.01" defaultValue={coupon.challengeFee ?? ''} placeholder="149" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Claim / Affiliate URL</Label>
+                        <Input name="claimUrl" type="url" defaultValue={coupon.claimUrl ?? ''} placeholder="https://..." />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label>Description</Label>
+                      <Input name="description" defaultValue={coupon.description ?? ''} placeholder="Coupon description" />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="space-y-1">
+                        <Label>Platform Override</Label>
+                        <Input name="platform" defaultValue={coupon.platform ?? ''} placeholder="Auto" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Payout Override</Label>
+                        <Input name="payoutModel" defaultValue={coupon.payoutModel ?? ''} placeholder="Auto" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Drawdown Override</Label>
+                        <Input name="drawdownType" defaultValue={coupon.drawdownType ?? ''} placeholder="Auto" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Label>Starts At</Label>
+                        <Input
+                          name="startsAt"
+                          type="datetime-local"
+                          defaultValue={coupon.startsAt ? new Date(coupon.startsAt).toISOString().slice(0, 16) : ''}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Expires At</Label>
+                        <Input
+                          name="expiresAt"
+                          type="datetime-local"
+                          defaultValue={coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().slice(0, 16) : ''}
+                        />
+                      </div>
+                    </div>
+
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs text-muted-foreground">Only coupon code and discount percentage are editable here.</p>
-                      <Button  type="submit" size="sm" variant="outline">Save</Button>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          name="couponIsActive"
+                          value="1"
+                          defaultChecked={coupon.isActive}
+                          className="h-4 w-4 rounded border-input accent-primary"
+                        />
+                        <span className="text-sm">Active</span>
+                      </div>
+                      <Button type="submit" size="sm" variant="outline">Save</Button>
                     </div>
                   </form>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-2">
                     Created: {new Date(coupon.createdAt).toLocaleDateString()}
                   </p>
                 </div>
