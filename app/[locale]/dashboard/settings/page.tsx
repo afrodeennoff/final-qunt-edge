@@ -1,19 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useI18n } from "@/locales/client"
+import { useI18n } from '@/locales/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Separator } from "@/components/ui/separator"
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { useUserStore } from '../../../../store/user-store'
 import { useTradovateSyncStore } from '../../../../store/tradovate-sync-store'
-import { useTheme } from "@/context/theme-provider"
-import { VALID_DASHBOARD_THEMES } from "@/lib/constants/dashboard-themes"
+import { useTheme } from '@/context/theme-provider'
+import { VALID_DASHBOARD_THEMES } from '@/lib/constants/dashboard-themes'
 import {
   User,
   Settings,
@@ -30,11 +30,11 @@ import {
   Eye,
   EyeOff,
   Palette,
-} from "lucide-react"
-import { signOut, setPasswordAction } from "@/server/auth"
+} from 'lucide-react'
+import { signOut, setPasswordAction } from '@/server/auth'
 import Link from 'next/link'
-import { useChangeLocale, useCurrentLocale } from "@/locales/client"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { useChangeLocale, useCurrentLocale } from '@/locales/client'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,9 +44,9 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import { leaveTeam, getUserTeams } from './actions'
-import { toast } from "sonner"
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,9 +57,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { LinkedAccounts } from "@/components/linked-accounts"
-import { UnifiedPageShell } from "@/components/layout/unified-page-shell"
+} from '@/components/ui/alert-dialog'
+import { LinkedAccounts } from '@/components/linked-accounts'
+import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
 
 type Locale = 'en' | 'fr'
 type TranslateFn = ReturnType<typeof useI18n>
@@ -84,7 +84,7 @@ const timezones = [
   'Asia/Shanghai',
   'Australia/Sydney',
   // Add more common timezones as needed
-];
+]
 
 function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message) {
@@ -105,15 +105,13 @@ function TeamSettingsCard({
   const hasTeams = userTeams.ownedTeams.length > 0 || userTeams.joinedTeams.length > 0
 
   return (
-    <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+    <Card className="border-border/35 bg-popover/45 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
           Team
         </CardTitle>
-        <CardDescription>
-          Manage your team connections
-        </CardDescription>
+        <CardDescription>Manage your team connections</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {hasTeams && (
@@ -121,28 +119,30 @@ function TeamSettingsCard({
             <Label className="text-base font-medium">Current Teams</Label>
             <div className="mt-2 space-y-2">
               {userTeams.ownedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border-[oklch(0.65_0.22_260/0.08)] rounded-lg">
+                <div
+                  key={team.id}
+                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                >
                   <div>
                     <p className="font-medium">{team.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {team.traderIds.length} traders
-                    </p>
+                    <p className="text-sm text-muted-foreground">{team.traderIds.length} traders</p>
                   </div>
                   <Badge variant="secondary">Owner</Badge>
                 </div>
               ))}
 
               {userTeams.joinedTeams.map((team) => (
-                <div key={team.id} className="flex items-center justify-between p-3 border-[oklch(0.65_0.22_260/0.08)] rounded-lg">
+                <div
+                  key={team.id}
+                  className="flex items-center justify-between p-3 border-border/45 rounded-lg"
+                >
                   <div>
                     <p className="font-medium">{team.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {team.traderIds.length} traders
-                    </p>
+                    <p className="text-sm text-muted-foreground">{team.traderIds.length} traders</p>
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button  variant="outline" size="sm">
+                      <Button variant="outline" size="sm">
                         Leave Team
                       </Button>
                     </AlertDialogTrigger>
@@ -173,10 +173,12 @@ function TeamSettingsCard({
         {!hasTeams && (
           <div className="text-center py-8 text-muted-foreground">
             <p>No team linked</p>
-            <p className="text-sm mt-2">Contact your team administrator to get an invitation to join a team.</p>
+            <p className="text-sm mt-2">
+              Contact your team administrator to get an invitation to join a team.
+            </p>
             <div className="mt-4">
               <Link href={`/${locale}/teams/dashboard`}>
-                <Button >
+                <Button>
                   <Building2 className="mr-2 h-4 w-4" />
                   Manage Teams
                 </Button>
@@ -188,7 +190,7 @@ function TeamSettingsCard({
         {hasTeams && (
           <div className="mt-4">
             <Link href={`/${locale}/teams/dashboard`}>
-              <Button  variant="outline" className="w-full">
+              <Button variant="outline" className="w-full">
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Teams
               </Button>
@@ -224,15 +226,13 @@ function PasswordSettingsCard({
   onUpdatePassword: () => Promise<void>
 }) {
   return (
-    <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+    <Card className="border-border/35 bg-popover/45 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5" />
           {t('auth.setPassword')}
         </CardTitle>
-        <CardDescription>
-          {t('auth.setPasswordDescription')}
-        </CardDescription>
+        <CardDescription>{t('auth.setPasswordDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-4">
@@ -247,7 +247,7 @@ function PasswordSettingsCard({
                 onChange={(e) => onNewPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <Button 
+              <Button
                 type="button"
                 variant="ghost"
                 size="icon"
@@ -256,11 +256,7 @@ function PasswordSettingsCard({
                 aria-pressed={showNewPassword}
                 onClick={onToggleNewPassword}
               >
-                {showNewPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
             </div>
           </div>
@@ -275,24 +271,22 @@ function PasswordSettingsCard({
                 onChange={(e) => onConfirmPasswordChange(e.target.value)}
                 className="pr-10"
               />
-              <Button 
+              <Button
                 type="button"
                 variant="ghost"
                 size="icon"
                 className="absolute right-2 top-1/2 -translate-y-1/2"
-                aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
+                aria-label={
+                  showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'
+                }
                 aria-pressed={showConfirmPassword}
                 onClick={onToggleConfirmPassword}
               >
-                {showConfirmPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
             </div>
           </div>
-          <Button  onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
+          <Button onClick={onUpdatePassword}>{t('auth.setPassword')}</Button>
         </div>
       </CardContent>
     </Card>
@@ -303,10 +297,10 @@ export default function SettingsPage() {
   const t = useI18n()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
-  const user = useUserStore(state => state.supabaseUser)
-  const timezone = useUserStore(state => state.timezone)
-  const setTimezone = useUserStore(state => state.setTimezone)
-  const resetUser = useUserStore(state => state.resetUser)
+  const user = useUserStore((state) => state.supabaseUser)
+  const timezone = useUserStore((state) => state.timezone)
+  const setTimezone = useUserStore((state) => state.setTimezone)
+  const resetUser = useUserStore((state) => state.resetUser)
   const clearTradovate = useTradovateSyncStore((state) => state.clearAll)
   const { theme, setTheme } = useTheme()
 
@@ -393,23 +387,19 @@ export default function SettingsPage() {
     <UnifiedPageShell density="compact">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Profile Section */}
-        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+        <Card className="border-border/35 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {t('dashboard.profile')}
             </CardTitle>
-            <CardDescription>
-              Manage your personal information and account details
-            </CardDescription>
+            <CardDescription>Manage your personal information and account details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={user?.user_metadata.avatar_url} />
-                <AvatarFallback className="text-lg">
-                  {user?.email![0].toUpperCase()}
-                </AvatarFallback>
+                <AvatarFallback className="text-lg">{user?.email![0].toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -437,21 +427,19 @@ export default function SettingsPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" type="email" value={user?.email || ''} disabled />
               </div>
-              <Button >Update Profile</Button>
+              <Button>Update Profile</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Preferences Section */}
-        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+        <Card className="border-border/35 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
               Preferences
             </CardTitle>
-            <CardDescription>
-              Customize your dashboard appearance and behavior
-            </CardDescription>
+            <CardDescription>Customize your dashboard appearance and behavior</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Accent Color Settings */}
@@ -462,7 +450,9 @@ export default function SettingsPage() {
               </Label>
               <div className="mt-2">
                 <div className="rounded-md border border-border/20 bg-background/30 p-3">
-                  <p className="mb-3 text-sm text-muted-foreground">Choose your dashboard accent color</p>
+                  <p className="mb-3 text-sm text-muted-foreground">
+                    Choose your dashboard accent color
+                  </p>
                   <div className="flex gap-3">
                     {VALID_DASHBOARD_THEMES.map((t) => (
                       <button
@@ -476,14 +466,21 @@ export default function SettingsPage() {
                         <span
                           className={`h-8 w-8 rounded-full transition-[opacity,background-color,border-color] ${theme === t ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                           style={{
-                            backgroundColor: t === 'blue' ? 'oklch(0.55 0.22 264)'
-                              : t === 'violet' ? 'oklch(0.60 0.22 290)'
-                              : t === 'emerald' ? 'oklch(0.55 0.20 160)'
-                              : t === 'amber' ? 'oklch(0.60 0.20 70)'
-                              : 'oklch(0.58 0.22 10)',
+                            backgroundColor:
+                              t === 'blue'
+                                ? 'oklch(0.55 0.22 264)'
+                                : t === 'violet'
+                                  ? 'oklch(0.60 0.22 290)'
+                                  : t === 'emerald'
+                                    ? 'oklch(0.55 0.20 160)'
+                                    : t === 'amber'
+                                      ? 'oklch(0.60 0.20 70)'
+                                      : 'oklch(0.58 0.22 10)',
                           }}
                         />
-                        <span className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                        <span
+                          className={`text-xs capitalize ${theme === t ? 'text-primary font-medium' : 'text-muted-foreground'}`}
+                        >
                           {t}
                         </span>
                       </button>
@@ -504,9 +501,9 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button  variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-[200px] justify-start">
                       <Globe className="mr-2 h-4 w-4" />
-                      {languages.find(lang => lang.value === currentLocale)?.label}
+                      {languages.find((lang) => lang.value === currentLocale)?.label}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -538,7 +535,7 @@ export default function SettingsPage() {
               <div className="mt-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button  variant="outline" className="w-[200px] justify-start">
+                    <Button variant="outline" className="w-[200px] justify-start">
                       <Clock className="mr-2 h-4 w-4" />
                       {timezone}
                     </Button>
@@ -570,23 +567,19 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications Section */}
-        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+        <Card className="border-border/35 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
               Notifications
             </CardTitle>
-            <CardDescription>
-              Configure how you receive notifications and alerts
-            </CardDescription>
+            <CardDescription>Configure how you receive notifications and alerts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <Label htmlFor="email-notifications">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive important updates via email
-                </p>
+                <p className="text-sm text-muted-foreground">Receive important updates via email</p>
               </div>
               <Switch
                 id="email-notifications"
@@ -639,7 +632,11 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} locale={currentLocale} />
+        <TeamSettingsCard
+          userTeams={userTeams}
+          onLeaveTeam={handleLeaveTeam}
+          locale={currentLocale}
+        />
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
@@ -658,38 +655,36 @@ export default function SettingsPage() {
         />
 
         {/* Account Management Section */}
-        <Card className="border-white/[0.03] bg-popover/45 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+        <Card className="border-border/35 bg-popover/45 shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
               Account Management
             </CardTitle>
-            <CardDescription>
-              Manage your account settings and data
-            </CardDescription>
+            <CardDescription>Manage your account settings and data</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4">
               <Link href={`/${currentLocale}/dashboard/billing`}>
-                <Button  variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start">
                   <CreditCard className="mr-2 h-4 w-4" />
                   Billing & Subscription
                 </Button>
               </Link>
               <Link href={`/${currentLocale}/dashboard/data`}>
-                <Button  variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start">
                   <Database className="mr-2 h-4 w-4" />
                   Data Management
                 </Button>
               </Link>
               <Link href={`/${currentLocale}/support`}>
-                <Button  variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start">
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   Support & Help
                 </Button>
               </Link>
               <Separator />
-              <Button 
+              <Button
                 variant="error"
                 className="w-full justify-start"
                 onClick={async () => {

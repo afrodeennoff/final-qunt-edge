@@ -222,7 +222,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
-            'flex h-full w-full flex-col border border-sidebar-border/70 bg-sidebar/95 shadow-sm',
+            'flex h-full w-full flex-col border border-sidebar-border/45 bg-sidebar/98 shadow-[0_28px_60px_-42px_rgba(0,0,0,0.92)]',
             'group-data-[variant=floating]:rounded-lg',
             'group-data-[variant=inset]:rounded-lg',
           )}
@@ -243,7 +243,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       variant="ghost"
       size="icon"
       className={cn(
-        'size-9 rounded-md border border-sidebar-border/70 bg-sidebar-accent/60 text-foreground/80 shadow-sm hover:bg-sidebar-accent/80 hover:text-foreground hover:shadow-md',
+        'size-9 rounded-lg border border-sidebar-border/45 bg-sidebar-accent/45 text-foreground/78 shadow-none hover:border-sidebar-primary/24 hover:bg-sidebar-primary/10 hover:text-foreground',
         className,
       )}
       onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
@@ -337,7 +337,7 @@ function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof S
     <Separator
       data-slot="sidebar-separator"
       data-sidebar="separator"
-      className={cn('mx-3 w-auto bg-sidebar-border/60', className)}
+      className={cn('mx-3 w-auto bg-sidebar-border/35', className)}
       {...props}
     />
   )
@@ -443,13 +443,13 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-md border border-transparent p-2.5 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-sidebar-border/45 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground focus-visible:ring-2 active:bg-sidebar-accent/80 active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-sidebar-border/65 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[state=open]:hover:bg-sidebar-accent/80 data-[state=open]:hover:text-sidebar-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-sm',
+  'peer/menu-button type-body-sm flex w-full items-center gap-2 overflow-hidden rounded-lg border border-transparent p-2.5 text-left ring-sidebar-ring outline-hidden transition-[width,height,padding,background-color,border-color,box-shadow,color] group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2.5! hover:border-sidebar-primary/18 hover:bg-sidebar-accent/55 hover:text-sidebar-foreground focus-visible:ring-2 active:bg-sidebar-accent/70 active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:border-sidebar-primary/28 data-[active=true]:bg-sidebar-primary/12 data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[state=open]:hover:bg-sidebar-accent/70 data-[state=open]:hover:text-sidebar-foreground [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 shadow-none',
   {
     variants: {
       variant: {
         default: 'hover:bg-sidebar-accent/70 hover:text-sidebar-foreground',
         outline:
-          'border border-sidebar-border/55 bg-sidebar-accent/35 shadow-none hover:border-sidebar-border/80 hover:bg-sidebar-accent/75 hover:text-sidebar-foreground',
+          'border border-sidebar-border/45 bg-sidebar-accent/28 shadow-none hover:border-sidebar-primary/22 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground',
       },
       size: {
         default: 'h-8 text-sm',

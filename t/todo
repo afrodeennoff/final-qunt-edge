@@ -33,13 +33,12 @@
 - [x] Audit duplicated home page sections and trace the live composition from `app/[locale]/(home)/components/HomeContent.tsx`
 - [x] Remove the repeated standalone `DashboardPreview` and delete the redundant `ComparisonSection` block from the home route
 - [x] Restructure the home page narrative so core workflow, live analysis, AI review, audience fit, proof, and prop-firm exploration each appear once in a cleaner order
-- [x] Add auto-slide behavior to the deals page “Today’s Biggest & Largest Deals!” spotlight
+- [x] Add auto-slide behavior to the deals page "Today's Biggest & Largest Deals!" spotlight
 - [x] Pause the deals spotlight auto-rotation on hover/focus and add manual slide indicators
 - [x] Re-verify the deals spotlight with targeted ESLint and full TypeScript checks
 - [x] Map the mounted home page tree end-to-end, move mounted home copy to locale dictionaries, and reshape the home narrative into hero → value props → feature highlights → proof → CTA with cleaner spacing
 - [x] Define and apply a shared typography scale from global tokens and layout fonts through `components/ui/**`, then push tabular numeric treatment into dashboard and data-heavy surfaces
 - [x] Rework dashboard tab shells and account/table surfaces to match the premium reference spacing, even grid/card structure, and consistent chrome; then run polish, verification, and note sync
-
 - [x] Comprehensive spacing audit + fix across entire app
 - [x] Eliminated gap-5/7/9, space-y-2.5, mb-7/9, mt-7/9, arbitrary px
 - [x] Standardized section padding: py-16 sm:py-20 lg:py-24 (responsive)
@@ -47,6 +46,13 @@
 - [x] SPACING_SYSTEM.md documented
 - [x] Commit and deploy to Vercel production (completed 2026-04-15)
 - [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper from MarketingLayoutShell
+- [x] Fix home page blank on soft navigation — loading.tsx z-50 overlay (Lesson 23)
 
 ## In Progress
-- [ ] None
+- [ ] Diagnose and fix homepage blank black screen during soft navigation (clicking Link) vs hard refresh
+
+## Plan — Homepage Soft Navigation Blank Screen Fix
+1. **Replace Framer Motion `initial={{ opacity: 0 }}` with CSS animations** in Hero.tsx and Navbar.tsx — CSS animations fire immediately on DOM insertion, no JS dependency
+2. **Improve `loading.tsx`** to show a visible skeleton instead of `null`
+3. **Add CSS safety net** in globals.css for content visibility after timeout
+4. **Verify** with typecheck

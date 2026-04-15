@@ -1,25 +1,42 @@
 'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, CheckCircle2, CalendarDays, Clock, CreditCard, History, Receipt, FileText } from "lucide-react"
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { updateSubscription, collectSubscriptionFeedback } from "../../../../../server/billing"
-import { toast } from "sonner"
-import { useI18n, useCurrentLocale } from "@/locales/client"
-import PricingPlans from "@/components/pricing-plans"
-import Link from "next/link"
-import { useSubscriptionStore } from "@/store/subscription-store"
-import { formatCurrencyAmount } from "@/lib/formatting/currency"
-import { useCurrency } from "@/hooks/use-currency"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  AlertCircle,
+  CheckCircle2,
+  CalendarDays,
+  Clock,
+  CreditCard,
+  History,
+  Receipt,
+  FileText,
+} from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { updateSubscription, collectSubscriptionFeedback } from '../../../../../server/billing'
+import { toast } from 'sonner'
+import { useI18n, useCurrentLocale } from '@/locales/client'
+import PricingPlans from '@/components/pricing-plans'
+import Link from 'next/link'
+import { useSubscriptionStore } from '@/store/subscription-store'
+import { formatCurrencyAmount } from '@/lib/formatting/currency'
+import { useCurrency } from '@/hooks/use-currency'
 
 export default function BillingManagement() {
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false)
-  const [cancellationReason, setCancellationReason] = useState("")
-  const [feedback, setFeedback] = useState("")
+  const [cancellationReason, setCancellationReason] = useState('')
+  const [feedback, setFeedback] = useState('')
   const t = useI18n()
   const locale = useCurrentLocale()
   const { currency } = useCurrency()
@@ -31,20 +48,20 @@ export default function BillingManagement() {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })
-  
+
   // Use store instead of local state
-  const subscription = useSubscriptionStore(state => state.subscription)
-  const isLoading = useSubscriptionStore(state => state.isLoading)
-  const refreshSubscription = useSubscriptionStore(state => state.refreshSubscription)
+  const subscription = useSubscriptionStore((state) => state.subscription)
+  const isLoading = useSubscriptionStore((state) => state.isLoading)
+  const refreshSubscription = useSubscriptionStore((state) => state.refreshSubscription)
 
   // Add helper function for safe date formatting
   function formatWhopDate(
-    timestamp: number | null | undefined, 
-    options: Intl.DateTimeFormatOptions = { 
-      month: 'long', 
+    timestamp: number | null | undefined,
+    options: Intl.DateTimeFormatOptions = {
+      month: 'long',
       day: 'numeric',
-      year: 'numeric'
-    }
+      year: 'numeric',
+    },
   ): string {
     if (!timestamp) return t('billing.notApplicable')
     const date = new Date(timestamp * 1000)
@@ -58,37 +75,32 @@ export default function BillingManagement() {
 
     try {
       const result = await updateSubscription(action, subscription.id)
-      
+
       if (result.success) {
         // If cancelling, collect feedback
         if (action === 'cancel' && subscription?.plan?.name) {
-          await collectSubscriptionFeedback(
-            'cancellation',
-            cancellationReason,
-            feedback
-          )
+          await collectSubscriptionFeedback('cancellation', cancellationReason, feedback)
         }
 
         // Refresh subscription data
         await refreshSubscription()
-        
-        toast.success("Success", {
+
+        toast.success('Success', {
           description: `Successfully ${action}ed your subscription`,
         })
       } else {
         throw new Error(result.error)
       }
     } catch {
-      toast.error("Error", {
+      toast.error('Error', {
         description: `Failed to ${action} subscription. Please try again.`,
       })
     }
   }
 
-
   return (
     <div className="w-full space-y-6">
-      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
@@ -101,10 +113,9 @@ export default function BillingManagement() {
             ) : (
               <>
                 <span>
-                  {subscription?.plan?.interval === 'lifetime' 
+                  {subscription?.plan?.interval === 'lifetime'
                     ? t('pricing.plus.name') + ' ' + t('pricing.lifetime')
-                    : subscription?.plan?.name || t('pricing.basic.name')
-                  }
+                    : subscription?.plan?.name || t('pricing.basic.name')}
                 </span>
                 <span className="text-muted-foreground">•</span>
                 {subscription?.status === 'ACTIVE' ? (
@@ -119,23 +130,25 @@ export default function BillingManagement() {
                   </span>
                 ) : (
                   <span className="text-muted-foreground">
-                    {subscription?.status ? (() => {
-                      const status = String(subscription.status || '').toUpperCase()
-                      switch (status) {
-                        case 'ACTIVE':
-                          return t('billing.status.active')
-                        case 'CANCELLED':
-                          return t('billing.status.canceled')
-                        case 'PENDING':
-                          return t('billing.status.incomplete')
-                        case 'PAST_DUE':
-                          return t('billing.status.past_due')
-                        case 'TRIAL_EXPIRED':
-                          return t('billing.status.incomplete_expired')
-                        default:
-                          return t('billing.notApplicable')
-                      }
-                    })() : t('billing.notApplicable')}
+                    {subscription?.status
+                      ? (() => {
+                          const status = String(subscription.status || '').toUpperCase()
+                          switch (status) {
+                            case 'ACTIVE':
+                              return t('billing.status.active')
+                            case 'CANCELLED':
+                              return t('billing.status.canceled')
+                            case 'PENDING':
+                              return t('billing.status.incomplete')
+                            case 'PAST_DUE':
+                              return t('billing.status.past_due')
+                            case 'TRIAL_EXPIRED':
+                              return t('billing.status.incomplete_expired')
+                            default:
+                              return t('billing.notApplicable')
+                          }
+                        })()
+                      : t('billing.notApplicable')}
                   </span>
                 )}
               </>
@@ -143,7 +156,7 @@ export default function BillingManagement() {
           </div>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="space-y-6 rounded-xl border border-white/[0.08] bg-background/70 p-4 sm:p-6">
+          <div className="space-y-6 rounded-xl border border-border/45 bg-background/70 p-4 sm:p-6">
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               {isLoading ? (
@@ -175,7 +188,12 @@ export default function BillingManagement() {
                           <span>
                             {formatAmount(
                               subscription.plan.amount -
-                                (subscription.promotion.amount_off || (subscription.promotion.percent_off ? subscription.plan.amount * subscription.promotion.percent_off / 100 : 0)),
+                                (subscription.promotion.amount_off ||
+                                  (subscription.promotion.percent_off
+                                    ? (subscription.plan.amount *
+                                        subscription.promotion.percent_off) /
+                                      100
+                                    : 0)),
                             )}
                             <span className="text-lg font-normal text-muted-foreground">
                               /{subscription.plan.interval}
@@ -186,35 +204,51 @@ export default function BillingManagement() {
                           <Badge variant="secondary" className="bg-secondary/25 text-foreground/95">
                             {subscription.promotion.percent_off
                               ? `${subscription.promotion.percent_off}% OFF`
-                              : subscription.promotion.amount_off 
+                              : subscription.promotion.amount_off
                                 ? `${formatAmount(subscription.promotion.amount_off)} OFF`
-                                : "Discount Applied"}
+                                : 'Discount Applied'}
                           </Badge>
                           <span className="text-sm text-muted-foreground">
                             {subscription.promotion.duration.duration === 'forever' && (
-                              <span className="ml-1">({t('billing.promotionDuration.forever')})</span>
+                              <span className="ml-1">
+                                ({t('billing.promotionDuration.forever')})
+                              </span>
                             )}
                             {subscription.promotion.duration.duration === 'once' && (
                               <span className="ml-1">({t('billing.promotionDuration.once')})</span>
                             )}
-                            {subscription.promotion.duration.duration === 'repeating' && subscription.promotion.duration.duration_in_months && (
-                              <span className="ml-1">({t('billing.promotionDuration.repeating', { months: subscription.promotion.duration.duration_in_months })})</span>
-                            )}
+                            {subscription.promotion.duration.duration === 'repeating' &&
+                              subscription.promotion.duration.duration_in_months && (
+                                <span className="ml-1">
+                                  (
+                                  {t('billing.promotionDuration.repeating', {
+                                    months: subscription.promotion.duration.duration_in_months,
+                                  })}
+                                  )
+                                </span>
+                              )}
                           </span>
                         </div>
                       </div>
                     ) : (
                       <div className="text-2xl font-bold">
-                        {subscription?.plan?.amount 
-                          ? (
-                            <>
-                              {formatAmount(subscription.plan.amount)}
-                              <span className="text-lg font-normal text-muted-foreground">
-                                /{subscription.plan.interval === 'year' ? t('pricing.year') : subscription.plan.interval === 'month' ? t('pricing.month') : subscription.plan.interval === 'quarter' ? t('pricing.quarter') : t('pricing.lifetime')}
-                              </span>
-                            </>
-                          )
-                          : t('pricing.free.name')}
+                        {subscription?.plan?.amount ? (
+                          <>
+                            {formatAmount(subscription.plan.amount)}
+                            <span className="text-lg font-normal text-muted-foreground">
+                              /
+                              {subscription.plan.interval === 'year'
+                                ? t('pricing.year')
+                                : subscription.plan.interval === 'month'
+                                  ? t('pricing.month')
+                                  : subscription.plan.interval === 'quarter'
+                                    ? t('pricing.quarter')
+                                    : t('pricing.lifetime')}
+                            </span>
+                          </>
+                        ) : (
+                          t('pricing.free.name')
+                        )}
                       </div>
                     )}
                     {/* {subscription?.plan?.interval !== 'lifetime' && (
@@ -225,13 +259,14 @@ export default function BillingManagement() {
                       </p>
                     )} */}
                   </div>
-                  {subscription?.trial_end && new Date(subscription.trial_end * 1000) > new Date() && (
-                    <div className="bg-primary/10 text-primary px-4 py-2 rounded-md text-sm">
-                      {t('billing.trialEndsIn', {
-                        date: formatWhopDate(subscription.trial_end)
-                      })}
-                    </div>
-                  )}
+                  {subscription?.trial_end &&
+                    new Date(subscription.trial_end * 1000) > new Date() && (
+                      <div className="bg-primary/10 text-primary px-4 py-2 rounded-md text-sm">
+                        {t('billing.trialEndsIn', {
+                          date: formatWhopDate(subscription.trial_end),
+                        })}
+                      </div>
+                    )}
                 </>
               )}
             </div>
@@ -262,8 +297,8 @@ export default function BillingManagement() {
                       <History className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium">
-                          {t('billing.dates.activeSince', { 
-                            date: formatWhopDate(subscription?.created) 
+                          {t('billing.dates.activeSince', {
+                            date: formatWhopDate(subscription?.created),
                           })}
                         </p>
                       </div>
@@ -284,7 +319,7 @@ export default function BillingManagement() {
                           <p className="font-medium">
                             {t('billing.dates.currentPeriod', {
                               startDate: formatWhopDate(subscription?.current_period_start),
-                              endDate: formatWhopDate(subscription?.current_period_end)
+                              endDate: formatWhopDate(subscription?.current_period_end),
                             })}
                           </p>
                         </div>
@@ -296,7 +331,8 @@ export default function BillingManagement() {
                         <div>
                           <p className="font-medium">Trial Period</p>
                           <p className="text-sm text-muted-foreground">
-                            {formatWhopDate(subscription.trial_start)} - {formatWhopDate(subscription.trial_end)}
+                            {formatWhopDate(subscription.trial_start)} -{' '}
+                            {formatWhopDate(subscription.trial_end)}
                           </p>
                         </div>
                       </div>
@@ -321,129 +357,129 @@ export default function BillingManagement() {
       </Card>
 
       {/* Subscription Management */}
-      {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
-        <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
-          <CardContent className="px-0">
-            <div className="flex flex-col gap-4">
-              {!subscription.cancel_at_period_end && (
-                <div className="flex flex-wrap items-center gap-4">
-                  <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button  
-                        variant="error" 
-                        className="sm:w-auto"
-                      >
-                        {t('billing.cancelSubscription')}
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>{t('pricing.cancelSubscription.title')}</DialogTitle>
-                        <DialogDescription>
-                          {t('pricing.cancelSubscription.description')}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <p className="text-sm font-medium">
-                          {t('pricing.cancelSubscription.warning')}
-                        </p>
-                        <ul className="list-disc pl-6 space-y-2">
-                          {[
-                            t('pricing.cancelSubscription.features.0'),
-                            t('pricing.cancelSubscription.features.1'),
-                            t('pricing.cancelSubscription.features.2')
-                          ].map((feature, index) => (
-                            <li key={index} className="text-sm text-muted-foreground">
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <label htmlFor="cancellationReason" className="text-sm font-medium">
-                              {t('billing.cancellationReason')}
-                            </label>
-                            <select
-                              id="cancellationReason"
-                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-                              value={cancellationReason}
-                              onChange={(e) => setCancellationReason(e.target.value)}
-                            >
-                              <option value="">{t('billing.selectReason')}</option>
-                              <option value="too_expensive">{t('billing.reasons.tooExpensive')}</option>
-                              <option value="missing_features">{t('billing.reasons.missingFeatures')}</option>
-                              <option value="not_using">{t('billing.reasons.notUsing')}</option>
-                              <option value="switching">{t('billing.reasons.switching')}</option>
-                              <option value="other">{t('billing.reasons.other')}</option>
-                            </select>
-                          </div>
-                          <div className="space-y-2">
-                            <label htmlFor="feedback" className="text-sm font-medium">
-                              {t('billing.additionalFeedback')}
-                            </label>
-                            <textarea
-                              id="feedback"
-                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-                              rows={3}
-                              value={feedback}
-                              onChange={(e) => setFeedback(e.target.value)}
-                              placeholder={t('billing.feedbackPlaceholder')}
-                            />
+      {!isLoading &&
+        (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') &&
+        subscription?.plan?.interval !== 'lifetime' && (
+          <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+            <CardContent className="px-0">
+              <div className="flex flex-col gap-4">
+                {!subscription.cancel_at_period_end && (
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="error" className="sm:w-auto">
+                          {t('billing.cancelSubscription')}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>{t('pricing.cancelSubscription.title')}</DialogTitle>
+                          <DialogDescription>
+                            {t('pricing.cancelSubscription.description')}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <p className="text-sm font-medium">
+                            {t('pricing.cancelSubscription.warning')}
+                          </p>
+                          <ul className="list-disc pl-6 space-y-2">
+                            {[
+                              t('pricing.cancelSubscription.features.0'),
+                              t('pricing.cancelSubscription.features.1'),
+                              t('pricing.cancelSubscription.features.2'),
+                            ].map((feature, index) => (
+                              <li key={index} className="text-sm text-muted-foreground">
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label htmlFor="cancellationReason" className="text-sm font-medium">
+                                {t('billing.cancellationReason')}
+                              </label>
+                              <select
+                                id="cancellationReason"
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                                value={cancellationReason}
+                                onChange={(e) => setCancellationReason(e.target.value)}
+                              >
+                                <option value="">{t('billing.selectReason')}</option>
+                                <option value="too_expensive">
+                                  {t('billing.reasons.tooExpensive')}
+                                </option>
+                                <option value="missing_features">
+                                  {t('billing.reasons.missingFeatures')}
+                                </option>
+                                <option value="not_using">{t('billing.reasons.notUsing')}</option>
+                                <option value="switching">{t('billing.reasons.switching')}</option>
+                                <option value="other">{t('billing.reasons.other')}</option>
+                              </select>
+                            </div>
+                            <div className="space-y-2">
+                              <label htmlFor="feedback" className="text-sm font-medium">
+                                {t('billing.additionalFeedback')}
+                              </label>
+                              <textarea
+                                id="feedback"
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                                rows={3}
+                                value={feedback}
+                                onChange={(e) => setFeedback(e.target.value)}
+                                placeholder={t('billing.feedbackPlaceholder')}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <DialogFooter>
-                        <Button 
-                          variant="outline"
-                          onClick={() => setIsCancelDialogOpen(false)}
-                        >
-                          {t('pricing.cancelSubscription.cancel')}
-                        </Button>
-                        <Button 
-                          variant="error"
-                          onClick={() => {
-                            handleSubscriptionAction('cancel')
-                            setIsCancelDialogOpen(false)
-                          }}
-                        >
-                          {t('pricing.cancelSubscription.confirm')}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                  <Button 
-                    variant="outline"
-                    className="sm:w-auto"
-                    asChild
-                  >
-                    <Link href={subscription?.manage_url || "https://whop.com/@me/settings/memberships/"}>
-                          <CreditCard className="h-4 w-4 mr-2" />
-                          {t('billing.managePaymentMethod')}
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
-                  {subscription.cancel_at_period_end && (
-                    <div className="flex flex-wrap items-center gap-4">
-                      <Button  
-                        variant="outline"
-                        className="sm:w-auto"
-                        asChild
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsCancelDialogOpen(false)}>
+                            {t('pricing.cancelSubscription.cancel')}
+                          </Button>
+                          <Button
+                            variant="error"
+                            onClick={() => {
+                              handleSubscriptionAction('cancel')
+                              setIsCancelDialogOpen(false)
+                            }}
+                          >
+                            {t('pricing.cancelSubscription.confirm')}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                    <Button variant="outline" className="sm:w-auto" asChild>
+                      <Link
+                        href={
+                          subscription?.manage_url || 'https://whop.com/@me/settings/memberships/'
+                        }
                       >
-                        <Link href={subscription?.manage_url || "https://whop.com/@me/settings/memberships/"}>
-                          <CreditCard className="h-4 w-4 mr-2" />
-                          {t('billing.managePaymentMethod')}
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        {t('billing.managePaymentMethod')}
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+                {subscription.cancel_at_period_end && (
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Button variant="outline" className="sm:w-auto" asChild>
+                      <Link
+                        href={
+                          subscription?.manage_url || 'https://whop.com/@me/settings/memberships/'
+                        }
+                      >
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        {t('billing.managePaymentMethod')}
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
       {/* Available Plans */}
-      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.availablePlans')}</CardTitle>
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
@@ -454,13 +490,13 @@ export default function BillingManagement() {
       </Card>
 
       {/* Payment History */}
-      <Card className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.080] shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+      <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
         <CardHeader className="px-0">
           <CardTitle>{t('billing.paymentHistory')}</CardTitle>
           <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
-          <div className="rounded-xl border border-white/[0.08] bg-background/70">
+          <div className="rounded-xl border border-border/45 bg-background/70">
             {isLoading ? (
               <div className="p-4 space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -482,9 +518,7 @@ export default function BillingManagement() {
                 {subscription.invoices.map((invoice) => (
                   <div key={invoice.id} className="flex items-center justify-between p-4">
                     <div className="space-y-1">
-                      <p className="text-sm font-medium">
-                        {formatAmount(invoice.amount_paid)}
-                      </p>
+                      <p className="text-sm font-medium">{formatAmount(invoice.amount_paid)}</p>
                       <p className="text-sm text-muted-foreground">
                         {formatWhopDate(invoice.created)}
                       </p>
@@ -497,22 +531,27 @@ export default function BillingManagement() {
                       )}
                       <div className="flex items-center gap-2">
                         {invoice.hosted_invoice_url && (
-                          <Button 
+                          <Button
                             variant="outline"
                             size="sm"
                             className="h-8"
-                            onClick={() => invoice.hosted_invoice_url && window.open(invoice.hosted_invoice_url, '_blank')}
+                            onClick={() =>
+                              invoice.hosted_invoice_url &&
+                              window.open(invoice.hosted_invoice_url, '_blank')
+                            }
                           >
                             <Receipt className="h-4 w-4 mr-2" />
                             {t('billing.viewInvoice')}
                           </Button>
                         )}
                         {invoice.invoice_pdf && (
-                          <Button 
+                          <Button
                             variant="outline"
                             size="sm"
                             className="h-8"
-                            onClick={() => invoice.invoice_pdf && window.open(invoice.invoice_pdf, '_blank')}
+                            onClick={() =>
+                              invoice.invoice_pdf && window.open(invoice.invoice_pdf, '_blank')
+                            }
                           >
                             <FileText className="h-4 w-4 mr-2" />
                             {t('billing.downloadPdf')}
@@ -533,4 +572,4 @@ export default function BillingManagement() {
       </Card>
     </div>
   )
-} 
+}

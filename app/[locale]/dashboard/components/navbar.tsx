@@ -1,21 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import {
- Pencil,
- RefreshCw,
- Sparkles,
- CloudUpload,
- CheckCircle2
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Pencil, RefreshCw, Sparkles, CloudUpload, CheckCircle2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import ImportButton from './import/import-button'
 import { useKeyboardShortcuts } from '../../../../hooks/use-keyboard-shortcuts'
 import { ActiveFilterTags } from './filters/active-filter-tags'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FilterCommandMenu } from './filters/filter-command-menu'
-import { useCurrentLocale } from "@/locales/client"
+import { useCurrentLocale } from '@/locales/client'
 import { useDashboard } from '../dashboard-context'
 import { AddWidgetSheet } from './add-widget-sheet'
 import { ShareButton } from './share-button'
@@ -27,153 +21,160 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { PnLSummary } from './pnl-summary'
 
 export default function Navbar() {
- const locale = useCurrentLocale()
- const {
- isCustomizing,
- toggleCustomizing,
- addWidget,
- layouts,
- autoSaveStatus,
- flushPendingSaves
- } = useDashboard()
- const { refreshAllData, isPlusUser } = useDataActions()
- const isLoading = useDataIsLoading()
- const [isRefreshing, setIsRefreshing] = useState(false)
+  const locale = useCurrentLocale()
+  const {
+    isCustomizing,
+    toggleCustomizing,
+    addWidget,
+    layouts,
+    autoSaveStatus,
+    flushPendingSaves,
+  } = useDashboard()
+  const { refreshAllData, isPlusUser } = useDataActions()
+  const isLoading = useDataIsLoading()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
- const handleRefresh = async () => {
- setIsRefreshing(true)
- await refreshAllData({ force: true })
- setTimeout(() => setIsRefreshing(false), 1000)
- }
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    await refreshAllData({ force: true })
+    setTimeout(() => setIsRefreshing(false), 1000)
+  }
 
- // Initialize keyboard shortcuts
- useKeyboardShortcuts()
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts()
 
- const currentLayout = layouts || { desktop: [], mobile: [] }
+  const currentLayout = layouts || { desktop: [], mobile: [] }
 
- return (
- <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none bg-background/95">
- <motion.nav
- initial={{ y: -20, opacity: 0 }}
- animate={{ y: 0, opacity: 1 }}
- transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
- className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-white/[0.055] bg-black/75 backdrop-saturate-200 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_8px_40px_-8px_rgba(0,0,0,0.75)] transition-[opacity,background-color,border-color] duration-300"
- >
- <div className="flex items-center justify-between px-4 sm:px-6 h-14">
+  return (
+    <div className="sticky top-0 z-40 w-full px-4 sm:px-6 py-2.5 pointer-events-none bg-background/95">
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-border/45 bg-background/72 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300"
+      >
+        <div className="flex items-center justify-between px-4 sm:px-6 h-14">
+          {/* Left Side: Sidebar Toggle & Brand */}
+          <div className="flex items-center gap-4">
+            <SidebarTrigger className="-ml-1 h-9 w-9 rounded-xl text-muted-foreground/60 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8 hover:text-foreground/95" />
+            <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
+          </div>
 
- {/* Left Side: Sidebar Toggle & Brand */}
- <div className="flex items-center gap-4">
- <SidebarTrigger className="-ml-1 text-muted-foreground/60 hover:text-foreground/95 transition-[opacity,background-color,border-color] rounded-xl w-9 h-9 hover:bg-white/[0.05]" />
- <div className="h-5 w-px bg-white/[0.08] hidden sm:block mx-1" />
- </div>
+          {/* Center: PnL Metrics (Desktop Only) */}
+          <div className="hidden md:flex flex-1 max-w-2xl px-4">
+            <PnLSummary />
+          </div>
 
- {/* Center: PnL Metrics (Desktop Only) */}
- <div className="hidden md:flex flex-1 max-w-2xl px-4">
- <PnLSummary />
- </div>
+          {/* Right Side: Actions */}
+          <div className="flex items-center gap-3">
+            {/* Config Group */}
+            <div className="flex items-center gap-1.5 rounded-xl border border-border/45 bg-primary/6 p-1">
+              <Button
+                id="customize-mode"
+                variant="ghost"
+                size="sm"
+                onClick={toggleCustomizing}
+                className={cn(
+                  'h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500',
+                  isCustomizing
+                    ? 'bg-[oklch(0.65_0.22_260)] text-white shadow-[0_0_16px_oklch(0.65_0.22_260/0.45)] font-semibold'
+                    : 'text-muted-foreground/70 hover:bg-primary/8 hover:text-foreground/95',
+                )}
+              >
+                <Pencil className={cn('w-3.5 h-3.5', isCustomizing && 'animate-pulse')} />
+                <span className="inline text-[10px] font-bold uppercase tracking-[0.14em]">
+                  {isCustomizing ? 'Lock Grid' : 'Edit Layout'}
+                </span>
+              </Button>
 
- {/* Right Side: Actions */}
- <div className="flex items-center gap-3">
+              {isCustomizing && autoSaveStatus.hasPending && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={flushPendingSaves}
+                  className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground/95 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
+                >
+                  <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
+                </Button>
+              )}
 
- {/* Config Group */}
- <div className="flex items-center gap-1.5 p-1 bg-[oklch(0.65_0.22_260/0.06)] rounded-xl border border-[oklch(0.65_0.22_260/0.08)]">
- <Button 
- id="customize-mode"
- variant="ghost"
- size="sm"
- onClick={toggleCustomizing}
- className={cn("h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500",
- isCustomizing
- ?"bg-[oklch(0.65_0.22_260)] text-white shadow-[0_0_16px_oklch(0.65_0.22_260/0.45)] font-semibold"
- :"text-muted-foreground/70 hover:text-foreground/95 hover:bg-white/[0.05]"
- )}
- >
- <Pencil className={cn("w-3.5 h-3.5", isCustomizing &&"animate-pulse")} />
- <span className="inline text-[10px] font-bold uppercase tracking-[0.14em]">
- {isCustomizing ?"Lock Grid" :"Edit Layout"}
- </span>
- </Button>
+              {!autoSaveStatus.hasPending && isCustomizing && (
+                <div className="hidden sm:flex items-center gap-2 px-3 text-foreground/60">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Saved</span>
+                </div>
+              )}
 
- {isCustomizing && autoSaveStatus.hasPending && (
- <Button 
- variant="ghost"
- size="sm"
- onClick={flushPendingSaves}
- className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground/95 transition-[opacity,background-color,border-color] border border-[oklch(0.65_0.22_260/0.08)]"
- >
- <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
- <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
- </Button>
- )}
+              <AddWidgetSheet
+                onAddWidget={addWidget}
+                isCustomizing={isCustomizing}
+                showLabelOnMobile
+              />
 
- {!autoSaveStatus.hasPending && isCustomizing && (
- <div className="hidden sm:flex items-center gap-2 px-3 text-foreground/60">
- <CheckCircle2 className="w-3.5 h-3.5" />
- <span className="text-[10px] font-black uppercase tracking-widest">Saved</span>
- </div>
- )}
+              <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
 
- <AddWidgetSheet onAddWidget={addWidget} isCustomizing={isCustomizing} showLabelOnMobile />
+              <ShareButton currentLayout={currentLayout} />
+            </div>
 
- <div className="hidden sm:block w-px h-5 bg-border/50 mx-1" />
+            {/* Performance & Search Group */}
+            <div className="flex items-center gap-2">
+              <FilterCommandMenu variant="navbar" />
 
- <ShareButton currentLayout={currentLayout} />
- </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <ImportButton />
 
- {/* Performance & Search Group */}
- <div className="flex items-center gap-2">
- <FilterCommandMenu variant="navbar" />
+                {!isPlusUser() && (
+                  <Link href={`/${locale}/dashboard/billing`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/95 shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
+                      aria-label="Upgrade to Elite plan"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
+                      <span>Elite</span>
+                    </Button>
+                  </Link>
+                )}
+              </div>
 
- <div className="hidden sm:flex items-center gap-2">
- <ImportButton />
+              <div className="mx-1 hidden h-6 w-px bg-border/50 sm:block" />
 
- {!isPlusUser() && (
- <Link href={`/${locale}/dashboard/billing`}>
- <Button 
- variant="ghost" 
- size="sm" 
- className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-[oklch(0.65_0.22_260/0.08)] text-foreground/95 text-[10px] font-black uppercase tracking-[0.2em] transition-[opacity,background-color,border-color] duration-500 shadow-none hover:bg-secondary/35"
- aria-label="Upgrade to Elite plan"
- >
- <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
- <span>Elite</span>
- </Button>
- </Link>
- )}
- </div>
+              {/* Real-time Actions */}
+              <div className="flex items-center gap-2 rounded-xl border border-border/35 bg-background/55 p-1.5 shadow-inner">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleRefresh}
+                  disabled={isLoading}
+                  className="h-8 w-8 rounded-xl text-fg-muted transition-[opacity,background-color,border-color] active:scale-90"
+                  aria-label="Refresh dashboard data"
+                >
+                  <RefreshCw
+                    className={cn(
+                      'w-3.5 h-3.5 transition-transform duration-1000',
+                      (isRefreshing || isLoading) && 'animate-spin',
+                    )}
+                  />
+                </Button>
+                <DailySummaryModal />
+              </div>
+            </div>
+          </div>
+        </div>
 
- <div className="w-px h-6 bg-border/50 mx-1 hidden sm:block" />
+        <div className="md:hidden px-4 pb-3">
+          <PnLSummary className="w-full" />
+        </div>
 
- {/* Real-time Actions */}
- <div className="flex items-center gap-2 bg-background/70 p-1.5 rounded-xl border border-border/20 shadow-inner">
- <Button 
- variant="ghost"
- size="icon"
- onClick={handleRefresh}
- disabled={isLoading}
- className="h-8 w-8 rounded-xl text-fg-muted transition-[opacity,background-color,border-color] active:scale-90"
- aria-label="Refresh dashboard data"
- >
- <RefreshCw className={cn("w-3.5 h-3.5 transition-transform duration-1000", (isRefreshing || isLoading) &&"animate-spin")} />
- </Button>
- <DailySummaryModal />
- </div>
- </div>
-
- </div>
- </div>
-
- <div className="md:hidden px-4 pb-3">
- <PnLSummary className="w-full" />
- </div>
-
- {/* Dynamic Filters Bar */}
- <AnimatePresence>
- <div className="px-8 pb-3 flex flex-wrap gap-2">
- <ActiveFilterTags showAccountNumbers={true} />
- </div>
- </AnimatePresence>
- </motion.nav>
- </div>
- )
+        {/* Dynamic Filters Bar */}
+        <AnimatePresence>
+          <div className="px-8 pb-3 flex flex-wrap gap-2">
+            <ActiveFilterTags showAccountNumbers={true} />
+          </div>
+        </AnimatePresence>
+      </motion.nav>
+    </div>
+  )
 }
