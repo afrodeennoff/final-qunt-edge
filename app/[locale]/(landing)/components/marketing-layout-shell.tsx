@@ -1,6 +1,7 @@
 import Navbar from './navbar'
 import Footer from './footer'
 import { cn } from '@/lib/utils'
+import { Suspense } from 'react'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
 import { BackgroundGlow } from '@/components/ui/background-glow'
 
@@ -56,7 +57,11 @@ export default function MarketingLayoutShell({
             <Navbar />
           </MiniMaxNavbarWrapper>
           <div className={cn('relative z-10', topSpacingClassName)}>
-            {showRollingBanner ? <RollingAdBanner /> : null}
+            {showRollingBanner ? (
+              <Suspense fallback={null}>
+                <RollingAdBanner />
+              </Suspense>
+            ) : null}
             <div className={cn(contentSpacingClassName, contentClassName)}>{children}</div>
           </div>
           <Footer />
