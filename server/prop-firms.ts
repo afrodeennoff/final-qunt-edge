@@ -22,6 +22,16 @@ const PROP_FIRMS_CACHE_LIFETIME = {
 const PROP_FIRMS_CACHE_TAG = 'prop-firms'
 const PROP_FIRMS_BANNER_ITEMS_COOLDOWN_KEY = 'prop-firms-banner-items'
 const PROP_FIRM_TABLE_NAME = 'PropFirm'
+const PROP_FIRM_COUPON_TABLE_NAME = 'PropFirmCoupon'
+const MAX_COUPON_CODE_LENGTH = 64
+const ALLOWED_CLAIM_URL_PROTOCOLS = new Set(['http:', 'https:'])
+
+export class PropFirmCouponAdminError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'PropFirmCouponAdminError'
+  }
+}
 
 function isPropFirmDataUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
@@ -46,6 +56,154 @@ function isPropFirmDataUnavailableError(error: unknown): boolean {
 
 function logPropFirmFallback(source: string, error: unknown) {
   console.warn(`[PropFirms] Falling back in ${source}`, error)
+}
+
+function normalizeOptionalCouponText(value: string | null | undefined): string | null | undefined {
+  if (typeof value !== 'string') return value
+  const trimmed = value.trim()
+  return trimmed ? trimmed : null
+}
+
+function normalizeOptionalCouponDate(value: Date | null | undefined): Date | null | undefined {
+  if (value === undefined) return undefined
+  if (value === null) return null
+
+  const normalized = new Date(value)
+  if (Number.isNaN(normalized.getTime())) {
+    throw new PropFirmCouponAdminError('Use a valid start and expiry date before saving the coupon.')
+  }
+
+  return normalized
+}
+
+function normalizeCouponCode(code: string): string {
+  return code.trim().toUpperCase()
+}
+
+function normalizePropFirmCouponInput(data: PropFirmCouponInput): PropFirmCouponInput {
+  const code = normalizeCouponCode(data.code)
+  if (!code) {
+    throw new PropFirmCouponAdminError('Coupon code is required.')
+  }
+
+  if (code.length > MAX_COUPON_CODE_LENGTH) {
+    throw new PropFirmCouponAdminError(
+      `Coupon code must be ${MAX_COUPON_CODE_LENGTH} characters or fewer.`,
+    )
+  }
+
+  if (/\s/.test(code)) {
+    throw new PropFirmCouponAdminError('Coupon code cannot contain spaces.')
+  }
+
+  const discountPercent = data.discountPercent ?? null
+  if (
+    discountPercent !== null &&
+    (!Number.isFinite(discountPercent) || discountPercent < 0 || discountPercent > 100)
+  ) {
+    throw new PropFirmCouponAdminError('Discount percent must be between 0 and 100.')
+  }
+
+  const challengeFee = data.challengeFee ?? null
+  if (challengeFee !== null && (!Number.isFinite(challengeFee) || challengeFee < 0)) {
+    throw new PropFirmCouponAdminError('Challenge fee must be 0 or greater.')
+  }
+
+  const claimUrl = normalizeOptionalCouponText(data.claimUrl)
+  if (claimUrl) {
+    let parsedUrl: URL
+    try {
+      parsedUrl = new URL(claimUrl)
+    } catch {
+      throw new PropFirmCouponAdminError('Claim / affiliate URL must be a valid link.')
+    }
+
+    if (!ALLOWED_CLAIM_URL_PROTOCOLS.has(parsedUrl.protocol)) {
+      throw new PropFirmCouponAdminError('Claim / affiliate URL must start with http or https.')
+    }
+  }
+
+  const startsAt = normalizeOptionalCouponDate(data.startsAt)
+  const expiresAt = normalizeOptionalCouponDate(data.expiresAt)
+
+  if (
+    startsAt instanceof Date &&
+    expiresAt instanceof Date &&
+    startsAt.getTime() > expiresAt.getTime()
+  ) {
+    throw new PropFirmCouponAdminError('Start date must be earlier than expiry date.')
+  }
+
+  return {
+    ...data,
+    code,
+    discountPercent,
+    challengeFee,
+    description: normalizeOptionalCouponText(data.description),
+    drawdownType: normalizeOptionalCouponText(data.drawdownType),
+    payoutModel: normalizeOptionalCouponText(data.payoutModel),
+    platform: normalizeOptionalCouponText(data.platform),
+    claimUrl,
+    startsAt,
+    expiresAt,
+  }
+}
+
+async function assertCouponMutationAvailable() {
+  if (!hasConfiguredDatabaseConnection) {
+    throw new PropFirmCouponAdminError(
+      'Coupon editing requires a configured database connection.',
+    )
+  }
+
+  const couponTableAvailable = await isPrismaTableAvailable(PROP_FIRM_COUPON_TABLE_NAME)
+  const firmTableAvailable = await isPrismaTableAvailable(PROP_FIRM_TABLE_NAME)
+
+  if (!couponTableAvailable || !firmTableAvailable) {
+    throw new PropFirmCouponAdminError(
+      'Coupon editing is unavailable because the prop-firm schema is not ready.',
+    )
+  }
+}
+
+function toPropFirmCouponMutationError(error: unknown): Error {
+  if (error instanceof PropFirmCouponAdminError) {
+    return error
+  }
+
+  const maybeError = error as { code?: string }
+
+  if (maybeError?.code === 'P2002') {
+    return new PropFirmCouponAdminError(
+      'This prop firm already has a coupon with that code.',
+    )
+  }
+
+  if (maybeError?.code === 'P2003' || maybeError?.code === 'P2025') {
+    return new PropFirmCouponAdminError(
+      'The coupon or linked prop firm could not be found anymore.',
+    )
+  }
+
+  if (isPrismaSchemaMismatchError(error)) {
+    return new PropFirmCouponAdminError(
+      'The coupon schema is missing in the current database.',
+    )
+  }
+
+  if (isPropFirmDataUnavailableError(error)) {
+    return new PropFirmCouponAdminError(
+      'The coupon database is unavailable right now. Try again in a moment.',
+    )
+  }
+
+  return error instanceof Error
+    ? error
+    : new PropFirmCouponAdminError('Unable to save coupon changes right now.')
+}
+
+export function getPropFirmCouponAdminErrorMessage(error: unknown): string {
+  return toPropFirmCouponMutationError(error).message
 }
 
 function buildFallbackPropFirmRows() {
@@ -372,9 +530,19 @@ export type PropFirmCouponInput = {
 
 export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCouponInput) {
   await assertAdminAccess()
-  const result = await prisma.propFirmCoupon.create({
-    data: { propFirmId, ...data },
-  })
+  await assertCouponMutationAvailable()
+
+  const normalizedData = normalizePropFirmCouponInput(data)
+
+  let result
+  try {
+    result = await prisma.propFirmCoupon.create({
+      data: { propFirmId, ...normalizedData },
+    })
+  } catch (error) {
+    throw toPropFirmCouponMutationError(error)
+  }
+
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
@@ -383,10 +551,20 @@ export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCou
 
 export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput) {
   await assertAdminAccess()
-  const result = await prisma.propFirmCoupon.update({
-    where: { id },
-    data,
-  })
+  await assertCouponMutationAvailable()
+
+  const normalizedData = normalizePropFirmCouponInput(data)
+
+  let result
+  try {
+    result = await prisma.propFirmCoupon.update({
+      where: { id },
+      data: normalizedData,
+    })
+  } catch (error) {
+    throw toPropFirmCouponMutationError(error)
+  }
+
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
@@ -395,7 +573,15 @@ export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput
 
 export async function deletePropFirmCoupon(id: string) {
   await assertAdminAccess()
-  const result = await prisma.propFirmCoupon.delete({ where: { id } })
+  await assertCouponMutationAvailable()
+
+  let result
+  try {
+    result = await prisma.propFirmCoupon.delete({ where: { id } })
+  } catch (error) {
+    throw toPropFirmCouponMutationError(error)
+  }
+
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')

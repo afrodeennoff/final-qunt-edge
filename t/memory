@@ -6,6 +6,13 @@
 
 ## Current State
 
+### Admin Coupon Operations — Functional
+- Both admin coupon entry points now share the same hardened path: the global manager at `app/[locale]/admin/coupons/page.tsx` and the per-firm manager at `app/[locale]/admin/propfirms/[id]/page.tsx` both call the validated mutation helpers in `server/prop-firms.ts`
+- Coupon mutations now validate and normalize code, discount %, challenge fee, claim URL, and date order before writing; duplicate codes and missing records return friendly admin-facing errors instead of raw Prisma failures
+- Admin coupon screens now show success/error banners via search-param redirects, and submit/delete buttons use pending states through `app/[locale]/admin/components/form-action-button.tsx`
+- Coupon descriptions are now edited in `Textarea` fields, and both admin surfaces expose quick “Public” and “Claim” links so admins can verify live destinations without leaving the workspace blindly
+- If the database connection is missing, coupon management now switches to an explicit read-only fallback state instead of rendering forms that cannot save
+
 ### Backend Performance & Reliability Rework — COMPLETE
 
 8-phase backend rework program completed. All phases committed and type-checked.

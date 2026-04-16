@@ -88,3 +88,6 @@
 - Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
 - Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.
 - For admin update forms, blank optional coupon fields should normalize to `null`, not `undefined`, so Prisma actually clears persisted values when an admin removes a discount, claim URL, fee override, or date.
+- Coupon admin writes should go through shared server-side validation/error translation in `server/prop-firms.ts`, not page-local ad hoc checks. Duplicate codes, invalid URLs, invalid date ranges, and unavailable DB/schema states should surface as friendly admin messages.
+- Admin coupon entry points should show mutation feedback explicitly: success/error banners after redirects and pending-submit states on create/save/delete buttons.
+- If admin coupon pages are using fallback/read-only data because the database connection is unavailable, disable the write forms and show a warning instead of leaving dead-looking controls on screen.

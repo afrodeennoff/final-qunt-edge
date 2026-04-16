@@ -37,3 +37,15 @@
 - **RC:** Without singleflight + stale serving, N concurrent requests each hit the DB simultaneously for the same data
 - **R:** (1) Singleflight deduplicates concurrent loaders to 1. (2) Serve stale data for up to `staleTtl` seconds while one refresher runs. (3) Cache always has something to serve
 - **E:** CacheService.getOrLoad() combines singleflight Map + stale-while-recompute background refresh
+
+## Lesson 48: Admin write surfaces feel broken if server actions have no explicit feedback loop
+- **M:** The coupon admin screens looked dead even when the raw server actions existed.
+- **RC:** Create/update/delete actions redirected silently, had no pending affordance, and surfaced raw failures poorly, so the UI gave admins no confidence that anything had happened.
+- **R:** For admin mutation screens, always pair server actions with visible success/error banners and pending-submit states so the operator gets an immediate outcome signal.
+- **E:** Coupon admin now uses redirect-based status banners plus `useFormStatus` pending buttons on create/save/delete.
+
+## Lesson 49: Fallback/read-only admin data must disable writes instead of rendering dead forms
+- **M:** Coupon admin could still render writable-looking forms when the app was running without a configured database connection.
+- **RC:** The page loaded fallback prop-firm data for display, but the mutation path still required live Prisma writes, creating a dead-end UX.
+- **R:** Whenever admin pages fall back to sample/read-only data, show an explicit warning state and disable the write forms entirely.
+- **E:** Both coupon admin entry points now switch to read-only messaging when `hasConfiguredDatabaseConnection` is false.

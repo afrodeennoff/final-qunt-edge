@@ -278,6 +278,9 @@ Each phase is independently shippable and backward-compatible.
 - [x] Catalogued 57 API routes with auth/rate-limiting/error patterns
 - [x] Found 10+ unbounded queries, 4 N+1 patterns, 3 duplicate logic patterns
 - [x] Identified missing indexes, missing instrumentation, missing CI
+- [x] Harden admin coupon create/update/delete with validation and friendly failure handling
+- [x] Add visible success/error/pending feedback to both admin coupon screens
+- [x] Improve coupon operations UX with preview/open actions and clearer edit surfaces
 
 ## In Progress
 - [ ] Awaiting approval for Phase 1 implementation

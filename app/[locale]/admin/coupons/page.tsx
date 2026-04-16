@@ -2,21 +2,42 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { connection } from 'next/server'
 import type { ReactNode } from 'react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import {
   createPropFirmCoupon,
   deletePropFirmCoupon,
+  getPropFirmCouponAdminErrorMessage,
   updatePropFirmCoupon,
 } from '@/server/prop-firms'
-import { Building2, Clock3, Percent, Plus, Tags, Trash2 } from 'lucide-react'
+import {
+  AlertTriangle,
+  ArrowUpRight,
+  Building2,
+  CheckCircle2,
+  Clock3,
+  Eye,
+  Percent,
+  Plus,
+  Tags,
+  Trash2,
+} from 'lucide-react'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import {
+  buildCouponAdminRedirectUrl,
+  formatAdminDateTimeInput,
+  getCouponAdminNotice,
+  getCouponTimingState,
+} from '../components/coupon-admin-utils'
+import { FormActionButton } from '../components/form-action-button'
 
 function requireText(value: FormDataEntryValue | null, fallback = ''): string {
   return value?.toString().trim() || fallback
@@ -65,50 +86,86 @@ function requireFormString(formData: FormData, key: string): string {
 
 async function handleCreateCoupon(formData: FormData) {
   'use server'
-  const locale = requireFormString(formData, 'locale')
-  const propFirmId = requireText(formData.get('propFirmId'))
-  await createPropFirmCoupon(propFirmId, {
-    code: requireText(formData.get('code')),
-    discountPercent: parseOptionalNumber(formData.get('discountPercent')),
-    description: normalizeOptionalText(formData.get('description')),
-    challengeFee: parseOptionalNumber(formData.get('challengeFee')),
-    drawdownType: normalizeOptionalText(formData.get('drawdownType')),
-    payoutModel: normalizeOptionalText(formData.get('payoutModel')),
-    platform: normalizeOptionalText(formData.get('platform')),
-    claimUrl: normalizeOptionalText(formData.get('claimUrl')),
-    isActive: formData.has('couponIsActive'),
-    startsAt: parseOptionalDate(formData.get('startsAt')),
-    expiresAt: parseOptionalDate(formData.get('expiresAt')),
-  })
-  redirect(`/${locale}/admin/coupons`)
+  const locale = requireText(formData.get('locale'), 'en')
+
+  try {
+    const propFirmId = requireFormString(formData, 'propFirmId')
+    await createPropFirmCoupon(propFirmId, {
+      code: requireText(formData.get('code')),
+      discountPercent: parseOptionalNumber(formData.get('discountPercent')),
+      description: normalizeOptionalText(formData.get('description')),
+      challengeFee: parseOptionalNumber(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalText(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalText(formData.get('payoutModel')),
+      platform: normalizeOptionalText(formData.get('platform')),
+      claimUrl: normalizeOptionalText(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
+    })
+  } catch (error) {
+    redirect(
+      buildCouponAdminRedirectUrl(
+        `/${locale}/admin/coupons`,
+        'error',
+        getPropFirmCouponAdminErrorMessage(error),
+      ),
+    )
+  }
+
+  redirect(buildCouponAdminRedirectUrl(`/${locale}/admin/coupons`, 'created'))
 }
 
 async function handleUpdateCoupon(formData: FormData) {
   'use server'
-  const locale = requireFormString(formData, 'locale')
-  const couponId = requireText(formData.get('couponId'))
-  await updatePropFirmCoupon(couponId, {
-    code: requireText(formData.get('code')),
-    discountPercent: parseOptionalNumberForUpdate(formData.get('discountPercent')),
-    description: normalizeOptionalTextForUpdate(formData.get('description')),
-    challengeFee: parseOptionalNumberForUpdate(formData.get('challengeFee')),
-    drawdownType: normalizeOptionalTextForUpdate(formData.get('drawdownType')),
-    payoutModel: normalizeOptionalTextForUpdate(formData.get('payoutModel')),
-    platform: normalizeOptionalTextForUpdate(formData.get('platform')),
-    claimUrl: normalizeOptionalTextForUpdate(formData.get('claimUrl')),
-    isActive: formData.has('couponIsActive'),
-    startsAt: parseOptionalDate(formData.get('startsAt')),
-    expiresAt: parseOptionalDate(formData.get('expiresAt')),
-  })
-  redirect(`/${locale}/admin/coupons`)
+  const locale = requireText(formData.get('locale'), 'en')
+
+  try {
+    const couponId = requireFormString(formData, 'couponId')
+    await updatePropFirmCoupon(couponId, {
+      code: requireText(formData.get('code')),
+      discountPercent: parseOptionalNumberForUpdate(formData.get('discountPercent')),
+      description: normalizeOptionalTextForUpdate(formData.get('description')),
+      challengeFee: parseOptionalNumberForUpdate(formData.get('challengeFee')),
+      drawdownType: normalizeOptionalTextForUpdate(formData.get('drawdownType')),
+      payoutModel: normalizeOptionalTextForUpdate(formData.get('payoutModel')),
+      platform: normalizeOptionalTextForUpdate(formData.get('platform')),
+      claimUrl: normalizeOptionalTextForUpdate(formData.get('claimUrl')),
+      isActive: formData.has('couponIsActive'),
+      startsAt: parseOptionalDate(formData.get('startsAt')),
+      expiresAt: parseOptionalDate(formData.get('expiresAt')),
+    })
+  } catch (error) {
+    redirect(
+      buildCouponAdminRedirectUrl(
+        `/${locale}/admin/coupons`,
+        'error',
+        getPropFirmCouponAdminErrorMessage(error),
+      ),
+    )
+  }
+
+  redirect(buildCouponAdminRedirectUrl(`/${locale}/admin/coupons`, 'updated'))
 }
 
 async function handleDeleteCoupon(formData: FormData) {
   'use server'
-  const locale = requireFormString(formData, 'locale')
-  const couponId = requireText(formData.get('couponId'))
-  await deletePropFirmCoupon(couponId)
-  redirect(`/${locale}/admin/coupons`)
+  const locale = requireText(formData.get('locale'), 'en')
+
+  try {
+    const couponId = requireFormString(formData, 'couponId')
+    await deletePropFirmCoupon(couponId)
+  } catch (error) {
+    redirect(
+      buildCouponAdminRedirectUrl(
+        `/${locale}/admin/coupons`,
+        'error',
+        getPropFirmCouponAdminErrorMessage(error),
+      ),
+    )
+  }
+
+  redirect(buildCouponAdminRedirectUrl(`/${locale}/admin/coupons`, 'deleted'))
 }
 
 async function loadCoupons() {
@@ -126,7 +183,7 @@ async function loadCoupons() {
         },
       },
     },
-    orderBy: [{ updatedAt: 'desc' }, { createdAt: 'desc' }],
+    orderBy: [{ isActive: 'desc' }, { expiresAt: 'asc' }, { updatedAt: 'desc' }],
   })
 }
 
@@ -154,18 +211,21 @@ async function loadFirms() {
   })
 }
 
-function isExpiringSoon(expiresAt: Date | null) {
-  if (!expiresAt) return false
-  const now = Date.now()
-  const expiry = new Date(expiresAt).getTime()
-  return expiry >= now && expiry <= now + 14 * 24 * 60 * 60 * 1000
+function buildPublicFirmHref(locale: string, slug: string) {
+  return `/${locale}/firm/${slug}`
 }
 
 function CouponBadges({
   active,
+  live,
+  scheduled,
+  expired,
   expiringSoon,
 }: {
   active: boolean
+  live: boolean
+  scheduled: boolean
+  expired: boolean
   expiringSoon: boolean
 }) {
   return (
@@ -173,6 +233,21 @@ function CouponBadges({
       <Badge variant={active ? 'default' : 'secondary'}>
         {active ? 'Active' : 'Inactive'}
       </Badge>
+      {live ? (
+        <Badge variant="outline" className="border-emerald-500/40 text-emerald-300">
+          Live on deals
+        </Badge>
+      ) : null}
+      {scheduled ? (
+        <Badge variant="outline" className="border-sky-500/40 text-sky-300">
+          Scheduled
+        </Badge>
+      ) : null}
+      {expired ? (
+        <Badge variant="outline" className="border-border/40 text-muted-foreground">
+          Expired
+        </Badge>
+      ) : null}
       {expiringSoon ? (
         <Badge variant="outline" className="border-amber-500/40 text-amber-300">
           Expires soon
@@ -215,7 +290,7 @@ function CouponEditCard({
   locale: string
 }) {
   const active = coupon.isActive
-  const expiringSoon = isExpiringSoon(coupon.expiresAt)
+  const timing = getCouponTimingState(coupon)
 
   return (
     <Card variant="flat" hover className="overflow-hidden">
@@ -226,7 +301,13 @@ function CouponEditCard({
               <CardTitle size="md" className="tracking-tight">
                 {coupon.code}
               </CardTitle>
-              <CouponBadges active={active} expiringSoon={expiringSoon} />
+              <CouponBadges
+                active={active}
+                live={timing.isLive}
+                scheduled={timing.isScheduled}
+                expired={timing.isExpired}
+                expiringSoon={timing.isExpiringSoon}
+              />
             </div>
             <p className="text-sm text-muted-foreground">
               <span className="font-medium text-foreground/95">{coupon.propFirm.name}</span>
@@ -234,12 +315,28 @@ function CouponEditCard({
             </p>
           </div>
 
-          <Button  variant="ghost" size="sm" asChild>
-            <Link href={`/${locale}/admin/propfirms/${coupon.propFirm.id}`}>
-              <Building2 className="h-4 w-4" />
-              Firm
-            </Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={buildPublicFirmHref(locale, coupon.propFirm.slug)}>
+                <Eye className="h-4 w-4" />
+                Public
+              </Link>
+            </Button>
+            {coupon.claimUrl ? (
+              <Button variant="ghost" size="sm" asChild>
+                <a href={coupon.claimUrl} target="_blank" rel="noreferrer">
+                  <ArrowUpRight className="h-4 w-4" />
+                  Claim
+                </a>
+              </Button>
+            ) : null}
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={`/${locale}/admin/propfirms/${coupon.propFirm.id}`}>
+                <Building2 className="h-4 w-4" />
+                Firm
+              </Link>
+            </Button>
+          </div>
         </div>
       </CardHeader>
 
@@ -293,11 +390,12 @@ function CouponEditCard({
 
           <div className="space-y-1">
             <Label htmlFor={`description-${coupon.id}`}>Description</Label>
-            <Input
+            <Textarea
               id={`description-${coupon.id}`}
               name="description"
               defaultValue={coupon.description ?? ''}
               placeholder="Coupon description"
+              className="min-h-[92px] resize-y"
             />
           </div>
 
@@ -322,7 +420,7 @@ function CouponEditCard({
               <Input
                 name="startsAt"
                 type="datetime-local"
-                defaultValue={coupon.startsAt ? new Date(coupon.startsAt).toISOString().slice(0, 16) : ''}
+                defaultValue={formatAdminDateTimeInput(coupon.startsAt)}
               />
             </div>
             <div className="space-y-1">
@@ -330,7 +428,7 @@ function CouponEditCard({
               <Input
                 name="expiresAt"
                 type="datetime-local"
-                defaultValue={coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().slice(0, 16) : ''}
+                defaultValue={formatAdminDateTimeInput(coupon.expiresAt)}
               />
             </div>
           </div>
@@ -346,9 +444,9 @@ function CouponEditCard({
               />
               <span className="text-sm">Active</span>
             </div>
-            <Button type="submit" variant="outline" size="sm">
+            <FormActionButton type="submit" variant="outline" size="sm" pendingLabel="Saving coupon...">
               Save coupon
-            </Button>
+            </FormActionButton>
           </div>
         </form>
 
@@ -360,15 +458,16 @@ function CouponEditCard({
             <input type="hidden" name="couponId" value={coupon.id} />
             <input type="hidden" name="propFirmId" value={coupon.propFirmId} />
             <input type="hidden" name="locale" value={locale} />
-            <Button
+            <FormActionButton
               type="submit"
               size="sm"
               variant="ghost"
+              pendingLabel="Deleting..."
               className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
             >
               <Trash2 className="h-4 w-4" />
               Delete
-            </Button>
+            </FormActionButton>
           </form>
         </div>
       </CardContent>
@@ -378,19 +477,23 @@ function CouponEditCard({
 
 export default async function AdminCouponsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   await connection()
   await assertAdminAccess()
   const { locale } = await params
+  const notice = getCouponAdminNotice(await searchParams)
 
   const [firms, coupons] = await Promise.all([loadFirms(), loadCoupons()])
 
   const activeCount = coupons.filter((coupon) => coupon.isActive).length
   const inactiveCount = coupons.length - activeCount
-  const soonExpiringCount = coupons.filter((coupon) => isExpiringSoon(coupon.expiresAt)).length
+  const soonExpiringCount = coupons.filter((coupon) => getCouponTimingState(coupon).isExpiringSoon).length
   const firmCoverageCount = new Set(coupons.map((coupon) => coupon.propFirmId)).size
+  const isReadOnlyFallback = !hasConfiguredDatabaseConnection
 
   return (
     <div className="space-y-6">
@@ -418,6 +521,28 @@ export default async function AdminCouponsPage({
         </div>
       </div>
 
+      {notice ? (
+        <Alert variant={notice.variant}>
+          {notice.variant === 'success' ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <AlertTriangle className="h-4 w-4" />
+          )}
+          <AlertTitle>{notice.title}</AlertTitle>
+          <AlertDescription>{notice.description}</AlertDescription>
+        </Alert>
+      ) : null}
+
+      {isReadOnlyFallback ? (
+        <Alert variant="warning">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Coupon workspace is read-only</AlertTitle>
+          <AlertDescription>
+            The database connection is not configured in this environment, so coupon create, edit, and delete actions are unavailable until the app is connected to the live schema.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard icon={<Tags className="h-4 w-4" />} label="Total coupons" value={coupons.length.toString()} />
         <StatCard icon={<Percent className="h-4 w-4" />} label="Active" value={activeCount.toString()} />
@@ -438,7 +563,11 @@ export default async function AdminCouponsPage({
           </div>
         </CardHeader>
         <CardContent size="sm" className="pt-4">
-          {firms.length === 0 ? (
+          {isReadOnlyFallback ? (
+            <p className="text-sm text-muted-foreground">
+              Connect the database to create and manage coupons from this screen.
+            </p>
+          ) : firms.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Add at least one prop firm before creating coupons.
             </p>
@@ -482,7 +611,12 @@ export default async function AdminCouponsPage({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="new-description">Description</Label>
-                <Input id="new-description" name="description" placeholder="20% off all challenges" />
+                <Textarea
+                  id="new-description"
+                  name="description"
+                  placeholder="20% off all challenges"
+                  className="min-h-[92px] resize-y"
+                />
               </div>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
@@ -519,10 +653,10 @@ export default async function AdminCouponsPage({
                   />
                   <span className="text-sm">Active</span>
                 </div>
-                <Button type="submit">
+                <FormActionButton type="submit" pendingLabel="Creating coupon...">
                   <Plus className="h-4 w-4" />
                   Create coupon
-                </Button>
+                </FormActionButton>
               </div>
             </form>
           )}
