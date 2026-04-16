@@ -10,7 +10,7 @@ import { formatTimestamp, isChronologicalRange, normalizeToUtcTimestamp } from '
 import { v5 as uuidv5 } from 'uuid'
 import { logger } from '@/lib/logger'
 import { z } from 'zod'
-import { invalidateCacheNamespace } from '@/lib/redis-client'
+import { invalidateNamespace } from '@/lib/cache/cache-service'
 import { invalidateTradeDataCaches } from '@/lib/cache/cache-invalidation'
 
 const TRADE_PAGE_CACHE_LIFETIME = {
@@ -137,8 +137,8 @@ export async function revalidateCache(tags: string[]) {
 export async function invalidateTradeRelatedCaches(userId: string): Promise<void> {
   invalidateTradeDataCaches(userId)
   await Promise.all([
-    invalidateCacheNamespace('ai-trades'),
-    invalidateCacheNamespace('behavior-insights'),
+    invalidateNamespace('ai-trades'),
+    invalidateNamespace('behavior-insights'),
   ])
 }
 
@@ -349,8 +349,8 @@ async function saveTradesForResolvedUser(
       await updateTag(`user-data-${userId}`)
       await Promise.all([
         updateTag(`trades-${userId}`),
-        invalidateCacheNamespace('ai-trades'),
-        invalidateCacheNamespace('behavior-insights'),
+        invalidateNamespace('ai-trades'),
+        invalidateNamespace('behavior-insights'),
       ])
 
       return tradeResult
