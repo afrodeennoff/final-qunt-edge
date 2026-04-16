@@ -98,3 +98,23 @@
 - Coupon admin writes should go through shared server-side validation/error translation in `server/prop-firms.ts`, not page-local ad hoc checks. Duplicate codes, invalid URLs, invalid date ranges, and unavailable DB/schema states should surface as friendly admin messages.
 - Admin coupon entry points should show mutation feedback explicitly: success/error banners after redirects and pending-submit states on create/save/delete buttons.
 - If admin coupon pages are using fallback/read-only data because the database connection is unavailable, disable the write forms and show a warning instead of leaving dead-looking controls on screen.
+
+## API Route & Rate Limiting Patterns
+- ALL authenticated user-facing API routes should be wrapped with `withRateLimited` from `lib/api/with-api-route.ts`
+- Rate limit config: `{ rateLimitId: string, rateLimitMax: number, rateLimitWindow: number, routeName: string }`
+- Typical limits: 120/min for reads, 60/min for expensive reads, 30/min for mutations, 20/min for checkout/payment routes
+- `withRateLimited` handler signature: `(request: NextRequest, ctx: { params: Promise<Record<string, string>> })`
+- For tests, mock the wrapper as identity: `vi.mock('@/lib/api/with-api-route', () => ({ withRateLimited: (h) => h }))`
+- Routes that don't need rate limiting: infrastructure probes (`/api/health`, `/api/ready`), webhook receivers with signature verification, cron routes with Vercel auth
+
+## Cache Invalidation Patterns
+- Cache invalidation MUST happen AFTER `prisma.$transaction()` commits, never inside the callback
+- If invalidation fails after a successful write, log the error but never throw — the DB write is truth, cache self-heals via TTL
+- Use `updateTag()` for Next.js `'use cache'` cached server functions
+- Use `CacheService.invalidateNamespace()` for Redis-layer cached data
+- Always invalidate both layers when mutating data that flows through both
+
+## Test Mock Patterns
+- When mocking `@/lib/logger`, always include BOTH `logger` and `createLogger: () => ({ info, warn, error, debug })`
+- This is needed because `cache-service.ts` (transitively imported by many modules) uses `createLogger`
+- For `withRateLimited`-wrapped route tests, pass `{ params: Promise.resolve({}) }` as second arg to the exported handler

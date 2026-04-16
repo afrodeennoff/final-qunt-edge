@@ -6,86 +6,36 @@
 
 ## Current State
 
-### Trader Profile + Deals Experience Enhancement — COMPLETE
-- `app/[locale]/dashboard/trader-profile/page-client.tsx` now opens with a stronger summary story: the hero includes a performance brief, compact signal tiles, and a wider content/aside balance so the page reads as overview first instead of a flat wall of cards
-- The trader profile control rail now carries more context inside the review-window panel itself, including compact net PnL, win-rate, and total-capital signals while keeping the existing calculations and actions unchanged
-- `app/[locale]/(landing)/deals/components/deals-experience.tsx` now uses `UnifiedPageShell` for the live board sections plus a shared cobalt-tinted surface language for the hero, filter board, snapshot panel, spotlight carousel, and deal cards
-- The deals spotlight and card system now has a clearer hierarchy: headline offer summary first, then structured offer facts, split utility actions, and a single full-width primary claim CTA
-- Matchup, cost planner, playbooks, and help sections on the deals page now reuse the same darker surfaced card language instead of mixing multiple route-local white-tinted panel treatments
+### Comprehensive Audit Fix Sprint — COMPLETE (2026-04-17)
+Fixed 9 audit findings across security, reliability, and data integrity:
 
-### Verification
-- `npx eslint 'app/[locale]/dashboard/trader-profile/page-client.tsx' 'app/[locale]/(landing)/deals/components/deals-experience.tsx'` returned no errors; the remaining output is the existing trader-profile complexity warnings only
-- `npx tsc --noEmit` passed after the UI enhancement changes
+| # | Finding | Severity | Fix |
+|---|---------|----------|-----|
+| F-01 | Cache invalidation inside Prisma transaction | HIGH | Moved updateTag/invalidateNamespace AFTER transaction commit |
+| F-02 | behavior/insights API no rate limiting | HIGH | Wrapped with `withRateLimited` (60/min) |
+| F-03 | team/accept-invitation no rate limiting (brute-force risk) | HIGH | Wrapped with `withRateLimited` (20/min) |
+| F-04 | teams/[id]/analytics no rate limiting | HIGH | Wrapped GET (60/min) + PUT (30/min) |
+| F-07 | No Prisma transaction retry config | MED | Added `transactionOptions: { maxWait: 5000, timeout: 10000 }` |
+| F-08 | layouts.ts null propagation to Prisma where clause | MED | Early return null when findFirst returns no version |
+| F-09 | Admin propfirm edit no try/catch | MED | Wrapped Prisma query, falls back to buildFallbackFirm |
+| F-10 | whop/checkout + checkout-team no rate limiting | MED | Wrapped POST+GET (20/min each) |
+| F-11 | trader-profile/benchmark no rate limiting | MED | Wrapped GET (60/min) |
 
-### Admin Coupon Fallback Sync — COMPLETE
-- Public deals can fall back to `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` rows exist, which is why cards like Apex Trader Funding can show `85%`, `MATCH`, and a claim link even though admin previously looked empty
-- Added `lib/prop-firms/spotlight-coupon-suggestions.ts` as the shared bridge that derives admin-ready coupon defaults from spotlight + verified-firm data
-- `app/[locale]/admin/coupons/page.tsx` now shows “Live deal suggestions” cards for firms that have public spotlight offers but no saved coupon rows yet, with prefilled create forms for code, discount, fee, claim URL, and overrides
-- `app/[locale]/admin/propfirms/[id]/page.tsx` now pre-fills the create-coupon form from spotlight fallback data when a firm has no saved coupons, so the page no longer looks empty for those public deals
-- `server/deals.ts` now uses the shared spotlight suggestion helper for public fallback deals so admin-prefilled values stay aligned with the public cards
+Additional fixes:
+- `server/teams.ts`: early return `[]` when user has no email (was silently querying `email: ''`)
+- `server/firm-coupons.ts` cached reads: verified admin CRUD already calls `updateTag('firm-coupons')` + `updateTag('prop-firm-{id}')` — F-12 was already fixed
+- 6 test files updated for `withRateLimited` signature (NextRequest + ctx)
+- 3 test files had missing `createLogger` mock (pre-existing, only broke when cache-service was imported transitively)
 
-### Verification
-- `npx tsc --noEmit` passed after the admin coupon fallback sync changes
-- Targeted ESLint on the touched admin/deals files returned no errors; remaining output is complexity warnings only
+### Import Account Selection UX Fix — COMPLETE (2026-04-16)
+- Auto-expand "Add New Account" form when no existing accounts
+- Auto-select the single account when there's exactly one
+- Show clear "No trading accounts found" hint with instructions
+- Pass `tradesAccountNumbers` prop so component knows CSV-derived accounts
+- Better error messages: distinguish "no accounts" vs "missing numbers in trades"
 
-### Dashboard Layout Audit + Trader Profile Refinement — COMPLETE
-- `app/[locale]/dashboard/trader-profile/page-client.tsx` now uses `UnifiedPageShell` + `UnifiedSurface` instead of a route-local black canvas, fixed narrow max-width, and ad-hoc `qe-soft-panel` composition
-- Trader profile now has a balanced two-stage layout: elevated summary hero first, then a responsive content/aside grid that stacks on smaller screens and uses a sticky right rail only on larger screens
-- Trader profile labels now better match their displayed values in the UI, including `Avg net / trade` and `Gross wins`, while keeping the underlying calculations unchanged
-- `app/[locale]/dashboard/strategies/page.tsx` now uses the shared dashboard page shell so the journal/table surface matches the rest of the authenticated route spacing and safe-area rhythm
-- `app/[locale]/dashboard/trader-profile/loading.tsx` now mirrors the page geometry with shell-aligned skeleton blocks instead of a single centered spinner
-
-### Verification
-- `npx tsc --noEmit` passed after the dashboard changes
-- Targeted ESLint on the touched dashboard files returned no errors; the remaining output is the component-complexity warning on the large trader profile client component
-
-### Admin Coupon Operations — Functional
-- Both admin coupon entry points now share the same hardened path: the global manager at `app/[locale]/admin/coupons/page.tsx` and the per-firm manager at `app/[locale]/admin/propfirms/[id]/page.tsx` both call the validated mutation helpers in `server/prop-firms.ts`
-- Coupon mutations now validate and normalize code, discount %, challenge fee, claim URL, and date order before writing; duplicate codes and missing records return friendly admin-facing errors instead of raw Prisma failures
-- Admin coupon screens now show success/error banners via search-param redirects, and submit/delete buttons use pending states through `app/[locale]/admin/components/form-action-button.tsx`
-- Coupon descriptions are now edited in `Textarea` fields, and both admin surfaces expose quick “Public” and “Claim” links so admins can verify live destinations without leaving the workspace blindly
-- If the database connection is missing, coupon management now switches to an explicit read-only fallback state instead of rendering forms that cannot save
-
-### Backend Performance & Reliability Rework — COMPLETE
-
-8-phase backend rework program completed. All phases committed and type-checked.
-
-**Phase 1: Cache Platform Foundation** ✅
-- Created `lib/cache/cache-service.ts` — unified CacheService with LRU memory, Redis 3-tier, singleflight, stale-while-recompute, circuit breaker
-- Fixed 12 cache bugs: AI cache namespace=key bug, duplicate queryCache, missing cacheLife on tags, missing cacheTag on bootstrap, inconsistent layout TTLs, uncatalogued prop-firms-catalogue tag
-- CachePolicies presets: publicReference, privateSummary, aiDerived, criticalEntitlement, hotReference
-
-**Phase 2: Cache Policy Standardization** ✅
-- Migrated behavior insights API to CacheService (privateSummary policy)
-- Migrated trade Redis namespace invalidation to CacheService.invalidateNamespace
-
-**Phase 3: API Hardening** ✅
-- Created `lib/api/with-api-route.ts` — withApiRoute and withRateLimited wrappers
-- Added rate limiting to 10+ previously uncovered routes
-- All wrapped routes return X-Request-Id header
-
-**Phase 4: Idempotency Service** ✅
-- Created `lib/idempotency.ts` — durable Postgres-backed request deduplication
-- Added IdempotencyRecord model to Prisma schema + migration
-
-**Phase 5: Rate Limiting & Query Bounds** ✅
-- Added take limits to unbounded queries: equity-chart (10K), trades stats (5K)
-- Added explicit select projection to calculateAccountMetricsAction
-- Added @@index([isActive]) to PropFirm model
-
-**Phase 6: Data Access Optimization** ✅
-- Fixed missing select projections
-- Added measured index on PropFirm.isActive
-
-**Phase 7: Observability Foundation** ✅
-- Created `instrumentation.ts` with server startup logging
-- Created `/api/ready` endpoint (Kubernetes-style readiness probe)
-- Enhanced `/api/health` with Redis dependency check
-- Added Prisma slow query logging (>1000ms) in production
-
-**Phase 8: Operational Layer** ✅
-- Created `.github/workflows/ci.yml` (lint, typecheck, test with Postgres+Redis, build smoke)
-- Created `docs/CACHING_DECISIONS.md` (architecture, policies, runbooks)
+### Backend Performance & Reliability Rework — COMPLETE (2026-04-16)
+8-phase program completed. See previous memory entries for full details.
 
 ### Build Stack
 - **Node**: v22.22.2 (nvm use 22, `.nvmrc` = 22)
@@ -96,6 +46,7 @@
 ### Build Status
 - `npx tsc --noEmit` = 0 errors ✅
 - `npm run lint` = 0 errors (921 pre-existing warnings) ✅
+- Test suite: 1 pre-existing failure (sidebar-trigger-contract), 433 passed ✅
 
 ## New Files Created
 - `lib/cache/cache-service.ts` — unified cache abstraction
@@ -108,11 +59,10 @@
 - `prisma/migrations/20260416000000_add_idempotency_table/migration.sql`
 
 ## Blockers
-- None
+- `startsAt` column doesn't exist in live DB — cannot re-enable filtering until migration created
+- Pre-existing sidebar-trigger-contract test failure (unrelated to our changes)
 
-### Deals Page Fix (2026-04-16)
-- Root cause: `startsAt` column added to Prisma schema but no migration ever created. Previous commit added `startsAt` filter to all coupon queries → every query failed → deals page empty.
-- Fix: Removed `startsAt` filter from all 6 coupon listing queries. Keep startsAt in admin validation for future use.
-- Added `loading.tsx` and `error.tsx` to deals page route.
-- Added `firm-coupons` and `prop-firm-{id}` cache tag invalidation to coupon CRUD mutations.
-- Cache will auto-expire in ≤2 hours. Admin coupon/firm edit also busts the cache immediately.
+## Manual-Only Findings (Require Developer Attention)
+- **F-05 [HIGH]**: Trade multiplication UX — when user selects multiple accounts, trades are duplicated per account (N×M). Needs product decision: add confirmation dialog or change to single-account assignment
+- **F-06 [MED]**: Client/server UUID hash mismatch — `generateTradeHash` (client) and `generateTradeUUID` (server) use different field sets. Should unify for consistent dedup
+- **F-14 [LOW]**: `resolveWritableUserId` error surfaces as `DATABASE_ERROR` — misleading; should be an auth/user-resolution error

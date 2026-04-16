@@ -67,3 +67,21 @@
 - **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
 - **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
 - **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.
+
+## Lesson 53: Cache invalidation must happen AFTER transaction commit, not inside
+- **M:** `server/trades.ts` called `updateTag()` and `invalidateNamespace()` inside the `prisma.$transaction()` callback
+- **RC:** If the transaction rolls back (write conflict, constraint violation), cache invalidation has already fired. Users see stale-then-fresh-then-stale data. Also, if invalidation throws, the entire trade save aborts.
+- **R:** Move all cache invalidation to AFTER the transaction completes: `const result = await prisma.$transaction(...); if (result.count > 0) { await updateTag(...); }`
+- **E:** No other transaction in the codebase does this — accounts, teams, webhook-service all invalidate after commit
+
+## Lesson 54: withRateLimited requires NextRequest + ctx signature, not bare Request
+- **M:** Wrapping whop/checkout routes that used `Request` with `withRateLimited` caused type errors because the wrapper expects `NextRequest`
+- **RC:** `withRateLimited` is typed as `(handler: (request: NextRequest, ctx: TCtx) => ...) => ...` — plain `Request` doesn't have `nextUrl`, `cookies`, etc.
+- **R:** Always use `NextRequest` for wrapped handlers. For tests, mock `withRateLimited` as an identity function: `vi.mock('@/lib/api/with-api-route', () => ({ withRateLimited: (handler) => handler }))`
+- **E:** All whop/checkout, behavior/insights, team routes updated to NextRequest
+
+## Lesson 55: Tests that import modules using createLogger need the mock too
+- **M:** Three test files failed with `No "createLogger" export is defined on the "@/lib/logger" mock` after cache-service.ts (which imports createLogger) was transitively imported
+- **RC:** Tests mocked `@/lib/logger` with only `{ logger: {...} }` but `cache-service.ts` also uses `createLogger` from the same module. When any import chain reaches cache-service, the incomplete mock breaks.
+- **R:** When mocking `@/lib/logger`, always include both `logger` and `createLogger: () => ({ info, warn, error, debug })` in the mock
+- **E:** save-trades-action, trades-mutation-batch, user-id-resolution tests all fixed
