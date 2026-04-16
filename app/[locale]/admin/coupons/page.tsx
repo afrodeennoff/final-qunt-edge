@@ -175,18 +175,23 @@ async function loadCoupons() {
     return []
   }
 
-  return prisma.propFirmCoupon.findMany({
-    include: {
-      propFirm: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
+  try {
+    return await prisma.propFirmCoupon.findMany({
+      include: {
+        propFirm: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
         },
       },
-    },
-    orderBy: [{ isActive: 'desc' }, { expiresAt: 'asc' }, { updatedAt: 'desc' }],
-  })
+      orderBy: [{ isActive: 'desc' }, { expiresAt: 'asc' }, { updatedAt: 'desc' }],
+    })
+  } catch (error) {
+    console.warn('[Admin Coupons] Failed to load coupons:', error)
+    return []
+  }
 }
 
 async function loadFirms() {
