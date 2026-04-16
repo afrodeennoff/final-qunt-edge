@@ -3,7 +3,7 @@
  * Loads all data needed for the first dashboard render.
  * The 'use cache' directive enables SSR caching.
  */
-import { cacheLife } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { getDatabaseUserId } from '@/server/auth'
 import { getUserData } from '@/server/user-data'
 import { getDashboardLayout } from '@/server/user-data'
@@ -12,6 +12,7 @@ import { deriveScoreMetricsFromTrades } from '@/lib/score-calculator'
 import { normalizeAccountsForClient, normalizeTradesForClient, type GroupInput } from '@/lib/data-types'
 import { calculateStatistics } from '@/lib/utils'
 import type { DashboardBootstrapPayload } from '@/lib/types/bootstrap'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 
 const PAGE_SIZE = 500
 
@@ -21,6 +22,11 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapPayload
   cacheLife({ stale: 60, revalidate: 60, expire: 300 })
 
   const userId = await getDatabaseUserId()
+
+  // Tag so mutations can invalidate bootstrap data
+  if (userId) {
+    cacheTag(CACHE_TAGS.DASHBOARD(userId))
+  }
 
   if (!userId) {
     return createEmptyBootstrap()

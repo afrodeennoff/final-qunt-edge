@@ -2,7 +2,7 @@
 
 import { getDatabaseUserId } from './auth'
 import { prisma } from '@/lib/prisma'
-import { cacheTag } from 'next/cache'
+import { cacheTag, cacheLife } from 'next/cache'
 import { CACHE_TAGS, invalidateTagRelatedCaches } from '@/lib/cache/cache-invalidation'
 
 async function _getTags(userId: string) {
@@ -20,6 +20,7 @@ async function _getTags(userId: string) {
 async function _getTagsCached(userId: string) {
   'use cache'
   cacheTag(CACHE_TAGS.TAGS(userId))
+  cacheLife({ stale: 300, revalidate: 300, expire: 1800 })
   return _getTags(userId)
 }
 

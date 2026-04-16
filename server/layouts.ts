@@ -31,7 +31,7 @@ interface SaveLayoutResult {
 
 const saveLocks = new Map<string, { promise: Promise<SaveLayoutResult>; timestamp: number }>()
 const LOCK_TIMEOUT_MS = 30000 // 30 second max lock lifetime
-const LAYOUT_CACHE_LIFETIME = { stale: 300, revalidate: 300, expire: 1_800 } as const
+const LAYOUT_CACHE_LIFETIME = { stale: 120, revalidate: 120, expire: 600 } as const
 
 function validateLayouts(layouts: DashboardLayout): boolean {
   if (!layouts || typeof layouts !== 'object') return false

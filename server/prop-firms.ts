@@ -283,6 +283,7 @@ export async function createPropFirm(data: PropFirmCreateInput) {
   const result = await prisma.propFirm.create({ data })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -291,6 +292,7 @@ export async function updatePropFirm(id: string, data: PropFirmUpdateInput) {
   const result = await prisma.propFirm.update({ where: { id }, data })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -299,6 +301,7 @@ export async function deletePropFirm(id: string) {
   const result = await prisma.propFirm.delete({ where: { id } })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -310,6 +313,7 @@ export async function softDeletePropFirm(id: string) {
   })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -327,6 +331,7 @@ export async function createPropFirmReview(propFirmId: string, data: PropFirmRev
   })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -338,6 +343,7 @@ export async function updatePropFirmReview(id: string, data: PropFirmReviewInput
   })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -346,6 +352,7 @@ export async function deletePropFirmReview(id: string) {
   const result = await prisma.propFirmReview.delete({ where: { id } })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -370,6 +377,7 @@ export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCou
   })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -381,6 +389,7 @@ export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput
   })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }
 
@@ -389,5 +398,6 @@ export async function deletePropFirmCoupon(id: string) {
   const result = await prisma.propFirmCoupon.delete({ where: { id } })
   updateTag('prop-firms')
   updateTag('deals')
+  updateTag('prop-firms-catalogue')
   return result
 }

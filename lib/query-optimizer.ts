@@ -1,3 +1,20 @@
+/**
+ * Query Performance Optimizer
+ *
+ * Two utilities:
+ * 1. `measureQueryPerformance` — wraps any async function, logs execution time,
+ *    warns on >1000ms, stores metrics (max 500).
+ * 2. `executeOptimizedQuery` — wraps a query function with caching via CacheService.
+ *
+ * The duplicate queryCache Map that was previously here has been consolidated
+ * into CacheService (lib/cache/cache-service.ts) which provides unified
+ * in-memory + Redis caching.
+ *
+ * @module lib/query-optimizer
+ */
+
+import { getOrLoad, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
+
 export interface QueryMetrics {
   queryName: string
   executionTime: number
@@ -43,55 +60,30 @@ export function clearQueryMetrics(): void {
   queryMetrics.length = 0
 }
 
-import {
-  getCachedResult,
-  setCachedResult
-} from './redis-client'
-
+/**
+ * Execute a query with optional caching.
+ * Uses CacheService for unified in-memory + Redis caching with singleflight.
+ *
+ * @param queryName - Name for performance tracking
+ * @param queryFn - The async function to execute on cache miss
+ * @param cacheKey - Optional cache key (enables caching)
+ * @param cacheTtl - TTL in seconds (required if cacheKey is provided)
+ */
 export async function executeOptimizedQuery<T>(
   queryName: string,
   queryFn: () => Promise<T>,
   cacheKey?: string,
   cacheTtl?: number
 ): Promise<T> {
-  if (cacheKey) {
-    const cached = await getCachedResult<T>(cacheKey)
-    if (cached) {
-      return cached
-    }
-  }
-
-  const result = await measureQueryPerformance(queryName, queryFn)
-
   if (cacheKey && cacheTtl) {
-    await setCachedResult(cacheKey, result, cacheTtl)
+    const key = buildCacheKey('query', queryName, cacheKey)
+    return getOrLoad(
+      key,
+      () => measureQueryPerformance(queryName, queryFn),
+      CachePolicies.publicReference(cacheTtl),
+      'query-optimizer'
+    )
   }
 
-  return result
+  return measureQueryPerformance(queryName, queryFn)
 }
-
-const queryCache = new Map<string, { data: unknown; expiresAt: number }>()
-const MAX_IN_MEMORY_CACHE_ENTRIES = 500
-const CACHE_SWEEP_INTERVAL_MS = 60_000
-
-function enforceLocalCacheBounds(): void {
-  const now = Date.now()
-
-  for (const [key, value] of queryCache.entries()) {
-    if (value.expiresAt <= now) {
-      queryCache.delete(key)
-    }
-  }
-
-  while (queryCache.size > MAX_IN_MEMORY_CACHE_ENTRIES) {
-    const oldestKey = queryCache.keys().next().value as string | undefined
-    if (!oldestKey) break
-    queryCache.delete(oldestKey)
-  }
-}
-
-const cacheSweepTimer = setInterval(() => {
-  enforceLocalCacheBounds()
-}, CACHE_SWEEP_INTERVAL_MS)
-
-cacheSweepTimer.unref?.()

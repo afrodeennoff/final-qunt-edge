@@ -1,126 +1,117 @@
-import { isRedisConfigured, getRedisJson, setRedisJson } from "../redis-client";
+/**
+ * AI Response Cache
+ *
+ * Caches AI model responses to reduce API calls and latency.
+ * Uses CacheService for unified caching with singleflight and graceful degradation.
+ *
+ * @module lib/ai/cache
+ */
+
+import { getOrLoad, set, invalidate, invalidateNamespace, CachePolicies, buildCacheKey } from '@/lib/cache/cache-service'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger('ai-cache')
+
+const AI_CACHE_TTL = 300 // 5 minutes
+const AI_CACHE_DOMAIN = 'ai'
 
 // Simple hash function for caching keys
 function hashString(str: string): string {
-  let hash = 0;
+  let hash = 0
   for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash; // Convert to 32-bit integer
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash
   }
-  return Math.abs(hash).toString(36);
+  return Math.abs(hash).toString(36)
 }
 
-// Create a stable JSON string for hashing (ignoring undefined/null)
+// Create a stable JSON string for hashing
 function stableStringify(obj: unknown): string {
-  return JSON.stringify(obj, (_, value) => 
-    typeof value === 'bigint' ? value.toString() : 
-    value === undefined || value === null ? null : value
-  );
+  return JSON.stringify(obj, (_, value) =>
+    typeof value === 'bigint' ? value.toString()
+    : value === undefined || value === null ? null : value
+  )
 }
-
-// In-memory cache fallback
-const inMemoryCache = new Map<string, { value: unknown; expiresAt: number }>();
-const CACHE_SWEEP_INTERVAL_MS = 60_000; // 1 minute
 
 // Cache statistics
 const cacheStats = {
   hits: 0,
   misses: 0,
-  redisHits: 0,
-  memoryHits: 0,
   sets: 0,
-  errors: 0
-};
-
-// Clean up expired entries periodically
-setInterval(() => {
-  const now = Date.now();
-  inMemoryCache.forEach((value, key) => {
-    if (value.expiresAt <= now) {
-      inMemoryCache.delete(key);
-    }
-  });
-}, CACHE_SWEEP_INTERVAL_MS).unref?.();
-
-function getFromInMemoryCache<T>(key: string): T | null {
-  const entry = inMemoryCache.get(key);
-  if (!entry) return null;
-  if (entry.expiresAt <= Date.now()) {
-    inMemoryCache.delete(key);
-    return null;
-  }
-  return entry.value as T;
+  errors: 0,
 }
 
-function setInMemoryCache<T>(key: string, value: T, ttlSeconds: number): void {
-  inMemoryCache.set(key, {
-    value,
-    expiresAt: Date.now() + ttlSeconds * 1000,
-  });
+function buildAiCacheKey(feature: string, options: unknown): string {
+  const optionsStr = stableStringify(options)
+  const hash = hashString(optionsStr)
+  return buildCacheKey(AI_CACHE_DOMAIN, feature, hash)
 }
 
 /**
  * Get cache statistics
  */
 export function getAiCacheStats() {
-  return { ...cacheStats };
+  return { ...cacheStats }
 }
 
 /**
  * Reset cache statistics
  */
 export function resetAiCacheStats() {
-  Object.keys(cacheStats).forEach(key => {
-    cacheStats[key as keyof typeof cacheStats] = 0;
-  });
+  cacheStats.hits = 0
+  cacheStats.misses = 0
+  cacheStats.sets = 0
+  cacheStats.errors = 0
 }
 
 /**
- * Cache AI responses to reduce API calls and improve performance
+ * Read AI response from cache.
+ * Returns null on miss — caller should compute and call setAiResponseCache.
+ *
  * @param feature The AI feature (chat, editor, etc.)
- * @param options The options passed to the AI model (messages, parameters, etc.)
+ * @param options The options passed to the AI model
  * @returns Cached result if available, null otherwise
  */
 export async function cacheAiResponse<T>(
   feature: string,
   options: unknown
 ): Promise<T | null> {
-  // Generate cache key
-  const optionsStr = stableStringify(options);
-  const cacheKey = `ai:${feature}:${hashString(optionsStr)}`;
-  
-  // Try to get from Redis first
-  if (isRedisConfigured()) {
-    try {
-      const cached = await getRedisJson<T>(cacheKey, cacheKey);
-      if (cached !== null) {
-        cacheStats.hits++;
-        cacheStats.redisHits++;
-        return cached;
-      }
-    } catch (error) {
-      console.warn('[AI Cache] Redis GET failed, falling back to in-memory cache', { error });
-      cacheStats.errors++;
+  const key = buildAiCacheKey(feature, options)
+  const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
+
+  try {
+    const cached = await getOrLoad<T>(
+      key,
+      async () => {
+        cacheStats.misses++
+        // Return a sentinel so getOrLoad doesn't cache the miss
+        // We use a separate flow for read-then-write
+        return null as unknown as T
+      },
+      policy,
+      `ai-${feature}`
+    )
+
+    if (cached !== null) {
+      cacheStats.hits++
+      return cached
     }
+
+    cacheStats.misses++
+    return null
+  } catch (error) {
+    cacheStats.errors++
+    log.warn('AI cache read failed', { feature, error })
+    return null
   }
-  
-  // Fallback to in-memory cache
-  const cached = getFromInMemoryCache<T>(cacheKey);
-  if (cached !== null) {
-    cacheStats.hits++;
-    cacheStats.memoryHits++;
-    return cached;
-  }
-  
-  cacheStats.misses++;
-  return null;
 }
 
 /**
- * Cache AI responses to reduce API calls and improve performance
+ * Write AI response to cache.
+ *
  * @param feature The AI feature (chat, editor, etc.)
- * @param options The options passed to the AI model (messages, parameters, etc.)
+ * @param options The options passed to the AI model
  * @param result The result to cache
  */
 export async function setAiResponseCache<T>(
@@ -128,23 +119,25 @@ export async function setAiResponseCache<T>(
   options: unknown,
   result: T
 ): Promise<void> {
-  const ttlSeconds = 300; // Default 5 minutes TTL
-  
-  // Generate cache key
-  const optionsStr = stableStringify(options);
-  const cacheKey = `ai:${feature}:${hashString(optionsStr)}`;
-  
-  // Set in Redis
-  if (isRedisConfigured()) {
-    try {
-      await setRedisJson(cacheKey, cacheKey, result, ttlSeconds);
-      cacheStats.sets++;
-    } catch (error) {
-      console.warn('[AI Cache] Redis SET failed, falling back to in-memory cache', { error });
-      cacheStats.errors++;
-    }
+  const key = buildAiCacheKey(feature, options)
+  const policy = CachePolicies.aiDerived(AI_CACHE_TTL)
+
+  try {
+    await set(key, result, policy, `ai-${feature}`)
+    cacheStats.sets++
+  } catch (error) {
+    cacheStats.errors++
+    log.warn('AI cache write failed', { feature, error })
   }
-  
-  // Always set in-memory cache as fallback
-  setInMemoryCache(cacheKey, result, ttlSeconds);
+}
+
+/**
+ * Invalidate all cached responses for an AI feature.
+ */
+export async function invalidateAiCache(feature: string): Promise<void> {
+  try {
+    await invalidateNamespace(`ai-${feature}`)
+  } catch {
+    // Best-effort
+  }
 }
