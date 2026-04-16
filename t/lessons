@@ -1,6 +1,6 @@
 # Lessons Learned
 
-**Updated:** 2026-04-16
+**Updated:** 2026-04-17
 
 ## Lesson 42: Prisma $extends breaks type inference for serverless PrismaClient
 - **M:** Tried to add query timing via `prisma.$extends({ query: { ... } })` — it changes the return type to a complex dynamic extension type that's incompatible with `PrismaClient` typed variables
@@ -49,3 +49,9 @@
 - **RC:** The page loaded fallback prop-firm data for display, but the mutation path still required live Prisma writes, creating a dead-end UX.
 - **R:** Whenever admin pages fall back to sample/read-only data, show an explicit warning state and disable the write forms entirely.
 - **E:** Both coupon admin entry points now switch to read-only messaging when `hasConfiguredDatabaseConnection` is false.
+
+## Lesson 50: Dashboard route pages drift quickly when they bypass the shared shell
+- **M:** The trader profile page felt horizontally cramped and vertically uneven compared with the rest of `/dashboard`, even though the app already had shared page-shell primitives.
+- **RC:** The route used its own `bg-black` canvas, narrow max width, and one-off panel spacing instead of `UnifiedPageShell`/`UnifiedSurface`, so spacing and responsive behavior diverged from the shell used elsewhere.
+- **R:** For dashboard subpages that are not intentionally fullscreen or special-purpose, start from the shared dashboard shell and layer route-specific grids on top of that baseline instead of rebuilding the shell locally.
+- **E:** The trader profile and strategies pages now inherit shared shell spacing first, then add their route-specific grids and sticky rails.

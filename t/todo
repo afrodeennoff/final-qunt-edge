@@ -4,6 +4,14 @@
 **Branch:** codex-obsidian-v3-redesign
 **Scope:** Backend-only, no UI/route-shape changes in Phase 1
 
+## Current UI Audit
+
+### Dashboard spacing + trader profile refinement (2026-04-17)
+- [x] Audit `app/[locale]/dashboard/*` route shells for inconsistent padding, max-widths, and vertical rhythm
+- [x] Normalize dashboard/trader-profile responsiveness so sections balance horizontally on desktop and stack cleanly on smaller widths
+- [x] Refine `app/[locale]/dashboard/trader-profile/page-client.tsx` to use shared shell patterns, cleaner information hierarchy, and more resilient card/grid spacing
+- [x] Verify with targeted type/lint checks and a visual pass where feasible
+
 ## Plan Overview
 
 8-phase incremental backend rework aligned with multi-layer caching architecture.

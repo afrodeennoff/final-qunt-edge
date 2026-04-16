@@ -79,6 +79,8 @@
 - Dashboard shell chrome should avoid bright `white/[...]` borders and fills. For sidebar/header/navbar/summary chrome, prefer `border-border/35-45`, `bg-background/55-80`, and restrained `bg-primary/6-12` accents instead of white-tinted pills.
 - When dashboard visuals feel inconsistent, patch shared chrome first: `components/ui/sidebar.tsx`, `components/ui/unified-sidebar.tsx`, `components/ui/sidebar-primitives/**`, `dashboard-header.tsx`, `navbar.tsx`, and shared summary bars before touching route-local widgets.
 - Major dashboard subpages that still use legacy `border-white/[...]`, `bg-white/[...]`, or bright `border-[oklch(...)]` card recipes should be normalized toward `border-border/35-45` and `bg-card/50-60` so they match the shell.
+- Dashboard route pages that are normal content surfaces should start from `components/layout/unified-page-shell.tsx` and `UnifiedSurface` before adding route-local grids. Avoid route-local `bg-black` wrappers, ad-hoc shell padding, or narrow one-off max widths unless the page is intentionally fullscreen.
+- For trader-profile-style analytics pages, prefer a two-stage composition: an elevated summary hero first, then a responsive main/aside grid with `min-w-0` content columns and a sticky right rail only at larger breakpoints.
 
 ## Admin Panel Patterns
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.

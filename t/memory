@@ -1,10 +1,21 @@
 # Project Memory
 
-**Updated:** 2026-04-16
+**Updated:** 2026-04-17
 **Branch:** codex-obsidian-v3-redesign
 **Production URL:** https://qunt-edge.vercel.app
 
 ## Current State
+
+### Dashboard Layout Audit + Trader Profile Refinement — COMPLETE
+- `app/[locale]/dashboard/trader-profile/page-client.tsx` now uses `UnifiedPageShell` + `UnifiedSurface` instead of a route-local black canvas, fixed narrow max-width, and ad-hoc `qe-soft-panel` composition
+- Trader profile now has a balanced two-stage layout: elevated summary hero first, then a responsive content/aside grid that stacks on smaller screens and uses a sticky right rail only on larger screens
+- Trader profile labels now better match their displayed values in the UI, including `Avg net / trade` and `Gross wins`, while keeping the underlying calculations unchanged
+- `app/[locale]/dashboard/strategies/page.tsx` now uses the shared dashboard page shell so the journal/table surface matches the rest of the authenticated route spacing and safe-area rhythm
+- `app/[locale]/dashboard/trader-profile/loading.tsx` now mirrors the page geometry with shell-aligned skeleton blocks instead of a single centered spinner
+
+### Verification
+- `npx tsc --noEmit` passed after the dashboard changes
+- Targeted ESLint on the touched dashboard files returned no errors; the remaining output is the component-complexity warning on the large trader profile client component
 
 ### Admin Coupon Operations — Functional
 - Both admin coupon entry points now share the same hardened path: the global manager at `app/[locale]/admin/coupons/page.tsx` and the per-firm manager at `app/[locale]/admin/propfirms/[id]/page.tsx` both call the validated mutation helpers in `server/prop-firms.ts`
