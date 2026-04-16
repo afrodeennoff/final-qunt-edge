@@ -1,70 +1,283 @@
-# Todo
+# Backend Performance & Reliability Rework Program
 
-**Updated:** 2026-04-16
+**Created:** 2026-04-16
+**Branch:** codex-obsidian-v3-redesign
+**Scope:** Backend-only, no UI/route-shape changes in Phase 1
+
+## Plan Overview
+
+8-phase incremental backend rework aligned with multi-layer caching architecture.
+Phases 1-3 are highest priority. Phases 4-8 follow in order.
+Each phase is independently shippable and backward-compatible.
+
+---
+
+## Phase 1: Cache Platform Foundation ⬅️ START HERE
+**Goal:** Create unified `CacheService` abstraction, fix existing bugs, eliminate duplication.
+
+### 1.1 Create CacheService abstraction (`lib/cache/cache-service.ts`)
+- [ ] Define `CachePolicy` interface: `{ ttl, staleTtl, layer, invalidationMode, version }`
+- [ ] Define `CacheLayer` enum: `'memory' | 'redis' | 'cdn'`
+- [ ] Define `InvalidationMode` enum: `'write-aside' | 'write-through' | 'ttl-only'`
+- [ ] Implement `CacheService` class with methods:
+  - `getOrLoad<T>(key, loader, policy)` — read-through with singleflight
+  - `set<T>(key, value, policy)` — write to appropriate layers
+  - `invalidate(key)` — delete from all layers
+  - `invalidateNamespace(namespace)` — versioned namespace flush
+  - `get<T>(key)` — raw get (no loader)
+- [ ] Versioned key format: `qunt:v2:{domain}:{scope}:{id}`
+- [ ] In-memory layer: LRU Map with configurable max entries (default 500)
+- [ ] Redis layer: reuse existing 3-tier fallback (memory → local Redis → Upstash)
+- [ ] Singleflight: in-process dedup per key (Map<key, Promise>)
+- [ ] Stale-while-recompute: serve stale up to `staleTtl` past TTL while one refresher runs
+
+### 1.2 Fix existing cache bugs
+- [ ] Fix AI cache namespace=key bug in `lib/ai/cache.ts` (passes `cacheKey` as both namespace AND key)
+- [ ] Fix duplicate `queryCache` Map in `redis-client.ts` and `query-optimizer.ts`
+- [ ] Add missing `cacheLife` to `server/tags.ts` `_getTagsCached`
+- [ ] Add missing `cacheTag` to `server/dashboard-bootstrap.ts` `getDashboardBootstrap`
+- [ ] Fix inconsistent dashboard layout TTLs (`user-data.ts` uses 120/120/600, `layouts.ts` uses 300/300/1800)
+- [ ] Fix `ACCOUNT_METRICS` tag defined but never used on read
+- [ ] Fix `prop-firms-catalogue` tag never invalidated by admin CRUD
+
+### 1.3 Graceful degradation
+- [ ] On Redis failure: log once per window with request/key/layer context, skip cache writes, fall back to DB
+- [ ] Invalidation remains idempotent and best-effort: DB commit first, then updateTag + Redis delete; cache failure never rolls back write
+- [ ] Add circuit breaker for Redis (track failures, skip Redis for 30s after N consecutive failures)
+
+### 1.4 Migrate existing callers to CacheService
+- [ ] Migrate `lib/ai/cache.ts` to use CacheService
+- [ ] Migrate `lib/query-optimizer.ts` to use CacheService (or delete if truly unused)
+- [ ] Migrate Redis namespace invalidation calls in `server/trades.ts` to CacheService
+- [ ] Keep `'use cache'`/`updateTag` for SSR reads (do NOT replace)
+- [ ] Clean up dead code: `executeOptimizedQuery` if unused
+
+### Verification
+- [ ] `npx tsc --noEmit` passes
+- [ ] `npm run lint` passes
+- [ ] `bun run build` passes
+- [ ] Unit tests for CacheService: getOrLoad, set, invalidate, singleflight, stale serving, Redis failure fallback
+- [ ] Existing functionality preserved (deals page, dashboard, AI chat all work)
+
+---
+
+## Phase 2: Cache Policy Standardization & Hot-Surface Migration
+**Goal:** Define cache policies by data class and migrate highest-value surfaces.
+
+### 2.1 Define cache policies
+- [ ] Public reference data (deals, firms, propfirm stats): CDN `s-maxage=300, stale-while-revalidate=600`, Redis TTL 300s, memory TTL 30s, write-aside invalidation
+- [ ] Private summaries (behavior insights, dashboard trade summaries, user-data snapshots): Redis TTL 60s, memory TTL 15s, no CDN, write-aside invalidation
+- [ ] AI-derived data (trade-context helpers): Redis TTL 90s, namespace invalidation on trade writes
+- [ ] Critical entitlement (subscription summary): Redis TTL 30s, write-through on webhook/admin plan changes, no stale serving
+
+### 2.2 Migrate route families (incremental)
+- [ ] Public deals APIs and prop-firm read models
+- [ ] Private analytics reads (behavior/insights, dashboard trade summaries)
+- [ ] AI trade-history/context loaders
+- [ ] Remaining read-heavy admin/report endpoints
+
+### 2.3 Measure and validate
+- [ ] Measure baseline latency for each route family before migration
+- [ ] Measure hit rate and latency after migration
+- [ ] Target: 3x improvement on warm hits, >=80% steady-state hit rate on migrated routes
+- [ ] Retire unused/duplicate cache helpers as each family is absorbed
+
+### Verification
+- [ ] All Phase 1 checks pass
+- [ ] Cache hit/miss metrics visible in logs
+- [ ] No correctness regressions (stale data within TTL bounds)
+
+---
+
+## Phase 3: API Hardening with `withApiRoute`
+**Goal:** Normalize API route handling, error responses, request tracking.
+
+### 3.1 Create `withApiRoute` wrapper (`lib/api/with-api-route.ts`)
+- [ ] Request ID creation (`X-Request-Id` header)
+- [ ] Structured logging with request context (route, method, userId, requestId)
+- [ ] Latency measurement and logging (`http_request_duration_ms`)
+- [ ] Auth integration (Supabase session extraction)
+- [ ] Rate limiting integration
+- [ ] Zod schema validation helper
+- [ ] `apiError`/`apiSuccess` envelope standardization
+- [ ] `Cache-Status` response header
+- [ ] Body size limit enforcement
+
+### 3.2 Standardize error response format
+- [ ] All routes use `{ error: { code, message, requestId } }` format
+- [ ] Fix 3 inconsistent patterns: `apiError()`, direct JSON, raw `new Response()`
+- [ ] Fix IBKR routes using raw `new Response(JSON.stringify(...))`
+
+### 3.3 Apply wrapper to highest-value routes
+- [ ] Checkout/payment routes (`/api/whop/checkout`, `/api/whop/checkout-team`)
+- [ ] Invitation/team routes (`/api/team/invite`, `/api/team/accept-invitation`)
+- [ ] Deals routes (all 4)
+- [ ] Dashboard data routes (`/api/dashboard/trades`, `/api/dashboard/accounts`)
+- [ ] Admin/report routes
+
+### 3.4 Add pagination defaults
+- [ ] Default page size: 50, max page size: 200 on all list endpoints
+- [ ] Enforce `take`/`skip` on all unbounded `findMany` calls
+
+### Verification
+- [ ] All wrapped routes return `X-Request-Id` header
+- [ ] All wrapped routes return consistent error format
+- [ ] Latency metrics logged for every wrapped route
+- [ ] Backward compatible (existing response bodies unchanged)
+
+---
+
+## Phase 4: Mutation Safety & Idempotency
+**Goal:** Add idempotency support for externally-retried mutation endpoints.
+
+### 4.1 Create IdempotencyService (`lib/idempotency.ts`)
+- [ ] `Idempotency-Key` header support on POST endpoints
+- [ ] Store idempotency records in Postgres (durable, not Redis)
+- [ ] Schema: `{ key (unique), endpoint, requestHash, response, createdAt, expiresAt }`
+- [ ] Auto-expire records older than 24h via TTL column
+- [ ] On duplicate key: return stored response
+
+### 4.2 Apply to target endpoints
+- [ ] `POST /api/whop/checkout`
+- [ ] `POST /api/whop/checkout-team`
+- [ ] `POST /api/team/invite`
+- [ ] Other externally-retried mutation endpoints
+
+### 4.3 Unify webhook dedup
+- [ ] Move webhook idempotency (`processedWebhook` table) under same service boundary
+- [ ] One dedup pattern for both webhook and non-webhook paths
+
+### Verification
+- [ ] Duplicate `Idempotency-Key` returns same response
+- [ ] Expired keys are treated as new requests
+- [ ] Webhook dedup still works correctly
+
+---
+
+## Phase 5: Rate Limiting & Query Bounds
+**Goal:** Close rate limiting gaps, enforce bounded queries.
+
+### 5.1 Route-class policy matrix
+- [ ] Public read: 120/min per IP
+- [ ] Authenticated read: 120/min per user
+- [ ] Authenticated write: 30/min per user
+- [ ] Admin: 120/min read, 30/min write
+- [ ] AI: keep existing per-route limits
+- [ ] Webhook/cron: auth-only (no rate limit)
+
+### 5.2 Fix ~30 routes with NO rate limiting
+- [ ] `/api/dashboard/trades`, `/api/dashboard/accounts`
+- [ ] `/api/deals/*` (all 4 routes)
+- [ ] `/api/behavior/insights`, `/api/trader-profile/benchmark`
+- [ ] `/api/referral`, `/api/user/theme`
+- [ ] `/api/tradovate/synchronizations`, `/api/rithmic/encryption-key`
+- [ ] Email routes (IBKR extract-orders, fifo-computation)
+- [ ] Team analytics routes
+
+### 5.3 Enforce bounded queries
+- [ ] Eliminate unbounded `findMany` on: `_getUnifiedFirms`, `_listPropFirms`, `loadTradesPage` stats, `equity-chart.ts` trades, `calculateAccountMetricsAction`, `getTeamOverviewData`
+- [ ] Add `take` limits or pagination to all list endpoints
+- [ ] Push filters to DB where currently done in JS (equity-chart date/instrument/tag filters)
+
+### Verification
+- [ ] Every API route has rate limiting or explicit exemption
+- [ ] No unbounded Prisma queries remain
+- [ ] Load test confirms rate limiting works
+
+---
+
+## Phase 6: Data Access Refactoring
+**Goal:** Extract repositories, optimize queries, add indexes.
+
+### 6.1 Extract read repositories
+- [ ] `server/repositories/deals-repository.ts` — deals/prop-firms read queries
+- [ ] `server/repositories/trade-summaries-repository.ts` — trade summary aggregations
+- [ ] `server/repositories/subscription-repository.ts` — subscription/entitlement reads
+- [ ] `server/repositories/team-analytics-repository.ts` — team analytics queries
+
+### 6.2 Optimize critical queries
+- [ ] Push equity-chart filters to DB (currently loads ALL trades, filters in JS)
+- [ ] Fix `loadTradesPage` stats query (unbounded PnL fetch → SQL window function for winning streak)
+- [ ] Consolidate `getTeamOverviewData` N+1 (team > members > user > accounts > trades)
+- [ ] Consolidate `updateTeamAnalytics` 6+ queries into 1-2 aggregate queries
+- [ ] Fix `calculateAccountMetricsAction` missing `select` projection
+- [ ] Consolidate duplicate user resolution (3 files × 2 queries each → shared resolver)
+
+### 6.3 Add measured indexes
+- [ ] Run `EXPLAIN ANALYZE` on highest-latency queries
+- [ ] Add `PropFirm.isActive` index
+- [ ] Add `PropFirmCoupon.isActive` + `PropFirmCoupon.expiresAt` indexes (if measured benefit)
+- [ ] Add `PropFirmReview.status` index (if measured benefit)
+- [ ] Only add indexes backed by measured query plans
+
+### Verification
+- [ ] Query latency improvements measured (before/after)
+- [ ] No N+1 patterns remaining in hot paths
+- [ ] `EXPLAIN ANALYZE` confirms index usage
+
+---
+
+## Phase 7: Observability Foundation
+**Goal:** Full request tracing, metrics, and health checks.
+
+### 7.1 Create `instrumentation.ts`
+- [ ] Wire structured logs through existing logger
+- [ ] Every request carries: requestId, userId (when available), route, cache key, cache layer, dependency timings
+
+### 7.2 Emit metrics
+- [ ] `http_request_duration_ms` (per route)
+- [ ] `db_query_duration_ms` (per query/operation)
+- [ ] `cache_hit_total`, `cache_miss_total`, `cache_refresh_total`, `cache_stale_served_total`, `cache_fallback_total`
+- [ ] `rate_limit_rejected_total`
+- [ ] Redis health/utilization
+- [ ] Prisma middleware for automatic query timing
+
+### 7.3 Health endpoints
+- [ ] `/api/health` — liveness (already exists, enhance with dependency checks)
+- [ ] `/api/ready` — readiness with dependency snapshot
+  - Redis-down → ready-but-degraded
+  - DB/auth failure → not ready
+- [ ] Add Redis, Supabase Auth, Whop API reachability checks to health
+
+### Verification
+- [ ] Metrics visible in structured logs
+- [ ] `/api/ready` returns correct degraded/not-ready states
+- [ ] Health endpoint covers all critical dependencies
+
+---
+
+## Phase 8: Operational Layer & CI
+**Goal:** Complete the operational layer around the new design.
+
+### 8.1 CI pipeline (`.github/workflows/`)
+- [ ] lint + typecheck + unit tests on PR
+- [ ] Redis service in CI
+- [ ] Integration tests with real Redis
+- [ ] Build smoke test
+- [ ] Security scanning
+
+### 8.2 Documentation
+- [ ] Caching decision doc (what is cached, TTLs, invalidation method, why)
+- [ ] Runbooks for cache degradation and purge/invalidation
+- [ ] Observability architecture doc
+- [ ] Update Docker Compose to include Redis as normal path
+
+### 8.3 Route metadata
+- [ ] OpenAPI-compatible route metadata (for doc generation without changing public contracts)
+
+### Verification
+- [ ] CI passes on PR
+- [ ] Docs reviewed and accurate
+- [ ] Local dev setup works with Docker Compose
+
+---
 
 ## Done ✅
-- [x] Kill nested `<button>` hydration error (PricingSection.tsx)
-- [x] Kill 9 repeat:Infinity animations
-- [x] Remove all filter:blur() from animations
-- [x] Remove all backdrop-blur from codebase
-- [x] Remove hover paints from widget-shell/chart-surface
-- [x] Replace transition-all with specific properties (72 files)
-- [x] Remove cursor-tracking JS from MagneticButton/InteractiveWrapper
-- [x] Add content-visibility on sections
-- [x] Add contain:layout+style+paint on dashboard grid
-- [x] Inject cobalt color system across entire app (153 files)
-- [x] Fix Hero double card → black cards with color gradient
-- [x] Rebalance sidebar: 5 groups, 18 unique icons, added Import
-- [x] Remove sidebar group headers (flat list with separators)
-- [x] Standardize section padding to py-24 (all home + landing)
-- [x] Clean empty className="" (14 instances)
-- [x] Full app audit: typecheck, lint, spacing, icons, routes
-- [x] End-to-end functional audit (database, API, auth, providers)
-- [x] Add loading.tsx to 20 missing routes (dashboard, admin, teams)
-- [x] Update .env.example with 31 missing env vars (240 lines total)
-- [x] Fix Turbopack cache corruption (rm -rf .next)
-- [x] Upgrade to Node 22 (required for Prisma 7.x)
-- [x] Configure Bun build (vercel.json, .nvmrc, package.json)
-- [x] Remove cobalt tint from homepage (neutral white surfaces)
-- [x] Full bun build passes: 176 pages, 0 errors
-- [x] Apply the tweakcn Deep Purple theme tokens to the shared global design system
-- [x] Update shared primitives and shell chrome so buttons, cards, tabs, sidebars, widgets, and nav surfaces use the purple palette
-- [x] Sweep remaining route-level hardcoded accent colors and verify theme pass
-- [x] Audit duplicated home page sections and trace the live composition
-- [x] Remove the repeated standalone `DashboardPreview` and delete `ComparisonSection`
-- [x] Restructure the home page narrative so each section has one job
-- [x] Add auto-slide behavior to the deals page spotlight
-- [x] Pause the deals spotlight auto-rotation on hover/focus and add manual indicators
-- [x] Re-verify the deals spotlight with targeted ESLint and full TypeScript checks
-- [x] Map mounted home page tree, move copy to locale dictionaries, reshape home narrative
-- [x] Define and apply shared typography scale from global tokens through components
-- [x] Rework dashboard tab shells and account/table surfaces
-- [x] Comprehensive spacing audit + fix across entire app
-- [x] Commit and deploy to Vercel production (completed 2026-04-15)
-- [x] Fix home page blank on first load — removed MotionStagger opacity:0 wrapper
-- [x] Fix home page blank on soft navigation — loading.tsx z-50 overlay
-- [x] Fix home page blank on soft navigation — replace Framer Motion with CSS animations
-- [x] Remove bright white dashboard chrome borders and normalize subpages
-- [x] Audit import trade save path — saveTradesAction fully functional with Zod validation, dedup, account creation
-- [x] Expand PropFirmCouponInput from 2 fields to 11 (code, discount%, challengeFee, claimUrl, description, platform/payout/drawdown overrides, isActive, startsAt, expiresAt)
-- [x] Rebuild admin coupon forms on both /admin/propfirms/[id] and /admin/coupons with all schema fields
-- [x] Fix deals data mapping to use coupon-level overrides when set
-- [x] Verify admin coupon/deal changes flow through to public deals page
-- [x] Audit home route SSR/CSR reveal path and remove any full-page client boundary that leaves the hero behind a fallback
-- [x] Fix admin coupon edit flow so code, discount percent, and claim link can be updated from both admin coupon surfaces
-- [x] Re-verify with targeted runtime checks plus typecheck/lint and persist the findings in project notes
-
-## Recently Closed
-- [x] Fix auth page blank on soft navigation — removed double dynamic({ssr:false}) + Framer Motion opacity:0
-- [x] Fix home page blank on soft navigation — loading.tsx now shows spinner instead of null
-- [x] Fix RollingAdBanner blocking entire layout — wrapped in Suspense
-- [x] Enable scrolling ad banner on home page
-- [x] Remove z-50 blocking overlays from loading.tsx files
-- [x] Add error.tsx to shared/[slug]/ and embed/ routes
-- [x] Add loading.tsx to embed/ route
-- [x] Fix parseOptionalDate — returns null on empty so dates can be cleared
-- [x] Fix community/post loading.tsx — removed z-50 and 'use client'
-- [x] Fix (landing)/loading.tsx — removed z-50 and 'use client'
+- [x] Comprehensive codebase exploration (caching, API routes, data access, observability)
+- [x] Identified 12 cache bugs/gaps
+- [x] Catalogued 57 API routes with auth/rate-limiting/error patterns
+- [x] Found 10+ unbounded queries, 4 N+1 patterns, 3 duplicate logic patterns
+- [x] Identified missing indexes, missing instrumentation, missing CI
 
 ## In Progress
-- [ ] None
+- [ ] Awaiting approval for Phase 1 implementation
