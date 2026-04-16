@@ -98,3 +98,10 @@
 
 ## Blockers
 - None
+
+### Deals Page Fix (2026-04-16)
+- Root cause: `startsAt` column added to Prisma schema but no migration ever created. Previous commit added `startsAt` filter to all coupon queries → every query failed → deals page empty.
+- Fix: Removed `startsAt` filter from all 6 coupon listing queries. Keep startsAt in admin validation for future use.
+- Added `loading.tsx` and `error.tsx` to deals page route.
+- Added `firm-coupons` and `prop-firm-{id}` cache tag invalidation to coupon CRUD mutations.
+- Cache will auto-expire in ≤2 hours. Admin coupon/firm edit also busts the cache immediately.
