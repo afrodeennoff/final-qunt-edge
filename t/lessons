@@ -2,248 +2,38 @@
 
 **Updated:** 2026-04-16
 
-## Lesson 1: Regex scripts on JSX are dangerous
-- **M:** Content-visibility script broke 23 files with `className="classes ""`
-- **RC:** Regex `<section([^>]*className=")([^"]*?)"` captured group 2 but replaced with literal `classes}` string
-- **R:** Never use regex to modify JSX className strings. Use AST parsers or manual edits.
-- **E:** `sed` replaced `className="relative flex..."` with `className="classes """` — had to restore 23 files from git
+## Lesson 42: Prisma $extends breaks type inference for serverless PrismaClient
+- **M:** Tried to add query timing via `prisma.$extends({ query: { ... } })` — it changes the return type to a complex dynamic extension type that's incompatible with `PrismaClient` typed variables
+- **RC:** Prisma extensions return `DynamicClientExtensionThis<>` which doesn't satisfy `PrismaClient` type constraints
+- **R:** Use Prisma's built-in `log` option with `{ emit: 'event', level: 'query' }` + `$on('query', ...)` instead of `$extends`
+- **E:** Cast `(prisma as any).$on?.('query', callback)` works because PrismaClient still exposes the event emitter
 
-## Lesson 2: sed line deletion can break JSX syntax
-- **M:** `sed '/pattern/d'` removed a line containing `hover:bg-gradient` but the line also had the closing `)}` for cn()
-- **RC:** sed doesn't understand code structure — it operates on text lines
-- **R:** For multi-line string arguments in cn(), use Python with full string replacement, not sed line deletion
-- **E:** chart-surface.tsx lost its closing `)}` → TS error
+## Lesson 43: Next.js route handler type signatures must match exactly
+- **M:** `withRateLimited` wrapper broke Next.js type validation because dynamic route handlers take `(request, { params })` but static routes take just `(request)`
+- **RC:** Next.js validates route handler exports against a strict type that expects `{ params: Promise<Record<string, string>> }` as the second parameter
+- **R:** Use a generic `TCtx` type parameter so the wrapper accepts any second argument shape. Static routes pass `_ctx: { params: Promise<Record<string, string>> }` even though they don't use it
+- **E:** `export const GET = withRateLimited(handleGet, config)` where `handleGet(request: NextRequest, _ctx: { params: ... })` satisfies Next.js validation
 
-## Lesson 3: whileHover removal leaves orphaned braces
-- **M:** Script removed `whileHover={...}` but left `} }` closing braces
-- **RC:** The regex removed the prop but the surrounding ternary/closing braces remained
-- **R:** When removing JSX props via regex, account for surrounding syntax
-- **E:** widget-canvas.tsx had `} : undefined}` extra closing
+## Lesson 44: sed can mangle multiline function calls in test files
+- **M:** Using `sed` to replace `DELETE(request)` with `DELETE(request, ...)` broke a test file because DELETE was on a different line than the opening paren
+- **RC:** `sed` operates line-by-line and can't match multiline patterns. The replacement shifted content across lines
+- **R:** For test file modifications, use Python with proper string replacement or manual file writes, not sed
+- **E:** `tests/api/tradovate-synchronizations-route.test.ts` had to be manually rewritten after sed corruption
 
-## Lesson 4: Python string replacement > sed for multi-line JSX
-- **M:** Python `.replace()` with exact string matching works for JSX; sed doesn't handle multi-line patterns
-- **RC:** sed is line-based; JSX props span multiple lines
-- **R:** Use Python scripts for any JSX modification that involves multi-line patterns
-- **E:** FloatingOrbs animate block replacement failed with sed, succeeded with Python
+## Lesson 45: Circuit breaker pattern for Redis prevents cascading failures
+- **M:** Without a circuit breaker, Redis failures cause every cached request to attempt Redis, adding ~2s timeout per request
+- **RC:** Each failed Redis call adds latency. Under sustained Redis outage, this multiplies across all requests
+- **R:** Track consecutive failures. After N failures, open circuit (skip Redis) for a cooldown period. Half-open allows one probe to check recovery
+- **E:** CacheService circuit breaker: 5 failures → 30s cooldown → auto-recovery
 
-## Lesson 5: backdrop-blur on sticky elements = worst scroll jank
-- **M:** Dashboard navbar had `[backdrop-filter:saturate(180%)_blur(8px)]` on a sticky div
-- **RC:** Sticky elements repaint on every scroll pixel. Backdrop-blur means each repaint runs a blur filter on all content behind it
-- **R:** Replace with `bg-background/95` (solid semi-transparent). Looks 95% identical, costs 0% GPU
-- **E:** Single CSS class was causing 30%+ of all scroll jank
+## Lesson 46: Cache-aside invalidation must be best-effort, never blocking
+- **M:** If cache invalidation (updateTag, Redis delete) fails, the DB write already succeeded — the data is correct, just potentially stale
+- **RC:** Rolling back the DB write because cache invalidation failed would cause data loss; the cache is secondary to the DB
+- **R:** Always: (1) commit DB write, (2) invalidate cache best-effort, (3) log failures but never throw. Cache will self-heal via TTL
+- **E:** `CacheService.invalidate()` catches and logs failures, never rethrows
 
-## Lesson 6: filter:blur() in entrance animations blocks first paint
-- **M:** Hero.tsx used `filter:"blur(8px)"` → `filter:"blur(0px)"` for entrance
-- **RC:** Blur requires sampling ~50 surrounding pixels per pixel. During animation at 60fps, this runs continuously
-- **R:** Use `opacity: 0→1` + `y: offset→0` for entrances. Zero blur = instant paint
-- **E:** Hero loaded noticeably faster after removing blur
-
-## Lesson 7: transition-all includes transform and filter
-- **M:** 121 instances of `transition-all` across dashboard
-- **RC:** `transition-all` animates ALL changed properties including transform and filter — the two most expensive
-- **R:** Use `transition-[opacity,background-color,border-color]` to exclude transform/filter
-- **E:** Click response went from ~200ms to ~16ms visual feedback
-
-## Lesson 8: Git restore is the fastest fix for script damage
-- **M:** 23 files had broken classNames from a bad script
-- **RC:** Manually fixing 23 files would take hours; git restore took seconds
-- **R:** Always commit before running bulk scripts. `git show COMMIT:path > path` for targeted restore
-- **E:** `git show e1bd588:"app/path/file.tsx" > app/path/file.tsx` restored each file instantly
-
-## Lesson 9: Public UI docs drift quickly when route composition changes
-- **M:** Public UI guidance pointed to older home/landing composition files that are no longer the live route wiring.
-- **RC:** Shared shell files stayed active while page composition moved into `HomeContent.tsx` and `UnifiedPageShell`-based route pages, but docs were not updated in the same pass.
-- **R:** Before editing public UI, trace from the route `page.tsx`/`layout.tsx` imports into the live composition tree instead of assuming every file under `(landing)/components` or `(home)/components` is mounted.
-- **E:** `public/AGENTS.md` references `DeferredHomeSections.tsx`, but the live home page composes sections directly in `app/[locale]/(home)/components/HomeContent.tsx`.
-
-## Lesson 10: Shared public shell spacing should be configurable
-- **M:** The home page showed an unwanted strip below the navbar.
-- **RC:** Shared banner spacing was hardcoded in `MarketingLayoutShell`, so the home route inherited layout space meant for other public pages.
-- **R:** Add a small route-level shell option instead of forking navbar/footer layout code.
-- **E:** `app/[locale]/(home)/layout.tsx` now disables the shared rolling banner through shell props instead of introducing a separate home-only shell.
-
-## Lesson 11: Public hero sections should blend with the route shell
-- **M:** The home hero read like a separate black panel instead of part of the public page shell.
-- **RC:** `Hero.tsx` painted a full opaque background while `HomeContent.tsx` used a wider content width than the shared landing shell.
-- **R:** Keep hero backgrounds translucent enough to inherit the shell atmosphere, and align major public content widths with the shared shell unless there is a strong reason not to.
-- **E:** `app/[locale]/(home)/components/Hero.tsx` now uses a blended gradient backdrop and `HomeContent.tsx` uses `max-w-[1320px]` to match the shared public shell rhythm.
-
-## Lesson 12: Home shell color should be switchable independently of public shell structure
-- **M:** The user wanted the home page shell black, not cobalt-tinted, while keeping the shared layout structure intact.
-- **RC:** The shared public shell bundled layout structure and accent atmosphere together, so route-level color changes were awkward.
-- **R:** Keep shell structure shared, but expose a route-level shell color variant so visual tone can change without duplicating layout code or altering behavior.
-- **E:** `MarketingLayoutShell` now supports `shellVariant="black"` and the home layout uses it to remove cobalt ambient gradients while preserving navbar/footer/content structure.
-
-## Lesson 13: Turbopack cache corruption causes 'Module not found' for files that exist
-- **M:** Build error `Can't resolve './dev/on-demand-entries-client'` + `Failed to restore task data (TaskId 517435))` SST file errors
-- **RC:** `.next` Turbopack cache had corrupted `.sst`/`.meta` files (stale from previous build). The module exists in `node_modules` but Turbopack's cached resolver couldn't find it.
-- **R:** `rm -rf .next` clears the corruption. Always delete `.next` before debugging 'module not found' errors where the file clearly exists in `node_modules`.
-- **E:** `on-demand-entries-client.js` exists at `node_modules/next/dist/client/dev/` but Turbopack's SST index was corrupted.
-
-## Lesson 14: Prisma 7.x requires Node 22+ — Node 20.18 crashes with ERR_REQUIRE_ESM
-- **M:** `bunx prisma generate` and `bun install` crashed with `ERR_REQUIRE_ESM: require() of ES Module zeptomatch`
-- **RC:** Prisma 7.x uses `@prisma/dev` which requires `zeptomatch` (ESM-only). Node <20.19 cannot `require()` ESM modules. Node 22.12+ works.
-- **R:** Pin Node to >=22.12.0 in `.nvmrc`, `package.json engines`, and Vercel `functions.runtime`. Use `nvm use 22` locally.
-- **E:** GitHub issue prisma/prisma#28805 — upgrading from Node 20.18.1 to Node 22.22.2 fixed all Prisma CLI issues instantly.
-
-## Lesson 15: Bun build SIGKILL on 16GB machines — lower heap size
-- **M:** `bun run build` with `--max-old-space-size=8192` gets SIGKILL (OOM killer) on 16GB machines
-- **RC:** 8GB heap + Next.js webpack compilation + 176 static pages + OS overhead exceeds available RAM
-- **R:** Use `--max-old-space-size=4096` on 16GB machines. 1 CPU worker. Build still completes in ~5 min.
-- **E:** Build with 4GB heap: compiles in 90s, generates 176 pages in 2.5 min, zero errors.
-
-## Lesson 16: Dashboard theme overrides can silently undo a global palette change
-- **M:** A global tweakcn theme pass updated shared tokens and component chrome, but the dashboard could still boot with the old accent.
-- **RC:** The authenticated shell applies accent overrides from `lib/constants/dashboard-themes.ts`, `context/theme-provider.tsx`, and the inline bootstrap script in `app/[locale]/dashboard/layout.tsx`, so changing only `app/globals.css` is incomplete.
-- **R:** For any app-wide palette change, update globals, extended token files, shared primitives, dashboard theme palettes, the dashboard default theme, and the server bootstrap fallback together.
-- **E:** The Deep Purple pass only became consistent after `THEME_PALETTES.violet`, `DEFAULT_THEME`, and the dashboard layout bootstrap fallback were all aligned to the same palette.
-
-## Lesson 17: Home marketing sections should each own a single job
-- **M:** The home page repeated the dashboard product mock and stacked multiple sections that all re-pitched differentiation and AI value in slightly different ways.
-- **RC:** `Hero.tsx`, `DashboardPreview.tsx`, `FeaturesBento.tsx`, and `ComparisonSection.tsx` evolved independently, so the live `HomeContent.tsx` composition started repeating the same story beats instead of moving the user forward.
-- **R:** Audit the mounted section order from `HomeContent.tsx` and keep one section per narrative role: one hero product mock, one core workflow/capability section, one dedicated AI section, one proof section.
-- **E:** The cleanup removed the standalone `DashboardPreview`, deleted `ComparisonSection.tsx`, and trimmed repeated AI cards from `FeaturesBento.tsx` so `AIFeatures.tsx` is the only dedicated AI explainer.
-
-## Lesson 18: Client hooks in public sections must stay above empty-state returns
-- **M:** The deals spotlight auto-slide patch initially triggered a React hooks lint warning.
-- **RC:** `useEffect` was added after `if (deals.length === 0) return null`, which makes hook order conditional even when the logic feels harmless.
-- **R:** In client-rendered marketing/public components, declare hooks first, derive simple counts, and only return early after hook registration.
-- **E:** `BiggestDealsCarousel` was fixed by introducing `dealsCount`, moving the auto-slide `useEffect` above the empty-state return, and then deriving the active deal afterward.
-
-## Lesson 19: Shared typography only works if route sections stop freelancing their headings
-- **M:** The home redesign had a documented type scale in globals, but several section headings still used bespoke clamp sizes and ad-hoc font-family classes.
-- **RC:** Adding tokens alone does not create consistency if route-level sections keep custom heading recipes.
-- **R:** After defining a global type scale, do a second pass through mounted sections and replace one-off heading styles with shared utilities like `.type-h1`, `.type-h2`, `.type-h3`, `.type-h4`, and responsive `text-*` overrides only where necessary.
-- **E:** `Hero.tsx`, `ProblemStatement.tsx`, `HowItWorks.tsx`, `FeaturesBento.tsx`, `AnalysisDemo.tsx`, `AIFeatures.tsx`, `AudienceSegmentation.tsx`, `SocialProof.tsx`, `PricingSection.tsx`, and `FAQSection.tsx` were normalized onto the shared type classes.
-
-## Lesson 20: Public copy extraction must include every active locale, not just the primary two
-- **M:** The home restructuring moved a large amount of marketing copy into locale dictionaries.
-- **RC:** It is easy to update `en` and `fr` while forgetting secondary locales that still compile and ship.
-- **R:** When extracting public copy into i18n, update every locale entry point in the repo during the same pass. If full translation is not available, wire temporary English fallbacks explicitly so no locale crashes on missing keys.
-- **E:** `locales/en/landing.ts` and `locales/fr/landing.ts` received the new `landing.home.*` tree, while `locales/es.ts`, `locales/hi.ts`, `locales/it.ts`, and `locales/ja.ts` were kept compiling through the shared English fallback spread.
-
-## Lesson 21: Home hero redesigns work better when support chrome moves next to the preview
-- **M:** The hero felt busy when broker integrations and capability cards were all stacked below a centered intro.
-- **RC:** Supporting UI was competing with the primary product preview instead of framing it.
-- **R:** Keep the hero in a split layout: editorial copy and capability cards on one side, preview on the other, and move compact trust/integration chrome into a shallow tray above or beside the preview.
-- **E:** `Hero.tsx` now places integrations in a compact tray above `DashboardPreview`, which lets the preview read as the main focal point without losing supporting context.
-
-## Lesson 22: Cal.com-style hero inspiration works best as composition, not as a full-theme transplant
-- **M:** The user wanted the Cal.com design language implemented while explicitly excluding the grayscale color system.
-- **RC:** Copying the palette would fight the app's established purple theme, but the composition, typography density, restraint, and product-first layout are portable.
-- **R:** When adapting a strong external design reference, isolate the transferable primitives first: centered editorial structure, generous whitespace, shadow-contained surfaces, screenshot-first hierarchy, and restrained decoration. Keep palette and brand accents local when requested.
-- **E:** The updated home `Hero.tsx` dropped the ambient glow-heavy split layout in favor of a centered launch-page composition while preserving Qunt Edge's existing tokens.
-
-## Lesson 23: Xtract-style hero placement works best as a staged card grid, not a flat stack
-- **M:** The user wanted the hero card placement to feel closer to `xtract.framer.ai`.
-- **RC:** The reference reads as a centered editorial intro followed by a card-led product stage, where one dominant visual is supported by smaller utility cards instead of every card competing equally.
-- **R:** For SaaS-style hero references with strong card placement, keep the copy centered first, then build a second-row stage with one dominant media/product card and smaller stacked support cards beside it.
-- **E:** `Hero.tsx` now uses a large left-anchored `DashboardPreview` card with two smaller right-side support cards instead of placing every hero card in a uniform row below the screenshot.
-
-## Lesson 24: Vercel `functions.runtime` config must match supported Node runtimes
-- **M:** `vercel --prod` failed with `Function Runtimes must have a valid version, for example now-php@1.0.0`
-- **RC:** `vercel.json` had `"functions": { "api/**/*.ts": { "runtime": "nodejs22.x" } }` but the Vercel project settings use Node 24.x. The `nodejs22.x` runtime string was rejected by Vercel's build system (CLI 51.2.1).
-- **R:** Remove the explicit `functions` runtime override from `vercel.json` and let Vercel auto-detect the Node version from project settings. Only specify `functions` config for Edge runtimes or when you need per-route overrides.
-- **E:** Removed the `functions` block entirely; Vercel now auto-detects Node 24.x and builds succeed.
-
-## Lesson 25: MotionStagger at page-level opacity:0 blocks first paint
-- **M:** Home page showed blank until force reload
-- **RC:** `MarketingLayoutShell` wrapped ALL children in `<MotionStagger>` which starts at `opacity: 0` and only becomes visible when `useInView` fires. After new deployments, stale chunk caches or slow JS hydration could prevent IntersectionObserver from firing, leaving the entire page invisible.
-- **R:** Never wrap an entire page's content in a motion container that starts invisible. Use per-section animations instead. The page shell must be immediately visible.
-- **E:** Removed `MotionStagger`/`MotionStaggerItem` wrapper from `MarketingLayoutShell`. Content renders immediately; individual sections handle their own entrance animations.
-
-## Lesson 26: loading.tsx with z-50 blocks content during client navigation
-- **M:** Home page showed black screen when clicking a link to navigate, but worked on force reload
-- **RC:** `loading.tsx` had `z-50` overlay with a nearly-invisible spinner (`border-border/20` on `bg-background` which is black). During client-side navigation, Next.js shows this loading state. If chunk loading was slow or stale after a deployment, the overlay covered the entire page indefinitely. Additionally: (1) `PublicRootProviders` wrapped public pages in `SidebarProvider` causing unnecessary hydration conflicts during layout transitions; (2) No `error.tsx` at the home route meant errors caused blank page with no recovery; (3) `HomeContent` was a server component forcing RSC bailout overhead for all-client children
-- **R**: (1) Replace `loading.tsx` with `return null` to prevent blocking overlay; (2) Remove `SidebarProvider` from `PublicRootProviders`; (3) Add `error.tsx` with retry button; (4) Add `'use client'` to `HomeContent` since all children are client components
-- **E:** `app/[locale]/(home)/loading.tsx` returned null; page now renders immediately on client navigation
-
-## Lesson 27: Framer Motion `initial={{ opacity: 0 }}` causes blank screen during soft navigation
-- **M:** Homepage showed blank black screen when navigating via Link click (soft nav), but loaded correctly on hard refresh
-- **RC:** Every visible element on the homepage (navbar + hero) used Framer Motion `initial={{ opacity: 0 }}` to start invisible and animate in. During soft navigation after Vercel deployments, stale chunk caches can prevent Framer Motion from initializing, so the `animate={{ opacity: 1 }}` transition never fires. Content stays at opacity:0 on a black `bg-background` = blank black screen. Hard refresh works because full SSR delivers all chunks synchronously.
-- **R:** Replace Framer Motion `initial={{ opacity: 0 }}` entrance animations with CSS `@keyframes` animations for above-the-fold content. CSS animations fire immediately on DOM insertion via the browser compositor thread — no JavaScript dependency, no chunk loading dependency, no `requestAnimationFrame` scheduling. Use `animation-fill-mode: both` for staggered delays so elements stay invisible during delay then animate in. If CSS never loads, elements use their default style (visible).
-- **E:** `Hero.tsx` replaced 6 `motion.*` elements with plain HTML + `hero-entrance` CSS classes. `Navbar.tsx` removed `motion.div` wrapper entirely. `globals.css` added `@keyframes hero-entrance` with staggered delay classes. `loading.tsx` changed from `return null` to a visible spinner.
-
-## Lesson 28: Admin server action types must match the full Prisma schema, not a subset
-- **M:** PropFirmCoupon schema had 10+ fields but `PropFirmCouponInput` only exposed 2 (code, discountPercent), so admin forms could only edit those 2 fields while the public deals page consumed many more (claimUrl, challengeFee, expiresAt, isActive).
-- **RC:** The input type was defined as a narrow subset when the coupon feature was first built, and was never expanded when the schema and public pages added more fields.
-- **R:** When a Prisma model has schema fields that the public UI consumes, the admin input type and forms must expose all of them. Otherwise admin creates content with missing data that shows as blank/zero on the public page.
-- **E:** `PropFirmCouponInput` was expanded from `{code, discountPercent}` to include all 11 coupon fields, and both admin coupon forms were rebuilt to match.
-
-## Lesson 29: Coupon-level overrides must take priority over firm-level values in deal mapping
-- **M:** The deals page always showed firm-level platform/payoutModel/drawdownType, ignoring coupon-specific overrides.
-- **RC:** The `_getActiveDeals` mapping in `server/deals.ts` only read from `coupon.propFirm.*`, never checking if the coupon itself had override values for those fields.
-- **R:** When coupon rows have nullable override columns (platform, payoutModel, drawdownType), map them with coupon-level priority: `coupon.platform || coupon.propFirm.platform || 'Default'`.
-- **E:** `server/deals.ts` now uses coupon-level overrides when set, falling back to firm-level values.
-
-## Lesson 30: Never wrap a page-level layout or shell in dynamic({ ssr: false }) with a blank loading fallback
-- **M:** Auth page showed blank black on soft navigation (Link click), but worked on hard refresh.
-- **RC:** `layout-shell.tsx` used `dynamic({ ssr: false })` rendering `<div class="min-h-screen bg-background" />` during loading — a blank black div with NO `{children}`. Then `page-shell.tsx` had the same pattern. Then `page-client.tsx` had `motion.div` with `initial={{ opacity: 0 }}`. Three invisible layers meant any soft-navigation chunk loading delay = permanently blank page.
-- **R:** Never use `dynamic({ ssr: false })` on page-level layouts or shells with a loading fallback that doesn't render `{children}`. Use direct imports instead. If client-only code is needed, use `'use client'` directive — it still renders during SSR via hydration.
-- **E:** Replaced both auth `dynamic({ ssr: false })` wrappers with direct imports, replaced `motion.div` entrance with CSS `@keyframes auth-entrance`, added `error.tsx`.
-
-## Lesson 31: dynamic({ ssr: false }) on page shells is a blank-page landmine during soft navigation
-- **M:** Same blank-page pattern can happen on any route that uses `dynamic({ ssr: false })` at the page/shell level.
-- **RC:** During soft navigation, the client must fetch and evaluate JavaScript chunks. `dynamic({ ssr: false })` shows the `loading` fallback until the chunk loads. If the fallback is a blank div, the user sees nothing during that window. If chunk loading fails silently, the blank is permanent.
-- **R:** Reserve `ssr: false` for individual interactive widgets (charts, maps, editors) with visible skeleton loading states. NEVER use it for page-level shells, layouts, or route wrappers.
-- **E:** Dashboard widget registry uses `ssr: false` with `widgetFallback` skeletons — safe. Auth page layout used it with a blank div — caused blank page.
-
-## Lesson 32: Async Server Components in layouts must be wrapped in Suspense
-- **M:** After enabling the RollingAdBanner on the home page, the entire page went blank during soft navigation.
-- **RC:** RollingAdBanner is an async Server Component that `await`s database queries. It's rendered inside MarketingLayoutShell (the layout for ALL public pages). Without a Suspense boundary, it suspends the entire layout until data resolves. If the DB is slow or unavailable, the whole page is blank.
-- **R:** Any async Server Component rendered inside a layout must be wrapped in `<Suspense fallback={...}>`. The fallback can be `null` if the component is optional (like a banner), or a skeleton if it's critical content.
-- **E:** `<Suspense fallback={null}><RollingAdBanner /></Suspense>` in marketing-layout-shell.tsx prevents the banner from blocking the entire page.
-
-## Lesson 33: loading.tsx must never return null — it's the Suspense fallback for route transitions
-- **M:** Home page showed blank during soft navigation (clicking links to `/`), but worked on hard refresh.
-- **RC:** `app/[locale]/loading.tsx` returned `null`. During soft navigation between route groups, Next.js shows this Suspense fallback — which was nothing (black screen on dark background).
-- **R:** Every `loading.tsx` must render visible content (at minimum a spinner). Returning `null` causes a blank flash during route transitions.
-- **E:** Changed `loading.tsx` from `return null` to a visible spinner. Same pattern caused the auth page blank issue (Lesson 26).
-
-## Lesson 34: Never use `initial={{ opacity: 0 }}` or `initial="hidden"` on content-wrapping motion elements
-- **M:** Dashboard content, hero, navbar, and stagger containers all used `initial={{ opacity: 0 }}` via Framer Motion. If FM fails to hydrate (JS error, slow network, blocked script), the content stays permanently invisible — blank page.
-- **RC:** FM's `initial` prop sets inline styles immediately. These persist until FM runs and applies the `animate` state. No FM = no animate = content stuck at opacity 0.
-- **R:** Use `initial={false}` on content wrappers and CSS `@keyframes` for entrance animations. CSS animations always run (browser compositor), even without JS. The project has `animate-fade-up-smooth` in globals.css for this exact purpose.
-- **E:** `MotionSection` changed from `initial={{ opacity: 0, y: 12 }}` to `initial={false}` + `className="animate-fade-up-smooth"`. Same visual effect, but content is always visible even without FM.
-
-## Lesson 35: Deals cache must be invalidated alongside prop-firms cache
-- **M:** Admin coupon mutations called `updateTag('prop-firms')` but not `updateTag('deals')`. Deactivated coupons stayed visible on `/deals` for up to 2 hours.
-- **RC:** `getActiveDealsCached()` uses `cacheTag('deals')` but no mutation ever calls `updateTag('deals')`. Only the `'prop-firms'` tag was invalidated.
-- **R:** Every mutation that affects coupon or firm data must invalidate BOTH `updateTag('prop-firms')` AND `updateTag('deals')`.
-- **E:** Added `updateTag('deals')` after every `updateTag('prop-firms')` call in `server/prop-firms.ts`.
-
-## Lesson 36: Server actions in i18n apps must include locale in redirects
-- **M:** Blog admin server actions used `redirect('/admin/blogs')` — missing the `/${locale}/` prefix.
-- **RC:** Server actions are module-scope `'use server'` functions that don't have access to the `locale` param from the page component.
-- **R:** Pass `locale` via a hidden form input (`<input name="locale" value={locale} />`) and read it with `formData.get('locale')` in the server action.
-- **E:** Blog page now has `formData.append('locale', locale)` in the client component, and server actions read it before redirect.
-
-## Lesson 37: A marquee inside a flex shell can make a page look blank without breaking SSR
-- **M:** The home page looked blank even though the navbar rendered and production HTML contained the full hero.
-- **RC:** `RollingAdBanner` expanded the shared marketing shell to max-content width inside a flex layout, pushing the hero several thousand pixels off-screen instead of failing render.
-- **R:** When a scrolling banner/marquee lives inside a shared flex shell, constrain the shell with `min-w-0` and the banner with `w-full max-w-full overflow-hidden` so it cannot determine page width.
-- **E:** `MarketingLayoutShell` plus `RollingAdBanner` produced an ~8222px-wide home page until `min-w-0` and width containment were added.
-
-## Lesson 38: `asChild` interactive primitives must slot children directly and stay out of nested button wrappers
-- **M:** Public CTAs on the home page rendered invalid nested interactive markup and increased hydration/layout risk.
-- **RC:** `components/ui/button.tsx` wrapped slotted `asChild` content in an extra wrapper, and `MagneticButton` was wrapping `Button asChild` links in a second interactive control.
-- **R:** For `asChild` primitives, render the slotted child directly with `Slot`; do not add extra interactive wrappers around already-interactive children like anchor CTAs.
-- **E:** Fixing `Button asChild` and removing `MagneticButton` around home CTA links eliminated nested `button a` markup.
-
-## Lesson 39: Admin update forms need `null` semantics for clearing optional Prisma fields
-- **M:** Editing a coupon from the admin UI could change values, but blanking optional fields like claim link or discount often left the old value behind.
-- **RC:** Update handlers passed `undefined` for cleared optional fields, which Prisma treats as "leave unchanged" rather than "clear this column".
-- **R:** For admin update flows, normalize empty optional text/number/date fields to `null` when the intent is to clear persisted data.
-- **E:** Coupon edit flows on `/admin/coupons` and `/admin/propfirms/[id]` now use nullable update helpers for `claimUrl`, `discountPercent`, `challengeFee`, dates, and override fields.
-
-## Lesson 40: Server actions must stay at module scope in App Router admin surfaces
-- **M:** Admin pages for `propfirms/[id]`, coupons, and reviews crashed in production with "Functions cannot be passed directly to Client Components" and related serialization errors.
-- **RC:** Server actions defined inside component closures captured route variables like `locale`, which Next.js could not safely serialize across the server/client boundary.
-- **R:** Keep server actions at module scope and pass dynamic values like `locale`, `id`, `status`, and `page` through hidden form inputs.
-- **E:** Extracting all admin server actions to module scope with `requireFormString(formData, 'locale')` removed the runtime crash.
-
-## Lesson 41: Dynamic shell imports need visible loading fallbacks
-- **M:** Shared dashboard chrome briefly disappeared during soft navigation.
-- **RC:** `dynamic(() => import(...), { loading: () => null })` rendered nothing while the chunk loaded, creating a visible blank flash.
-- **R:** Use a skeleton or layout-matching placeholder for shell-level dynamic imports instead of `null`.
-- **E:** `DashboardHeader` now uses a simple `animate-pulse` skeleton instead of a blank fallback.
+## Lesson 47: Stale-while-recompute prevents thundering herd on hot keys
+- **M:** When a popular cache key expires, many concurrent requests all try to reload simultaneously
+- **RC:** Without singleflight + stale serving, N concurrent requests each hit the DB simultaneously for the same data
+- **R:** (1) Singleflight deduplicates concurrent loaders to 1. (2) Serve stale data for up to `staleTtl` seconds while one refresher runs. (3) Cache always has something to serve
+- **E:** CacheService.getOrLoad() combines singleflight Map + stale-while-recompute background refresh
