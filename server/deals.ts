@@ -348,9 +348,9 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
         coupons: {
           where: {
             isActive: true,
-            OR: [
-              { expiresAt: null },
-              { expiresAt: { gte: now } },
+            AND: [
+              { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+              { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
             ],
           },
           orderBy: [
@@ -499,9 +499,9 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       where: {
         isActive: true,
         propFirm: { isActive: true },
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gte: now } },
+        AND: [
+          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+          { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
         ],
       },
       include: {
@@ -585,9 +585,9 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
           coupons: {
             where: {
               isActive: true,
-              OR: [
-                { expiresAt: null },
-                { expiresAt: { gte: now } },
+              AND: [
+                { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+                { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
               ],
             },
             orderBy: [
@@ -714,9 +714,9 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       where: {
         propFirmId: firmId,
         isActive: true,
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gte: now } },
+        AND: [
+          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+          { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
         ],
       },
       include: {

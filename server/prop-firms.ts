@@ -319,7 +319,10 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
             coupons: {
               where: {
                 isActive: true,
-                OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+                AND: [
+                  { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+                  { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+                ],
               },
               orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
               take: 1,
@@ -546,6 +549,8 @@ export async function createPropFirmCoupon(propFirmId: string, data: PropFirmCou
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
+  updateTag('firm-coupons')
+  updateTag(`prop-firm-${propFirmId}`)
   return result
 }
 
@@ -568,12 +573,28 @@ export async function updatePropFirmCoupon(id: string, data: PropFirmCouponInput
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
+  updateTag('firm-coupons')
+  if (result.propFirmId) {
+    updateTag(`prop-firm-${result.propFirmId}`)
+  }
   return result
 }
 
 export async function deletePropFirmCoupon(id: string) {
   await assertAdminAccess()
   await assertCouponMutationAvailable()
+
+  // Look up the coupon first to get propFirmId for cache invalidation
+  let propFirmId: string | undefined
+  try {
+    const existing = await prisma.propFirmCoupon.findUnique({
+      where: { id },
+      select: { propFirmId: true },
+    })
+    propFirmId = existing?.propFirmId
+  } catch {
+    // Continue - best effort lookup
+  }
 
   let result
   try {
@@ -585,5 +606,9 @@ export async function deletePropFirmCoupon(id: string) {
   updateTag('prop-firms')
   updateTag('deals')
   updateTag('prop-firms-catalogue')
+  updateTag('firm-coupons')
+  if (propFirmId) {
+    updateTag(`prop-firm-${propFirmId}`)
+  }
   return result
 }
