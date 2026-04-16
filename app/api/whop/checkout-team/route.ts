@@ -3,6 +3,7 @@ import { getWebsiteURL } from "@/server/auth";
 import { getWhop } from "@/lib/whop";
 import { createRouteClient } from "@/lib/supabase/route-client";
 import { apiError } from "@/lib/api-response";
+import { withRateLimited } from "@/lib/api/with-api-route";
 
 const TEAM_NAME_MAX_LENGTH = 100
 const TEAM_NAME_PATTERN = /^[a-zA-Z0-9\s\-_.]+$/
@@ -63,7 +64,7 @@ async function handleWhopTeamCheckout(user: CheckoutUser, websiteURL: string, lo
     }
 }
 
-export async function POST(req: Request) {
+export const POST = withRateLimited(async (req: Request) => {
     const body = await req.formData();
     const websiteURL = await getWebsiteURL();
     const teamName = body.get('teamName') as string | null;
@@ -92,9 +93,9 @@ export async function POST(req: Request) {
     }
 
     return handleWhopTeamCheckout(user, websiteURL, locale, teamName || undefined);
-}
+})
 
-export async function GET(req: Request) {
+export const GET = withRateLimited(async (req: Request) => {
     const websiteURL = await getWebsiteURL();
     const { searchParams } = new URL(req.url);
     const teamName = searchParams.get('teamName');
@@ -123,4 +124,4 @@ export async function GET(req: Request) {
     }
 
     return handleWhopTeamCheckout(user, websiteURL, locale, teamName || undefined);
-}
+})

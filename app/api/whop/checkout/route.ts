@@ -5,6 +5,7 @@ import { getWhop } from "@/lib/whop";
 import { getReferralBySlug } from "@/server/referral";
 import { getSubscriptionDetails } from "@/server/subscription";
 import { createRouteClient } from "@/lib/supabase/route-client";
+import { withRateLimited } from "@/lib/api/with-api-route";
 
 function safeLocale(value: string | null | undefined): string {
   const raw = (value || "").trim().toLowerCase();
@@ -130,7 +131,7 @@ async function handleWhopCheckout(
   }
 }
 
-export async function POST(req: Request) {
+export const POST = withRateLimited(async (req: Request) => {
   const body = await req.formData();
   const websiteURL = await getWebsiteURL();
 
@@ -174,9 +175,9 @@ export async function POST(req: Request) {
   }
 
   return handleWhopCheckout(lookupKey, user, websiteURL, referral, locale, promoCode);
-}
+})
 
-export async function GET(req: Request) {
+export const GET = withRateLimited(async (req: Request) => {
   const websiteURL = await getWebsiteURL();
   const { searchParams } = new URL(req.url);
   const lookupKey = searchParams.get("lookup_key");
@@ -207,4 +208,4 @@ export async function GET(req: Request) {
   }
 
   return handleWhopCheckout(lookupKey, user, websiteURL, referral, locale, promoCode);
-}
+})

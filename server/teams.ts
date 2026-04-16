@@ -567,11 +567,15 @@ export async function getTeamOverviewData(teamId: string, userId: string) {
 
 export async function getTeamInvitations(userId: string) {
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    })
+    if (!user?.email) return []
+
     const invitations = await prisma.teamInvitation.findMany({
       where: {
-        email: await prisma.user.findUnique({
-          where: { id: userId }
-        }).then(u => u?.email || ''),
+        email: user.email,
         status: 'PENDING',
       },
       include: {

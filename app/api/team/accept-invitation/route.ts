@@ -4,8 +4,9 @@ import { createRouteClient } from "@/lib/supabase/route-client"
 import { MemberRole } from "@/prisma/generated/prisma"
 import { ensureTeamMembership, resolveTeamUserId } from "@/server/team-membership"
 import { apiError } from "@/lib/api-response"
+import { withRateLimited } from "@/lib/api/with-api-route"
 
-export async function POST(req: Request) {
+export const POST = withRateLimited(async (req: Request) => {
   try {
     const supabase = createRouteClient(req)
     const { data: { user } } = await supabase.auth.getUser()
@@ -77,4 +78,4 @@ export async function POST(req: Request) {
     console.error('Error accepting team invitation:', error)
     return apiError("INTERNAL_ERROR", "Internal server error", 500)
   }
-} 
+}) 

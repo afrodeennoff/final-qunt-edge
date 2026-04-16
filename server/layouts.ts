@@ -349,13 +349,14 @@ export async function getLayoutVersionByNumberAction(
     // Verify ownership before reading version
     await assertLayoutOwnership(layoutId)
 
+    const found = await prisma.layoutVersion.findFirst({
+      where: { layoutId, version: versionNumber },
+      select: { id: true },
+    })
+    if (!found) return null
+
     const version = await prisma.layoutVersion.findUnique({
-      where: {
-        id: await prisma.layoutVersion.findFirst({
-          where: { layoutId, version: versionNumber },
-          select: { id: true }
-        }).then(v => v?.id)
-      }
+      where: { id: found.id }
     })
 
     if (!version) return null

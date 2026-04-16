@@ -4,6 +4,7 @@ import { apiError } from "@/lib/api-response"
 import { getDatabaseUserId } from "@/server/auth"
 import { computeBehaviorInsights } from "@/lib/behavior-insights"
 import { getOrLoad, CachePolicies, buildCacheKey } from "@/lib/cache/cache-service"
+import { withRateLimited } from "@/lib/api/with-api-route"
 
 function sanitizePeriodDays(value: string | null): number {
   if (!value) return 30
@@ -25,7 +26,7 @@ function isPrerenderInterruption(error: unknown): boolean {
   )
 }
 
-export async function GET(request: NextRequest) {
+export const GET = withRateLimited(async (request: NextRequest) => {
   const requestId = crypto.randomUUID()
   try {
     const userId = await getDatabaseUserId()
@@ -86,4 +87,4 @@ export async function GET(request: NextRequest) {
     console.error("[Behavior Insights API] Failed to build insights", error)
     return apiError("INTERNAL_ERROR", "Failed to build behavior insights", 500, { requestId })
   }
-}
+})

@@ -339,11 +339,14 @@ async function saveTradesForResolvedUser(
         })
       }
 
-      const tradeResult = await tx.trade.createMany({
+      return tx.trade.createMany({
         data: userAssignedTrades,
         skipDuplicates: true
       })
+    })
 
+    // Invalidate caches AFTER successful transaction commit
+    if (result.count > 0) {
       await updateTag(`user-data-core-${userId}`)
       await updateTag(`user-data-supplemental-${userId}`)
       await updateTag(`user-data-${userId}`)
@@ -352,9 +355,7 @@ async function saveTradesForResolvedUser(
         invalidateNamespace('ai-trades'),
         invalidateNamespace('behavior-insights'),
       ])
-
-      return tradeResult
-    })
+    }
 
     if (result.count === 0) {
       logger.info('[saveTrades] No trades added. Duplicate check.')

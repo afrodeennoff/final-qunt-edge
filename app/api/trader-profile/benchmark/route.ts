@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
 import { isPrismaSchemaMismatchError } from "@/lib/prisma-guard"
 import { apiError } from "@/lib/api-response"
+import { withRateLimited } from "@/lib/api/with-api-route"
 
 const sanitizeErrorMessage = (error: unknown): string => {
   if (error instanceof Error && error.message) {
@@ -175,7 +176,7 @@ function responseFromSnapshot(snapshot: BenchmarkSnapshotPayload) {
   })
 }
 
-export async function GET() {
+export const GET = withRateLimited(async () => {
   try {
     let currentUserId: string
     try {
@@ -289,4 +290,4 @@ export async function GET() {
     })
     return apiError('INTERNAL_ERROR', 'Failed to build benchmark', 500)
   }
-}
+})

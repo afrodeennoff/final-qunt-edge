@@ -336,15 +336,22 @@ export default async function PropFirmEditPage({
 
   let firm: PropFirmData | null = null
   if (!isNew) {
-    firm = hasConfiguredDatabaseConnection
-      ? await prisma.propFirm.findUnique({
+    if (hasConfiguredDatabaseConnection) {
+      try {
+        firm = await prisma.propFirm.findUnique({
           where: { id },
           include: {
             reviews: { orderBy: { createdAt: 'desc' } },
             coupons: { orderBy: { createdAt: 'desc' } },
           },
         })
-      : buildFallbackFirm(id)
+      } catch (error) {
+        console.warn('[Admin PropFirm] DB error loading firm:', error)
+        firm = buildFallbackFirm(id)
+      }
+    } else {
+      firm = buildFallbackFirm(id)
+    }
     if (!firm) {
       notFound()
     }

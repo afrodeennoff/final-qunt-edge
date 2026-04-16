@@ -4,14 +4,15 @@ import { createRouteClient } from "@/lib/supabase/route-client"
 import { resolveTeamUserId } from "@/server/team-membership"
 import { apiError } from "@/lib/api-response"
 import { z } from "zod"
+import { withRateLimited } from "@/lib/api/with-api-route"
 
 const teamIdSchema = z.string().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/)
 const periodSchema = z.enum(["daily", "weekly", "monthly"])
 
-export async function GET(
+export const GET = withRateLimited(async (
   req: Request,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(req)
@@ -55,12 +56,12 @@ export async function GET(
     console.error('Error fetching team analytics:', error)
     return apiError("INTERNAL_ERROR", "Failed to fetch analytics", 500, { requestId })
   }
-}
+})
 
-export async function PUT(
+export const PUT = withRateLimited(async (
   req: Request,
   { params }: { params: Promise<{ id: string }> }
-) {
+) => {
   const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(req)
@@ -99,4 +100,4 @@ export async function PUT(
     console.error('Error updating team analytics:', error)
     return apiError("INTERNAL_ERROR", "Failed to update analytics", 500, { requestId })
   }
-}
+})

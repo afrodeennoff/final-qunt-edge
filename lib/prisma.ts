@@ -324,6 +324,10 @@ if (!connectionString) {
           'error',
           'warn',
         ],
+    transactionOptions: {
+      maxWait: 5000,
+      timeout: 10000,
+    },
   })
 
   // Log slow queries in production via Prisma event
