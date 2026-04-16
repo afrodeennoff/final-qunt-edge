@@ -3,15 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { endOfDay, format, startOfDay, subDays, subMonths, subYears } from 'date-fns'
 import type { DateRange, DayButtonProps } from 'react-day-picker'
-import {
-  CalendarIcon,
-  CircleDot,
-  Globe,
-  Lock,
-  Sparkles,
-  TrendingUp,
-  Wallet,
-} from 'lucide-react'
+import { CalendarIcon, CircleDot, Globe, Lock, Sparkles, TrendingUp, Wallet } from 'lucide-react'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 
 import { UnifiedPageShell, UnifiedSurface } from '@/components/layout/unified-page-shell'
@@ -219,6 +211,34 @@ function MeterRow({
           style={{ width: `${progress}%` }}
         />
       </div>
+    </div>
+  )
+}
+
+function SignalTile({
+  label,
+  value,
+  helper,
+  tone = 'default',
+}: {
+  label: string
+  value: string
+  helper?: string
+  tone?: StatTone
+}) {
+  return (
+    <div className={cn(insetPanelClassName, 'p-3.5')}>
+      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p
+        className={cn(
+          'mt-2 text-lg font-semibold tracking-tight text-foreground',
+          tone === 'positive' && 'text-semantic-success',
+          tone === 'negative' && 'text-semantic-error',
+        )}
+      >
+        {value}
+      </p>
+      {helper ? <p className="mt-1 text-xs text-muted-foreground">{helper}</p> : null}
     </div>
   )
 }
@@ -444,8 +464,7 @@ export default function TraderProfilePageClient() {
     const positiveDays = activeDays.filter((value) => value > 0).length
     const consistencyRate = activeDays.length > 0 ? (positiveDays / activeDays.length) * 100 : 0
     const winningStreak = getWinningStreak(pnlValues)
-    const breakEvenRate =
-      avgWin + avgLossAbs > 0 ? (avgLossAbs / (avgWin + avgLossAbs)) * 100 : 0
+    const breakEvenRate = avgWin + avgLossAbs > 0 ? (avgLossAbs / (avgWin + avgLossAbs)) * 100 : 0
 
     return {
       riskReward: avgLossAbs > 0 ? avgWin / avgLossAbs : 0,
@@ -472,7 +491,10 @@ export default function TraderProfilePageClient() {
     const totalTradeBaseline = Math.max(20, baseline.sampleSize)
 
     return [
-      { metric: 'TOTAL TRADES', trader: scoreHigherBetter(metrics.totalTrades, totalTradeBaseline) },
+      {
+        metric: 'TOTAL TRADES',
+        trader: scoreHigherBetter(metrics.totalTrades, totalTradeBaseline),
+      },
       { metric: 'RISK REWARD', trader: scoreHigherBetter(metrics.riskReward, baseline.riskReward) },
       { metric: 'AVG. DRAWDOWN', trader: scoreLowerBetter(metrics.drawdown, baseline.drawdown) },
       { metric: 'WIN RATE', trader: scoreHigherBetter(metrics.winRate, baseline.winRate) },
@@ -550,7 +572,8 @@ export default function TraderProfilePageClient() {
       const date = new Date(trade.entryDate)
       if (Number.isNaN(date.getTime())) return
       const key = date.toISOString().slice(0, 10)
-      if (!byDay.has(key)) byDay.set(key, new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+      if (!byDay.has(key))
+        byDay.set(key, new Date(date.getFullYear(), date.getMonth(), date.getDate()))
     })
 
     return Array.from(byDay.values()).sort((a, b) => a.getTime() - b.getTime())
@@ -634,7 +657,7 @@ export default function TraderProfilePageClient() {
     <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
       <div className="space-y-4 sm:space-y-5 lg:space-y-6">
         <UnifiedSurface variant="elevated" className="overflow-hidden p-5 sm:p-6 lg:p-7">
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.95fr)] xl:gap-6">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.9fr)] xl:gap-6">
             <div className="min-w-0 space-y-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                 <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
@@ -644,14 +667,17 @@ export default function TraderProfilePageClient() {
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="min-w-0 flex-1 space-y-3">
-                  <div className="space-y-2">
+                <div className="min-w-0 flex-1 space-y-4">
+                  <div className="space-y-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary" className="gap-1.5">
                         <Sparkles className="h-3.5 w-3.5" />
                         Trader Profile
                       </Badge>
-                      <Badge variant={showOnLeaderboard ? 'success' : 'outline'} className="gap-1.5">
+                      <Badge
+                        variant={showOnLeaderboard ? 'success' : 'outline'}
+                        className="gap-1.5"
+                      >
                         {showOnLeaderboard ? (
                           <Globe className="h-3.5 w-3.5" />
                         ) : (
@@ -672,7 +698,54 @@ export default function TraderProfilePageClient() {
                     </div>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+                  <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Performance brief
+                        </p>
+                        <p className="text-base font-semibold text-foreground">
+                          Start with the headline account health, then move down into day pattern,
+                          benchmark shape, and the closed-trade tape.
+                        </p>
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                          This layout keeps the review window and execution context visible while
+                          you scan for consistency, risk balance, and momentum.
+                        </p>
+                      </div>
+                      <Badge variant="secondary" className="w-fit">
+                        {tradeCalendarDays.length} active days
+                      </Badge>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                      <SignalTile
+                        label="Consistency"
+                        value={`${formatValue(metrics.consistencyRate)}%`}
+                        helper="Profitable trading days"
+                        tone={metrics.consistencyRate >= 50 ? 'positive' : 'default'}
+                      />
+                      <SignalTile
+                        label="Avg net / trade"
+                        value={formatSigned(metrics.avgReturn)}
+                        helper="After commissions"
+                        tone={
+                          metrics.avgReturn > 0
+                            ? 'positive'
+                            : metrics.avgReturn < 0
+                              ? 'negative'
+                              : 'default'
+                        }
+                      />
+                      <SignalTile
+                        label="Break-even rate"
+                        value={`${formatValue(metrics.breakEvenRate)}%`}
+                        helper="Win rate required by your R:R"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <StatTile
                       label="Active accounts"
                       value={String(activeAccountsCount)}
@@ -706,8 +779,8 @@ export default function TraderProfilePageClient() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+            <div className="space-y-4">
+              <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -715,7 +788,7 @@ export default function TraderProfilePageClient() {
                     </p>
                     <p className="text-sm font-semibold text-foreground">{reviewWindowSummary}</p>
                   </div>
-                  <Badge variant="secondary">{tradeCalendarDays.length} active days</Badge>
+                  <Badge variant="secondary">{selectedDayLabel}</Badge>
                 </div>
 
                 <div className="mt-4 flex flex-col gap-3">
@@ -758,17 +831,42 @@ export default function TraderProfilePageClient() {
                     </PopoverContent>
                   </Popover>
                 </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+                  <SignalTile
+                    label="Net PnL"
+                    value={formatSigned(metrics.netPnl)}
+                    helper="Current review window"
+                    tone={
+                      metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : 'default'
+                    }
+                  />
+                  <SignalTile
+                    label="Win rate"
+                    value={`${formatValue(metrics.winRate)}%`}
+                    helper="Decisive trade outcomes"
+                    tone={metrics.winRate >= 50 ? 'positive' : 'default'}
+                  />
+                  <SignalTile
+                    label="Total capital"
+                    value={formatCapitalCompact(totalCapitalAllAccounts)}
+                    helper="After payouts and net trading"
+                    tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
+                  />
+                </div>
               </div>
 
               {isOwnProfile ? (
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 space-y-1">
                       <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                         Leaderboard visibility
                       </p>
                       <p className="text-sm font-semibold text-foreground">
-                        {showOnLeaderboard ? 'Visible on the public leaderboard' : 'Private to your dashboard'}
+                        {showOnLeaderboard
+                          ? 'Visible on the public leaderboard'
+                          : 'Private to your dashboard'}
                       </p>
                       <p className="text-xs leading-relaxed text-muted-foreground">
                         Toggle this on when you want your live profile to appear publicly.
@@ -787,7 +885,7 @@ export default function TraderProfilePageClient() {
           </div>
         </UnifiedSurface>
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.95fr)] xl:gap-6">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-6">
           <section className="min-w-0 space-y-4">
             <UnifiedSurface className="overflow-hidden p-5 sm:p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -849,7 +947,9 @@ export default function TraderProfilePageClient() {
                       if (date.getMonth() !== displayMonth.getMonth()) {
                         return (
                           <button type="button" {...buttonProps} className={className}>
-                            <span className="text-[11px] text-muted-foreground">{format(date, 'd')}</span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {format(date, 'd')}
+                            </span>
                           </button>
                         )
                       }
@@ -1029,7 +1129,9 @@ export default function TraderProfilePageClient() {
                   <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                     Benchmark
                   </p>
-                  <h3 className="text-lg font-semibold text-foreground">Compared with average user</h3>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Compared with average user
+                  </h3>
                   <p className="text-sm text-muted-foreground">
                     Relative shape across activity, reward, drawdown, and average result.
                   </p>
@@ -1046,7 +1148,11 @@ export default function TraderProfilePageClient() {
                       <PolarGrid stroke="hsl(var(--border) / 0.45)" />
                       <PolarAngleAxis
                         dataKey="metric"
-                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11, fontWeight: 600 }}
+                        tick={{
+                          fill: 'hsl(var(--muted-foreground))',
+                          fontSize: 11,
+                          fontWeight: 600,
+                        }}
                       />
                       <Radar
                         dataKey="trader"
@@ -1073,7 +1179,9 @@ export default function TraderProfilePageClient() {
                   <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                     Capital snapshot
                   </p>
-                  <h3 className="text-lg font-semibold text-foreground">Portfolio and return view</h3>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Portfolio and return view
+                  </h3>
                 </div>
               </div>
 

@@ -10,14 +10,19 @@ import {
   ChevronLeft,
   ChevronRight,
   Copy,
-  Flame,
   Search,
   Sparkles,
-  Star,
   Wallet,
 } from 'lucide-react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import type {
   DealItem,
   DealsOverview,
@@ -68,6 +73,16 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 ]
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
+const dealsPanelClassName =
+  'rounded-[1.75rem] border border-[oklch(0.65_0.22_260/0.14)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_32px_88px_-48px_rgba(0,0,0,0.94)]'
+const dealsInsetPanelClassName =
+  'rounded-2xl border border-[oklch(0.65_0.22_260/0.12)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.05),oklch(0_0_0/0.84))] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+const dealsChipClassName =
+  'rounded-full border border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.08)]'
+const dealsGhostButtonClassName =
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] px-4 py-2.5 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:bg-[oklch(0.65_0.22_260/0.11)]'
+const dealsPrimaryButtonClassName =
+  'inline-flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-[0_16px_28px_-16px_hsl(var(--primary)/0.85)] transition-[background-color,transform,box-shadow,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_22px_34px_-18px_hsl(var(--primary)/0.9)]'
 
 const faqFallbackItems: ReadonlyArray<{ question: string; answer: string }> = [
   {
@@ -105,18 +120,18 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
-    <nav className="sticky top-16 z-40 bg-[hsl(var(--background)/0.82)]">
+    <nav className="sticky top-16 z-40 border-y border-[oklch(0.65_0.22_260/0.1)] bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className="my-2 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
+        <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.06)] p-1.5 scrollbar-none">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => onTabClick(tab.id)}
-              className={`relative whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${
+              className={`relative whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 ${
                 activeTab === tab.id
-                  ? 'bg-[hsl(var(--mk-surface-muted)/0.95)] text-primary shadow-[0_0_0_1px_hsl(var(--primary)/0.22),0_12px_24px_-18px_hsl(var(--primary)/0.55)]'
-                  : 'text-muted-foreground hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:text-foreground/95'
+                  ? 'bg-[oklch(0.65_0.22_260/0.12)] text-foreground shadow-[0_0_0_1px_oklch(0.65_0.22_260/0.22),0_16px_28px_-22px_hsl(var(--primary)/0.7)]'
+                  : 'text-muted-foreground hover:bg-[oklch(0.65_0.22_260/0.08)] hover:text-foreground'
               }`}
             >
               {tab.label}
@@ -181,7 +196,10 @@ function isExpiringDeal(deal: DealItem): boolean {
 }
 
 function buildFirmOptions(deals: DealItem[]): string[] {
-  return ['All', ...Array.from(new Set(deals.map((deal) => deal.firmName))).sort((a, b) => a.localeCompare(b))]
+  return [
+    'All',
+    ...Array.from(new Set(deals.map((deal) => deal.firmName))).sort((a, b) => a.localeCompare(b)),
+  ]
 }
 
 function matchesDealFilters(
@@ -191,14 +209,16 @@ function matchesDealFilters(
     selectedMarket: 'All' | MarketType
     selectedDiscount: string
     normalizedSearch: string
-  }
+  },
 ): boolean {
   if (filters.selectedFirm !== 'All' && deal.firmName !== filters.selectedFirm) return false
   if (filters.selectedMarket !== 'All' && deal.category !== filters.selectedMarket) return false
-  if (filters.selectedDiscount !== 'all' && deal.discountPercent < Number(filters.selectedDiscount)) return false
+  if (filters.selectedDiscount !== 'all' && deal.discountPercent < Number(filters.selectedDiscount))
+    return false
   if (!filters.normalizedSearch) return true
 
-  const haystack = `${deal.firmName} ${deal.couponCode} ${deal.platform} ${deal.category}`.toLowerCase()
+  const haystack =
+    `${deal.firmName} ${deal.couponCode} ${deal.platform} ${deal.category}`.toLowerCase()
   return haystack.includes(filters.normalizedSearch)
 }
 
@@ -274,7 +294,7 @@ export function DealsExperience({
         selectedMarket,
         selectedDiscount,
         normalizedSearch,
-      })
+      }),
     )
 
     return sortDeals(next, sortKey)
@@ -282,7 +302,7 @@ export function DealsExperience({
 
   const { featuredDeals, expiringDeals, browseDeals } = useMemo(
     () => partitionDeals(filteredDeals),
-    [filteredDeals]
+    [filteredDeals],
   )
   const topFirms = useMemo(() => getTopPayoutFirms(firms), [firms])
 
@@ -379,7 +399,13 @@ function DealsBoard({
   hadFetchError: boolean
   lastUpdated: string | null
 }) {
-  const hasActiveFilters = hasActiveDealFilters(search, selectedFirm, selectedMarket, selectedDiscount, sortKey)
+  const hasActiveFilters = hasActiveDealFilters(
+    search,
+    selectedFirm,
+    selectedMarket,
+    selectedDiscount,
+    sortKey,
+  )
   const topDiscountDeal = getTopDiscountDeal(filteredDeals)
   const spotlightDeals = useMemo(() => getSpotlightDeals(filteredDeals), [filteredDeals])
   const expiringCount = filteredDeals.filter(isExpiringDeal).length
@@ -441,73 +467,89 @@ function DealsBoard({
   const faqItems = faqs.length > 0 ? faqs : faqFallbackItems
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[radial-gradient(900px_280px_at_15%_0%,rgba(255,255,255,0.06),transparent_72%),radial-gradient(860px_260px_at_85%_2%,rgba(255,255,255,0.04),transparent_72%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_26%,hsl(var(--background))_100%)]">
-      <div className="mx-auto flex max-w-[1280px] flex-col gap-6 lg:gap-8 px-4 py-6 sm:px-6 md:px-8 lg:px-12 lg:py-10">
+    <div className="min-h-screen overflow-hidden bg-[radial-gradient(900px_320px_at_15%_0%,oklch(0.65_0.22_260/0.16),transparent_72%),radial-gradient(860px_280px_at_85%_2%,oklch(0.65_0.22_260/0.1),transparent_72%),linear-gradient(180deg,oklch(0_0_0)_0%,oklch(0.08_0.02_260)_24%,oklch(0_0_0)_100%)]">
+      <UnifiedPageShell
+        widthClassName="max-w-[1360px]"
+        density="compact"
+        className="pb-3 pt-6 sm:pt-8 lg:pt-10"
+      >
         <DealsHero localePrefix={localePrefix} overview={overview} />
-      </div>
+      </UnifiedPageShell>
 
       <DealsTabBar activeTab={activeTab} onTabClick={scrollToTab} />
 
       <section id="deals-board" className="scroll-mt-[120px] overflow-hidden">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-6 lg:gap-8 px-4 py-8 sm:px-6 md:px-8 lg:px-12">
-          {spotlightDeals.length > 0 ? (
-            <BiggestDealsCarousel
+        <UnifiedPageShell
+          widthClassName="max-w-[1360px]"
+          density="compact"
+          className="py-8 sm:py-10"
+        >
+          <div className="space-y-6 lg:space-y-8">
+            {spotlightDeals.length > 0 ? (
+              <BiggestDealsCarousel
+                locale={locale}
+                deals={spotlightDeals}
+                copiedCode={copiedCode}
+                onCopyCode={onCopyCode}
+              />
+            ) : null}
+
+            <section className="grid gap-4 lg:grid-cols-3">
+              <InsightCard
+                label="Best visible discount"
+                value={
+                  topDiscountDeal ? `${topDiscountDeal.discountPercent}% off` : 'No current match'
+                }
+                helper={
+                  topDiscountDeal
+                    ? `${topDiscountDeal.firmName} • ${topDiscountDeal.couponCode}`
+                    : 'Widen filters to surface a current promo'
+                }
+              />
+              <InsightCard
+                label="Expiring soon"
+                value={expiringCount.toString()}
+                helper="Deals ending in the next two weeks inside the current board"
+              />
+              <InsightCard
+                label="Current board"
+                value={`${filteredDeals.length}`}
+                helper={`Sorted by ${sortOptions.find((item) => item.key === sortKey)?.label.toLowerCase() ?? 'best discount'}`}
+              />
+            </section>
+
+            <DealsFilterPanel
+              localePrefix={localePrefix}
+              search={search}
+              selectedFirm={selectedFirm}
+              selectedMarket={selectedMarket}
+              selectedDiscount={selectedDiscount}
+              sortKey={sortKey}
+              onSearchChange={onSearchChange}
+              onFirmChange={onFirmChange}
+              onMarketChange={onMarketChange}
+              onDiscountChange={onDiscountChange}
+              onSortChange={onSortChange}
+              onResetFilters={resetFilters}
+              hasActiveFilters={hasActiveFilters}
+              firmOptions={firmOptions}
+              spotlights={spotlights}
+              lastUpdated={lastUpdated}
+              topFirms={topFirms}
+            />
+
+            <DealsContentSections
               locale={locale}
-              deals={spotlightDeals}
+              featuredDeals={featuredDeals}
+              expiringDeals={expiringDeals}
+              browseDeals={browseDeals}
+              filteredDeals={filteredDeals}
               copiedCode={copiedCode}
               onCopyCode={onCopyCode}
+              hadFetchError={hadFetchError}
             />
-          ) : null}
-
-          <section className="grid gap-4 lg:grid-cols-3">
-            <InsightCard
-              label="Best visible discount"
-              value={topDiscountDeal ? `${topDiscountDeal.discountPercent}% off` : 'No current match'}
-              helper={topDiscountDeal ? `${topDiscountDeal.firmName} • ${topDiscountDeal.couponCode}` : 'Widen filters to surface a current promo'}
-            />
-            <InsightCard
-              label="Expiring soon"
-              value={expiringCount.toString()}
-              helper="Deals ending in the next two weeks inside the current board"
-            />
-            <InsightCard
-              label="Current board"
-              value={`${filteredDeals.length}`}
-              helper={`Sorted by ${sortOptions.find((item) => item.key === sortKey)?.label.toLowerCase() ?? 'best discount'}`}
-            />
-          </section>
-
-          <DealsFilterPanel
-            localePrefix={localePrefix}
-            search={search}
-            selectedFirm={selectedFirm}
-            selectedMarket={selectedMarket}
-            selectedDiscount={selectedDiscount}
-            sortKey={sortKey}
-            onSearchChange={onSearchChange}
-            onFirmChange={onFirmChange}
-            onMarketChange={onMarketChange}
-            onDiscountChange={onDiscountChange}
-            onSortChange={onSortChange}
-            onResetFilters={resetFilters}
-            hasActiveFilters={hasActiveFilters}
-            firmOptions={firmOptions}
-            spotlights={spotlights}
-            lastUpdated={lastUpdated}
-            topFirms={topFirms}
-          />
-
-          <DealsContentSections
-            locale={locale}
-            featuredDeals={featuredDeals}
-            expiringDeals={expiringDeals}
-            browseDeals={browseDeals}
-            filteredDeals={filteredDeals}
-            copiedCode={copiedCode}
-            onCopyCode={onCopyCode}
-            hadFetchError={hadFetchError}
-          />
-        </div>
+          </div>
+        </UnifiedPageShell>
       </section>
 
       <DealsTabSections locale={locale} firms={firms} faqItems={faqItems} />
@@ -527,40 +569,71 @@ function DealsTabSections({
   return (
     <>
       {/* ── Matchup ── */}
-      <section id="matchup" className="scroll-mt-[120px] overflow-hidden bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+      <section
+        id="matchup"
+        className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
+      >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
-            <Badge variant="secondary" className="mb-3 rounded-full px-3">Matchup</Badge>
-            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">Compare prop firm tradeoffs before you pay</h2>
-            <p className="mt-3 text-muted-foreground leading-relaxed">Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit over headline hype.</p>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">
+              Matchup
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">
+              Compare prop firm tradeoffs before you pay
+            </h2>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              Compare current entry pricing, drawdown model, and payout rhythm. Pick structure-fit
+              over headline hype.
+            </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-2xl grid-cols-3 gap-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Firms</p>
-              <p className="mt-1 text-lg font-bold text-foreground/95">{firms.length}+</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Models</p>
-              <p className="mt-1 text-lg font-bold text-foreground/95">3</p>
+              <p className="mt-1 text-lg font-bold text-foreground">3</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">View</p>
-              <p className="mt-1 text-lg font-bold text-foreground/95">Live</p>
+              <p className="mt-1 text-lg font-bold text-foreground">Live</p>
             </div>
           </div>
           <FirmComparisonGrid firms={firms} />
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:border-white/[0.14] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-              <h3 className="text-base font-bold text-foreground/95">1. Set max month-one spend</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Include evaluation fee, any likely retry budget, and platform costs.</p>
+            <div
+              className={cn(
+                dealsInsetPanelClassName,
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)]',
+              )}
+            >
+              <h3 className="text-base font-bold text-foreground">1. Set max month-one spend</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Include evaluation fee, any likely retry budget, and platform costs.
+              </p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:border-white/[0.14] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-              <h3 className="text-base font-bold text-foreground/95">2. Pick executable drawdown</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Favor rule sets you can consistently follow during volatile sessions.</p>
+            <div
+              className={cn(
+                dealsInsetPanelClassName,
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)]',
+              )}
+            >
+              <h3 className="text-base font-bold text-foreground">2. Pick executable drawdown</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Favor rule sets you can consistently follow during volatile sessions.
+              </p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5 transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:border-white/[0.14] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-              <h3 className="text-base font-bold text-foreground/95">3. Align payout cadence</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Match payout timing with your capital recycling and scaling plan.</p>
+            <div
+              className={cn(
+                dealsInsetPanelClassName,
+                'p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)]',
+              )}
+            >
+              <h3 className="text-base font-bold text-foreground">3. Align payout cadence</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Match payout timing with your capital recycling and scaling plan.
+              </p>
             </div>
           </div>
         </div>
@@ -570,56 +643,87 @@ function DealsTabSections({
       <section id="cost-planner" className="scroll-mt-[120px] overflow-hidden py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
-            <Badge variant="secondary" className="mb-3 rounded-full px-3">Cost Planner</Badge>
-            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">Model your evaluation cost before you start</h2>
-            <p className="mt-3 text-muted-foreground leading-relaxed">Set realistic expectations for resets, platform costs, and payout targets.</p>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">
+              Cost Planner
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">
+              Model your evaluation cost before you start
+            </h2>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              Set realistic expectations for resets, platform costs, and payout targets.
+            </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Input Layer</p>
-              <p className="mt-1 font-bold text-foreground/95">Fees + resets</p>
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                Input Layer
+              </p>
+              <p className="mt-1 font-bold text-foreground">Fees + resets</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Output Layer</p>
-              <p className="mt-1 font-bold text-foreground/95">Net after costs</p>
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                Output Layer
+              </p>
+              <p className="mt-1 font-bold text-foreground">Net after costs</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Risk Layer</p>
-              <p className="mt-1 font-bold text-foreground/95">Ratio signal</p>
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
+                Risk Layer
+              </p>
+              <p className="mt-1 font-bold text-foreground">Ratio signal</p>
             </div>
           </div>
           <EvalCostCalculator />
-          <div className="mt-6 rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.82)] p-5 sm:p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-            <h3 className="text-lg font-bold text-foreground/95">Interpretation tips</h3>
+          <div className={cn(dealsPanelClassName, 'mt-6 p-5 sm:p-6')}>
+            <h3 className="text-lg font-bold text-foreground">Interpretation tips</h3>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
-              <li className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">If your cost-to-payout ratio rises above 40%, reconsider account size, reset assumptions, or execution pace.</li>
-              <li className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Use the Matchup tab to cross-check whether a different drawdown model can reduce expected reset frequency.</li>
-              <li className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Pair this with the Playbooks tab to align risk rules with the same assumptions entered here.</li>
+              <li className={cn(dealsInsetPanelClassName, 'px-3 py-2')}>
+                If your cost-to-payout ratio rises above 40%, reconsider account size, reset
+                assumptions, or execution pace.
+              </li>
+              <li className={cn(dealsInsetPanelClassName, 'px-3 py-2')}>
+                Use the Matchup tab to cross-check whether a different drawdown model can reduce
+                expected reset frequency.
+              </li>
+              <li className={cn(dealsInsetPanelClassName, 'px-3 py-2')}>
+                Pair this with the Playbooks tab to align risk rules with the same assumptions
+                entered here.
+              </li>
             </ul>
           </div>
         </div>
       </section>
 
       {/* ── Playbooks ── */}
-      <section id="playbooks" className="scroll-mt-[120px] overflow-hidden bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+      <section
+        id="playbooks"
+        className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
+      >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
-            <Badge variant="secondary" className="mb-3 rounded-full px-3">Playbooks</Badge>
-            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">Prop firm playbooks for disciplined execution</h2>
-            <p className="mt-3 text-muted-foreground leading-relaxed">Convert policy language into concrete actions you can execute during evaluation and funded phases.</p>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">
+              Playbooks
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">
+              Prop firm playbooks for disciplined execution
+            </h2>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              Convert policy language into concrete actions you can execute during evaluation and
+              funded phases.
+            </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Focus</p>
-              <p className="mt-1 font-bold text-foreground/95">Execution Quality</p>
+              <p className="mt-1 font-bold text-foreground">Execution Quality</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Mode</p>
-              <p className="mt-1 font-bold text-foreground/95">Actionable Steps</p>
+              <p className="mt-1 font-bold text-foreground">Actionable Steps</p>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+            <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Outcome</p>
-              <p className="mt-1 font-bold text-foreground/95">Lower Rule Breaches</p>
+              <p className="mt-1 font-bold text-foreground">Lower Rule Breaches</p>
             </div>
           </div>
           <GuideLibrary locale={locale} />
@@ -630,19 +734,35 @@ function DealsTabSections({
       <section id="help" className="scroll-mt-[120px] overflow-hidden py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="mb-8 text-center">
-            <Badge variant="secondary" className="mb-3 rounded-full px-3">Help</Badge>
-            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">Deals FAQ</h2>
-            <p className="mt-3 text-muted-foreground leading-relaxed">Everything on this page is specific to how Qunt Edge presents and maintains prop firm deal information.</p>
+            <Badge variant="secondary" className="mb-3 rounded-full px-3">
+              Help
+            </Badge>
+            <h2 className="text-balance text-3xl font-bold tracking-tighter text-foreground/95 sm:text-4xl">
+              Deals FAQ
+            </h2>
+            <p className="mt-3 text-muted-foreground leading-relaxed">
+              Everything on this page is specific to how Qunt Edge presents and maintains prop firm
+              deal information.
+            </p>
           </div>
           <div className="mb-4 flex flex-wrap gap-2">
             {['Deals basics', 'Offer updates', 'Risk fit', 'Support'].map((chip) => (
-              <span key={chip} className="rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.68)] px-3 py-1 text-xs text-muted-foreground">{chip}</span>
+              <span
+                key={chip}
+                className={cn(dealsChipClassName, 'px-3 py-1 text-xs text-muted-foreground')}
+              >
+                {chip}
+              </span>
             ))}
           </div>
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
-              <AccordionItem key={item.question} value={`item-${index}`} className="mb-3 rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] px-4 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-                <AccordionTrigger className="py-4 text-left text-base font-bold text-foreground/95 hover:no-underline">
+              <AccordionItem
+                key={item.question}
+                value={`item-${index}`}
+                className={cn(dealsPanelClassName, 'mb-3 rounded-2xl px-4')}
+              >
+                <AccordionTrigger className="py-4 text-left text-base font-bold text-foreground hover:no-underline">
                   {item.question}
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 pt-1 text-sm leading-relaxed text-muted-foreground">
@@ -701,22 +821,34 @@ function BiggestDealsCarousel({
 
   return (
     <section
-      className="relative overflow-hidden rounded-2xl bg-[hsl(var(--mk-bg-0))] px-6 pb-8 pt-7 text-[hsl(var(--mk-text))] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] sm:px-8 sm:pb-10 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10"
+      className={cn(
+        dealsPanelClassName,
+        'relative overflow-hidden px-6 pb-8 pt-7 sm:px-8 sm:pb-10 sm:pt-8 lg:px-10 lg:pb-12 lg:pt-10',
+      )}
       onMouseEnter={() => setIsAutoSlidePaused(true)}
       onMouseLeave={() => setIsAutoSlidePaused(false)}
       onFocusCapture={() => setIsAutoSlidePaused(true)}
       onBlurCapture={() => setIsAutoSlidePaused(false)}
     >
       <div className="relative flex items-center justify-between gap-3">
-        <h2 className="text-balance text-[clamp(2rem,2.8vw,3.3rem)] font-extrabold leading-tight tracking-tighter text-[hsl(var(--mk-text))]">
-          Today&apos;s Biggest &amp; Largest Deals!
-        </h2>
+        <div className="space-y-2">
+          <Badge variant="secondary" className="w-fit rounded-full px-3">
+            Deal spotlight
+          </Badge>
+          <h2 className="text-balance text-[clamp(1.8rem,2.8vw,3rem)] font-extrabold leading-tight tracking-tighter text-foreground">
+            Today&apos;s strongest live setup
+          </h2>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            A cleaner read on the top board offer, with the pricing details and next action in one
+            place.
+          </p>
+        </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={goToPrevious}
             aria-label="Show previous deal spotlight"
-            className="inline-flex h-11 w-11 items-center justify-center text-[hsl(var(--chart-3))] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 hover:brightness-125"
+            className={cn(dealsGhostButtonClassName, 'h-11 w-11 px-0')}
           >
             <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
           </button>
@@ -724,7 +856,7 @@ function BiggestDealsCarousel({
             type="button"
             onClick={goToNext}
             aria-label="Show next deal spotlight"
-            className="inline-flex h-11 w-11 items-center justify-center text-[hsl(var(--chart-3))] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-110 hover:brightness-125"
+            className={cn(dealsGhostButtonClassName, 'h-11 w-11 px-0')}
           >
             <ChevronRight className="h-5 w-5" strokeWidth={2.5} />
           </button>
@@ -739,61 +871,112 @@ function BiggestDealsCarousel({
           <BackgroundDealTeaser deal={nextDeal} align="right" />
         </div>
 
-        <div className="relative mx-auto w-full max-w-[1020px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-bg-0))] px-6 py-8 sm:px-8 sm:py-9 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-          <div className="absolute left-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))]">
-            <Flame className="h-4 w-4" />
-          </div>
-          <div className="grid gap-6 lg:gap-8 lg:grid-cols-[0.97fr_auto_1.03fr] lg:items-center">
-            <div className="flex flex-col items-center text-center">
-              <div className="relative mt-4 h-36 w-36">
-                <div className="absolute -inset-7 rounded-full bg-[radial-gradient(circle,rgba(190,218,255,0.34)_0%,rgba(20,39,70,0.08)_60%,transparent_100%)] blur-2xl" />
-                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_26%,rgba(244,250,255,0.94)_0%,rgba(183,204,236,0.36)_20%,rgba(26,47,82,0.7)_48%,rgba(6,13,27,1)_76%)]" />
-                <div className="absolute inset-0 rounded-full shadow-[inset_-20px_-20px_36px_rgba(0,0,0,0.82)]" />
-                <div className="absolute -left-2 top-1 h-10 w-10 rounded-full bg-[hsl(var(--mk-text)/0.52)] blur-xl" />
+        <div
+          className={cn(
+            dealsInsetPanelClassName,
+            'relative mx-auto w-full max-w-[1080px] overflow-hidden px-6 py-7 sm:px-8 sm:py-8',
+          )}
+        >
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-start">
+            <div className="space-y-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className={cn(
+                    dealsChipClassName,
+                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground',
+                  )}
+                >
+                  {activeDeal.category}
+                </span>
+                <span
+                  className={cn(
+                    dealsChipClassName,
+                    'px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground',
+                  )}
+                >
+                  {activeDeal.platform}
+                </span>
               </div>
-              <p className="mt-8 font-mono text-[1.9rem] font-bold tracking-tighter text-[hsl(var(--mk-text))] sm:text-[2.1rem]">
-                {activeDeal.firmName}
-              </p>
-              <div className="mt-3 flex items-center gap-1.5 text-[hsl(var(--chart-3))]">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star key={index} className="h-6 w-6 fill-current" />
-                ))}
+
+              <div className="space-y-3">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Lead spotlight
+                </p>
+                <h3 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                  {activeDeal.firmName}
+                </h3>
+                <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {activeDeal.discountPercent}% off on {activeDeal.platform}{' '}
+                  {activeDeal.payoutModel.toLowerCase()} accounts with{' '}
+                  {activeDeal.drawdownType.toLowerCase()} rules. Use the coupon below, then jump
+                  straight into the firm page if you want deeper context first.
+                </p>
+              </div>
+
+              <div className={cn(dealsInsetPanelClassName, 'p-4')}>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Coupon code
+                </p>
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-2xl font-semibold tracking-tight text-foreground">
+                    {activeDeal.couponCode}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => onCopyCode(activeDeal.couponCode)}
+                    className={dealsGhostButtonClassName}
+                  >
+                    <Copy className="h-4 w-4" />
+                    {copiedCode === activeDeal.couponCode ? 'Code copied' : 'Copy code'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={getFirmHref(locale, activeDeal.firmSlug)}
+                  className={dealsGhostButtonClassName}
+                >
+                  View firm
+                </Link>
+                {isExternalClaim ? (
+                  <a
+                    href={claimHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={dealsPrimaryButtonClassName}
+                  >
+                    Claim deal
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <Link href={claimHref} className={dealsPrimaryButtonClassName}>
+                    Claim deal
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
               </div>
             </div>
 
-            <div className="hidden h-[340px] w-px border-l border-dashed border-white/[0.10] lg:block" />
-
-            <div className="flex flex-col items-center text-center">
-              <p className="whitespace-nowrap text-[clamp(3rem,4vw,4.9rem)] font-extrabold tracking-tighter text-[hsl(var(--mk-text))]">
-                {activeDeal.discountPercent}% Off
-              </p>
-              <p className="mt-3 max-w-[400px] text-[1.02rem] leading-8 text-[hsl(var(--mk-text))] leading-relaxed sm:text-[1.05rem]">
-                Big savings inside: {activeDeal.discountPercent}% off on {activeDeal.firmName} accounts.
-              </p>
-              <button
-                type="button"
-                onClick={() => onCopyCode(activeDeal.couponCode)}
-                className="mt-8 text-[1.35rem] font-bold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[hsl(var(--chart-3)/0.82)] hover:brightness-110"
-              >
-                {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy_Code:_ ${activeDeal.couponCode}`}
-              </button>
-              {isExternalClaim ? (
-                <a
-                  href={claimHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-bold text-[hsl(var(--mk-bg-0))] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:brightness-110 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)]"
-                >
-                  Get Deal
-                </a>
-              ) : (
-                <Link
-                  href={claimHref}
-                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-bold text-[hsl(var(--mk-bg-0))] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:brightness-110 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)]"
-                >
-                  Get Deal
-                </Link>
-              )}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <StatPill label="Discount" value={`${activeDeal.discountPercent}% off`} />
+              <StatPill label="Challenge fee" value={formatPrice(activeDeal.challengeFee)} />
+              <StatPill label="Drawdown" value={activeDeal.drawdownType} />
+              <StatPill
+                label="Expiry"
+                value={
+                  getDaysLeft(activeDeal.expiryDate) === null
+                    ? 'No expiry'
+                    : getDaysLeft(activeDeal.expiryDate) === 0
+                      ? 'Ends today'
+                      : `${getDaysLeft(activeDeal.expiryDate)}d left`
+                }
+              />
+              <StatPill label="Payout model" value={activeDeal.payoutModel} />
+              <StatPill
+                label="Claim route"
+                value={isExternalClaim ? 'Direct link' : 'Firm detail'}
+              />
             </div>
           </div>
         </div>
@@ -810,15 +993,15 @@ function BiggestDealsCarousel({
                   onClick={() => setActiveIndex(index)}
                   aria-label={`Show ${deal.firmName} spotlight`}
                   aria-pressed={isActive}
-                  className={`h-2.5 rounded-full transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`h-2.5 rounded-full transition-[width,background-color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isActive
-                      ? 'w-10 bg-[hsl(var(--chart-3))] opacity-100'
-                      : 'w-2.5 bg-[hsl(var(--mk-border)/0.85)] opacity-55 hover:opacity-100'
+                      ? 'w-10 bg-primary opacity-100'
+                      : 'w-2.5 bg-[oklch(0.65_0.22_260/0.28)] opacity-55 hover:opacity-100'
                   }`}
                 />
               )
             })}
-            <span className="ml-2 text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--mk-text-muted)/0.78)]">
+            <span className="ml-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               {normalizedActiveIndex + 1} / {dealsCount}
             </span>
           </div>
@@ -828,28 +1011,29 @@ function BiggestDealsCarousel({
   )
 }
 
-function BackgroundDealTeaser({
-  deal,
-  align,
-}: {
-  deal: DealItem
-  align: 'left' | 'right'
-}) {
+function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
-      className={`w-[390px] overflow-hidden rounded-2xl border border-white/[0.06] bg-[hsl(var(--mk-bg-0))] px-6 py-7 opacity-15 ${
+      className={`w-[360px] overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.08)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.04),oklch(0_0_0/0.82))] px-6 py-6 opacity-20 ${
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
-      <div className="grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+      <div className="space-y-4">
         <div>
-          <p className="text-5xl font-bold text-[hsl(var(--mk-text-muted)/0.8)]">{deal.discountPercent}% Off</p>
-          <p className="mt-3 text-xl text-[hsl(var(--mk-text-muted)/0.75)]">{deal.firmName}</p>
+          <p className="text-4xl font-bold text-foreground/60">{deal.discountPercent}% off</p>
+          <p className="mt-2 text-lg text-foreground/60">{deal.firmName}</p>
         </div>
-        <div className="hidden h-24 w-px border-l border-dashed border-white/[0.10] lg:block" />
-        <div>
-          <p className="text-sm text-[hsl(var(--mk-text-muted)/0.78)]">Copy_Code:_ {deal.couponCode}</p>
-          <div className="mt-4 h-14 w-full rounded-full bg-[hsl(var(--chart-3)/0.5)]" />
+        <div className="grid grid-cols-2 gap-3">
+          <div className={cn(dealsInsetPanelClassName, 'p-3')}>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Coupon</p>
+            <p className="mt-1 text-sm font-semibold text-foreground/70">{deal.couponCode}</p>
+          </div>
+          <div className={cn(dealsInsetPanelClassName, 'p-3')}>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Fee</p>
+            <p className="mt-1 text-sm font-semibold text-foreground/70">
+              {formatPrice(deal.challengeFee)}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -909,7 +1093,8 @@ function DealsContentSections({
 
       {hadFetchError ? (
         <p className="text-sm leading-relaxed text-amber-500">
-          Some deal data could not be refreshed fully. The page is showing the best available snapshot.
+          Some deal data could not be refreshed fully. The page is showing the best available
+          snapshot.
         </p>
       ) : null}
     </>
@@ -930,11 +1115,15 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] sm:p-6">
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Browse all live deals</p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground/95">The active board</h2>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+            Browse all live deals
+          </p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
+            The active board
+          </h2>
         </div>
         <p className="text-sm leading-relaxed text-muted-foreground">
           {browseDeals.length} remaining result{browseDeals.length === 1 ? '' : 's'}
@@ -954,7 +1143,7 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-white/[0.10] bg-[hsl(var(--mk-surface-muted)/0.66)] p-8 text-center text-sm leading-relaxed text-muted-foreground">
+        <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.06)] p-8 text-center text-sm leading-relaxed text-muted-foreground">
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -964,16 +1153,15 @@ function BrowseDealsSection({
   )
 }
 
-function DealsHero({
-  localePrefix,
-  overview,
-}: {
-  localePrefix: string
-  overview: DealsOverview
-}) {
+function DealsHero({ localePrefix, overview }: { localePrefix: string; overview: DealsOverview }) {
   return (
-    <section className="grid gap-6 overflow-hidden rounded-2xl bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
-      <div>
+    <section
+      className={cn(
+        dealsPanelClassName,
+        'grid gap-6 overflow-hidden p-5 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
+      )}
+    >
+      <div className="space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-primary">
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
@@ -982,25 +1170,39 @@ function DealsHero({
           Open current promos without losing the firm context.
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Browse active challenge discounts, compare pricing by market and firm, and move straight into the firm record when you want more context.
+          Browse active challenge discounts, compare pricing by market and firm, and move from
+          discovery to the firm record without losing your risk and payout context.
         </p>
+        <div className={cn(dealsInsetPanelClassName, 'grid gap-3 p-4 sm:grid-cols-3')}>
+          <div className="space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              1. Scan the board
+            </p>
+            <p className="text-sm font-semibold text-foreground">Find live pricing fast</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              2. Validate fit
+            </p>
+            <p className="text-sm font-semibold text-foreground">
+              Check drawdown and payout structure
+            </p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              3. Move with context
+            </p>
+            <p className="text-sm font-semibold text-foreground">Compare firms before you claim</p>
+          </div>
+        </div>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href={`${localePrefix}/propfirms`}
-            className="rounded-full bg-primary px-5 py-3 text-sm font-bold text-primary-foreground shadow-[0_16px_28px_-14px_hsl(var(--primary)/0.75)] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:brightness-110"
-          >
+          <Link href={`${localePrefix}/propfirms`} className={dealsPrimaryButtonClassName}>
             Compare firms
           </Link>
-          <Link
-            href={`${localePrefix}/deals/compare`}
-            className="rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.82)] hover:border-white/[0.14]"
-          >
+          <Link href={`${localePrefix}/deals/compare`} className={dealsGhostButtonClassName}>
             Compare pricing
           </Link>
-          <Link
-            href={`${localePrefix}/best-trading-journal`}
-            className="rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.82)] hover:border-white/[0.14]"
-          >
+          <Link href={`${localePrefix}/best-trading-journal`} className={dealsGhostButtonClassName}>
             Best trading journal guide
           </Link>
         </div>
@@ -1008,10 +1210,38 @@ function DealsHero({
 
       <div className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
-          <StatCard label="Live deals" value={overview.totalLiveDeals.toString()} icon={BadgePercent} />
-          <StatCard label="Tracked firms" value={overview.totalTrackedFirms.toString()} icon={Building2} />
-          <StatCard label="Account value" value={formatCompactCurrency(overview.totalAccountValue)} icon={Wallet} />
-          <StatCard label="Paid payouts" value={formatCompactCurrency(overview.totalPaidPayoutAmount)} icon={Banknote} />
+          <StatCard
+            label="Live deals"
+            value={overview.totalLiveDeals.toString()}
+            icon={BadgePercent}
+          />
+          <StatCard
+            label="Tracked firms"
+            value={overview.totalTrackedFirms.toString()}
+            icon={Building2}
+          />
+          <StatCard
+            label="Account value"
+            value={formatCompactCurrency(overview.totalAccountValue)}
+            icon={Wallet}
+          />
+          <StatCard
+            label="Paid payouts"
+            value={formatCompactCurrency(overview.totalPaidPayoutAmount)}
+            icon={Banknote}
+          />
+        </div>
+        <div className={cn(dealsInsetPanelClassName, 'p-4 sm:p-5')}>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            Board rhythm
+          </p>
+          <h2 className="mt-2 text-lg font-semibold text-foreground">
+            Start with the headline, finish with the rules.
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Use discounts to narrow the tape, then compare drawdown model, pricing, and payout
+            cadence before committing capital.
+          </p>
         </div>
       </div>
     </section>
@@ -1057,7 +1287,7 @@ function DealsFilterPanel({
 }) {
   return (
     <section className="grid gap-6 overflow-hidden lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+      <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -1065,12 +1295,16 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
-              className="h-11 w-full rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] pl-11 pr-4 text-sm text-foreground/95 outline-none transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
+              className="h-11 w-full rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
             <SelectLike value={selectedFirm} onChange={onFirmChange} options={firmOptions} />
-            <SelectLike value={selectedMarket} onChange={(value) => onMarketChange(value as 'All' | MarketType)} options={marketOptions} />
+            <SelectLike
+              value={selectedMarket}
+              onChange={(value) => onMarketChange(value as 'All' | MarketType)}
+              options={marketOptions}
+            />
           </div>
         </div>
 
@@ -1081,10 +1315,10 @@ function DealsFilterPanel({
                 key={option.value}
                 type="button"
                 onClick={() => onDiscountChange(option.value)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground/95 hover:border-white/[0.14]'
+                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
                 }`}
               >
                 {option.label}
@@ -1097,10 +1331,10 @@ function DealsFilterPanel({
                 key={item.key}
                 type="button"
                 onClick={() => onSortChange(item.key)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
-                    : 'border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground/95 hover:border-white/[0.14]'
+                    : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
                 }`}
               >
                 {item.label}
@@ -1110,12 +1344,14 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-dashed border-white/[0.10] bg-[hsl(var(--mk-surface-muted)/0.6)] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
-            <span>The deal board is narrowed right now. Reset to return to the full live tape.</span>
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.05)] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+            <span>
+              The deal board is narrowed right now. Reset to return to the full live tape.
+            </span>
             <button
               type="button"
               onClick={onResetFilters}
-              className="rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-1.5 text-xs font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:border-white/[0.14]"
+              className={cn(dealsGhostButtonClassName, 'px-3 py-1.5 text-xs')}
             >
               Reset filters
             </button>
@@ -1123,36 +1359,51 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Board snapshot</p>
+      <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+          Board snapshot
+        </p>
         <div className="mt-4 space-y-3">
           <RadarRow label="Futures coverage" value={`${spotlights.futures.length} spotlights`} />
           <RadarRow label="CFD coverage" value={`${spotlights.cfd.length} spotlights`} />
           <RadarRow label="Last refreshed" value={lastUpdated ?? spotlights.updatedAt} />
         </div>
-        <div className="mt-5 overflow-hidden rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.62)] p-4">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">Top payout firms</p>
+        <div className={cn(dealsInsetPanelClassName, 'mt-5 overflow-hidden p-4')}>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            Top payout firms
+          </p>
           <div className="mt-3 space-y-2">
             {topFirms.map((firm) => (
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
-                className="flex items-center justify-between rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-sm transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.7)] hover:border-white/[0.14]"
+                className="flex items-center justify-between rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.2)] hover:bg-[oklch(0.65_0.22_260/0.09)]"
               >
-                <span className="font-medium text-foreground/95">{firm.name}</span>
-                <span className="text-muted-foreground">{formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}</span>
+                <span className="font-medium text-foreground">{firm.name}</span>
+                <span className="text-muted-foreground">
+                  {formatCompactCurrency(firm.catalogueStats.paidPayoutAmount)}
+                </span>
               </Link>
             ))}
           </div>
         </div>
-        <div className="mt-5 flex items-center justify-between gap-4 overflow-hidden rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.62)] px-4 py-4">
+        <div
+          className={cn(
+            dealsInsetPanelClassName,
+            'mt-5 flex items-center justify-between gap-4 overflow-hidden px-4 py-4',
+          )}
+        >
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">Need policy context?</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">The FAQ covers verification, timing, and risk-fit questions.</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+              Need policy context?
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              The FAQ covers verification, timing, and risk-fit questions.
+            </p>
           </div>
           <Link
             href={`${localePrefix}/deals/faq`}
-            className="shrink-0 rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-xs font-bold text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:border-white/[0.14]"
+            className={cn(dealsGhostButtonClassName, 'shrink-0 px-3 py-2 text-xs font-bold')}
           >
             FAQ
           </Link>
@@ -1178,12 +1429,20 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] sm:p-6">
-      <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+    <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
+      <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+        {title}
+      </p>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p>
       <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         {deals.map((deal) => (
-          <DealCard key={deal.id} deal={deal} locale={locale} copiedCode={copiedCode} onCopyCode={onCopyCode} />
+          <DealCard
+            key={deal.id}
+            deal={deal}
+            locale={locale}
+            copiedCode={copiedCode}
+            onCopyCode={onCopyCode}
+          />
         ))}
       </div>
     </section>
@@ -1207,18 +1466,23 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-[linear-gradient(155deg,hsl(var(--mk-surface)/0.9),hsl(var(--mk-surface-muted)/0.66))] p-4 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:border-white/[0.14] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
+    <div className="group overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.14)] bg-[linear-gradient(160deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_64px_-40px_rgba(0,0,0,0.94)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_78px_-42px_rgba(0,0,0,0.96)]">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="inline-flex items-center rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.78)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <div
+            className={cn(
+              dealsChipClassName,
+              'inline-flex items-center px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground',
+            )}
+          >
             {deal.category}
           </div>
-          <h3 className="mt-3 text-lg font-bold tracking-tight text-foreground/95">{deal.firmName}</h3>
+          <h3 className="mt-3 text-xl font-bold tracking-tight text-foreground">{deal.firmName}</h3>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {deal.platform} • {deal.payoutModel}
           </p>
         </div>
-        <div className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-right">
+        <div className="rounded-[1.4rem] border border-primary/30 bg-primary/10 px-3 py-2 text-right">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Discount</p>
           <p className="mt-1 text-xl font-bold text-foreground/95">{deal.discountPercent}%</p>
         </div>
@@ -1228,39 +1492,40 @@ function DealCard({
         <StatPill label="Challenge fee" value={formatPrice(deal.challengeFee)} />
         <StatPill label="Drawdown" value={deal.drawdownType} />
         <StatPill label="Coupon" value={deal.couponCode} />
-        <StatPill label="Expiry" value={daysLeft === null ? 'No expiry' : daysLeft === 0 ? 'Ends today' : `${daysLeft}d left`} />
+        <StatPill
+          label="Expiry"
+          value={
+            daysLeft === null ? 'No expiry' : daysLeft === 0 ? 'Ends today' : `${daysLeft}d left`
+          }
+        />
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 grid gap-2 sm:grid-cols-2">
         <button
           type="button"
           onClick={() => onCopyCode(deal.couponCode)}
-          className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:border-white/[0.14]"
+          className={dealsGhostButtonClassName}
         >
           <Copy className="h-4 w-4" />
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
-        <Link
-          href={firmHref}
-          className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground/95 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[hsl(var(--mk-surface-muted)/0.72)] hover:border-white/[0.14]"
-        >
+        <Link href={firmHref} className={dealsGhostButtonClassName}>
           View firm
         </Link>
+      </div>
+      <div className="mt-2">
         {isExternalClaim ? (
           <a
             href={claimHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-[0_14px_24px_-14px_hsl(var(--primary)/0.8)] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:brightness-110"
+            className={cn(dealsPrimaryButtonClassName, 'w-full')}
           >
             Claim deal
             <ArrowRight className="h-4 w-4" />
           </a>
         ) : (
-          <Link
-            href={claimHref}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-[0_14px_24px_-14px_hsl(var(--primary)/0.8)] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:scale-[1.005] hover:brightness-110"
-          >
+          <Link href={claimHref} className={cn(dealsPrimaryButtonClassName, 'w-full')}>
             Claim deal
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -1280,47 +1545,41 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+    <div className={cn(dealsInsetPanelClassName, 'overflow-hidden p-4')}>
       <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
-      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground/95">{value}</p>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
     </div>
   )
 }
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.72)] p-3">
+    <div className={cn(dealsInsetPanelClassName, 'rounded-[1.35rem] p-3')}>
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="mt-1 text-sm font-bold text-foreground/95">{value}</p>
+      <p className="mt-1 text-sm font-bold text-foreground">{value}</p>
     </div>
   )
 }
 
 function RadarRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-3">
+    <div className={cn(dealsInsetPanelClassName, 'flex items-center justify-between px-3 py-3')}>
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-bold text-foreground/95">{value}</span>
+      <span className="text-sm font-bold text-foreground">{value}</span>
     </div>
   )
 }
 
-function InsightCard({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: string
-  helper: string
-}) {
+function InsightCard({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
-      <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground/95">{value}</p>
+    <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+      <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{helper}</p>
     </div>
   )
@@ -1339,7 +1598,7 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
-      className="h-11 rounded-full border border-white/[0.08] bg-[hsl(var(--mk-surface-muted)/0.7)] px-4 text-sm text-foreground/95 outline-none transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
+      className="h-11 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
     >
       {options.map((option) => (
         <option key={option} value={option}>
