@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { NextRequest } from "next/server"
 
 const { getDatabaseUserId, findUnique } = vi.hoisted(() => ({
   getDatabaseUserId: vi.fn(),
@@ -19,6 +20,10 @@ vi.mock("@/lib/prisma", () => ({
   },
 }))
 
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
+}))
+
 import { GET } from "@/app/api/trader-profile/benchmark/route"
 
 describe("/api/trader-profile/benchmark auth guard", () => {
@@ -29,7 +34,10 @@ describe("/api/trader-profile/benchmark auth guard", () => {
   it("returns 401 when auth resolution throws", async () => {
     getDatabaseUserId.mockRejectedValue(new Error("auth lookup failed"))
 
-    const response = await GET()
+    const response = await GET(
+      new NextRequest("http://localhost/api/trader-profile/benchmark"),
+      { params: Promise.resolve({}) }
+    )
 
     expect(response.status).toBe(401)
     expect(findUnique).not.toHaveBeenCalled()

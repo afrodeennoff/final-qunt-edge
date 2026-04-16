@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { Prisma } from "@/prisma/generated/prisma"
 import { prisma } from "@/lib/prisma"
 import { getDatabaseUserId } from "@/server/auth"
@@ -176,7 +176,7 @@ function responseFromSnapshot(snapshot: BenchmarkSnapshotPayload) {
   })
 }
 
-export const GET = withRateLimited(async () => {
+async function handleGet(_request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   try {
     let currentUserId: string
     try {
@@ -290,4 +290,10 @@ export const GET = withRateLimited(async () => {
     })
     return apiError('INTERNAL_ERROR', 'Failed to build benchmark', 500)
   }
+}
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: "trader-benchmark",
+  rateLimitMax: 60,
+  routeName: "trader-profile/benchmark",
 })

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { NextRequest } from "next/server"
 
 const { findUniqueMock, transactionMock } = vi.hoisted(() => ({
   findUniqueMock: vi.fn(),
@@ -23,6 +24,10 @@ vi.mock("@/server/team-membership", () => ({
   ensureTeamMembership: vi.fn().mockResolvedValue(undefined),
 }))
 
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
+}))
+
 import { createRouteClient } from "@/lib/supabase/route-client"
 import { POST } from "@/app/api/team/accept-invitation/route"
 
@@ -39,10 +44,11 @@ describe("team accept invitation route", () => {
     } as never)
 
     const response = await POST(
-      new Request("http://localhost/api/team/accept-invitation", {
+      new NextRequest("http://localhost/api/team/accept-invitation", {
         method: "POST",
         body: JSON.stringify({ invitationId: "inv_1" }),
-      })
+      }),
+      { params: Promise.resolve({}) }
     )
 
     expect(response.status).toBe(401)
@@ -74,10 +80,11 @@ describe("team accept invitation route", () => {
     })
 
     const response = await POST(
-      new Request("http://localhost/api/team/accept-invitation", {
+      new NextRequest("http://localhost/api/team/accept-invitation", {
         method: "POST",
         body: JSON.stringify({ invitationId: "inv_1" }),
-      })
+      }),
+      { params: Promise.resolve({}) }
     )
 
     expect(response.status).toBe(200)

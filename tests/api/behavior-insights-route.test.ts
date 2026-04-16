@@ -21,6 +21,10 @@ vi.mock("@/lib/behavior-insights", () => ({
   computeBehaviorInsights: vi.fn(() => ({ summary: { tradeCount: 0 } })),
 }))
 
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
+}))
+
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     trade: {
@@ -45,7 +49,7 @@ describe("/api/behavior/insights error envelope", () => {
   it("returns normalized unauthorized error", async () => {
     getDatabaseUserId.mockResolvedValue(null)
 
-    const response = await GET(new NextRequest("http://localhost/api/behavior/insights"))
+    const response = await GET(new NextRequest("http://localhost/api/behavior/insights"), { params: Promise.resolve({}) })
 
     expect(response.status).toBe(401)
     const payload = await response.json()
@@ -61,7 +65,7 @@ describe("/api/behavior/insights error envelope", () => {
     getDatabaseUserId.mockResolvedValue("user_1")
     tradeFindMany.mockRejectedValue(new Error("db failed"))
 
-    const response = await GET(new NextRequest("http://localhost/api/behavior/insights"))
+    const response = await GET(new NextRequest("http://localhost/api/behavior/insights"), { params: Promise.resolve({}) })
 
     expect(response.status).toBe(500)
     const payload = await response.json()

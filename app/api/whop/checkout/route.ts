@@ -1,16 +1,15 @@
-import { z } from "zod";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getWebsiteURL } from "@/server/auth";
 import { getWhop } from "@/lib/whop";
 import { getReferralBySlug } from "@/server/referral";
 import { getSubscriptionDetails } from "@/server/subscription";
 import { createRouteClient } from "@/lib/supabase/route-client";
 import { withRateLimited } from "@/lib/api/with-api-route";
+import { z } from "zod";
 
 function safeLocale(value: string | null | undefined): string {
   const raw = (value || "").trim().toLowerCase();
   if (!raw) return "en";
-  // Keep permissive (supports en, fr, hi, ja, es, it, etc.)
   if (!/^[a-z]{2}(-[a-z]{2})?$/.test(raw)) return "en";
   return raw;
 }
@@ -23,23 +22,20 @@ function withLocalePrefix(locale: string, pathWithOptionalQuery: string): string
 }
 
 function resolvePlanId(lookupKey: string): string {
-  // Expected format from UI: "plus_{interval}_{currency}", e.g. plus_monthly_usd
   const parts = lookupKey.toLowerCase().split("_");
   const intervalRaw = parts[1] || "";
   const currencyRaw = parts[2] || "";
 
   const interval =
-    intervalRaw === "6month" ? "quarterly" : intervalRaw; // legacy alias
+    intervalRaw === "6month" ? "quarterly" : intervalRaw;
   const currency = currencyRaw === "usd" || currencyRaw === "eur" ? currencyRaw.toUpperCase() : "";
 
   const env = process.env as Record<string, string | undefined>;
 
-  // Prefer currency-specific env vars when present, fall back to existing ones.
   const candidates: Array<string | undefined> = [
     env[`NEXT_PUBLIC_WHOP_${interval.toUpperCase()}_PLAN_ID_${currency}`],
     env[`NEXT_PUBLIC_WHOP_PLUS_${interval.toUpperCase()}_PLAN_ID_${currency}`],
     env[`NEXT_PUBLIC_WHOP_${interval.toUpperCase()}_PLAN_ID`],
-    // Legacy name kept for backwards compatibility
     interval === "quarterly" ? process.env.NEXT_PUBLIC_WHOP_6MONTH_PLAN_ID : undefined,
     interval === "monthly" ? process.env.NEXT_PUBLIC_WHOP_MONTHLY_PLAN_ID : undefined,
     interval === "yearly" ? process.env.NEXT_PUBLIC_WHOP_YEARLY_PLAN_ID : undefined,
@@ -131,8 +127,8 @@ async function handleWhopCheckout(
   }
 }
 
-export const POST = withRateLimited(async (req: Request) => {
-  const body = await req.formData();
+async function handlePost(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
+  const body = await request.formData();
   const websiteURL = await getWebsiteURL();
 
   const lookupKey = body.get("lookup_key") as string;
@@ -156,7 +152,7 @@ export const POST = withRateLimited(async (req: Request) => {
     );
   }
 
-  const supabase = createRouteClient(req);
+  const supabase = createRouteClient(request);
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -175,11 +171,11 @@ export const POST = withRateLimited(async (req: Request) => {
   }
 
   return handleWhopCheckout(lookupKey, user, websiteURL, referral, locale, promoCode);
-})
+}
 
-export const GET = withRateLimited(async (req: Request) => {
+async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   const websiteURL = await getWebsiteURL();
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = request.nextUrl;
   const lookupKey = searchParams.get("lookup_key");
   const referral = searchParams.get("referral");
   const locale = searchParams.get("locale");
@@ -189,7 +185,7 @@ export const GET = withRateLimited(async (req: Request) => {
     return NextResponse.json({ message: "Lookup key is required" }, { status: 400 });
   }
 
-  const supabase = createRouteClient(req);
+  const supabase = createRouteClient(request);
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -208,4 +204,18 @@ export const GET = withRateLimited(async (req: Request) => {
   }
 
   return handleWhopCheckout(lookupKey, user, websiteURL, referral, locale, promoCode);
+}
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: "whop-checkout",
+  rateLimitMax: 20,
+  rateLimitWindow: 60_000,
+  routeName: "whop/checkout",
+})
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: "whop-checkout",
+  rateLimitMax: 20,
+  rateLimitWindow: 60_000,
+  routeName: "whop/checkout",
 })

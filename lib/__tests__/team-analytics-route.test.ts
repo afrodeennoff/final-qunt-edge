@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { NextRequest } from "next/server"
 
 vi.mock("@/lib/supabase/route-client", () => ({
   createRouteClient: vi.fn(),
@@ -12,6 +13,10 @@ vi.mock("@/server/teams", () => ({
 
 vi.mock("@/server/team-membership", () => ({
   resolveTeamUserId: vi.fn(async (authUserId: string) => authUserId),
+}))
+
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
 }))
 
 import { createRouteClient } from "@/lib/supabase/route-client"
@@ -32,8 +37,8 @@ describe("teams analytics route", () => {
     vi.mocked(getTeamById).mockRejectedValue(new Error("Team not found"))
 
     const response = await GET(
-      new Request("http://localhost/api/teams/t_1/analytics"),
-      { params: Promise.resolve({ id: "t_1" }) } as never
+      new NextRequest("http://localhost/api/teams/t_1/analytics"),
+      { params: Promise.resolve({ id: "t_1" }) }
     )
 
     expect(response.status).toBe(404)
@@ -54,8 +59,8 @@ describe("teams analytics route", () => {
     } as never)
 
     const response = await GET(
-      new Request("http://localhost/api/teams/t_1/analytics?period=yearly"),
-      { params: Promise.resolve({ id: "t_1" }) } as never
+      new NextRequest("http://localhost/api/teams/t_1/analytics?period=yearly"),
+      { params: Promise.resolve({ id: "t_1" }) }
     )
 
     expect(response.status).toBe(400)
@@ -78,8 +83,8 @@ describe("teams analytics route", () => {
     vi.mocked(getTeamAnalytics).mockResolvedValue({ teamId: "t_1", totalPnl: 1 } as never)
 
     const response = await GET(
-      new Request("http://localhost/api/teams/t_1/analytics?period=monthly"),
-      { params: Promise.resolve({ id: "t_1" }) } as never
+      new NextRequest("http://localhost/api/teams/t_1/analytics?period=monthly"),
+      { params: Promise.resolve({ id: "t_1" }) }
     )
 
     expect(response.status).toBe(200)
@@ -97,8 +102,8 @@ describe("teams analytics route", () => {
     vi.mocked(updateTeamAnalytics).mockResolvedValue({ success: true, analytics: { teamId: "t_1" } } as never)
 
     const response = await PUT(
-      new Request("http://localhost/api/teams/t_1/analytics?period=weekly"),
-      { params: Promise.resolve({ id: "t_1" }) } as never
+      new NextRequest("http://localhost/api/teams/t_1/analytics?period=weekly", { method: "PUT" }),
+      { params: Promise.resolve({ id: "t_1" }) }
     )
 
     expect(response.status).toBe(200)

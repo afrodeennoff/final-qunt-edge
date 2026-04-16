@@ -26,7 +26,7 @@ function isPrerenderInterruption(error: unknown): boolean {
   )
 }
 
-export const GET = withRateLimited(async (request: NextRequest) => {
+async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   const requestId = crypto.randomUUID()
   try {
     const userId = await getDatabaseUserId()
@@ -87,4 +87,10 @@ export const GET = withRateLimited(async (request: NextRequest) => {
     console.error("[Behavior Insights API] Failed to build insights", error)
     return apiError("INTERNAL_ERROR", "Failed to build behavior insights", 500, { requestId })
   }
+}
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: "behavior-insights",
+  rateLimitMax: 60,
+  routeName: "behavior/insights",
 })

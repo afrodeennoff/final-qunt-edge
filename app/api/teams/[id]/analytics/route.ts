@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getTeamById, getTeamAnalytics, updateTeamAnalytics } from "@/server/teams"
 import { createRouteClient } from "@/lib/supabase/route-client"
 import { resolveTeamUserId } from "@/server/team-membership"
@@ -9,10 +9,10 @@ import { withRateLimited } from "@/lib/api/with-api-route"
 const teamIdSchema = z.string().min(1).max(128).regex(/^[a-zA-Z0-9_-]+$/)
 const periodSchema = z.enum(["daily", "weekly", "monthly"])
 
-export const GET = withRateLimited(async (
-  req: Request,
+async function handleGet(
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) => {
+) {
   const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(req)
@@ -56,12 +56,12 @@ export const GET = withRateLimited(async (
     console.error('Error fetching team analytics:', error)
     return apiError("INTERNAL_ERROR", "Failed to fetch analytics", 500, { requestId })
   }
-})
+}
 
-export const PUT = withRateLimited(async (
-  req: Request,
+async function handlePut(
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) => {
+) {
   const requestId = crypto.randomUUID()
   try {
     const supabase = createRouteClient(req)
@@ -100,4 +100,16 @@ export const PUT = withRateLimited(async (
     console.error('Error updating team analytics:', error)
     return apiError("INTERNAL_ERROR", "Failed to update analytics", 500, { requestId })
   }
+}
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: "team-analytics",
+  rateLimitMax: 60,
+  routeName: "teams/[id]/analytics",
+})
+
+export const PUT = withRateLimited(handlePut, {
+  rateLimitId: "team-analytics-update",
+  rateLimitMax: 30,
+  routeName: "teams/[id]/analytics",
 })

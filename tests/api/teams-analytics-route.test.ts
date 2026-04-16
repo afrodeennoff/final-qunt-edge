@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { NextRequest } from "next/server"
 
 const {
   getUserMock,
@@ -32,6 +33,10 @@ vi.mock("@/server/team-membership", () => ({
   resolveTeamUserId: resolveTeamUserIdMock,
 }))
 
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
+}))
+
 describe("/api/teams/[id]/analytics error envelope", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -43,7 +48,7 @@ describe("/api/teams/[id]/analytics error envelope", () => {
     getUserMock.mockResolvedValue({ data: { user: null } })
     const { GET } = await import("@/app/api/teams/[id]/analytics/route")
 
-    const response = await GET(new Request("http://localhost/api/teams/team-1/analytics"), {
+    const response = await GET(new NextRequest("http://localhost/api/teams/team-1/analytics"), {
       params: Promise.resolve({ id: "team-1" }),
     })
 
@@ -59,7 +64,7 @@ describe("/api/teams/[id]/analytics error envelope", () => {
   it("returns normalized validation envelope for invalid period", async () => {
     const { GET } = await import("@/app/api/teams/[id]/analytics/route")
 
-    const response = await GET(new Request("http://localhost/api/teams/team-1/analytics?period=yearly"), {
+    const response = await GET(new NextRequest("http://localhost/api/teams/team-1/analytics?period=yearly"), {
       params: Promise.resolve({ id: "team-1" }),
     })
 
@@ -80,7 +85,7 @@ describe("/api/teams/[id]/analytics error envelope", () => {
     getTeamByIdMock.mockResolvedValue(null)
     const { GET } = await import("@/app/api/teams/[id]/analytics/route")
 
-    const response = await GET(new Request("http://localhost/api/teams/team-1/analytics"), {
+    const response = await GET(new NextRequest("http://localhost/api/teams/team-1/analytics"), {
       params: Promise.resolve({ id: "team-1" }),
     })
 
@@ -101,7 +106,7 @@ describe("/api/teams/[id]/analytics error envelope", () => {
     updateTeamAnalyticsMock.mockResolvedValue({ success: false, error: "update failed" })
     const { PUT } = await import("@/app/api/teams/[id]/analytics/route")
 
-    const response = await PUT(new Request("http://localhost/api/teams/team-1/analytics", { method: "PUT" }), {
+    const response = await PUT(new NextRequest("http://localhost/api/teams/team-1/analytics", { method: "PUT" }), {
       params: Promise.resolve({ id: "team-1" }),
     })
 

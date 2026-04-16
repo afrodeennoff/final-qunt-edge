@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { createRouteClient } from "@/lib/supabase/route-client"
 import { MemberRole } from "@/prisma/generated/prisma"
@@ -6,15 +6,15 @@ import { ensureTeamMembership, resolveTeamUserId } from "@/server/team-membershi
 import { apiError } from "@/lib/api-response"
 import { withRateLimited } from "@/lib/api/with-api-route"
 
-export const POST = withRateLimited(async (req: Request) => {
+async function handlePost(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   try {
-    const supabase = createRouteClient(req)
+    const supabase = createRouteClient(request)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user?.id) {
       return apiError("UNAUTHORIZED", "Unauthorized", 401)
     }
 
-    const { invitationId } = await req.json()
+    const { invitationId } = await request.json()
 
     if (!invitationId) {
       return apiError("BAD_REQUEST", "Invitation ID is required", 400)
@@ -78,4 +78,11 @@ export const POST = withRateLimited(async (req: Request) => {
     console.error('Error accepting team invitation:', error)
     return apiError("INTERNAL_ERROR", "Internal server error", 500)
   }
-}) 
+}
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: "team-accept-invitation",
+  rateLimitMax: 20,
+  rateLimitWindow: 60_000,
+  routeName: "team/accept-invitation",
+})

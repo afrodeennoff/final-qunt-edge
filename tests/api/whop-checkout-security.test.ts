@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { NextRequest } from "next/server"
 
 const {
   getUser,
@@ -38,6 +39,10 @@ vi.mock("@/lib/whop", () => ({
   })),
 }))
 
+vi.mock("@/lib/api/with-api-route", () => ({
+  withRateLimited: <T>(handler: (req: NextRequest, ctx: T) => Promise<Response>) => handler,
+}))
+
 import { GET as checkoutGet } from "@/app/api/whop/checkout/route"
 import { GET as checkoutTeamGet } from "@/app/api/whop/checkout-team/route"
 
@@ -54,16 +59,16 @@ describe("Whop checkout security guards", () => {
   })
 
   it("fails closed when WHOP_COMPANY_ID is missing for checkout route", async () => {
-    const request = new Request("http://localhost/api/whop/checkout?lookup_key=plus_monthly_usd")
-    const response = await checkoutGet(request)
+    const request = new NextRequest("http://localhost/api/whop/checkout?lookup_key=plus_monthly_usd")
+    const response = await checkoutGet(request, { params: Promise.resolve({}) })
 
     expect(response.status).toBe(500)
     expect(createCheckoutConfiguration).not.toHaveBeenCalled()
   })
 
   it("fails closed when WHOP_COMPANY_ID is missing for team checkout route", async () => {
-    const request = new Request("http://localhost/api/whop/checkout-team?teamName=Alpha")
-    const response = await checkoutTeamGet(request)
+    const request = new NextRequest("http://localhost/api/whop/checkout-team?teamName=Alpha")
+    const response = await checkoutTeamGet(request, { params: Promise.resolve({}) })
 
     expect(response.status).toBe(500)
     expect(createCheckoutConfiguration).not.toHaveBeenCalled()
