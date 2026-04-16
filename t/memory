@@ -6,6 +6,17 @@
 
 ## Current State
 
+### Trader Profile + Deals Experience Enhancement — COMPLETE
+- `app/[locale]/dashboard/trader-profile/page-client.tsx` now opens with a stronger summary story: the hero includes a performance brief, compact signal tiles, and a wider content/aside balance so the page reads as overview first instead of a flat wall of cards
+- The trader profile control rail now carries more context inside the review-window panel itself, including compact net PnL, win-rate, and total-capital signals while keeping the existing calculations and actions unchanged
+- `app/[locale]/(landing)/deals/components/deals-experience.tsx` now uses `UnifiedPageShell` for the live board sections plus a shared cobalt-tinted surface language for the hero, filter board, snapshot panel, spotlight carousel, and deal cards
+- The deals spotlight and card system now has a clearer hierarchy: headline offer summary first, then structured offer facts, split utility actions, and a single full-width primary claim CTA
+- Matchup, cost planner, playbooks, and help sections on the deals page now reuse the same darker surfaced card language instead of mixing multiple route-local white-tinted panel treatments
+
+### Verification
+- `npx eslint 'app/[locale]/dashboard/trader-profile/page-client.tsx' 'app/[locale]/(landing)/deals/components/deals-experience.tsx'` returned no errors; the remaining output is the existing trader-profile complexity warnings only
+- `npx tsc --noEmit` passed after the UI enhancement changes
+
 ### Admin Coupon Fallback Sync — COMPLETE
 - Public deals can fall back to `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` rows exist, which is why cards like Apex Trader Funding can show `85%`, `MATCH`, and a claim link even though admin previously looked empty
 - Added `lib/prop-firms/spotlight-coupon-suggestions.ts` as the shared bridge that derives admin-ready coupon defaults from spotlight + verified-firm data

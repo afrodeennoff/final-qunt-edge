@@ -61,3 +61,9 @@
 - **RC:** The public deals page can source fallback offer data from `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` DB row exists, but admin previously rendered only real coupon rows.
 - **R:** When public commerce content has a non-DB fallback source, expose a prefilled admin suggestion path so operators can materialize that fallback into a real editable record.
 - **E:** Admin coupons now shows spotlight-backed suggestion cards, and the per-firm coupon create form preloads spotlight values when the firm has no saved coupons yet.
+
+## Lesson 52: Large landing pages look fragmented when every section invents its own surface recipe
+- **M:** The deals page felt visually empty and disjointed even though it already had strong content blocks like the spotlight, filters, and comparison tools.
+- **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
+- **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
+- **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.

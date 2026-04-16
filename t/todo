@@ -7,10 +7,10 @@
 ## Current UI Audit
 
 ### Trader profile + deals experience enhancement (2026-04-17)
-- [ ] Audit `app/[locale]/dashboard/trader-profile/page-client.tsx` and `app/[locale]/(landing)/deals/components/deals-experience.tsx` for weak hierarchy, uneven section balance, and inconsistent surface styling
-- [ ] Refine trader profile into a cleaner overview/performance/story layout with stronger stat grouping, better aside structure, and more intentional spacing across breakpoints
-- [ ] Rebuild the deals page shell, hero, filter board, spotlight carousel, and deal cards onto a more cohesive Electric Obsidian layout with clearer sections and stronger CTA hierarchy
-- [ ] Verify with targeted lint + typecheck, then persist the durable UI/design notes into the project markdown files
+- [x] Audit `app/[locale]/dashboard/trader-profile/page-client.tsx` and `app/[locale]/(landing)/deals/components/deals-experience.tsx` for weak hierarchy, uneven section balance, and inconsistent surface styling
+- [x] Refine trader profile into a cleaner overview/performance/story layout with stronger stat grouping, better aside structure, and more intentional spacing across breakpoints
+- [x] Rebuild the deals page shell, hero, filter board, spotlight carousel, and deal cards onto a more cohesive Electric Obsidian layout with clearer sections and stronger CTA hierarchy
+- [x] Verify with targeted lint + typecheck, then persist the durable UI/design notes into the project markdown files
 
 ### Dashboard spacing + trader profile refinement (2026-04-17)
 - [x] Audit `app/[locale]/dashboard/*` route shells for inconsistent padding, max-widths, and vertical rhythm

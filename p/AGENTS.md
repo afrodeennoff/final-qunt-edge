@@ -62,6 +62,8 @@
 - Many public landing routes use `components/layout/unified-page-shell.tsx` and `UnifiedSurface` for page composition. Do not assume every file in `app/[locale]/(landing)/components/` is part of the live route tree.
 - The active public shell comes from `(landing)/components/navbar.tsx` and `footer.tsx`; home-local `Navigation.tsx` and `Footer.tsx` are not part of the current route wiring.
 - When auditing or editing public UI, trace from route `page.tsx`/`layout.tsx` imports first, then edit the shared primitive or section that is actually mounted.
+- For tool-heavy landing routes such as `/deals`, keep width rhythm on `UnifiedPageShell` and centralize any route-local surface/button recipes into a small shared set of classes or helpers. Do not mix many one-off white-tinted panel styles in the same file.
+- Offer/deal cards should read in one clear order: context badge, firm/title block, compact fact grid, split secondary actions, then one full-width primary CTA. Avoid scattering equal-weight buttons and stats without hierarchy.
 - `public/AGENTS.md` can lag behind the live home composition. Treat `HomeContent.tsx` as the source of truth for current home section order.
 - Keep the home page narrative linear. Do not mount `DashboardPreview` both inside `Hero.tsx` and again in `HomeContent.tsx`; the hero owns the product showcase.
 - Avoid stacking multiple home sections that all restate AI or differentiation claims. If `AIFeatures.tsx` is mounted, keep `FeaturesBento.tsx` focused on core workflow/platform capabilities and avoid reintroducing a second AI feature grid or a duplicate compare block.
@@ -81,6 +83,7 @@
 - Major dashboard subpages that still use legacy `border-white/[...]`, `bg-white/[...]`, or bright `border-[oklch(...)]` card recipes should be normalized toward `border-border/35-45` and `bg-card/50-60` so they match the shell.
 - Dashboard route pages that are normal content surfaces should start from `components/layout/unified-page-shell.tsx` and `UnifiedSurface` before adding route-local grids. Avoid route-local `bg-black` wrappers, ad-hoc shell padding, or narrow one-off max widths unless the page is intentionally fullscreen.
 - For trader-profile-style analytics pages, prefer a two-stage composition: an elevated summary hero first, then a responsive main/aside grid with `min-w-0` content columns and a sticky right rail only at larger breakpoints.
+- On trader-profile-style pages, the hero should carry a short performance brief plus compact signal tiles inside the control rail so the page reads overview → day pattern → benchmark/feed instead of a flat stack of equal-weight stats.
 
 ## Admin Panel Patterns
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.
