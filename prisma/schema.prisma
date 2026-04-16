@@ -1425,6 +1425,7 @@ model PropFirm {
   rules    PropFirmRule[]
 
   @@index([slug])
+  @@index([isActive])
   @@schema("public")
 }
 

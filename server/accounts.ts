@@ -774,13 +774,26 @@ export async function calculateAccountMetricsAction(
   const userId = await getDatabaseUserId();
   const accountNumbers = accounts.map(account => account.number);
 
-  // Fetch trades from database internally
+  // Fetch trades from database internally (minimal projection)
   const trades = await prisma.trade.findMany({
     where: {
       accountNumber: {
         in: accountNumbers,
       },
       userId: userId
+    },
+    select: {
+      id: true,
+      accountNumber: true,
+      entryPrice: true,
+      closePrice: true,
+      pnl: true,
+      commission: true,
+      quantity: true,
+      timeInPosition: true,
+      entryDate: true,
+      closeDate: true,
+      tags: true,
     },
   });
 

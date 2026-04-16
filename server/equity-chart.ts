@@ -75,6 +75,7 @@ async function getEquityChartData(userId: string, params: EquityChartParams) {
         prisma.trade.findMany({
           where: { userId },
           orderBy: { entryDate: 'desc' },
+          take: 10_000,
           select: {
             id: true,
             accountNumber: true,

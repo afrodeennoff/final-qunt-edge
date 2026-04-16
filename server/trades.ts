@@ -602,11 +602,12 @@ async function loadTradesPage(
         _sum: { pnl: true, commission: true, timeInPosition: true },
         _count: true,
       }),
-      // Fetch only ordered pnl values for winning streak calculation
+      // Fetch ordered pnl values for winning streak calculation (capped for safety)
       prisma.trade.findMany({
         where,
         orderBy: { entryDate: 'desc' },
         select: { pnl: true },
+        take: 5_000,
       }),
     ])
 
