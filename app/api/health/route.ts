@@ -2,6 +2,7 @@ import { NextResponse, connection } from 'next/server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { logger, withLogContext } from '@/lib/logger'
 import { requireServiceAuth } from '@/server/authz'
+import { isRedisConfigured } from '@/lib/redis-client'
 
 const DB_LATENCY_ALERT_MS = Number.parseInt(process.env.DB_LATENCY_ALERT_MS || "1000", 10)
 const EXPOSE_HEALTH_DETAILS_PUBLICLY =
@@ -35,6 +36,19 @@ async function checkDatabase(): Promise<{ ok: boolean; latencyMs: number; error?
   }
 }
 
+async function checkRedis(): Promise<{ ok: boolean; configured: boolean; error?: string }> {
+  if (!isRedisConfigured()) {
+    return { ok: false, configured: false, error: 'Redis not configured' }
+  }
+  try {
+    const { getCachedResult } = await import('@/lib/redis-client')
+    await getCachedResult<string>('__health_check__')
+    return { ok: true, configured: true }
+  } catch (error) {
+    return { ok: false, configured: true, error: error instanceof Error ? error.message : 'Redis check failed' }
+  }
+}
+
 export async function GET(request: Request) {
   await connection()
   const requestId = crypto.randomUUID()
@@ -48,6 +62,7 @@ export async function GET(request: Request) {
     async () => {
       const startedAt = Date.now()
       const db = await checkDatabase()
+      const redis = await checkRedis()
       const alerts: string[] = []
 
       if (!db.ok) {
@@ -55,6 +70,9 @@ export async function GET(request: Request) {
       }
       if (db.latencyMs > DB_LATENCY_ALERT_MS) {
         alerts.push(`database-latency-above-threshold:${db.latencyMs}ms`)
+      }
+      if (redis.configured && !redis.ok) {
+        alerts.push('redis-unhealthy')
       }
 
       const status = !db.ok && !db.unconfigured ? "down" : alerts.length > 0 ? "degraded" : "ok"
@@ -80,7 +98,7 @@ export async function GET(request: Request) {
 
       if (canViewDetailedDiagnostics) {
         const memory = process.memoryUsage()
-        body.checks = { database: db }
+        body.checks = { database: db, redis }
         body.alerts = alerts
         body.uptimeSeconds = Math.floor(process.uptime())
         body.memory = {

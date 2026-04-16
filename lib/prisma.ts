@@ -317,8 +317,27 @@ if (!connectionString) {
 
   prisma = globalForPrisma.prisma ?? new PrismaClient({
     adapter,
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: process.env.NODE_ENV === 'development'
+      ? ['query', 'error', 'warn']
+      : [
+          { emit: 'event', level: 'query' },
+          'error',
+          'warn',
+        ],
   })
+
+  // Log slow queries in production via Prisma event
+  if (isProduction && !isNextBuildPhase) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(prisma as any).$on?.('query', (e: { duration: number; query: string }) => {
+      if (e.duration > 1000) {
+        logger.warn('[Slow DB Query]', {
+          durationMs: e.duration,
+          query: e.query.slice(0, 200),
+        })
+      }
+    })
+  }
 
   globalForPrisma.pool = pool
 }
