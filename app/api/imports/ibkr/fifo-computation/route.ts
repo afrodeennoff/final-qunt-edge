@@ -1,3 +1,5 @@
+import { NextRequest } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
 import { tradeSchema, orderSchema } from './schema'
 import { type FinancialInstrument } from '../extract-orders/schema'
 import { z } from 'zod/v3';
@@ -127,7 +129,7 @@ function matchOrdersWithFIFO(orders: Order[], instruments: FinancialInstrument[]
   return trades;
 }
 
-export async function POST(request: Request) {
+async function handlePost(request: NextRequest) {
     try {
         const supabase = createRouteClient(request)
         const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -189,4 +191,11 @@ export async function POST(request: Request) {
             headers: { "Content-Type": "application/json" },
         });
     }
-} 
+}
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: 'ibkr-fifo',
+  rateLimitMax: 15,
+  rateLimitWindow: 60_000,
+  routeName: 'ibkr-fifo',
+})

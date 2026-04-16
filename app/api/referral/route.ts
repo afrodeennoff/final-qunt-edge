@@ -1,3 +1,4 @@
+import { withRateLimited } from '@/lib/api/with-api-route'
 import { NextRequest, NextResponse } from 'next/server'
 import { connection } from 'next/server'
 import { getDatabaseUserId } from '@/server/auth'
@@ -32,7 +33,7 @@ function noStoreHeaders(): HeadersInit {
   }
 }
 
-export async function GET() {
+async function handleGet(request: NextRequest) {
   await connection()
   try {
     const userId = await getDatabaseUserId()
@@ -76,10 +77,10 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
+async function handlePost(request: NextRequest) {
   await connection()
   try {
-    const { slug } = await parseJson(req, ApplyReferralSchema)
+    const { slug } = await parseJson(request, ApplyReferralSchema)
 
     const userId = await getDatabaseUserId()
 
@@ -119,3 +120,17 @@ export async function POST(req: NextRequest) {
     return apiError('INTERNAL_ERROR', 'Failed to apply referral code', 500)
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'referral',
+  rateLimitMax: 30,
+  rateLimitWindow: 60_000,
+  routeName: 'referral',
+})
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: 'referral',
+  rateLimitMax: 30,
+  rateLimitWindow: 60_000,
+  routeName: 'referral',
+})

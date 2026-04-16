@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { Prisma } from '@/prisma/generated/prisma'
 import { getAccountsAction } from '@/server/accounts'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
+import { withRateLimited } from '@/lib/api/with-api-route'
 
 function serializeWithDecimals<T>(value: T): T {
   return JSON.parse(
@@ -15,7 +16,7 @@ function serializeWithDecimals<T>(value: T): T {
   ) as T
 }
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   try {
     const supabase = createRouteClient(request)
     const {
@@ -46,3 +47,10 @@ export async function GET(request: Request) {
     )
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'dashboard-accounts',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'dashboard-accounts',
+})

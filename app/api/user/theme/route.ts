@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
+import { NextRequest, NextResponse } from 'next/server'
 import { getUserDashboardTheme, setUserDashboardTheme } from '@/server/user-data'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { VALID_DASHBOARD_THEMES, type DashboardTheme } from '@/lib/constants/dashboard-themes'
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest) {
   try {
     const supabase = createRouteClient(request)
     const {
@@ -82,3 +83,10 @@ export async function PUT(request: Request) {
     )
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'user-theme',
+  rateLimitMax: 30,
+  rateLimitWindow: 60_000,
+  routeName: 'user-theme',
+})

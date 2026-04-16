@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
+import { NextRequest, NextResponse } from 'next/server'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiError } from '@/lib/api-response'
 import { logger } from '@/lib/logger'
@@ -6,7 +7,7 @@ import { logger } from '@/lib/logger'
 const KEY_DERIVATION_ITERATIONS = 100000
 const KEY_LENGTH = 256
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest) {
   try {
     const supabase = createRouteClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -56,3 +57,10 @@ export async function GET(request: Request) {
     return apiError('INTERNAL_ERROR', 'Failed to derive encryption key', 500)
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'rithmic-key',
+  rateLimitMax: 30,
+  rateLimitWindow: 60_000,
+  routeName: 'rithmic-key',
+})

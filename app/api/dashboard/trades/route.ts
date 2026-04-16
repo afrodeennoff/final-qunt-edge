@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getTradesAction } from '@/server/database'
 import { apiError } from '@/lib/api-response'
 import { createRouteClient } from '@/lib/supabase/route-client'
-
+import { withRateLimited } from '@/lib/api/with-api-route'
 
 const MAX_PAGE_SIZE = 200
-export async function GET(request: NextRequest) {
+
+async function handleGet(request: NextRequest, _ctx: { params: Promise<Record<string, string>> }) {
   try {
     const supabase = createRouteClient(request)
     const {
@@ -47,3 +48,10 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'dashboard-trades',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'dashboard-trades',
+})

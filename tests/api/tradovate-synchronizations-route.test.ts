@@ -35,16 +35,15 @@ describe('DELETE /api/tradovate/synchronizations', () => {
   it('removes the owned synchronization', async () => {
     removeTradovateTokenMock.mockResolvedValue({ deletedCount: 1 })
     const { DELETE } = await import('@/app/api/tradovate/synchronizations/route')
-    const response = await DELETE(
-      new Request('http://localhost/api/tradovate/synchronizations', {
-        method: 'DELETE',
-        headers: {
-          authorization: 'Bearer token',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ accountId: 'ACC-1' }),
-      }) as never
-    )
+    const request = new Request('http://localhost/api/tradovate/synchronizations', {
+      method: 'DELETE',
+      headers: {
+        authorization: 'Bearer token',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ accountId: 'ACC-1' }),
+    }) as never
+    const response = await DELETE(request, { params: Promise.resolve({}) })
 
     expect(response.status).toBe(200)
     expect(removeTradovateTokenMock).toHaveBeenCalledWith('ACC-1')
@@ -53,16 +52,15 @@ describe('DELETE /api/tradovate/synchronizations', () => {
   it('returns 404 when the token is not owned', async () => {
     removeTradovateTokenMock.mockResolvedValue({ deletedCount: 0 })
     const { DELETE } = await import('@/app/api/tradovate/synchronizations/route')
-    const response = await DELETE(
-      new Request('http://localhost/api/tradovate/synchronizations', {
-        method: 'DELETE',
-        headers: {
-          authorization: 'Bearer token',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ accountId: 'ACC-1' }),
-      }) as never
-    )
+    const request = new Request('http://localhost/api/tradovate/synchronizations', {
+      method: 'DELETE',
+      headers: {
+        authorization: 'Bearer token',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ accountId: 'ACC-1' }),
+    }) as never
+    const response = await DELETE(request, { params: Promise.resolve({}) })
 
     expect(response.status).toBe(404)
     await expect(response.json()).resolves.toMatchObject({
@@ -77,15 +75,14 @@ describe('DELETE /api/tradovate/synchronizations', () => {
   it('rejects unauthenticated requests', async () => {
     getUserMock.mockResolvedValue({ data: { user: null }, error: null })
     const { DELETE } = await import('@/app/api/tradovate/synchronizations/route')
-    const response = await DELETE(
-      new Request('http://localhost/api/tradovate/synchronizations', {
-        method: 'DELETE',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ accountId: 'ACC-1' }),
-      }) as never
-    )
+    const request = new Request('http://localhost/api/tradovate/synchronizations', {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ accountId: 'ACC-1' }),
+    }) as never
+    const response = await DELETE(request, { params: Promise.resolve({}) })
 
     expect(response.status).toBe(401)
     await expect(response.json()).resolves.toMatchObject({

@@ -1565,3 +1565,21 @@ model Challenge {
   @@index([propFirmId, accountSize])
   @@schema("public")
 }
+
+// ============================================================================
+// IDEMPOTENCY (Durable request deduplication for POST endpoints)
+// ============================================================================
+
+model IdempotencyRecord {
+  key         String   @id
+  endpoint    String
+  requestHash String   @default("") @map("request_hash")
+  status      Int
+  body        String
+  createdAt   DateTime @default(now()) @map("created_at")
+  expiresAt   DateTime @map("expires_at")
+
+  @@index([expiresAt])
+  @@map("IdempotencyRecord")
+  @@schema("public")
+}

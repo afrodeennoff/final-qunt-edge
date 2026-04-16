@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server'
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const {
@@ -57,12 +58,12 @@ describe("/api/deals/active", () => {
     getActiveDeals.mockResolvedValue(mockDeals)
 
     // Mock request
-    const request = new Request("http://localhost/api/deals/active")
+    const request = new NextRequest("http://localhost/api/deals/active")
     
     // Import the route handler
     const { GET } = await import("@/app/api/deals/route")
     
-    const response = await GET(request)
+    const response = await GET(request, { params: Promise.resolve({}) })
     const data = await response.json()
 
     expect(response.status).toBe(200)
@@ -111,12 +112,12 @@ describe("/api/deals/active", () => {
     getActiveDeals.mockResolvedValue(mockDeals)
 
     // Mock request with search parameter
-    const request = new Request("http://localhost/api/deals/active?search=test")
+    const request = new NextRequest("http://localhost/api/deals/active?search=test")
     
     // Import the route handler
     const { GET } = await import("@/app/api/deals/route")
     
-    const response = await GET(request)
+    const response = await GET(request, { params: Promise.resolve({}) })
     const data = await response.json()
 
     expect(response.status).toBe(200)
@@ -128,12 +129,12 @@ describe("/api/deals/active", () => {
     getActiveDeals.mockRejectedValue(new Error("Database error"))
 
     // Mock request
-    const request = new Request("http://localhost/api/deals/active")
+    const request = new NextRequest("http://localhost/api/deals/active")
     
     // Import the route handler
     const { GET } = await import("@/app/api/deals/route")
     
-    const response = await GET(request)
+    const response = await GET(request, { params: Promise.resolve({}) })
     const data = await response.json()
 
     expect(response.status).toBe(500)
@@ -150,10 +151,10 @@ describe("/api/deals/active", () => {
       },
     })
 
-    const request = new Request("http://localhost/api/deals/active")
+    const request = new NextRequest("http://localhost/api/deals/active")
     const { GET } = await import("@/app/api/deals/route")
 
-    const response = await GET(request)
+    const response = await GET(request, { params: Promise.resolve({}) })
     const data = await response.json()
 
     expect(response.status).toBe(401)

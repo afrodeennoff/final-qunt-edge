@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
+import { NextRequest, NextResponse } from 'next/server'
 import { connection } from 'next/server'
 import { getUnifiedFirms, type UnifiedFirm } from '@/server/deals'
 import { logger } from '@/lib/logger'
@@ -20,7 +21,7 @@ function getSearchParams(request: Request): URLSearchParams {
   return new URL(request.url).searchParams
 }
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest) {
   await connection()
   try {
     const access = await requireDealsApiAuth(request)
@@ -153,3 +154,10 @@ export async function GET(request: Request) {
     )
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'deals-unified',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'deals-unified',
+})

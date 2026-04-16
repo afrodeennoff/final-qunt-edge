@@ -1,10 +1,11 @@
-import { connection, NextResponse } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
+import { NextRequest, connection, NextResponse } from 'next/server'
 import { getPropfirmCatalogueData } from '@/app/[locale]/(landing)/propfirms/actions/get-propfirm-catalogue'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { createRouteClient } from '@/lib/supabase/route-client'
 import { apiError } from '@/lib/api-response'
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest) {
   // This endpoint requires request headers for auth; opt out of build-time prerender.
   await connection()
 
@@ -45,3 +46,10 @@ export async function GET(request: Request) {
     return apiError('INTERNAL_ERROR', 'Failed to fetch propfirm statistics', 500)
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'propfirms-stats',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'propfirms-stats',
+})

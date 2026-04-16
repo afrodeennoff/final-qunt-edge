@@ -1,3 +1,4 @@
+import { withRateLimited } from '@/lib/api/with-api-route'
 import { NextRequest, NextResponse } from "next/server";
 import {
   getTradovateSynchronizations,
@@ -21,7 +22,7 @@ async function requireSessionUser(request: Request) {
   return { user, error };
 }
 
-export async function GET(request: NextRequest) {
+async function handleGet(request: NextRequest) {
   try {
     const { user, error } = await requireSessionUser(request);
     if (error || !user?.id) {
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+async function handleDelete(request: NextRequest) {
   const requestId = crypto.randomUUID();
   try {
     const { user, error } = await requireSessionUser(request);
@@ -76,3 +77,17 @@ export async function DELETE(request: NextRequest) {
     return apiError("INTERNAL_ERROR", "Failed to delete synchronization", 500, { requestId });
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'tradovate-syncs',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'tradovate-syncs',
+})
+
+export const DELETE = withRateLimited(handleDelete, {
+  rateLimitId: 'tradovate-syncs',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'tradovate-syncs',
+})

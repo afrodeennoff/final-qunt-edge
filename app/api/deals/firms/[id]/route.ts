@@ -3,8 +3,9 @@ import { connection } from 'next/server'
 import { getFirmById } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from '../../_auth'
+import { withRateLimited } from '@/lib/api/with-api-route'
 
-export async function GET(
+async function handleGet(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -42,3 +43,10 @@ export async function GET(
     )
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'deals-firm-detail',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'deals-firm-detail',
+})

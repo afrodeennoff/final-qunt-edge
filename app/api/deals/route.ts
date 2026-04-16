@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { connection } from 'next/server'
 import { getActiveDeals, type DealItem } from '@/server/deals'
 import { logger } from '@/lib/logger'
 import { requireDealsApiAuth } from './_auth'
 import { apiError } from '@/lib/api-response'
+import { withRateLimited } from '@/lib/api/with-api-route'
 import { z } from 'zod'
 
 const VALID_SORT_FIELDS = ['discountPercent', 'challengeFee', 'firmName', 'payoutModel', 'drawdownType', 'category', 'platform'] as const
@@ -32,13 +33,13 @@ function isPrerenderInterruption(error: unknown): boolean {
   return digest === 'HANGING_PROMISE_REJECTION' || digest === 'NEXT_PRERENDER_INTERRUPTED'
 }
 
-function getSearchParams(request: Request): URLSearchParams {
-  const nextUrl = (request as Request & { nextUrl?: URL }).nextUrl
+function getSearchParams(request: NextRequest): URLSearchParams {
+  const nextUrl = (request as NextRequest & { nextUrl?: URL }).nextUrl
   if (nextUrl?.searchParams) return nextUrl.searchParams
   return new URL(request.url).searchParams
 }
 
-export async function GET(request: Request) {
+async function handleGet(request: NextRequest) {
   await connection()
   try {
     const access = await requireDealsApiAuth(request)
@@ -166,3 +167,10 @@ export async function GET(request: Request) {
     return apiError('INTERNAL_ERROR', 'Failed to fetch deals', 500)
   }
 }
+
+export const GET = withRateLimited(handleGet, {
+  rateLimitId: 'deals-read',
+  rateLimitMax: 120,
+  rateLimitWindow: 60_000,
+  routeName: 'deals-list',
+})

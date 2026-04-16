@@ -1,3 +1,5 @@
+import { NextRequest } from 'next/server'
+import { withRateLimited } from '@/lib/api/with-api-route'
 import { orderSchema } from '../fifo-computation/schema'
 import { type FinancialInstrument } from './schema'
 import { addMoney, toMoneyNumber } from '@/lib/financial-math'
@@ -146,7 +148,7 @@ const parseInstrumentInformation = (text: string): FinancialInstrument[] => {
   return instruments;
 };
 
-export async function POST(request: Request) {
+async function handlePost(request: NextRequest) {
   try {
     const supabase = createRouteClient(request)
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -192,4 +194,11 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
     });
   }
-} 
+}
+
+export const POST = withRateLimited(handlePost, {
+  rateLimitId: 'ibkr-extract',
+  rateLimitMax: 15,
+  rateLimitWindow: 60_000,
+  routeName: 'ibkr-extract',
+})
