@@ -26,12 +26,11 @@ const PROP_FIRM_COUPON_TABLE_NAME = 'PropFirmCoupon'
 const MAX_COUPON_CODE_LENGTH = 64
 const ALLOWED_CLAIM_URL_PROTOCOLS = new Set(['http:', 'https:'])
 
-export class PropFirmCouponAdminError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'PropFirmCouponAdminError'
-  }
-}
+/**
+ * Re-exported from a non-server module so consumers can import the class.
+ * Server files may only export async functions.
+ */
+export { PropFirmCouponAdminError } from '@/lib/errors'
 
 function isPropFirmDataUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
