@@ -161,9 +161,14 @@ export default function ImportButton() {
  ...trade,
  accountNumber: trade.accountNumber?.trim() || fallbackAccount,
  }));
+ } else if (knownAccounts.length === 0) {
+ toast.error("No account found", {
+ description: "You don't have any trading accounts yet. Go back to the Account Selection step and create a new account.",
+ });
+ return;
  } else {
  toast.error(t("import.error.invalidData"), {
- description:"Missing account numbers in imported trades. Select an account before saving.",
+ description: "Some trades are missing account numbers. Select an account on the previous step to assign them.",
  });
  return;
  }
@@ -421,6 +426,13 @@ export default function ImportButton() {
  ...accounts.map((account) => account.number),
  ...trades.map((trade) => trade.accountNumber),
  ])
+ )}
+ tradesAccountNumbers={Array.from(
+ new Set(
+ processedTrades
+ .map((trade) => trade.accountNumber)
+ .filter((a): a is string => Boolean(a?.trim()))
+ )
  )}
  accountNumbers={accountNumbers}
  setAccountNumbers={setAccountNumbers}
