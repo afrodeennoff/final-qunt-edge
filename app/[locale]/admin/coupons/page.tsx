@@ -14,9 +14,9 @@ import { assertAdminAccess } from '@/server/authz'
 import {
   createPropFirmCoupon,
   deletePropFirmCoupon,
-  getPropFirmCouponAdminErrorMessage,
   updatePropFirmCoupon,
 } from '@/server/prop-firms'
+import { getPropFirmCouponAdminErrorMessage } from '@/lib/errors'
 import {
   AlertTriangle,
   ArrowUpRight,

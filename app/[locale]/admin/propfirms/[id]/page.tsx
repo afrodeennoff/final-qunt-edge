@@ -8,12 +8,12 @@ import {
   updatePropFirm,
   createPropFirmReview,
   updatePropFirmReview,
-    deletePropFirmReview,
-    createPropFirmCoupon,
-    getPropFirmCouponAdminErrorMessage,
-    updatePropFirmCoupon,
-    deletePropFirmCoupon,
+  deletePropFirmReview,
+  createPropFirmCoupon,
+  updatePropFirmCoupon,
+  deletePropFirmCoupon,
 } from '@/server/prop-firms'
+import { getPropFirmCouponAdminErrorMessage } from '@/lib/errors'
 import { assertAdminAccess } from '@/server/authz'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'

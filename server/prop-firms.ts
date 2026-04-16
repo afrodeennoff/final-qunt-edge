@@ -26,11 +26,8 @@ const PROP_FIRM_COUPON_TABLE_NAME = 'PropFirmCoupon'
 const MAX_COUPON_CODE_LENGTH = 64
 const ALLOWED_CLAIM_URL_PROTOCOLS = new Set(['http:', 'https:'])
 
-/**
- * Re-exported from a non-server module so consumers can import the class.
- * Server files may only export async functions.
- */
-export { PropFirmCouponAdminError } from '@/lib/errors'
+// PropFirmCouponAdminError is in lib/errors.ts (not exportable from "use server")
+import { PropFirmCouponAdminError } from '@/lib/errors'
 
 function isPropFirmDataUnavailableError(error: unknown): boolean {
   if (isPrismaSchemaMismatchError(error)) return true
@@ -201,9 +198,8 @@ function toPropFirmCouponMutationError(error: unknown): Error {
     : new PropFirmCouponAdminError('Unable to save coupon changes right now.')
 }
 
-export function getPropFirmCouponAdminErrorMessage(error: unknown): string {
-  return toPropFirmCouponMutationError(error).message
-}
+// getPropFirmCouponAdminErrorMessage is in lib/errors.ts (not exportable from "use server")
+// getPropFirmCouponAdminErrorMessage moved to lib/errors.ts
 
 function buildFallbackPropFirmRows() {
   return Object.entries(propFirms).map(([key, firm]) => {
