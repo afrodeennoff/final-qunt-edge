@@ -314,10 +314,7 @@ const _listPropFirmBannerItems = async (): Promise<PropFirmBannerItem[]> => {
             coupons: {
               where: {
                 isActive: true,
-                AND: [
-                  { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-                  { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
-                ],
+                OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
               },
               orderBy: [{ discountPercent: 'desc' }, { updatedAt: 'desc' }],
               take: 1,

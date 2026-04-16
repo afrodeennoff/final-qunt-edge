@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
+import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import {
   createPropFirmCoupon,
   deletePropFirmCoupon,
@@ -26,6 +27,7 @@ import {
   Eye,
   Percent,
   Plus,
+  Sparkles,
   Tags,
   Trash2,
 } from 'lucide-react'
@@ -475,6 +477,186 @@ function CouponEditCard({
   )
 }
 
+function CouponSuggestionCard({
+  firm,
+  locale,
+  suggestion,
+}: {
+  firm: Awaited<ReturnType<typeof loadFirms>>[number]
+  locale: string
+  suggestion: NonNullable<ReturnType<typeof getSpotlightCouponSuggestionForFirm>>
+}) {
+  return (
+    <Card variant="flat" hover className="overflow-hidden border-primary/15">
+      <CardHeader size="sm" className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <CardTitle size="md" className="tracking-tight">
+                {suggestion.couponCode}
+              </CardTitle>
+              <Badge variant="frost-info" className="gap-1.5">
+                <Sparkles className="h-3.5 w-3.5" />
+                Spotlight suggestion
+              </Badge>
+              <Badge variant="outline">{suggestion.discountPercent}% off</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground/95">{firm.name}</span>
+              {' '}• visible on the public deals page, but not yet saved as an admin coupon
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={buildPublicFirmHref(locale, firm.slug)}>
+                <Eye className="h-4 w-4" />
+                Public
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <a href={suggestion.sourceUrl} target="_blank" rel="noreferrer">
+                <ArrowUpRight className="h-4 w-4" />
+                Source
+              </a>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={`/${locale}/admin/propfirms/${firm.id}`}>
+                <Building2 className="h-4 w-4" />
+                Firm
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent size="sm" className="space-y-4 pt-4">
+        <Alert variant="warning">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Not saved in the coupon table yet</AlertTitle>
+          <AlertDescription>
+            Save this suggestion once so the discount, code, fee, and claim link become fully editable from admin.
+          </AlertDescription>
+        </Alert>
+
+        <form action={handleCreateCoupon} className="space-y-3">
+          <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="propFirmId" value={firm.id} />
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-code-${firm.id}`}>Code</Label>
+              <Input
+                id={`suggestion-code-${firm.id}`}
+                name="code"
+                defaultValue={suggestion.couponCode}
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-discount-${firm.id}`}>Discount %</Label>
+              <Input
+                id={`suggestion-discount-${firm.id}`}
+                name="discountPercent"
+                type="number"
+                step="0.01"
+                defaultValue={suggestion.discountPercent}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-fee-${firm.id}`}>Challenge Fee</Label>
+              <Input
+                id={`suggestion-fee-${firm.id}`}
+                name="challengeFee"
+                type="number"
+                step="0.01"
+                defaultValue={suggestion.challengeFee || ''}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-claim-${firm.id}`}>Claim / Affiliate URL</Label>
+              <Input
+                id={`suggestion-claim-${firm.id}`}
+                name="claimUrl"
+                type="url"
+                defaultValue={suggestion.claimUrl}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor={`suggestion-description-${firm.id}`}>Description</Label>
+            <Textarea
+              id={`suggestion-description-${firm.id}`}
+              name="description"
+              defaultValue={suggestion.description}
+              className="min-h-[92px] resize-y"
+            />
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-platform-${firm.id}`}>Platform Override</Label>
+              <Input
+                id={`suggestion-platform-${firm.id}`}
+                name="platform"
+                defaultValue={suggestion.platform}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-payout-${firm.id}`}>Payout Override</Label>
+              <Input
+                id={`suggestion-payout-${firm.id}`}
+                name="payoutModel"
+                defaultValue={suggestion.payoutModel}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-drawdown-${firm.id}`}>Drawdown Override</Label>
+              <Input
+                id={`suggestion-drawdown-${firm.id}`}
+                name="drawdownType"
+                defaultValue={suggestion.drawdownType}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-starts-${firm.id}`}>Starts At</Label>
+              <Input id={`suggestion-starts-${firm.id}`} name="startsAt" type="datetime-local" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor={`suggestion-expires-${firm.id}`}>Expires At</Label>
+              <Input id={`suggestion-expires-${firm.id}`} name="expiresAt" type="datetime-local" />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="couponIsActive"
+                value="1"
+                defaultChecked
+                className="h-4 w-4 rounded border-input accent-primary"
+              />
+              <span className="text-sm">Active</span>
+            </div>
+            <FormActionButton type="submit" pendingLabel="Creating coupon...">
+              <Plus className="h-4 w-4" />
+              Save as coupon
+            </FormActionButton>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default async function AdminCouponsPage({
   params,
   searchParams,
@@ -494,6 +676,29 @@ export default async function AdminCouponsPage({
   const soonExpiringCount = coupons.filter((coupon) => getCouponTimingState(coupon).isExpiringSoon).length
   const firmCoverageCount = new Set(coupons.map((coupon) => coupon.propFirmId)).size
   const isReadOnlyFallback = !hasConfiguredDatabaseConnection
+  const couponSuggestions = isReadOnlyFallback
+    ? []
+    : firms
+        .filter((firm) => firm.isActive)
+        .map((firm) => {
+          if (coupons.some((coupon) => coupon.propFirmId === firm.id)) return null
+
+          const suggestion = getSpotlightCouponSuggestionForFirm({
+            name: firm.name,
+            slug: firm.slug,
+          })
+          if (!suggestion) return null
+
+          return { firm, suggestion }
+        })
+        .filter(
+          (
+            value,
+          ): value is {
+            firm: Awaited<ReturnType<typeof loadFirms>>[number]
+            suggestion: NonNullable<ReturnType<typeof getSpotlightCouponSuggestionForFirm>>
+          } => value !== null,
+        )
 
   return (
     <div className="space-y-6">
@@ -662,6 +867,34 @@ export default async function AdminCouponsPage({
           )}
         </CardContent>
       </Card>
+
+      {couponSuggestions.length > 0 ? (
+        <Card variant="flat" hover>
+          <CardHeader className="space-y-2 border-b border-[oklch(0.65_0.22_260/0.08)]">
+            <div className="flex items-center justify-between gap-3">
+              <div className="space-y-1">
+                <CardTitle size="md">Live deal suggestions</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  These firms already show offer data on the public deals page, but the coupons have not been saved into admin yet.
+                </p>
+              </div>
+              <Badge variant="secondary">{couponSuggestions.length} unsynced</Badge>
+            </div>
+          </CardHeader>
+          <CardContent size="sm" className="pt-4">
+            <div className="grid gap-4 xl:grid-cols-2">
+              {couponSuggestions.map(({ firm, suggestion }) => (
+                <CouponSuggestionCard
+                  key={firm.id}
+                  firm={firm}
+                  locale={locale}
+                  suggestion={suggestion}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       <div className="grid gap-4 xl:grid-cols-2">
         {coupons.length === 0 ? (

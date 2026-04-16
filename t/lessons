@@ -55,3 +55,9 @@
 - **RC:** The route used its own `bg-black` canvas, narrow max width, and one-off panel spacing instead of `UnifiedPageShell`/`UnifiedSurface`, so spacing and responsive behavior diverged from the shell used elsewhere.
 - **R:** For dashboard subpages that are not intentionally fullscreen or special-purpose, start from the shared dashboard shell and layer route-specific grids on top of that baseline instead of rebuilding the shell locally.
 - **E:** The trader profile and strategies pages now inherit shared shell spacing first, then add their route-specific grids and sticky rails.
+
+## Lesson 51: Public deal fallbacks need an admin bridge or coupon screens look empty
+- **M:** A public deals card could show discount, coupon code, challenge fee, and claim link while the admin coupon screen for that firm still looked empty.
+- **RC:** The public deals page can source fallback offer data from `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` DB row exists, but admin previously rendered only real coupon rows.
+- **R:** When public commerce content has a non-DB fallback source, expose a prefilled admin suggestion path so operators can materialize that fallback into a real editable record.
+- **E:** Admin coupons now shows spotlight-backed suggestion cards, and the per-firm coupon create form preloads spotlight values when the firm has no saved coupons yet.

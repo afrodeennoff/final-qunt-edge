@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
+import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import {
   createPropFirm,
@@ -582,6 +583,11 @@ function CouponsSection({
   canManageCoupons: boolean
 }) {
   const publicFirmHref = `/${locale}/firm/${firm.slug}`
+  const spotlightSuggestion = getSpotlightCouponSuggestionForFirm({
+    name: firm.name,
+    slug: firm.slug,
+  })
+  const createDefaults = firm.coupons.length === 0 ? spotlightSuggestion : null
 
   return (
     <Card>
@@ -604,23 +610,60 @@ function CouponsSection({
           <form action={handleCreateCoupon} className="space-y-4 rounded-lg border border-[oklch(0.65_0.22_260/0.08)] p-4">
             <input type="hidden" name="propFirmId" value={firm.id} />
             <input type="hidden" name="locale" value={locale} />
-            <p className="text-sm font-medium">Add New Coupon</p>
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Add New Coupon</p>
+              {createDefaults ? (
+                <Alert variant="warning">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Public deal found for this firm</AlertTitle>
+                  <AlertDescription>
+                    The deals page already has spotlight values for this firm. They are prefilled below so you can save them as a real admin coupon and edit them normally.
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="new-code">Code *</Label>
-                <Input id="new-code" name="code" placeholder="SAVE20" required />
+                <Input
+                  id="new-code"
+                  name="code"
+                  placeholder="SAVE20"
+                  defaultValue={createDefaults?.couponCode ?? ''}
+                  required
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-discount">Discount %</Label>
-                <Input id="new-discount" name="discountPercent" type="number" step="0.01" placeholder="20" />
+                <Input
+                  id="new-discount"
+                  name="discountPercent"
+                  type="number"
+                  step="0.01"
+                  placeholder="20"
+                  defaultValue={createDefaults?.discountPercent ?? ''}
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-fee">Challenge Fee</Label>
-                <Input id="new-fee" name="challengeFee" type="number" step="0.01" placeholder="149" />
+                <Input
+                  id="new-fee"
+                  name="challengeFee"
+                  type="number"
+                  step="0.01"
+                  placeholder="149"
+                  defaultValue={createDefaults?.challengeFee || ''}
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-claim">Claim / Affiliate URL</Label>
-                <Input id="new-claim" name="claimUrl" type="url" placeholder="https://..." />
+                <Input
+                  id="new-claim"
+                  name="claimUrl"
+                  type="url"
+                  placeholder="https://..."
+                  defaultValue={createDefaults?.claimUrl ?? ''}
+                />
               </div>
             </div>
             <div className="space-y-1">
@@ -629,21 +672,37 @@ function CouponsSection({
                 id="new-desc"
                 name="description"
                 placeholder="20% off all challenges"
+                defaultValue={createDefaults?.description ?? ''}
                 className="min-h-[92px] resize-y"
               />
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="new-platform">Platform Override</Label>
-                <Input id="new-platform" name="platform" placeholder="Auto" />
+                <Input
+                  id="new-platform"
+                  name="platform"
+                  placeholder="Auto"
+                  defaultValue={createDefaults?.platform ?? ''}
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-payout">Payout Override</Label>
-                <Input id="new-payout" name="payoutModel" placeholder="Auto" />
+                <Input
+                  id="new-payout"
+                  name="payoutModel"
+                  placeholder="Auto"
+                  defaultValue={createDefaults?.payoutModel ?? ''}
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="new-dd">Drawdown Override</Label>
-                <Input id="new-dd" name="drawdownType" placeholder="Auto" />
+                <Input
+                  id="new-dd"
+                  name="drawdownType"
+                  placeholder="Auto"
+                  defaultValue={createDefaults?.drawdownType ?? ''}
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">

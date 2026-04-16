@@ -6,6 +6,17 @@
 
 ## Current State
 
+### Admin Coupon Fallback Sync — COMPLETE
+- Public deals can fall back to `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` rows exist, which is why cards like Apex Trader Funding can show `85%`, `MATCH`, and a claim link even though admin previously looked empty
+- Added `lib/prop-firms/spotlight-coupon-suggestions.ts` as the shared bridge that derives admin-ready coupon defaults from spotlight + verified-firm data
+- `app/[locale]/admin/coupons/page.tsx` now shows “Live deal suggestions” cards for firms that have public spotlight offers but no saved coupon rows yet, with prefilled create forms for code, discount, fee, claim URL, and overrides
+- `app/[locale]/admin/propfirms/[id]/page.tsx` now pre-fills the create-coupon form from spotlight fallback data when a firm has no saved coupons, so the page no longer looks empty for those public deals
+- `server/deals.ts` now uses the shared spotlight suggestion helper for public fallback deals so admin-prefilled values stay aligned with the public cards
+
+### Verification
+- `npx tsc --noEmit` passed after the admin coupon fallback sync changes
+- Targeted ESLint on the touched admin/deals files returned no errors; remaining output is complexity warnings only
+
 ### Dashboard Layout Audit + Trader Profile Refinement — COMPLETE
 - `app/[locale]/dashboard/trader-profile/page-client.tsx` now uses `UnifiedPageShell` + `UnifiedSurface` instead of a route-local black canvas, fixed narrow max-width, and ad-hoc `qe-soft-panel` composition
 - Trader profile now has a balanced two-stage layout: elevated summary hero first, then a responsive content/aside grid that stacks on smaller screens and uses a sticky right rail only on larger screens

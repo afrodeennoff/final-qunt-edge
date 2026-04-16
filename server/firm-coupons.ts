@@ -15,9 +15,9 @@ function loadFirmCoupons(propfirmId: string) {
     where: {
       propFirmId: propfirmId,
       isActive: true,
-      AND: [
-        { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-        { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gte: now } },
       ],
     },
     orderBy: [

@@ -8,8 +8,8 @@ import {
 } from '@/lib/propfirmmatch/source'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { normalizeFirmName } from '@/lib/prop-firms/normalize'
-import { getVerifiedPropFirmProfileByName, getVerifiedPropFirmProfileBySlug } from '@/lib/prop-firms/verified-profiles'
-import { safeArrayMin } from '@/lib/array-utils'
+import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import { listSpotlightCouponSuggestions } from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import {
   isPrismaOperationCoolingDown,
   isPrismaSchemaMismatchError,
@@ -348,9 +348,9 @@ async function loadFirmWithRelations(where: { id?: string; slug?: string }): Pro
         coupons: {
           where: {
             isActive: true,
-            AND: [
-              { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-              { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+            OR: [
+              { expiresAt: null },
+              { expiresAt: { gte: now } },
             ],
           },
           orderBy: [
@@ -430,58 +430,28 @@ function mapSpotlightCategoryToMarket(category: PropFirmMatchSpotlight['category
   return category === 'CFD' ? 'Forex' : 'Futures'
 }
 
-function parseDiscountPercentFromPromoText(promoText: string): number | null {
-  const match = promoText.match(/(\d{1,3}(?:\.\d+)?)\s*%/i)
-  if (!match) return null
-
-  const parsed = Number(match[1])
-  if (!Number.isFinite(parsed) || parsed <= 0) return null
-  return Math.min(100, Math.round(parsed))
-}
-
-function estimateChallengeFeeFromConfig(firmName: string): number {
-  const accountSizes = getAccountSizesFromConfig(firmName)
-  const prices = Object.values(accountSizes)
-    .flatMap((size) => [size.priceWithPromo, size.price])
-    .filter((value) => Number.isFinite(value) && value > 0)
-
-  if (prices.length === 0) return 0
-  return Math.round(safeArrayMin(prices))
-}
-
 function getWebSourcedDealsFallback(): DealItem[] {
-  const deals: DealItem[] = []
+  return listSpotlightCouponSuggestions().map((suggestion, index) => {
+    const spotlight = PROP_FIRM_MATCH_SPOTLIGHTS.find(
+      (entry) => entry.slug === suggestion.spotlightSlug,
+    )
 
-  PROP_FIRM_MATCH_SPOTLIGHTS.forEach((spotlight, index) => {
-    const discountPercent = parseDiscountPercentFromPromoText(spotlight.promoText)
-    if (discountPercent === null) return
-
-    const profile =
-      getVerifiedPropFirmProfileBySlug(spotlight.slug) ??
-      getVerifiedPropFirmProfileByName(spotlight.name)
-
-    const firmSlug = profile?.slug ?? spotlight.slug
-    const couponCode = spotlight.promoCode?.trim() || 'MATCH'
-    const firmName = profile?.name ?? spotlight.name
-
-    deals.push({
-      id: `web-${firmSlug}-${index + 1}`,
-      firmId: `web-${firmSlug}`,
-      firmSlug,
-      firmName,
-      category: profile?.category ?? mapSpotlightCategoryToMarket(spotlight.category),
-      platform: profile?.platform ?? 'Tradovate',
-      payoutModel: profile?.payoutModel ?? 'Monthly',
-      drawdownType: profile?.drawdownType ?? 'Static',
-      discountPercent,
-      couponCode,
-      challengeFee: estimateChallengeFeeFromConfig(firmName),
+    return {
+      id: `web-${suggestion.firmSlug}-${index + 1}`,
+      firmId: `web-${suggestion.firmSlug}`,
+      firmSlug: suggestion.firmSlug,
+      firmName: suggestion.firmName,
+      category: spotlight ? mapSpotlightCategoryToMarket(spotlight.category) : 'Futures',
+      platform: suggestion.platform as TradingPlatform,
+      payoutModel: suggestion.payoutModel as PayoutModel,
+      drawdownType: suggestion.drawdownType as DrawdownType,
+      discountPercent: suggestion.discountPercent,
+      couponCode: suggestion.couponCode,
+      challengeFee: suggestion.challengeFee,
       expiryDate: 'No expiry',
-      claimUrl: profile?.referralUrl ?? spotlight.sourceUrl,
-    })
+      claimUrl: suggestion.claimUrl,
+    }
   })
-
-  return deals
 }
 
 const _getActiveDeals = async (): Promise<DealItem[]> => {
@@ -499,9 +469,9 @@ const _getActiveDeals = async (): Promise<DealItem[]> => {
       where: {
         isActive: true,
         propFirm: { isActive: true },
-        AND: [
-          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-          { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gte: now } },
         ],
       },
       include: {
@@ -585,9 +555,9 @@ const _getUnifiedFirms = async (): Promise<UnifiedFirm[]> => {
           coupons: {
             where: {
               isActive: true,
-              AND: [
-                { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-                { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+              OR: [
+                { expiresAt: null },
+                { expiresAt: { gte: now } },
               ],
             },
             orderBy: [
@@ -714,9 +684,9 @@ export const getFirmDeals = async (firmId: string): Promise<DealItem[]> => {
       where: {
         propFirmId: firmId,
         isActive: true,
-        AND: [
-          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
-          { OR: [{ expiresAt: null }, { expiresAt: { gte: now } }] },
+        OR: [
+          { expiresAt: null },
+          { expiresAt: { gte: now } },
         ],
       },
       include: {

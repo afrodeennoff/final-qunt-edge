@@ -6,11 +6,23 @@
 
 ## Current UI Audit
 
+### Trader profile + deals experience enhancement (2026-04-17)
+- [ ] Audit `app/[locale]/dashboard/trader-profile/page-client.tsx` and `app/[locale]/(landing)/deals/components/deals-experience.tsx` for weak hierarchy, uneven section balance, and inconsistent surface styling
+- [ ] Refine trader profile into a cleaner overview/performance/story layout with stronger stat grouping, better aside structure, and more intentional spacing across breakpoints
+- [ ] Rebuild the deals page shell, hero, filter board, spotlight carousel, and deal cards onto a more cohesive Electric Obsidian layout with clearer sections and stronger CTA hierarchy
+- [ ] Verify with targeted lint + typecheck, then persist the durable UI/design notes into the project markdown files
+
 ### Dashboard spacing + trader profile refinement (2026-04-17)
 - [x] Audit `app/[locale]/dashboard/*` route shells for inconsistent padding, max-widths, and vertical rhythm
 - [x] Normalize dashboard/trader-profile responsiveness so sections balance horizontally on desktop and stack cleanly on smaller widths
 - [x] Refine `app/[locale]/dashboard/trader-profile/page-client.tsx` to use shared shell patterns, cleaner information hierarchy, and more resilient card/grid spacing
 - [x] Verify with targeted type/lint checks and a visual pass where feasible
+
+### Admin coupon fallback sync (2026-04-17)
+- [x] Trace why public deal cards can show discount/code/claim values while admin coupon screens still appear empty
+- [x] Add shared spotlight-to-coupon suggestion logic so admin can save fallback public deals as real editable coupons
+- [x] Surface prefilled coupon suggestions in both `/admin/coupons` and `/admin/propfirms/[id]`
+- [x] Verify with targeted lint and full typecheck
 
 ## Plan Overview
 
