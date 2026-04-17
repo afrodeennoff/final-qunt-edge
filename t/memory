@@ -19,7 +19,15 @@
 - Replaced `text-amber-500` with oklch design system token
 - Admin list already shows all firms (active + inactive)
 
-### Remainder from prior session
+### Import Trade Function — NOW FULLY FUNCTIONAL (2026-04-17)
+- Fixed default import platform from disabled 'rithmic-sync' to 'csv-ai'
+- Fixed /import redirect: now goes to dashboard/?import=true instead of auth page
+- Re-enabled rithmic-performance and rithmic-orders CSV imports (pure CSV, no WebSocket needed)
+- Kept rithmic-sync disabled (live WebSocket connection required)
+- Added skipHeaderSelection:true to NinjaTrader (header step was commented out)
+- Added loading spinner to all 13 dynamic import processors
+- All 13 platform imports have loading states
+- Known remaining issues: Tradovate live environment is stub, ATAS/FTMO/NinjaTrader/Quantower have no server-side validation, no import history UI, no chunked upload for 5K+ trades
 | Wave | Phase | REQs | Status |
 |------|-------|------|--------|
 | 5 | 01 Visual Refresh | 5/5 | ✅ Complete (prior session) |
