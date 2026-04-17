@@ -57,10 +57,10 @@
 - [x] REQ-VISUAL-005: Responsive design improvements for mobile and tablet viewports — Phase 01 PASS
 
 ### Server Dashboard Bootstrap
-- [ ] REQ-SRV-001: Dashboard first paint renders authenticated user state, sidebar, layout, first trade snapshot from server loaders before hydration
-- [ ] REQ-SRV-002: Typed DashboardBootstrapPayload contract containing user, layout, entities, and precomputed analytics
-- [ ] REQ-SRV-003: Monolithic data-provider split into bootstrap snapshot, mutable entities, filters, derived analytics, and mutation API slices
-- [ ] REQ-SRV-004: Expensive derivations (sorting, filtering, score metrics, calendar aggregates) precomputed server-side for first paint
+- [x] REQ-SRV-001: Dashboard first paint renders authenticated user state, sidebar, layout, first trade snapshot from server loaders before hydration — Phase 02 WIRED
+- [x] REQ-SRV-002: Typed DashboardBootstrapPayload contract containing user, layout, entities, and precomputed analytics — Phase 02 EXISTS
+- [x] REQ-SRV-003: Monolithic data-provider split into bootstrap snapshot, mutable entities, filters, derived analytics, and mutation API slices — Phase 02 WIRED
+- [x] REQ-SRV-004: Expensive derivations (sorting, filtering, score metrics, calendar aggregates) precomputed server-side for first paint — Phase 02 WIRED
 
 ### Widget Server Shells
 - [ ] REQ-WIDGET-001: Widget titles, summaries, counts, empty states, and shell chrome rendered on the server
@@ -68,7 +68,7 @@
 - [ ] REQ-WIDGET-003: Remove blanket `ssr: false` usage in widget registry; replace with server wrappers and targeted lazy imports
 
 ### Import Flow Polish
-- [ ] REQ-IMPORT-001: Import type selector is stable with no layout jumping, predictable card heights, fast filtering/search
+- [x] REQ-IMPORT-001: Import type selector is stable with no layout jumping, predictable card heights, fast filtering/search — Phase 04 layout fix done
 - [ ] REQ-IMPORT-002: Parser-heavy code (exceljs) lazy-loaded only after user enters an import path that needs it
 - [ ] REQ-IMPORT-003: Import cards use lightweight ImportPlatformCardViewModel, decoupled from parser/runtime modules
 
