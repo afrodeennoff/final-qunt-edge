@@ -305,7 +305,11 @@ function CouponEditCard({
 
   return (
     <Card variant="flat" hover className="overflow-hidden">
+<<<<<<< HEAD
       <CardHeader size="sm" className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
+=======
+      <CardHeader size="sm" className="space-y-3 border-b border-border/24">
+>>>>>>> origin/main
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -461,7 +465,11 @@ function CouponEditCard({
           </div>
         </form>
 
+<<<<<<< HEAD
         <div className="flex items-center justify-between gap-3 border-t border-[oklch(0.65_0.22_260/0.08)] pt-4">
+=======
+        <div className="flex items-center justify-between gap-3 border-t border-border/24 pt-4">
+>>>>>>> origin/main
           <div className="text-xs text-muted-foreground">
             Updated {new Date(coupon.updatedAt).toLocaleString()}
           </div>
@@ -745,7 +753,11 @@ export default async function AdminCouponsPage({
 
   return (
     <div className="space-y-6">
+<<<<<<< HEAD
       <div className="flex flex-col gap-4 border-b border-[oklch(0.65_0.22_260/0.08)] pb-6 md:flex-row md:items-end md:justify-between">
+=======
+      <div className="flex flex-col gap-4 border-b border-border/24 pb-6 md:flex-row md:items-end md:justify-between">
+>>>>>>> origin/main
         <div className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
             Admin Coupons
@@ -799,7 +811,11 @@ export default async function AdminCouponsPage({
       </div>
 
       <Card variant="flat" hover>
+<<<<<<< HEAD
         <CardHeader className="space-y-2 border-b border-[oklch(0.65_0.22_260/0.08)]">
+=======
+        <CardHeader className="space-y-2 border-b border-border/24">
+>>>>>>> origin/main
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-1">
               <CardTitle size="md">Add coupon</CardTitle>

@@ -11,12 +11,18 @@ import { cn } from '@/lib/utils'
 export function PricingPageClient() {
   return (
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
+<<<<<<< HEAD
       <div className="space-y-6">
         <section
           className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-5 sm:p-8 lg:p-10')}
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
+=======
+      <section className="relative overflow-hidden rounded-3xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.92),hsl(var(--background)/0.7))] p-5 shadow-[0_36px_80px_-62px_hsl(var(--foreground)/0.95)] sm:p-8 lg:p-10">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,hsl(var(--primary)/0.18),transparent_72%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,hsl(var(--accent)/0.16),transparent_74%)]" />
+>>>>>>> origin/main
 
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.72fr)] xl:items-end">
             <header className="space-y-4 lg:space-y-5">
@@ -83,12 +89,16 @@ function PricingMetaChip({
   className?: string
 }) {
   return (
+<<<<<<< HEAD
     <div
       className={cn(
         'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_20px_42px_-34px_rgba(0,0,0,0.88)]',
         className,
       )}
     >
+=======
+    <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.36)] bg-[hsl(var(--mk-surface-muted)/0.78)] px-4 py-3">
+>>>>>>> origin/main
       <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}

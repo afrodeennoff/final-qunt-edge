@@ -43,7 +43,11 @@ export default function SearchHero({
             placeholder={String(t('landing.home.explorer.searchPlaceholder'))}
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
+<<<<<<< HEAD
             className="h-12 rounded-md border-border/50 bg-background/70 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
+=======
+            className="h-[52px] rounded-2xl border-border/28 bg-card/90 pl-11 pr-4 text-sm placeholder:text-muted-foreground/60"
+>>>>>>> origin/main
           />
         </div>
         <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">

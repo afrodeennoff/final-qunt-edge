@@ -109,9 +109,14 @@ function formatPlanAmount(
 
 function getPlanCardClassName(popular: boolean): string {
   return cn(
+<<<<<<< HEAD
     'relative flex w-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1',
     !popular && 'rounded-2xl border border-white/[0.08] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
     popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+=======
+    'marketing-panel relative flex w-full flex-col rounded-2xl border border-border/30 bg-card backdrop-blur-sm transition-all duration-300 hover:border-border/40 hover:-translate-y-1 hover:shadow-xl overflow-hidden',
+    popular && 'border-2 border-primary shadow-card before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/10 before:via-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100',
+>>>>>>> origin/main
   )
 }
 
@@ -367,7 +372,11 @@ function PlusPlanCard({
               {t('pricing.billingPeriod')}
             </span>
 
+<<<<<<< HEAD
             <div className="grid grid-cols-3 gap-1 rounded-[1rem] border border-white/[0.06] bg-black/25 p-1">
+=======
+            <div className="grid grid-cols-3 gap-1 rounded-lg border border-border/20 bg-card p-1">
+>>>>>>> origin/main
               {recurringBillingOptions.map((option) => (
                 <button
                   key={option.key}
@@ -385,7 +394,11 @@ function PlusPlanCard({
               ))}
             </div>
 
+<<<<<<< HEAD
             <div className="border-t border-white/[0.06] pt-3">
+=======
+            <div className="border-t border-border/20 pt-3">
+>>>>>>> origin/main
               <button
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-all',

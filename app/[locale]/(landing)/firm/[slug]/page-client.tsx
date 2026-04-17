@@ -423,7 +423,11 @@ function FactTile({
   value: string
 }) {
   return (
+<<<<<<< HEAD
     <div className="rounded-xl border border-border/20 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
+=======
+    <div className="rounded-2xl border border-border/20 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
+>>>>>>> origin/main
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-white/[0.035]">
           <Icon className="h-4 w-4 text-v2-accent" />
@@ -441,7 +445,11 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
   return (
     <div
       className={cn(
+<<<<<<< HEAD
         'rounded-xl border border-border/20 px-4 py-4',
+=======
+        'rounded-2xl border border-border/20 px-4 py-4',
+>>>>>>> origin/main
         highlight
           ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
           : 'bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))]'
@@ -1060,8 +1068,13 @@ function RulesSection({ firm }: { firm: FirmData }) {
 
             <div className="mt-6 grid gap-3 lg:hidden">
               {accountSizes.map(([key, size]) => (
+<<<<<<< HEAD
                 <article key={key} className="rounded-xl border border-white/[0.08] bg-background/50 p-4">
                   <h3 className="text-base font-semibold text-foreground/95">{size.name}</h3>
+=======
+                <article key={key} className="rounded-2xl border border-border/28 bg-background/50 p-4">
+                  <h3 className="text-base font-semibold text-foreground">{size.name}</h3>
+>>>>>>> origin/main
                   <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
                     <div>
                       <dt className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Daily Loss</dt>
@@ -1239,7 +1252,11 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
+<<<<<<< HEAD
       <Card className="w-full rounded-xl border-border/20 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+=======
+      <Card className="w-full rounded-2xl border-border/20 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+>>>>>>> origin/main
         <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
@@ -1284,8 +1301,13 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
+<<<<<<< HEAD
     <section className="relative overflow-hidden rounded-2xl border border-border/20 bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_36px_110px_-66px_hsl(0_0%_0%_/0.95)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
+=======
+    <section className="relative overflow-hidden rounded-3xl border border-border/20 bg-[linear-gradient(160deg,hsl(var(--background))_0%,hsl(var(--card))_100%)] p-5 shadow-[0_36px_110px_-66px_hsl(0_0%_0%_/0.95)] sm:p-7 lg:p-9">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(88,129,255,0.22),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(28,200,138,0.12),_transparent_40%)]" />
+>>>>>>> origin/main
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
@@ -1356,8 +1378,13 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
       <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <FirmHeader firm={firm} />
 
+<<<<<<< HEAD
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
           <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-xl border border-border/20 bg-background/70 p-2">
+=======
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-7">
+          <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto rounded-2xl border border-border/20 bg-background/70 p-2 backdrop-blur">
+>>>>>>> origin/main
             {[
               ['overview', 'Overview'],
               ['challenges', 'Challenges'],
@@ -1372,8 +1399,13 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
                 key={value}
                 value={value}
                 className={cn(
+<<<<<<< HEAD
                   'shrink-0 rounded-xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
                   'hover:border-border/20 hover:bg-white/[0.050]',
+=======
+                  'shrink-0 rounded-2xl border border-transparent px-4 py-2.5 text-sm text-foreground/80 transition-colors',
+                  'hover:border-border/20 hover:bg-card/50',
+>>>>>>> origin/main
                   'data-[state=active]:border-v2-accent/30 data-[state=active]:bg-v2-accent data-[state=active]:text-v2-accent-foreground'
                 )}
               >

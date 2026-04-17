@@ -47,7 +47,11 @@ export function FirmCouponsSection({
           <Skeleton className="h-16" />
         </div>
       ) : coupons.length === 0 ? (
+<<<<<<< HEAD
         <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
+=======
+        <div className="rounded-2xl border border-dashed border-border/24 bg-background/40 px-5 py-8 text-center text-sm text-muted-foreground">
+>>>>>>> origin/main
           <p>No active coupons are currently tracked in the database snapshot.</p>
           <p className="mx-auto mt-2 max-w-lg leading-6">
             We only show live codes when the firm record has an active coupon attached. Check the Deals board for current offers or visit the official site for the firm&apos;s latest pricing.

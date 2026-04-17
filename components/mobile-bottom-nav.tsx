@@ -128,7 +128,11 @@ function MobileBottomNav({ items }: { items?: MobileNavItem[] }) {
     <nav
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 md:hidden',
+<<<<<<< HEAD
         'px-3 pb-safe'
+=======
+        'bg-sidebar pb-safe'
+>>>>>>> origin/main
       )}
       aria-label="Dashboard navigation"
     >

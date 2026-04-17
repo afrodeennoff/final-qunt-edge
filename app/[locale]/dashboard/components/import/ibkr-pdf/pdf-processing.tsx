@@ -353,10 +353,17 @@ export default function PdfProcessing({
  },
  });
 
+<<<<<<< HEAD
  
  const renderTradeRow = (row: any) => {
  const trade = row.original;
  const tradeOrders = getTradeOrders(trade);
+=======
+   
+  const renderTradeRow = (row: any) => {
+    const trade = row.original;
+    const tradeOrders = getTradeOrders(trade);
+>>>>>>> origin/main
 
  return (
  <TooltipProvider>

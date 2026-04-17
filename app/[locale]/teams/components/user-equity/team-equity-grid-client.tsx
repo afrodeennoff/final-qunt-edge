@@ -17,6 +17,7 @@ import { useTypedI18n } from '@/locales/client'
 import { toast } from 'sonner'
 
 interface UserEquityData {
+<<<<<<< HEAD
  userId: string
  email: string
  createdAt: string
@@ -38,6 +39,29 @@ interface UserEquityData {
  winningTrades: number
  losingTrades: number
  }
+=======
+  userId: string
+  email: string
+  createdAt: string
+  trades: Array<{ id: string; [key: string]: unknown }>
+  equityCurve: {
+    date: string
+    pnl: number
+    cumulativePnL: number
+    tradeNumber: number
+  }[]
+  statistics: {
+    totalTrades: number
+    totalPnL: number
+    winRate: number
+    averageWin: number
+    averageLoss: number
+    maxDrawdown: number
+    profitFactor: number
+    winningTrades: number
+    losingTrades: number
+  }
+>>>>>>> origin/main
 }
 
 interface TeamEquityGridClientProps {
@@ -192,6 +216,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
 
  const hasActiveFilters = filters.minTrades > 0 || filters.minTradedDays > 0 || filters.equityFilter !== 'all'
 
+<<<<<<< HEAD
  if (isInitialLoading) {
  return (
  <div className="flex justify-center items-center py-8">
@@ -199,6 +224,15 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  </div>
  )
  }
+=======
+  if (isInitialLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border/28"></div>
+      </div>
+    )
+  }
+>>>>>>> origin/main
 
  return (
  <>

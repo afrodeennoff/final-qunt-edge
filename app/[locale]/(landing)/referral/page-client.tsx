@@ -55,6 +55,7 @@ export default function ReferralPage() {
   ] as const
 
   return (
+<<<<<<< HEAD
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
       <div className="space-y-6">
         <section
@@ -62,6 +63,27 @@ export default function ReferralPage() {
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(740px_280px_at_12%_6%,rgba(255,255,255,0.08),transparent_72%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(560px_220px_at_88%_12%,rgba(255,255,255,0.045),transparent_72%)]" />
+=======
+    <div className="px-4 py-12 bg-background text-foreground">
+      <div className="w-full">
+        <Card className="mb-8 border-border/24 bg-gradient-to-br from-card/85 via-card/70 to-card/85 text-foreground shadow-2xl">
+          <CardContent className="p-6 md:p-10">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="space-y-4">
+                <Badge className="w-fit bg-card/25 text-foreground hover:bg-card/35">
+                  {t('referral.landing.heroBadge')}
+                </Badge>
+                <h1 className="text-3xl font-bold leading-tight md:text-5xl">
+                  {t('referral.landing.heroTitle')}
+                </h1>
+                <p className="max-w-2xl text-sm text-muted-foreground md:text-base">
+                  {t('referral.landing.heroDescription')}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t('referral.landing.affiliateLinkLabel')}: {affiliateUrl}
+                </p>
+              </div>
+>>>>>>> origin/main
 
           <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.82fr)] xl:items-end">
             <div className="space-y-5">
@@ -288,6 +310,7 @@ export default function ReferralPage() {
           </section>
         </div>
 
+<<<<<<< HEAD
         <section
           className={cn(
             unifiedSectionPanelClassName,
@@ -322,6 +345,107 @@ export default function ReferralPage() {
             ))}
           </div>
         </section>
+=======
+        {/* How It Works Section */}
+        <Card className="mb-8 bg-card border-border/24">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.howItWorks')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                  1
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">{t('referral.landing.step1Title')}</h3>
+                  <p className="text-muted-foreground">{t('referral.landing.step1Description')}</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                  2
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">{t('referral.landing.step2Title')}</h3>
+                  <p className="text-muted-foreground">{t('referral.landing.step2Description')}</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
+                  3
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">{t('referral.landing.step3Title')}</h3>
+                  <p className="text-muted-foreground">{t('referral.landing.step3Description')}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Requirements Section */}
+        <Card className="mb-8 bg-card border-border/24">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.requirements')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-6">
+              {t('referral.landing.requirementsDescription')}
+            </p>
+            <div className="space-y-4">
+              {requirements.map((req, index) => (
+                <div key={index} className="flex gap-4 p-4 rounded-lg border border-border/24 bg-muted/30">
+                  <div className="flex-shrink-0 mt-0.5">
+                    {req.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-1">{req.title}</h3>
+                    <p className="text-sm text-muted-foreground">{req.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Rewards Tiers Section */}
+        <Card className="mb-8 bg-card border-border/24">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.rewards')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {tiers.map((tier, index) => (
+                <div
+                  key={index}
+                  className="p-6 rounded-lg border border-border/24 bg-muted/20 flex flex-col items-center text-center transition-colors hover:bg-muted/35"
+                >
+                  <div className="mb-4">{tier.icon}</div>
+                  <Badge variant="secondary" className="mb-3">
+                    {t('referral.landing.tierBadge', { count: tier.count })}
+                  </Badge>
+                  <p className="text-sm text-muted-foreground">{tier.reward}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Important Notes */}
+        <Card className="bg-card border-border/24">
+          <CardHeader>
+            <CardTitle className="text-2xl">{t('referral.landing.importantNotes')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3 list-disc list-inside text-muted-foreground">
+              <li>{t('referral.landing.note1')}</li>
+              <li>{t('referral.landing.note2')}</li>
+              <li>{t('referral.landing.note3')}</li>
+            </ul>
+          </CardContent>
+        </Card>
+>>>>>>> origin/main
       </div>
     </UnifiedPageShell>
   )

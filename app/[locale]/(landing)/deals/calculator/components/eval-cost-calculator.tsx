@@ -37,7 +37,11 @@ export function EvalCostCalculator() {
   }, [evaluationFee, expectedResets, resetCost, monthlyPlatformFees, targetPayout])
 
   return (
+<<<<<<< HEAD
     <section className="qe-soft-panel mt-6 rounded-2xl p-5 sm:p-6">
+=======
+    <section className="qe-soft-panel mt-6 rounded-3xl p-5 sm:p-6">
+>>>>>>> origin/main
       <div className="qe-soft-surface mb-4 rounded-xl p-3">
         <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Planner Inputs</p>
         <p className="mt-1 text-sm text-foreground/95">Adjust values to simulate realistic month-one evaluation economics.</p>
@@ -49,7 +53,11 @@ export function EvalCostCalculator() {
             value={evaluationFee}
             onChange={(event) => setEvaluationFee(event.target.value)}
             inputMode="decimal"
+<<<<<<< HEAD
             className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground/95 outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+=======
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+>>>>>>> origin/main
             placeholder="149"
           />
         </label>
@@ -60,7 +68,11 @@ export function EvalCostCalculator() {
             value={expectedResets}
             onChange={(event) => setExpectedResets(event.target.value)}
             inputMode="numeric"
+<<<<<<< HEAD
             className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground/95 outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+=======
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+>>>>>>> origin/main
             placeholder="1"
           />
         </label>
@@ -71,7 +83,11 @@ export function EvalCostCalculator() {
             value={resetCost}
             onChange={(event) => setResetCost(event.target.value)}
             inputMode="decimal"
+<<<<<<< HEAD
             className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground/95 outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+=======
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+>>>>>>> origin/main
             placeholder="99"
           />
         </label>
@@ -82,7 +98,11 @@ export function EvalCostCalculator() {
             value={monthlyPlatformFees}
             onChange={(event) => setMonthlyPlatformFees(event.target.value)}
             inputMode="decimal"
+<<<<<<< HEAD
             className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground/95 outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+=======
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+>>>>>>> origin/main
             placeholder="35"
           />
         </label>
@@ -93,7 +113,11 @@ export function EvalCostCalculator() {
             value={targetPayout}
             onChange={(event) => setTargetPayout(event.target.value)}
             inputMode="decimal"
+<<<<<<< HEAD
             className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground/95 outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+=======
+            className="w-full rounded-lg border border-border/35 bg-background px-3 py-2 text-foreground outline-none ring-0 transition-colors placeholder:text-muted-foreground focus:border-primary/25"
+>>>>>>> origin/main
             placeholder="1200"
           />
         </label>

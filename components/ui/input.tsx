@@ -34,12 +34,23 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
+<<<<<<< HEAD
               'type-body-sm flex h-10 w-full rounded-md border border-border/60 bg-background/70 px-3.5 py-2 text-foreground shadow-sm ring-offset-background placeholder:text-muted-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               error && 'border-destructive/50 focus-visible:ring-destructive/40',
               label && 'peer',
               className,
+=======
+              "flex h-10 w-full rounded-md border border-[var(--frost-border)] bg-transparent px-3 py-2 text-base shadow-none transition-all duration-200 outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-v2-text-muted disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+              leftIcon && "pl-10",
+              rightIcon && "pr-10",
+              "focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
+              error && "border-v2-error focus-visible:border-v2-error focus-visible:ring-v2-error/50",
+              !error && "focus-visible:border-v2-accent",
+              label && "peer",
+              className
+>>>>>>> origin/main
             )}
             ref={ref}
             aria-invalid={Boolean(error) || undefined}

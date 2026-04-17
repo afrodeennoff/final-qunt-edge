@@ -20,8 +20,13 @@ export function TeamSubscriptionBadge({
  subscription: Subscription | null
  className?: string
 }) {
+<<<<<<< HEAD
  const t = useI18n()
  const locale = useCurrentLocale()
+=======
+  const t = useI18n()
+  const locale = useCurrentLocale()
+>>>>>>> origin/main
 
  // If no subscription data, user is on Free plan
  if (!subscription) {
@@ -117,6 +122,7 @@ export function TeamSubscriptionBadge({
 
  const badge = getBadgeContent()
 
+<<<<<<< HEAD
  return (
  <TooltipProvider>
  <Tooltip>
@@ -145,4 +151,35 @@ export function TeamSubscriptionBadge({
  </Tooltip>
  </TooltipProvider>
  )
+=======
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link href={`/${locale}/dashboard/billing`}>
+            <Badge
+              variant="secondary"
+              className={cn(
+                "px-2 py-0.5 text-xs whitespace-nowrap cursor-help transition-colors",
+                badge.variant === 'active' && "bg-primary text-primary-foreground hover:bg-primary/90",
+                badge.variant === 'trial' && "bg-semantic-info-bg text-primary-foreground dark:bg-semantic-info-bg hover:bg-semantic-info-bg dark:hover:bg-semantic-info-bg",
+                badge.variant === 'expiring' && "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                badge.variant === 'expired' && "bg-destructive/80 text-destructive-foreground hover:bg-destructive/70",
+                badge.variant === 'normal' && "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                className
+              )}
+            >
+              {badge.text}
+            </Badge>
+          </Link>
+        </TooltipTrigger>
+        {badge.tooltip && (
+          <TooltipContent>
+            <p>{badge.tooltip}</p>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
+  )
+>>>>>>> origin/main
 } 

@@ -38,10 +38,20 @@ export default async function LeaderboardPage({
   const entries = await getLeaderboardData(sortKey)
 
   return (
+<<<<<<< HEAD
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
       <Suspense fallback={<LeaderboardTableSkeleton />}>
         <LeaderboardContent initialEntries={entries} locale={locale} />
       </Suspense>
     </UnifiedPageShell>
+=======
+    <div className="min-h-screen bg-black">
+      <div className="mx-auto max-w-[1120px] px-6 py-20 sm:px-8">
+        <Suspense fallback={<LeaderboardTableSkeleton />}>
+          <LeaderboardContent initialEntries={entries} locale={locale} />
+        </Suspense>
+      </div>
+    </div>
+>>>>>>> origin/main
   )
 }

@@ -249,6 +249,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  }
  }
 
+<<<<<<< HEAD
  return (
  <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
  <div className="flex items-center gap-3 mb-4">
@@ -278,6 +279,37 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  {t('landing.features.chat-feature.stat')}
  </div>
  </div>
+=======
+  return (
+    <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
+          <MessageSquare className="size-[18px] text-primary" strokeWidth={2} />
+        </div>
+        <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+          AI Chat
+        </p>
+      </div>
+    <div
+      ref={containerRef}
+      className={`relative w-full h-full min-h-0 bg-card transition-colors duration-500 ${className}`}
+      style={{
+        contain: "layout style paint",
+        isolation: "isolate",
+      }}
+    >
+      <div className="h-full w-full overflow-hidden rounded-lg border border-border/28 bg-card shadow-lg transition-all duration-500">
+        <div className="p-4 h-full flex flex-col min-h-0">
+          <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border/28 pb-2 transition-colors duration-300">
+            <Bot className="h-4 w-4 text-foreground transition-colors duration-300" />
+            <span className="text-sm font-medium text-foreground transition-colors duration-300">
+              {t('landing.features.chat-feature.title')}
+            </span>
+            <div className="ml-auto text-xs text-foreground/80">
+              {t('landing.features.chat-feature.stat')}
+            </div>
+          </div>
+>>>>>>> origin/main
 
  <div className="flex-1 overflow-hidden relative">
  <div className="absolute inset-0 flex flex-col justify-end gap-3 text-xs">

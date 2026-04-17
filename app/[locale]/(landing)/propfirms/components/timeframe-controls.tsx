@@ -41,11 +41,19 @@ export function TimeframeControls({ timeframeLabel, timeframeOptions }: Timefram
       <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
         <SelectTrigger
           id="timeframe-select"
+<<<<<<< HEAD
           className="w-[200px] border border-white/[0.08] bg-white/[0.040] text-foreground/95 shadow-none transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.060] focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
         >
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="border border-white/[0.08] bg-background text-foreground/95 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+=======
+          className="w-[200px] border border-border/28 bg-card/80 text-foreground shadow-none backdrop-blur-sm hover:bg-card focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="border border-border/28 bg-card text-foreground shadow-xl">
+>>>>>>> origin/main
           <SelectItem value="currentMonth">{timeframeOptions.currentMonth}</SelectItem>
           <SelectItem value="last3Months">{timeframeOptions.last3Months}</SelectItem>
           <SelectItem value="last6Months">{timeframeOptions.last6Months}</SelectItem>

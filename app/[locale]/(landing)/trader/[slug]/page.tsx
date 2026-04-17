@@ -92,7 +92,11 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
     <div className="min-h-[calc(100vh-72px)] bg-black px-6 py-20 sm:px-8">
       <div className="mx-auto max-w-[1120px]">
+<<<<<<< HEAD
         <div className={`rounded-2xl border ${FB} bg-black p-8`} style={FR}>
+=======
+        <div className={`rounded-3xl border ${FB} bg-black p-8`} style={FR}>
+>>>>>>> origin/main
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#7a7a7a]">Trader profile</p>
           <h1 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-[#f0f0f0]">{slug}</h1>
           <p className="mt-3 max-w-xl text-[14px] leading-[1.6] text-[#a1a4a5]">
@@ -101,14 +105,22 @@ function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
           <div className="mt-8 flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
+<<<<<<< HEAD
               className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-1.5 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+=======
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-4 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+>>>>>>> origin/main
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
+<<<<<<< HEAD
               className="inline-flex items-center rounded-full bg-[#ffffff] px-4 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+=======
+              className="inline-flex items-center rounded-full bg-[#ffffff] px-4 py-[5px] text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+>>>>>>> origin/main
             >
               Manage profile
             </Link>
@@ -159,8 +171,13 @@ export default async function TraderProfilePage({
       <div className="mx-auto grid max-w-[1120px] gap-8 xl:grid-cols-[1.35fr_1fr]">
         <section className="space-y-6">
           {/* Header */}
+<<<<<<< HEAD
           <div className={`rounded-2xl border ${FB} bg-black p-6 sm:p-8`} style={FR}>
             <div className="flex items-start gap-6">
+=======
+          <div className={`rounded-3xl border ${FB} bg-black p-6 sm:p-8`} style={FR}>
+            <div className="flex items-start gap-5">
+>>>>>>> origin/main
               <Avatar className={`h-20 w-20 border ${FB} ${FS}`} style={FR}>
                 <AvatarFallback className={`${FS} text-lg font-semibold text-[#f0f0f0]`}>
                   {snapshot.username.slice(0, 2).toUpperCase()}
@@ -196,14 +213,22 @@ export default async function TraderProfilePage({
 
           {/* Profit + Trades cards */}
           <div className="grid gap-4 sm:grid-cols-2">
+<<<<<<< HEAD
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+            <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Total Profit</p>
               <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-[#11ff99]' : negative ? 'text-[#ff2047]' : 'text-[#f0f0f0]'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
               <p className="mt-2 text-[12px] text-[#7a7a7a]">Current public performance snapshot</p>
             </div>
+<<<<<<< HEAD
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+            <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Total Trades</p>
               <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#f0f0f0]">{snapshot.totalTrades.toLocaleString()}</p>
               <p className="mt-2 text-[12px] text-[#7a7a7a]">Visible public trades</p>
@@ -212,7 +237,11 @@ export default async function TraderProfilePage({
 
           {/* Demo leaderboard stats */}
           {snapshot.demo && snapshot.winRate !== undefined ? (
+<<<<<<< HEAD
             <div className={`rounded-xl border ${FB} bg-black p-6`} style={FR}>
+=======
+            <div className={`rounded-2xl border ${FB} bg-black p-6`} style={FR}>
+>>>>>>> origin/main
               <div className="mb-5 flex items-center justify-between">
                 <p className="text-[14px] font-semibold text-[#f0f0f0]">Demo Leaderboard Stats</p>
                 <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[#a1a4a5]`}>
@@ -256,14 +285,22 @@ export default async function TraderProfilePage({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/${locale}/leaderboard`}
+<<<<<<< HEAD
               className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-1.5 text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+=======
+              className={`inline-flex items-center gap-2 rounded-full border ${FB} bg-transparent px-5 py-[5px] text-[13px] font-medium text-[#f0f0f0] transition-colors hover:bg-accent/55`}
+>>>>>>> origin/main
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to leaderboard
             </Link>
             <Link
               href={`/${locale}/dashboard/trader-profile`}
+<<<<<<< HEAD
               className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-1.5 text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+=======
+              className="inline-flex items-center rounded-full bg-[#ffffff] px-5 py-[5px] text-[13px] font-semibold text-[#000000] transition-opacity hover:opacity-90"
+>>>>>>> origin/main
             >
               Manage profile
             </Link>
@@ -272,13 +309,21 @@ export default async function TraderProfilePage({
 
         {/* Right aside */}
         <aside className="space-y-4">
+<<<<<<< HEAD
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+          <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Total Capital</p>
             <p className="mt-2 text-3xl font-semibold text-[#f0f0f0]">{formatCapitalCompact(snapshot.totalPnl)}</p>
           </div>
 
           {snapshot.demo && snapshot.winRate !== undefined && (
+<<<<<<< HEAD
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+            <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Win Rate</p>
               <p className="mt-2 text-4xl font-semibold text-[#f0f0f0]">{formatValue(snapshot.winRate)}%</p>
               <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
@@ -287,7 +332,11 @@ export default async function TraderProfilePage({
             </div>
           )}
 
+<<<<<<< HEAD
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+          <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Total Trades</p>
               <span className={`inline-flex items-center rounded-full border ${FB} ${FS} px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[#a1a4a5]`}>
@@ -300,7 +349,11 @@ export default async function TraderProfilePage({
             </div>
           </div>
 
+<<<<<<< HEAD
           <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
+=======
+          <div className={`rounded-2xl border ${FB} bg-black p-5`} style={FR}>
+>>>>>>> origin/main
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#7a7a7a]">Profile Status</p>
               <span className={`inline-flex items-center gap-1.5 rounded-full border ${FB} ${FS} px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[#a1a4a5]`}>

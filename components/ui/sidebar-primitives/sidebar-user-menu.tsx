@@ -50,7 +50,11 @@ export function SidebarUserMenu({
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
+<<<<<<< HEAD
                   <Avatar className="h-9 w-9 overflow-hidden rounded-[var(--radius-icon)] ring-1 ring-sidebar-primary/20">
+=======
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-xl">
+>>>>>>> origin/main
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
                     <AvatarFallback className="rounded-[var(--radius-icon)] bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
                       {initials}
@@ -71,14 +75,23 @@ export function SidebarUserMenu({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
+<<<<<<< HEAD
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 overflow-hidden rounded-xl border border-sidebar-border/35 bg-sidebar/98 shadow-[0_24px_56px_-32px_rgba(0,0,0,0.94)]"
+=======
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl overflow-hidden shadow-xl border-sidebar-border/18 bg-sidebar/95 backdrop-blur-xl"
+>>>>>>> origin/main
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={6}
           >
             <DropdownMenuLabel className="p-0 font-normal">
+<<<<<<< HEAD
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-primary/18 to-sidebar-accent/10 px-3 py-2.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+=======
+              <div className="flex items-center gap-2.5 px-3 py-2.5 text-left text-sm bg-gradient-to-r from-sidebar-accent/30 to-sidebar-accent/10">
+                <Avatar className="h-8 w-8 rounded-lg shadow-sm">
+>>>>>>> origin/main
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}
@@ -99,10 +112,17 @@ export function SidebarUserMenu({
                   Timezone
                 </p>
                 <Select value={timezone.value} onValueChange={timezone.onChange}>
+<<<<<<< HEAD
                   <SelectTrigger className="w-full border-sidebar-border/24 bg-sidebar-accent/20 text-sm hover:border-sidebar-primary/18 hover:bg-sidebar-accent/34 data-[placeholder]:text-sidebar-foreground/40">
                     <SelectValue placeholder="Select timezone" />
                   </SelectTrigger>
                   <SelectContent className="border-sidebar-border/24 bg-sidebar/98 text-popover-foreground">
+=======
+                  <SelectTrigger className="w-full bg-sidebar-accent/30 text-sm border-sidebar-border/18 hover:bg-sidebar-accent/50 hover:border-sidebar-primary/20 data-[placeholder]:text-sidebar-foreground/40">
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover text-popover-foreground border-sidebar-border/18">
+>>>>>>> origin/main
                     {timezone.options.map((tz) => (
                       <SelectItem key={tz} value={tz}>
                         {tz}

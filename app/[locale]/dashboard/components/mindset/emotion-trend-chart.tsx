@@ -26,6 +26,7 @@ function getEmotionColor(val: number): string {
 export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  const t = useI18n()
 
+<<<<<<< HEAD
  if (data.length === 0) {
  return (
  <div
@@ -37,6 +38,20 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  </div>
  )
  }
+=======
+  if (data.length === 0) {
+    return (
+      <div
+        className={cn(
+          "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
+          className
+        )}
+      >
+        <p className="text-center text-sm text-muted-foreground">{t("mindset.noData")}</p>
+      </div>
+    )
+  }
+>>>>>>> origin/main
 
  const maxValue = data.length > 0 ? Math.max(safeArrayMax(data.map((d) => d.value)), 100) : 100
  const minValue = data.length > 0 ? Math.min(safeArrayMin(data.map((d) => d.value)), 0) : 0
@@ -60,6 +75,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  .map((point, index) => `${index === 0 ?"M" :"L"} ${getX(index)} ${getY(point.value)}`)
  .join("")
 
+<<<<<<< HEAD
  return (
  <div
  className={cn("journal-glass-elevated mb-4 rounded-xl border border-white/[0.08] bg-white/[0.070] p-4",
@@ -71,6 +87,20 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  <p className="text-sm font-medium text-foreground/95">{t("mindset.emotion.title")}</p>
  <span className="text-xs text-muted-foreground">Last 7 days</span>
  </div>
+=======
+  return (
+    <div
+      className={cn(
+        "journal-glass-elevated mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md",
+        className
+      )}
+    >
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>
+          <span className="text-xs text-muted-foreground">Last 7 days</span>
+        </div>
+>>>>>>> origin/main
 
  <div className="relative" style={{ height: `${chartHeight}px` }}>
  <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none">

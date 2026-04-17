@@ -5,6 +5,7 @@ import { useI18n } from "@/locales/client";
 export default function FAQ() {
  const t = useI18n();
 
+<<<<<<< HEAD
  return (
  <section className="py-16 sm:py-20 lg:py-24">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0_0)] p-6 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
@@ -78,4 +79,67 @@ export default function FAQ() {
  </div>
  </section>
  );
+=======
+  return (
+    <section className="py-16">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          {t("faq.heading")}
+        </h2>
+        <div className="max-w-3xl mx-auto space-y-6">
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question1")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer1")}
+            </p>
+          </details>
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question2")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer2")}
+            </p>
+          </details>
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question3")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer3")}
+            </p>
+          </details>
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question4")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer4")}
+            </p>
+          </details>
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question5")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer5")}
+            </p>
+          </details>
+          <details className="border-b border-border/28 pb-4">
+            <summary className="cursor-pointer font-semibold text-foreground">
+              {t("faq.question6")}
+            </summary>
+            <p className="mt-2 text-foreground/85">
+              {t("faq.answer6")}
+            </p>
+          </details>
+        </div>
+      </div>
+      </div>
+    </section>
+  );
+>>>>>>> origin/main
 }

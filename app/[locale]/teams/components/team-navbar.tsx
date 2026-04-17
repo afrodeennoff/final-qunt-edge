@@ -91,6 +91,7 @@ function MobileNavContent({
  </AccordionContent>
  </AccordionItem>
 
+<<<<<<< HEAD
  </Accordion>
  <Button asChild variant="outline" className="w-full" onClick={onLinkClick}>
  <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
@@ -104,6 +105,21 @@ function MobileNavContent({
  </div>
  </nav>
  )
+=======
+            </Accordion>
+            <Button  asChild variant="outline" className="w-full" onClick={onLinkClick}>
+                <Link href={"/teams/dashboard"}>{t('teams.cta')}</Link>
+            </Button>
+            <div className="py-4 border-t space-y-4">
+                <div className="flex items-center gap-2 rounded-md border border-border/20 px-3 py-2 text-sm text-muted-foreground">
+                    <Moon className="h-4 w-4 text-primary" />
+                    <span>Unified dark theme</span>
+                </div>
+                <LanguageSelector showLabel align="start" />
+            </div>
+        </nav>
+    )
+>>>>>>> origin/main
 }
 
 export default function TeamNavbar() {

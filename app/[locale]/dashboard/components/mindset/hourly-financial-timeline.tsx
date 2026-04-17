@@ -24,6 +24,7 @@ interface Session {
 }
 
 const SESSIONS: Session[] = [
+<<<<<<< HEAD
  {
  name:"Tokyo Session",
  startHour: 0,
@@ -42,6 +43,26 @@ const SESSIONS: Session[] = [
  endHour: 21,
  color:"bg-accent/70 border-[oklch(0.65_0.22_260/0.08)]"
  }
+=======
+  {
+    name: "Tokyo Session",
+    startHour: 0,
+    endHour: 8,
+    color: "bg-semantic-error-bg/20 border-semantic-error-border"
+  },
+  {
+    name: "London Session",
+    startHour: 8,
+    endHour: 16,
+    color: "bg-accent/70 border-border/24"
+  },
+  {
+    name: "New York Session",
+    startHour: 13,
+    endHour: 21,
+    color: "bg-accent/70 border-border/24"
+  }
+>>>>>>> origin/main
 ]
 
 interface HourlyFinancialTimelineProps {
@@ -546,6 +567,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  return dateA.getTime() - dateB.getTime()
  })
 
+<<<<<<< HEAD
  return (
  <Popover>
  <PopoverTrigger asChild>
@@ -559,6 +581,22 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  <div className="font-medium text-sm">
  {t('mindset.newsImpact.tradedHour')}
  </div>
+=======
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <div
+          className={cn(
+            "border-l-4 rounded-r-md p-2 cursor-pointer transition-colors hover:opacity-90",
+            trade.totalPnL > 0 
+              ? "bg-accent/70 border-border/24 text-foreground   dark:text-foreground"
+              : "bg-semantic-error-bg border-semantic-error-border text-semantic-error dark:bg-semantic-error-bg/30 dark:border-semantic-error-border dark:text-semantic-error"
+          )}
+        >
+          <div className="font-medium text-sm">
+            {t('mindset.newsImpact.tradedHour')}
+          </div>
+>>>>>>> origin/main
 
  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs">
  <div className="flex items-center">

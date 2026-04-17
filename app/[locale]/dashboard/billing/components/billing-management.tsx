@@ -100,7 +100,11 @@ export default function BillingManagement() {
 
   return (
     <div className="w-full space-y-6">
+<<<<<<< HEAD
       <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+=======
+      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+>>>>>>> origin/main
         <CardHeader className="px-0">
           <CardTitle>{t('billing.currentPlan')}</CardTitle>
           <div className="mt-1.5 text-sm text-muted-foreground flex items-center gap-2">
@@ -156,7 +160,11 @@ export default function BillingManagement() {
           </div>
         </CardHeader>
         <CardContent className="px-0">
+<<<<<<< HEAD
           <div className="space-y-6 rounded-xl border border-border/45 bg-background/70 p-4 sm:p-6">
+=======
+          <div className="space-y-6 rounded-2xl border border-border/28 bg-background/70 p-4 sm:p-6">
+>>>>>>> origin/main
             {/* Current Plan Details */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
               {isLoading ? (
@@ -357,6 +365,7 @@ export default function BillingManagement() {
       </Card>
 
       {/* Subscription Management */}
+<<<<<<< HEAD
       {!isLoading &&
         (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') &&
         subscription?.plan?.interval !== 'lifetime' && (
@@ -429,6 +438,76 @@ export default function BillingManagement() {
                                 placeholder={t('billing.feedbackPlaceholder')}
                               />
                             </div>
+=======
+      {!isLoading && (subscription?.status === 'ACTIVE' || subscription?.status === 'PENDING') && subscription?.plan?.interval !== 'lifetime' && (
+        <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+          <CardContent className="px-0">
+            <div className="flex flex-col gap-4">
+              {!subscription.cancel_at_period_end && (
+                <div className="flex flex-wrap items-center gap-4">
+                  <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button  
+                        variant="error" 
+                        className="sm:w-auto"
+                      >
+                        {t('billing.cancelSubscription')}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{t('pricing.cancelSubscription.title')}</DialogTitle>
+                        <DialogDescription>
+                          {t('pricing.cancelSubscription.description')}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <p className="text-sm font-medium">
+                          {t('pricing.cancelSubscription.warning')}
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2">
+                          {[
+                            t('pricing.cancelSubscription.features.0'),
+                            t('pricing.cancelSubscription.features.1'),
+                            t('pricing.cancelSubscription.features.2')
+                          ].map((feature, index) => (
+                            <li key={index} className="text-sm text-muted-foreground">
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <label htmlFor="cancellationReason" className="text-sm font-medium">
+                              {t('billing.cancellationReason')}
+                            </label>
+                            <select
+                              id="cancellationReason"
+                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                              value={cancellationReason}
+                              onChange={(e) => setCancellationReason(e.target.value)}
+                            >
+                              <option value="">{t('billing.selectReason')}</option>
+                              <option value="too_expensive">{t('billing.reasons.tooExpensive')}</option>
+                              <option value="missing_features">{t('billing.reasons.missingFeatures')}</option>
+                              <option value="not_using">{t('billing.reasons.notUsing')}</option>
+                              <option value="switching">{t('billing.reasons.switching')}</option>
+                              <option value="other">{t('billing.reasons.other')}</option>
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <label htmlFor="feedback" className="text-sm font-medium">
+                              {t('billing.additionalFeedback')}
+                            </label>
+                            <textarea
+                              id="feedback"
+                              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                              rows={3}
+                              value={feedback}
+                              onChange={(e) => setFeedback(e.target.value)}
+                              placeholder={t('billing.feedbackPlaceholder')}
+                            />
+>>>>>>> origin/main
                           </div>
                         </div>
                         <DialogFooter>
@@ -479,7 +558,11 @@ export default function BillingManagement() {
         )}
 
       {/* Available Plans */}
+<<<<<<< HEAD
       <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+=======
+      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+>>>>>>> origin/main
         <CardHeader className="px-0">
           <CardTitle>{t('billing.availablePlans')}</CardTitle>
           <CardDescription>{t('billing.choosePlan')}</CardDescription>
@@ -490,13 +573,21 @@ export default function BillingManagement() {
       </Card>
 
       {/* Payment History */}
+<<<<<<< HEAD
       <Card className="rounded-2xl border border-border/45 bg-card/60 shadow-sm">
+=======
+      <Card className="rounded-3xl border border-border/24 bg-card/80 shadow-sm backdrop-blur-sm">
+>>>>>>> origin/main
         <CardHeader className="px-0">
           <CardTitle>{t('billing.paymentHistory')}</CardTitle>
           <CardDescription>{t('billing.paymentHistoryDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="px-0">
+<<<<<<< HEAD
           <div className="rounded-xl border border-border/45 bg-background/70">
+=======
+          <div className="rounded-2xl border border-border/28 bg-background/70">
+>>>>>>> origin/main
             {isLoading ? (
               <div className="p-4 space-y-4">
                 {[1, 2, 3].map((i) => (

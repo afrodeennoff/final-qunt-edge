@@ -176,6 +176,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  setPlayingSegment(null)
  }
 
+<<<<<<< HEAD
  return (
  <div className="p-4 bg-white/[0.2] border border-white/[0.6] rounded-lg">
  {error && (
@@ -282,4 +283,112 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  )}
  </div>
  )
+=======
+  return (
+    <div className="p-4 bg-card border border-border rounded-lg">
+      {error && (
+        <div className="mb-4 p-3 bg-semantic-error-bg dark:bg-semantic-error-bg/20 border border-semantic-error-border dark:border-semantic-error-border rounded-md text-semantic-error dark:text-semantic-error">
+          {error}
+        </div>
+      )}
+      
+      <div className="relative">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="video/*,audio/*"
+          onChange={handleFileChange}
+          disabled={isLoading}
+          className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-semantic-info-bg dark:file:bg-semantic-info-bg/20 file:text-semantic-info dark:file:text-semantic-info hover:file:bg-semantic-info-bg dark:hover:file:bg-semantic-info-bg/30"
+        />
+        <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+      </div>
+      
+      {isLoading && (
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-semantic-info-border dark:border-semantic-info-border"></div>
+            <span>
+              {currentSegment ? `Creating segment ${currentSegment}...` : 'Processing audio...'}
+            </span>
+          </div>
+          <div className="w-full bg-muted/30 dark:bg-muted/60 rounded-full h-2">
+            <div 
+              className="bg-semantic-info-bg dark:bg-semantic-info-bg h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {Math.round(progress)}% complete
+          </div>
+        </div>
+      )}
+      
+      {/* Segments List */}
+      {segments.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-foreground mb-4">
+            Generated Segments ({segments.length})
+          </h3>
+          <div className="space-y-3">
+            {segments.map((segment) => (
+              <div 
+                key={segment.index} 
+                className="flex items-center justify-between p-3 bg-card/30 dark:bg-card/70 rounded-lg border border-border/24"
+              >
+                <div className="flex-1">
+                <div className="font-medium text-foreground">
+                    {segment.fileName}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Segment {segment.index} • {segment.startTime.toFixed(1)}s - {segment.endTime.toFixed(1)}s
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => playingSegment === segment.index ? stopAudio() : playSegment(segment)}
+                    className="p-2 text-semantic-info dark:text-semantic-info hover:bg-semantic-info-bg dark:hover:bg-semantic-info-bg/20 rounded-md transition-colors"
+                    title={playingSegment === segment.index ? 'Stop' : 'Play'}
+                  >
+                    {playingSegment === segment.index ? (
+                      <Pause className="w-4 h-4" />
+                    ) : (
+                      <Play className="w-4 h-4" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => downloadSegment(segment)}
+                    className="p-2 text-card-foreground hover:bg-card/30 rounded-md transition-colors"
+                    title="Download"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Download All Button */}
+          <div className="mt-4">
+            <button
+              onClick={() => segments.forEach(downloadSegment)}
+              className="w-full py-2 px-4 bg-semantic-info-bg dark:bg-semantic-info-bg text-card-foreground rounded-md hover:bg-semantic-info-bg dark:hover:bg-semantic-info-bg transition-colors"
+            >
+              Download All Segments
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Transcription Component - Removed */}
+      {segments.length > 0 && (
+        <div className="mt-6 p-4 bg-card/40 rounded-lg border border-border/24">
+          <p className="text-sm text-muted-foreground">
+            Transcription feature has been removed. Segments are ready for manual processing.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+>>>>>>> origin/main
 }

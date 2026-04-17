@@ -12,6 +12,7 @@ const PopoverTrigger = PopoverPrimitive.Trigger
 const PopoverAnchor = PopoverPrimitive.Anchor
 
 const PopoverContent = React.forwardRef<
+<<<<<<< HEAD
  React.ElementRef<typeof PopoverPrimitive.Content>,
  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, align ="center", sideOffset = 4, ...props }, ref) => (
@@ -27,6 +28,24 @@ const PopoverContent = React.forwardRef<
  {...props}
  />
  </PopoverPrimitive.Portal>
+=======
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      data-slot="popover-content"
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-[90vw] sm:w-72 rounded-md border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl p-4 text-popover-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] outline-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--radix-popover-content-transform-origin)",
+        className
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+>>>>>>> origin/main
 ))
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 

@@ -132,6 +132,7 @@ function CustomizingControls({
  </AlertDialog>
  )}
 
+<<<<<<< HEAD
  {!isMobile && (
  <AlertDialog>
  <AlertDialogTrigger asChild>
@@ -161,6 +162,37 @@ function CustomizingControls({
  </AlertDialogContent>
  </AlertDialog>
  )}
+=======
+      {!isMobile && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              type="button"
+              aria-label={t("widgets.deleteAll")}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary"
+              title={t("widgets.deleteAll")}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t("widgets.deleteAllConfirmTitle")}</AlertDialogTitle>
+              <AlertDialogDescription>{t("widgets.deleteAllConfirmDescription")}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={removeAllWidgets}
+                className="bg-foreground/10 text-foreground hover:bg-foreground/20 border border-border/14"
+              >
+                {t("widgets.confirmDeleteAll")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+>>>>>>> origin/main
 
  {autoSaveStatus.hasPending ? (
  <button

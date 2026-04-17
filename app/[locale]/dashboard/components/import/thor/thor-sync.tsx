@@ -23,12 +23,21 @@ import { useI18n } from "@/locales/client"
 import { useUserStore } from "../../../../../../store/user-store"
 
 export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }) {
+<<<<<<< HEAD
  const [isGenerating, setIsGenerating] = useState(false)
  const [isRevealed, setIsRevealed] = useState(false)
  const user = useUserStore(state => state.user)
  const setUser = useUserStore(state => state.setUser)
  const t = useI18n()
  const videoRef = useRef<HTMLVideoElement>(null)
+=======
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isRevealed, setIsRevealed] = useState(false)
+  const user = useUserStore(state => state.user)
+  const setUser = useUserStore(state => state.setUser)
+  const t = useI18n()
+  const videoRef = useRef<HTMLVideoElement>(null)
+>>>>>>> origin/main
 
  // Handle video playback
  useEffect(() => {
@@ -39,12 +48,21 @@ export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }
  video.pause()
  video.currentTime = 0
 
+<<<<<<< HEAD
  // Play video when component mounts
  const playVideo = () => {
  video.play().catch(() => {
  console.warn('Video playback failed — user interaction may be required')
  })
  }
+=======
+    // Play video when component mounts
+    const playVideo = () => {
+      video.play().catch(() => {
+        console.warn('Video playback failed — user interaction may be required')
+      })
+    }
+>>>>>>> origin/main
 
  // Play video when it's ready
  if (video.readyState >= 2) {

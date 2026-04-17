@@ -1,12 +1,12 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776456126168,
+  "lastScanned": 1776458676427,
   "projectRoot": "/Users/timon/Downloads/qunt-edge",
   "techStack": {
     "languages": [
       {
         "name": "JavaScript/TypeScript",
-        "version": ">=22.12.0",
+        "version": null,
         "confidence": "high",
         "markers": [
           "package.json"
@@ -21,84 +21,16 @@
         ]
       }
     ],
-    "frameworks": [
-      {
-        "name": "next",
-        "version": "16.1.6",
-        "category": "fullstack"
-      },
-      {
-        "name": "react",
-        "version": "19.2.1",
-        "category": "frontend"
-      },
-      {
-        "name": "react-dom",
-        "version": "19.2.1",
-        "category": "frontend"
-      },
-      {
-        "name": "@playwright/test",
-        "version": "1.58.2",
-        "category": "testing"
-      },
-      {
-        "name": "vitest",
-        "version": "2.1.9",
-        "category": "testing"
-      }
-    ],
+    "frameworks": [],
     "packageManager": "npm",
-    "runtime": "Node.js 22.12.0"
+    "runtime": null
   },
   "build": {
-    "buildCommand": "npm run build",
-    "testCommand": "npm test",
-    "lintCommand": "npm run lint",
-    "devCommand": "npm run dev",
-    "scripts": {
-      "dev": "next dev",
-      "dev:bun": "bun --bun next dev",
-      "dev:npm": "npm run dev",
-      "clean:build-artifacts": "node scripts/clean-build-artifacts.mjs",
-      "self-heal": "node scripts/self-heal.mjs",
-      "prebuild": "node scripts/clean-build-artifacts.mjs && tsx scripts/generate-routes.ts",
-      "db:sync": "node scripts/sync-stack.mjs",
-      "db:seed-firms": "npx tsx scripts/seed-prop-firms.ts",
-      "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
-      "build:bun": "bun run scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} bun run scripts/robust-next-build.mjs",
-      "build:npm": "npm run build",
-      "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
-      "start:bun": "bun run start",
-      "pack:bun": "bun pm pack",
-      "vps:deploy": "bash ./scripts/vps-deploy-bun.sh",
-      "vps:deploy:npm": "npm ci && npm run build",
-      "start:standalone": "HOSTNAME=0.0.0.0 node .next/standalone/server.js",
-      "lint": "eslint",
-      "typecheck": "node scripts/clean-build-artifacts.mjs && node scripts/robust-typecheck.mjs",
-      "test": "vitest run --config vitest.config.ts",
-      "test:smoke": "node scripts/smoke-http.mjs",
-      "test:coverage": "vitest run --config vitest.config.ts --coverage",
-      "loadtest:k6": "k6 run scripts/loadtest/k6-smoke.js",
-      "check:route-budgets": "node scripts/check-route-budgets.mjs",
-      "check:route-security": "node scripts/check-route-security.mjs",
-      "check:dead-code": "node scripts/check-dead-code.mjs",
-      "check:warning-budget": "node scripts/check-warning-budget.mjs",
-      "check:color-contract": "node scripts/check-color-contract.mjs",
-      "analyze:bundle": "node scripts/analyze-bundle.mjs",
-      "perf:verify": "npm run check:route-budgets && npm run analyze:bundle",
-      "postinstall": "prisma generate",
-      "test:payment": "vitest run --config vitest.payment.config.ts",
-      "test:payment:ui": "vitest --config vitest.payment.config.ts --ui",
-      "test:payment:coverage": "vitest --config vitest.payment.config.ts --coverage",
-      "perf:lighthouse": "node scripts/perf-lighthouse.mjs",
-      "perf:dashboard-runtime": "node scripts/perf-dashboard-runtime.mjs",
-      "perf:headers": "node scripts/perf-header-check.mjs",
-      "perf:baseline": "node scripts/perf-baseline.mjs",
-      "perf:capture-baseline": "node scripts/perf-capture-baseline.mjs",
-      "perf:ci": "npm run check:dead-code && npm run check:route-security && npm run check:route-budgets && npm run analyze:bundle && PERF_HEADER_STRICT=true npm run perf:headers && npm run perf:baseline && npm run perf:dashboard-runtime && npm run perf:lighthouse",
-      "typecheck:bun": "bun run scripts/clean-build-artifacts.mjs && bun run scripts/robust-typecheck.mjs"
-    }
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
   },
   "conventions": {
     "namingStyle": "camelCase",
@@ -123,32 +55,13 @@
       "branchingStrategy": null
     }
   },
-  "customNotes": [
-    {
-      "timestamp": 1775762761419,
-      "source": "manual",
-      "category": "security",
-      "content": "Full security audit 2026-04-10 — Fixed: P0 password validation (auth-password.ts truthiness bug), P0 admin header PII leakage (proxy.ts), P0 OAuth CSRF bypass (auth callback). Remaining: ADMIN_EMAIL_DOMAINS allows domain-based admin elevation (authz.ts:55-67), static Rithmic PBKDF2 salt (rithmic/encryption-key/route.ts), no app-level rate limit on auth endpoints, TOKEN_CRYPTO_KEY now enforces min 32 chars, userIdCache now has 5min TTL + 10K cap."
-    },
-    {
-      "timestamp": 1775762761636,
-      "source": "manual",
-      "category": "bugs",
-      "content": "Fixed bugs 2026-04-10: (1) server/auth-password.ts lines 138,164 — validatePasswordStrength() returns always-truthy object, password changes were silently broken for ALL users. Fixed to check .valid property. (2) server/auth-user.ts line 504 — updateUserLanguage only allowed en/fr but app supports 11 locales. Expanded to full locale set. (3) app/[locale]/(home)/components/Navigation.tsx — linked to /features (non-existent) and /blog (should be /blogs)."
-    },
-    {
-      "timestamp": 1775762761830,
-      "source": "manual",
-      "category": "test",
-      "content": "Pre-existing test failures confirmed 2026-04-10: (1) tests/api/auth-callback-route.test.ts — 2 tests fail because mock setup doesn't match route's createCallbackClient pattern. Not a regression. (2) .worktrees/ contains stale test copies that also fail. (3) Total: 168 passed, 14 failed (pre-existing), 92 skipped across 184 test files."
-    }
-  ],
+  "customNotes": [],
   "directoryMap": {
     "app": {
       "path": "app",
       "purpose": "Application code",
       "fileCount": 13,
-      "lastAccessed": 1776456126146,
+      "lastAccessed": 1776458676402,
       "keyFiles": [
         "error.tsx",
         "global-error.tsx",
@@ -161,7 +74,7 @@
       "path": "awesome-design-md",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1776456126146,
+      "lastAccessed": 1776458676403,
       "keyFiles": [
         "CONTRIBUTING.md",
         "LICENSE",
@@ -172,7 +85,7 @@
       "path": "components",
       "purpose": "UI components",
       "fileCount": 21,
-      "lastAccessed": 1776456126150,
+      "lastAccessed": 1776458676409,
       "keyFiles": [
         "SparkChart.tsx",
         "ai-activated.tsx",
@@ -185,14 +98,14 @@
       "path": "content",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1776456126151,
+      "lastAccessed": 1776458676410,
       "keyFiles": []
     },
     "context": {
       "path": "context",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1776456126152,
+      "lastAccessed": 1776458676411,
       "keyFiles": [
         "AGENTS.md",
         "data-provider-utils.ts",
@@ -205,7 +118,7 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 64,
-      "lastAccessed": 1776456126152,
+      "lastAccessed": 1776458676411,
       "keyFiles": [
         "AI-Router-Complete-Report.md",
         "AI_AUTOFIX_QUICK_START.md",
@@ -218,14 +131,14 @@
       "path": "goose",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1776456126152,
+      "lastAccessed": 1776458676412,
       "keyFiles": []
     },
     "hooks": {
       "path": "hooks",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1776456126153,
+      "lastAccessed": 1776458676412,
       "keyFiles": [
         "use-auto-scroll.ts",
         "use-currency.ts",
@@ -238,7 +151,7 @@
       "path": "lib",
       "purpose": "Library code",
       "fileCount": 61,
-      "lastAccessed": 1776456126153,
+      "lastAccessed": 1776458676413,
       "keyFiles": [
         "AGENTS.md",
         "account-metrics.ts",
@@ -251,7 +164,7 @@
       "path": "locales",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1776456126153,
+      "lastAccessed": 1776458676413,
       "keyFiles": [
         "client.ts",
         "en.ts",
@@ -264,7 +177,7 @@
       "path": "mt5_import_service",
       "purpose": null,
       "fileCount": 7,
-      "lastAccessed": 1776456126154,
+      "lastAccessed": 1776458676414,
       "keyFiles": [
         "Dockerfile",
         "config.py",
@@ -273,18 +186,11 @@
         "requirements.txt"
       ]
     },
-    "output": {
-      "path": "output",
-      "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1776456126155,
-      "keyFiles": []
-    },
     "p": {
       "path": "p",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1776456126155,
+      "lastAccessed": 1776458676414,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -293,7 +199,7 @@
       "path": "prisma",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1776456126155,
+      "lastAccessed": 1776458676414,
       "keyFiles": [
         "schema-optimizations.prisma",
         "schema.prisma",
@@ -305,7 +211,7 @@
       "path": "public",
       "purpose": "Public files",
       "fileCount": 23,
-      "lastAccessed": 1776456126155,
+      "lastAccessed": 1776458676415,
       "keyFiles": [
         "AGENTS.md",
         "android-chrome-192x192.png",
@@ -318,7 +224,7 @@
       "path": "ripgrep-14.1.1-aarch64-apple-darwin",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1776456126155,
+      "lastAccessed": 1776458676416,
       "keyFiles": [
         "COPYING",
         "LICENSE-MIT",
@@ -331,7 +237,7 @@
       "path": "schemas",
       "purpose": "Schema definitions",
       "fileCount": 4,
-      "lastAccessed": 1776456126156,
+      "lastAccessed": 1776458676416,
       "keyFiles": [
         "risk-register.schema.json",
         "widget-input.schema.json",
@@ -343,7 +249,7 @@
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 37,
-      "lastAccessed": 1776456126156,
+      "lastAccessed": 1776458676417,
       "keyFiles": [
         "analyze-bundle.mjs",
         "analyze-components.js",
@@ -356,7 +262,7 @@
       "path": "server",
       "purpose": null,
       "fileCount": 38,
-      "lastAccessed": 1776456126156,
+      "lastAccessed": 1776458676417,
       "keyFiles": [
         "AGENTS.md",
         "accounts.ts",
@@ -369,7 +275,7 @@
       "path": "state",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1776456126156,
+      "lastAccessed": 1776458676417,
       "keyFiles": [
         "cancel-signal-state.json"
       ]
@@ -378,7 +284,7 @@
       "path": "store",
       "purpose": null,
       "fileCount": 26,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676417,
       "keyFiles": [
         "AGENTS.md",
         "account-order-store.ts",
@@ -391,7 +297,7 @@
       "path": "styles",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676418,
       "keyFiles": [
         "styleseed-base.css",
         "styleseed-fonts.css",
@@ -404,7 +310,7 @@
       "path": "t",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676418,
       "keyFiles": [
         "lessons",
         "memory",
@@ -415,7 +321,7 @@
       "path": "tasks",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676418,
       "keyFiles": [
         "PERFORMANCE_FIX_CHECKLIST.md",
         "lessons.md",
@@ -428,14 +334,14 @@
       "path": "test-results",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676418,
       "keyFiles": []
     },
     "tests": {
       "path": "tests",
       "purpose": "Test files",
       "fileCount": 20,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676418,
       "keyFiles": [
         "AGENTS.md",
         "account-metrics.test.ts",
@@ -448,7 +354,7 @@
       "path": "types",
       "purpose": "Type definitions",
       "fileCount": 1,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676419,
       "keyFiles": [
         "web-vitals.d.ts"
       ]
@@ -457,7 +363,7 @@
       "path": "app/api",
       "purpose": "API routes",
       "fileCount": 1,
-      "lastAccessed": 1776456126157,
+      "lastAccessed": 1776458676419,
       "keyFiles": [
         "AGENTS.md"
       ]
@@ -466,7 +372,7 @@
       "path": "lib/__tests__",
       "purpose": "Test files",
       "fileCount": 20,
-      "lastAccessed": 1776456126158,
+      "lastAccessed": 1776458676420,
       "keyFiles": [
         "admin-bypass.test.ts",
         "ai-policy.test.ts",
@@ -477,7 +383,7 @@
       "path": "lib/api",
       "purpose": "API routes",
       "fileCount": 1,
-      "lastAccessed": 1776456126159,
+      "lastAccessed": 1776458676420,
       "keyFiles": [
         "with-api-route.ts"
       ]
@@ -486,7 +392,7 @@
       "path": "prisma/migrations",
       "purpose": "Database migrations",
       "fileCount": 2,
-      "lastAccessed": 1776456126159,
+      "lastAccessed": 1776458676422,
       "keyFiles": [
         "README.md",
         "migration_lock.toml"
@@ -496,7 +402,7 @@
       "path": "tests/api",
       "purpose": "API routes",
       "fileCount": 23,
-      "lastAccessed": 1776456126160,
+      "lastAccessed": 1776458676425,
       "keyFiles": [
         "admin-reports-route.test.ts",
         "ai-budget-enforcement.test.ts",
@@ -507,7 +413,7 @@
       "path": "tests/app",
       "purpose": "Application code",
       "fileCount": 0,
-      "lastAccessed": 1776456126161,
+      "lastAccessed": 1776458676426,
       "keyFiles": []
     }
   },

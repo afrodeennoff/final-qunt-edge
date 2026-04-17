@@ -34,6 +34,7 @@ export function DataDebug() {
 
  const isMock = trades.length > 0 && trades[0].id.startsWith('mock-')
 
+<<<<<<< HEAD
  return (
  <div className="fixed bottom-4 right-4 z-[9999]">
  {!isOpen ? (
@@ -56,6 +57,30 @@ export function DataDebug() {
  <X className="h-4 w-4" />
  </button>
  </div>
+=======
+  return (
+    <div className="fixed bottom-4 right-4 z-[9999]">
+            {!isOpen ? (
+                <Button 
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setIsOpen(true)}
+                    className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 backdrop-blur-md shadow-lg"
+                >
+                    <Bug className="h-4 w-4 text-primary" />
+                </Button>
+            ) : (
+                <div className="w-80 bg-background/90 border border-border/14 rounded-2xl p-4 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between mb-4 border-b border-border/8 pb-2">
+                        <div className="flex items-center gap-2">
+                            <Bug className="h-4 w-4 text-primary" />
+                            <span className="text-xs font-bold uppercase tracking-widest text-foreground/90">Debug Dashboard</span>
+                        </div>
+                        <button onClick={() => setIsOpen(false)} className="text-foreground/60 hover:text-foreground transition-colors">
+                            <X className="h-4 w-4" />
+                        </button>
+                    </div>
+>>>>>>> origin/main
 
  <div className="space-y-3">
  <div className="flex justify-between items-center text-[10px]">
@@ -90,6 +115,7 @@ export function DataDebug() {
  </div>
  </div>
 
+<<<<<<< HEAD
  <div className="grid grid-cols-2 gap-2 mt-6">
  <Button 
  variant="outline"
@@ -115,4 +141,31 @@ export function DataDebug() {
  )}
  </div>
  )
+=======
+                    <div className="grid grid-cols-2 gap-2 mt-6">
+                        <Button 
+                            variant="outline"
+                            size="sm"
+                            onClick={() => refreshAllData({ force: true })}
+                            disabled={isLoading}
+                            className="h-8 text-[9px] font-bold uppercase tracking-widest border-border/8 bg-foreground/5 hover:bg-foreground/10"
+                        >
+                            <RefreshCw className={cn("h-3 w-3 mr-2", isLoading && "animate-spin")} />
+                            Sync Now
+                        </Button>
+                        <Button 
+                            variant="outline"
+                            size="sm"
+                            onClick={handleClearCache}
+                            className="h-8 text-[9px] font-bold uppercase tracking-widest border-semantic-error-border/20 bg-semantic-error-bg/5 hover:bg-semantic-error-bg/10 text-semantic-error"
+                        >
+                            <HardDrive className="h-3 w-3 mr-2" />
+                            Reset Cache
+                        </Button>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+>>>>>>> origin/main
 }

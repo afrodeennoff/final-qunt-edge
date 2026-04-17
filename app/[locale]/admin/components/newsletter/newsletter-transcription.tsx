@@ -238,6 +238,7 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  </div>
  )}
 
+<<<<<<< HEAD
  {/* Transcription Results */}
  {transcriptionResults.length > 0 && (
  <div className="space-y-4">
@@ -260,6 +261,30 @@ export function TranscriptionComponent({ segments, onTranscriptionComplete }: Tr
  </Button>
  </div>
  </div>
+=======
+        {/* Transcription Results */}
+        {transcriptionResults.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">
+                Résultats de transcription
+              </h3>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">
+                  {getTotalDuration().toFixed(1)}s total
+                </Badge>
+                <Button 
+                  onClick={downloadTranscription}
+                  variant="outline"
+                  size="sm"
+                  className="text-foreground border-border/28 hover:bg-accent/70"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Télécharger
+                </Button>
+              </div>
+            </div>
+>>>>>>> origin/main
 
  <div className="space-y-3 max-h-96 overflow-y-auto">
  {transcriptionResults

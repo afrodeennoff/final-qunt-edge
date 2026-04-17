@@ -32,8 +32,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
+<<<<<<< HEAD
       <header className="mb-6 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.070] p-6">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground/95">About Qunt Edge</h1>
+=======
+      <header className="mb-6 rounded-2xl border border-border/24 bg-card/70 p-6">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
+>>>>>>> origin/main
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
           Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
         </p>
@@ -47,7 +52,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </header>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+<<<<<<< HEAD
         <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.070]">
+=======
+        <Card className="border-border/24 bg-card/70">
+>>>>>>> origin/main
           <CardHeader>
             <CardTitle className="text-2xl">Our Mission</CardTitle>
           </CardHeader>
@@ -60,7 +69,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
         <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.070]">
+=======
+        <Card className="border-border/24 bg-card/70">
+>>>>>>> origin/main
           <CardHeader>
             <CardTitle className="text-2xl">THE TRADER BEHIND TIMON|</CardTitle>
           </CardHeader>
@@ -74,14 +87,22 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
         <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.070] md:col-span-2">
+=======
+        <Card className="border-border/24 bg-card/70 md:col-span-2">
+>>>>>>> origin/main
           <CardHeader>
             <CardTitle className="text-2xl">Founder&apos;s Expertise</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {founderSkills.map((skill, index) => (
+<<<<<<< HEAD
                 <Badge key={index} variant="secondary" className="border-[oklch(0.65_0.22_260/0.08)] bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
+=======
+                <Badge key={index} variant="secondary" className="border-border/24 bg-secondary/30 text-sm py-1 px-2 flex items-center gap-1">
+>>>>>>> origin/main
                   {skill.icon}
                   {skill.name}
                 </Badge>
@@ -90,7 +111,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
         <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.070] md:col-span-2">
+=======
+        <Card className="border-border/24 bg-card/70 md:col-span-2">
+>>>>>>> origin/main
           <CardHeader>
             <CardTitle className="text-2xl">Why Qunt Edge?</CardTitle>
           </CardHeader>

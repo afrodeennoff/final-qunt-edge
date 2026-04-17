@@ -177,6 +177,7 @@ export function PropFirmCatalogueExperience({
   }
 
   return (
+<<<<<<< HEAD
     <UnifiedPageShell widthClassName="max-w-[1360px]" className="py-12 sm:py-16">
       <div className="flex flex-col gap-6 lg:gap-8">
         <section
@@ -185,6 +186,11 @@ export function PropFirmCatalogueExperience({
             'animate-fade-up-smooth grid gap-6 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8',
           )}
         >
+=======
+    <div className="min-h-screen bg-[radial-gradient(860px_290px_at_14%_4%,hsl(var(--primary)/0.1),transparent_72%),radial-gradient(760px_260px_at_85%_4%,hsl(var(--accent)/0.09),transparent_74%),linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--card)/0.22)_24%,hsl(var(--background))_100%)]">
+      <div className="mx-auto flex max-w-[1320px] flex-col gap-7 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <section className="grid gap-6 rounded-3xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-6 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+>>>>>>> origin/main
           <div>
             <div className={cn(unifiedChipClassName, 'px-4 py-2')}>
               <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -203,12 +209,23 @@ export function PropFirmCatalogueExperience({
               >
                 Browse deals
               </Link>
+<<<<<<< HEAD
               <Link href={`/${locale}`} className={cn(unifiedGhostActionClassName, 'px-5 py-3')}>
+=======
+              <Link
+                href={`/${locale}`}
+                className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+              >
+>>>>>>> origin/main
                 Back to home
               </Link>
               <Link
                 href={`/${locale}/best-trading-journal`}
+<<<<<<< HEAD
                 className={cn(unifiedGhostActionClassName, 'px-5 py-3')}
+=======
+                className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+>>>>>>> origin/main
               >
                 Best trading journal
               </Link>
@@ -241,6 +258,7 @@ export function PropFirmCatalogueExperience({
 
             <RegisteredAccountsChart data={registeredAccountsChartData} />
 
+<<<<<<< HEAD
             <section
               className={cn(
                 unifiedSectionPanelClassName,
@@ -259,8 +277,16 @@ export function PropFirmCatalogueExperience({
                 <p className="text-sm text-muted-foreground">
                   Compact ranking before the full board.
                 </p>
+=======
+            <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.82)] p-5 shadow-[0_24px_60px_-44px_hsl(var(--foreground)/0.9)] sm:p-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Leaders</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Top firms in the current shortlist</h2>
+>>>>>>> origin/main
               </div>
 
+<<<<<<< HEAD
               <div className="mt-6 grid gap-3 lg:grid-cols-3">
                 {topFirms.map((firm, index) => (
                   <Link
@@ -289,6 +315,20 @@ export function PropFirmCatalogueExperience({
                       <p className="text-sm font-semibold text-foreground/95">
                         {formatCompactCurrency(firm.stats.payouts.paidAmount)}
                       </p>
+=======
+            <div className="mt-6 grid gap-3 lg:grid-cols-3">
+              {topFirms.map((firm, index) => (
+                <Link
+                  key={firm.key}
+                  href={`/${locale}/firm/${firm.slug}`}
+                  className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] px-4 py-4 transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.84)]"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Rank #{index + 1}</p>
+                      <p className="mt-2 text-base font-semibold text-foreground">{firm.name}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{firm.platform} • {firm.drawdownType}</p>
+>>>>>>> origin/main
                     </div>
                   </Link>
                 ))}
@@ -297,12 +337,16 @@ export function PropFirmCatalogueExperience({
           </>
         ) : null}
 
+<<<<<<< HEAD
         <section
           className={cn(
             unifiedSectionPanelClassName,
             'animate-fade-up-smooth animate-fade-up-smooth-d3 p-3 sm:p-4',
           )}
         >
+=======
+        <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.82)] p-3 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.9)] sm:p-4">
+>>>>>>> origin/main
           <div className="flex items-center gap-2">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground/65" />
@@ -310,7 +354,11 @@ export function PropFirmCatalogueExperience({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search firm..."
+<<<<<<< HEAD
                 className="h-10 w-full rounded-full border border-border/40 bg-card/55 pl-9 pr-3 text-sm text-foreground/95 outline-none placeholder:text-muted-foreground/55 transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35 focus:bg-card/70 focus:shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]"
+=======
+                className="h-9 w-full rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground/55 focus:border-primary/35"
+>>>>>>> origin/main
               />
             </div>
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -320,7 +368,11 @@ export function PropFirmCatalogueExperience({
               <button
                 type="button"
                 onClick={resetFilters}
+<<<<<<< HEAD
                 className={cn(unifiedGhostActionClassName, 'shrink-0 px-3 py-1.5 text-xs')}
+=======
+                className="shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.75)] px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
+>>>>>>> origin/main
               >
                 Reset
               </button>
@@ -328,12 +380,16 @@ export function PropFirmCatalogueExperience({
           </div>
         </section>
 
+<<<<<<< HEAD
         <section
           className={cn(
             unifiedSectionPanelClassName,
             'animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6',
           )}
         >
+=======
+        <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.82)] p-5 shadow-[0_24px_60px_-44px_hsl(var(--foreground)/0.9)] sm:p-6">
+>>>>>>> origin/main
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -441,7 +497,11 @@ function StatCard({
   icon: typeof Building2
 }) {
   return (
+<<<<<<< HEAD
     <div className={cn(unifiedMetricPanelClassName, 'p-4')}>
+=======
+    <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
+>>>>>>> origin/main
       <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5" />
         {label}
@@ -463,11 +523,17 @@ function PayoutPill({
   variant: 'paid' | 'pending' | 'refused'
 }) {
   const borderStyles = {
+<<<<<<< HEAD
     paid: 'bg-[linear-gradient(135deg,hsl(var(--success)/0.12),hsl(var(--mk-surface-muted)/0.72))]',
     pending:
       'bg-[linear-gradient(135deg,hsl(var(--warning)/0.1),hsl(var(--mk-surface-muted)/0.72))]',
     refused:
       'bg-[linear-gradient(135deg,hsl(var(--semantic-error-bg)),hsl(var(--mk-surface-muted)/0.72))]',
+=======
+    paid: 'border-success/30 bg-[linear-gradient(135deg,hsl(var(--success)/0.12),hsl(var(--mk-surface-muted)/0.72))]',
+    pending: 'border-warning/30 bg-[linear-gradient(135deg,hsl(var(--warning)/0.1),hsl(var(--mk-surface-muted)/0.72))]',
+    refused: 'border-semantic-error-border bg-[linear-gradient(135deg,hsl(var(--semantic-error-bg)),hsl(var(--mk-surface-muted)/0.72))]',
+>>>>>>> origin/main
   }
 
   const labelStyles = {
@@ -569,8 +635,13 @@ function RegisteredAccountsChart({
   }
 
   return (
+<<<<<<< HEAD
     <Card className={cn(unifiedSectionPanelClassName, 'overflow-hidden')}>
       <CardHeader className="border-b border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.58)_0%,transparent_100%)] px-6 pb-3 pt-4">
+=======
+    <Card className="overflow-hidden rounded-3xl border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.82)] shadow-[0_30px_66px_-48px_hsl(var(--foreground)/0.92)]">
+      <CardHeader className="border-b border-[hsl(var(--mk-border)/0.38)] bg-[linear-gradient(180deg,hsl(var(--mk-surface-muted)/0.62)_0%,transparent_100%)] px-6 pb-3 pt-4">
+>>>>>>> origin/main
         <div className="flex flex-col gap-2">
           <div className="min-w-0">
             <CardTitle className="text-[clamp(1.2rem,2.4vw,1.55rem)] leading-tight tracking-tight">
@@ -581,7 +652,11 @@ function RegisteredAccountsChart({
             <span className="shrink-0 text-xs text-muted-foreground">
               {registeredAccountsChartConfig[activeMetric].label}
             </span>
+<<<<<<< HEAD
             <div className="inline-flex shrink-0 rounded-full border border-border/35 bg-card/55 p-1">
+=======
+            <div className="inline-flex shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.68)] p-1">
+>>>>>>> origin/main
               {metricTabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -602,11 +677,16 @@ function RegisteredAccountsChart({
       </CardHeader>
       <CardContent className="pt-3">
         {chartData.length > 0 ? (
+<<<<<<< HEAD
           <div className={cn(unifiedInsetPanelClassName, 'overflow-hidden p-3')}>
             <ChartContainer
               config={registeredAccountsChartConfig}
               className="h-[360px] w-full overflow-hidden"
             >
+=======
+          <div className="overflow-hidden rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-3">
+            <ChartContainer config={registeredAccountsChartConfig} className="h-[360px] w-full overflow-hidden">
+>>>>>>> origin/main
               <BarChart
                 accessibilityLayer
                 data={chartData}
@@ -647,7 +727,11 @@ function RegisteredAccountsChart({
             </ChartContainer>
           </div>
         ) : (
+<<<<<<< HEAD
           <div className="rounded-xl border border-dashed border-[oklch(0.65_0.22_260/0.08)] bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+=======
+          <div className="rounded-xl border border-dashed border-border/24 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
+>>>>>>> origin/main
             No account registrations available yet.
           </div>
         )}

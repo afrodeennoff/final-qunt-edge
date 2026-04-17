@@ -39,7 +39,11 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
   return (
     <Link href={`/${locale}/firm/${slug}`} className="block group">
+<<<<<<< HEAD
       <article className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.090] transition-all duration-300 hover:-translate-y-1 hover:border-border/40 hover:bg-[oklch(0.65_0.22_260/0.03)]">
+=======
+      <article className="relative overflow-hidden rounded-2xl border border-border/28 bg-card/90 transition-all duration-300 hover:-translate-y-1 hover:border-border/40 hover:bg-card">
+>>>>>>> origin/main
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -143,7 +147,11 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
         {/* Footer CTA */}
         <div className="px-5 pb-4">
+<<<<<<< HEAD
           <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/20 text-xs font-medium text-muted-foreground transition-all duration-200 group-hover:border-[oklch(0.65_0.22_260/0.08)] group-hover:bg-muted/50 group-hover:text-foreground/95">
+=======
+          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/20 text-xs font-medium text-muted-foreground transition-all duration-200 group-hover:border-border/24 group-hover:bg-muted/50 group-hover:text-foreground">
+>>>>>>> origin/main
             View Details
             <svg className="ml-1.5 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

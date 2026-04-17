@@ -68,6 +68,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  const response = await fetch(`${http}//${process.env.NEXT_PUBLIC_RITHMIC_API_URL}/servers`)
  const data = await response.json()
 
+<<<<<<< HEAD
  if (data.success) {
  setServerConfigs(data.servers)
  } else {
@@ -91,6 +92,31 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  const [allAccounts, setAllAccounts] = useState(true)
  const [accountSearch, setAccountSearch] = useState('')
  const t = useI18n()
+=======
+      if (data.success) {
+        setServerConfigs(data.servers)
+      } else {
+        throw new Error(data.message)
+      }
+    } catch (error) {
+      console.warn('Failed to fetch server configurations:', error)
+    }
+  }, [])
+  
+  const [credentials, setCredentials] = useState<RithmicCredentials>({
+    username: '',
+    password: '',
+    server_type: 'Rithmic Paper Trading',
+    location: 'Chicago Area',
+    userId: user?.id || ''
+  })
+  const [shouldSaveCredentials, setShouldSaveCredentials] = useState(true)
+  const [showCredentialsManager, setShowCredentialsManager] = useState(true)
+  const [currentCredentialId, setCurrentCredentialId] = useState<string | null>(null)
+  const [allAccounts, setAllAccounts] = useState(true)
+  const [accountSearch, setAccountSearch] = useState('')
+  const t = useI18n()
+>>>>>>> origin/main
 
  const isLegacyCredentialId = useCallback(
  (id: string | null) => !!id && id.startsWith('rithmic_'),
@@ -133,6 +159,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  throw new Error(result.message)
  }
 
+<<<<<<< HEAD
  setAvailableAccounts(result.accounts)
  setToken(result.token)
  setWsUrl(result.websocket_url)
@@ -159,6 +186,34 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  ? t('rithmic.error.timeout')
  : errorMessage,
  })
+=======
+      setAvailableAccounts(result.accounts)
+      setToken(result.token)
+      setWsUrl(result.websocket_url)
+      
+      // Always go to account selection when editing credentials
+      setStep('select-accounts')
+      
+      // Send success message
+      handleMessage({
+        type: 'log',
+        level: 'info',
+        message: `Retrieved ${result.accounts.length} accounts. Please select accounts and click "Start Processing"`
+      })
+    } catch (error: unknown) {
+      if (!(error instanceof Error && error.message.includes('Rate limit exceeded'))) {
+        console.warn('Connection error:', error)
+      }
+      
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      
+      // Show error toast
+      toast.error(t('rithmic.error.connectionFailed'), {
+        description: error instanceof DOMException && error.name === 'AbortError' 
+          ? t('rithmic.error.timeout')
+          : errorMessage,
+      })
+>>>>>>> origin/main
 
  // Reset form if it's a timeout or invalid credentials
  if (error instanceof DOMException && error.name === 'AbortError' || 
@@ -403,6 +458,7 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  return
  }
 
+<<<<<<< HEAD
  // Save credentials and accounts locally
  void saveCredentialsAndAccounts()
  // Store synchronization data in db
@@ -419,6 +475,24 @@ export function RithmicSyncConnection({ setIsOpen }: RithmicSyncConnectionProps)
  description: t('rithmic.error.syncDataSaveFailedDescription'),
  })
  }
+=======
+    // Save credentials and accounts locally
+    void saveCredentialsAndAccounts()
+    // Store synchronization data in db
+    try {
+      await setRithmicSynchronization({
+        service: 'rithmic',
+        accountId: credentials.username || '',
+        token: token,
+        tokenExpiresAt: null
+      })
+    } catch (error) {
+      console.warn('Failed to save synchronization data:', error)
+      toast.error(t('rithmic.error.syncDataSaveFailed'), {
+        description: t('rithmic.error.syncDataSaveFailedDescription'),
+      })
+    }
+>>>>>>> origin/main
 
  // Use all available accounts if allAccounts is true
  const accountsToSync = allAccounts ? availableAccounts.map(acc => acc.account_id) : selectedAccounts

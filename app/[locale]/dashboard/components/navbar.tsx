@@ -9,7 +9,11 @@ import { useKeyboardShortcuts } from '../../../../hooks/use-keyboard-shortcuts'
 import { ActiveFilterTags } from './filters/active-filter-tags'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FilterCommandMenu } from './filters/filter-command-menu'
+<<<<<<< HEAD
 import { useCurrentLocale } from '@/locales/client'
+=======
+import { useCurrentLocale } from "@/locales/client"
+>>>>>>> origin/main
 import { useDashboard } from '../dashboard-context'
 import { AddWidgetSheet } from './add-widget-sheet'
 import { ShareButton } from './share-button'
@@ -51,7 +55,11 @@ export default function Navbar() {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+<<<<<<< HEAD
         className="animate-fade-up-smooth pointer-events-auto flex flex-col rounded-[2rem] sm:rounded-full border border-border/45 bg-background/72 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300"
+=======
+        className="pointer-events-auto flex flex-col rounded-3xl sm:rounded-full border border-border/24 bg-card/80 sm:shadow-xl transition-all duration-300"
+>>>>>>> origin/main
       >
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
@@ -68,8 +76,13 @@ export default function Navbar() {
           {/* Right Side: Actions */}
           <div className="flex items-center gap-3">
             {/* Config Group */}
+<<<<<<< HEAD
             <div className="flex items-center gap-1.5 rounded-xl border border-border/45 bg-primary/6 p-1">
               <Button
+=======
+            <div className="flex items-center gap-2 p-1.5 bg-secondary/20 backdrop-blur-xl rounded-2xl border border-border/20">
+              <Button 
+>>>>>>> origin/main
                 id="customize-mode"
                 variant="ghost"
                 size="sm"
@@ -92,7 +105,11 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={flushPendingSaves}
+<<<<<<< HEAD
                   className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground/95 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
+=======
+                  className="hidden sm:flex h-9 px-3 gap-2 rounded-xl text-foreground transition-all border border-border/24"
+>>>>>>> origin/main
                 >
                   <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -126,10 +143,17 @@ export default function Navbar() {
 
                 {!isPlusUser() && (
                   <Link href={`/${locale}/dashboard/billing`}>
+<<<<<<< HEAD
                     <Button
                       variant="ghost"
                       size="sm"
                       className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/95 shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
+=======
+                    <Button  
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-9 px-5 gap-2 rounded-xl bg-secondary/25 border border-border/24 text-foreground text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 shadow-none hover:bg-secondary/35"
+>>>>>>> origin/main
                       aria-label="Upgrade to Elite plan"
                     >
                       <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />
@@ -142,8 +166,13 @@ export default function Navbar() {
               <div className="mx-1 hidden h-6 w-px bg-border/50 sm:block" />
 
               {/* Real-time Actions */}
+<<<<<<< HEAD
               <div className="flex items-center gap-2 rounded-xl border border-border/35 bg-background/55 p-1.5 shadow-inner">
                 <Button
+=======
+              <div className="flex items-center gap-2 bg-background/70 p-1.5 rounded-2xl border border-border/20 shadow-inner">
+                <Button 
+>>>>>>> origin/main
                   variant="ghost"
                   size="icon"
                   onClick={handleRefresh}

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 "use client"
+=======
+>>>>>>> origin/main
 /* eslint-disable */
 import { useCallback, useEffect, useMemo, useState, startTransition } from 'react'
 import { type FileError, type FileRejection, useDropzone } from 'react-dropzone'

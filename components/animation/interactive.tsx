@@ -71,6 +71,7 @@ export function InteractiveWrapper({
  return <div className={className}>{children}</div>
  }
 
+<<<<<<< HEAD
  return (
  <motion.div
  ref={ref}
@@ -95,6 +96,10 @@ export function InteractiveWrapper({
  className="absolute inset-0 rounded-lg pointer-events-none"
  style={{
  background: glowColor,
+=======
+  const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
+    if (prefersReducedMotion) return
+>>>>>>> origin/main
 
  opacity: 0,
  zIndex: -1,

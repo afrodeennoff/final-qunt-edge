@@ -12,6 +12,7 @@ const Circle = forwardRef<
  HTMLDivElement,
  { className?: string; children?: React.ReactNode }
 >(({ className, children }, ref) => {
+<<<<<<< HEAD
  return (
  <div
  ref={ref}
@@ -22,6 +23,19 @@ const Circle = forwardRef<
  {children}
  </div>
  );
+=======
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "z-10 flex size-12 items-center justify-center rounded-full border-2 border-border/28 bg-card p-3 shadow-none",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+>>>>>>> origin/main
 });
 
 Circle.displayName ="Circle";

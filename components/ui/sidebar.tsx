@@ -222,9 +222,15 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
           className={cn(
+<<<<<<< HEAD
             'flex h-full w-full flex-col border border-sidebar-border/45 bg-sidebar/98 shadow-[0_28px_60px_-42px_rgba(0,0,0,0.92)]',
             'group-data-[variant=floating]:rounded-lg',
             'group-data-[variant=inset]:rounded-lg',
+=======
+            "flex h-full w-full flex-col bg-sidebar",
+            "group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border/35 group-data-[variant=floating]:shadow-sm",
+            "group-data-[variant=inset]:rounded-lg group-data-[variant=inset]:shadow-sm"
+>>>>>>> origin/main
           )}
         >
           {children}
@@ -449,7 +455,11 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: 'hover:bg-sidebar-accent/70 hover:text-sidebar-foreground',
         outline:
+<<<<<<< HEAD
           'border border-sidebar-border/45 bg-sidebar-accent/28 shadow-none hover:border-sidebar-primary/22 hover:bg-sidebar-primary/10 hover:text-sidebar-foreground',
+=======
+          "border border-[hsl(var(--sidebar-border)/0.4)] bg-background shadow-none hover:border-[hsl(var(--sidebar-accent)/0.55)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+>>>>>>> origin/main
       },
       size: {
         default: 'h-8 text-sm',
@@ -561,7 +571,11 @@ function SidebarMenuSkeleton({
   className,
   showIcon = false,
   ...props
+<<<<<<< HEAD
 }: React.ComponentProps<'div'> & { showIcon?: boolean }) {
+=======
+}: React.ComponentProps<"div"> & { showIcon?: boolean }) {
+>>>>>>> origin/main
   // Deterministic width for skeleton — avoids impure random during render
   const [width] = React.useState(() => `${Math.floor(Math.random() * 45) + 50}%`)
   return (

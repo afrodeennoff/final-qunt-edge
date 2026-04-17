@@ -34,6 +34,7 @@ import type { ImportTradeDraft } from "@/lib/trade-types";
 type ImportErrorBoundaryState = { hasError: boolean; error: Error | null };
 
 class ImportErrorBoundary extends Component<
+<<<<<<< HEAD
  { children: React.ReactNode; onReset: () => void },
  ImportErrorBoundaryState
 > {
@@ -70,6 +71,44 @@ class ImportErrorBoundary extends Component<
  }
  return this.props.children;
  }
+=======
+  { children: React.ReactNode; onReset: () => void },
+  ImportErrorBoundaryState
+> {
+  constructor(props: { children: React.ReactNode; onReset: () => void }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error): ImportErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    logger.error({ error, componentStack: info.componentStack }, "Import dialog error");
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+          <p className="text-sm text-v2-text-muted">Something went wrong loading this import.</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              this.props.onReset();
+            }}
+          >
+            Try again
+          </Button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+>>>>>>> origin/main
 }
 
 type ColumnConfig = {
@@ -199,6 +238,7 @@ export default function ImportButton() {
 
  const result = await saveTradesAction(newTrades);
 
+<<<<<<< HEAD
  if (result.error) {
  if (result.error ==="DUPLICATE_TRADES") {
  toast.error(t("import.error.duplicateTrades"), {
@@ -236,6 +276,45 @@ export default function ImportButton() {
  setTimeout(() => resetImportState(), 100);
  return;
  }
+=======
+      if (result.error) {
+        if (result.error === "DUPLICATE_TRADES") {
+          toast.error(t("import.error.duplicateTrades"), {
+            description: t("import.error.duplicateTradesDescription"),
+          });
+        } else if (result.error === "INVALID_DATA") {
+          const detailStr = String(result.details || "");
+          if (detailStr.includes("future entry date")) {
+            toast.error(t("import.error.futureDate"), {
+              description: t("import.error.futureDateDescription"),
+            });
+          } else {
+            toast.error(t("import.error.invalidData"), {
+              description:
+                typeof result.details === "string"
+                  ? result.details
+                  : t("import.error.invalidDataDescription"),
+            });
+          }
+        } else if (result.error === "NO_TRADES_ADDED") {
+          toast.error(t("import.error.noTradesAdded"), {
+            description: t("import.error.noTradesAddedDescription"),
+          });
+        } else {
+          const details =
+            typeof result.details === "string"
+              ? result.details
+              : t("import.error.failedDescription");
+          toast.error(t("import.error.failed"), {
+            description: details,
+          });
+        }
+        // Don't proceed further if there's an error - close dialog to prevent freezing
+        setIsOpen(false);
+        setTimeout(() => resetImportState(), 100);
+        return;
+      }
+>>>>>>> origin/main
 
  // Show success message
  toast.success(t("import.success"), {
@@ -244,6 +323,7 @@ export default function ImportButton() {
  }),
  });
 
+<<<<<<< HEAD
  // Close dialog immediately to prevent UI freezing
  setIsOpen(false);
  
@@ -287,6 +367,51 @@ export default function ImportButton() {
  refreshTradesOnly,
  refreshUserDataOnly,
  ]);
+=======
+      // Close dialog immediately to prevent UI freezing
+      setIsOpen(false);
+      
+      // Reset state with a small delay to allow UI to update
+      setTimeout(() => {
+        resetImportState();
+      }, 200);
+
+      // Refresh data in the background without blocking UI
+      refreshTradesOnly({ force: true }).catch((refreshError) => {
+        logger.error({ error: refreshError }, "Background data refresh failed after import");
+      });
+      refreshUserDataOnly({ force: true }).catch((refreshError) => {
+        logger.error({ error: refreshError }, "Background user refresh failed after import");
+      });
+      
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : t("import.error.failedDescription");
+      logger.error({ error }, "Error saving trades:");
+      toast.error(t("import.error.failed"), {
+        description: message,
+      });
+      
+      // Ensure dialog closes on error to prevent freezing
+      setIsOpen(false);
+      setTimeout(() => resetImportState(), 100);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [
+    processedTrades,
+    accountNumbers,
+    selectedAccountNumbers,
+    importType,
+    user,
+    supabaseUser,
+    accounts,
+    trades,
+    t,
+    refreshTradesOnly,
+    refreshUserDataOnly,
+  ]);
+>>>>>>> origin/main
 
  const resetImportState = () => {
  setImportType("");
@@ -562,6 +687,7 @@ export default function ImportButton() {
  <span className="hidden md:block text-[10px] font-semibold uppercase tracking-[0.18em]">{t("import.button")}</span>
  </Button>
 
+<<<<<<< HEAD
  <Dialog
  open={isOpen}
  onOpenChange={(open) => {
@@ -600,6 +726,47 @@ export default function ImportButton() {
  {renderStep()}
  </ImportErrorBoundary>
  </div>
+=======
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsOpen(false);
+            // Defer state reset to after dialog close animation completes
+            // to prevent heavy re-renders during animation that freeze the UI
+            requestAnimationFrame(() => {
+              resetImportState();
+            });
+          } else {
+            setIsOpen(true);
+          }
+        }}
+      >
+        <DialogContent
+          className={cn(
+            "flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_36px_100px_-28px_rgba(0,0,0,0.85)] sm:h-[80vh] sm:max-w-[80vw]",
+          )}
+          onPointerDownOutside={(e) => {
+            // Prevent accidental closes during import flow
+            if (step !== 'select-import-type') {
+              e.preventDefault();
+            }
+          }}
+          onEscapeKeyDown={(e) => {
+            // Only allow escape on first step
+            if (step !== 'select-import-type') {
+              e.preventDefault();
+            }
+          }}
+        >
+          <ImportDialogHeader step={step} importType={importType} />
+
+          <div className="flex-1 overflow-hidden p-6">
+            <ImportErrorBoundary onReset={resetImportState}>
+              {renderStep()}
+            </ImportErrorBoundary>
+          </div>
+>>>>>>> origin/main
 
  <ImportDialogFooter
  step={step}

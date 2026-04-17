@@ -30,7 +30,11 @@ export function SidebarLayoutShell({
   return (
     <>
       {sidebar}
+<<<<<<< HEAD
       <SidebarInset className={cn('relative h-dvh overflow-hidden qe-v2-app-shell', className)}>
+=======
+      <SidebarInset className={cn('relative overflow-hidden h-dvh', className)}>
+>>>>>>> origin/main
         <BackgroundGlow variant={backgroundVariant} />
         <div className="relative z-0 flex h-full flex-col">
           {header}

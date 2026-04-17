@@ -120,9 +120,15 @@ function DealsTabBar({
   onTabClick: (id: string) => void
 }) {
   return (
+<<<<<<< HEAD
     <nav className="sticky top-16 z-40 border-y border-[oklch(0.65_0.22_260/0.1)] bg-background/95">
       <div className="mx-auto max-w-[1360px] overflow-hidden px-4 sm:px-6 md:px-8 lg:px-12">
         <div className="my-3 flex gap-1.5 overflow-x-auto overflow-y-hidden rounded-full border border-[oklch(0.65_0.22_260/0.1)] bg-[oklch(0.65_0.22_260/0.06)] p-1.5 scrollbar-none">
+=======
+    <nav className="sticky top-[68px] z-40 bg-[hsl(var(--background)/0.82)] backdrop-blur">
+      <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+        <div className="my-2 flex gap-1.5 overflow-x-auto rounded-full bg-[hsl(var(--mk-surface)/0.82)] p-1.5 scrollbar-none">
+>>>>>>> origin/main
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -569,11 +575,16 @@ function DealsTabSections({
   return (
     <>
       {/* ── Matchup ── */}
+<<<<<<< HEAD
       <section
         id="matchup"
         className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
       >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
+=======
+      <section id="matchup" className="scroll-mt-[120px] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+>>>>>>> origin/main
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">
               Matchup
@@ -587,6 +598,7 @@ function DealsTabSections({
             </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-2xl grid-cols-3 gap-3">
+<<<<<<< HEAD
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">Firms</p>
               <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
@@ -597,11 +609,24 @@ function DealsTabSections({
             </div>
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-xs uppercase tracking-widest text-muted-foreground">View</p>
+=======
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Firms</p>
+              <p className="mt-1 text-lg font-bold text-foreground">{firms.length}+</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Models</p>
+              <p className="mt-1 text-lg font-bold text-foreground">3</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">View</p>
+>>>>>>> origin/main
               <p className="mt-1 text-lg font-bold text-foreground">Live</p>
             </div>
           </div>
           <FirmComparisonGrid firms={firms} />
           <div className="mt-6 grid gap-4 md:grid-cols-3">
+<<<<<<< HEAD
             <div
               className={cn(
                 dealsInsetPanelClassName,
@@ -634,14 +659,32 @@ function DealsTabSections({
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Match payout timing with your capital recycling and scaling plan.
               </p>
+=======
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
+              <h3 className="text-base font-semibold text-foreground">1. Set max month-one spend</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Include evaluation fee, any likely retry budget, and platform costs.</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
+              <h3 className="text-base font-semibold text-foreground">2. Pick executable drawdown</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Favor rule sets you can consistently follow during volatile sessions.</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-5">
+              <h3 className="text-base font-semibold text-foreground">3. Align payout cadence</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Match payout timing with your capital recycling and scaling plan.</p>
+>>>>>>> origin/main
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Cost Planner ── */}
+<<<<<<< HEAD
       <section id="cost-planner" className="scroll-mt-[120px] overflow-hidden py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
+=======
+      <section id="cost-planner" className="scroll-mt-[120px] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+>>>>>>> origin/main
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">
               Cost Planner
@@ -654,6 +697,7 @@ function DealsTabSections({
             </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+<<<<<<< HEAD
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
                 Input Layer
@@ -689,17 +733,44 @@ function DealsTabSections({
                 Pair this with the Playbooks tab to align risk rules with the same assumptions
                 entered here.
               </li>
+=======
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Input Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Fees + resets</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Output Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Net after costs</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Risk Layer</p>
+              <p className="mt-1 font-semibold text-foreground">Ratio signal</p>
+            </div>
+          </div>
+          <EvalCostCalculator />
+          <div className="mt-6 rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.82)] p-5 sm:p-6">
+            <h3 className="text-lg font-semibold text-foreground">Interpretation tips</h3>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">If your cost-to-payout ratio rises above 40%, reconsider account size, reset assumptions, or execution pace.</li>
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Use the Matchup tab to cross-check whether a different drawdown model can reduce expected reset frequency.</li>
+              <li className="rounded-xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-2">Pair this with the Playbooks tab to align risk rules with the same assumptions entered here.</li>
+>>>>>>> origin/main
             </ul>
           </div>
         </div>
       </section>
 
       {/* ── Playbooks ── */}
+<<<<<<< HEAD
       <section
         id="playbooks"
         className="scroll-mt-[120px] overflow-hidden bg-[oklch(0.65_0.22_260/0.04)] py-16 sm:py-20"
       >
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
+=======
+      <section id="playbooks" className="scroll-mt-[120px] bg-[hsl(var(--mk-surface)/0.3)] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+>>>>>>> origin/main
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">
               Playbooks
@@ -713,6 +784,7 @@ function DealsTabSections({
             </p>
           </div>
           <div className="mx-auto mb-6 grid max-w-xl gap-2 sm:grid-cols-3">
+<<<<<<< HEAD
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Focus</p>
               <p className="mt-1 font-bold text-foreground">Execution Quality</p>
@@ -724,6 +796,19 @@ function DealsTabSections({
             <div className={cn(dealsInsetPanelClassName, 'p-3 text-center')}>
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Outcome</p>
               <p className="mt-1 font-bold text-foreground">Lower Rule Breaches</p>
+=======
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Focus</p>
+              <p className="mt-1 font-semibold text-foreground">Execution Quality</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Mode</p>
+              <p className="mt-1 font-semibold text-foreground">Actionable Steps</p>
+            </div>
+            <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] p-3 text-center">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Outcome</p>
+              <p className="mt-1 font-semibold text-foreground">Lower Rule Breaches</p>
+>>>>>>> origin/main
             </div>
           </div>
           <GuideLibrary locale={locale} />
@@ -731,8 +816,13 @@ function DealsTabSections({
       </section>
 
       {/* ── Help / FAQ ── */}
+<<<<<<< HEAD
       <section id="help" className="scroll-mt-[120px] overflow-hidden py-16 sm:py-20">
         <div className="mx-auto max-w-[1360px] px-4 sm:px-6 md:px-8 lg:px-12">
+=======
+      <section id="help" className="scroll-mt-[120px] py-16 sm:py-20">
+        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
+>>>>>>> origin/main
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-3 rounded-full px-3">
               Help
@@ -747,22 +837,31 @@ function DealsTabSections({
           </div>
           <div className="mb-4 flex flex-wrap gap-2">
             {['Deals basics', 'Offer updates', 'Risk fit', 'Support'].map((chip) => (
+<<<<<<< HEAD
               <span
                 key={chip}
                 className={cn(dealsChipClassName, 'px-3 py-1 text-xs text-muted-foreground')}
               >
                 {chip}
               </span>
+=======
+              <span key={chip} className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.68)] px-3 py-1 text-xs text-muted-foreground">{chip}</span>
+>>>>>>> origin/main
             ))}
           </div>
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
+<<<<<<< HEAD
               <AccordionItem
                 key={item.question}
                 value={`item-${index}`}
                 className={cn(dealsPanelClassName, 'mb-3 rounded-2xl px-4')}
               >
                 <AccordionTrigger className="py-4 text-left text-base font-bold text-foreground hover:no-underline">
+=======
+              <AccordionItem key={item.question} value={`item-${index}`} className="mb-3 rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.84)] px-4">
+                <AccordionTrigger className="py-4 text-left text-base font-semibold text-foreground hover:no-underline">
+>>>>>>> origin/main
                   {item.question}
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 pt-1 text-sm leading-relaxed text-muted-foreground">
@@ -820,6 +919,7 @@ function BiggestDealsCarousel({
   }
 
   return (
+<<<<<<< HEAD
     <section
       className={cn(
         dealsPanelClassName,
@@ -830,6 +930,9 @@ function BiggestDealsCarousel({
       onFocusCapture={() => setIsAutoSlidePaused(true)}
       onBlurCapture={() => setIsAutoSlidePaused(false)}
     >
+=======
+    <section className="relative overflow-hidden rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 pb-8 pt-7 text-[hsl(var(--mk-text))] sm:px-8 sm:pb-10 sm:pt-8 lg:px-10 lg:pb-14 lg:pt-10">
+>>>>>>> origin/main
       <div className="relative flex items-center justify-between gap-3">
         <div className="space-y-2">
           <Badge variant="secondary" className="w-fit rounded-full px-3">
@@ -871,6 +974,7 @@ function BiggestDealsCarousel({
           <BackgroundDealTeaser deal={nextDeal} align="right" />
         </div>
 
+<<<<<<< HEAD
         <div
           className={cn(
             dealsInsetPanelClassName,
@@ -896,6 +1000,19 @@ function BiggestDealsCarousel({
                 >
                   {activeDeal.platform}
                 </span>
+=======
+        <div className="relative mx-auto w-full max-w-[1020px] rounded-3xl bg-[hsl(var(--mk-bg-0))] px-6 py-8 sm:px-8 sm:py-9 shadow-[0_28px_70px_-48px_hsl(var(--foreground)/0.32)]">
+          <div className="absolute left-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-[hsl(var(--chart-3))]">
+            <Flame className="h-4 w-4" />
+          </div>
+          <div className="grid gap-7 lg:grid-cols-[0.97fr_auto_1.03fr] lg:items-center">
+            <div className="flex flex-col items-center text-center">
+              <div className="relative mt-4 h-36 w-36">
+                <div className="absolute -inset-7 rounded-full bg-[radial-gradient(circle,rgba(190,218,255,0.34)_0%,rgba(20,39,70,0.08)_60%,transparent_100%)] blur-2xl" />
+                <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_26%,rgba(244,250,255,0.94)_0%,rgba(183,204,236,0.36)_20%,rgba(26,47,82,0.7)_48%,rgba(6,13,27,1)_76%)]" />
+                <div className="absolute inset-0 rounded-full shadow-[inset_-20px_-20px_36px_rgba(0,0,0,0.82)]" />
+                <div className="absolute -left-2 top-1 h-10 w-10 rounded-full bg-[hsl(var(--mk-text)/0.52)] blur-xl" />
+>>>>>>> origin/main
               </div>
 
               <div className="space-y-3">
@@ -958,6 +1075,7 @@ function BiggestDealsCarousel({
               </div>
             </div>
 
+<<<<<<< HEAD
             <div className="grid gap-3 sm:grid-cols-2">
               <StatPill label="Discount" value={`${activeDeal.discountPercent}% off`} />
               <StatPill label="Challenge fee" value={formatPrice(activeDeal.challengeFee)} />
@@ -977,6 +1095,41 @@ function BiggestDealsCarousel({
                 label="Claim route"
                 value={isExternalClaim ? 'Direct link' : 'Firm detail'}
               />
+=======
+            <div className="hidden h-[340px] w-px border-l border-dashed border-[hsl(var(--mk-border)/0.32)] lg:block" />
+
+            <div className="flex flex-col items-center text-center">
+              <p className="whitespace-nowrap text-[clamp(3rem,4vw,4.9rem)] font-semibold tracking-tight text-[hsl(var(--mk-text))]">
+                {activeDeal.discountPercent}% Off
+              </p>
+              <p className="mt-3 max-w-[400px] text-[1.02rem] leading-8 text-[hsl(var(--mk-text))] sm:text-[1.05rem]">
+                Big savings inside: {activeDeal.discountPercent}% off on {activeDeal.firmName} accounts.
+              </p>
+              <button
+                type="button"
+                onClick={() => onCopyCode(activeDeal.couponCode)}
+                className="mt-7 text-[1.35rem] font-semibold text-[hsl(var(--chart-3))] underline underline-offset-4 transition-colors hover:text-[hsl(var(--chart-3)/0.82)]"
+              >
+                {copiedCode === activeDeal.couponCode ? 'Code copied' : `Copy_Code:_ ${activeDeal.couponCode}`}
+              </button>
+              {isExternalClaim ? (
+                <a
+                  href={claimHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
+                >
+                  Get Deal
+                </a>
+              ) : (
+                <Link
+                  href={claimHref}
+                  className="mt-8 inline-flex h-16 w-full max-w-[430px] items-center justify-center rounded-full bg-[hsl(var(--chart-3))] px-8 text-[2rem] font-semibold text-[hsl(var(--mk-bg-0))] transition hover:brightness-110"
+                >
+                  Get Deal
+                </Link>
+              )}
+>>>>>>> origin/main
             </div>
           </div>
         </div>
@@ -1014,7 +1167,11 @@ function BiggestDealsCarousel({
 function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
+<<<<<<< HEAD
       className={`w-[360px] overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.08)] bg-[linear-gradient(180deg,oklch(0.65_0.22_260/0.04),oklch(0_0_0/0.82))] px-6 py-6 opacity-20 ${
+=======
+      className={`w-[390px] rounded-3xl border border-[hsl(var(--mk-border)/0.3)] bg-[hsl(var(--mk-bg-0))] px-6 py-7 opacity-15 ${
+>>>>>>> origin/main
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
@@ -1023,6 +1180,7 @@ function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' |
           <p className="text-4xl font-bold text-foreground/60">{deal.discountPercent}% off</p>
           <p className="mt-2 text-lg text-foreground/60">{deal.firmName}</p>
         </div>
+<<<<<<< HEAD
         <div className="grid grid-cols-2 gap-3">
           <div className={cn(dealsInsetPanelClassName, 'p-3')}>
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Coupon</p>
@@ -1034,6 +1192,12 @@ function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' |
               {formatPrice(deal.challengeFee)}
             </p>
           </div>
+=======
+        <div className="hidden h-24 w-px border-l border-dashed border-[hsl(var(--mk-border)/0.28)] lg:block" />
+        <div>
+          <p className="text-sm text-[hsl(var(--mk-text-muted)/0.78)]">Copy_Code:_ {deal.couponCode}</p>
+          <div className="mt-4 h-14 w-full rounded-full bg-[hsl(var(--chart-3)/0.5)]" />
+>>>>>>> origin/main
         </div>
       </div>
     </div>
@@ -1115,7 +1279,11 @@ function BrowseDealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
+<<<<<<< HEAD
     <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
+=======
+    <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_24px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-6">
+>>>>>>> origin/main
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -1143,7 +1311,11 @@ function BrowseDealsSection({
           ))}
         </div>
       ) : (
+<<<<<<< HEAD
         <div className="mt-6 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.06)] p-8 text-center text-sm leading-relaxed text-muted-foreground">
+=======
+        <div className="mt-6 rounded-3xl border border-dashed border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] p-8 text-center text-sm text-muted-foreground">
+>>>>>>> origin/main
           {filteredDeals.length === 0
             ? 'No deals match the current filter stack. Try widening the firm or market selection.'
             : 'All matching deals are already highlighted above.'}
@@ -1155,6 +1327,7 @@ function BrowseDealsSection({
 
 function DealsHero({ localePrefix, overview }: { localePrefix: string; overview: DealsOverview }) {
   return (
+<<<<<<< HEAD
     <section
       className={cn(
         dealsPanelClassName,
@@ -1163,6 +1336,11 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
     >
       <div className="space-y-5">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-primary">
+=======
+    <section className="grid gap-6 rounded-3xl bg-[linear-gradient(160deg,hsl(var(--mk-surface)/0.88),hsl(var(--background)/0.7))] p-5 shadow-[0_34px_90px_-62px_hsl(var(--foreground)/0.95)] lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+      <div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+>>>>>>> origin/main
           <Sparkles className="h-3.5 w-3.5 text-primary" />
           Verified prop firm discounts
         </div>
@@ -1199,10 +1377,23 @@ function DealsHero({ localePrefix, overview }: { localePrefix: string; overview:
           <Link href={`${localePrefix}/propfirms`} className={dealsPrimaryButtonClassName}>
             Compare firms
           </Link>
+<<<<<<< HEAD
           <Link href={`${localePrefix}/deals/compare`} className={dealsGhostButtonClassName}>
             Compare pricing
           </Link>
           <Link href={`${localePrefix}/best-trading-journal`} className={dealsGhostButtonClassName}>
+=======
+          <Link
+            href={`${localePrefix}/deals/compare`}
+            className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+          >
+            Compare pricing
+          </Link>
+          <Link
+            href={`${localePrefix}/best-trading-journal`}
+            className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.82)]"
+          >
+>>>>>>> origin/main
             Best trading journal guide
           </Link>
         </div>
@@ -1286,8 +1477,13 @@ function DealsFilterPanel({
   topFirms: UnifiedFirm[]
 }) {
   return (
+<<<<<<< HEAD
     <section className="grid gap-6 overflow-hidden lg:grid-cols-[1.2fr_0.8fr]">
       <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
+=======
+    <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_26px_60px_-44px_hsl(var(--foreground)/0.9)]">
+>>>>>>> origin/main
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -1295,7 +1491,11 @@ function DealsFilterPanel({
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder="Search by firm, coupon, or platform..."
+<<<<<<< HEAD
               className="h-11 w-full rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] pl-11 pr-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] placeholder:text-muted-foreground/60 focus:border-primary/35"
+=======
+              className="h-11 w-full rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] pl-11 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/35"
+>>>>>>> origin/main
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -1318,7 +1518,11 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   selectedDiscount === option.value
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
+<<<<<<< HEAD
                     : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
+=======
+                    : 'border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground'
+>>>>>>> origin/main
                 }`}
               >
                 {option.label}
@@ -1334,7 +1538,11 @@ function DealsFilterPanel({
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   sortKey === item.key
                     ? 'border-primary/35 bg-primary text-primary-foreground shadow-[0_12px_20px_-14px_hsl(var(--primary)/0.75)]'
+<<<<<<< HEAD
                     : 'border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] text-muted-foreground hover:border-[oklch(0.65_0.22_260/0.22)] hover:text-foreground'
+=======
+                    : 'border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.65)] text-muted-foreground hover:text-foreground'
+>>>>>>> origin/main
                 }`}
               >
                 {item.label}
@@ -1344,6 +1552,7 @@ function DealsFilterPanel({
         </div>
 
         {hasActiveFilters ? (
+<<<<<<< HEAD
           <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[oklch(0.65_0.22_260/0.14)] bg-[oklch(0.65_0.22_260/0.05)] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
             <span>
               The deal board is narrowed right now. Reset to return to the full live tape.
@@ -1352,6 +1561,14 @@ function DealsFilterPanel({
               type="button"
               onClick={onResetFilters}
               className={cn(dealsGhostButtonClassName, 'px-3 py-1.5 text-xs')}
+=======
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-[hsl(var(--mk-border)/0.42)] bg-[hsl(var(--mk-surface-muted)/0.6)] px-4 py-3 text-sm text-muted-foreground">
+            <span>The deal board is narrowed right now. Reset to return to the full live tape.</span>
+            <button
+              type="button"
+              onClick={onResetFilters}
+              className="rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
+>>>>>>> origin/main
             >
               Reset filters
             </button>
@@ -1359,25 +1576,39 @@ function DealsFilterPanel({
         ) : null}
       </div>
 
+<<<<<<< HEAD
       <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
         <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
           Board snapshot
         </p>
+=======
+      <div className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_26px_60px_-44px_hsl(var(--foreground)/0.9)]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Board snapshot</p>
+>>>>>>> origin/main
         <div className="mt-4 space-y-3">
           <RadarRow label="Futures coverage" value={`${spotlights.futures.length} spotlights`} />
           <RadarRow label="CFD coverage" value={`${spotlights.cfd.length} spotlights`} />
           <RadarRow label="Last refreshed" value={lastUpdated ?? spotlights.updatedAt} />
         </div>
+<<<<<<< HEAD
         <div className={cn(dealsInsetPanelClassName, 'mt-5 overflow-hidden p-4')}>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             Top payout firms
           </p>
+=======
+        <div className="mt-5 rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.62)] p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Top payout firms</p>
+>>>>>>> origin/main
           <div className="mt-3 space-y-2">
             {topFirms.map((firm) => (
               <Link
                 key={firm.id}
                 href={getFirmHrefFromPrefix(localePrefix, firm.slug)}
+<<<<<<< HEAD
                 className="flex items-center justify-between rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.04)] px-3 py-2 text-sm transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.2)] hover:bg-[oklch(0.65_0.22_260/0.09)]"
+=======
+                className="flex items-center justify-between rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-sm transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.7)]"
+>>>>>>> origin/main
               >
                 <span className="font-medium text-foreground">{firm.name}</span>
                 <span className="text-muted-foreground">
@@ -1387,12 +1618,16 @@ function DealsFilterPanel({
             ))}
           </div>
         </div>
+<<<<<<< HEAD
         <div
           className={cn(
             dealsInsetPanelClassName,
             'mt-5 flex items-center justify-between gap-4 overflow-hidden px-4 py-4',
           )}
         >
+=======
+        <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.62)] px-4 py-4">
+>>>>>>> origin/main
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">
               Need policy context?
@@ -1403,7 +1638,11 @@ function DealsFilterPanel({
           </div>
           <Link
             href={`${localePrefix}/deals/faq`}
+<<<<<<< HEAD
             className={cn(dealsGhostButtonClassName, 'shrink-0 px-3 py-2 text-xs font-bold')}
+=======
+            className="shrink-0 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.76)] px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
+>>>>>>> origin/main
           >
             FAQ
           </Link>
@@ -1429,11 +1668,17 @@ function DealsSection({
   onCopyCode: (code: string) => void
 }) {
   return (
+<<<<<<< HEAD
     <section className={cn(dealsPanelClassName, 'overflow-hidden p-5 sm:p-6')}>
       <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
         {title}
       </p>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p>
+=======
+    <section className="rounded-3xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_24px_60px_-46px_hsl(var(--foreground)/0.9)] sm:p-6">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{title}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+>>>>>>> origin/main
       <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         {deals.map((deal) => (
           <DealCard
@@ -1466,6 +1711,7 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
+<<<<<<< HEAD
     <div className="group overflow-hidden rounded-[1.6rem] border border-[oklch(0.65_0.22_260/0.14)] bg-[linear-gradient(160deg,oklch(0.65_0.22_260/0.08),oklch(0_0_0/0.9))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_64px_-40px_rgba(0,0,0,0.94)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-[oklch(0.65_0.22_260/0.22)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_30px_78px_-42px_rgba(0,0,0,0.96)]">
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -1475,6 +1721,12 @@ function DealCard({
               'inline-flex items-center px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground',
             )}
           >
+=======
+    <div className="group rounded-3xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(155deg,hsl(var(--mk-surface)/0.9),hsl(var(--mk-surface-muted)/0.66))] p-4 transition-all hover:-translate-y-0.5 hover:border-primary/25">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="inline-flex items-center rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.78)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+>>>>>>> origin/main
             {deal.category}
           </div>
           <h3 className="mt-3 text-xl font-bold tracking-tight text-foreground">{deal.firmName}</h3>
@@ -1504,12 +1756,23 @@ function DealCard({
         <button
           type="button"
           onClick={() => onCopyCode(deal.couponCode)}
+<<<<<<< HEAD
           className={dealsGhostButtonClassName}
+=======
+          className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
+>>>>>>> origin/main
         >
           <Copy className="h-4 w-4" />
           {copiedCode === deal.couponCode ? 'Copied' : 'Copy code'}
         </button>
+<<<<<<< HEAD
         <Link href={firmHref} className={dealsGhostButtonClassName}>
+=======
+        <Link
+          href={firmHref}
+          className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface)/0.78)] px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-[hsl(var(--mk-surface-muted)/0.72)]"
+        >
+>>>>>>> origin/main
           View firm
         </Link>
       </div>
@@ -1545,8 +1808,13 @@ function StatCard({
   icon: typeof Wallet
 }) {
   return (
+<<<<<<< HEAD
     <div className={cn(dealsInsetPanelClassName, 'overflow-hidden p-4')}>
       <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+=======
+    <div className="rounded-3xl bg-[hsl(var(--mk-surface-muted)/0.72)] p-4 shadow-[0_16px_30px_-24px_hsl(var(--foreground)/0.85)]">
+      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+>>>>>>> origin/main
         <Icon className="h-3.5 w-3.5" />
         {label}
       </div>
@@ -1557,16 +1825,26 @@ function StatCard({
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
+<<<<<<< HEAD
     <div className={cn(dealsInsetPanelClassName, 'rounded-[1.35rem] p-3')}>
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-bold text-foreground">{value}</p>
+=======
+    <div className="rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.72)] p-3">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
+>>>>>>> origin/main
     </div>
   )
 }
 
 function RadarRow({ label, value }: { label: string; value: string }) {
   return (
+<<<<<<< HEAD
     <div className={cn(dealsInsetPanelClassName, 'flex items-center justify-between px-3 py-3')}>
+=======
+    <div className="flex items-center justify-between rounded-2xl border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.66)] px-3 py-3">
+>>>>>>> origin/main
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-bold text-foreground">{value}</span>
     </div>
@@ -1575,12 +1853,19 @@ function RadarRow({ label, value }: { label: string; value: string }) {
 
 function InsightCard({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
+<<<<<<< HEAD
     <div className={cn(dealsPanelClassName, 'overflow-hidden p-5')}>
       <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
         {label}
       </p>
       <p className="mt-3 text-2xl font-bold tracking-tight text-foreground">{value}</p>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{helper}</p>
+=======
+    <div className="rounded-3xl bg-[hsl(var(--mk-surface)/0.84)] p-5 shadow-[0_20px_44px_-34px_hsl(var(--foreground)/0.92)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-3 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{helper}</p>
+>>>>>>> origin/main
     </div>
   )
 }
@@ -1598,7 +1883,11 @@ function SelectLike<T extends string>({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as T)}
+<<<<<<< HEAD
       className="h-11 rounded-full border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.06)] px-4 text-sm text-foreground outline-none transition-[background-color,border-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] focus:border-primary/35"
+=======
+      className="h-11 rounded-full border border-[hsl(var(--mk-border)/0.38)] bg-[hsl(var(--mk-surface-muted)/0.7)] px-4 text-sm text-foreground outline-none transition-colors focus:border-primary/35"
+>>>>>>> origin/main
     >
       {options.map((option) => (
         <option key={option} value={option}>

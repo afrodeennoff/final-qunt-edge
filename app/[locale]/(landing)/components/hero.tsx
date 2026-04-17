@@ -79,6 +79,7 @@ export default function Hero({ }: HeroProps) {
  <span className="relative z-10">Start Free Audit</span>
  </Link>
 
+<<<<<<< HEAD
  <Link
  href={`/${locale}/updates`}
  className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-white/[0.12] bg-[oklch(0.65_0.22_260/0.06)] px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-white/[0.20] hover:bg-white/[0.07] hover:text-foreground/95 sm:w-auto"
@@ -87,6 +88,16 @@ export default function Hero({ }: HeroProps) {
  <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
  </Link>
  </motion.div>
+=======
+          <Link
+            href={`/${locale}/updates`}
+            className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-lg border border-border bg-card px-8 text-center text-sm font-medium text-foreground transition-all hover:border-border/36 hover:bg-card/80 sm:w-auto"
+          >
+            View Product Updates
+            <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </Link>
+        </motion.div>
+>>>>>>> origin/main
 
  <motion.div
  initial={{ opacity: 0 }}

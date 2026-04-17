@@ -142,6 +142,7 @@ export function AdminDashboard() {
  }
 
 
+<<<<<<< HEAD
  return (
  <div className="space-y-6 p-4 sm:p-6">
  <Card className={cn(unifiedSectionPanelClassName, 'p-6')}>
@@ -158,6 +159,24 @@ export function AdminDashboard() {
  Internal only
  </Badge>
  </div>
+=======
+  return (
+    <div className="space-y-6 p-4 sm:p-6">
+      <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Admin Tools</p>
+            <h2 className="text-2xl font-semibold tracking-tight">Operations hub</h2>
+            <p className="text-sm text-muted-foreground">
+              Fast access to the same internal admin workflows used for newsletters, recap emails, and platform management.
+            </p>
+          </div>
+          <Badge variant="secondary" className="w-fit">
+            <Sparkles className="mr-2 h-3.5 w-3.5" />
+            Internal only
+          </Badge>
+        </div>
+>>>>>>> origin/main
 
  <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
  {[
@@ -200,6 +219,7 @@ export function AdminDashboard() {
  ].map((item) => {
  const Icon = item.icon
 
+<<<<<<< HEAD
  return (
  <Link
  key={item.label}
@@ -268,6 +288,76 @@ export function AdminDashboard() {
  <div className="text-3xl font-bold">{valueFormatter(userStats.totalUsers)}</div>
  </Card>
  </div>
+=======
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="group rounded-xl border border-border/28 bg-background/60 p-4 transition-all hover:-translate-y-0.5 hover:border-border/30 hover:bg-background hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="rounded-lg border border-border/24 bg-muted/60 p-2 text-foreground transition-colors group-hover:bg-foreground group-hover:text-background">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="font-medium leading-none">{item.label}</div>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </Card>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <p className="text-sm text-muted-foreground">Active subscribers</p>
+          <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.activeSubscribers)}</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            People currently receiving newsletter sends.
+          </p>
+        </Card>
+
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <p className="text-sm text-muted-foreground">Paused subscribers</p>
+          <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.inactiveSubscribers)}</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Unsubscribed or inactive newsletter records.
+          </p>
+        </Card>
+
+        <Card className="border-border/28 bg-card/80 p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+          <p className="text-sm text-muted-foreground">Newsletter coverage</p>
+          <div className="mt-2 text-3xl font-semibold">
+            {userStats.totalUsers > 0
+              ? `${Math.round((newsletterStats.activeSubscribers / userStats.totalUsers) * 100)}%`
+              : '0%'}
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Active subscribers compared with total platform users.
+          </p>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="border border-border/28 bg-card/70 p-1 shadow-sm">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="space-y-2 border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium">Total Users</h3>
+                <Badge variant="secondary">Active</Badge>
+              </div>
+              <div className="text-3xl font-bold">{valueFormatter(userStats.totalUsers)}</div>
+            </Card>
+          </div>
+>>>>>>> origin/main
 
  <UserGrowthChart
  dailyData={userStats.dailyData}
@@ -275,6 +365,7 @@ export function AdminDashboard() {
  />
  </TabsContent>
 
+<<<<<<< HEAD
  <TabsContent value="users">
  <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
  <div className="flex items-center justify-between mb-4">
@@ -303,4 +394,34 @@ export function AdminDashboard() {
  </Tabs>
  </div>
  )
+=======
+        <TabsContent value="users">
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Free Users</h3>
+              <Badge variant="secondary">Active</Badge>
+            </div>
+            <FreeUsersTable />
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="payments" className="space-y-6">
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Recent Transactions</h3>
+            </div>
+            <TransactionsTable transactions={paymentData.transactions} />
+          </Card>
+
+          <Card className="border-border/28 bg-card/80 p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Active Subscriptions</h3>
+            </div>
+            <SubscriptionsTable subscriptions={paymentData.subscriptions} />
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+>>>>>>> origin/main
 } 

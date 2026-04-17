@@ -97,7 +97,11 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
           items.map((item) => (
             <div
               key={item.id}
+<<<<<<< HEAD
               className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.04)] p-6"
+=======
+              className="rounded-2xl border border-border/28 bg-card/70 p-6"
+>>>>>>> origin/main
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">

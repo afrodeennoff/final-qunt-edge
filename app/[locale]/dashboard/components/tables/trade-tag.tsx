@@ -95,6 +95,7 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  }
  }
 
+<<<<<<< HEAD
  return (
  <div className="flex items-center gap-2">
  <div className="flex gap-1 flex-wrap">
@@ -210,6 +211,123 @@ export function TradeTag({ trade, tradeIds }: TradeTagProps) {
  </Popover>
  </div>
  )
+=======
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex gap-1 flex-wrap">
+        {trade.tags.map((tag, index) => {
+          const metadata = tags.find(t => t.name.toLowerCase() === tag.toLowerCase())
+          return (
+            <div
+              key={index}
+              className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 border border-border/55 h-auto max-w-[150px] transition-all hover:border-border/65"
+              style={{
+                backgroundColor: metadata?.color || 'hsl(var(--foreground) / 0.35)',
+                color: 'hsl(var(--foreground))'
+              }}
+            >
+              {tag}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleRemoveTag(tag)
+                }}
+                className="hover:text-destructive"
+                disabled={isUpdating}
+              >
+                ×
+              </button>
+            </div>
+          )
+        })}
+      </div>
+      <Popover
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
+        <PopoverTrigger asChild>
+          <Button 
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0"
+            disabled={isUpdating}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" side="right" align="start">
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder={t('trade-table.searchTags')}
+              value={inputValue}
+              onValueChange={setInputValue}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && inputValue && !isUpdating) {
+                  e.preventDefault()
+                  handleAddTag(inputValue)
+                }
+              }}
+            />
+            <CommandList className="max-h-[200px] overflow-y-auto">
+              {inputValue.trim() && (
+                <CommandItem
+                  value={inputValue.trim()}
+                  onSelect={(value) => {
+                    if (!isUpdating) {
+                      handleAddTag(value)
+                    }
+                  }}
+                >
+                  {t('trade-table.addTag', { tag: inputValue.trim() })}
+                </CommandItem>
+              )}
+              {tags.length > 0 && (
+                <CommandGroup heading={t('trade-table.existingTags')}>
+                  {tags
+                    .filter(tag => !trade.tags.includes(tag.name))
+                    .filter(tag => {
+                      const input = inputValue.trim()
+                      return !input || tag.name.includes(input)
+                    })
+                    .map(tag => (
+                      <CommandItem
+                        key={tag.name}
+                        value={tag.name}
+                        onSelect={() => {
+                          if (!isUpdating) {
+                            handleAddTag(tag.name)
+                          }
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0 border border-border/55"
+                            style={{ backgroundColor: tag.color || 'hsl(var(--foreground) / 0.35)' }}
+                          />
+                          <span>{tag.name}</span>
+                          {tag.description && (
+                            <span className="text-muted-foreground text-xs">
+                              - {tag.description}
+                            </span>
+                          )}
+                        </div>
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
+              <CommandEmpty>{t('trade-table.noTagsFound')}</CommandEmpty>
+            </CommandList>
+          </Command>
+          {isUpdating && (
+              <div className="absolute right-2 top-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-border/20 border-t-transparent" />
+              </div>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
+  )
+>>>>>>> origin/main
 }
 
 // Helper function to determine text color based on background color

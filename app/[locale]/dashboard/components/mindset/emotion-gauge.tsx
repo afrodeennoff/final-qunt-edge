@@ -28,6 +28,7 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  return t("mindset.emotion.veryHappy")
  }
 
+<<<<<<< HEAD
  return (
  <div className="journal-glass mb-4 rounded-xl border border-white/[0.08] bg-white/[0.070] p-4">
  <div>
@@ -35,6 +36,15 @@ export function EmotionGauge({ value, onChange }: EmotionGaugeProps) {
  <p className="text-sm font-medium text-foreground/95">{t("mindset.emotion.title")}</p>
  <p className="mt-1 text-xs text-muted-foreground">{getEmotionLabel(percentage)}</p>
  </div>
+=======
+  return (
+    <div className="journal-glass mb-4 rounded-xl border border-border/28 bg-card/70 p-4 backdrop-blur-md">
+      <div className="">
+        <div className="text-center">
+          <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{getEmotionLabel(percentage)}</p>
+        </div>
+>>>>>>> origin/main
 
  <div className="relative flex h-32 items-center justify-center">
  <div className="absolute inset-0 flex items-center justify-center">

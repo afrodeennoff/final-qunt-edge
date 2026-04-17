@@ -39,6 +39,7 @@ type FeatureCard = {
 }
 
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
+<<<<<<< HEAD
  return (
  <div
  className={cn("group relative overflow-hidden rounded-[1.85rem] border transition-all duration-500","border-white/[0.08] bg-[oklch(0.038_0.005_264)]","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] hover:border-white/[0.14] hover:shadow-[0_30px_70px_-34px_rgba(0,0,0,0.95)]","hover:-translate-y-1","opacity-0 translate-y-8",
@@ -99,6 +100,77 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  </div>
  </div>
  )
+=======
+  return (
+    <div
+      className={cn(
+        "group relative overflow-hidden rounded-2xl border transition-all duration-500",
+        "bg-card/80 backdrop-blur-sm",
+        "border-border/24 hover:border-border/40",
+        "shadow-[0_12px_34px_-24px_hsl(var(--foreground)/0.45)] hover:shadow-[0_20px_40px_-20px_hsl(var(--foreground)/0.55)]",
+        "hover:-translate-y-1",
+        "opacity-0 translate-y-8",
+        isVisible && "opacity-100 translate-y-0",
+        index < 2 ? 'lg:col-span-3' :
+        index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',
+        `transition-delay-[${index * 100}ms]`
+      )}
+      style={{
+        transitionDelay: isVisible ? `${index * 100}ms` : '0ms',
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+      
+      <div className="relative h-full">
+        <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/24 pb-4">
+          <CardTitle className="text-base font-medium text-foreground sm:text-lg">{feature.title}</CardTitle>
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative">
+              {feature.icon}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <div>
+              <div className="text-xl font-bold text-foreground sm:text-2xl">{feature.stat}</div>
+              <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
+                {feature.description}
+              </p>
+            </div>
+          <div
+            className={cn(
+              "relative w-full flex justify-center items-center rounded-xl overflow-hidden",
+              "border border-border/40 bg-card/50 backdrop-blur-sm",
+              "group-hover:border-border/24 group-hover:bg-card/70 transition-all duration-500",
+              feature.wrapperClass ?? "h-[250px] sm:h-[300px] md:h-[350px]"
+            )}
+          >
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative">
+                {typeof feature.image === "string" ? (
+                  <Image
+                    src={feature.image}
+                    alt={`${feature.title} visualization`}
+                    className="h-full w-full rounded-md object-contain"
+                    width={800}
+                    height={400}
+                  />
+                ) : (
+                  feature.image
+                )}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </div>
+    </div>
+  )
+>>>>>>> origin/main
 }
 
 export default function Features() {

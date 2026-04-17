@@ -174,7 +174,11 @@ function TeamSettingsCard({
             </p>
             <div className="mt-4">
               <Link href={`/${locale}/teams/dashboard`}>
+<<<<<<< HEAD
                 <Button>
+=======
+                <Button >
+>>>>>>> origin/main
                   <Building2 className="mr-2 h-4 w-4" />
                   Manage Teams
                 </Button>
@@ -186,7 +190,11 @@ function TeamSettingsCard({
         {hasTeams && (
           <div className="mt-4">
             <Link href={`/${locale}/teams/dashboard`}>
+<<<<<<< HEAD
               <Button variant="outline" className="w-full">
+=======
+              <Button  variant="outline" className="w-full">
+>>>>>>> origin/main
                 <Settings className="mr-2 h-4 w-4" />
                 Manage Teams
               </Button>
@@ -446,9 +454,13 @@ export default function SettingsPage() {
               </Label>
               <div className="mt-2">
                 <div className="rounded-md border border-border/20 bg-background/30 p-3">
+<<<<<<< HEAD
                   <p className="mb-3 text-sm text-muted-foreground">
                     Choose your dashboard accent color
                   </p>
+=======
+                  <p className="mb-3 text-sm text-muted-foreground">Choose your dashboard accent color</p>
+>>>>>>> origin/main
                   <div className="flex gap-3">
                     {VALID_DASHBOARD_THEMES.map((t) => (
                       <button
@@ -628,11 +640,15 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
         <TeamSettingsCard
           userTeams={userTeams}
           onLeaveTeam={handleLeaveTeam}
           locale={currentLocale}
         />
+=======
+        <TeamSettingsCard userTeams={userTeams} onLeaveTeam={handleLeaveTeam} locale={currentLocale} />
+>>>>>>> origin/main
 
         {/* Linked Accounts Section */}
         <LinkedAccounts />
@@ -662,19 +678,31 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-4">
               <Link href={`/${currentLocale}/dashboard/billing`}>
+<<<<<<< HEAD
                 <Button variant="outline" className="w-full justify-start">
+=======
+                <Button  variant="outline" className="w-full justify-start">
+>>>>>>> origin/main
                   <CreditCard className="mr-2 h-4 w-4" />
                   Billing & Subscription
                 </Button>
               </Link>
               <Link href={`/${currentLocale}/dashboard/data`}>
+<<<<<<< HEAD
                 <Button variant="outline" className="w-full justify-start">
+=======
+                <Button  variant="outline" className="w-full justify-start">
+>>>>>>> origin/main
                   <Database className="mr-2 h-4 w-4" />
                   Data Management
                 </Button>
               </Link>
               <Link href={`/${currentLocale}/support`}>
+<<<<<<< HEAD
                 <Button variant="outline" className="w-full justify-start">
+=======
+                <Button  variant="outline" className="w-full justify-start">
+>>>>>>> origin/main
                   <LifeBuoy className="mr-2 h-4 w-4" />
                   Support & Help
                 </Button>

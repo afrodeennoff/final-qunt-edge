@@ -29,6 +29,7 @@ const socialLinks = [
 ]
 
 export default function Footer() {
+<<<<<<< HEAD
  return (
  <footer className="border-t border-border/20 bg-white/[0.030]">
  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -44,6 +45,23 @@ export default function Footer() {
  The trading journal and analytics platform for discretionary traders who take their craft seriously.
  </p>
  </div>
+=======
+  return (
+    <footer className="border-t border-border/20 bg-card/30">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-14">
+          <div className="col-span-2">
+            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_16px_-4px_hsl(var(--primary)/0.5)] transition-shadow duration-300 group-hover:shadow-[0_0_24px_-4px_hsl(var(--primary)/0.65)]">
+                <span className="text-primary-foreground font-bold text-sm">Q</span>
+              </div>
+              <span className="font-semibold text-foreground tracking-tight">Qunt Edge</span>
+            </Link>
+            <p className="text-[0.875rem] text-muted-foreground/70 max-w-xs leading-relaxed">
+              The trading journal and analytics platform for discretionary traders who take their craft seriously.
+            </p>
+          </div>
+>>>>>>> origin/main
 
  <div>
  <h4 className="font-semibold text-foreground/95 mb-4 text-[0.85rem] tracking-[-0.01em]">Product</h4>

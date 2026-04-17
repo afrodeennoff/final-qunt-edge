@@ -1349,6 +1349,7 @@ function AccountsOverviewComponent({
               <Table className="mb-4 h-10 w-10 opacity-20" />
               <p className="type-body">{t('modals.noTrades.description')}</p>
             </div>
+<<<<<<< HEAD
           ) : view === 'cards' ? (
             <div className="space-y-6 px-4 py-4 sm:px-6 sm:py-6">
               {sortedGroupEntries.map(({ group, accounts: orderedAccounts }) => (
@@ -1365,6 +1366,73 @@ function AccountsOverviewComponent({
                           ? t('accounts.table.account')
                           : t('dashboard.tabs.accounts')}
                       </span>
+=======
+          ) : view === "cards" ? (
+            <div className="mt-4">
+              <div className="space-y-6">
+                {sortedGroupEntries.map(({ group, accounts: orderedAccounts }, groupIndex) => {
+                  // Generate a consistent color for each group based on group index
+                  const groupColors = [
+                    'border-primary/20 bg-primary/[0.02]',
+                    'border-muted-foreground/20 bg-muted-foreground/[0.02]',
+                    'border-border bg-card',
+                    'border-primary/10 bg-primary/[0.01]',
+                    'border-secondary bg-secondary/10',
+                    'border-border/14 bg-foreground/[0.02]',
+                  ];
+
+                  const groupColorClass = groupColors[groupIndex % groupColors.length];
+
+                  return (
+                    <div
+                      key={group.id}
+                      className={cn(
+                        "relative border-l-4 rounded-r-lg",
+                        groupColorClass,
+                        "transition-all duration-200 hover:shadow-md"
+                      )}
+                    >
+                      {/* Group header with subtle styling */}
+                      <div className="px-4 py-3 border-b border-border/40">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-[10px] font-bold text-muted-foreground tracking-[0.2em] uppercase">
+                            {group.name}
+                          </h3>
+                          <div className="text-[9px] font-bold text-muted-foreground bg-background/50 px-2 py-0.5 rounded-full border border-border/40">
+                            {orderedAccounts.length} {orderedAccounts.length === 1 ? 'ACCOUNT' : 'ACCOUNTS'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Cards container with optimized spacing */}
+                      <div className="p-4 pt-3">
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={handleDragEnd}
+                          modifiers={[restrictToHorizontalAxis]}
+                        >
+                          <SortableContext
+                            items={orderedAccounts.map(acc => acc.number)}
+                            strategy={horizontalListSortingStrategy}
+                          >
+                            <div className="flex gap-3 overflow-x-auto pb-2 min-h-fit">
+                              {orderedAccounts.map(account => {
+                                if (!account.number) return null;
+                                return (
+                                  <DraggableAccountCard
+                                    key={account.number}
+                                    account={account as Account}
+                                    onClick={() => setSelectedAccountForTable(account as Account)}
+                                    size={size}
+                                  />
+                                )
+                              }).filter(Boolean)}
+                            </div>
+                          </SortableContext>
+                        </DndContext>
+                      </div>
+>>>>>>> origin/main
                     </div>
                   </div>
                   <div className="p-4">

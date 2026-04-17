@@ -152,6 +152,7 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  return { activeDays, wins, losses }
  }, [calendarData])
 
+<<<<<<< HEAD
  return (
  <Card className="h-full flex flex-col overflow-hidden border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.095]">
  <div className="shrink-0 border-b border-[oklch(0.65_0.22_260/0.08)] p-3">
@@ -192,6 +193,49 @@ function MobileCalendarPnlComponent({ calendarData }: { calendarData: CalendarDa
  <div className="grid h-[calc(100%-30px)] grid-cols-7 auto-rows-fr gap-1">
  {calendarDayStrings.map((dateString) => { // Iterate over date strings
  const dayData = calendarData[dateString] // Direct lookup using the string key
+=======
+  return (
+    <Card className="h-full flex flex-col overflow-hidden border-border/24 bg-card/95 backdrop-blur-xl">
+      <div className="shrink-0 border-b border-border/24 p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <CardTitle className="truncate text-base font-semibold capitalize">
+              {formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })}
+            </CardTitle>
+            <div className={cn(
+              "mt-1 text-lg font-black tracking-tight",
+              monthlyTotal >= 0 ? "text-semantic-success" : "text-semantic-error"
+            )}>
+              {formatCurrency(monthlyTotal)}
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Button  variant="outline" size="icon" onClick={handlePrevMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Previous month">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button  variant="outline" size="icon" onClick={handleNextMonth} className="h-10 w-10 border-border/24 bg-card/92" aria-label="Next month">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <div className="mt-2 flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <span className="rounded-md border border-border/55 bg-card/92 px-1.5 py-0.5">Days {monthStats.activeDays}</span>
+          <span className="rounded-md border border-semantic-success-border/40 bg-semantic-success-bg/10 px-1.5 py-0.5 text-semantic-success">W {monthStats.wins}</span>
+          <span className="rounded-md border border-semantic-error-border/40 bg-semantic-error-bg/10 px-1.5 py-0.5 text-semantic-error">L {monthStats.losses}</span>
+        </div>
+      </div>
+      <div className="flex-1 min-h-0 p-2">
+        <div className="mb-2 grid grid-cols-7 gap-1">
+          {weekdayHeaders.map((day) => (
+            <div key={day.key} className="rounded-md border border-border/55 bg-secondary/30 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {day.label}
+            </div>
+          ))}
+        </div>
+        <div className="grid h-[calc(100%-30px)] grid-cols-7 auto-rows-fr gap-1">
+          {calendarDayStrings.map((dateString) => { // Iterate over date strings
+            const dayData = calendarData[dateString] // Direct lookup using the string key
+>>>>>>> origin/main
 
  // Parse the date string *in the target timezone* to get a Date object
  // for reliable month/year checks and display formatting.

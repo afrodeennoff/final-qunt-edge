@@ -19,6 +19,7 @@
     --ui-10-accent: var(--primary);
     --ui-10-accent-fg: var(--primary-foreground);
 
+<<<<<<< HEAD
     /* ===== MARKETING SURFACES ===== */
     --mk-bg-0: 0 0% 0%;
     --mk-bg-1: 0 0% 0%;
@@ -40,6 +41,28 @@
     --bg-modal: 0 0% 6.5%;
     --bg-highlight: 0 0% 8%;
     --bg-interactive: 0 0% 9%;
+=======
+    /* ===== MARKETING SURFACE TOKENS (Resend Frost Theme) ===== */
+    --mk-bg-0: 0 0% 0%;
+    --mk-bg-1: 0 0% 0%;
+    --mk-bg-2: 214 30% 3%;
+    --mk-surface: 214 40% 4%;
+    --mk-surface-muted: 214 30% 6%;
+    --mk-border: 214 14% 9%;
+    --mk-text: 0 0% 94%;
+    --mk-text-muted: 0 0% 44%;
+    --mk-lime: 160 100% 53%;
+    --mk-lime-ink: 0 0% 10%;
+
+    /* ===== BACKGROUND HIERARCHY (7 levels — Resend void + frost) ===== */
+    --bg-base: 214 40% 1%;
+    --bg-elevated: 214 40% 3%;
+    --bg-card: 214 40% 4%;
+    --bg-card-hover: 214 35% 5%;
+    --bg-overlay: 214 30% 7%;
+    --bg-modal: 214 25% 9%;
+    --bg-highlight: 214 20% 11%;
+>>>>>>> origin/main
 
     /* ===== PRIMARY ACCENT ===== */
     --accent-neutral: var(--primary);
@@ -49,6 +72,7 @@
     --accent-neutral-glow: oklch(0.6083 0.2172 297.1153 / 0.22);
     --accent-neutral-rgb: 145 108 255;
 
+<<<<<<< HEAD
     /* ===== PRECISION PANEL ===== */
     --precision-cobalt: oklch(0.6083 0.2172 297.1153);
     --precision-cobalt-rgb: 145 108 255;
@@ -56,6 +80,40 @@
     --precision-panel-elevated: 0 0% 2.8%;
     --precision-panel-line: 0 0% 7%;
     --precision-panel-inner: oklch(0.7001 0.1882 313.2907);
+=======
+    /* ===== PRECISION PANEL (Resend frost borders) ===== */
+    --precision-cobalt: oklch(0.62 0.19 260);
+    --precision-cobalt-rgb: 59 158 255;
+    --precision-panel: 214 40% 2%;
+    --precision-panel-elevated: 214 40% 4%;
+    --precision-panel-line: 214 14% 9%;
+    --precision-panel-inner: oklch(0.62 0.19 260);
+
+    /* ===== RESEND FROST SYSTEM (resend.com aesthetic) ===== */
+    --rs-frost-border: 214 14% 9%;
+    --rs-frost-border-alt: 214 12% 7%;
+    --rs-frost-ring: 214 18% 14%;
+    --rs-frost-surface: 214 100% 92% / 0.02;
+    --rs-frost-hover: 0 0% 100% / 0.08;
+    --rs-text-strong: 0 0% 94%;
+    --rs-text-primary: 0 0% 88%;
+    --rs-text-secondary: 0 0% 64%;
+    --rs-text-tertiary: 0 0% 48%;
+    --rs-accent-orange: 22 100% 56%;
+    --rs-accent-orange-bg: 22 100% 56% / 0.08;
+    --rs-accent-orange-border: 22 100% 56% / 0.22;
+    --rs-accent-green: 150 100% 53%;
+    --rs-accent-green-bg: 150 100% 53% / 0.06;
+    --rs-accent-green-border: 150 100% 53% / 0.18;
+    --rs-accent-blue: 213 100% 62%;
+    --rs-accent-blue-bg: 213 100% 62% / 0.08;
+    --rs-accent-blue-border: 213 100% 62% / 0.2;
+    --rs-accent-red: 348 100% 56%;
+    --rs-accent-red-bg: 348 100% 56% / 0.08;
+    --rs-accent-red-border: 348 100% 56% / 0.2;
+    --rs-accent-gold: 42 100% 62%;
+    --rs-accent-gold-border: 42 100% 62% / 0.25;
+>>>>>>> origin/main
 
     /* ===== OBSIDIAN FROST SYSTEM ===== */
     --rs-frost-border: 0 0% 7%;
@@ -104,6 +162,7 @@
     --border-error: var(--destructive);
     --border-success: var(--success);
 
+<<<<<<< HEAD
     /* ===== GLASSMORPHISM — Premium Luxury grade ===== */
     --glass-bg: 0 0% 3% / 0.70;
     --glass-bg-strong: 0 0% 4% / 0.88;
@@ -116,6 +175,17 @@
                     0 8px 24px rgba(0, 0, 0, 0.42),
                     0 40px 80px -28px rgba(0, 0, 0, 0.65),
                     0 0 0 0.5px rgba(145, 108, 255, 0.08);
+=======
+    /* ===== GLASSMORPHISM TOKENS ===== */
+    --glass-bg: var(--bg-elevated) / 0.65;
+    --glass-bg-strong: var(--bg-card) / 0.85;
+    --glass-bg-subtle: var(--bg-base) / 0.45;
+    --glass-blur: blur(20px);
+    --glass-blur-strong: blur(40px);
+    --glass-border: 214 14% 9%;
+    --glass-border-opacity: 0.18;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+>>>>>>> origin/main
 
     /* ===== INTERACTIVE STATES ===== */
     --hover-overlay: 255 255 255 / 0.05;
@@ -200,10 +270,14 @@
     --glass-blur-strong: blur(40px);
     --glass-border: 220 13% 91%;
     --glass-border-opacity: 0.5;
+<<<<<<< HEAD
     --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
                     0 4px 12px rgba(0, 0, 0, 0.06),
                     0 16px 40px -12px rgba(0, 0, 0, 0.08),
                     0 0 0 0.5px rgba(0, 0, 0, 0.04);
+=======
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+>>>>>>> origin/main
   }
 }
 

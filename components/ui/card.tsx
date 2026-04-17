@@ -54,6 +54,32 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         role={isInteractive ? 'button' : undefined}
         tabIndex={isInteractive ? 0 : undefined}
         onKeyDown={isInteractive ? handleKeyDown : undefined}
+<<<<<<< HEAD
+=======
+        className={cn(
+          "relative rounded-xl border bg-v2-bg-surface text-v2-text-primary shadow-sm shadow-v2-accent/5 transition-all duration-200",
+          variant === "default" && "border-v2-border/22 bg-v2-bg-surface",
+          variant === "glass" && "border-v2-border/12 bg-v2-bg-surface/20 backdrop-blur-xl shadow-lg",
+          variant === "elevated" && "border-v2-border/18 bg-v2-bg-surface shadow-xl shadow-v2-accent/10",
+          variant === "outlined" && "border-2 border-v2-border/24 bg-transparent shadow-none",
+          variant === "flat" && "border-0 bg-transparent shadow-none",
+          variant === "gradient-border" && "border-2 border-transparent bg-gradient-to-r from-v2-bg-surface to-v2-bg-hover p-[2px] shadow-lg shadow-v2-accent/8",
+          variant === "frost" && "bg-transparent border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
+          {
+            "text-sm": size === "sm",
+            "text-base": size === "md",
+            "text-lg": size === "lg",
+          },
+          {
+            "cursor-pointer": isInteractive,
+            "hover:-translate-y-1 hover:shadow-xl hover:shadow-v2-accent/20": hover || isInteractive,
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base":
+              isInteractive,
+          },
+          isLoading && "pointer-events-none opacity-80",
+          className
+        )}
+>>>>>>> origin/main
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
@@ -83,10 +109,16 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           <div className="absolute inset-0 z-20 overflow-hidden rounded-[inherit]">
             <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </div>
+<<<<<<< HEAD
         ) : null}
 
         {status ? (
           <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/45 bg-background/82 px-2.5 py-1 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.85)]">
+=======
+        )}
+        {status && (
+            <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-v2-border/14 bg-v2-bg-base/90 backdrop-blur-md px-2 py-1 shadow-sm">
+>>>>>>> origin/main
             <div
               className={cn(
                 'h-1.5 w-1.5 rounded-full',

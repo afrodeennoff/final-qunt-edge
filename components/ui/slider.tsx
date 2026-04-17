@@ -9,6 +9,7 @@ const Slider = React.forwardRef<
  React.ElementRef<typeof SliderPrimitive.Root>,
  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
 >(({ className, ...props }, ref) => (
+<<<<<<< HEAD
  <SliderPrimitive.Root
  ref={ref}
  data-slot="slider"
@@ -22,6 +23,22 @@ const Slider = React.forwardRef<
  </SliderPrimitive.Track>
  <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-white/[0.06] shadow-none bg-background transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
  </SliderPrimitive.Root>
+=======
+  <SliderPrimitive.Root
+    ref={ref}
+    data-slot="slider"
+    className={cn(
+      "relative flex w-full touch-none select-none items-center",
+      className
+    )}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-secondary">
+      <SliderPrimitive.Range className="absolute h-full bg-primary" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-[var(--frost-border)] shadow-none bg-background transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+>>>>>>> origin/main
 ))
 Slider.displayName = SliderPrimitive.Root.displayName
 

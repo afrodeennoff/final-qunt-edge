@@ -49,7 +49,11 @@ export default async function EditBlogPostPage({ params }: PageProps) {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="rounded-2xl border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)] p-6 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+=======
+      <div className="rounded-3xl border border-border/24 bg-card/70 p-6 shadow-sm backdrop-blur-sm">
+>>>>>>> origin/main
         <BlogForm
           post={{
             id: post.id,

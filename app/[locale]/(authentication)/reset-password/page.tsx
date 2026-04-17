@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 
 export default function ResetPasswordPage() {
+<<<<<<< HEAD
  const router = useRouter()
  const params = useParams<{ locale: string }>()
  const locale = params.locale || 'en'
@@ -19,6 +20,17 @@ export default function ResetPasswordPage() {
  const [isLoading, setIsLoading] = useState(false)
  const [isSuccess, setIsSuccess] = useState(false)
  const [error, setError] = useState<string | null>(null)
+=======
+  const router = useRouter()
+  const params = useParams<{ locale: string }>()
+  const locale = params.locale || 'en'
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+>>>>>>> origin/main
 
  const requirements = getPasswordRequirements(password)
  const passwordsMatch = password === confirmPassword && password.length > 0
@@ -47,6 +59,7 @@ export default function ResetPasswordPage() {
  }
  }
 
+<<<<<<< HEAD
  if (isSuccess) {
  return (
  <div className="flex flex-col items-center gap-4 text-center">
@@ -60,6 +73,21 @@ export default function ResetPasswordPage() {
  </div>
  )
  }
+=======
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h2 className="text-2xl font-semibold">Password updated!</h2>
+        <p className="text-muted-foreground">
+          Your password has been successfully updated. Redirecting to dashboard...
+        </p>
+        <Link href={`/${locale}/dashboard`} className="text-sm text-primary underline-offset-4 hover:underline">
+          Go to dashboard
+        </Link>
+      </div>
+    )
+  }
+>>>>>>> origin/main
 
  return (
  <div className="flex flex-col gap-6">

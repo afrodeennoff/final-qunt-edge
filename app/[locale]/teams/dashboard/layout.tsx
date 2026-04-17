@@ -6,6 +6,10 @@ import { cookies } from "next/headers"
 import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/sidebar-state"
 import { SidebarRootProviders } from "@/components/providers/root-providers"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+<<<<<<< HEAD
+=======
+import { BackgroundGlow } from "@/components/ui/background-glow"
+>>>>>>> origin/main
 import {
     unifiedInsetPanelClassName,
     unifiedSectionPanelClassName,
@@ -81,6 +85,7 @@ export default async function DashboardLayout({
             <DashboardProviders>
                 <TeamsSidebar />
 
+<<<<<<< HEAD
                 <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground/95">
                     <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-[2rem] border border-primary/10 bg-primary/[0.03]" />
 
@@ -124,13 +129,36 @@ export default async function DashboardLayout({
                                                 Shared team operating layer
                                             </span>
                                         </div>
+=======
+                <SidebarInset className="relative overflow-hidden h-dvh selection:bg-muted selection:text-foreground">
+                    <BackgroundGlow variant="default" />
+
+                    <div className="relative z-0 flex h-full flex-col">
+                        <header
+                            className={`sticky top-0 ${HEADER_HEIGHT} ${HEADER_Z_INDEX} ${HEADER_BORDER} ${HEADER_BG}`}
+                        >
+                            <div className="flex h-full w-full items-center px-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center gap-3">
+                                    <SidebarTrigger className="-ml-1" />
+                                    <div className="flex flex-col">
+                                        <h1 className="text-sm font-bold tracking-wide text-foreground">
+                                            Teams Dashboard
+                                        </h1>
+                                        <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+                                            Unified Workspace
+                                        </span>
+>>>>>>> origin/main
                                     </div>
                                 </div>
                             </div>
                         </header>
 
                         <main className="flex-1 overflow-y-auto">
+<<<<<<< HEAD
                             <div className={`mx-auto w-full max-w-[1800px] ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+=======
+                            <div className={`w-full ${CONTENT_PADDING} ${CONTENT_PADDING_Y}`}>
+>>>>>>> origin/main
                                 {children}
                             </div>
                         </main>

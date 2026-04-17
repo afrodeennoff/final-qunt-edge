@@ -83,6 +83,7 @@ interface StatsCardSkeletonProps {
 function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
  const config = SIZE_CONFIG[size]
 
+<<<<<<< HEAD
  return (
  <div
  className={cn("relative overflow-hidden rounded-xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.06)]","shadow-[inset_0_1px_0_rgba(145,108,255,0.08),0_4px_16px_-4px_rgba(0,0,0,0.3)]",
@@ -105,6 +106,30 @@ function StatsCardSkeleton({ size ="md", className }: StatsCardSkeletonProps) {
  </div>
  </div>
  )
+=======
+  return (
+    <Card
+      variant="flat"
+      className={cn(
+        "border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
+        config.padding,
+        className
+      )}
+    >
+      <div className="flex flex-col gap-[var(--space-3)]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
+            <Skeleton className={cn(config.icon, "shrink-0")} />
+            <Skeleton className={cn("h-4 w-20", config.title)} />
+          </div>
+          <Skeleton className="h-5 w-12 shrink-0" />
+        </div>
+        <Skeleton className={cn("h-8 w-32", config.value)} />
+        <Skeleton className="h-3 w-24" />
+      </div>
+    </Card>
+  )
+>>>>>>> origin/main
 }
 
 const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
@@ -262,6 +287,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  return value.toLocaleString(locale ==="fr" ?"fr-FR" :"en-US")
  }, [value, formatCurrency, locale])
 
+<<<<<<< HEAD
  if (isLoading) {
  return (
  <div
@@ -278,6 +304,26 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  </div>
  )
  }
+=======
+    if (isLoading) {
+      return (
+        <Card
+          className={cn(
+            "relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)]",
+            "bg-v2-bg-surface/88",
+            config.padding,
+            className
+          )}
+        >
+          <div className="flex flex-col gap-[var(--space-3)]">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className={cn("h-8 w-32", config.value)} />
+            <Skeleton className="h-3 w-24" />
+          </div>
+        </Card>
+      )
+    }
+>>>>>>> origin/main
 
  const rawNumber = typeof value ==="number" && !formatCurrency ? value : undefined
 
@@ -291,6 +337,7 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  return null
  }
 
+<<<<<<< HEAD
  return (
  <div
  ref={ref}
@@ -311,6 +358,34 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  
  {/* Hover glow */}
  <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 " />
+=======
+    return (
+        <Card
+          ref={ref}
+          data-widget-shell="v2"
+          className={cn(
+            "group relative overflow-hidden rounded-xl border border-[var(--frost-border)] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.62)] transition-all duration-[180ms]",
+            "bg-v2-bg-surface/88",
+            "hover:border-[var(--frost-border)] hover:bg-v2-bg-surface/92",
+            glass && "bg-v2-bg-surface/60 backdrop-blur-md",
+            !!onClick && "cursor-pointer hover:shadow-md",
+            config.padding,
+            className
+          )}
+        >
+        {(title || trend) && (
+          <div className="flex items-center justify-between gap-[var(--space-3)]">
+            <div className="flex items-center gap-[var(--space-2)] flex-1 min-w-0">
+              {renderIcon() && (
+                <div className="shrink-0 text-v2-text-muted group-hover:text-v2-accent transition-colors duration-200" aria-hidden="true">
+                  {renderIcon()}
+                </div>
+              )}
+              <h3 className={cn("text-v2-text-muted truncate micro-sans", config.title)}>
+                {title}
+              </h3>
+            </div>
+>>>>>>> origin/main
 
  {(title || trend) && (
  <div className="relative flex items-center justify-between gap-3 mb-2">

@@ -113,7 +113,11 @@ export function AccountsBarChart({
   )
 
   return (
+<<<<<<< HEAD
     <Card data-chart-surface="modern" className="border-white/[0.06] bg-white/[0.040] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
+=======
+    <Card data-chart-surface="modern" className="border-border/28 bg-card/90">
+>>>>>>> origin/main
       <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <CardTitle>{chartTitle}</CardTitle>
@@ -126,7 +130,11 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
+<<<<<<< HEAD
               "h-7 px-2 border-white/[0.06] text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+=======
+              "h-7 px-2 border-border/28 text-[11px] tracking-wide",
+>>>>>>> origin/main
               showPayoutBars
                 ? "border-primary/60 bg-primary/20 text-foreground/95"
                 : "text-foreground/80 hover:bg-white/[0.080] hover:text-foreground/95"
@@ -140,7 +148,11 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
+<<<<<<< HEAD
               "h-7 px-2 border-white/[0.06] text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+=======
+              "h-7 px-2 border-border/28 text-[11px] tracking-wide",
+>>>>>>> origin/main
               showAccountValue
                 ? "border-primary/60 bg-primary/20 text-foreground/95"
                 : "text-foreground/80 hover:bg-white/[0.080] hover:text-foreground/95"
@@ -154,7 +166,11 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
+<<<<<<< HEAD
               "h-7 px-2 border-white/[0.06] text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+=======
+              "h-7 px-2 border-border/28 text-[11px] tracking-wide",
+>>>>>>> origin/main
               showRegistered
                 ? "border-primary/60 bg-primary/20 text-foreground/95"
                 : "text-foreground/80 hover:bg-white/[0.080] hover:text-foreground/95"
@@ -168,7 +184,11 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
+<<<<<<< HEAD
               "h-7 px-2 border-white/[0.06] text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+=======
+              "h-7 px-2 border-border/28 text-[11px] tracking-wide",
+>>>>>>> origin/main
               showSized
                 ? "border-primary/60 bg-primary/20 text-foreground/95"
                 : "text-foreground/80 hover:bg-white/[0.080] hover:text-foreground/95"
@@ -182,7 +202,11 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
+<<<<<<< HEAD
               "h-7 px-2 border-white/[0.06] text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+=======
+              "h-7 px-2 border-border/28 text-[11px] tracking-wide",
+>>>>>>> origin/main
               showZeroFirms
                 ? "border-primary/60 bg-primary/20 text-foreground/95"
                 : "text-foreground/80 hover:bg-white/[0.080] hover:text-foreground/95"
@@ -192,7 +216,11 @@ export function AccountsBarChart({
           </Button>
         </div>
       </CardHeader>
+<<<<<<< HEAD
       <CardContent className="border-t border-white/[0.06] pt-4">
+=======
+      <CardContent className="border-t border-border/28 pt-4">
+>>>>>>> origin/main
         <ChartContainer config={chartConfig} className="h-[380px] w-full">
           <ComposedChart
             data={visibleData}

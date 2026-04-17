@@ -36,6 +36,7 @@ export default function AuthenticationPageClient() {
  <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:36px_36px]" />
  </div>
 
+<<<<<<< HEAD
  <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10">
  <div className="w-full overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(7,7,7,0.96),rgba(2,2,2,0.94))] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_40px_100px_-48px_rgba(0,0,0,0.98)]">
  <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]">
@@ -58,6 +59,35 @@ export default function AuthenticationPageClient() {
  <Logo className="h-5 w-5 text-foreground/95" />
  <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/72">Qunt Edge</span>
  </div>
+=======
+      <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10">
+        <div className="w-full overflow-hidden rounded-2xl border border-border/24 bg-card/70 shadow-[0_24px_80px_-38px_hsl(var(--foreground) / 0.28)] backdrop-blur-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(500px,620px)]">
+        <section className="p-6 sm:p-8 lg:border-r lg:border-border/24 lg:p-10">
+          <div className="flex items-center justify-between">
+            <Link
+              href={`/${locale}`}
+              className="inline-flex items-center gap-2 rounded-full border border-border/28 bg-card/60 px-4 py-2 text-xs font-semibold tracking-wide text-foreground transition hover:bg-accent/70"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to website
+            </Link>
+            <span className="rounded-full border border-border/24 bg-card/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Secure Access
+            </span>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+            className="my-10 max-w-xl lg:my-14"
+          >
+            <div className="mb-7 inline-flex items-center gap-3 rounded-2xl border border-border/28 bg-card/50 px-4 py-3">
+              <Logo className="h-5 w-5 text-foreground" />
+              <span className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground">Qunt Edge</span>
+            </div>
+>>>>>>> origin/main
 
  <h1 className="text-balance text-4xl font-[350] leading-[0.98] tracking-[-0.045em] text-foreground/95 sm:text-5xl lg:text-6xl">
  Welcome back to
@@ -67,6 +97,7 @@ export default function AuthenticationPageClient() {
  {t('authentication.description')}
  </p>
 
+<<<<<<< HEAD
  <div className="mt-10 grid gap-3">
  {valuePoints.map((point) => (
  <div
@@ -86,6 +117,27 @@ export default function AuthenticationPageClient() {
  ))}
  </div>
  </div>
+=======
+            <div className="mt-10 grid gap-3">
+              {valuePoints.map((point) => (
+                <div
+                  key={point.title}
+                  className="rounded-2xl border border-border/24 bg-card/50 px-4 py-3.5"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 rounded-lg border border-border/28 bg-accent/50 p-2">
+                      <point.icon className="h-4 w-4 text-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{point.title}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{point.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+>>>>>>> origin/main
 
  <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/34">
  <Sparkles className="h-3.5 w-3.5" />
@@ -93,6 +145,7 @@ export default function AuthenticationPageClient() {
  </div>
  </section>
 
+<<<<<<< HEAD
  <section className="flex items-center justify-center border-t border-white/[0.06] p-6 sm:p-8 lg:border-t-0 lg:p-10">
  <div className="auth-entrance-2 w-full max-w-[560px] mx-auto">
  <div className="mb-6 rounded-[1.6rem] border border-white/[0.06] bg-white/[0.04] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]">
@@ -119,6 +172,39 @@ export default function AuthenticationPageClient() {
  <p className="pl-[1.35rem] text-xs text-foreground/46">Protected session handling for every login method.</p>
  </div>
  </div>
+=======
+        <section className="flex items-center justify-center border-t border-border/24 p-6 sm:p-8 lg:border-t-0 lg:p-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05, ease: "easeOut" }}
+            className="w-full max-w-[560px] mx-auto"
+          >
+            <div className="mb-6 rounded-2xl border border-border/24 bg-card/50 p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Account Access</p>
+                <div className="rounded-xl border border-border/28 bg-card/60 p-2.5">
+                  <LockKeyhole className="h-4 w-4 text-foreground" />
+                </div>
+              </div>
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in to continue</h2>
+              <p className="mt-1 text-xs text-muted-foreground">{t('authentication.testimonialAuthor')}</p>
+            </div>
+
+            <div className="mb-6 grid gap-2 rounded-2xl border border-border/24 bg-card/40 p-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CheckCircle2 className="h-3.5 w-3.5 text-foreground" />
+                <span>Magic link and password sign-in</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CheckCircle2 className="h-3.5 w-3.5 text-foreground" />
+                <span>Discord and Google authentication</span>
+              </div>
+              <div>
+                <p className="pl-[1.35rem] text-xs text-muted-foreground">Protected session handling for every login method.</p>
+              </div>
+            </div>
+>>>>>>> origin/main
 
  <UserAuthForm />
 

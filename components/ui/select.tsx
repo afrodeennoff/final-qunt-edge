@@ -20,11 +20,18 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     data-slot="select-trigger"
     className={cn(
+<<<<<<< HEAD
       'type-body-sm flex h-10 w-full items-center justify-between rounded-md border border-border/70 bg-background/80 px-3 py-2 text-left text-foreground shadow-sm transition-[background-color,border-color,box-shadow] duration-200 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
       'focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20',
       error &&
         'border-destructive/70 focus-visible:border-destructive/70 focus-visible:ring-destructive/20',
       className,
+=======
+      "flex h-10 w-full items-center justify-between rounded-md border border-[var(--frost-border)] bg-transparent px-3 py-2 text-sm shadow-none transition-all duration-200 outline-none placeholder:text-v2-text-muted disabled:cursor-not-allowed disabled:opacity-50",
+      "focus-visible:border-v2-accent focus-visible:ring-2 focus-visible:ring-v2-accent/50",
+      error && "border-v2-error focus-visible:border-v2-error focus-visible:ring-v2-error/50",
+      className
+>>>>>>> origin/main
     )}
     aria-invalid={error ? 'true' : undefined}
     {...props}
@@ -74,10 +81,17 @@ const SelectContent = React.forwardRef<
       ref={ref}
       data-slot="select-content"
       className={cn(
+<<<<<<< HEAD
         'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-lg border border-border/70 bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         position === 'popper' &&
           'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,
+=======
+        "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border border-[var(--frost-border)] bg-v2-bg-base/95 backdrop-blur-xl text-v2-text-primary shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className
+>>>>>>> origin/main
       )}
       position={position}
       {...props}

@@ -534,6 +534,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  </div>
  </TransformComponent>
 
+<<<<<<< HEAD
  <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-white/[0.095] border border-white/[0.08] z-50">
  <Button 
  variant="ghost"
@@ -563,6 +564,37 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  </motion.div>
  </AnimatePresence>
  </div>
+=======
+                      <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-card/95 border border-border/28 backdrop-blur-xs z-50">
+                        <Button 
+                          variant="ghost"
+                          size="icon"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+                          onClick={() => zoomOut()}
+                          disabled={scale <= 0.5}
+                        >
+                          <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
+                        </Button>
+                        <span className="min-w-10 sm:min-w-12 text-center text-xs sm:text-sm font-medium text-foreground">
+                          {Math.round(scale * 100)}%
+                        </span>
+                        <Button 
+                          variant="ghost"
+                          size="icon"
+                          className="bg-linear-to-r bg-card hover:bg-accent/70 shadow-lg border border-border ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+                          onClick={() => zoomIn()}
+                          disabled={scale >= 3}
+                        >
+                          <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </TransformWrapper>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+>>>>>>> origin/main
 
  <div className="border-t p-4">
  <Carousel className="w-full">

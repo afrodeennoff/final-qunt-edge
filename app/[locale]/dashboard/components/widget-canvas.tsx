@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> origin/main
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
@@ -41,12 +45,21 @@ import {
 } from "@/lib/widget-layout"
 // Helper function to convert internal layout to Prisma type
 const toPrismaLayout = (layout: DashboardLayoutWithWidgets): DashboardLayout => {
+<<<<<<< HEAD
  return {
  ...layout,
  version: layout.version ?? 1,
  checksum: layout.checksum ?? null,
  deviceId: layout.deviceId ?? null,
  } as unknown as DashboardLayout
+=======
+  return {
+    ...layout,
+    version: layout.version ?? 1,
+    checksum: layout.checksum ?? null,
+    deviceId: layout.deviceId ?? null,
+  } as unknown as DashboardLayout
+>>>>>>> origin/main
 }
 
 const LAYOUT_SAVE_DEBOUNCE_MS = 250

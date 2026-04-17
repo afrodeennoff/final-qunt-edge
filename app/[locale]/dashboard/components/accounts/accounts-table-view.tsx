@@ -291,6 +291,7 @@ function AccountsTableSection({
  }
  }
 
+<<<<<<< HEAD
  return (
  <div className="relative">
  <div className="overflow-x-auto" ref={tableWrapperRef}>
@@ -396,6 +397,115 @@ function AccountsTableSection({
  )}
  </div>
  )
+=======
+  return (
+    <div className="relative">
+      <div className="overflow-x-auto" ref={tableWrapperRef}>
+        <table className="w-full border-separate border-spacing-0 text-sm">
+        <thead className="sticky top-0 z-10 bg-card/90 backdrop-blur-xs shadow-xs border-b [&_tr]:border-b">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr
+              key={headerGroup.id}
+              className="border-b transition-colors hover:bg-card/40"
+            >
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="whitespace-nowrap px-3 py-2 text-left text-sm font-semibold bg-card/90 border-r border-border/20 last:border-r-0 first:border-l align-middle text-foreground/80"
+                  style={{ width: header.getSize() }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody className="bg-background [&_tr:last-child]:border-0">
+          {displayRows.map((entry, rowIndex) => {
+            if (entry.type === "summary") {
+              return (
+                <tr
+                  key={entry.summary.id}
+                className="border-b border-border bg-card/90 font-semibold"
+                >
+                  {table.getVisibleLeafColumns().map((column) => (
+                    <td
+                      key={`${entry.summary.id}-${column.id}`}
+                      className="px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle"
+                      style={{ width: column.getSize() }}
+                    >
+                      {renderSummaryCell(column.id, entry.summary)}
+                    </td>
+                  ))}
+                </tr>
+              )
+            }
+
+            const row = entry.row
+            return (
+              <tr
+                key={row.id}
+                className={cn(
+                  "border-b border-border transition-all duration-75 hover:bg-card/40",
+                  rowIndex % 2 === 1 && "bg-card/5",
+                  row.getCanExpand() && "bg-card/10 font-medium",
+                  isDrawdownBreached(row.original) && "opacity-50",
+                  (row.getCanExpand() || row.depth > 0) && "cursor-pointer"
+                )}
+                onClick={() => {
+                  if (row.getCanExpand()) {
+                    row.toggleExpanded()
+                  } else if (!isGroupRow(row.original)) {
+                    onSelectAccount(row.original)
+                  }
+                }}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className={cn(
+                      "px-3 py-2 text-sm border-r border-border/20 last:border-r-0 first:border-l align-middle",
+                      row.depth > 0 && cell.column.id === "account" && "pl-6"
+                    )}
+                    style={{ width: cell.column.getSize() }}
+                  >
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
+        </tbody>
+        </table>
+      </div>
+      {showScrollHint && (
+        <div className="pointer-events-none absolute bottom-2 right-2">
+          <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/24 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-sm">
+            <span className="max-w-[220px] leading-snug">
+              {t("accounts.table.scrollHint")}
+            </span>
+            <button
+              type="button"
+              onClick={handleDismissHint}
+              className="text-muted-foreground transition-colors hover:text-muted-foreground cursor-pointer"
+            >
+              <XCircle className="h-4 w-4" />
+              <span className="sr-only">{t("accounts.table.dismissHint")}</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+>>>>>>> origin/main
 }
 
 export function AccountsTableView({

@@ -12,6 +12,7 @@ export default function HowItWorks() {
  ];
 
 return (
+<<<<<<< HEAD
  <section id="how-it-works" className="relative overflow-hidden border-t border-white/[0.08] bg-background px-4 py-24 sm:px-6 sm:py-24 lg:px-8">
  <div className="mx-6 overflow-hidden rounded-[2.2rem] border border-white/[0.08] bg-[oklch(0.038_0.005_264)] p-6 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_28px_70px_-42px_rgba(0,0,0,0.96)]">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-8">
@@ -42,6 +43,29 @@ return (
  The product captures intent, audits execution, and forces review into a repeatable rhythm instead of leaving performance buried in screenshots and hindsight.
  </motion.p>
  </motion.div>
+=======
+    <section id="how-it-works" className="relative overflow-hidden border-t border-border/28 bg-background px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+      <div className="mx-6 rounded-2xl p-6 bg-card shadow-card">
+        <div className="text-center mb-16 sm:mb-20 relative z-10">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter mb-3 sm:mb-4 text-foreground"
+          >
+            The Optimization Pipeline
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mx-auto max-w-lg px-4 text-base font-light text-foreground/85 sm:text-lg"
+          >
+            A closed-loop system designed to extract alpha from behavioral inefficiencies.
+          </motion.p>
+        </div>
+>>>>>>> origin/main
 
  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4 relative">
  <div className="hidden lg:block absolute top-8 left-[8%] w-[84%] h-px z-0 bg-white/[0.08]" />
@@ -71,6 +95,7 @@ return (
  </span>
  </div>
 
+<<<<<<< HEAD
  <div className="px-1">
  <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/72">{step.name}</h3>
  <p className="text-sm leading-[1.8] text-foreground/62">{step.desc}</p>
@@ -82,4 +107,31 @@ return (
  </div>
  </section>
  )
+=======
+          {steps.map((step, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              className="relative group z-10"
+            >
+              <div className="flex justify-center mb-6 sm:mb-8 relative">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-card border border-border/24 flex items-center justify-center relative z-10 group-hover:border-border/36 transition-colors shadow-2xl">
+                      <span className="font-mono text-xs font-bold text-foreground/85 group-hover:text-foreground sm:text-sm">0{i+1}</span>
+                  </div>
+              </div>
+
+              <div className="text-center px-2 sm:px-3">
+                <h3 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-3 sm:mb-4 text-foreground mono group-hover:text-foreground transition-colors">{step.name}</h3>
+                <p className="text-xs leading-relaxed font-light text-foreground/85 sm:text-sm">{step.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+>>>>>>> origin/main
 }

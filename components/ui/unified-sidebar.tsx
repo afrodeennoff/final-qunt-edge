@@ -228,10 +228,17 @@ function SidebarContentRender({
       collapsible="icon"
       className={cn(
         'pointer-events-auto overflow-hidden text-sidebar-foreground',
+<<<<<<< HEAD
         styleVariant === 'minimal' ? 'bg-sidebar/98' : 'bg-sidebar/96',
       )}
     >
       <SidebarHeader className="px-3 py-3">
+=======
+        styleVariant === 'minimal' ? 'bg-sidebar/96' : 'bg-sidebar'
+      )}
+    >
+      <SidebarHeader className="px-2 py-2">
+>>>>>>> origin/main
         <SidebarLogoHeader />
       </SidebarHeader>
 
@@ -254,7 +261,11 @@ function SidebarContentRender({
         )}
       </SidebarContent>
 
+<<<<<<< HEAD
       <SidebarFooter className="p-3">
+=======
+      <SidebarFooter className="p-2">
+>>>>>>> origin/main
         <SidebarUserMenu
           user={user}
           timezone={timezone}

@@ -1,7 +1,25 @@
+<<<<<<< HEAD
 export default function HomeLoading() {
   return (
     <div className="flex min-h-[80vh] items-center justify-center">
       <div className="h-5 w-5 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-primary" />
     </div>
   )
+=======
+
+import React from 'react';
+
+export default function Loading() {
+    return (
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center z-50">
+            <div className="relative w-16 h-16 mb-8">
+                <div className="absolute inset-0 border-t-2 border-border/20 rounded-full animate-spin"></div>
+                <div className="absolute inset-2 border-r-2 border-border/36 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+            </div>
+            <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/80 animate-pulse">
+                Initializing Qunt Edge
+            </div>
+        </div>
+    );
+>>>>>>> origin/main
 }

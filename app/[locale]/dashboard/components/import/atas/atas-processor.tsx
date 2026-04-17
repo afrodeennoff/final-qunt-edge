@@ -664,6 +664,7 @@ export default function AtasProcessor({
  const tradeCount = tradesPerAccount[account] || 0;
  const isSelected = currentSelectedAccounts.includes(account);
 
+<<<<<<< HEAD
  return (
  <Card
  key={account}
@@ -774,6 +775,119 @@ export default function AtasProcessor({
  <p className="text-muted-foreground">{t("import.account.selectAccountToView")}</p>
  </div>
  )}
+=======
+                  return (
+                    <Card
+                      key={account}
+                      className={cn(
+                        "p-6 cursor-pointer hover:border-border/24 transition-colors relative group",
+                        isSelected ? "border-border/24 bg-card/90" : "border-border/40 bg-card/20"
+                      )}
+                      onClick={() => {
+                        if (isSelected) {
+                          setCurrentSelectedAccounts(
+                            currentSelectedAccounts.filter((a) => a !== account)
+                          );
+                        } else {
+                          setCurrentSelectedAccounts([
+                            ...currentSelectedAccounts,
+                            account,
+                          ]);
+                        }
+                      }}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-2 flex-1">
+                          <p className="font-medium">{account}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {tradeCount}{" "}
+                            {tradeCount === 1
+                              ? t("import.account.trade")
+                              : t("import.account.trades")}
+                          </p>
+                        </div>
+                        {isSelected && (
+                          <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
+                        )}
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Commissions Section - Only show for selected accounts */}
+          {selectedAccountInstrumentPairs.length > 0 && (
+            <div
+              className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+              role="alert"
+            >
+              <p className="font-bold">{t("import.commission.title")}</p>
+              <p className="text-muted-foreground">{t("import.commission.description")}</p>
+              <p className="mt-2 text-sm text-muted-foreground/60">{t("import.commission.help")}</p>
+              <p className="text-sm italic text-muted-foreground/50">{t("import.commission.example")}</p>
+              <div className="mt-4 space-y-2">
+                {selectedAccountInstrumentPairs.map((pair) => {
+                  const [accountNumber, instrument] = pair.split(":");
+                  // Get current commission value: user-set > existing > 0
+                  const currentCommission =
+                    missingCommissions[pair] !== undefined
+                      ? missingCommissions[pair]
+                      : existingCommissions[pair] || 0;
+
+                  return (
+                    <div
+                      key={pair}
+                      className="flex items-center gap-2"
+                    >
+                      <label
+                        htmlFor={`commission-${pair}`}
+                        className="min-w-[200px] text-muted-foreground"
+                      >
+                        {accountNumber} - {instrument} - {t("import.commission.perContract")}
+                      </label>
+                      <Input
+                        id={`commission-${pair}`}
+                        type="number"
+                        step="0.01"
+                        value={currentCommission}
+                        onChange={(e) =>
+                          handleCommissionChange(pair, e.target.value)
+                        }
+                        className="w-24 bg-background/60 border-border/24 text-foreground"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <Button  onClick={applyCommissions} className="mt-4 bg-card/90 text-foreground hover:bg-card/80">
+                {t("import.commission.apply")}
+              </Button>
+            </div>
+          )}
+
+          {allProcessedTrades.length === 0 && (
+            <div
+              className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+              role="alert"
+            >
+              <p className="font-bold">{t("import.error.duplicateTrades")}</p>
+              <p className="text-muted-foreground">{t("import.error.duplicateTradesDescription")}</p>
+            </div>
+          )}
+
+          {currentSelectedAccounts.length === 0 &&
+            allProcessedTrades.length > 0 && (
+              <div
+                className="flex-none bg-card/80 border border-border/20 text-muted-foreground p-4 rounded-md"
+                role="alert"
+              >
+                <p className="font-bold">{t("import.account.selectAccount")}</p>
+                <p className="text-muted-foreground">{t("import.account.selectAccountToView")}</p>
+              </div>
+            )}
+>>>>>>> origin/main
 
  {(() => {
  const tradesForTable = filteredTrades.map((trade) =>

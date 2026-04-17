@@ -48,7 +48,11 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
   const hasActiveFilters = search || payoutFilter || sort !== "accounts"
 
   return (
+<<<<<<< HEAD
     <div className="space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.040] p-4 sm:p-5">
+=======
+    <div className="space-y-4 rounded-2xl border border-border/28 bg-card/60 p-4 sm:p-5">
+>>>>>>> origin/main
       {/* Search Bar */}
       <div className="relative">
         <svg
@@ -69,7 +73,11 @@ export function FirmFilters({ totalCount, filteredCount }: FirmFiltersProps) {
           placeholder="Search prop firms..."
           defaultValue={search}
           onChange={(e) => updateParams("q", e.target.value)}
+<<<<<<< HEAD
           className="h-12 rounded-xl border-white/[0.08] bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus-visible:ring-1 focus-visible:ring-primary/55 focus-visible:ring-offset-0"
+=======
+          className="h-12 rounded-2xl border-border/24 bg-background/70 pl-10 placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/20"
+>>>>>>> origin/main
         />
       </div>
 

@@ -83,6 +83,7 @@ const NavigationMenuViewport = React.forwardRef<
  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
 >(({ className, ...props }, ref) => (
+<<<<<<< HEAD
  <div className={cn("absolute left-0 top-full flex justify-center")}>
  <NavigationMenuPrimitive.Viewport
  data-slot="navigation-menu-viewport"
@@ -93,6 +94,19 @@ const NavigationMenuViewport = React.forwardRef<
  {...props}
  />
  </div>
+=======
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      data-slot="navigation-menu-viewport"
+      className={cn(
+        "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-md border border-[var(--frost-border)] bg-popover text-popover-foreground shadow-[0_18px_40px_-24px_rgba(0,0,0,0.72)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-(--radix-navigation-menu-viewport-width)",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
+>>>>>>> origin/main
 ))
 NavigationMenuViewport.displayName =
  NavigationMenuPrimitive.Viewport.displayName

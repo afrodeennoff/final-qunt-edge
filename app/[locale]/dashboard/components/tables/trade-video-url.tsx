@@ -116,6 +116,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  }
  }
 
+<<<<<<< HEAD
  return (
  <div className="max-w-[200px]">
  <Button 
@@ -247,4 +248,139 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  </Dialog>
  </div>
  )
+=======
+  return (
+    <div className="max-w-[200px]">
+      <Button 
+        variant="ghost"
+        className={cn(
+          "h-8 w-full justify-start px-2 gap-2 truncate",
+          !localUrl && "text-muted-foreground font-normal"
+        )}
+        onClick={() => setIsOpen(true)}
+      >
+        {localUrl ? (
+          <div className="truncate">
+            {(() => {
+              try {
+                return new URL(localUrl).hostname
+              } catch {
+                return localUrl
+              }
+            })()}
+          </div>
+        ) : t('trade-table.addVideoUrl')}
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{t('trade-table.videoUrl')}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-x-2">
+                <div className="relative flex-1">
+                  <Input
+                    placeholder="https://"
+                    value={draftUrl}
+                    onChange={(e) => handleUrlChange(e.target.value)}
+                    className={cn(
+                      "pr-8",
+                      !isValid && draftUrl && "border-border/65 focus-visible:ring-ring/30",
+                      showSuccess && "border-border/36 focus-visible:ring-ring",
+                      isUpdating && "border-border/65"
+                    )}
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isUpdating && (
+                      <div className="h-4 w-4">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-border/65 border-r-transparent" />
+                      </div>
+                    )}
+                    {showSuccess && !isUpdating && (
+                      <svg
+                        className="h-4 w-4 text-foreground"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                    {!isValid && draftUrl && !isUpdating && (
+                      <svg
+                        className="h-4 w-4 text-muted-foreground/55"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <Button 
+                  variant="outline"
+                  size="icon"
+                  disabled={isUpdating || !draftUrl}
+                  onClick={handleClear}
+                  className="shrink-0 text-muted-foreground hover:text-foreground"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              {!isValid && draftUrl && (
+                <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+                  {t('trade-table.invalidVideoUrl')}
+                </p>
+              )}
+              {draftUrl && isValid && (
+                <div className="rounded-lg overflow-hidden border bg-muted">
+                  <div className="aspect-video w-full relative">
+                    <iframe
+                      src={getEmbedUrl(draftUrl)}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      loading="lazy"
+                      title="Video content"
+                      sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="secondary"
+              onClick={() => setIsOpen(false)}
+              disabled={isUpdating}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button 
+              onClick={handleSave}
+              disabled={!isValid || isUpdating}
+            >
+              {t('common.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+>>>>>>> origin/main
 } 

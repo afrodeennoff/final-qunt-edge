@@ -524,6 +524,7 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  return { activeDays, winningDays, losingDays, totalTrades }
  }, [calendarData, currentDate, viewMode])
 
+<<<<<<< HEAD
  return (
  <Card className="h-full flex flex-col overflow-hidden border-[oklch(0.65_0.22_260/0.08)] bg-white/[0.095]">
  <CardHeader
@@ -793,4 +794,291 @@ export default function CalendarPnl({ calendarData, hideFiltersOnMobile = false 
  </CardFooter>
  </Card>
  )
+=======
+  return (
+    <Card className="h-full flex flex-col overflow-hidden border-border/24 bg-card/95 backdrop-blur-xl">
+      <CardHeader
+        className="shrink-0 border-b border-border/24 px-4 py-3 sm:px-5 sm:py-4"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 space-y-1">
+            <div className="flex items-center gap-2">
+              <CardTitle className="truncate text-base font-semibold capitalize sm:text-lg">
+                {viewMode === 'daily'
+                  ? formatInTimeZone(currentDate, timezone, 'MMMM yyyy', { locale: dateLocale })
+                  : formatInTimeZone(currentDate, timezone, 'yyyy', { locale: dateLocale })}
+              </CardTitle>
+              <span className="rounded-md border border-border/24 bg-secondary/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {viewMode === 'daily' ? 'PnL Month' : 'PnL Year'}
+              </span>
+            </div>
+            <div className={cn(
+              "text-xl font-black tracking-tight sm:text-2xl",
+              (viewMode === 'daily' ? monthlyTotal : yearTotal) >= 0
+                ? "text-semantic-success"
+                : "text-semantic-error"
+            )}>
+              {formatCurrency(viewMode === 'daily' ? monthlyTotal : yearTotal)}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="rounded-md border border-border/55 bg-card/92 px-2 py-1">
+                Active Days: {periodStats.activeDays}
+              </span>
+              <span className="rounded-md border border-border/55 bg-card/92 px-2 py-1">
+                Trades: {periodStats.totalTrades}
+              </span>
+              <span className="rounded-md border border-border/55 bg-card/92 px-2 py-1 text-semantic-success">
+                Wins: {periodStats.winningDays}
+              </span>
+              <span className="rounded-md border border-border/55 bg-card/92 px-2 py-1 text-semantic-error">
+                Losses: {periodStats.losingDays}
+              </span>
+              <span className="rounded-md border border-border/55 bg-card/92 px-2 py-1">
+                Avg/Active: {periodStats.activeDays > 0 ? formatCurrency((viewMode === 'daily' ? monthlyTotal : yearTotal) / periodStats.activeDays, { maximumFractionDigits: 0 }) : "$0"}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-1.5">
+              <Button 
+                variant="outline"
+                size="icon"
+                onClick={() => viewMode === 'daily' ? handlePrevMonth() : setCurrentDate(new Date(getYear(currentDate) - 1, 0, 1))}
+                className="h-8 w-8 border-border/24 bg-card/92 hover:bg-secondary/50"
+                aria-label={viewMode === 'daily' ? "Previous month" : "Previous year"}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline"
+                size="icon"
+                onClick={() => viewMode === 'daily' ? handleNextMonth() : setCurrentDate(new Date(getYear(currentDate) + 1, 0, 1))}
+                className="h-8 w-8 border-border/24 bg-card/92 hover:bg-secondary/50"
+                aria-label={viewMode === 'daily' ? "Next month" : "Next year"}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className={cn("flex items-center gap-2", hideFiltersOnMobile && "max-sm:hidden")}>
+              <ImportanceFilter
+                value={impactLevels}
+                onValueChange={setImpactLevels}
+                className="h-8"
+              />
+              <CountryFilter
+                countries={countries}
+                value={selectedCountries}
+                onValueChange={setSelectedCountries}
+                className={cn("h-8", hideFiltersOnMobile && "max-sm:hidden")}
+              />
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1 min-h-0 p-2 sm:p-3">
+        {viewMode === 'daily' ? (
+          <>
+            <div className="mb-2 grid grid-cols-8 gap-1">
+              {WEEKDAYS.map((day) => (
+                <div key={day} className="rounded-md border border-border/18 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+                  {translateWeekday(t, day)}
+                </div>
+              ))}
+              <div className="rounded-md border border-border/18 bg-secondary/18 py-1 text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-[10px]">
+                {t('calendar.weekdays.weekly')}
+              </div>
+            </div>
+            <div className="grid h-[calc(100%-30px)] auto-rows-fr grid-cols-8 gap-1">
+              {calendarDays.map((date, index) => {
+                const dateString = format(date, 'yyyy-MM-dd')
+                const dayData = calendarData[dateString]
+                // Check if it's the last day of the week (Saturday for Sunday start, Sunday for Monday start)
+                const isLastDayOfWeek = weekStartsOnMonday ? getDay(date) === 0 : getDay(date) === 6
+                const isCurrentMonth = isSameMonth(date, currentDate)
+                const dateEvents = filteredEventsByDate.get(dateString) || []
+                const dateRenewals = renewalsByDate.get(dateString) || []
+                const calculations = dayCalculations.get(dateString) || { maxProfit: 0, maxDrawdown: 0 }
+                const maxProfit = calculations.maxProfit
+                const maxDrawdown = calculations.maxDrawdown
+                const dayPnl = dayData?.pnl ?? 0
+                const pnlIntensity = Math.min(Math.abs(dayPnl) / monthMaxMagnitude, 1)
+
+                return (
+                  <React.Fragment key={dateString}>
+                    <button
+                      type="button"
+                      className={cn(
+                        "group relative h-full cursor-pointer overflow-hidden rounded-lg border p-2 transition-all duration-200",
+                        "hover:-translate-y-[1px] hover:shadow-md",
+                        !dayData && "bg-card/86 border-border/18",
+                        dayPnl > 0 && "bg-semantic-success-bg/10 border-semantic-success-border/30",
+                        dayPnl < 0 && "bg-semantic-error-bg/10 border-semantic-error-border/30",
+                        !isCurrentMonth && "opacity-45",
+                        isToday(date) && "border-primary/70 bg-primary/10 shadow-[0_0_0_1px_hsl(var(--primary)/0.3)_inset]",
+                        index === 0 && "rounded-tl-xl",
+                        index === 35 && "rounded-bl-xl",
+                      )}
+                      onClick={() => {
+                        setSelectedDate(date)
+                      }}
+                      aria-label={`Open day ${format(date, 'yyyy-MM-dd')}`}
+                    >
+                      <div
+                        className={cn(
+                          "pointer-events-none absolute inset-0 rounded-lg transition-opacity",
+                          dayPnl > 0 && "bg-semantic-success/20",
+                          dayPnl < 0 && "bg-semantic-error/20"
+                        )}
+                        style={{ opacity: pnlIntensity * 0.8 }}
+                      />
+                      <div className="flex items-start justify-between gap-1">
+                        <span className={cn(
+                          "min-w-[18px] rounded-md border border-border/18 bg-card/86 px-1 py-0.5 text-center text-[10px] font-semibold",
+                          isToday(date) && "text-primary font-semibold",
+                          !isCurrentMonth && "opacity-60"
+                        )}>
+                          {format(date, 'd')}
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          {dateEvents.length > 0 && <EventBadge events={dateEvents} impactLevels={impactLevels} />}
+                          {dateRenewals.length > 0 && <RenewalBadge renewals={dateRenewals} />}
+                        </div>
+                      </div>
+                      <div className="mt-2 flex flex-1 flex-col justify-end gap-1">
+                        {dayData ? (
+                          <div className={cn(
+                            "truncate text-center text-[11px] font-bold",
+                            dayData.pnl >= 0 ? "text-semantic-success" : "text-semantic-error",
+                            !isCurrentMonth && "opacity-60"
+                          )}>
+                            {formatCurrency(dayData.pnl)}
+                          </div>
+                        ) : (
+                          <div className={cn(
+                            "invisible text-center text-[11px] font-semibold",
+                            !isCurrentMonth && "opacity-50"
+                          )}>$0</div>
+                        )}
+                        <div className={cn(
+                          "truncate text-center text-[8px] font-medium uppercase tracking-wider text-muted-foreground",
+                          !isCurrentMonth && "opacity-50"
+                        )}>
+                          {dayData
+                            ? `${dayData.tradeNumber} ${dayData.tradeNumber > 1 ? t('calendar.trades') : t('calendar.trade')}`
+                            : t('calendar.noTrades')}
+                        </div>
+                        {dayData && (
+                          <>
+                            <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-card/92">
+                              <div
+                                className={cn(
+                                  "h-full rounded-full",
+                                  dayPnl >= 0 ? "bg-semantic-success/90" : "bg-semantic-error/90"
+                                )}
+                                style={{ width: `${Math.max(10, Math.round(pnlIntensity * 100))}%` }}
+                              />
+                            </div>
+                            <div className={cn(
+                              "truncate text-center text-[8px] text-muted-foreground",
+                              !isCurrentMonth && "opacity-50"
+                            )}>
+                              {t('calendar.maxProfit')}: {formatCurrency(maxProfit)}
+                            </div>
+                            <div className={cn(
+                              "truncate text-center text-[8px] text-muted-foreground/80",
+                              !isCurrentMonth && "opacity-50"
+                            )}>
+                              {t('calendar.maxDD')}: -{formatCurrency(maxDrawdown)}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </button>
+                    {isLastDayOfWeek && (() => {
+                      const weeklyTotal = calculateWeeklyTotal(index, calendarDays, calendarData)
+                      return (
+                        <button
+                          type="button"
+                          className={cn(
+                            "flex h-full cursor-pointer items-center justify-center rounded-lg border border-border/18 bg-card/86 px-1 transition-all",
+                            "hover:bg-secondary/50 hover:border-primary/40",
+                            index === 6 && "rounded-tr-xl",
+                            index === 41 && "rounded-br-xl"
+                          )}
+                          onClick={() => setSelectedWeekDate(date)}
+                          aria-label={`Open weekly summary for ${format(date, 'yyyy-MM-dd')}`}
+                        >
+                          <div className={cn(
+                            "truncate px-1 text-[10px] font-bold",
+                            weeklyTotal >= 0
+                              ? "text-semantic-success"
+                              : "text-semantic-error"
+                          )}>
+                            {formatCurrency(weeklyTotal)}
+                          </div>
+                        </button>
+                      )
+                    })()}
+                  </React.Fragment>
+                )
+              })}
+            </div>
+          </>
+        ) : (
+          <WeeklyCalendarPnl
+            calendarData={calendarData}
+            year={getYear(currentDate)}
+          />
+        )}
+      </CardContent>
+      <CalendarModal
+        isOpen={selectedDate !== null && selectedDate !== undefined}
+        onOpenChange={(open) => {
+          if (!open) setSelectedDate(null)
+        }}
+        selectedDate={selectedDate}
+        dayData={selectedDate ? calendarData[format(selectedDate, 'yyyy-MM-dd', { locale: dateLocale })] : undefined}
+        isLoading={isLoading}
+      />
+      <WeeklyModal
+        isOpen={selectedWeekDate !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedWeekDate(null)
+        }}
+        selectedDate={selectedWeekDate}
+        calendarData={calendarData}
+        isLoading={isLoading}
+      />
+      <CardFooter className="flex justify-end border-t border-border/24 bg-background/30 px-3 py-2">
+        {/* View Mode Toggle */}
+        <div className="flex items-center gap-1 rounded-lg border border-border/24 bg-secondary/30 p-1">
+          <Button 
+            variant={viewMode === 'daily' ? 'default' : 'ghost'}
+            size="sm"
+            className={cn(
+              "h-7 px-3 transition-colors",
+              viewMode === 'daily' && "bg-primary text-primary-foreground shadow-sm font-semibold"
+            )}
+            onClick={() => setViewMode('daily')}
+          >
+            <Calendar className="h-4 w-4 mr-1" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.daily')}</span>
+          </Button>
+          <Button 
+            variant={viewMode === 'weekly' ? 'default' : 'ghost'}
+            size="sm"
+            className={cn(
+              "h-7 px-3 transition-colors",
+              viewMode === 'weekly' && "bg-primary text-primary-foreground shadow-sm font-semibold"
+            )}
+            onClick={() => setViewMode('weekly')}
+          >
+            <CalendarDays className="h-4 w-4 mr-1" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">{t('calendar.viewMode.weekly')}</span>
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
+  )
+>>>>>>> origin/main
 }

@@ -3,8 +3,13 @@ import { Card, CardContent } from '@/components/ui/card'
 
 function NavbarSkeleton() {
   return (
+<<<<<<< HEAD
     <div className="sticky top-0 border-b border-border/20 bg-background/80">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
+=======
+    <div className="border-b border-border/20 bg-background/80 backdrop-blur-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+>>>>>>> origin/main
         <div className="flex items-center gap-8">
           <Skeleton className="h-8 w-32" />
           <div className="hidden items-center gap-6 md:flex">
@@ -67,7 +72,11 @@ function FeaturesSkeleton() {
 
 function StatsSkeleton() {
   return (
+<<<<<<< HEAD
     <section className="border-y border-border/20 py-16">
+=======
+    <section className="py-16 border-y border-border/20">
+>>>>>>> origin/main
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
@@ -103,7 +112,11 @@ function CTASection() {
 
 function FooterSkeleton() {
   return (
+<<<<<<< HEAD
     <footer className="border-t border-border/20 bg-muted/20 py-16">
+=======
+    <footer className="border-t border-border/20 py-16 bg-muted/20">
+>>>>>>> origin/main
       <div className="container mx-auto px-4">
         <div className="grid gap-12 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
@@ -117,7 +130,11 @@ function FooterSkeleton() {
             </div>
           ))}
         </div>
+<<<<<<< HEAD
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/20 pt-8 md:flex-row">
+=======
+        <div className="mt-12 pt-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4">
+>>>>>>> origin/main
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-4 w-48" />
         </div>

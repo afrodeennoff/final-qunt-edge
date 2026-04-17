@@ -39,7 +39,11 @@ export function PublicFlowShell({
       <div className="mx-auto w-full max-w-[1280px] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         {!compactHeader ? (
           <>
+<<<<<<< HEAD
             <section className="qe-soft-panel relative overflow-hidden rounded-2xl p-5 sm:p-7">
+=======
+            <section className="qe-soft-panel relative overflow-hidden rounded-3xl p-5 sm:p-7">
+>>>>>>> origin/main
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-foreground/10 blur-3xl" />
                 <div className="absolute right-6 top-8 h-32 w-32 rounded-full bg-foreground/10 blur-2xl" />
@@ -49,7 +53,11 @@ export function PublicFlowShell({
 
               <div className="relative">
                 <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+<<<<<<< HEAD
                   <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground/95">
+=======
+                  <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground">
+>>>>>>> origin/main
                     Qunt Edge
                   </span>
                   <span>Futures Funding Offers Hub</span>
@@ -73,7 +81,11 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
+<<<<<<< HEAD
                             : 'border-border/35 bg-background/60 text-foreground/95 hover:border-border/45 hover:bg-[oklch(0.65_0.22_260/0.045)]'
+=======
+                            : 'border-border/35 bg-background/60 text-foreground hover:border-border/45 hover:bg-muted'
+>>>>>>> origin/main
                         )}
                       >
                         {link.label}
@@ -84,6 +96,7 @@ export function PublicFlowShell({
               </div>
             </section>
 
+<<<<<<< HEAD
             <section className="qe-soft-panel mt-4 grid gap-3 rounded-xl p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
               <article className="qe-soft-surface rounded-xl px-3 py-2">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground/95">Offer Checks</p>
@@ -95,6 +108,19 @@ export function PublicFlowShell({
               </article>
               <article className="qe-soft-surface rounded-xl px-3 py-2">
                 <p className="font-semibold uppercase tracking-[0.12em] text-foreground/95">Decision Tools</p>
+=======
+            <section className="qe-soft-panel mt-4 grid gap-3 rounded-2xl p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Offer Checks</p>
+                <p className="mt-1">Deal terms re-validated before listing changes are published.</p>
+              </article>
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Policy Context</p>
+                <p className="mt-1">Pricing, drawdown style, and payout notes linked in one flow.</p>
+              </article>
+              <article className="qe-soft-surface rounded-xl px-3 py-2">
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Decision Tools</p>
+>>>>>>> origin/main
                 <p className="mt-1">Compare, plan costs, and verify rules before committing capital.</p>
               </article>
             </section>

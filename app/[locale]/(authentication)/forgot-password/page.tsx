@@ -8,11 +8,19 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 export default function ForgotPasswordPage() {
+<<<<<<< HEAD
  const params = useParams<{ locale: string }>()
  const locale = params.locale || 'en'
  const [email, setEmail] = useState('')
  const [isLoading, setIsLoading] = useState(false)
  const [isSubmitted, setIsSubmitted] = useState(false)
+=======
+  const params = useParams<{ locale: string }>()
+  const locale = params.locale || 'en'
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+>>>>>>> origin/main
 
  const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault()
@@ -29,6 +37,7 @@ export default function ForgotPasswordPage() {
  }
  }
 
+<<<<<<< HEAD
  if (isSubmitted) {
  return (
  <div className="flex flex-col items-center gap-4 text-center">
@@ -45,6 +54,24 @@ export default function ForgotPasswordPage() {
  </div>
  )
  }
+=======
+  if (isSubmitted) {
+    return (
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h2 className="text-2xl font-semibold">Check your email</h2>
+        <p className="text-muted-foreground max-w-sm">
+          If an account exists with <strong>{email}</strong>, you will receive a password reset link shortly.
+        </p>
+        <Link
+          href={`/${locale}/authentication`}
+          className="text-sm text-primary underline-offset-4 hover:underline"
+        >
+          Back to sign in
+        </Link>
+      </div>
+    )
+  }
+>>>>>>> origin/main
 
  return (
  <div className="flex flex-col gap-6">
@@ -71,6 +98,7 @@ export default function ForgotPasswordPage() {
  </Button>
  </form>
 
+<<<<<<< HEAD
  <Link
  href={`/${locale}/authentication`}
  className="text-sm text-primary underline-offset-4 hover:underline text-center"
@@ -79,4 +107,14 @@ export default function ForgotPasswordPage() {
  </Link>
  </div>
  )
+=======
+      <Link
+        href={`/${locale}/authentication`}
+        className="text-sm text-primary underline-offset-4 hover:underline text-center"
+      >
+        Back to sign in
+      </Link>
+    </div>
+  )
+>>>>>>> origin/main
 }

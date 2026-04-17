@@ -40,6 +40,7 @@ function isWeekend() {
 }
 
 export default function ImportTypeSelection({ selectedType, setSelectedType, setIsOpen }: ImportTypeSelectionProps) {
+<<<<<<< HEAD
  const [searchQuery, setSearchQuery] = useState('')
  const [activeCategory, setActiveCategory] = useState<string>("all")
  const [isCompareMode, setIsCompareMode] = useState(false)
@@ -49,6 +50,23 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
  const deferredSearchQuery = useDeferredValue(searchQuery)
  const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase()
+=======
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeCategory, setActiveCategory] = useState<string>("all")
+  const [isCompareMode, setIsCompareMode] = useState(false)
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
+  const t = useTypedI18n()
+  const isMobile = useIsMobile()
+  const { lastSelectedType, setLastSelectedType } = useImportTypePreferenceStore()
+  const deferredSearchQuery = useDeferredValue(searchQuery)
+  const normalizedSearchQuery = deferredSearchQuery.trim().toLowerCase()
+
+  // Stable reference — platforms array is constant, no need to rebuild
+  const platformsByType = useMemo(
+    () => new Map(platforms.map((platform) => [platform.type, platform])),
+    []
+  )
+>>>>>>> origin/main
 
  // Stable reference — platforms array is constant, no need to rebuild
  const platformsByType = useMemo(
@@ -258,6 +276,7 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  )}
  </div>
 
+<<<<<<< HEAD
  {showDesktopDetailPanel && (
  <div className="relative hidden h-full overflow-hidden bg-v2-bg-hover/20 lg:flex">
  {isCompareMode && selectedPlatforms.length >= 2 ? (
@@ -373,4 +392,34 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  </div>
  </div>
  )
+=======
+        {isMobile && selectedType && selectedPlatform && (
+          <Sheet open={!!selectedType} onOpenChange={() => {
+            setSelectedType('')
+            setLastSelectedType('')
+          }}>
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl bg-v2-bg-surface border-v2-border p-0">
+              {/* Drag Handle */}
+              <div className="flex justify-center py-3">
+                <div className="h-1.5 w-12 rounded-full bg-v2-border" />
+              </div>
+                  <SheetHeader className="px-4 pb-2">
+                    <SheetTitle className="text-v2-text-primary">
+                      {t(selectedPlatform.name, { count: 1 })}
+                    </SheetTitle>
+                  </SheetHeader>
+              <div className="h-[calc(85vh-100px)] overflow-y-auto px-4 pb-4">
+                {selectedPlatform.customComponent ? (
+                  <selectedPlatform.customComponent setIsOpen={setIsOpen} />
+                ) : (
+                  <PlatformTutorial selectedPlatform={selectedPlatform} setIsOpen={setIsOpen} />
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
+      </div>
+    </div>
+  )
+>>>>>>> origin/main
 }

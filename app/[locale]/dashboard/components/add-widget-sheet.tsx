@@ -95,6 +95,7 @@ const LazyWidgetPreview: React.FC<LazyWidgetPreviewProps> = ({
 }
 
 const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
+<<<<<<< HEAD
  ({ onClick, className, style, children }, ref) => {
  const t = useI18n()
  const isMobile = useDashboardIsMobile()
@@ -116,6 +117,31 @@ const PreviewCard = forwardRef<HTMLDivElement, PreviewCardProps>(
  </div>
  )
  }
+=======
+  ({ onClick, className, style, children }, ref) => {
+    const t = useI18n()
+    const isMobile = useDashboardIsMobile()
+    return (
+      <div 
+        ref={ref}
+        className={cn(
+          "cursor-pointer rounded-2xl relative group m-1 w-full overflow-hidden border border-border/24 bg-card/60 px-2 shadow-[0_16px_34px_-28px_hsl(var(--background)/0.85)] backdrop-blur-md",
+          "active:scale-[0.98] transition-all duration-150 ease-in-out",
+          className
+        )}
+        style={style}
+        onClick={onClick}
+      >
+        {!isMobile && (
+          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 shadow-xs">
+            {t('widgets.clickToAdd')}
+          </div>
+        )}
+        {children}
+      </div>
+    )
+  }
+>>>>>>> origin/main
 )
 PreviewCard.displayName ="PreviewCard"
 
