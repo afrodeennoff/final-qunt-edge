@@ -692,7 +692,7 @@ export default function TraderProfilePageClient() {
       <div className="space-y-4 sm:space-y-5 lg:space-y-6">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-6">
           <section className="min-w-0 space-y-4">
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_240px]">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
               <UnifiedSurface variant="elevated" className="overflow-hidden p-5 sm:p-6 lg:p-7">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
@@ -725,10 +725,6 @@ export default function TraderProfilePageClient() {
                       <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                         {profileName}
                       </h2>
-                      <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                        Review your account health, daily execution pattern, and trade outcomes in
-                        one balanced profile view.
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -736,32 +732,17 @@ export default function TraderProfilePageClient() {
 
               <UnifiedSurface className="p-5 sm:p-6">
                 <div className="space-y-4">
-                  <div className="space-y-1">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                      Visible on the public leaderboard
-                    </p>
-                    <p className="text-sm font-semibold text-foreground">
-                      {showOnLeaderboard
-                        ? 'Visible on the public leaderboard'
-                        : 'Private to your dashboard'}
-                    </p>
-                    <p className="text-xs leading-relaxed text-muted-foreground">
-                      {isOwnProfile
-                        ? 'Use this control box to manage public visibility and the current review window.'
-                        : 'This profile is being viewed in read-only mode for benchmark review.'}
-                    </p>
-                  </div>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Visibility
+                  </p>
 
                   {isOwnProfile ? (
                     <div
                       className={cn(insetPanelClassName, 'flex items-center justify-between p-3')}
                     >
                       <div className="space-y-0.5">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Public profile toggle
-                        </p>
                         <p className="text-xs text-muted-foreground">
-                          Show this profile on the leaderboard
+                          Show on public leaderboard
                         </p>
                       </div>
                       <Switch
@@ -779,16 +760,14 @@ export default function TraderProfilePageClient() {
 
                   <div className={cn(insetPanelClassName, 'p-4')}>
                     <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Review window
-                        </p>
-                        <p className="text-sm font-semibold text-foreground">
-                          {reviewWindowSummary}
-                        </p>
-                      </div>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                        Review window
+                      </p>
                       <Badge variant="secondary">{selectedDayLabel}</Badge>
                     </div>
+                    <p className="mt-1 text-sm font-semibold text-foreground">
+                      {reviewWindowSummary}
+                    </p>
 
                     <div className="mt-4 flex flex-col gap-3">
                       <Select
@@ -875,34 +854,17 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
 
             <UnifiedSurface className="p-5 sm:p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Active accounts
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Accounts contributing to this profile
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    Keep the connected account list visible while you review capital, payouts, and
-                    the trading days behind the current profile window.
-                  </p>
-                </div>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Accounts
+                </p>
                 <Badge variant="secondary">{activeAccountsCount} active</Badge>
               </div>
 
-              <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.9fr)]">
+              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.9fr)]">
                 <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Connected account list
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These accounts are contributing balances, payouts, and trade history to the
-                    current profile snapshot.
-                  </p>
-
                   {activeAccountLabels.length > 0 ? (
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {activeAccountLabels.map((accountLabel) => (
                         <span
                           key={accountLabel}
@@ -914,9 +876,9 @@ export default function TraderProfilePageClient() {
                     </div>
                   ) : (
                     <div
-                      className={cn(insetPanelClassName, 'mt-4 p-4 text-sm text-muted-foreground')}
+                      className={cn(insetPanelClassName, 'p-4 text-sm text-muted-foreground')}
                     >
-                      No linked account numbers are available yet for this profile.
+                      No linked accounts yet.
                     </div>
                   )}
                 </div>
@@ -925,18 +887,15 @@ export default function TraderProfilePageClient() {
                   <SignalTile
                     label="Total capital"
                     value={formatCapitalCompact(totalCapitalAllAccounts)}
-                    helper="After payouts and net trading"
                     tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
                   />
                   <SignalTile
                     label="Total withdraw"
                     value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                    helper="Paid payouts in the selected window"
                   />
                   <SignalTile
                     label="Active days"
                     value={String(tradeCalendarDays.length)}
-                    helper="Trading days in the current window"
                     tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
                   />
                 </div>
@@ -945,27 +904,19 @@ export default function TraderProfilePageClient() {
 
             <UnifiedSurface className="overflow-hidden p-5 sm:p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    PnL calendar
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">Daily session pattern</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Scan profitable and losing days without losing the wider date context.
-                  </p>
-                </div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Daily session pattern
+                </p>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <StatTile
                     label="Selected day"
                     value={selectedDayLabel}
-                    helper="Focus date for the detail strip below"
                     className="p-3"
                   />
                   <StatTile
                     label="Selected PnL"
                     value={formatSigned(selectedPnl)}
-                    helper="Net result for the focused day"
                     tone={selectedPnl >= 0 ? 'positive' : 'negative'}
                     className="p-3"
                   />
@@ -1057,17 +1008,9 @@ export default function TraderProfilePageClient() {
           <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
             <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Benchmark
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Compared with average user
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Relative shape across activity, reward, drawdown, and average result.
-                  </p>
-                </div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Benchmark
+                </p>
                 <Badge variant={isBenchmarkLoading ? 'outline' : 'success'}>
                   {isBenchmarkLoading ? 'Refreshing' : 'Live'}
                 </Badge>
@@ -1099,39 +1042,31 @@ export default function TraderProfilePageClient() {
 
               <p className="mt-3 text-xs text-muted-foreground">
                 {benchmark?.sampleSize
-                  ? `Benchmark sample size: ${benchmark.sampleSize} traders`
-                  : 'Benchmark sample is still loading for this session.'}
+                  ? `${benchmark.sampleSize} traders in sample`
+                  : 'Loading benchmark data...'}
               </p>
             </UnifiedSurface>
 
             <UnifiedSurface className="p-5 sm:p-6">
               <div className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-muted-foreground" />
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Capital snapshot
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Portfolio and return view
-                  </h3>
-                </div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Capital snapshot
+                </p>
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <StatTile
                   label="Total capital"
                   value={formatCapitalCompact(totalCapitalAllAccounts)}
-                  helper="Opening balance plus net trading result"
                 />
                 <StatTile
                   label="Total withdraw"
                   value={formatCapitalCompact(totalWithdrawAllAccounts)}
-                  helper="Paid payouts in the selected window"
                 />
                 <StatTile
                   label="Avg net / trade"
                   value={formatSigned(metrics.avgReturn)}
-                  helper="Average net result after commissions"
                   tone={
                     metrics.avgReturn > 0
                       ? 'positive'
@@ -1143,7 +1078,6 @@ export default function TraderProfilePageClient() {
                 <StatTile
                   label="Risk reward"
                   value={formatValue(metrics.riskReward)}
-                  helper="Average win divided by average loss"
                 />
               </div>
 
@@ -1160,36 +1094,29 @@ export default function TraderProfilePageClient() {
             <UnifiedSurface className="p-5 sm:p-6">
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Execution quality
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">Risk and win profile</h3>
-                </div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Execution quality
+                </p>
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 <StatTile
                   label="Max drawdown"
                   value={formatValue(metrics.drawdown)}
-                  helper="Largest peak-to-trough drop"
                   tone={metrics.drawdown > 0 ? 'negative' : 'default'}
                 />
                 <StatTile
                   label="Win rate"
                   value={`${formatValue(metrics.winRate)}%`}
-                  helper="Winning trades among decisive outcomes"
                   tone={metrics.winRate >= 50 ? 'positive' : 'default'}
                 />
                 <StatTile
                   label="Break-even rate"
                   value={`${formatValue(metrics.breakEvenRate)}%`}
-                  helper="Minimum win rate implied by your R:R"
                 />
                 <StatTile
                   label="Gross wins"
                   value={formatCapitalCompact(metrics.sumGain)}
-                  helper="Total profit from winning trades"
                   tone={metrics.sumGain > 0 ? 'positive' : 'default'}
                 />
               </div>
@@ -1218,13 +1145,10 @@ export default function TraderProfilePageClient() {
         </div>
 
         <UnifiedSurface className="p-5 sm:p-6">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                Trade history
-              </p>
-              <h3 className="text-lg font-semibold text-foreground">Closed trades in focus</h3>
-            </div>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              Trade history
+            </p>
             <Badge variant="secondary">{tradeFeedSummary}</Badge>
           </div>
 

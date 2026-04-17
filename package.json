@@ -17,6 +17,7 @@
     "self-heal": "node scripts/self-heal.mjs",
     "prebuild": "node scripts/clean-build-artifacts.mjs && tsx scripts/generate-routes.ts",
     "db:sync": "node scripts/sync-stack.mjs",
+    "db:seed-firms": "npx tsx scripts/seed-prop-firms.ts",
     "build": "node scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} node scripts/robust-next-build.mjs",
     "build:bun": "bun run scripts/sync-stack.mjs && NODE_OPTIONS=--max-old-space-size=8192 NEXT_DISABLE_FONT_DOWNLOADS=1 NEXT_BUILD_CPUS=${NEXT_BUILD_CPUS:-1} bun run scripts/robust-next-build.mjs",
     "build:npm": "npm run build",
