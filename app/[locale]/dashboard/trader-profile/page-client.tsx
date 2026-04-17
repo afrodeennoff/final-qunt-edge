@@ -721,11 +721,9 @@ export default function TraderProfilePageClient() {
                       </Badge>
                     </div>
 
-                    <div className="space-y-1">
-                      <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                        {profileName}
-                      </h2>
-                    </div>
+                    <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                      {profileName}
+                    </h2>
                   </div>
                 </div>
               </UnifiedSurface>
