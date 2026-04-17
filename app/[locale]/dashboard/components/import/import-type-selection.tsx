@@ -131,9 +131,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  <div className="flex flex-col h-full bg-v2-bg-base/50">
  <div
  className={cn("grid h-full overflow-hidden",
- showDesktopDetailPanel
- ?"lg:grid-cols-[minmax(0,1fr)_320px] lg:divide-x lg:divide-v2-border xl:grid-cols-[minmax(0,1fr)_340px]"
- :"grid-cols-1",
+ "grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_340px]",
+ showDesktopDetailPanel && "lg:divide-x lg:divide-v2-border",
  )}
  >
  {/* Left Side: Grid of options */}
@@ -258,8 +257,8 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  )}
  </div>
 
- {showDesktopDetailPanel && (
- <div className="relative hidden h-full overflow-hidden bg-v2-bg-hover/20 lg:flex">
+ {/* Always reserve right panel space on desktop */}
+ <div className={cn("relative hidden h-full overflow-hidden lg:flex", showDesktopDetailPanel ? "bg-v2-bg-hover/20" : "bg-transparent")}>
  {isCompareMode && selectedPlatforms.length >= 2 ? (
  <div className="h-full flex flex-col w-full">
  <div className="p-4 border-b border-v2-border flex items-center justify-between">
@@ -341,9 +340,12 @@ export default function ImportTypeSelection({ selectedType, setSelectedType, set
  )}
  </div>
  </div>
- ) : null}
+ ) : (
+ <div className="flex items-center justify-center h-full text-muted-foreground">
+ <p className="text-sm">Select a platform to view details</p>
  </div>
  )}
+ </div>
 
  {isMobile && selectedType && selectedPlatform && (
  <Sheet open={!!selectedType} onOpenChange={() => {
