@@ -72,7 +72,13 @@
 - **M:** Admin coupon page showed forms and firms but creating coupons always failed silently
 - **RC:** The `PropFirm` table had 0 rows. The firm dropdown used fallback config data with fake `fallback-xxx` IDs that don't exist in the database. When the user tried to create a coupon, Prisma threw a P2003 foreign key error because the `propFirmId` didn't match any real row.
 - **R:** Always verify database state (row counts) before debugging form submission issues. If a form depends on a parent entity, seed the parent table first. Created `scripts/seed-prop-firms.ts` for idempotent firm seeding.
-- **E:** `npm run db:seed-firms` now seeds 14 verified prop firms, after which the coupon CRUD works end-to-end. Large landing pages look fragmented when every section invents its own surface recipe
+- **E:** `npm run db:seed-firms` now seeds 14 verified prop firms, after which the coupon CRUD works end-to-end.
+
+## Lesson 54: Any component using React hooks MUST have 'use client' directive
+- **M:** Admin coupons page crashed in production with `TypeError: e.useState is not a function` repeated 80+ times per request.
+- **RC:** `components/ui/input.tsx` uses `React.useState` for focus/value tracking and `React.useId` for generated IDs, but was missing the `'use client'` directive at the top. When the admin coupons page (a Server Component) rendered `<Input>`, the server tried to call `useState` which doesn't exist in the server React runtime.
+- **R:** After adding any hook (`useState`, `useEffect`, `useRef`, `useId`, etc.) to a component, verify it has `'use client'`. Run `grep -rl 'React\.useState' components/ui/*.tsx` and cross-check each file has the directive.
+- **E:** Added `'use client'` to `components/ui/input.tsx` — crash resolved immediately. Large landing pages look fragmented when every section invents its own surface recipe
 - **M:** The deals page felt visually empty and disjointed even though it already had strong content blocks like the spotlight, filters, and comparison tools.
 - **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
 - **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
