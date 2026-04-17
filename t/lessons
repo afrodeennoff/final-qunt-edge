@@ -25,3 +25,51 @@
 - **RC:** Project convention requires `oklch()` design system tokens instead of hardcoded hex or Tailwind color names outside the semantic palette (destructive, muted-foreground, etc.)
 - **R:** Use `text-[oklch(...)]` for custom colors, or stick to semantic tokens (`text-destructive`, `text-muted-foreground`). Avoid raw `text-yellow-*`, `text-blue-*`, etc.
 - **E:** `text-yellow-500` → `text-[oklch(0.75_0.15_85)]` (warm amber in oklch)
+
+## Lesson 66: `hasConfiguredDatabaseConnection` is a boolean, not a function
+- **M:** Wrote `if (!hasConfiguredDatabaseConnection())` in `assertPropFirmMutationAvailable()` — TypeScript error: "This expression is not callable. Type 'Boolean' has no call signatures"
+- **RC:** `hasConfiguredDatabaseConnection` is exported as `const hasConfiguredDatabaseConnection = Boolean(connectionString)` — a boolean value, not a function
+- **R:** Check how a symbol is exported before using it. In this codebase, `hasConfiguredDatabaseConnection` is a boolean, `isPrismaTableAvailable` is an async function, and `isPrismaOperationCoolingDown` is a function
+- **E:** Changed `!hasConfiguredDatabaseConnection()` to `!hasConfiguredDatabaseConnection` and `!isPrismaTableAvailable()` to `!(await isPrismaTableAvailable())`
+
+## Lesson 67: Default preference pointing to disabled platform breaks UX on first load
+- **M:** `import-type-preference-store.ts` defaulted to `rithmic-sync`, but Rithmic sync is disabled (`isDisabled: true`). First-time users saw a blank/flash state because the preference was auto-cleared by `useEffect`
+- **RC:** The default preference was set when Rithmic was active, but never updated when it was disabled. The UI correctly hides disabled platforms, but the persisted default still pointed to one
+- **R:** When disabling a platform, always update any preference defaults that reference it. Choose a platform that's always available (like `csv-ai`) as the fallback default
+- **E:** Changed default from `'rithmic-sync'` to `'csv-ai'`
+
+## Lesson 68: Legacy redirect routes should point to the current feature location
+- **M:** `/import` (under `(authentication)`) redirected to `/{locale}/authentication` instead of the dashboard
+- **RC:** The import feature was moved from the auth section to the dashboard, but the legacy redirect was left pointing to the old location
+- **R:** When features move between route groups, update ALL redirect paths — check `(authentication)`, `(landing)`, and any `next.config` redirects
+- **E:** Changed redirect from `/{locale}/authentication` to `/{locale}/dashboard?import=true`
+
+## Lesson 69: Dynamic imports without loading states cause blank flashes
+- **M:** All 13 import processor dynamic imports used empty options `{}` — no `loading` component specified. When the chunk loaded, users saw a blank space
+- **RC:** Next.js `dynamic()` with no `loading` shows nothing during chunk download. The page jumps when the component finally mounts
+- **R:** Always specify a `loading` component for `dynamic()` imports, even if just a centered spinner. Use `oklch` design system colors for the spinner consistent with the project theme
+- **E:** Created `importLoading` function with cobalt spinner, added `loading: importLoading` to all 13 processor imports
+
+## Lesson 70: `ssr: false` removal needs cleanup, not just deletion
+- **M:** Removing `ssr: false` with `sed` left empty options objects `{}` and whitespace artifacts `{ loading: ... }` in dynamic import calls
+- **RC:** `sed` works line-by-line and can't reformat multiline code. Removing `ssr: false,` from `{ ssr: false, loading: () => X }` leaves `{ loading: () => X }` which is valid but `{  loading: () => X }` with double spaces looks wrong
+- **R:** After bulk property removal from JS objects, do a cleanup pass: collapse single-property objects to one line, remove trailing commas after last property
+- **E:** python3 regex pass collapsed all `{ loading: ... }` to clean single-line format
+
+## Lesson 71: Admin validation gaps are security issues, not just UX issues
+- **M:** `createPropFirm` and `updatePropFirm` passed raw form data directly to Prisma with zero validation. Review ratings accepted any number (including negatives or >5). Slugs could contain any characters
+- **RC:** Server actions with `'use server'` are publicly callable API endpoints. Any client can craft a request with arbitrary data. Without validation, Prisma will store whatever it receives
+- **R:** Every server action that accepts user input must validate before database writes, even if the form has client-side validation. Client-side validation is UX, not security
+- **E:** Added `normalizePropFirmInput()` (slug regex, name length, URL protocol, description length) and `normalizePropFirmReviewInput()` (rating 0-5.0, title 200 chars, content 5000 chars)
+
+## Lesson 72: Duplicated code across admin pages is a maintenance hazard
+- **M:** 7 helper functions were copy-pasted identically across `coupons/page.tsx` and `propfirms/[id]/page.tsx`. `getFirmAdminNotice` was duplicated with slight behavioral differences across two files
+- **RC:** Both pages evolved independently — fixes in one weren't applied to the other. The differing `getFirmAdminNotice` in propfirms/[id] had different success messages ('Deleted' vs 'Firm deleted') which could confuse users
+- **R:** When admin pages share form processing patterns, extract to a shared utility immediately — don't wait for "later". The utility module name should be descriptive (`admin-form-helpers.ts`, not `utils.ts`)
+- **E:** Extracted all 7 helpers to `admin/lib/admin-form-helpers.ts`, moved `getFirmAdminNotice` to `coupon-admin-utils.ts`
+
+## Lesson 73: CSV import platforms shouldn't be disabled just because a related live-sync platform is
+- **M:** Rithmic-performance and rithmic-orders CSV imports were marked `isDisabled: true` because the rithmic-sync (live WebSocket) platform was disabled
+- **RC:** CSV import is a completely different code path — it reads a file, parses it client-side, and saves trades. It has no dependency on the live WebSocket connection. Disabling them was overly conservative
+- **R:** When disabling a platform, evaluate each platform's dependencies separately. CSV processors only need the file upload + parsing pipeline, not the live sync infrastructure
+- **E:** Re-enabled both Rithmic CSV imports while keeping rithmic-sync disabled

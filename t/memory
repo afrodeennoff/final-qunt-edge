@@ -3,65 +3,130 @@
 **Updated:** 2026-04-17
 **Branch:** codex-obsidian-v3-redesign
 
-## Current State: All 8 Implementation Waves COMPLETE + Admin Fix (39/39 REQs + Admin functional)
+## Current State: All Requirements Complete + Admin + Import Fully Functional
 
-### Admin Coupons + Propfirms — NOW FULLY FUNCTIONAL (2026-04-17)
-- Extracted 7 duplicated helpers to `admin/lib/admin-form-helpers.ts`
-- Extracted `getFirmAdminNotice` to shared `coupon-admin-utils.ts`
-- Added input validation to firm CRUD: slug format, name length, URL protocol, description length
-- Added review validation: rating 0-5, title 200 char max, content 5000 char max
-- Added `assertPropFirmMutationAvailable()` DB guard to `createPropFirm` / `updatePropFirm`
-- Deprecated `deletePropFirm` (hard delete) — admin only uses `softDeletePropFirm`
-- Added `connection()` dynamic rendering guard to both propfirms pages
-- Read-only warning banner + disabled submit when DB unavailable
-- Review content field changed from single-line Input to Textarea
-- ConfirmDeleteButton for firm soft-delete (client confirmation)
-- Replaced `text-amber-500` with oklch design system token
-- Admin list already shows all firms (active + inactive)
+### Wave Completion (39/39 REQs — 100%)
 
-### Import Trade Function — NOW FULLY FUNCTIONAL (2026-04-17)
-- Fixed default import platform from disabled 'rithmic-sync' to 'csv-ai'
-- Fixed /import redirect: now goes to dashboard/?import=true instead of auth page
-- Re-enabled rithmic-performance and rithmic-orders CSV imports (pure CSV, no WebSocket needed)
-- Kept rithmic-sync disabled (live WebSocket connection required)
-- Added skipHeaderSelection:true to NinjaTrader (header step was commented out)
-- Added loading spinner to all 13 dynamic import processors
-- All 13 platform imports have loading states
-- Known remaining issues: Tradovate live environment is stub, ATAS/FTMO/NinjaTrader/Quantower have no server-side validation, no import history UI, no chunked upload for 5K+ trades
-| Wave | Phase | REQs | Status |
-|------|-------|------|--------|
-| 5 | 01 Visual Refresh | 5/5 | ✅ Complete (prior session) |
-| 5 | 02 Server Bootstrap | 4/4 | ✅ Already wired |
-| 6 | 03 Widget Shells | 3/3 | ✅ Done — 60+ `ssr:false` removed, WidgetShellServer + WidgetSkeleton created |
-| 6 | 04 Import Polish | 3/3 | ✅ Done — layout shift fix, debounce hook |
-| 5 | 05 Dark Theme | 2/2 | ✅ Complete (prior session) |
-| 5 | 06 Navigation | 3/3 | ✅ Complete (prior session) |
-| 6 | 07 Dashboard Polish | 3/3 | ✅ Done — bg-card/bg-secondary → oklch cobalt token sweep |
-| 6 | 08 Font/Bundle | 3/3 | ✅ Already correct — only sans+mono preloaded |
-| 6 | 09 Auth | 3/3 | ✅ Verified — shared getUserId/getDatabaseUserId helpers |
-| 6 | 10 Observability | 4/4 | ✅ Built — instrumentation.ts, ready probe, cache metrics, idempotency, DegradedStateBanner |
-| 6 | 11 Security | 3/3 | ✅ Verified — 19 routes rate-limited, CSP enforced, admin auth double-gated |
-| 6 | 12 CI/Dep | 3/3 | ✅ Verified — CI pipeline complete |
+| Wave | Phase | REQs | Status | What Was Done |
+|------|-------|------|--------|---------------|
+| 5 | 01 Visual Refresh | 5/5 | ✅ | Prior session |
+| 5 | 02 Server Bootstrap | 4/4 | ✅ | Already wired — feature flag, bootstrap loader, layout provider |
+| 6 | 03 Widget Shells | 3/3 | ✅ | Removed 60+ `ssr:false`, created WidgetShellServer + WidgetSkeleton |
+| 6 | 04 Import Polish | 3/3 | ✅ | Layout shift fix, debounce hook, exceljs already lazy |
+| 5 | 05 Dark Theme | 2/2 | ✅ | Prior session |
+| 5 | 06 Navigation | 3/3 | ✅ | Prior session |
+| 6 | 07 Dashboard Polish | 3/3 | ✅ | Token sweep bg-card/bg-secondary → oklch cobalt |
+| 6 | 08 Font/Bundle | 3/3 | ✅ | Already correct — only sans+mono preloaded |
+| 6 | 09 Auth | 3/3 | ✅ | Shared getUserId/getDatabaseUserId helpers |
+| 6 | 10 Observability | 4/4 | ✅ | instrumentation.ts, ready probe, cache metrics, idempotency, DegradedStateBanner |
+| 6 | 11 Security | 3/3 | ✅ | 19 routes rate-limited, CSP enforced, admin auth double-gated |
+| 6 | 12 CI/Dep | 3/3 | ✅ | CI pipeline complete |
 
-### Code Review Fixes Applied
-- Cleaned up sed artifacts from `ssr:false` removal (empty-line `{\n  \n  loading:` patterns)
+### Code Review Fixes Applied (Post-Wave)
+- Cleaned up sed artifacts from `ssr:false` removal (empty-line `{\n  \n  loading:` patterns → inline `{ loading: ... }`)
 - Replaced `text-yellow-500` with `oklch` design system token in DegradedStateBanner
-- All 6 affected files cleaned and tested
+- All 6 affected files cleaned and typecheck-verified
 
-### Key Architecture Decisions
+### Admin Coupons + Propfirms — FULLY FUNCTIONAL (2026-04-17)
+Comprehensive fix of 15 issues identified by deep audit:
+
+**Code Quality:**
+- Extracted 7 duplicated helper functions (`requireText`, `parseOptionalNumber`, `normalizeOptionalText`, `normalizeOptionalTextForUpdate`, `parseOptionalDate`, `parseOptionalNumberForUpdate`, `requireFormString`) to `admin/lib/admin-form-helpers.ts`
+- Extracted `getFirmAdminNotice` to shared `coupon-admin-utils.ts` (was duplicated across 2 files)
+- Added `connection()` dynamic rendering guard to both propfirms pages
+
+**Input Validation:**
+- `normalizePropFirmInput()` validates: name (required, 200 chars), slug (required, lowercase, `^[a-z0-9-]+$`, 100 chars), category (validated against config), referralUrl/logoUrl (http/https), description (2000 chars)
+- `normalizePropFirmReviewInput()` validates: rating (0-5, 0.5 increments), title (required, 200 chars), content (required, 5000 chars)
+- Uses `PropFirmCouponAdminError` for consistent error messages (same as coupon mutations)
+
+**Database Safety:**
+- `assertPropFirmMutationAvailable()` checks `hasConfiguredDatabaseConnection` + `isPrismaTableAvailable('PropFirm')` before firm mutations (same pattern as coupon mutations)
+- Deprecated `deletePropFirm` (hard delete) — JSDoc `@deprecated`, admin only uses `softDeletePropFirm`
+
+**UX Improvements:**
+- Read-only warning banner + disabled submit when `!hasConfiguredDatabaseConnection`
+- Review content `<Input>` → `<Textarea rows={2}>` for better UX
+- `ConfirmDeleteButton` for firm soft-delete (browser `confirm()` dialog)
+- `text-amber-500` → `text-[oklch(0.75_0.15_85)]` (design system token)
+- Admin list shows all firms (active + inactive) — confirmed working
+
+### Import Trade Function — FULLY FUNCTIONAL (2026-04-17)
+All 15 import platforms operational or intentionally disabled:
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| csv-ai | ✅ Active | **Default selection** (was rithmic-sync) |
+| tradezella | ✅ Active | CSV processor |
+| tradovate (CSV) | ✅ Active | CSV processor |
+| quantower | ✅ Active | CSV processor |
+| topstep | ✅ Active | CSV processor |
+| ninjatrader | ✅ Active | Added `skipHeaderSelection:true` |
+| rithmic-performance | ✅ **Re-enabled** | Pure CSV, no WebSocket needed |
+| rithmic-orders | ✅ **Re-enabled** | Pure CSV, no WebSocket needed |
+| ibkr-pdf | ✅ Active | PDF upload + OCR |
+| atas | ✅ Active | File upload + processor |
+| ftmo | ✅ Active | CSV processor |
+| manual-entry | ✅ Active | Manual trade form |
+| tradovate-sync | ✅ Active | Full OAuth2 broker sync |
+| thor-sync | ✅ Active | Token-based sync |
+| rithmic-sync | ⚠️ Disabled | Requires live WebSocket |
+
+**Fixes applied:**
+- Default platform changed from `rithmic-sync` (disabled!) to `csv-ai` (always available)
+- `/import` redirect now goes to `/{locale}/dashboard?import=true` instead of auth page
+- Rithmic performance + orders CSV imports re-enabled (don't need WebSocket)
+- NinjaTrader: added `skipHeaderSelection:true`, cleaned up commented code
+- All 13 dynamic import processors now have loading spinners (was empty `{}`)
+
+**Known remaining issues (not blocking):**
+- Tradovate live environment is stub (only demo works)
+- No server-side validation for CSV-processor trade data (ATAS, FTMO, NinjaTrader, Quantower)
+- No import history/audit trail UI
+- No chunked upload for 5K+ trades
+- `format-preview.tsx` is very complex (~500 lines, dual AI streaming) — could benefit from extraction
+- Rithmic WebSocket URL construction is fragile (string-replace based)
+- Tradovate `@ts-expect-error` / `as any` suppressions (6 instances in tradovate-actions.ts)
+
+### Key Architecture Decisions This Session
 - `ssr: false` removed from ALL dynamic imports except `lazy-widget.tsx` (deprecated)
 - Widget loading fallbacks preserved via `loading: () => widgetFallback`
 - Design system tokens: `bg-card`/`bg-muted`/`bg-secondary` → `oklch(0.65 0.22 260/0.03-0.08)` cobalt surfaces
 - DegradedStateBanner polls `/api/ready` every 60s, shows degraded/down services
 - Auth system uses shared `getUserId()` + `getDatabaseUserId()` helpers; remaining direct `getUser()` calls in authz+proxy are justified
+- Admin validation uses `PropFirmCouponAdminError` for both firm and review errors (error type reused for consistency)
+- `hasConfiguredDatabaseConnection` is a boolean, not a function — don't call it with `()`
 
 ### Build Stack
 - **Node**: v22.22.2 (nvm use 22, `.nvmrc` = 22)
 - **Next.js**: 16.1.6
 - **npx tsc --noEmit** = 0 errors ✅
+- **npm run lint** = 0 errors (921 pre-existing warnings) ✅
 
 ### Files Created This Session
+- `app/[locale]/admin/lib/admin-form-helpers.ts` — 7 shared form helpers
+- `app/[locale]/admin/components/confirm-delete-button.tsx` — client confirm dialog button
 - `app/[locale]/dashboard/components/widgets/server/widget-shell-server.tsx`
 - `app/[locale]/dashboard/components/widgets/skeletons/widget-skeleton.tsx`
 - `components/degraded/degraded-state-banner.tsx`
 - `hooks/use-debounced-value.ts`
+
+### Files Significantly Modified This Session
+- `app/[locale]/admin/coupons/page.tsx` — deduplicated helpers
+- `app/[locale]/admin/propfirms/page.tsx` — connection guard, shared utils, ConfirmDeleteButton
+- `app/[locale]/admin/propfirms/[id]/page.tsx` — connection guard, shared helpers, read-only guard, Textarea for reviews
+- `app/[locale]/admin/components/coupon-admin-utils.ts` — added getFirmAdminNotice
+- `server/prop-firms.ts` — added normalizePropFirmInput, normalizePropFirmReviewInput, assertPropFirmMutationAvailable, deprecated deletePropFirm
+- `app/[locale]/dashboard/config/widget-registry.tsx` — removed all ssr:false
+- `app/[locale]/dashboard/components/import/config/platforms.tsx` — re-enabled Rithmic CSVs, added loading spinners, NinjaTrader skipHeaderSelection
+- `store/import-type-preference-store.ts` — default changed to 'csv-ai'
+- `app/[locale]/(authentication)/import/page.tsx` — redirect to dashboard instead of auth
+- `.planning/REQUIREMENTS.md` — all 39 REQs marked satisfied
+
+### Blockers
+None.
+
+### Manual-Only Findings (Require Developer Attention)
+- **F-05 [HIGH]**: Trade multiplication UX — when user selects multiple accounts, trades are duplicated per account (N×M). Needs product decision: add confirmation dialog or change to single-account assignment
+- **F-06 [MED]**: Client/server UUID hash mismatch — `generateTradeHash` (client) and `generateTradeUUID` (server) use different field sets. Should unify for consistent dedup
+- **F-14 [LOW]**: `resolveWritableUserId` error surfaces as `DATABASE_ERROR` — misleading; should be an auth/user-resolution error
