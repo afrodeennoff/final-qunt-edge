@@ -20,12 +20,9 @@ const mockData = [
   { time: '14:00', price: 4367, ema: 4350, volume: 67 },
 ]
 
-const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), {
-  
-  loading: () => (
+const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), { loading: () => (
     <div className="h-full w-full animate-pulse rounded-md border border-border/40 bg-card/60" />
-  ),
-})
+  ) })
 
 export default function AnalysisDemo() {
   const t = useTypedI18n()

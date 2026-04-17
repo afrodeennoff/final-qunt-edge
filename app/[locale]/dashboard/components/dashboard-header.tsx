@@ -18,10 +18,7 @@ const FilterCommandMenu = dynamic(
   () => import('./filters/filter-command-menu').then((m) => m.FilterCommandMenu),
   {  loading: () => null },
 )
-const ImportButton = dynamic(() => import('./import/import-button'), {
-  
-  loading: () => null,
-})
+const ImportButton = dynamic(() => import('./import/import-button'), { loading: () => null })
 const DailySummaryModal = dynamic(
   () => import('./daily-summary-modal').then((m) => m.DailySummaryModal),
   {  loading: () => null },
