@@ -6,6 +6,12 @@
 
 ## Current State
 
+### Project Exploration Completed (2026-04-18)
+- Completed comprehensive exploration of project structure and conventions
+- Reviewed AGENTS.md files across root, lib, server, dashboard, and other modules
+- Examined t/memory, t/lessons, and t/todo files to understand project state
+- Confirmed project is on branch "codex-obsidian-v3-redesign" with production URL https://qunt-edge.vercel.app
+
 ### Admin coupons + prop-firms audit — REVIEW ONLY (2026-04-18)
 - Audited `app/[locale]/admin/coupons/page.tsx`, `app/[locale]/admin/propfirms/page.tsx`, `app/[locale]/admin/propfirms/[id]/page.tsx`, `server/prop-firms.ts`, `server/firm-coupons.ts`, `server/deals.ts`, and the shared coupon admin helpers
 - Confirmed admin access is double-gated through `app/[locale]/admin/layout.tsx` and `assertAdminAccess()` in the page/actions layer
@@ -89,6 +95,15 @@ Additional fixes:
 - Admin coupon system is now fully functional: firms exist, forms submit to real DB mutations
 - Added `npm run db:seed-firms` convenience script
 - Deployed to Vercel production: commit `b00ad7f2`, build succeeded in 7m, status Ready
+
+### Admin System Full Audit + Hardening — COMPLETE
+- Deep audit of all 3 admin pages (coupons, propfirms list, propfirms detail)
+- **Root cause of useState crash**: `components/ui/input.tsx` was missing `'use client'` despite using `React.useState`/`React.useId`
+- Added try/catch to ALL firm/review server actions (previously unhandled)
+- Added success/error redirect banners to propfirms list and detail pages
+- Replaced all plain submit buttons with FormActionButton for loading state
+- All admin CRUD (firms, reviews, coupons) now has error handling + user feedback
+- Deployed: commits `7c55606c`, `07703325` — production Ready
 
 ### Build Stack
 - **Node**: v22.22.2 (nvm use 22, `.nvmrc` = 22)
