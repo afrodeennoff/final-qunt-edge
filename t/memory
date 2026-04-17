@@ -50,7 +50,7 @@ Additional fixes:
 ### Backend Performance & Reliability Rework — COMPLETE (2026-04-16)
 8-phase program completed. See previous memory entries for full details.
 
-### Trader Profile Cleanup + PropFirm Seed + Deploy — COMPLETE
+### Trader Profile Cleanup + PropFirm Seed + Audit + Deploy — COMPLETE
 - Removed all `<h3>` subheadings and verbose description paragraphs from `app/[locale]/dashboard/trader-profile/page-client.tsx`
 - Kept only overline labels (tiny uppercase) as section identifiers for a cleaner, denser layout
 - Removed helper text from stat tiles — labels are self-explanatory
