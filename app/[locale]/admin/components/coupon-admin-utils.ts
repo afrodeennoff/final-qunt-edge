@@ -94,3 +94,22 @@ export function getCouponTimingState({ isActive, startsAt, expiresAt }: CouponTi
 export function formatAdminDateTimeInput(value: Date | null): string {
   return value ? new Date(value).toISOString().slice(0, 16) : ''
 }
+
+export type FirmAdminStatus = 'saved' | 'deleted' | 'error'
+
+export function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
+  const status = readFirstSearchParam(searchParams.firmStatus)
+  if (!status) return null
+  const message = readFirstSearchParam(searchParams.firmMessage)
+
+  switch (status) {
+    case 'saved':
+      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
+    case 'deleted':
+      return { variant: 'success', title: 'Firm deleted', description: message ?? 'The firm has been removed.' }
+    case 'error':
+      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The firm change did not save.' }
+    default:
+      return null
+  }
+}

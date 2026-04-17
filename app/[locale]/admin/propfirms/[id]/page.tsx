@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import { connection } from 'next/server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
@@ -35,56 +36,21 @@ import {
   buildCouponAdminRedirectUrl,
   formatAdminDateTimeInput,
   getCouponAdminNotice,
+  getFirmAdminNotice,
   getCouponTimingState,
   type CouponAdminSearchParamValue,
   type CouponAdminNotice,
 } from '../../components/coupon-admin-utils'
 import { FormActionButton } from '../../components/form-action-button'
-
-// ---------------------------------------------------------------------------
-// Shared helpers (module scope — no closure capture)
-// ---------------------------------------------------------------------------
-
-function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
-  const text = value?.toString().trim()
-  return text ? text : undefined
-}
-
-function requireText(value: FormDataEntryValue | null, fallback = ''): string {
-  return value?.toString().trim() || fallback
-}
-
-function parseOptionalNumber(value: FormDataEntryValue | null): number | undefined {
-  const text = value?.toString().trim()
-  if (!text) return undefined
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function parseOptionalNumberForUpdate(value: FormDataEntryValue | null): number | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = new Date(text)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
-}
-
-function normalizeOptionalTextForUpdate(value: FormDataEntryValue | null): string | null | undefined {
-  const text = value?.toString().trim()
-  return typeof text === 'string' ? (text ? text : null) : undefined
-}
-
-function requireFormString(formData: FormData, key: string): string {
-  const val = formData.get(key)
-  if (!val || typeof val !== 'string') throw new Error(`Missing required field: ${key}`)
-  return val
-}
+import {
+  requireText,
+  parseOptionalNumber,
+  normalizeOptionalText,
+  normalizeOptionalTextForUpdate,
+  parseOptionalDate,
+  parseOptionalNumberForUpdate,
+  requireFormString,
+} from '../../lib/admin-form-helpers'
 
 // ---------------------------------------------------------------------------
 // Server actions (module scope — read locale from FormData, not closure)
@@ -342,23 +308,6 @@ function buildFallbackFirm(id: string): PropFirmData | null {
 // Page (Server Component — no function props passed to client boundaries)
 // ---------------------------------------------------------------------------
 
-// eslint-disable-next-line complexity
-function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
-  const status = Array.isArray(searchParams.firmStatus) ? searchParams.firmStatus[0] : searchParams.firmStatus
-  if (!status) return null
-  const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
-
-  switch (status) {
-    case 'saved':
-      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
-    case 'deleted':
-      return { variant: 'success', title: 'Deleted', description: message ?? 'Item removed.' }
-    case 'error':
-      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The change did not save.' }
-    default:
-      return null
-  }
-}
 
 // eslint-disable-next-line complexity
 export default async function PropFirmEditPage({
@@ -369,6 +318,7 @@ export default async function PropFirmEditPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
   await assertAdminAccess()
+  await connection()
   const { locale, id } = await params
   const couponNotice = getCouponAdminNotice(await searchParams)
   const firmNotice = getFirmAdminNotice(await searchParams)
@@ -442,6 +392,13 @@ export default async function PropFirmEditPage({
           <CardContent className="space-y-4">
             <input type="hidden" name="locale" value={locale} />
             {firm && <input type="hidden" name="id" value={id} />}
+            {isReadOnlyFallback && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Read-only mode</AlertTitle>
+                <AlertDescription>The database is not configured — changes cannot be saved.</AlertDescription>
+              </Alert>
+            )}
 
             <div className={fieldClass}>
               <Label htmlFor="name">Name</Label>
@@ -531,7 +488,7 @@ export default async function PropFirmEditPage({
               <Button variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
               </Button>
-              <FormActionButton type="submit">{isNew ? 'Create' : 'Save Changes'}</FormActionButton>
+              <FormActionButton type="submit" disabled={isReadOnlyFallback}>{isNew ? 'Create' : 'Save Changes'}</FormActionButton>
             </div>
           </CardContent>
         </Card>
@@ -559,10 +516,10 @@ function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }
         <form action={handleCreateReview}>
           <input type="hidden" name="propFirmId" value={firm.id} />
           <input type="hidden" name="locale" value={locale} />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-start gap-2">
             <Input name="title" placeholder="Review title" className="w-40" />
-            <Input name="rating" type="number" min="0" max="5" placeholder="Rating" className="w-20" />
-            <Input name="content" placeholder="Content" className="w-60" />
+            <Input name="rating" type="number" min="0" max="5" step="0.5" placeholder="Rating" className="w-20" />
+            <Textarea name="content" placeholder="Review content" rows={2} className="min-w-60" />
             <label className="flex items-center gap-1 text-sm">
               <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
               Verified

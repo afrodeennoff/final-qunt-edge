@@ -44,47 +44,15 @@ import {
   getCouponTimingState,
 } from '../components/coupon-admin-utils'
 import { FormActionButton } from '../components/form-action-button'
-
-function requireText(value: FormDataEntryValue | null, fallback = ''): string {
-  return value?.toString().trim() || fallback
-}
-
-function parseOptionalNumber(value: FormDataEntryValue | null): number | undefined {
-  const text = value?.toString().trim()
-  if (!text) return undefined
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function normalizeOptionalText(value: FormDataEntryValue | null): string | undefined {
-  const text = value?.toString().trim()
-  return text ? text : undefined
-}
-
-function normalizeOptionalTextForUpdate(value: FormDataEntryValue | null): string | null | undefined {
-  const text = value?.toString().trim()
-  return typeof text === 'string' ? (text ? text : null) : undefined
-}
-
-function parseOptionalDate(value: FormDataEntryValue | null): Date | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = new Date(text)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
-}
-
-function parseOptionalNumberForUpdate(value: FormDataEntryValue | null): number | null | undefined {
-  const text = value?.toString().trim()
-  if (!text) return null
-  const parsed = Number.parseFloat(text)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function requireFormString(formData: FormData, key: string): string {
-  const val = formData.get(key)
-  if (!val || typeof val !== 'string') throw new Error(`Missing required field: ${key}`)
-  return val
-}
+import {
+  requireText,
+  parseOptionalNumber,
+  normalizeOptionalText,
+  normalizeOptionalTextForUpdate,
+  parseOptionalDate,
+  parseOptionalNumberForUpdate,
+  requireFormString,
+} from '../lib/admin-form-helpers'
 
 // ---------------------------------------------------------------------------
 // Server actions (module scope — read locale from FormData, not closure)

@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { connection } from 'next/server'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import { softDeletePropFirm } from '@/server/prop-firms'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Trash2 } from 'lucide-react'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
 import { FormActionButton } from '../components/form-action-button'
+import { ConfirmDeleteButton } from '../components/confirm-delete-button'
 
 async function handleDelete(formData: FormData) {
   'use server'
@@ -29,26 +30,15 @@ async function handleDelete(formData: FormData) {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import {
+  buildCouponAdminRedirectUrl,
+  formatAdminDateTimeInput,
+  getCouponAdminNotice,
+  getFirmAdminNotice,
+  getCouponTimingState,
   type CouponAdminSearchParamValue,
   type CouponAdminNotice,
 } from '../components/coupon-admin-utils'
 
-function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
-  const status = Array.isArray(searchParams.firmStatus) ? searchParams.firmStatus[0] : searchParams.firmStatus
-  if (!status) return null
-  const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
-
-  switch (status) {
-    case 'saved':
-      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
-    case 'deleted':
-      return { variant: 'success', title: 'Firm deleted', description: message ?? 'The firm has been removed.' }
-    case 'error':
-      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The firm change did not save.' }
-    default:
-      return null
-  }
-}
 
 export default async function PropFirmsListPage({
   params,
@@ -58,9 +48,9 @@ export default async function PropFirmsListPage({
   searchParams: Promise<Record<string, CouponAdminSearchParamValue>>
 }) {
   await assertAdminAccess()
+  await connection()
   const { locale } = await params
   const notice = getFirmAdminNotice(await searchParams)
-
   const firms = hasConfiguredDatabaseConnection
     ? await prisma.propFirm.findMany({
         select: {
@@ -147,7 +137,7 @@ export default async function PropFirmsListPage({
                       <td className="py-3 pr-4 text-center">{f._count.reviews}</td>
                       <td className="py-3 pr-4 text-center">{f._count.coupons}</td>
                       <td className="py-3 pr-4 text-center">
-                        <span className={f.isActive ? 'text-emerald-500' : 'text-amber-500'}>
+                        <span className={f.isActive ? 'text-emerald-400' : 'text-[oklch(0.75_0.15_85)]'}>
                           {f.isActive ? 'Yes' : 'No'}
                         </span>
                       </td>
@@ -159,15 +149,13 @@ export default async function PropFirmsListPage({
                           <form action={handleDelete}>
                             <input type="hidden" name="id" value={f.id} />
                             <input type="hidden" name="locale" value={locale} />
-                            <FormActionButton
+                            <ConfirmDeleteButton
                               variant="ghost"
                               size="sm"
-                              type="submit"
+                              confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
                               pendingLabel="Deleting..."
                               className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </FormActionButton>
+                            />
                           </form>
                         </div>
                       </td>
