@@ -14,139 +14,139 @@ const widgetFallback = <div className="h-full w-full rounded-xl bg-white/[0.05]"
 
 const SmartInsightsWidget = dynamic(
   () => import('../components/widgets/smart-insights-widget').then((m) => m.SmartInsightsWidget),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const EquityChart = dynamic(() => import('../components/charts/equity-chart'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const TickDistributionChart = dynamic(() => import('../components/charts/tick-distribution'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const PNLChart = dynamic(() => import('../components/charts/pnl-bar-chart'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const TimeOfDayTradeChart = dynamic(
   () => import('../components/charts/pnl-time-bar-chart'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const TimeInPositionChart = dynamic(() => import('../components/charts/time-in-position'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const TimeRangePerformanceChart = dynamic(
   () => import('../components/charts/time-range-performance'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const WeekdayPNLChart = dynamic(() => import('../components/charts/weekday-pnl'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const PnLBySideChart = dynamic(() => import('../components/charts/pnl-by-side'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const PnLPerContractChart = dynamic(
   () => import('../components/charts/pnl-per-contract'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const PnLPerContractDailyChart = dynamic(
   () => import('../components/charts/pnl-per-contract-daily'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const ContractQuantityChart = dynamic(
   () => import('../components/charts/contract-quantity'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const AveragePositionTimeCard = dynamic(
   () => import('../components/statistics/average-position-time-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const CumulativePnlCard = dynamic(
   () => import('../components/statistics/cumulative-pnl-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const LongShortPerformanceCard = dynamic(
   () => import('../components/statistics/long-short-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const TradePerformanceCard = dynamic(
   () => import('../components/statistics/trade-performance-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const WinningStreakCard = dynamic(
   () => import('../components/statistics/winning-streak-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const RiskRewardRatioCard = dynamic(
   () => import('../components/statistics/risk-reward-ratio-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const CalendarPnl = dynamic(() => import('../components/calendar/calendar-widget'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const CommissionsPnLChart = dynamic(
   () => import('../components/charts/commissions-pnl'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const StatisticsWidget = dynamic(
   () => import('../components/statistics/statistics-widget'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const TradeTableReview = dynamic(
   () => import('../components/tables/trade-table-review').then((m) => m.TradeTableReview),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const MoodSelector = dynamic(
   () => import('../components/calendar/mood-selector').then((m) => m.MoodSelector),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const TradeDistributionChart = dynamic(
   () => import('../components/charts/trade-distribution'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const AccountsOverview = dynamic(
   () => import('../components/accounts/accounts-overview').then((m) => m.AccountsOverview),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const TagWidget = dynamic(
   () => import('../components/filters/tag-widget').then((m) => m.TagWidget),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const ProfitFactorCard = dynamic(
   () => import('../components/statistics/profit-factor-card'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const DailyTickTargetChart = dynamic(
   () => import('../components/charts/daily-tick-target'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const MindsetWidget = dynamic(
   () => import('../components/mindset/mindset-widget').then((m) => m.MindsetWidget),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const ChatWidget = dynamic(() => import('../components/chat/chat'), {
-  ssr: false,
+  
   loading: () => widgetFallback,
 })
 const TradingScoreWidget = dynamic(
   () => import('../components/widgets/trading-score-widget'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const ExpectancyWidget = dynamic(
   () => import('../components/widgets/expectancy-widget'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const RiskMetricsWidget = dynamic(
   () => import('../components/widgets/risk-metrics-widget'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 const PropfirmCatalogueWidget = dynamic(
   () => import('../components/widgets/propfirm-catalogue-widget'),
-  { ssr: false, loading: () => widgetFallback }
+  {  loading: () => widgetFallback }
 )
 // import MarketChart from '../components/market/market-chart'
 

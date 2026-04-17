@@ -32,7 +32,7 @@ const FirmReviewsSection = dynamic(
   () => import('./components/firm-reviews-section').then((m) => ({ default: m.FirmReviewsSection })),
   {
     loading: () => <Card className="p-6"><Skeleton className="h-48" /></Card>,
-    ssr: false,
+    
   }
 )
 
@@ -40,7 +40,7 @@ const FirmCouponsSection = dynamic(
   () => import('./components/firm-coupons-section').then((m) => ({ default: m.FirmCouponsSection })),
   {
     loading: () => <Card className="p-6"><Skeleton className="h-32" /></Card>,
-    ssr: false,
+    
   }
 )
 

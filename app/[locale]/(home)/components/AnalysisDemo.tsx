@@ -21,7 +21,7 @@ const mockData = [
 ]
 
 const AnalysisDemoChart = dynamic(() => import('./analysis-demo-chart'), {
-  ssr: false,
+  
   loading: () => (
     <div className="h-full w-full animate-pulse rounded-md border border-border/40 bg-card/60" />
   ),

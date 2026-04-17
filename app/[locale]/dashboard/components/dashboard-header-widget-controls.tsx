@@ -20,12 +20,12 @@ import { CheckCircle2, CloudUpload, RotateCcw, Sparkles, Trash2 } from "lucide-r
 
 const AddWidgetSheet = dynamic(
  () => import("@/app/[locale]/dashboard/components/add-widget-sheet").then((m) => m.AddWidgetSheet),
- { ssr: false }
+ {  }
 );
 
 const ShareButton = dynamic(
  () => import("./share-button").then((m) => m.ShareButton),
- { ssr: false }
+ {  }
 );
 
 type DashboardHeaderWidgetControlsProps = {

@@ -11,7 +11,7 @@ export const EquityChart = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/equity-chart'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
@@ -19,7 +19,7 @@ export const PnLBarChart = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/pnl-bar-chart'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
@@ -27,7 +27,7 @@ export const WeekdayPnL = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/weekday-pnl'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
@@ -35,7 +35,7 @@ export const TimeRangePerformance = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/time-range-performance'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
@@ -43,7 +43,7 @@ export const TradeDistribution = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/trade-distribution'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
@@ -51,7 +51,7 @@ export const PnLBySide = dynamic(
   () => import('@/app/[locale]/dashboard/components/charts/pnl-by-side'),
   {
     loading: () => <ChartSkeleton />,
-    ssr: false,
+    
   }
 ) as AnyComponent
 
