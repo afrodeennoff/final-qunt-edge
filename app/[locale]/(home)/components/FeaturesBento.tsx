@@ -1,13 +1,19 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { ArrowRight, BarChart3, Brain, Download, FileText, Shield, Users } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 import {
   MotionSection,
   MotionStagger,
   MotionStaggerItem,
 } from '@/components/animation/enhanced-motion'
+import {
+  unifiedBodyCopyClassName,
+  unifiedChipClassName,
+  unifiedInsetPanelClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 
 const issueIcons = [BarChart3, Brain, Users]
@@ -33,54 +39,42 @@ export default function FeaturesBento() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
-      {/* Atmospheric glow orbs */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-primary/[0.04] blur-[120px]" />
-      <div className="mx-auto max-w-[1360px]">
-        <motion.div
-          className="mb-10 text-center md:mb-14"
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            {t('landing.home.features.eyebrow')}
-          </p>
-          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
-            {t('landing.home.features.title')}{' '}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              {t('landing.home.features.highlight')}
-            </span>
-          </h2>
-          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            {t('landing.home.features.description')}
-          </p>
-        </motion.div>
+    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-[1360px] space-y-6">
+        <div className={cn(unifiedSectionPanelClassName, 'p-6 sm:p-8')}>
+          <p className={unifiedSectionEyebrowClassName}>{t('landing.home.features.eyebrow')}</p>
+          <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:items-end">
+            <div>
+              <h2 className="text-balance text-[clamp(2.2rem,4.8vw,4.3rem)] font-medium leading-[0.96] tracking-[-0.05em] text-foreground">
+                {t('landing.home.features.title')}
+                <span className="block text-primary">{t('landing.home.features.highlight')}</span>
+              </h2>
+            </div>
+            <p className={cn(unifiedBodyCopyClassName, 'max-w-2xl')}>
+              {t('landing.home.features.description')}
+            </p>
+          </div>
+        </div>
 
         <MotionStagger className="grid gap-4 md:grid-cols-3" delay={0.08}>
           {issues.map((issue) => {
             const Icon = issue.icon
             return (
               <MotionStaggerItem key={String(issue.title)}>
-                <article className="h-full rounded-lg border-white/[0.06] bg-card/70 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                <article className={cn(unifiedSectionPanelClassName, 'flex h-full flex-col gap-4 p-6')}>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <Badge
-                    variant="outline"
-                    size="sm"
-                    className="mt-4 rounded-full border-white/[0.06] bg-background/70 text-primary"
-                  >
-                    {issue.badge}
-                  </Badge>
-                  <h3 className="type-h4 mt-4 text-foreground">{issue.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {issue.description}
-                  </p>
-                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border-white/[0.06] bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/90 transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-white/[0.12]">
-                    <ArrowRight className="h-3 w-3" />
-                    <span>{issue.solution}</span>
+                  <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>{issue.badge}</span>
+                  <div className="space-y-2">
+                    <h3 className="text-[1.1rem] font-semibold tracking-[-0.02em] text-foreground">
+                      {issue.title}
+                    </h3>
+                    <p className="text-sm leading-[1.65] text-muted-foreground">{issue.description}</p>
+                  </div>
+                  <div className="mt-auto inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                    {issue.solution}
                   </div>
                 </article>
               </MotionStaggerItem>
@@ -88,10 +82,10 @@ export default function FeaturesBento() {
           })}
         </MotionStagger>
 
-        <div className="mt-10 mb-5">
-          <Badge variant="secondary" size="sm" className="rounded-full px-3 text-foreground/70">
+        <div className="px-1">
+          <span className={cn(unifiedChipClassName, 'px-3 py-1.5 text-foreground/80')}>
             {t('landing.home.features.listLabel')}
-          </Badge>
+          </span>
         </div>
 
         <MotionStagger className="grid gap-4 lg:grid-cols-4" delay={0.08}>
@@ -100,30 +94,26 @@ export default function FeaturesBento() {
             return (
               <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
                 <article
-                  className={`h-full rounded-lg border p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)] ${
-                    feature.highlighted
-                      ? 'border-primary/20 bg-card hover:border-primary/30'
-                      : 'border-white/[0.06] bg-card/70 hover:border-white/[0.12]'
-                  }`}
+                  className={cn(
+                    feature.highlighted ? unifiedSectionPanelClassName : unifiedInsetPanelClassName,
+                    'flex h-full flex-col gap-4 p-6',
+                    feature.highlighted && 'border-primary/16',
+                  )}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
-
                   {feature.highlighted ? (
-                    <Badge
-                      variant="outline"
-                      size="sm"
-                      className="mt-4 rounded-full border-primary/20 bg-primary/10 text-primary"
-                    >
+                    <span className={cn(unifiedChipClassName, 'w-fit px-3 py-1.5')}>
                       {t('landing.home.features.feature2Badge')}
-                    </Badge>
+                    </span>
                   ) : null}
-
-                  <h3 className="type-h4 mt-4 text-foreground">{feature.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {feature.description}
-                  </p>
+                  <div className="space-y-2">
+                    <h3 className="text-[1.06rem] font-semibold tracking-[-0.02em] text-foreground">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm leading-[1.65] text-muted-foreground">{feature.description}</p>
+                  </div>
                 </article>
               </MotionStaggerItem>
             )

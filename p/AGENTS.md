@@ -88,6 +88,9 @@
 - For trader-profile-style analytics pages, prefer a two-stage composition: an elevated summary hero first, then a responsive main/aside grid with `min-w-0` content columns and a sticky right rail only at larger breakpoints.
 - On trader-profile-style pages, the hero should carry a short performance brief plus compact signal tiles inside the control rail so the page reads overview → day pattern → benchmark/feed instead of a flat stack of equal-weight stats.
 - If a trader-profile-style page is being aligned to a user wireframe, lock the macro order before styling details: profile/control row, thin metrics strip, dedicated active-account block, large calendar/content panel, stacked analytics rail, then full-width trade history.
+- For full-site visual refreshes, start with shared chrome first: `components/layout/unified-page-shell.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/footer/shell wrappers, and core CTA/surface primitives. Route-by-route passes should inherit from that refreshed base instead of inventing local shells again.
+- Home page hero redesigns should use a dominant product-UI canvas plus restrained animated SVG overlays rather than gradient-heavy marketing treatment. Prefer one-shot stroke/node animations and flat tinted surfaces over decorative gradients or continuous glow effects.
+- If the user asks for “unified like `/deals`” with no function changes, treat it as a visual-only system pass: shared shell, shared panel recipes, shared CTA hierarchy, and route-local content reflow only. Do not change route behavior, data loading, filtering, or server contracts.
 
 ## Admin Panel Patterns
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.

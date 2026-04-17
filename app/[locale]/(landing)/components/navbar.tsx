@@ -3,8 +3,11 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import { UnifiedMobileNav } from '@/components/mobile-nav'
+import {
+  unifiedInsetPanelClassName,
+  unifiedPrimaryActionClassName,
+} from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
@@ -37,10 +40,15 @@ export default function Navbar() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3 sm:px-6">
-      <div className="mx-auto w-full max-w-6xl">
-        <div className="flex h-14 items-center justify-between rounded-full border border-border/60 bg-background/90 px-4 shadow-sm">
-          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-md px-2 py-1.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+      <div className="mx-auto w-full max-w-[1360px]">
+        <div
+          className={cn(
+            unifiedInsetPanelClassName,
+            'flex min-h-16 items-center justify-between rounded-full px-3.5 py-2 sm:px-4',
+          )}
+        >
+          <Link href={`/${locale}`} className="flex items-center gap-2 rounded-full px-2 py-1.5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
               <Logo className="h-4.5 w-4.5 fill-current" />
             </div>
             <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline-flex">
@@ -54,10 +62,10 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-full px-3.5 py-2 text-sm font-medium transition-colors',
+                  'rounded-full px-3.5 py-2 text-sm font-medium transition-[background-color,color,border-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
                   isActive(link.href)
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:text-foreground',
+                    ? 'border border-primary/18 bg-primary/10 text-primary'
+                    : 'border border-transparent text-muted-foreground hover:border-border/35 hover:bg-background/70 hover:text-foreground',
                 )}
               >
                 {link.title}
@@ -73,20 +81,22 @@ export default function Navbar() {
               {t('landing.navbar.signIn')}
             </Link>
 
-            <Button
-              asChild
-              size="sm"
-              className="hidden h-9 rounded-full px-4 text-sm font-semibold md:inline-flex"
+            <Link
+              href={`/${locale}/authentication`}
+              className={cn(unifiedPrimaryActionClassName, 'hidden h-9 px-4 text-sm md:inline-flex')}
             >
-              <Link href={`/${locale}/authentication`}>{t('landing.hero.ctaPrimary')}</Link>
-            </Button>
+              {t('landing.hero.ctaPrimary')}
+            </Link>
 
             <UnifiedMobileNav
               groups={[{ links: links.map((link) => ({ href: link.href, label: link.title })) }]}
               footer={
-                <Button asChild className="w-full rounded-full">
-                  <Link href={`/${locale}/authentication`}>{t('landing.hero.ctaPrimary')}</Link>
-                </Button>
+                <Link
+                  href={`/${locale}/authentication`}
+                  className={cn(unifiedPrimaryActionClassName, 'w-full')}
+                >
+                  {t('landing.hero.ctaPrimary')}
+                </Link>
               }
             />
           </div>

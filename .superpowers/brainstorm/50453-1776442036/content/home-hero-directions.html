@@ -1,0 +1,359 @@
+<style>
+  .direction-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-top: 24px;
+  }
+
+  .direction-card {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    background: rgba(8, 8, 8, 0.92);
+    overflow: hidden;
+  }
+
+  .direction-card .meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px 0;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .score {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.44);
+  }
+
+  .art {
+    min-height: 280px;
+    padding: 20px;
+  }
+
+  .frame {
+    height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    background: #070707;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .copy {
+    padding: 0 20px 22px;
+  }
+
+  .copy h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.05;
+  }
+
+  .copy p {
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .poster-headline {
+    position: absolute;
+    left: 22px;
+    top: 22px;
+    right: 22px;
+    font-size: 32px;
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+  }
+
+  .poster-sub {
+    position: absolute;
+    left: 22px;
+    top: 112px;
+    max-width: 180px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.56);
+  }
+
+  .cta-row {
+    position: absolute;
+    left: 22px;
+    bottom: 22px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .cta {
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .cta.primary {
+    background: #f4f4f4;
+    color: #050505;
+  }
+
+  .cta.secondary {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.76);
+  }
+
+  .panel {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .line-svg {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    width: 55%;
+    height: 58%;
+    opacity: 0.96;
+  }
+
+  .line-svg path {
+    stroke: rgba(255, 255, 255, 0.9);
+    stroke-width: 2.2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .line-svg polyline {
+    stroke: rgba(255, 255, 255, 0.32);
+    stroke-width: 1;
+    fill: none;
+  }
+
+  .hero-image {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.62)),
+      url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80')
+        center/cover no-repeat;
+    filter: grayscale(1);
+  }
+
+  .hero-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    pointer-events: none;
+  }
+
+  .caption-box {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.74);
+    padding: 18px;
+  }
+
+  .caption-box .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.48);
+  }
+
+  .caption-box .title {
+    margin-top: 10px;
+    font-size: 28px;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+  }
+
+  .caption-box .body {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .schematic-shell {
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .schematic-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.45;
+  }
+
+  .schematic-node {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .schematic-node strong {
+    display: block;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .schematic-path {
+    position: absolute;
+    inset: 0;
+  }
+
+  .schematic-path path {
+    stroke: rgba(255, 255, 255, 0.9);
+    stroke-width: 1.8;
+    fill: none;
+    stroke-dasharray: 5 8;
+  }
+</style>
+
+<h2>Pick the home-page hero direction for the full redesign</h2>
+<p class="subtitle">
+  You asked for every page to feel fully refined, with no gradients. These three options are all
+  monochrome, high-contrast, and premium. Choose the one that should define the full-site system.
+</p>
+
+<div class="direction-grid">
+  <div class="direction-card option" data-choice="command-deck" onclick="toggleSelect(this)">
+    <div class="meta">
+      <span class="chip">A · Command deck</span>
+      <span class="score">product-led</span>
+    </div>
+    <div class="art">
+      <div class="frame">
+        <div class="poster-headline">Qunt Edge.<br>Audit execution.</div>
+        <div class="poster-sub">
+          Dense product hero with hard-edged analytics framing and a live-system feel.
+        </div>
+        <div class="panel" style="left:22px; top:170px; width:130px; height:72px;"></div>
+        <div class="panel" style="left:22px; top:252px; width:170px; height:54px;"></div>
+        <div class="panel" style="right:22px; top:22px; width:120px; height:46px;"></div>
+        <svg class="line-svg" viewBox="0 0 260 180" aria-hidden="true">
+          <polyline points="8,156 252,156"></polyline>
+          <polyline points="8,116 252,116"></polyline>
+          <polyline points="8,76 252,76"></polyline>
+          <path d="M10 144 C44 122, 54 110, 78 104 C100 98, 118 120, 144 88 C164 64, 178 50, 208 38 C224 32, 238 26, 250 18"></path>
+        </svg>
+        <div class="cta-row">
+          <div class="cta primary">Start free audit</div>
+          <div class="cta secondary">View platform</div>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <h3>Big product frame, sharp data overlays</h3>
+      <p>
+        Best if you want the whole site to feel like a premium trading operating system from the
+        first screen.
+      </p>
+    </div>
+  </div>
+
+  <div class="direction-card option" data-choice="editorial-image" onclick="toggleSelect(this)">
+    <div class="meta">
+      <span class="chip">B · Editorial image</span>
+      <span class="score">campaign-led</span>
+    </div>
+    <div class="art">
+      <div class="frame">
+        <div class="hero-image"></div>
+        <div class="caption-box">
+          <div class="eyebrow">Qunt Edge</div>
+          <div class="title">The clinical layer for discretionary traders.</div>
+          <div class="body">
+            Large monochrome image, elegant copy block, and a more branded editorial feel.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <h3>Image-first, quieter, more luxurious</h3>
+      <p>
+        Best if you want the home page to feel more like a premium brand campaign than a product
+        dashboard.
+      </p>
+    </div>
+  </div>
+
+  <div class="direction-card option" data-choice="signal-schematic" onclick="toggleSelect(this)">
+    <div class="meta">
+      <span class="chip">C · Signal schematic</span>
+      <span class="score">system-led</span>
+    </div>
+    <div class="art">
+      <div class="frame">
+        <div class="schematic-shell">
+          <div class="schematic-grid"></div>
+          <div class="poster-headline" style="top:18px; font-size:30px;">Execution review<br>made structural.</div>
+          <svg class="schematic-path" viewBox="0 0 320 260" aria-hidden="true">
+            <path d="M44 148 C90 148, 98 108, 142 108 L180 108 C214 108, 226 78, 262 78"></path>
+            <path d="M150 112 C150 156, 210 156, 210 196"></path>
+          </svg>
+          <div class="schematic-node" style="left:24px; top:138px; width:90px;">
+            <strong>Import</strong>
+            Trades + balances
+          </div>
+          <div class="schematic-node" style="left:122px; top:88px; width:92px;">
+            <strong>Audit</strong>
+            Patterns + review
+          </div>
+          <div class="schematic-node" style="right:22px; top:58px; width:88px;">
+            <strong>Guide</strong>
+            Risk + next move
+          </div>
+          <div class="schematic-node" style="right:42px; bottom:20px; width:120px;">
+            <strong>Share</strong>
+            Teams + trader profile
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <h3>Animated SVG / technical system language</h3>
+      <p>
+        Best if you want the home page and the rest of the site to feel precise, technical, and
+        intentionally engineered.
+      </p>
+    </div>
+  </div>
+</div>

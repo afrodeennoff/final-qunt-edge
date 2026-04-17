@@ -6,6 +6,16 @@
 
 ## Current State
 
+### Full-Site Unified Product-Led Redesign — FOUNDATION + HOME/PUBLIC CORE PASS COMPLETE (2026-04-18)
+- Added `components/layout/unified-hero-media.tsx` and refreshed `components/layout/unified-page-shell.tsx` / `components/layout/unified-page-recipes.ts` so shared public/dashboard/team/admin routes inherit flatter product-led surfaces, tighter CTA hierarchy, and non-gradient shell treatment
+- Updated `app/globals.css` and `components/animation/enhanced-motion.tsx` with staged reveal helpers plus one-shot SVG signal-trace animation utilities for restrained motion without blur entrances or looping effects
+- Refined shared public chrome in `app/[locale]/(landing)/components/marketing-layout-shell.tsx`, `navbar.tsx`, and `footer.tsx` so the public shell now reads like the `/deals` system instead of older mixed landing-page chrome
+- Rebuilt the home page core sections as a cohesive product-led story without changing logic: `Hero.tsx`, `DashboardPreview.tsx`, `LiveStatsStrip.tsx`, `FeaturesBento.tsx`, `AIFeatures.tsx`, `HowItWorks.tsx`, `PricingSection.tsx`, `FinalCTA.tsx`, and `HomeContent.tsx`
+- Home hero now uses real product UI plus restrained animated SVG signal overlays instead of gradient-led marketing treatment; supporting sections now use shared panel recipes instead of one-off white/gradient card stacks
+- Refined `components/ui/button.tsx`, `card.tsx`, and `badge.tsx` so the shared primitive language better matches the new product-led system across pages that already depend on those primitives
+- Verification: targeted ESLint passed with only existing complexity warnings on `components/ui/button.tsx` and `components/ui/card.tsx`; `npx tsc --noEmit` passed
+- Rollout state: shared foundation and the main home/public shell are done; remaining long-tail route-by-route visual cleanup for dashboard/teams/admin can continue from this baseline without logic changes
+
 ### Global Page-Shell + Motion Unification — COMPLETE (2026-04-17)
 - Extracted shared `/deals`-style page recipes into `components/layout/unified-page-recipes.ts` so public and team landing routes can share the same hero panels, inset surfaces, and primary/secondary action hierarchy
 - Updated `components/layout/unified-page-shell.tsx` to use stronger shared surface treatment, explicit transition properties, and a calmer primary-atmosphere shell so routes already on the shared shell inherit the same visual language automatically

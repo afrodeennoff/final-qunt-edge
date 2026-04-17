@@ -2343,6 +2343,60 @@
     animation-delay: 0.24s;
   }
 
+  .animate-fade-up-smooth-d5 {
+    animation-delay: 0.4s;
+  }
+
+  .animate-fade-up-smooth-d6 {
+    animation-delay: 0.48s;
+  }
+
+  @keyframes signal-trace {
+    from {
+      opacity: 0;
+      stroke-dashoffset: 120;
+    }
+    to {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes signal-node {
+    from {
+      opacity: 0;
+      transform: scale(0.72);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-signal-trace {
+    animation: signal-trace 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-signal-trace-d1 {
+    animation-delay: 0.12s;
+  }
+
+  .animate-signal-trace-d2 {
+    animation-delay: 0.24s;
+  }
+
+  .animate-signal-node {
+    animation: signal-node 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-signal-node-d1 {
+    animation-delay: 0.18s;
+  }
+
+  .animate-signal-node-d2 {
+    animation-delay: 0.32s;
+  }
+
   /* ===== HERO ENTRANCE — CSS-driven for soft navigation resilience ===== */
   /*
     These animations replace Framer Motion initial={{opacity:0}} on the homepage hero.

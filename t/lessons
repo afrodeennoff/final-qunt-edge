@@ -113,3 +113,9 @@
 - **RC:** The shared shell alone was not enough; routes still carried their own hero panels, inset cards, and motion timing, so each page slowly became a one-off design system.
 - **R:** When one route becomes the reference experience, extract its reusable page recipes and entrance timing helpers into shared layout primitives, then move the outlier routes onto those recipes instead of restyling each page independently.
 - **E:** `components/layout/unified-page-recipes.ts` now carries the shared hero/surface/action classes, and the staged `animate-fade-up-smooth-d*` / `animate-scale-reveal-d*` helpers make public page motion consistent without inline animation delays.
+
+## Lesson 58: Full-site visual refreshes should start with shared chrome and hero media, not page-by-page repainting
+- **M:** A request to make every page feel unified can turn into lots of disconnected route edits if the shared shell and hero language are not tightened first.
+- **RC:** Public, dashboard, teams, and admin routes already inherit a mix of shared shells, page recipes, and core primitives. If those foundations stay old, route-level redesigns drift immediately and duplicate effort.
+- **R:** For visual-only redesign waves, update shared shell recipes, public chrome, and the flagship home hero/media system first. Then let route groups inherit that baseline before doing smaller route-specific polish passes.
+- **E:** Adding `unified-hero-media.tsx`, flattening `UnifiedPageShell`/`UnifiedSurface`, and rebuilding the home hero around product UI + restrained SVG made the rest of the app more cohesive without touching behavior.

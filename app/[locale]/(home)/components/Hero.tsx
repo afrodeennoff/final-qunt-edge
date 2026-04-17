@@ -1,9 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { ArrowRight, Dot, Sparkles } from 'lucide-react'
+import { UnifiedHeroMedia } from '@/components/layout/unified-hero-media'
+import {
+  unifiedBodyCopyClassName,
+  unifiedChipClassName,
+  unifiedDisplayTitleClassName,
+  unifiedGhostActionClassName,
+  unifiedInfoLabelClassName,
+  unifiedInfoValueClassName,
+  unifiedInsetPanelClassName,
+  unifiedPrimaryActionClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 import DashboardPreview from './DashboardPreview'
 
@@ -17,126 +27,153 @@ export default function Hero({ locale }: { locale: string }) {
 
   const integrations = [1, 2, 3, 4, 5].map((index) => t(`landing.home.hero.integration${index}`))
 
+  const proofPills = [
+    String(t('landing.hero.noCreditCard')),
+    String(t('landing.hero.firstAudit')),
+  ]
+
   return (
-    <section className="relative overflow-hidden px-4 pb-20 pt-[88px] sm:px-6 sm:pt-28 md:pb-24 md:pt-32 lg:px-8 xl:pb-28">
-      <div className="relative mx-auto max-w-[1200px] [--hero-copy:var(--font-dm-sans)] [--hero-display:var(--font-outfit)]">
-        <div className="mx-auto max-w-[860px] text-center">
-          <div className="hero-entrance">
-            <Badge
-              variant="outline"
-              className="mb-6 rounded-full border-border/60 bg-card/70 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-foreground/80"
-            >
+    <section className="relative overflow-hidden px-4 pb-20 pt-[92px] sm:px-6 sm:pt-28 lg:px-8 lg:pb-24 xl:pb-28">
+      <div className="mx-auto grid max-w-[1360px] gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(520px,1.1fr)] xl:items-end">
+        <div className="space-y-6 [--hero-copy:var(--font-dm-sans)] [--hero-display:var(--font-outfit)]">
+          <div className="animate-fade-up-smooth">
+            <span className={cn(unifiedChipClassName, 'px-4 py-2')}>
+              <Sparkles className="h-3.5 w-3.5" />
               {t('landing.hero.badge')}
-            </Badge>
+            </span>
           </div>
 
-          <h1 className="hero-entrance hero-entrance-d1 mx-auto max-w-[820px] text-balance text-[clamp(2.75rem,7vw,4.75rem)] leading-[1.05] tracking-[-0.055em] text-foreground [font-family:var(--hero-display)] font-semibold">
-            {t('landing.hero.headline')}
-            <span className="mt-2 block bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-              {t('landing.hero.headlineAccent')}
-            </span>
-          </h1>
-
-          <p className="hero-entrance hero-entrance-d2 mx-auto mt-6 max-w-[700px] text-balance text-[1rem] leading-[1.55] text-muted-foreground md:text-[1.125rem] [font-family:var(--hero-copy)]">
-            {t('landing.hero.subheadline')}
-          </p>
-
-          <div className="hero-entrance hero-entrance-d3 mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="h-11 w-full rounded-md px-8 text-sm font-semibold sm:w-auto"
+          <div className="animate-fade-up-smooth animate-fade-up-smooth-d1 space-y-4">
+            <h1
+              className={cn(
+                unifiedDisplayTitleClassName,
+                'max-w-3xl text-[clamp(2.9rem,6vw,6rem)] leading-[0.94] [font-family:var(--hero-display)]',
+              )}
             >
-              <Link href={`/${locale}/authentication?next=dashboard`}>
-                {t('landing.hero.ctaPrimary')}
-              </Link>
-            </Button>
-
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="group h-11 w-full rounded-md border-border/60 bg-background/70 px-8 text-sm font-semibold text-foreground/80 hover:border-border/80 hover:bg-background sm:w-auto"
+              {t('landing.hero.headline')}
+              <span className="mt-3 block text-primary">{t('landing.hero.headlineAccent')}</span>
+            </h1>
+            <p
+              className={cn(
+                unifiedBodyCopyClassName,
+                'max-w-xl [font-family:var(--hero-copy)] text-[1rem] md:text-[1.08rem]',
+              )}
             >
-              <a href="#how-it-works">
-                {t('landing.hero.ctaSecondary')}
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" />
-              </a>
-            </Button>
+              {t('landing.hero.subheadline')}
+            </p>
           </div>
 
-          <div className="hero-entrance hero-entrance-d4 mt-6 flex flex-wrap items-center justify-center gap-3">
-            <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
-              {t('landing.hero.noCreditCard')}
-            </span>
-            <span className="type-label rounded-full border border-border/60 bg-card/70 px-3 py-1.5 text-muted-foreground">
-              {t('landing.hero.firstAudit')}
-            </span>
+          <div className="animate-fade-up-smooth animate-fade-up-smooth-d2 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Link href={`/${locale}/authentication?next=dashboard`} className={unifiedPrimaryActionClassName}>
+              {t('landing.hero.ctaPrimary')}
+            </Link>
+            <a href="#how-it-works" className={unifiedGhostActionClassName}>
+              {t('landing.hero.ctaSecondary')}
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </div>
-        </div>
 
-        <div className="hero-entrance hero-entrance-d5 mt-12">
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)] xl:gap-5">
-            <div className="overflow-hidden rounded-lg border border-border/60 bg-card/70 p-3 shadow-sm sm:p-4 lg:row-span-2">
-              <div className="mb-4 flex flex-col gap-3 rounded-lg border border-border/60 bg-background/60 px-4 py-3 md:flex-row md:items-center md:justify-between">
-                <p className="type-label text-muted-foreground">
-                  {t('landing.home.hero.integrationsTitle')}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {integrations.map((integration) => (
-                    <span
-                      key={String(integration)}
-                      className="type-label rounded-full border border-border/60 bg-card/80 px-3 py-1 text-foreground/80"
-                    >
-                      {integration}
-                    </span>
-                  ))}
-                </div>
+          <div className="animate-fade-up-smooth animate-fade-up-smooth-d3 flex flex-wrap gap-2.5">
+            {proofPills.map((item) => (
+              <span key={item} className={cn(unifiedInsetPanelClassName, 'px-3.5 py-2 text-xs text-muted-foreground')}>
+                {item}
+              </span>
+            ))}
+          </div>
+
+          <div className="animate-fade-up-smooth animate-fade-up-smooth-d4 grid gap-3 sm:grid-cols-2 xl:max-w-[42rem]">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-3 p-4 sm:p-5')}>
+              <p className={unifiedInfoLabelClassName}>{t('landing.home.hero.integrationsTitle')}</p>
+              <div className="flex flex-wrap gap-2">
+                {integrations.map((integration) => (
+                  <span
+                    key={String(integration)}
+                    className="rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/78"
+                  >
+                    {integration}
+                  </span>
+                ))}
               </div>
-
-              <DashboardPreview />
             </div>
 
-            <article className="rounded-lg border border-border/60 bg-card/70 p-5 text-left shadow-sm">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <p className="type-label text-muted-foreground">{t('landing.hero.badge')}</p>
-                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-              </div>
-              <div className="space-y-4">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-3 p-4 sm:p-5')}>
+              <p className={unifiedInfoLabelClassName}>Review stack</p>
+              <div className="space-y-3">
                 {capabilityCards.map((card, index) => (
                   <div
                     key={String(card.title)}
-                    className={`${
-                      index < capabilityCards.length - 1 ? 'border-b border-border/60 pb-4' : ''
-                    }`}
+                    className={cn(
+                      'space-y-1.5',
+                      index < capabilityCards.length - 1 && 'border-b border-border/30 pb-3',
+                    )}
                   >
-                    <p className="text-[1rem] leading-[1.2] tracking-[0.2px] text-foreground [font-family:var(--hero-display)] font-semibold">
-                      {card.title}
-                    </p>
-                    <p className="mt-2 text-[0.875rem] leading-[1.5] text-muted-foreground [font-family:var(--hero-copy)]">
-                      {card.description}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <Dot className="h-4 w-4 text-primary" />
+                      <p className={cn(unifiedInfoValueClassName, 'text-[15px]')}>{card.title}</p>
+                    </div>
+                    <p className="text-sm leading-[1.55] text-muted-foreground">{card.description}</p>
                   </div>
                 ))}
               </div>
-            </article>
-
-            <article className="rounded-lg border border-border/60 bg-card/70 p-5 text-left shadow-sm">
-              <p className="type-label text-muted-foreground">
-                {t('landing.home.hero.integrationsTitle')}
-              </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                <div className="rounded-md border border-border/60 bg-background/60 px-4 py-3">
-                  <p className="type-label text-foreground/70">{t('landing.hero.noCreditCard')}</p>
-                </div>
-                <div className="rounded-md border border-border/60 bg-background/60 px-4 py-3">
-                  <p className="type-label text-foreground/70">{t('landing.hero.firstAudit')}</p>
-                </div>
-              </div>
-            </article>
+            </div>
           </div>
+        </div>
+
+        <div className="animate-fade-up-smooth animate-fade-up-smooth-d5">
+          <UnifiedHeroMedia
+            screenshot={<DashboardPreview />}
+            overlay={<SignalOverlay />}
+            caption={
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-border/35 bg-background/82 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/75">
+                <span className="inline-flex h-2 w-2 rounded-full bg-primary" />
+                Live review system
+              </div>
+            }
+            className="min-h-[560px]"
+          />
         </div>
       </div>
     </section>
+  )
+}
+
+function SignalOverlay() {
+  return (
+    <svg viewBox="0 0 800 520" className="h-full w-full text-primary/75" aria-hidden="true">
+      <path
+        d="M40 416 C120 380, 186 354, 256 300 C326 248, 382 214, 456 196 C548 174, 630 128, 744 78"
+        className="animate-signal-trace stroke-current/75"
+        strokeWidth="2.5"
+        strokeDasharray="140 14"
+        fill="none"
+      />
+      <path
+        d="M114 404 C190 366, 256 330, 334 258 C384 212, 446 184, 554 154"
+        className="animate-signal-trace animate-signal-trace-d1 stroke-current/40"
+        strokeWidth="1.5"
+        strokeDasharray="40 16"
+        fill="none"
+      />
+      <path
+        d="M520 168 L640 118 L732 88"
+        className="animate-signal-trace animate-signal-trace-d2 stroke-current/24"
+        strokeWidth="1.5"
+        strokeDasharray="12 10"
+        fill="none"
+      />
+      <circle cx="256" cy="300" r="6" className="animate-signal-node fill-primary/90" />
+      <circle
+        cx="456"
+        cy="196"
+        r="5"
+        className="animate-signal-node animate-signal-node-d1 fill-primary/72"
+      />
+      <circle
+        cx="640"
+        cy="118"
+        r="4.5"
+        className="animate-signal-node animate-signal-node-d2 fill-primary/60"
+      />
+    </svg>
   )
 }

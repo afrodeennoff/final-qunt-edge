@@ -57,20 +57,21 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-lg border border-border/50 bg-card shadow-sm',
-          variant === 'glass' && 'bg-card/80',
-          variant === 'elevated' && 'shadow-md',
+          'rounded-lg border border-border/45 bg-card/95 shadow-[0_18px_46px_-32px_rgba(0,0,0,0.9)]',
+          variant === 'glass' && 'border-primary/12 bg-primary/8',
+          variant === 'elevated' &&
+            'border-primary/14 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.92)]',
           variant === 'outlined' && 'bg-transparent shadow-none',
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
           variant === 'gradient-border' &&
-            'border-primary/30 bg-gradient-to-br from-card to-muted/40 shadow-sm',
-          variant === 'frost' && 'bg-background/70 shadow-sm',
+            'border-primary/18 bg-card/98 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_22px_52px_-36px_rgba(0,0,0,0.9)]',
+          variant === 'frost' && 'border-border/40 bg-background/74 shadow-[0_16px_38px_-30px_rgba(0,0,0,0.88)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
           size === 'lg' && 'type-body-lg',
           hover &&
-            'transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:shadow-md',
+            'transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/16 hover:shadow-[0_24px_58px_-34px_rgba(0,0,0,0.92)]',
           isInteractive &&
             'cursor-pointer transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
           isLoading && 'pointer-events-none opacity-80',
@@ -85,7 +86,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ) : null}
 
         {status ? (
-          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/50 bg-background/80 px-2.5 py-1 shadow-sm">
+          <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full border border-border/45 bg-background/82 px-2.5 py-1 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.85)]">
             <div
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
@@ -160,7 +161,7 @@ const CardStatusDot = React.forwardRef<HTMLSpanElement, CardStatusDotProps>(
 )
 CardStatusDot.displayName = 'CardStatusDot'
 
-export interface CardActionProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardActionProps = React.HTMLAttributes<HTMLDivElement>
 
 const CardAction = React.forwardRef<HTMLDivElement, CardActionProps>(
   ({ className, ...props }, ref) => (

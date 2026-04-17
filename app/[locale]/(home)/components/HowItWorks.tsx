@@ -2,6 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { InteractiveWrapper } from '@/components/animation/interactive'
+import {
+  unifiedBodyCopyClassName,
+  unifiedInsetPanelClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 
 export default function HowItWorks() {
@@ -13,44 +20,37 @@ export default function HowItWorks() {
   }))
 
   return (
-    <section
-      id="how-it-works"
-      className="relative overflow-hidden bg-muted/30 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8"
-    >
-      {/* Atmospheric glow orb */}
-      <div className="pointer-events-none absolute -left-48 bottom-0 h-[440px] w-[440px] rounded-full bg-accent/[0.04] blur-[120px]" />
+    <section id="how-it-works" className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-8">
         <motion.div
-          className="rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] lg:sticky lg:top-28"
+          className={cn(unifiedSectionPanelClassName, 'p-6 lg:sticky lg:top-28 lg:h-fit')}
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            {t('landing.home.workflow.eyebrow')}
-          </p>
-          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+          <p className={unifiedSectionEyebrowClassName}>{t('landing.home.workflow.eyebrow')}</p>
+          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.6vw,4rem)] font-medium leading-[0.97] tracking-[-0.05em] text-foreground">
             {t('landing.home.workflow.title')}
           </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+          <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl')}>
             {t('landing.home.workflow.description')}
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.workflow.signalTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.workflow.signalDescription')}
               </p>
             </div>
-            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.workflow.cadenceTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.workflow.cadenceDescription')}
               </p>
             </div>
@@ -61,7 +61,7 @@ export default function HowItWorks() {
           {steps.map((step, index) => (
             <InteractiveWrapper key={String(step.name)} hover="scale">
               <motion.article
-                className="flex h-full flex-col rounded-lg border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]"
+                className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col p-5')}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -72,15 +72,17 @@ export default function HowItWorks() {
                 }}
               >
                 <div className="mb-6 flex items-center justify-between gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-sm font-semibold text-primary">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-sm font-semibold text-primary">
                     0{index + 1}
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                     {t('landing.home.workflow.stage')} {index + 1}
                   </span>
                 </div>
-                <h3 className="type-label text-foreground/90">{step.name}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <h3 className="text-[1rem] font-semibold tracking-[-0.02em] text-foreground">
+                  {step.name}
+                </h3>
+                <p className="mt-3 text-sm leading-[1.65] text-muted-foreground">
                   {step.description}
                 </p>
               </motion.article>

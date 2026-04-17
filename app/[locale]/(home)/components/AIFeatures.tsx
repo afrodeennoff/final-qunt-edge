@@ -1,12 +1,19 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Brain, Radar, ShieldAlert, Sparkles, ArrowRight } from 'lucide-react'
+import { ArrowRight, Brain, Radar, ShieldAlert, Sparkles } from 'lucide-react'
 import {
   MotionSection,
   MotionStagger,
   MotionStaggerItem,
 } from '@/components/animation/enhanced-motion'
+import {
+  unifiedBodyCopyClassName,
+  unifiedChipClassName,
+  unifiedInsetPanelClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 
 const icons = [Brain, Radar, ShieldAlert, Sparkles]
@@ -22,52 +29,43 @@ export default function AIFeatures() {
   }))
 
   return (
-    <MotionSection className="relative overflow-hidden bg-muted/20 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
-      {/* Atmospheric glow orbs */}
-      <div className="pointer-events-none absolute -left-32 top-1/4 h-[420px] w-[420px] rounded-full bg-accent/[0.04] blur-[120px]" />
-      <div className="pointer-events-none absolute right-0 bottom-1/4 h-[380px] w-[380px] rounded-full bg-primary/[0.03] blur-[120px]" />
+    <MotionSection className="relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <div className="mx-auto grid max-w-[1360px] gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8">
-        <motion.div
-          className="rounded-lg border-white/[0.06] bg-card/80 p-6 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] md:p-8"
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            {t('landing.home.ai.eyebrow')}
-          </p>
-          <h2 className="type-h2 mt-4 text-balance text-foreground lg:text-h1">
+        <div className={cn(unifiedSectionPanelClassName, 'p-6 md:p-8')}>
+          <p className={unifiedSectionEyebrowClassName}>{t('landing.home.ai.eyebrow')}</p>
+          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-medium leading-[0.97] tracking-[-0.05em] text-foreground">
             {t('landing.home.ai.title')}
           </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
+          <p className={cn(unifiedBodyCopyClassName, 'mt-5 max-w-xl')}>
             {t('landing.home.ai.description')}
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.reasonTrailTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.ai.reasonTrailDescription')}
               </p>
             </div>
-            <div className="rounded-md border-white/[0.06] bg-background/60 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            <div className={cn(unifiedInsetPanelClassName, 'space-y-2 p-4')}>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.liveContextTitle')}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground/90">
                 {t('landing.home.ai.liveContextDescription')}
               </p>
             </div>
           </div>
 
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/40 hover:brightness-110">
-            <Sparkles className="h-3.5 w-3.5" />
-            {t('landing.home.ai.badge')}
+          <div className="mt-8">
+            <span className={cn(unifiedChipClassName, 'px-4 py-2')}>
+              <Sparkles className="h-3.5 w-3.5" />
+              {t('landing.home.ai.badge')}
+            </span>
           </div>
-        </motion.div>
+        </div>
 
         <div className="space-y-4">
           <MotionStagger className="grid grid-cols-1 gap-4 md:grid-cols-3" delay={0.08}>
@@ -75,18 +73,20 @@ export default function AIFeatures() {
               const Icon = feature.icon
               return (
                 <MotionStaggerItem key={String(feature.title)} className={feature.colSpan}>
-                  <article className="flex h-full flex-col rounded-lg border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)] transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-white/[0.12] hover:shadow-[0_2px_4px_rgba(0,0,0,0.10),0_8px_20px_rgba(0,0,0,0.32),0_32px_64px_-12px_rgba(0,0,0,0.90)]">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+                  <article className={cn(unifiedInsetPanelClassName, 'flex h-full flex-col gap-4 p-5')}>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="mt-4 inline-flex w-fit items-center rounded-full border-white/[0.06] bg-background/60 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                    <span className="inline-flex w-fit items-center rounded-full border border-border/35 bg-background/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                       {t('landing.home.ai.capabilityLabel')}
                     </span>
-                    <h3 className="type-h4 mt-4 text-foreground">{feature.title}</h3>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    <h3 className="text-[1.06rem] font-semibold tracking-[-0.02em] text-foreground">
+                      {feature.title}
+                    </h3>
+                    <p className="flex-1 text-sm leading-[1.65] text-muted-foreground">
                       {feature.description}
                     </p>
-                    <div className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-primary transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-primary/80">
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
                       <ArrowRight className="h-3.5 w-3.5" />
                       {t('landing.home.ai.inspectSignal')}
                     </div>
@@ -96,22 +96,16 @@ export default function AIFeatures() {
             })}
           </MotionStagger>
 
-          <motion.div
-            className="rounded-lg border-white/[0.06] bg-card/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div className={cn(unifiedInsetPanelClassName, 'p-5')}>
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {t('landing.home.ai.footerDescription')}
               </p>
-              <span className="inline-flex w-fit shrink-0 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary transition-[background-color,border-color,box-shadow,filter,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/40 hover:brightness-110">
+              <span className={cn(unifiedChipClassName, 'w-fit shrink-0 px-3 py-1.5')}>
                 {t('landing.home.ai.footerBadge')}
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </MotionSection>

@@ -4,7 +4,14 @@ import type { ComponentType } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Github, MessageCircle, Youtube } from 'lucide-react'
+import {
+  unifiedGhostActionClassName,
+  unifiedInsetPanelClassName,
+  unifiedPrimaryActionClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
 import { Logo } from '@/components/logo'
+import { cn } from '@/lib/utils'
 import { useCurrentLocale, useI18n } from '@/locales/client'
 
 type FooterLink = { name: string; href: string }
@@ -49,7 +56,7 @@ export default function Footer() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-border/50 bg-black py-12 sm:py-16 sm:py-12 sm:py-16"
+      className="border-t border-border/35 bg-black py-12 sm:py-16"
     >
       <h2 id="footer-heading" className="sr-only">
         {t('footer.heading')}
@@ -62,10 +69,15 @@ export default function Footer() {
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-8"
       >
-        <div className="grid gap-8 rounded-lg border border-border/50 bg-card/80 p-6 shadow-sm lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10">
+        <div
+          className={cn(
+            unifiedSectionPanelClassName,
+            'grid gap-8 p-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)] lg:p-10',
+          )}
+        >
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/10 text-primary">
                 <Logo className="h-5 w-5 fill-current" />
               </div>
               <div className="leading-none">
@@ -86,20 +98,20 @@ export default function Footer() {
               <Link
                 href={`/${locale}/support`}
                 prefetch={false}
-                className="rounded-full border border-border/60 px-4 py-2 text-xs font-medium text-foreground transition-colors hover:bg-background/60"
+                className={cn(unifiedGhostActionClassName, 'px-4 py-2 text-xs')}
               >
                 {t('landing.footerNew.contactSupport')}
               </Link>
               <Link
                 href={`/${locale}/authentication?next=dashboard`}
                 prefetch={false}
-                className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                className={cn(unifiedPrimaryActionClassName, 'px-4 py-2 text-xs')}
               >
                 {t('landing.footerNew.startAudit')}
               </Link>
             </div>
 
-            <div className="h-px w-full max-w-md bg-border/50" />
+            <div className="h-px w-full max-w-md bg-border/35" />
 
             <div className="flex items-center gap-2">
               {socialLinks.map((item, index) => (
@@ -113,7 +125,10 @@ export default function Footer() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.08 + index * 0.05, duration: 0.35 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors hover:bg-background/60 hover:text-primary"
+                  className={cn(
+                    unifiedInsetPanelClassName,
+                    'flex h-9 w-9 items-center justify-center rounded-full p-0 text-muted-foreground hover:text-primary',
+                  )}
                 >
                   <item.icon className="size-5" />
                 </motion.a>
@@ -128,7 +143,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/50 pt-5 text-muted-foreground/90">
+        <div className="mt-8 border-t border-border/35 pt-5 text-muted-foreground/90">
           <p className="text-xs tracking-[-0.005em] text-foreground/30">
             {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>

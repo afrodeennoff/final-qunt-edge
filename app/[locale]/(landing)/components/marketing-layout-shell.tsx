@@ -3,7 +3,6 @@ import Footer from './footer'
 import { cn } from '@/lib/utils'
 import { Suspense } from 'react'
 import RollingAdBanner from '../../(home)/components/RollingAdBanner'
-import { BackgroundGlow } from '@/components/ui/background-glow'
 
 type MarketingLayoutShellProps = Readonly<{
   children: React.ReactNode
@@ -31,25 +30,17 @@ export default function MarketingLayoutShell({
   return (
     <div
       className={cn(
-        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden',
+        'marketing-shell qe-v2-app-shell min-h-screen w-full overflow-x-hidden bg-black',
         className,
       )}
-      style={
-        shellVariant === 'black'
-          ? { background: 'linear-gradient(180deg, oklch(0 0 0) 0%, oklch(0.01 0 0) 100%)' }
-          : undefined
-      }
     >
-      {shellVariant === 'accent' ? <BackgroundGlow variant="accent" /> : null}
       <div
         className={cn(
           'pointer-events-none fixed inset-0 hidden qe-v2-grid sm:block',
-          shellVariant === 'black' ? 'opacity-[0.08]' : 'opacity-[0.14]',
+          shellVariant === 'black' ? 'opacity-[0.05]' : 'opacity-[0.08]',
         )}
       />
-      {shellVariant === 'accent' ? (
-        <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,oklch(0.80_0.12_82/0.14),transparent_36%),radial-gradient(circle_at_bottom_right,oklch(0.54_0.08_20/0.10),transparent_34%)]" />
-      ) : null}
+      <div className="pointer-events-none fixed inset-x-8 top-0 z-0 h-40 rounded-b-[2rem] border border-primary/10 bg-primary/[0.03]" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}
         <div className="flex-1 min-h-0 min-w-0 bg-transparent">
@@ -62,7 +53,7 @@ export default function MarketingLayoutShell({
                 <RollingAdBanner />
               </Suspense>
             ) : null}
-            <div className={cn('min-w-0', contentSpacingClassName, contentClassName)}>
+            <div className={cn('min-w-0 px-1', contentSpacingClassName, contentClassName)}>
               {children}
             </div>
           </div>

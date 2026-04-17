@@ -11,30 +11,33 @@ const buttonVariants = cva(
     variants: {
       variant: {
         solid:
-          'rounded-md bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90 active:scale-[0.98]',
+          'rounded-md border-primary/20 bg-primary text-primary-foreground shadow-[0_14px_28px_-18px_hsl(var(--primary)/0.78)] hover:bg-primary/92 hover:shadow-[0_18px_36px_-20px_hsl(var(--primary)/0.82)] active:scale-[0.98]',
         outline:
-          'rounded-md border-border bg-background/70 text-foreground shadow-sm hover:bg-muted/70 hover:shadow-md active:scale-[0.98]',
-        ghost: 'rounded-md text-muted-foreground hover:bg-muted/70 hover:text-foreground',
+          'rounded-md border-border/50 bg-background/70 text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-primary/20 hover:bg-primary/8 hover:shadow-md active:scale-[0.98]',
+        ghost:
+          'rounded-md text-muted-foreground hover:bg-primary/8 hover:text-foreground active:scale-[0.98]',
         error:
-          'rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-destructive/25 bg-destructive text-destructive-foreground shadow-[0_14px_28px_-18px_hsl(var(--destructive)/0.72)] hover:bg-destructive/92 hover:shadow-md active:scale-[0.98]',
         destructive:
-          'rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-destructive/25 bg-destructive text-destructive-foreground shadow-[0_14px_28px_-18px_hsl(var(--destructive)/0.72)] hover:bg-destructive/92 hover:shadow-md active:scale-[0.98]',
         link: 'rounded-md text-primary underline-offset-4 hover:underline',
         'gradient-primary':
-          'rounded-md bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-primary/20 bg-primary text-primary-foreground shadow-[0_14px_28px_-18px_hsl(var(--primary)/0.78)] hover:bg-primary/92 hover:shadow-md active:scale-[0.98]',
         'gradient-secondary':
-          'rounded-md border-border bg-gradient-to-r from-background to-muted/60 text-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-border/50 bg-background/72 text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-primary/18 hover:bg-primary/8 hover:shadow-md active:scale-[0.98]',
         shimmer:
-          'rounded-md bg-primary text-primary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-primary/20 bg-primary text-primary-foreground shadow-[0_14px_28px_-18px_hsl(var(--primary)/0.78)] hover:bg-primary/92 hover:shadow-md active:scale-[0.98]',
         default:
-          'rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98]',
+          'rounded-md border-primary/20 bg-primary text-primary-foreground shadow-[0_14px_28px_-18px_hsl(var(--primary)/0.78)] hover:bg-primary/92 hover:shadow-md active:scale-[0.98]',
         secondary:
-          'rounded-md border-border bg-secondary text-secondary-foreground shadow-sm hover:shadow-md active:scale-[0.98]',
-        mono: 'rounded-md border-border bg-background text-foreground shadow-sm hover:bg-muted/70 font-mono',
-        pill: 'rounded-full border-border bg-background/70 text-foreground shadow-sm hover:bg-muted/70 active:scale-[0.98]',
+          'rounded-md border-border/50 bg-secondary/88 text-secondary-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-primary/16 hover:bg-secondary active:scale-[0.98]',
+        mono:
+          'rounded-md border-border/50 bg-background text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:bg-muted/70 font-mono',
+        pill: 'rounded-full border-border/50 bg-background/72 text-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)] hover:border-primary/18 hover:bg-primary/8 active:scale-[0.98]',
         'pill-solid':
-          'rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98]',
-        'pill-ghost': 'rounded-full text-muted-foreground hover:bg-muted/70 hover:text-foreground',
+          'rounded-full border-primary/20 bg-primary text-primary-foreground shadow-[0_14px_28px_-18px_hsl(var(--primary)/0.78)] hover:bg-primary/92 hover:shadow-md active:scale-[0.98]',
+        'pill-ghost':
+          'rounded-full text-muted-foreground hover:bg-primary/8 hover:text-foreground active:scale-[0.98]',
       },
       size: {
         sm: 'h-8 min-h-[32px] min-w-[32px] px-3 rounded-md',

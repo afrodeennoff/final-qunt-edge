@@ -4,7 +4,16 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import {
+  unifiedBodyCopyClassName,
+  unifiedChipClassName,
+  unifiedGhostActionClassName,
+  unifiedInsetPanelClassName,
+  unifiedPrimaryActionClassName,
+  unifiedSectionEyebrowClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { useTypedI18n } from '@/locales/client'
 
 type BillingCycle = 'monthly' | 'annual'
@@ -60,34 +69,34 @@ export default function PricingSection({ locale }: { locale: string }) {
   ]
 
   return (
-    <section id="pricing" className="bg-muted/30 px-4 py-16 sm:py-20 lg:py-24 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1360px]">
+    <section id="pricing" className="px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-[1360px] space-y-6">
         <motion.div
-          className="mb-10 text-center md:mb-14"
+          className={cn(unifiedSectionPanelClassName, 'p-6 text-center md:p-8')}
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h2 className="type-h2 text-balance text-foreground lg:text-h1">
+          <p className={unifiedSectionEyebrowClassName}>Pricing</p>
+          <h2 className="mt-4 text-balance text-[clamp(2.2rem,4.8vw,4.2rem)] font-medium leading-[0.96] tracking-[-0.05em] text-foreground">
             {t('landing.pricingNew.headline', {
               highlight: t('landing.pricingNew.highlight'),
             })}
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          <p className={cn(unifiedBodyCopyClassName, 'mx-auto mt-4 max-w-3xl')}>
             {t('landing.pricingNew.subheadline')}
           </p>
 
-          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-white/[0.06] bg-card/70 p-1 shadow-sm">
+          <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border/35 bg-background/70 p-1">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
               aria-pressed={!isAnnual}
-              className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                !isAnnual
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
+              className={cn(
+                'rounded-full px-5 py-2 text-sm font-medium transition-colors',
+                !isAnnual ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
+              )}
             >
               {t('landing.pricingNew.monthly')}
             </button>
@@ -95,16 +104,13 @@ export default function PricingSection({ locale }: { locale: string }) {
               type="button"
               onClick={() => setIsAnnual(true)}
               aria-pressed={isAnnual}
-              className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                isAnnual
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
+              className={cn(
+                'rounded-full px-5 py-2 text-sm font-medium transition-colors',
+                isAnnual ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
+              )}
             >
               {t('landing.pricingNew.annual')}{' '}
-              <span className="text-xs font-semibold">
-                {t('landing.pricingNew.annualDiscount')}
-              </span>
+              <span className="text-xs font-semibold">{t('landing.pricingNew.annualDiscount')}</span>
             </button>
           </div>
         </motion.div>
@@ -121,35 +127,35 @@ export default function PricingSection({ locale }: { locale: string }) {
                 delay: index * 0.08,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`relative flex h-full flex-col rounded-lg border p-6 ${
-                plan.featured
-                  ? 'border-primary/30 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]'
-                  : 'border-white/[0.06] bg-card/70 shadow-[0_1px_2px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.28),0_20px_48px_-8px_rgba(0,0,0,0.85)]'
-              }`}
+              className={cn(
+                plan.featured ? unifiedSectionPanelClassName : unifiedInsetPanelClassName,
+                'relative flex h-full flex-col p-6',
+                plan.featured && 'border-primary/18',
+              )}
             >
               {plan.badge ? (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="rounded-full bg-primary px-4 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground">
-                    {plan.badge}
-                  </span>
+                <div className="absolute -top-3 left-6">
+                  <span className={cn(unifiedChipClassName, 'px-4 py-1.5')}>{plan.badge}</span>
                 </div>
               ) : null}
 
-              <h3 className="type-h4 text-foreground">{plan.name}</h3>
+              <h3 className="text-[1.14rem] font-semibold tracking-[-0.02em] text-foreground">
+                {plan.name}
+              </h3>
 
               <div className="mt-4">
-                <span className="tabular-nums text-5xl font-bold tracking-tight text-foreground">
+                <span className="tabular-nums text-5xl font-semibold tracking-[-0.06em] text-foreground">
                   {plan.price}
                 </span>
                 <span className="ml-2 text-sm text-muted-foreground">{plan.period}</span>
                 {plan.featured && billingCycle === 'annual' ? (
-                  <span className="ml-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                  <span className="ml-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
                     {t('landing.pricingNew.annualNote')}
                   </span>
                 ) : null}
               </div>
 
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{plan.description}</p>
+              <p className="mt-4 text-sm leading-[1.65] text-muted-foreground">{plan.description}</p>
 
               <ul className="mt-6 grid flex-1 gap-3">
                 {plan.features.map((feature) => (
@@ -162,19 +168,15 @@ export default function PricingSection({ locale }: { locale: string }) {
                 ))}
               </ul>
 
-              {plan.featured ? (
-                <Button asChild className="mt-6 h-11 w-full rounded-full text-sm font-semibold">
-                  <Link href={plan.href}>{plan.cta}</Link>
-                </Button>
-              ) : (
-                <Button
-                  asChild
-                  variant="outline"
-                  className="mt-6 h-11 w-full rounded-full border-white/[0.06] bg-background/70 text-sm font-medium text-foreground hover:bg-background"
-                >
-                  <Link href={plan.href}>{plan.cta}</Link>
-                </Button>
-              )}
+              <Link
+                href={plan.href}
+                className={cn(
+                  plan.featured ? unifiedPrimaryActionClassName : unifiedGhostActionClassName,
+                  'mt-6 w-full',
+                )}
+              >
+                {plan.cta}
+              </Link>
             </motion.article>
           ))}
         </div>

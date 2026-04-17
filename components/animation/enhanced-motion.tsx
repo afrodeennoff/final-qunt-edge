@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils"
 
 export const SPRING_GENTLE = { type:"spring" as const, stiffness: 300, damping: 20 }
 export const SPRING_BOUNCY = { type:"spring" as const, stiffness: 400, damping: 15 }
-const ENTRANCE_EASE = [0.22, 1, 0.36, 1] as const
 
 // ============================================================================
 // StyleSeed motion tokens
@@ -24,6 +23,17 @@ export const MOTION_EASE = {
  entrance: [0.16, 1, 0.3, 1] as const,
  bounce: [0.68, -0.55, 0.265, 1.55] as const,
 } as const
+
+export const STAGED_REVEAL_CLASS_NAMES = [
+  'animate-fade-up-smooth-d1',
+  'animate-fade-up-smooth-d2',
+  'animate-fade-up-smooth-d3',
+  'animate-fade-up-smooth-d4',
+] as const
+
+export function getStagedRevealClassName(stage = 0) {
+  return STAGED_REVEAL_CLASS_NAMES[Math.max(0, Math.min(stage, STAGED_REVEAL_CLASS_NAMES.length - 1))]
+}
 
 // ============================================================================
 // BLUR_ENTRANCE variant
@@ -207,14 +217,12 @@ export function MotionStaggerItem({ children, className, blur = false }: MotionS
 interface MotionOrchestratedProps {
  children: React.ReactNode
  className?: string
- stages?: number
  staggerDelay?: number
 }
 
 export function MotionOrchestrated({
  children,
  className,
- stages = 4,
  staggerDelay = 0.08,
 }: MotionOrchestratedProps) {
  const prefersReducedMotion = useReducedMotion()
@@ -369,43 +377,15 @@ const DEFAULT_ORBS: OrbConfig[] = [
 interface FloatingOrbsProps {
  className?: string
  orbs?: OrbConfig[]
- enableParallax?: boolean
  blobCount?: number
 }
 
 export function FloatingOrbs({
  className,
  orbs = DEFAULT_ORBS,
- enableParallax = true,
 }: FloatingOrbsProps) {
  const prefersReducedMotion = useReducedMotion()
  const containerRef = useRef<HTMLDivElement>(null)
- const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-
- useEffect(() => {
- if (!enableParallax || prefersReducedMotion) return
-
- const handleMouseMove = (e: MouseEvent) => {
- if (!containerRef.current) return
-
- const rect = containerRef.current.getBoundingClientRect()
- const x = (e.clientX - rect.left) / rect.width - 0.5
- const y = (e.clientY - rect.top) / rect.height - 0.5
-
- setMousePosition({ x, y })
- }
-
- const container = containerRef.current
- if (container) {
- container.addEventListener("mousemove", handleMouseMove)
- }
-
- return () => {
- if (container) {
- container.removeEventListener("mousemove", handleMouseMove)
- }
- }
- }, [enableParallax, prefersReducedMotion])
 
  if (prefersReducedMotion) {
  return null
@@ -414,9 +394,6 @@ export function FloatingOrbs({
  return (
  <div ref={containerRef} className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
  {orbs.map((orb, index) => {
- const parallaxX = enableParallax ? mousePosition.x * 20 * (index + 1) : 0
- const parallaxY = enableParallax ? mousePosition.y * 20 * (index + 1) : 0
-
  return (
  <motion.div
  key={index}
