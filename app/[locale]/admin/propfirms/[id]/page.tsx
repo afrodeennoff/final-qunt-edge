@@ -111,12 +111,20 @@ async function handleAction(formData: FormData) {
   }
 
   if (isUpdating) {
-    await updatePropFirm(firmId!, data)
+    try {
+      await updatePropFirm(firmId!, data)
+    } catch (error) {
+      redirect(`/${locale}/admin/propfirms/${firmId}?firmStatus=error&firmMessage=Failed+to+save+firm`)
+    }
   } else {
-    await createPropFirm(data)
+    try {
+      await createPropFirm(data)
+    } catch (error) {
+      redirect(`/${locale}/admin/propfirms/new?firmStatus=error&firmMessage=Failed+to+create+firm`)
+    }
   }
 
-  redirect(`/${locale}/admin/propfirms`)
+  redirect(`/${locale}/admin/propfirms?firmStatus=saved`)
 }
 
 async function handleCreateReview(formData: FormData) {

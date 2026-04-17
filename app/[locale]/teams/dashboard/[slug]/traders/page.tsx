@@ -4,6 +4,8 @@ import { Suspense } from "react"
 import { useParams } from "next/navigation"
 import { Zap } from "lucide-react"
 import { TeamEquityGridClient } from "../../../components/user-equity/team-equity-grid-client"
+import { unifiedSectionPanelClassName } from "@/components/layout/unified-page-recipes"
+import { cn } from "@/lib/utils"
 
 export default function TeamTradersPage() {
   const params = useParams<{ slug: string }>()
@@ -11,7 +13,7 @@ export default function TeamTradersPage() {
 
   return (
     <section className="space-y-6">
-      <header className="rounded-xl border border-white/[0.8] bg-white/[0.070] p-5 sm:p-6">
+      <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Zap className="h-4 w-4 text-primary" />
           <p className="text-[10px] font-black uppercase tracking-[0.2em]">Execution Layer</p>
@@ -22,7 +24,7 @@ export default function TeamTradersPage() {
         </p>
       </header>
 
-      <Suspense fallback={<div className="rounded-xl border border-white/[0.8] bg-white/[0.060] p-5 text-sm text-muted-foreground">Loading trader metrics…</div>}>
+      <Suspense fallback={<div className={cn(unifiedSectionPanelClassName, 'p-5 text-sm text-muted-foreground')}>Loading trader metrics…</div>}>
         <TeamEquityGridClient teamId={slug} />
       </Suspense>
     </section>

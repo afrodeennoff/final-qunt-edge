@@ -3,6 +3,10 @@
 import React from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
+import {
+  unifiedInsetPanelClassName,
+  unifiedPrimaryActionClassName,
+} from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -100,20 +104,19 @@ export function DashboardHeader() {
       data-dashboard-header="true"
     >
       <div className="relative mx-auto max-w-[1800px]">
-        <div className="pointer-events-none absolute inset-0 rounded-[calc(var(--radius)+0.9rem)] bg-gradient-to-r from-primary/8 via-transparent to-primary/4 opacity-90" />
-        <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-2xl border border-border/45 bg-background/80 px-3 py-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
+        <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-[1.8rem] border border-primary/10 bg-primary/[0.03]" />
+        <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-border/45 bg-background/78 px-3 py-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
           <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/45 bg-primary/6 text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
+            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/40 bg-background/72 text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
             <div className="flex min-w-0 items-center gap-3">
-              <div className="hidden h-8 w-px bg-gradient-to-b from-transparent via-border/60 to-transparent sm:block" />
+              <div className="hidden h-8 w-px bg-border/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
                 <div className="flex items-center gap-2.5">
                   {showSectionLabel && (
                     <span
                       className={cn(
                         'hidden sm:inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em]',
-                        'border-primary/18 bg-primary/8 text-foreground/45',
-                        '',
+                        'border-primary/18 bg-primary/10 text-primary/90',
                       )}
                     >
                       {sectionLabel}
@@ -154,10 +157,8 @@ export function DashboardHeader() {
                   <Link href={billingHref}>
                     <button
                       className={cn(
-                        'group flex h-10 items-center gap-2 rounded-full border border-primary/18 bg-primary/8 px-4',
-                        'text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/95 shadow-[0_20px_40px_-32px_rgba(0,0,0,0.84)] transition-[opacity,background-color,border-color] duration-200',
-                        'hover:-translate-y-0.5 hover:border-primary/26 hover:bg-primary/12 hover:shadow-[0_24px_42px_-30px_rgba(0,0,0,0.9)]',
-                        'active:translate-y-0 active:scale-[0.98]',
+                        unifiedPrimaryActionClassName,
+                        'group h-10 px-4 text-[10px] uppercase tracking-[0.22em]',
                       )}
                     >
                       <Sparkles className="h-3.5 w-3.5 text-v2-accent" />
@@ -177,7 +178,7 @@ export function DashboardHeader() {
 
       {isMobile && isDashboardRoot && isWidgetsTab ? (
         <div className="relative mx-auto max-w-[1800px] pt-2">
-          <div className="rounded-[1.75rem] border border-border/45 bg-background/72 px-2 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)] sm:px-3">
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-2 py-2 sm:px-3')}>
             <DashboardHeaderWidgetControls isMobile={isMobile} />
           </div>
         </div>
@@ -185,7 +186,7 @@ export function DashboardHeader() {
 
       {hasActiveFilters ? (
         <div className={cn('relative mx-auto max-w-[1800px] pt-2')}>
-          <div className="rounded-[1.75rem] border border-border/45 bg-background/72 px-3 py-2 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.88)]">
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-3 py-2')}>
             <ActiveFilterTags showAccountNumbers={true} />
           </div>
         </div>

@@ -1,6 +1,6 @@
 # Lessons Learned
 
-**Updated:** 2026-04-17
+**Updated:** 2026-04-18
 
 ## Lesson 42: Prisma $extends breaks type inference for serverless PrismaClient
 - **M:** Tried to add query timing via `prisma.$extends({ query: { ... } })` — it changes the return type to a complex dynamic extension type that's incompatible with `PrismaClient` typed variables
@@ -119,3 +119,27 @@
 - **RC:** Public, dashboard, teams, and admin routes already inherit a mix of shared shells, page recipes, and core primitives. If those foundations stay old, route-level redesigns drift immediately and duplicate effort.
 - **R:** For visual-only redesign waves, update shared shell recipes, public chrome, and the flagship home hero/media system first. Then let route groups inherit that baseline before doing smaller route-specific polish passes.
 - **E:** Adding `unified-hero-media.tsx`, flattening `UnifiedPageShell`/`UnifiedSurface`, and rebuilding the home hero around product UI + restrained SVG made the rest of the app more cohesive without touching behavior.
+
+## Lesson 59: Mounted internal shells often live in route layouts, not the page files you first inspect
+- **M:** Teams and admin still looked visually older even after several page-level refreshes.
+- **RC:** Their strongest chrome was coming from mounted layout wrappers (`teams/dashboard/layout.tsx`, `admin/admin-client-layout.tsx`) rather than the leaf route pages, so updating only page content left the app feeling split.
+- **R:** For “make every page feel unified” work, trace the mounted layout and header path first. Refresh the shell/layout wrapper before polishing leaf pages, especially on dashboard, teams, and admin surfaces.
+- **E:** Updating the teams dashboard layout and admin client layout immediately aligned the whole section, and the leaf pages only needed lighter surface cleanup afterward.
+
+## Lesson 59: Coupon schedule fields must be enforced by public read queries, not just admin UI badges
+- **M:** Admin coupon screens expose `startsAt` / `expiresAt` and correctly label coupons as scheduled or live, but the public deal readers still returned active coupons whose `startsAt` is in the future.
+- **RC:** `server/deals.ts` and `server/firm-coupons.ts` filter on `isActive` and `expiresAt` only, so the public visibility contract does not match the admin scheduling contract.
+- **R:** Any public coupon/deal query must apply the full visibility window: active, `(startsAt is null or startsAt <= now)`, and `(expiresAt is null or expiresAt >= now)`.
+- **E:** If admin marks a coupon active with `startsAt` tomorrow, the deals board and firm coupon section should keep it hidden until that start time actually arrives.
+
+## Lesson 60: `datetime-local` inputs cannot be populated with raw `toISOString()` output
+- **M:** Existing coupon schedule fields drift when opened in admin because the edit form formats stored timestamps with `toISOString().slice(0, 16)`.
+- **RC:** `datetime-local` expects local wall-clock time, while `toISOString()` always emits UTC. Re-saving the unchanged field applies the timezone offset again.
+- **R:** Format `datetime-local` values in local time components, not UTC ISO strings.
+- **E:** A coupon saved for 10:00 local should render back into the input as 10:00 local, not the UTC equivalent.
+
+## Lesson 61: Read-only admin fallbacks must disable every mutation path on the page
+- **M:** `/admin/coupons` disables writes in fallback mode, but `/admin/propfirms` still renders create/edit/delete controls against fallback data.
+- **RC:** The prop-firm surfaces added warning banners without enforcing the same write lock across firm and review mutations.
+- **R:** When an admin page is running on fallback/read-only data, disable or hide all mutation forms on that page, not just one subsection.
+- **E:** A fallback prop-firm detail page should not allow saving the main firm form or review forms if coupon edits are already disabled for the same environment.

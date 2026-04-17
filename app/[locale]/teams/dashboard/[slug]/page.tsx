@@ -1,5 +1,7 @@
 import { Suspense } from "react"
 import { TeamEquityGridClient } from "../../components/user-equity/team-equity-grid-client"
+import { unifiedSectionPanelClassName } from "@/components/layout/unified-page-recipes"
+import { cn } from "@/lib/utils"
 
 interface TeamDashboardPageProps {
   params: Promise<{
@@ -12,7 +14,7 @@ export default async function TeamDashboardPage({ params }: TeamDashboardPagePro
 
   return (
     <section className="space-y-6">
-      <header className="rounded-xl border border-white/[0.8] bg-white/[0.070] p-5 sm:p-6">
+      <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Team Workspace</p>
         <h1 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Overview</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
@@ -20,7 +22,7 @@ export default async function TeamDashboardPage({ params }: TeamDashboardPagePro
         </p>
       </header>
 
-      <Suspense fallback={<div className="rounded-xl border border-white/[0.8] bg-white/[0.060] p-5 text-sm text-muted-foreground">Loading team overview…</div>}>
+      <Suspense fallback={<div className={cn(unifiedSectionPanelClassName, 'p-5 text-sm text-muted-foreground')}>Loading team overview…</div>}>
         <TeamEquityGridClient teamId={slug} />
       </Suspense>
     </section>

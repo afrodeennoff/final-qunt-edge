@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useI18n } from "@/locales/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -65,6 +65,9 @@ import {
 } from '@/app/[locale]/dashboard/settings/actions'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import {
+ unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
 
 interface Team {
  id: string
@@ -694,7 +697,7 @@ export function TeamManagement({
  return (
  <div className="mx-auto py-4">
  {/* Header */}
- <div className="mb-6 rounded-xl border border-v2-border/50 bg-v2-bg-surface/60 p-5 sm:p-6">
+ <div className={cn(unifiedSectionPanelClassName, 'mb-6 p-5 sm:p-6')}>
  <h1 className="text-2xl font-bold tracking-tight text-v2-text-primary">{t('teams.management.component.title')}</h1>
  <p className="text-v2-text-secondary mt-2 text-sm">{t('teams.management.component.description')}</p>
  </div>
@@ -710,9 +713,9 @@ export function TeamManagement({
  const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
  return (
- <Card key={team.id} className={cn("cursor-pointer transition-all duration-200 border-v2-border/50 bg-v2-bg-surface/60 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-v2-accent/30",
+ <Card key={team.id} className={cn("cursor-pointer transition-all duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
  isActive 
- ?"border-v2-accent ring-2 ring-v2-accent/20" 
+ ?"border-primary ring-2 ring-primary/20" 
  :""
  )}>
  <CardHeader className="pb-3">

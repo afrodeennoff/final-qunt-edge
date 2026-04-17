@@ -5,6 +5,12 @@ import { Card } from '@/components/ui/card'
 import { useEffect, useState } from 'react'
 import { getNewsletterStats, getUserStats } from '../../actions/stats'
 import { Badge } from '@/components/ui/badge'
+import {
+ unifiedChipClassName,
+ unifiedInsetPanelClassName,
+ unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import { UserGrowthChart } from './user-growth-chart'
 import { FreeUsersTable } from './free-users-table'
 import {
@@ -138,7 +144,7 @@ export function AdminDashboard() {
 
  return (
  <div className="space-y-6 p-4 sm:p-6">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-6 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className={cn(unifiedSectionPanelClassName, 'p-6')}>
  <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
  <div className="space-y-1">
  <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">Admin Tools</p>
@@ -147,7 +153,7 @@ export function AdminDashboard() {
  Fast access to the same internal admin workflows used for newsletters, recap emails, and platform management.
  </p>
  </div>
- <Badge variant="secondary" className="w-fit">
+ <Badge variant="secondary" className={cn(unifiedChipClassName, 'w-fit')}>
  <Sparkles className="mr-2 h-3.5 w-3.5" />
  Internal only
  </Badge>
@@ -198,10 +204,10 @@ export function AdminDashboard() {
  <Link
  key={item.label}
  href={item.href}
- className="group rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/60 p-4 transition-[opacity,background-color,border-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-border/30 hover:bg-background hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]"
+ className={cn(unifiedInsetPanelClassName, 'group p-4 transition-[opacity,background-color,border-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-primary/18 hover:bg-background/78 hover:shadow-[0_18px_30px_-24px_hsl(var(--foreground)/0.45)]')}
  >
  <div className="flex items-start gap-3">
- <div className="rounded-lg border border-[oklch(0.65_0.22_260/0.08)] bg-muted/60 p-2 text-foreground/95 transition-colors group-hover:bg-foreground group-hover:text-background">
+ <div className="rounded-lg border border-border/35 bg-background/70 p-2 text-foreground/95 transition-colors group-hover:bg-foreground group-hover:text-background">
  <Icon className="h-4 w-4" />
  </div>
  <div className="space-y-1">
@@ -216,7 +222,7 @@ export function AdminDashboard() {
  </Card>
 
  <div className="grid gap-4 md:grid-cols-3">
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className={cn(unifiedInsetPanelClassName, 'p-5')}>
  <p className="text-sm text-muted-foreground">Active subscribers</p>
  <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.activeSubscribers)}</div>
  <p className="mt-1 text-sm text-muted-foreground">
@@ -224,7 +230,7 @@ export function AdminDashboard() {
  </p>
  </Card>
 
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className={cn(unifiedInsetPanelClassName, 'p-5')}>
  <p className="text-sm text-muted-foreground">Paused subscribers</p>
  <div className="mt-2 text-3xl font-semibold">{valueFormatter(newsletterStats.inactiveSubscribers)}</div>
  <p className="mt-1 text-sm text-muted-foreground">
@@ -232,7 +238,7 @@ export function AdminDashboard() {
  </p>
  </Card>
 
- <Card className="border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.06)] p-5 shadow-[0_20px_36px_-30px_hsl(var(--foreground)/0.45)]">
+ <Card className={cn(unifiedInsetPanelClassName, 'p-5')}>
  <p className="text-sm text-muted-foreground">Newsletter coverage</p>
  <div className="mt-2 text-3xl font-semibold">
  {userStats.totalUsers > 0
@@ -246,7 +252,7 @@ export function AdminDashboard() {
  </div>
 
  <Tabs defaultValue="overview" className="w-full">
- <TabsList className="border border-[oklch(0.65_0.22_260/0.08)] bg-[oklch(0.65_0.22_260/0.05)] p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <TabsList className="border border-border/35 bg-background/70 p-1 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <TabsTrigger value="overview">Overview</TabsTrigger>
  <TabsTrigger value="users">Users</TabsTrigger>
  <TabsTrigger value="payments">Payments</TabsTrigger>

@@ -91,6 +91,8 @@
 - For full-site visual refreshes, start with shared chrome first: `components/layout/unified-page-shell.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/footer/shell wrappers, and core CTA/surface primitives. Route-by-route passes should inherit from that refreshed base instead of inventing local shells again.
 - Home page hero redesigns should use a dominant product-UI canvas plus restrained animated SVG overlays rather than gradient-heavy marketing treatment. Prefer one-shot stroke/node animations and flat tinted surfaces over decorative gradients or continuous glow effects.
 - If the user asks for “unified like `/deals`” with no function changes, treat it as a visual-only system pass: shared shell, shared panel recipes, shared CTA hierarchy, and route-local content reflow only. Do not change route behavior, data loading, filtering, or server contracts.
+- Teams and admin section chrome is often owned by mounted layout wrappers (`app/[locale]/teams/dashboard/layout.tsx`, `app/[locale]/admin/admin-client-layout.tsx`) rather than the leaf pages. Refresh those layout shells first before spending time on route-local panels.
+- For internal workspace headers, avoid older `bg-black/70` + white-tinted frame treatments. Prefer the same flat shared recipe language used by the refreshed public shell: subdued top tint, `border-border/35-45`, `bg-background/72-78`, and primary accent only for badges/CTAs/active states.
 
 ## Admin Panel Patterns
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.
@@ -98,6 +100,7 @@
 - Coupon forms exist in two locations: inline on `/admin/propfirms/[id]` (CouponsSection component) and standalone on `/admin/coupons` (CouponEditCard component). Both must stay in sync when fields change.
 - When a coupon has override fields (platform, payoutModel, drawdownType), the deals data mapping (`server/deals.ts`) uses coupon-level values first, falling back to firm-level values: `coupon.platform || coupon.propFirm.platform || 'Default'`.
 - Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
+- Coupon visibility on public surfaces must honor the full schedule window, not just `isActive`/`expiresAt`. If admin exposes `startsAt`, public readers (`server/deals.ts`, `server/firm-coupons.ts`, firm detail surfaces) must also require `startsAt <= now`.
 - Public deals can also fall back to spotlight/web-sourced offers when no coupon rows exist. If admin needs to manage those offers, bridge them into prefilled create flows rather than leaving admin screens blank.
 - Keep spotlight-to-coupon fallback values centralized. Public deals fallback and admin suggestion UIs should read from the same helper so discount/code/fee/claim defaults stay aligned.
 - Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.
@@ -105,6 +108,8 @@
 - Coupon admin writes should go through shared server-side validation/error translation in `server/prop-firms.ts`, not page-local ad hoc checks. Duplicate codes, invalid URLs, invalid date ranges, and unavailable DB/schema states should surface as friendly admin messages.
 - Admin coupon entry points should show mutation feedback explicitly: success/error banners after redirects and pending-submit states on create/save/delete buttons.
 - If admin coupon pages are using fallback/read-only data because the database connection is unavailable, disable the write forms and show a warning instead of leaving dead-looking controls on screen.
+- Apply that same read-only contract to `/admin/propfirms` and any sibling admin CRUD page: if the page is showing fallback data or the schema is unavailable, do not leave live create/edit/delete controls mounted for firms or reviews.
+- For admin schedule fields backed by `input[type=\"datetime-local\"]`, never use `toISOString().slice(0, 16)` for default values. Render local wall-clock components so editing and re-saving a timestamp does not shift it by timezone offset.
 
 ## API Route & Rate Limiting Patterns
 - ALL authenticated user-facing API routes should be wrapped with `withRateLimited` from `lib/api/with-api-route.ts`

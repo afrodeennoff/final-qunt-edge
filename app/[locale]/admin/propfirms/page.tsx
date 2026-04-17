@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
 import { softDeletePropFirm } from '@/server/prop-firms'
@@ -7,17 +8,57 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Trash2 } from 'lucide-react'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import { FormActionButton } from '../components/form-action-button'
 
 async function handleDelete(formData: FormData) {
   'use server'
   const id = formData.get('id')
+  const locale = formData.get('locale')
   if (!id || typeof id !== 'string') throw new Error('Missing firm ID')
-  await softDeletePropFirm(id)
+  const localeStr = typeof locale === 'string' ? locale : 'en'
+
+  try {
+    await softDeletePropFirm(id)
+  } catch {
+    redirect(`/${localeStr}/admin/propfirms?firmStatus=error&firmMessage=Failed+to+delete+firm`)
+  }
+
+  redirect(`/${localeStr}/admin/propfirms?firmStatus=deleted`)
 }
 
-export default async function PropFirmsListPage({ params }: { params: Promise<{ locale: string }> }) {
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertTriangle, CheckCircle2 } from 'lucide-react'
+import {
+  buildCouponAdminRedirectUrl,
+  type CouponAdminSearchParamValue,
+  type CouponAdminNotice,
+} from '../components/coupon-admin-utils'
+
+function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
+  const status = Array.isArray(searchParams.firmStatus) ? searchParams.firmStatus[0] : searchParams.firmStatus
+  if (!status) return null
+  const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
+
+  switch (status) {
+    case 'deleted':
+      return { variant: 'success', title: 'Firm deleted', description: message ?? 'The firm has been removed.' }
+    case 'error':
+      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The firm change did not save.' }
+    default:
+      return null
+  }
+}
+
+export default async function PropFirmsListPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<Record<string, CouponAdminSearchParamValue>>
+}) {
   await assertAdminAccess()
   const { locale } = await params
+  const notice = getFirmAdminNotice(await searchParams)
 
   const firms = hasConfiguredDatabaseConnection
     ? await prisma.propFirm.findMany({
@@ -58,6 +99,14 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
           <Link href={`/${locale}/admin/propfirms/new`}>Add Firm</Link>
         </Button>
       </div>
+
+      {notice ? (
+        <Alert variant={notice.variant}>
+          {notice.variant === 'success' ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+          <AlertTitle>{notice.title}</AlertTitle>
+          <AlertDescription>{notice.description}</AlertDescription>
+        </Alert>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <AdminStat label="Total firms" value={firms.length.toString()} />
@@ -108,9 +157,16 @@ export default async function PropFirmsListPage({ params }: { params: Promise<{ 
                           </Button>
                           <form action={handleDelete}>
                             <input type="hidden" name="id" value={f.id} />
-                            <Button  variant="ghost" size="sm" type="submit" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                            <input type="hidden" name="locale" value={locale} />
+                            <FormActionButton
+                              variant="ghost"
+                              size="sm"
+                              type="submit"
+                              pendingLabel="Deleting..."
+                              className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                            >
                               <Trash2 className="w-4 h-4" />
-                            </Button>
+                            </FormActionButton>
                           </form>
                         </div>
                       </td>

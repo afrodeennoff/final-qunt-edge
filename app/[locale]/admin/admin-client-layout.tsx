@@ -8,7 +8,11 @@ import { useCurrentLocale } from '@/locales/client'
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
 import { SidebarRootProviders } from '@/components/providers/root-providers'
 import { MobileBottomNav } from '@/components/mobile-bottom-nav'
-import { BackgroundGlow } from '@/components/ui/background-glow'
+import {
+  unifiedInsetPanelClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 import {
   HEADER_Z_INDEX,
   CONTENT_PADDING,
@@ -57,17 +61,17 @@ export function AdminClientLayout({
     >
       <SidebarNav />
       <SidebarInset className="qe-v2-app-shell relative overflow-hidden">
-        <BackgroundGlow variant="default" />
+        <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-[2rem] border border-primary/10 bg-primary/[0.03]" />
         <header
           className={`${HEADER_Z_INDEX} sticky top-0 px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
         >
           <div className="mx-auto flex w-full max-w-[1800px] items-center">
-            <div className="flex min-h-[4.5rem] w-full flex-col gap-4 rounded-[2rem] border border-white/[0.8] bg-black/70 px-3 py-3 shadow-[0_0_0_0.5px_rgba(180,210,255,0.08),0_18px_44px_-28px_rgba(0,0,0,0.88)] sm:px-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className={cn(unifiedSectionPanelClassName, 'flex min-h-[4.5rem] w-full flex-col gap-4 rounded-[2rem] px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
               <div className="flex min-w-0 items-center gap-3">
-                <SidebarTrigger className="h-10 w-10 rounded-xl border border-white/[0.8] bg-white/[0.4] text-foreground/62 shadow-none transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.8] hover:text-foreground/95 md:h-9 md:w-9" />
+                <SidebarTrigger className="h-10 w-10 rounded-xl border border-border/40 bg-background/72 text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-center gap-2.5">
-                    <span className="hidden rounded-full border border-white/[0.12] bg-white/[0.4] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/34 sm:inline-flex">
+                    <span className="hidden rounded-full border border-primary/18 bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
                       Admin
                     </span>
                     <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground/95">
@@ -81,7 +85,7 @@ export function AdminClientLayout({
               </div>
 
               <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                <div className="rounded-[1.3rem] border border-white/[0.8] bg-white/[0.4] px-3 py-2.5">
+                <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.3rem] px-3 py-2.5')}>
                   <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
                     Mode
                   </span>
@@ -89,7 +93,7 @@ export function AdminClientLayout({
                     Editorial and growth ops
                   </span>
                 </div>
-                <div className="rounded-[1.3rem] border border-white/[0.8] bg-white/[0.4] px-3 py-2.5">
+                <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.3rem] px-3 py-2.5')}>
                   <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
                     Scope
                   </span>

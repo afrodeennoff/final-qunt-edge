@@ -4,7 +4,12 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowRight, Settings, Users } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import {
+  unifiedGhostActionClassName,
+  unifiedPrimaryActionClassName,
+  unifiedSectionPanelClassName,
+} from "@/components/layout/unified-page-recipes"
+import { cn } from "@/lib/utils"
 import { TeamManagement } from "../../../components/team-management"
 
 export default function TeamMembersPage() {
@@ -16,7 +21,7 @@ export default function TeamMembersPage() {
 
   return (
     <section className="space-y-6">
-      <header className="rounded-xl border border-white/[0.8] bg-white/[0.070] p-5 sm:p-6">
+      <header className={cn(unifiedSectionPanelClassName, 'p-5 sm:p-6')}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -29,23 +34,19 @@ export default function TeamMembersPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button  asChild variant="outline" className="h-10 rounded-xl border-white/[0.8] text-[11px] font-black uppercase tracking-[0.15em]">
-              <Link href={analyticsHref}>
-                Team Analytics
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button  asChild className="h-10 rounded-xl text-[11px] font-black uppercase tracking-[0.15em]">
-              <Link href={teamManageHref}>
-                <Settings className="h-4 w-4" />
-                Manage Team
-              </Link>
-            </Button>
+            <Link href={analyticsHref} className={cn(unifiedGhostActionClassName, 'text-[11px] font-black uppercase tracking-[0.15em]')}>
+              Team Analytics
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href={teamManageHref} className={cn(unifiedPrimaryActionClassName, 'text-[11px] font-black uppercase tracking-[0.15em]')}>
+              <Settings className="h-4 w-4" />
+              Manage Team
+            </Link>
           </div>
         </div>
       </header>
 
-      <Card className="border-white/[0.8] bg-white/[0.075]">
+      <Card className="border-border/40 bg-background/72">
         <CardContent className="p-2 sm:p-3">
           <TeamManagement />
         </CardContent>

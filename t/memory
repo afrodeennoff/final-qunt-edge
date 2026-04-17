@@ -1,10 +1,20 @@
 # Project Memory
 
-**Updated:** 2026-04-17
+**Updated:** 2026-04-18
 **Branch:** codex-obsidian-v3-redesign
 **Production URL:** https://qunt-edge.vercel.app
 
 ## Current State
+
+### Admin coupons + prop-firms audit — REVIEW ONLY (2026-04-18)
+- Audited `app/[locale]/admin/coupons/page.tsx`, `app/[locale]/admin/propfirms/page.tsx`, `app/[locale]/admin/propfirms/[id]/page.tsx`, `server/prop-firms.ts`, `server/firm-coupons.ts`, `server/deals.ts`, and the shared coupon admin helpers
+- Confirmed admin access is double-gated through `app/[locale]/admin/layout.tsx` and `assertAdminAccess()` in the page/actions layer
+- Findings:
+- Public deal/coupon readers still ignore `startsAt`, so coupons marked as "Scheduled" in admin can leak onto public deals/firm pages before their intended start time
+- Admin datetime-local edit fields use UTC serialization (`toISOString().slice(0, 16)`), which shifts coupon schedule timestamps when an existing coupon is opened and saved outside UTC
+- `/admin/propfirms` fallback/read-only handling is inconsistent with `/admin/coupons`: fallback data still renders live create/edit/delete controls for prop firms and reviews, and those actions do not have coupon-style error redirects
+- No code changes were made during this audit pass
+- `/init` is not available in this shell environment, so the final sync step could not be run here
 
 ### Full-Site Unified Product-Led Redesign — FOUNDATION + HOME/PUBLIC CORE PASS COMPLETE (2026-04-18)
 - Added `components/layout/unified-hero-media.tsx` and refreshed `components/layout/unified-page-shell.tsx` / `components/layout/unified-page-recipes.ts` so shared public/dashboard/team/admin routes inherit flatter product-led surfaces, tighter CTA hierarchy, and non-gradient shell treatment
@@ -15,6 +25,15 @@
 - Refined `components/ui/button.tsx`, `card.tsx`, and `badge.tsx` so the shared primitive language better matches the new product-led system across pages that already depend on those primitives
 - Verification: targeted ESLint passed with only existing complexity warnings on `components/ui/button.tsx` and `components/ui/card.tsx`; `npx tsc --noEmit` passed
 - Rollout state: shared foundation and the main home/public shell are done; remaining long-tail route-by-route visual cleanup for dashboard/teams/admin can continue from this baseline without logic changes
+
+### Dashboard + Teams + Admin Shell Refresh — IN PROGRESS (2026-04-18)
+- Updated the mounted dashboard header in `app/[locale]/dashboard/components/dashboard-header.tsx` so the live workspace chrome now matches the flatter product-led shell instead of older gradient/white-tint treatment
+- Rebuilt the live teams workspace shell in `app/[locale]/teams/dashboard/layout.tsx` around shared section/inset recipes, then aligned the main teams workspace pages: `dashboard/[slug]/page.tsx`, `analytics/page.tsx`, `members/page.tsx`, and `traders/page.tsx`
+- Team analytics now uses the shared surface language and a solid tinted chart fill instead of the older white-panel styling and gradient chart treatment
+- Refined `app/[locale]/teams/components/team-management.tsx` top-level shell/cards so the management surface matches the refreshed teams workspace
+- Updated the live admin shell in `app/[locale]/admin/admin-client-layout.tsx` and the main `admin-dashboard.tsx` so admin now inherits the same product-led shell language instead of older black/white-framed chrome
+- Verification: targeted ESLint passed with only pre-existing complexity / unused-prop warnings in large legacy files (`dashboard-header.tsx`, `team-management.tsx`, `teams analytics page`); `npx tsc --noEmit` passed
+- Current state: shared foundation, home/public core, live dashboard header, live teams workspace shell/pages, and live admin shell/dashboard are refreshed. Remaining admin/public long-tail pages can now be normalized incrementally on top of this base.
 
 ### Global Page-Shell + Motion Unification — COMPLETE (2026-04-17)
 - Extracted shared `/deals`-style page recipes into `components/layout/unified-page-recipes.ts` so public and team landing routes can share the same hero panels, inset surfaces, and primary/secondary action hierarchy
