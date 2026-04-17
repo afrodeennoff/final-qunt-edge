@@ -3,9 +3,23 @@
 **Updated:** 2026-04-17
 **Branch:** codex-obsidian-v3-redesign
 
-## Current State: All 8 Implementation Waves COMPLETE (39/39 REQs)
+## Current State: All 8 Implementation Waves COMPLETE + Admin Fix (39/39 REQs + Admin functional)
 
-### Wave Completion Status
+### Admin Coupons + Propfirms — NOW FULLY FUNCTIONAL (2026-04-17)
+- Extracted 7 duplicated helpers to `admin/lib/admin-form-helpers.ts`
+- Extracted `getFirmAdminNotice` to shared `coupon-admin-utils.ts`
+- Added input validation to firm CRUD: slug format, name length, URL protocol, description length
+- Added review validation: rating 0-5, title 200 char max, content 5000 char max
+- Added `assertPropFirmMutationAvailable()` DB guard to `createPropFirm` / `updatePropFirm`
+- Deprecated `deletePropFirm` (hard delete) — admin only uses `softDeletePropFirm`
+- Added `connection()` dynamic rendering guard to both propfirms pages
+- Read-only warning banner + disabled submit when DB unavailable
+- Review content field changed from single-line Input to Textarea
+- ConfirmDeleteButton for firm soft-delete (client confirmation)
+- Replaced `text-amber-500` with oklch design system token
+- Admin list already shows all firms (active + inactive)
+
+### Remainder from prior session
 | Wave | Phase | REQs | Status |
 |------|-------|------|--------|
 | 5 | 01 Visual Refresh | 5/5 | ✅ Complete (prior session) |
