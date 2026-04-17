@@ -1,137 +1,45 @@
 # Project Memory
 
-**Updated:** 2026-04-18
+**Updated:** 2026-04-17
 **Branch:** codex-obsidian-v3-redesign
-**Production URL:** https://qunt-edge.vercel.app
 
-## Current State
+## Current State: All 8 Implementation Waves COMPLETE (39/39 REQs)
 
-### Project Exploration Completed (2026-04-18)
-- Completed comprehensive exploration of project structure and conventions
-- Reviewed AGENTS.md files across root, lib, server, dashboard, and other modules
-- Examined t/memory, t/lessons, and t/todo files to understand project state
-- Confirmed project is on branch "codex-obsidian-v3-redesign" with production URL https://qunt-edge.vercel.app
+### Wave Completion Status
+| Wave | Phase | REQs | Status |
+|------|-------|------|--------|
+| 5 | 01 Visual Refresh | 5/5 | ✅ Complete (prior session) |
+| 5 | 02 Server Bootstrap | 4/4 | ✅ Already wired |
+| 6 | 03 Widget Shells | 3/3 | ✅ Done — 60+ `ssr:false` removed, WidgetShellServer + WidgetSkeleton created |
+| 6 | 04 Import Polish | 3/3 | ✅ Done — layout shift fix, debounce hook |
+| 5 | 05 Dark Theme | 2/2 | ✅ Complete (prior session) |
+| 5 | 06 Navigation | 3/3 | ✅ Complete (prior session) |
+| 6 | 07 Dashboard Polish | 3/3 | ✅ Done — bg-card/bg-secondary → oklch cobalt token sweep |
+| 6 | 08 Font/Bundle | 3/3 | ✅ Already correct — only sans+mono preloaded |
+| 6 | 09 Auth | 3/3 | ✅ Verified — shared getUserId/getDatabaseUserId helpers |
+| 6 | 10 Observability | 4/4 | ✅ Built — instrumentation.ts, ready probe, cache metrics, idempotency, DegradedStateBanner |
+| 6 | 11 Security | 3/3 | ✅ Verified — 19 routes rate-limited, CSP enforced, admin auth double-gated |
+| 6 | 12 CI/Dep | 3/3 | ✅ Verified — CI pipeline complete |
 
-### Admin coupons + prop-firms audit — REVIEW ONLY (2026-04-18)
-- Audited `app/[locale]/admin/coupons/page.tsx`, `app/[locale]/admin/propfirms/page.tsx`, `app/[locale]/admin/propfirms/[id]/page.tsx`, `server/prop-firms.ts`, `server/firm-coupons.ts`, `server/deals.ts`, and the shared coupon admin helpers
-- Confirmed admin access is double-gated through `app/[locale]/admin/layout.tsx` and `assertAdminAccess()` in the page/actions layer
-- Findings:
-- Public deal/coupon readers still ignore `startsAt`, so coupons marked as "Scheduled" in admin can leak onto public deals/firm pages before their intended start time
-- Admin datetime-local edit fields use UTC serialization (`toISOString().slice(0, 16)`), which shifts coupon schedule timestamps when an existing coupon is opened and saved outside UTC
-- `/admin/propfirms` fallback/read-only handling is inconsistent with `/admin/coupons`: fallback data still renders live create/edit/delete controls for prop firms and reviews, and those actions do not have coupon-style error redirects
-- No code changes were made during this audit pass
-- `/init` is not available in this shell environment, so the final sync step could not be run here
+### Code Review Fixes Applied
+- Cleaned up sed artifacts from `ssr:false` removal (empty-line `{\n  \n  loading:` patterns)
+- Replaced `text-yellow-500` with `oklch` design system token in DegradedStateBanner
+- All 6 affected files cleaned and tested
 
-### Full-Site Unified Product-Led Redesign — FOUNDATION + HOME/PUBLIC CORE PASS COMPLETE (2026-04-18)
-- Added `components/layout/unified-hero-media.tsx` and refreshed `components/layout/unified-page-shell.tsx` / `components/layout/unified-page-recipes.ts` so shared public/dashboard/team/admin routes inherit flatter product-led surfaces, tighter CTA hierarchy, and non-gradient shell treatment
-- Updated `app/globals.css` and `components/animation/enhanced-motion.tsx` with staged reveal helpers plus one-shot SVG signal-trace animation utilities for restrained motion without blur entrances or looping effects
-- Refined shared public chrome in `app/[locale]/(landing)/components/marketing-layout-shell.tsx`, `navbar.tsx`, and `footer.tsx` so the public shell now reads like the `/deals` system instead of older mixed landing-page chrome
-- Rebuilt the home page core sections as a cohesive product-led story without changing logic: `Hero.tsx`, `DashboardPreview.tsx`, `LiveStatsStrip.tsx`, `FeaturesBento.tsx`, `AIFeatures.tsx`, `HowItWorks.tsx`, `PricingSection.tsx`, `FinalCTA.tsx`, and `HomeContent.tsx`
-- Home hero now uses real product UI plus restrained animated SVG signal overlays instead of gradient-led marketing treatment; supporting sections now use shared panel recipes instead of one-off white/gradient card stacks
-- Refined `components/ui/button.tsx`, `card.tsx`, and `badge.tsx` so the shared primitive language better matches the new product-led system across pages that already depend on those primitives
-- Verification: targeted ESLint passed with only existing complexity warnings on `components/ui/button.tsx` and `components/ui/card.tsx`; `npx tsc --noEmit` passed
-- Rollout state: shared foundation and the main home/public shell are done; remaining long-tail route-by-route visual cleanup for dashboard/teams/admin can continue from this baseline without logic changes
-
-### Dashboard + Teams + Admin Shell Refresh — IN PROGRESS (2026-04-18)
-- Updated the mounted dashboard header in `app/[locale]/dashboard/components/dashboard-header.tsx` so the live workspace chrome now matches the flatter product-led shell instead of older gradient/white-tint treatment
-- Rebuilt the live teams workspace shell in `app/[locale]/teams/dashboard/layout.tsx` around shared section/inset recipes, then aligned the main teams workspace pages: `dashboard/[slug]/page.tsx`, `analytics/page.tsx`, `members/page.tsx`, and `traders/page.tsx`
-- Team analytics now uses the shared surface language and a solid tinted chart fill instead of the older white-panel styling and gradient chart treatment
-- Refined `app/[locale]/teams/components/team-management.tsx` top-level shell/cards so the management surface matches the refreshed teams workspace
-- Updated the live admin shell in `app/[locale]/admin/admin-client-layout.tsx` and the main `admin-dashboard.tsx` so admin now inherits the same product-led shell language instead of older black/white-framed chrome
-- Verification: targeted ESLint passed with only pre-existing complexity / unused-prop warnings in large legacy files (`dashboard-header.tsx`, `team-management.tsx`, `teams analytics page`); `npx tsc --noEmit` passed
-- Current state: shared foundation, home/public core, live dashboard header, live teams workspace shell/pages, and live admin shell/dashboard are refreshed. Remaining admin/public long-tail pages can now be normalized incrementally on top of this base.
-
-### Global Page-Shell + Motion Unification — COMPLETE (2026-04-17)
-- Extracted shared `/deals`-style page recipes into `components/layout/unified-page-recipes.ts` so public and team landing routes can share the same hero panels, inset surfaces, and primary/secondary action hierarchy
-- Updated `components/layout/unified-page-shell.tsx` to use stronger shared surface treatment, explicit transition properties, and a calmer primary-atmosphere shell so routes already on the shared shell inherit the same visual language automatically
-- Added staged motion helpers in `app/globals.css` so `animate-fade-up-smooth` and `animate-scale-reveal` now use `animation-fill-mode: both`, plus reusable `-d1/-d4` delay classes for coordinated section entrances
-- Rebuilt the main remaining route outliers onto that system: pricing, referral, leaderboard, teams landing, and prop-firm catalogue now follow the same section rhythm and CTA hierarchy as `/deals` instead of older one-off page chrome
-- Verified with targeted ESLint on all touched route/layout files and `npx tsc --noEmit`
-
-### Trader Profile Diagram Alignment — COMPLETE (2026-04-17)
-- Rebuilt `app/[locale]/dashboard/trader-profile/page-client.tsx` to follow the user-provided wireframe more directly: profile + visibility row, thin signal strip, active accounts section, large calendar block, stacked right-rail benchmark/portfolio/risk cards, and full-width trade history
-- Preserved the existing calculations and interactions (leaderboard toggle, review window filters, benchmark fetch, calendar selection, and trade history pagination) while rebalancing the page vertically and horizontally
-- Updated `app/[locale]/dashboard/trader-profile/loading.tsx` to mirror the new shell so the loading state no longer flashes a mismatched layout
-- Confirmed that `/deals/compare`, `/deals/calculator`, `/deals/guides`, and `/deals/faq` already unify through anchored redirects into the main `/deals` experience, so no extra shell work was required there
-
-### Comprehensive Audit Fix Sprint — COMPLETE (2026-04-17)
-Fixed 9 audit findings across security, reliability, and data integrity:
-
-| # | Finding | Severity | Fix |
-|---|---------|----------|-----|
-| F-01 | Cache invalidation inside Prisma transaction | HIGH | Moved updateTag/invalidateNamespace AFTER transaction commit |
-| F-02 | behavior/insights API no rate limiting | HIGH | Wrapped with `withRateLimited` (60/min) |
-| F-03 | team/accept-invitation no rate limiting (brute-force risk) | HIGH | Wrapped with `withRateLimited` (20/min) |
-| F-04 | teams/[id]/analytics no rate limiting | HIGH | Wrapped GET (60/min) + PUT (30/min) |
-| F-07 | No Prisma transaction retry config | MED | Added `transactionOptions: { maxWait: 5000, timeout: 10000 }` |
-| F-08 | layouts.ts null propagation to Prisma where clause | MED | Early return null when findFirst returns no version |
-| F-09 | Admin propfirm edit no try/catch | MED | Wrapped Prisma query, falls back to buildFallbackFirm |
-| F-10 | whop/checkout + checkout-team no rate limiting | MED | Wrapped POST+GET (20/min each) |
-| F-11 | trader-profile/benchmark no rate limiting | MED | Wrapped GET (60/min) |
-
-Additional fixes:
-- `server/teams.ts`: early return `[]` when user has no email (was silently querying `email: ''`)
-- `server/firm-coupons.ts` cached reads: verified admin CRUD already calls `updateTag('firm-coupons')` + `updateTag('prop-firm-{id}')` — F-12 was already fixed
-- 6 test files updated for `withRateLimited` signature (NextRequest + ctx)
-- 3 test files had missing `createLogger` mock (pre-existing, only broke when cache-service was imported transitively)
-
-### Import Account Selection UX Fix — COMPLETE (2026-04-16)
-- Auto-expand "Add New Account" form when no existing accounts
-- Auto-select the single account when there's exactly one
-- Show clear "No trading accounts found" hint with instructions
-- Pass `tradesAccountNumbers` prop so component knows CSV-derived accounts
-- Better error messages: distinguish "no accounts" vs "missing numbers in trades"
-
-### Backend Performance & Reliability Rework — COMPLETE (2026-04-16)
-8-phase program completed. See previous memory entries for full details.
-
-### Trader Profile Cleanup + PropFirm Seed + Audit + Deploy — COMPLETE
-- Removed all `<h3>` subheadings and verbose description paragraphs from `app/[locale]/dashboard/trader-profile/page-client.tsx`
-- Kept only overline labels (tiny uppercase) as section identifiers for a cleaner, denser layout
-- Removed helper text from stat tiles — labels are self-explanatory
-- Wider right rail in hero section (240px → 280px) for the control panel
-- Added `scripts/seed-prop-firms.ts` — seeds PropFirm table from VERIFIED_PROPFIRM_PROFILES
-- Ran seed: 14 prop firms created in the production Supabase database
-- Admin coupon system is now fully functional: firms exist, forms submit to real DB mutations
-- Added `npm run db:seed-firms` convenience script
-- Deployed to Vercel production: commit `b00ad7f2`, build succeeded in 7m, status Ready
-
-### Admin System Full Audit + Hardening — COMPLETE
-- Deep audit of all 3 admin pages (coupons, propfirms list, propfirms detail)
-- **Root cause of useState crash**: `components/ui/input.tsx` was missing `'use client'` despite using `React.useState`/`React.useId`
-- Added try/catch to ALL firm/review server actions (previously unhandled)
-- Added success/error redirect banners to propfirms list and detail pages
-- Replaced all plain submit buttons with FormActionButton for loading state
-- All admin CRUD (firms, reviews, coupons) now has error handling + user feedback
-- Deployed: commits `7c55606c`, `07703325` — production Ready
+### Key Architecture Decisions
+- `ssr: false` removed from ALL dynamic imports except `lazy-widget.tsx` (deprecated)
+- Widget loading fallbacks preserved via `loading: () => widgetFallback`
+- Design system tokens: `bg-card`/`bg-muted`/`bg-secondary` → `oklch(0.65 0.22 260/0.03-0.08)` cobalt surfaces
+- DegradedStateBanner polls `/api/ready` every 60s, shows degraded/down services
+- Auth system uses shared `getUserId()` + `getDatabaseUserId()` helpers; remaining direct `getUser()` calls in authz+proxy are justified
 
 ### Build Stack
 - **Node**: v22.22.2 (nvm use 22, `.nvmrc` = 22)
-- **Bun**: v1.3.12 (package manager + build runner)
-- **Next.js**: 16.1.6 (webpack, Cache Components)
-- **Prisma**: 7.7.0
+- **Next.js**: 16.1.6
+- **npx tsc --noEmit** = 0 errors ✅
 
-### Build Status
-- `npx tsc --noEmit` = 0 errors ✅
-- `npm run lint` = 0 errors (921 pre-existing warnings) ✅
-- Vercel production: **Ready** ✅
-- Test suite: 1 pre-existing failure (sidebar-trigger-contract), 433 passed ✅
-
-## New Files Created
-- `lib/cache/cache-service.ts` — unified cache abstraction
-- `lib/api/with-api-route.ts` — API route wrapper
-- `lib/idempotency.ts` — idempotency service
-- `app/api/ready/route.ts` — readiness probe
-- `instrumentation.ts` — Next.js instrumentation hook
-- `.github/workflows/ci.yml` — CI pipeline
-- `docs/CACHING_DECISIONS.md` — caching architecture doc
-- `prisma/migrations/20260416000000_add_idempotency_table/migration.sql`
-
-## Blockers
-- `startsAt` column doesn't exist in live DB — cannot re-enable filtering until migration created
-- Pre-existing sidebar-trigger-contract test failure (unrelated to our changes)
-
-## Manual-Only Findings (Require Developer Attention)
-- **F-05 [HIGH]**: Trade multiplication UX — when user selects multiple accounts, trades are duplicated per account (N×M). Needs product decision: add confirmation dialog or change to single-account assignment
-- **F-06 [MED]**: Client/server UUID hash mismatch — `generateTradeHash` (client) and `generateTradeUUID` (server) use different field sets. Should unify for consistent dedup
-- **F-14 [LOW]**: `resolveWritableUserId` error surfaces as `DATABASE_ERROR` — misleading; should be an auth/user-resolution error
+### Files Created This Session
+- `app/[locale]/dashboard/components/widgets/server/widget-shell-server.tsx`
+- `app/[locale]/dashboard/components/widgets/skeletons/widget-skeleton.tsx`
+- `components/degraded/degraded-state-banner.tsx`
+- `hooks/use-debounced-value.ts`

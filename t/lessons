@@ -1,145 +1,27 @@
 # Lessons Learned
 
-**Updated:** 2026-04-18
+**Updated:** 2026-04-17
 
-## Lesson 42: Prisma $extends breaks type inference for serverless PrismaClient
-- **M:** Tried to add query timing via `prisma.$extends({ query: { ... } })` — it changes the return type to a complex dynamic extension type that's incompatible with `PrismaClient` typed variables
-- **RC:** Prisma extensions return `DynamicClientExtensionThis<>` which doesn't satisfy `PrismaClient` type constraints
-- **R:** Use Prisma's built-in `log` option with `{ emit: 'event', level: 'query' }` + `$on('query', ...)` instead of `$extends`
-- **E:** Cast `(prisma as any).$on?.('query', callback)` works because PrismaClient still exposes the event emitter
+## Lesson 62: sed removal of `ssr: false` leaves multiline artifacts
+- **M:** Used `sed 's/ssr: false,//g; s/ssr: false//g'` to remove `ssr: false` from 34+ dynamic imports. This left empty lines and malformed option objects like `{  loading: () => widgetFallback }` with extra whitespace, and `{\n  \n  loading:` multiline patterns
+- **RC:** sed operates line-by-line and can't handle multiline restructuring. Removing a property from a JS object with `sed` leaves the surrounding syntax intact but ugly/fragile
+- **R:** After bulk sed removal on JS/TS files, always follow up with `python3` regex to clean multiline patterns. Use `\{\s*\n\s*\n\s*(loading:[^}]+)\s*\n\s*\}` → `{ \1 }` pattern to collapse empty-line options back to single-line
+- **E:** Widget registry had 30+ `{  loading: ... }` artifacts → python3 regex collapsed them all to clean `{ loading: ... }`
 
-## Lesson 43: Next.js route handler type signatures must match exactly
-- **M:** `withRateLimited` wrapper broke Next.js type validation because dynamic route handlers take `(request, { params })` but static routes take just `(request)`
-- **RC:** Next.js validates route handler exports against a strict type that expects `{ params: Promise<Record<string, string>> }` as the second parameter
-- **R:** Use a generic `TCtx` type parameter so the wrapper accepts any second argument shape. Static routes pass `_ctx: { params: Promise<Record<string, string>> }` even though they don't use it
-- **E:** `export const GET = withRateLimited(handleGet, config)` where `handleGet(request: NextRequest, _ctx: { params: ... })` satisfies Next.js validation
+## Lesson 63: `useDeferredValue` vs custom debounce hook for search filtering
+- **M:** Created `useDebouncedValue` hook for import type search, but the actual component already used React's built-in `useDeferredValue`
+- **RC:** `useDeferredValue` is React's native approach for deferring expensive re-renders, and it's already optimal for search filtering that triggers `useMemo` recomputation
+- **R:** Before creating a custom debounce hook, check if `useDeferredValue` already handles the use case. Keep the custom hook available for cases that need explicit time-based delay rather than React's scheduler-based deferral
+- **E:** Import type selection uses `useDeferredValue(searchQuery)` → `useMemo(filter)` — no custom hook needed
 
-## Lesson 44: sed can mangle multiline function calls in test files
-- **M:** Using `sed` to replace `DELETE(request)` with `DELETE(request, ...)` broke a test file because DELETE was on a different line than the opening paren
-- **RC:** `sed` operates line-by-line and can't match multiline patterns. The replacement shifted content across lines
-- **R:** For test file modifications, use Python with proper string replacement or manual file writes, not sed
-- **E:** `tests/api/tradovate-synchronizations-route.test.ts` had to be manually rewritten after sed corruption
+## Lesson 64: Many "missing" requirements are already implemented — verify before building
+- **M:** The master execution plan listed 39 requirements, but ~50% were already satisfied before any new code was written
+- **RC:** The audit that produced the plan didn't deeply verify each REQ against the actual codebase. Many items (font preloading, auth helpers, CSP headers, CI pipeline, observability infrastructure) already existed
+- **R:** Before implementing a requirement, grep/read the relevant files to verify the gap actually exists. Mark already-satisfied REQs as verified rather than reimplementing
+- **E:** Phase 08 (Font/Bundle), Phase 09 (Auth), Phase 11 (Security), and Phase 12 (CI) were 100% pre-existing. Phase 10 (Observability) was ~75% pre-existing
 
-## Lesson 45: Circuit breaker pattern for Redis prevents cascading failures
-- **M:** Without a circuit breaker, Redis failures cause every cached request to attempt Redis, adding ~2s timeout per request
-- **RC:** Each failed Redis call adds latency. Under sustained Redis outage, this multiplies across all requests
-- **R:** Track consecutive failures. After N failures, open circuit (skip Redis) for a cooldown period. Half-open allows one probe to check recovery
-- **E:** CacheService circuit breaker: 5 failures → 30s cooldown → auto-recovery
-
-## Lesson 46: Cache-aside invalidation must be best-effort, never blocking
-- **M:** If cache invalidation (updateTag, Redis delete) fails, the DB write already succeeded — the data is correct, just potentially stale
-- **RC:** Rolling back the DB write because cache invalidation failed would cause data loss; the cache is secondary to the DB
-- **R:** Always: (1) commit DB write, (2) invalidate cache best-effort, (3) log failures but never throw. Cache will self-heal via TTL
-- **E:** `CacheService.invalidate()` catches and logs failures, never rethrows
-
-## Lesson 47: Stale-while-recompute prevents thundering herd on hot keys
-- **M:** When a popular cache key expires, many concurrent requests all try to reload simultaneously
-- **RC:** Without singleflight + stale serving, N concurrent requests each hit the DB simultaneously for the same data
-- **R:** (1) Singleflight deduplicates concurrent loaders to 1. (2) Serve stale data for up to `staleTtl` seconds while one refresher runs. (3) Cache always has something to serve
-- **E:** CacheService.getOrLoad() combines singleflight Map + stale-while-recompute background refresh
-
-## Lesson 48: Admin write surfaces feel broken if server actions have no explicit feedback loop
-- **M:** The coupon admin screens looked dead even when the raw server actions existed.
-- **RC:** Create/update/delete actions redirected silently, had no pending affordance, and surfaced raw failures poorly, so the UI gave admins no confidence that anything had happened.
-- **R:** For admin mutation screens, always pair server actions with visible success/error banners and pending-submit states so the operator gets an immediate outcome signal.
-- **E:** Coupon admin now uses redirect-based status banners plus `useFormStatus` pending buttons on create/save/delete.
-
-## Lesson 49: Fallback/read-only admin data must disable writes instead of rendering dead forms
-- **M:** Coupon admin could still render writable-looking forms when the app was running without a configured database connection.
-- **RC:** The page loaded fallback prop-firm data for display, but the mutation path still required live Prisma writes, creating a dead-end UX.
-- **R:** Whenever admin pages fall back to sample/read-only data, show an explicit warning state and disable the write forms entirely.
-- **E:** Both coupon admin entry points now switch to read-only messaging when `hasConfiguredDatabaseConnection` is false.
-
-## Lesson 50: Dashboard route pages drift quickly when they bypass the shared shell
-- **M:** The trader profile page felt horizontally cramped and vertically uneven compared with the rest of `/dashboard`, even though the app already had shared page-shell primitives.
-- **RC:** The route used its own `bg-black` canvas, narrow max width, and one-off panel spacing instead of `UnifiedPageShell`/`UnifiedSurface`, so spacing and responsive behavior diverged from the shell used elsewhere.
-- **R:** For dashboard subpages that are not intentionally fullscreen or special-purpose, start from the shared dashboard shell and layer route-specific grids on top of that baseline instead of rebuilding the shell locally.
-- **E:** The trader profile and strategies pages now inherit shared shell spacing first, then add their route-specific grids and sticky rails.
-
-## Lesson 51: Public deal fallbacks need an admin bridge or coupon screens look empty
-- **M:** A public deals card could show discount, coupon code, challenge fee, and claim link while the admin coupon screen for that firm still looked empty.
-- **RC:** The public deals page can source fallback offer data from `PROP_FIRM_MATCH_SPOTLIGHTS` when no `PropFirmCoupon` DB row exists, but admin previously rendered only real coupon rows.
-- **R:** When public commerce content has a non-DB fallback source, expose a prefilled admin suggestion path so operators can materialize that fallback into a real editable record.
-- **E:** Admin coupons now shows spotlight-backed suggestion cards, and the per-firm coupon create form preloads spotlight values when the firm has no saved coupons yet.
-
-## Lesson 52: Large landing pages look fragmented when every section invents its own surface recipe
-- **M:** The deals page felt visually empty and disjointed even though it already had strong content blocks like the spotlight, filters, and comparison tools.
-- **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
-- **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
-- **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.
-
-## Lesson 53: Empty database tables can make admin forms appear broken even when code is correct
-- **M:** Admin coupon page showed forms and firms but creating coupons always failed silently
-- **RC:** The `PropFirm` table had 0 rows. The firm dropdown used fallback config data with fake `fallback-xxx` IDs that don't exist in the database. When the user tried to create a coupon, Prisma threw a P2003 foreign key error because the `propFirmId` didn't match any real row.
-- **R:** Always verify database state (row counts) before debugging form submission issues. If a form depends on a parent entity, seed the parent table first. Created `scripts/seed-prop-firms.ts` for idempotent firm seeding.
-- **E:** `npm run db:seed-firms` now seeds 14 verified prop firms, after which the coupon CRUD works end-to-end.
-
-## Lesson 54: Any component using React hooks MUST have 'use client' directive
-- **M:** Admin coupons page crashed in production with `TypeError: e.useState is not a function` repeated 80+ times per request.
-- **RC:** `components/ui/input.tsx` uses `React.useState` for focus/value tracking and `React.useId` for generated IDs, but was missing the `'use client'` directive at the top. When the admin coupons page (a Server Component) rendered `<Input>`, the server tried to call `useState` which doesn't exist in the server React runtime.
-- **R:** After adding any hook (`useState`, `useEffect`, `useRef`, `useId`, etc.) to a component, verify it has `'use client'`. Run `grep -rl 'React\.useState' components/ui/*.tsx` and cross-check each file has the directive.
-- **E:** Added `'use client'` to `components/ui/input.tsx` — crash resolved immediately. Large landing pages look fragmented when every section invents its own surface recipe
-- **M:** The deals page felt visually empty and disjointed even though it already had strong content blocks like the spotlight, filters, and comparison tools.
-- **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
-- **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
-- **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.
-
-## Lesson 53: Cache invalidation must happen AFTER transaction commit, not inside
-- **M:** `server/trades.ts` called `updateTag()` and `invalidateNamespace()` inside the `prisma.$transaction()` callback
-- **RC:** If the transaction rolls back (write conflict, constraint violation), cache invalidation has already fired. Users see stale-then-fresh-then-stale data. Also, if invalidation throws, the entire trade save aborts.
-- **R:** Move all cache invalidation to AFTER the transaction completes: `const result = await prisma.$transaction(...); if (result.count > 0) { await updateTag(...); }`
-- **E:** No other transaction in the codebase does this — accounts, teams, webhook-service all invalidate after commit
-
-## Lesson 54: withRateLimited requires NextRequest + ctx signature, not bare Request
-- **M:** Wrapping whop/checkout routes that used `Request` with `withRateLimited` caused type errors because the wrapper expects `NextRequest`
-- **RC:** `withRateLimited` is typed as `(handler: (request: NextRequest, ctx: TCtx) => ...) => ...` — plain `Request` doesn't have `nextUrl`, `cookies`, etc.
-- **R:** Always use `NextRequest` for wrapped handlers. For tests, mock `withRateLimited` as an identity function: `vi.mock('@/lib/api/with-api-route', () => ({ withRateLimited: (handler) => handler }))`
-- **E:** All whop/checkout, behavior/insights, team routes updated to NextRequest
-
-## Lesson 55: Tests that import modules using createLogger need the mock too
-- **M:** Three test files failed with `No "createLogger" export is defined on the "@/lib/logger" mock` after cache-service.ts (which imports createLogger) was transitively imported
-- **RC:** Tests mocked `@/lib/logger` with only `{ logger: {...} }` but `cache-service.ts` also uses `createLogger` from the same module. When any import chain reaches cache-service, the incomplete mock breaks.
-- **R:** When mocking `@/lib/logger`, always include both `logger` and `createLogger: () => ({ info, warn, error, debug })` in the mock
-- **E:** save-trades-action, trades-mutation-batch, user-id-resolution tests all fixed
-
-## Lesson 56: Wireframes should drive analytics page order before card styling
-- **M:** The trader profile still felt empty and slightly disorganized even after a broader visual polish pass.
-- **RC:** The page had better surfaces than before, but its macro layout still reflected the old overview/feed composition instead of the user’s intended review flow.
-- **R:** When a user provides a rough analytics wireframe, preserve the existing logic and map the section order to that sketch first: profile/control row, compact signal strip, account block, large calendar/content block, stacked comparison rail, then full-width history.
-- **E:** Reordering the trader profile to match that sequence made the page feel fuller and easier to scan without changing any metrics or interactions.
-
-## Lesson 57: Shared page recipes beat route-local redesigns for public UI consistency
-- **M:** Public landing pages and the teams landing page started drifting apart even after `/deals` established a much stronger section and CTA language.
-- **RC:** The shared shell alone was not enough; routes still carried their own hero panels, inset cards, and motion timing, so each page slowly became a one-off design system.
-- **R:** When one route becomes the reference experience, extract its reusable page recipes and entrance timing helpers into shared layout primitives, then move the outlier routes onto those recipes instead of restyling each page independently.
-- **E:** `components/layout/unified-page-recipes.ts` now carries the shared hero/surface/action classes, and the staged `animate-fade-up-smooth-d*` / `animate-scale-reveal-d*` helpers make public page motion consistent without inline animation delays.
-
-## Lesson 58: Full-site visual refreshes should start with shared chrome and hero media, not page-by-page repainting
-- **M:** A request to make every page feel unified can turn into lots of disconnected route edits if the shared shell and hero language are not tightened first.
-- **RC:** Public, dashboard, teams, and admin routes already inherit a mix of shared shells, page recipes, and core primitives. If those foundations stay old, route-level redesigns drift immediately and duplicate effort.
-- **R:** For visual-only redesign waves, update shared shell recipes, public chrome, and the flagship home hero/media system first. Then let route groups inherit that baseline before doing smaller route-specific polish passes.
-- **E:** Adding `unified-hero-media.tsx`, flattening `UnifiedPageShell`/`UnifiedSurface`, and rebuilding the home hero around product UI + restrained SVG made the rest of the app more cohesive without touching behavior.
-
-## Lesson 59: Mounted internal shells often live in route layouts, not the page files you first inspect
-- **M:** Teams and admin still looked visually older even after several page-level refreshes.
-- **RC:** Their strongest chrome was coming from mounted layout wrappers (`teams/dashboard/layout.tsx`, `admin/admin-client-layout.tsx`) rather than the leaf route pages, so updating only page content left the app feeling split.
-- **R:** For “make every page feel unified” work, trace the mounted layout and header path first. Refresh the shell/layout wrapper before polishing leaf pages, especially on dashboard, teams, and admin surfaces.
-- **E:** Updating the teams dashboard layout and admin client layout immediately aligned the whole section, and the leaf pages only needed lighter surface cleanup afterward.
-
-## Lesson 59: Coupon schedule fields must be enforced by public read queries, not just admin UI badges
-- **M:** Admin coupon screens expose `startsAt` / `expiresAt` and correctly label coupons as scheduled or live, but the public deal readers still returned active coupons whose `startsAt` is in the future.
-- **RC:** `server/deals.ts` and `server/firm-coupons.ts` filter on `isActive` and `expiresAt` only, so the public visibility contract does not match the admin scheduling contract.
-- **R:** Any public coupon/deal query must apply the full visibility window: active, `(startsAt is null or startsAt <= now)`, and `(expiresAt is null or expiresAt >= now)`.
-- **E:** If admin marks a coupon active with `startsAt` tomorrow, the deals board and firm coupon section should keep it hidden until that start time actually arrives.
-
-## Lesson 60: `datetime-local` inputs cannot be populated with raw `toISOString()` output
-- **M:** Existing coupon schedule fields drift when opened in admin because the edit form formats stored timestamps with `toISOString().slice(0, 16)`.
-- **RC:** `datetime-local` expects local wall-clock time, while `toISOString()` always emits UTC. Re-saving the unchanged field applies the timezone offset again.
-- **R:** Format `datetime-local` values in local time components, not UTC ISO strings.
-- **E:** A coupon saved for 10:00 local should render back into the input as 10:00 local, not the UTC equivalent.
-
-## Lesson 61: Read-only admin fallbacks must disable every mutation path on the page
-- **M:** `/admin/coupons` disables writes in fallback mode, but `/admin/propfirms` still renders create/edit/delete controls against fallback data.
-- **RC:** The prop-firm surfaces added warning banners without enforcing the same write lock across firm and review mutations.
-- **R:** When an admin page is running on fallback/read-only data, disable or hide all mutation forms on that page, not just one subsection.
-- **E:** A fallback prop-firm detail page should not allow saving the main firm form or review forms if coupon edits are already disabled for the same environment.
+## Lesson 65: Hardcoded Tailwind semantic colors violate the design system
+- **M:** DegradedStateBanner used `text-yellow-500` for degraded service indicators
+- **RC:** Project convention requires `oklch()` design system tokens instead of hardcoded hex or Tailwind color names outside the semantic palette (destructive, muted-foreground, etc.)
+- **R:** Use `text-[oklch(...)]` for custom colors, or stick to semantic tokens (`text-destructive`, `text-muted-foreground`). Avoid raw `text-yellow-*`, `text-blue-*`, etc.
+- **E:** `text-yellow-500` → `text-[oklch(0.75_0.15_85)]` (warm amber in oklch)
