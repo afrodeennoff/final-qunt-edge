@@ -6,6 +6,17 @@
 
 ## Current UI Audit
 
+### Global page-shell + motion unification (2026-04-17)
+- [x] Audit the remaining live landing, dashboard, admin, and teams routes that still bypass the `/deals` composition language or shared shell rhythm
+- [x] Extract or standardize the shared section/motion recipes needed to carry the `/deals` design system across those routes without reintroducing one-off page chrome
+- [x] Apply the unified shell, surface hierarchy, and stronger-but-restrained animation language to the remaining route groups in focused waves
+- [x] Re-verify with targeted lint + typecheck, then persist the durable design-system and animation rules to the project notes
+
+### Trader profile diagram alignment (2026-04-17)
+- [x] Reshape `app/[locale]/dashboard/trader-profile/page-client.tsx` to match the rough wireframe more closely: profile + visibility row, thin signal strip, active-accounts block, calendar block, right-side benchmark/portfolio/risk stack, and full-width trade history block
+- [x] Keep the existing trader-profile calculations and interactions intact while tightening the section order, card proportions, and horizontal balance to mirror the diagram
+- [x] Re-verify the updated trader-profile page with targeted lint + typecheck and persist any durable layout guidance to the project notes
+
 ### Trader profile + deals experience enhancement (2026-04-17)
 - [x] Audit `app/[locale]/dashboard/trader-profile/page-client.tsx` and `app/[locale]/(landing)/deals/components/deals-experience.tsx` for weak hierarchy, uneven section balance, and inconsistent surface styling
 - [x] Refine trader profile into a cleaner overview/performance/story layout with stronger stat grouping, better aside structure, and more intentional spacing across breakpoints

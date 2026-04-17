@@ -243,6 +243,31 @@ function SignalTile({
   )
 }
 
+function StripMetric({
+  label,
+  value,
+  tone = 'default',
+}: {
+  label: string
+  value: string
+  tone?: StatTone
+}) {
+  return (
+    <div className={cn(insetPanelClassName, 'p-3')}>
+      <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+      <p
+        className={cn(
+          'mt-1.5 text-sm font-semibold tracking-tight text-foreground',
+          tone === 'positive' && 'text-semantic-success',
+          tone === 'negative' && 'text-semantic-error',
+        )}
+      >
+        {value}
+      </p>
+    </div>
+  )
+}
+
 export default function TraderProfilePageClient() {
   const { formattedTrades } = useDashboardStats()
   const isLoading = useDashboardIsLoading()
@@ -566,6 +591,15 @@ export default function TraderProfilePageClient() {
     return (accounts || []).filter((account) => Boolean(account.number)).length
   }, [accounts])
 
+  const activeAccountLabels = useMemo(() => {
+    return (accounts || [])
+      .map((account) =>
+        typeof account.number === 'string' ? account.number.trim() : String(account.number || ''),
+      )
+      .filter((value) => value.length > 0)
+      .slice(0, 8)
+  }, [accounts])
+
   const tradeCalendarDays = useMemo(() => {
     const byDay = new Map<string, Date>()
     ;(filteredTrades || []).forEach((trade) => {
@@ -656,19 +690,19 @@ export default function TraderProfilePageClient() {
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
       <div className="space-y-4 sm:space-y-5 lg:space-y-6">
-        <UnifiedSurface variant="elevated" className="overflow-hidden p-5 sm:p-6 lg:p-7">
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.9fr)] xl:gap-6">
-            <div className="min-w-0 space-y-5">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
-                  <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
-                  <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
-                    {profileInitials}
-                  </AvatarFallback>
-                </Avatar>
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-6">
+          <section className="min-w-0 space-y-4">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_240px]">
+              <UnifiedSurface variant="elevated" className="overflow-hidden p-5 sm:p-6 lg:p-7">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                  <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
+                    <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
+                    <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
+                      {profileInitials}
+                    </AvatarFallback>
+                  </Avatar>
 
-                <div className="min-w-0 flex-1 space-y-4">
-                  <div className="space-y-3">
+                  <div className="min-w-0 flex-1 space-y-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="secondary" className="gap-1.5">
                         <Sparkles className="h-3.5 w-3.5" />
@@ -697,196 +731,218 @@ export default function TraderProfilePageClient() {
                       </p>
                     </div>
                   </div>
-
-                  <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          Performance brief
-                        </p>
-                        <p className="text-base font-semibold text-foreground">
-                          Start with the headline account health, then move down into day pattern,
-                          benchmark shape, and the closed-trade tape.
-                        </p>
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                          This layout keeps the review window and execution context visible while
-                          you scan for consistency, risk balance, and momentum.
-                        </p>
-                      </div>
-                      <Badge variant="secondary" className="w-fit">
-                        {tradeCalendarDays.length} active days
-                      </Badge>
-                    </div>
-
-                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                      <SignalTile
-                        label="Consistency"
-                        value={`${formatValue(metrics.consistencyRate)}%`}
-                        helper="Profitable trading days"
-                        tone={metrics.consistencyRate >= 50 ? 'positive' : 'default'}
-                      />
-                      <SignalTile
-                        label="Avg net / trade"
-                        value={formatSigned(metrics.avgReturn)}
-                        helper="After commissions"
-                        tone={
-                          metrics.avgReturn > 0
-                            ? 'positive'
-                            : metrics.avgReturn < 0
-                              ? 'negative'
-                              : 'default'
-                        }
-                      />
-                      <SignalTile
-                        label="Break-even rate"
-                        value={`${formatValue(metrics.breakEvenRate)}%`}
-                        helper="Win rate required by your R:R"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                    <StatTile
-                      label="Active accounts"
-                      value={String(activeAccountsCount)}
-                      helper="Accounts contributing to this profile"
-                    />
-                    <StatTile
-                      label="Total trades"
-                      value={String(metrics.totalTrades)}
-                      helper="Within the current review window"
-                    />
-                    <StatTile
-                      label="Current streak"
-                      value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
-                      helper="Consecutive profitable trades"
-                      tone={metrics.winningStreak > 0 ? 'positive' : 'default'}
-                    />
-                    <StatTile
-                      label="Net PnL"
-                      value={formatSigned(metrics.netPnl)}
-                      helper="After commissions"
-                      tone={
-                        metrics.netPnl > 0
-                          ? 'positive'
-                          : metrics.netPnl < 0
-                            ? 'negative'
-                            : 'default'
-                      }
-                    />
-                  </div>
                 </div>
-              </div>
-            </div>
+              </UnifiedSurface>
 
-            <div className="space-y-4">
-              <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
-                <div className="flex items-start justify-between gap-3">
+              <UnifiedSurface className="p-5 sm:p-6">
+                <div className="space-y-4">
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                      Review window
+                      Visible on the public leaderboard
                     </p>
-                    <p className="text-sm font-semibold text-foreground">{reviewWindowSummary}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {showOnLeaderboard
+                        ? 'Visible on the public leaderboard'
+                        : 'Private to your dashboard'}
+                    </p>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {isOwnProfile
+                        ? 'Use this control box to manage public visibility and the current review window.'
+                        : 'This profile is being viewed in read-only mode for benchmark review.'}
+                    </p>
                   </div>
-                  <Badge variant="secondary">{selectedDayLabel}</Badge>
-                </div>
 
-                <div className="mt-4 flex flex-col gap-3">
-                  <Select
-                    value={dateFilterPreset}
-                    onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                  >
-                    <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
-                      <SelectValue placeholder="Select range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="last_week">Last Week</SelectItem>
-                      <SelectItem value="last_month">Last Month</SelectItem>
-                      <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                      <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                      <SelectItem value="last_year">Last Year</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
-                      >
-                        <CalendarIcon className="h-4 w-4" />
-                        {dateFilterLabel ?? 'Custom Range'}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2" align="start">
-                      <Calendar
-                        mode="range"
-                        selected={customDateRange}
-                        onSelect={setCustomDateRange}
-                        numberOfMonths={isMobile ? 1 : 2}
-                        className="p-0"
+                  {isOwnProfile ? (
+                    <div
+                      className={cn(insetPanelClassName, 'flex items-center justify-between p-3')}
+                    >
+                      <div className="space-y-0.5">
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Public profile toggle
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Show this profile on the leaderboard
+                        </p>
+                      </div>
+                      <Switch
+                        checked={showOnLeaderboard}
+                        onCheckedChange={handleToggleLeaderboard}
+                        disabled={isTogglingVisibility}
+                        aria-label="Toggle leaderboard visibility"
                       />
-                    </PopoverContent>
-                  </Popover>
+                    </div>
+                  ) : (
+                    <Badge variant="secondary" className="w-fit">
+                      View only
+                    </Badge>
+                  )}
+
+                  <div className={cn(insetPanelClassName, 'p-4')}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Review window
+                        </p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {reviewWindowSummary}
+                        </p>
+                      </div>
+                      <Badge variant="secondary">{selectedDayLabel}</Badge>
+                    </div>
+
+                    <div className="mt-4 flex flex-col gap-3">
+                      <Select
+                        value={dateFilterPreset}
+                        onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                      >
+                        <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
+                          <SelectValue placeholder="Select range" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="last_week">Last Week</SelectItem>
+                          <SelectItem value="last_month">Last Month</SelectItem>
+                          <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                          <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                          <SelectItem value="last_year">Last Year</SelectItem>
+                          <SelectItem value="custom">Custom</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
+                          >
+                            <CalendarIcon className="h-4 w-4" />
+                            {dateFilterLabel ?? 'Custom Range'}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-2" align="start">
+                          <Calendar
+                            mode="range"
+                            selected={customDateRange}
+                            onSelect={setCustomDateRange}
+                            numberOfMonths={isMobile ? 1 : 2}
+                            className="p-0"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+                </div>
+              </UnifiedSurface>
+            </div>
+
+            <UnifiedSurface className="p-4 sm:p-5">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
+                <StripMetric
+                  label="Consistency"
+                  value={`${formatValue(metrics.consistencyRate)}%`}
+                  tone={metrics.consistencyRate >= 50 ? 'positive' : 'default'}
+                />
+                <StripMetric
+                  label="Avg net / trade"
+                  value={formatSigned(metrics.avgReturn)}
+                  tone={
+                    metrics.avgReturn > 0
+                      ? 'positive'
+                      : metrics.avgReturn < 0
+                        ? 'negative'
+                        : 'default'
+                  }
+                />
+                <StripMetric
+                  label="Break-even rate"
+                  value={`${formatValue(metrics.breakEvenRate)}%`}
+                />
+                <StripMetric label="Active accounts" value={String(activeAccountsCount)} />
+                <StripMetric label="Total trades" value={String(metrics.totalTrades)} />
+                <StripMetric
+                  label="Current streak"
+                  value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
+                  tone={metrics.winningStreak > 0 ? 'positive' : 'default'}
+                />
+                <StripMetric
+                  label="Net PnL"
+                  value={formatSigned(metrics.netPnl)}
+                  tone={
+                    metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : 'default'
+                  }
+                />
+              </div>
+            </UnifiedSurface>
+
+            <UnifiedSurface className="p-5 sm:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Active accounts
+                  </p>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Accounts contributing to this profile
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    Keep the connected account list visible while you review capital, payouts, and
+                    the trading days behind the current profile window.
+                  </p>
+                </div>
+                <Badge variant="secondary">{activeAccountsCount} active</Badge>
+              </div>
+
+              <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.9fr)]">
+                <div className={cn(insetPanelClassName, 'p-4 sm:p-5')}>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Connected account list
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    These accounts are contributing balances, payouts, and trade history to the
+                    current profile snapshot.
+                  </p>
+
+                  {activeAccountLabels.length > 0 ? (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {activeAccountLabels.map((accountLabel) => (
+                        <span
+                          key={accountLabel}
+                          className="rounded-full border border-border/35 bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground"
+                        >
+                          {accountLabel}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div
+                      className={cn(insetPanelClassName, 'mt-4 p-4 text-sm text-muted-foreground')}
+                    >
+                      No linked account numbers are available yet for this profile.
+                    </div>
+                  )}
                 </div>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-                  <SignalTile
-                    label="Net PnL"
-                    value={formatSigned(metrics.netPnl)}
-                    helper="Current review window"
-                    tone={
-                      metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : 'default'
-                    }
-                  />
-                  <SignalTile
-                    label="Win rate"
-                    value={`${formatValue(metrics.winRate)}%`}
-                    helper="Decisive trade outcomes"
-                    tone={metrics.winRate >= 50 ? 'positive' : 'default'}
-                  />
+                <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
                   <SignalTile
                     label="Total capital"
                     value={formatCapitalCompact(totalCapitalAllAccounts)}
                     helper="After payouts and net trading"
                     tone={totalCapitalAllAccounts >= 0 ? 'positive' : 'negative'}
                   />
+                  <SignalTile
+                    label="Total withdraw"
+                    value={formatCapitalCompact(totalWithdrawAllAccounts)}
+                    helper="Paid payouts in the selected window"
+                  />
+                  <SignalTile
+                    label="Active days"
+                    value={String(tradeCalendarDays.length)}
+                    helper="Trading days in the current window"
+                    tone={tradeCalendarDays.length > 0 ? 'positive' : 'default'}
+                  />
                 </div>
               </div>
+            </UnifiedSurface>
 
-              {isOwnProfile ? (
-                <div className={cn(insetPanelClassName, 'p-5 sm:p-6')}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 space-y-1">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                        Leaderboard visibility
-                      </p>
-                      <p className="text-sm font-semibold text-foreground">
-                        {showOnLeaderboard
-                          ? 'Visible on the public leaderboard'
-                          : 'Private to your dashboard'}
-                      </p>
-                      <p className="text-xs leading-relaxed text-muted-foreground">
-                        Toggle this on when you want your live profile to appear publicly.
-                      </p>
-                    </div>
-                    <Switch
-                      checked={showOnLeaderboard}
-                      onCheckedChange={handleToggleLeaderboard}
-                      disabled={isTogglingVisibility}
-                      aria-label="Toggle leaderboard visibility"
-                    />
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </UnifiedSurface>
-
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-6">
-          <section className="min-w-0 space-y-4">
             <UnifiedSurface className="overflow-hidden p-5 sm:p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="space-y-1">
@@ -996,134 +1052,10 @@ export default function TraderProfilePageClient() {
                 </div>
               </div>
             </UnifiedSurface>
-
-            <UnifiedSurface className="p-5 sm:p-6">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Trade feed
-                  </p>
-                  <h3 className="text-lg font-semibold text-foreground">Closed trades in focus</h3>
-                </div>
-                <Badge variant="secondary">{tradeFeedSummary}</Badge>
-              </div>
-
-              {isLoading ? (
-                <div className="mt-5 space-y-3">
-                  {[1, 2, 3].map((index) => (
-                    <div
-                      key={index}
-                      className={cn(
-                        insetPanelClassName,
-                        'flex items-center justify-between gap-3 p-4 animate-pulse',
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="h-3.5 w-3.5 rounded-full bg-primary/15" />
-                        <div className="space-y-2">
-                          <div className="h-3 w-24 rounded bg-primary/15" />
-                          <div className="h-2.5 w-36 rounded bg-primary/10" />
-                        </div>
-                      </div>
-                      <div className="h-3 w-14 rounded bg-primary/15" />
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-
-              <div className="mt-5 space-y-3">
-                {paginatedClosedTrades.length === 0 ? (
-                  <div className={cn(insetPanelClassName, 'p-5 text-sm text-muted-foreground')}>
-                    No closed trades in the current range yet.
-                  </div>
-                ) : (
-                  paginatedClosedTrades.map((trade) => {
-                    const pnl = Number(trade.pnl || 0)
-                    const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
-
-                    return (
-                      <div
-                        key={trade.id}
-                        className={cn(
-                          insetPanelClassName,
-                          'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
-                        )}
-                      >
-                        <div className="flex min-w-0 items-start gap-3">
-                          <CircleDot
-                            className={cn(
-                              'mt-0.5 h-4 w-4 shrink-0',
-                              pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
-                            )}
-                          />
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-foreground">
-                              {trade.instrument || 'Unknown instrument'}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Closed {formatTradeTimestamp(closeDate ?? trade.entryDate)}
-                            </p>
-                          </div>
-                        </div>
-
-                        <p
-                          className={cn(
-                            'shrink-0 text-sm font-semibold',
-                            pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
-                          )}
-                        >
-                          {formatSigned(pnl)}
-                        </p>
-                      </div>
-                    )
-                  })
-                )}
-              </div>
-
-              {closedTrades.length > tradesPerPage ? (
-                <div className={cn(insetPanelClassName, 'mt-4 px-2 py-1.5')}>
-                  <Pagination className="justify-end">
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          href="#"
-                          onClick={(event) => {
-                            event.preventDefault()
-                            setTradeFeedPage((current) => Math.max(1, current - 1))
-                          }}
-                          className={tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                        />
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationLink href="#" isActive size="default" className="min-w-24">
-                          {tradeFeedPage} / {tradeFeedTotalPages}
-                        </PaginationLink>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <PaginationNext
-                          href="#"
-                          onClick={(event) => {
-                            event.preventDefault()
-                            setTradeFeedPage((current) =>
-                              Math.min(tradeFeedTotalPages, current + 1),
-                            )
-                          }}
-                          className={
-                            tradeFeedPage >= tradeFeedTotalPages
-                              ? 'pointer-events-none opacity-50'
-                              : ''
-                          }
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              ) : null}
-            </UnifiedSurface>
           </section>
 
           <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-            <UnifiedSurface className="p-5 sm:p-6">
+            <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -1284,6 +1216,126 @@ export default function TraderProfilePageClient() {
             </UnifiedSurface>
           </aside>
         </div>
+
+        <UnifiedSurface className="p-5 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Trade history
+              </p>
+              <h3 className="text-lg font-semibold text-foreground">Closed trades in focus</h3>
+            </div>
+            <Badge variant="secondary">{tradeFeedSummary}</Badge>
+          </div>
+
+          {isLoading ? (
+            <div className="mt-5 space-y-3">
+              {[1, 2, 3].map((index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    insetPanelClassName,
+                    'flex items-center justify-between gap-3 p-4 animate-pulse',
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-3.5 w-3.5 rounded-full bg-primary/15" />
+                    <div className="space-y-2">
+                      <div className="h-3 w-24 rounded bg-primary/15" />
+                      <div className="h-2.5 w-36 rounded bg-primary/10" />
+                    </div>
+                  </div>
+                  <div className="h-3 w-14 rounded bg-primary/15" />
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="mt-5 space-y-3">
+            {paginatedClosedTrades.length === 0 ? (
+              <div className={cn(insetPanelClassName, 'p-5 text-sm text-muted-foreground')}>
+                No closed trades in the current range yet.
+              </div>
+            ) : (
+              paginatedClosedTrades.map((trade) => {
+                const pnl = Number(trade.pnl || 0)
+                const closeDate = (trade as { closeDate?: string | Date | null }).closeDate
+
+                return (
+                  <div
+                    key={trade.id}
+                    className={cn(
+                      insetPanelClassName,
+                      'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
+                    )}
+                  >
+                    <div className="flex min-w-0 items-start gap-3">
+                      <CircleDot
+                        className={cn(
+                          'mt-0.5 h-4 w-4 shrink-0',
+                          pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                        )}
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-foreground">
+                          {trade.instrument || 'Unknown instrument'}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Closed {formatTradeTimestamp(closeDate ?? trade.entryDate)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p
+                      className={cn(
+                        'shrink-0 text-sm font-semibold',
+                        pnl >= 0 ? 'text-semantic-success' : 'text-semantic-error',
+                      )}
+                    >
+                      {formatSigned(pnl)}
+                    </p>
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          {closedTrades.length > tradesPerPage ? (
+            <div className={cn(insetPanelClassName, 'mt-4 px-2 py-1.5')}>
+              <Pagination className="justify-end">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setTradeFeedPage((current) => Math.max(1, current - 1))
+                      }}
+                      className={tradeFeedPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive size="default" className="min-w-24">
+                      {tradeFeedPage} / {tradeFeedTotalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setTradeFeedPage((current) => Math.min(tradeFeedTotalPages, current + 1))
+                      }}
+                      className={
+                        tradeFeedPage >= tradeFeedTotalPages ? 'pointer-events-none opacity-50' : ''
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          ) : null}
+        </UnifiedSurface>
       </div>
     </UnifiedPageShell>
   )

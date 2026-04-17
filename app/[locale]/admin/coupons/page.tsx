@@ -11,7 +11,11 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { assertAdminAccess } from '@/server/authz'
-import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
+import {
+  listSpotlightCouponSuggestions,
+  getSpotlightCouponSuggestionForFirm,
+  type SpotlightCouponSuggestion,
+} from '@/lib/prop-firms/spotlight-coupon-suggestions'
 import {
   createPropFirmCoupon,
   deletePropFirmCoupon,
@@ -483,13 +487,13 @@ function CouponEditCard({
 }
 
 function CouponSuggestionCard({
-  firm,
-  locale,
   suggestion,
+  locale,
+  isReadOnly,
 }: {
-  firm: Awaited<ReturnType<typeof loadFirms>>[number]
+  suggestion: SpotlightCouponSuggestion & { firmId: string | null }
   locale: string
-  suggestion: NonNullable<ReturnType<typeof getSpotlightCouponSuggestionForFirm>>
+  isReadOnly: boolean
 }) {
   return (
     <Card variant="flat" hover className="overflow-hidden border-primary/15">
@@ -504,17 +508,19 @@ function CouponSuggestionCard({
                 <Sparkles className="h-3.5 w-3.5" />
                 Spotlight suggestion
               </Badge>
-              <Badge variant="outline">{suggestion.discountPercent}% off</Badge>
+              {suggestion.discountPercent > 0 ? (
+                <Badge variant="outline">{suggestion.discountPercent}% off</Badge>
+              ) : null}
             </div>
             <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground/95">{firm.name}</span>
+              <span className="font-medium text-foreground/95">{suggestion.firmName}</span>
               {' '}• visible on the public deals page, but not yet saved as an admin coupon
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <Link href={buildPublicFirmHref(locale, firm.slug)}>
+              <Link href={buildPublicFirmHref(locale, suggestion.firmSlug)}>
                 <Eye className="h-4 w-4" />
                 Public
               </Link>
@@ -525,138 +531,164 @@ function CouponSuggestionCard({
                 Source
               </a>
             </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href={`/${locale}/admin/propfirms/${firm.id}`}>
-                <Building2 className="h-4 w-4" />
-                Firm
-              </Link>
-            </Button>
+            {suggestion.firmId ? (
+              <Button variant="ghost" size="sm" asChild>
+                <Link href={`/${locale}/admin/propfirms/${suggestion.firmId}`}>
+                  <Building2 className="h-4 w-4" />
+                  Firm
+                </Link>
+              </Button>
+            ) : null}
           </div>
         </div>
       </CardHeader>
 
       <CardContent size="sm" className="space-y-4 pt-4">
-        <Alert variant="warning">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Not saved in the coupon table yet</AlertTitle>
-          <AlertDescription>
-            Save this suggestion once so the discount, code, fee, and claim link become fully editable from admin.
-          </AlertDescription>
-        </Alert>
+        {isReadOnly ? (
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Reference only (read-only mode)</AlertTitle>
+            <AlertDescription>
+              This suggestion is visible on the public deals page. Connect the database to save it as an editable admin coupon.
+            </AlertDescription>
+          </Alert>
+        ) : !suggestion.firmId ? (
+          <Alert variant="warning">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Prop firm not in database</AlertTitle>
+            <AlertDescription>
+              This firm does not have a database record yet.{' '}
+              <Link href={`/${locale}/admin/propfirms`} className="underline font-medium">
+                Create the prop firm first
+              </Link>
+              , then save this coupon suggestion.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <>
+            <Alert variant="warning">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Not saved in the coupon table yet</AlertTitle>
+              <AlertDescription>
+                Save this suggestion once so the discount, code, fee, and claim link become fully editable from admin.
+              </AlertDescription>
+            </Alert>
 
-        <form action={handleCreateCoupon} className="space-y-3">
-          <input type="hidden" name="locale" value={locale} />
-          <input type="hidden" name="propFirmId" value={firm.id} />
+            <form action={handleCreateCoupon} className="space-y-3">
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="propFirmId" value={suggestion.firmId} />
 
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-code-${firm.id}`}>Code</Label>
-              <Input
-                id={`suggestion-code-${firm.id}`}
-                name="code"
-                defaultValue={suggestion.couponCode}
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-discount-${firm.id}`}>Discount %</Label>
-              <Input
-                id={`suggestion-discount-${firm.id}`}
-                name="discountPercent"
-                type="number"
-                step="0.01"
-                defaultValue={suggestion.discountPercent}
-              />
-            </div>
-          </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-code-${suggestion.firmSlug}`}>Code</Label>
+                  <Input
+                    id={`suggestion-code-${suggestion.firmSlug}`}
+                    name="code"
+                    defaultValue={suggestion.couponCode}
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-discount-${suggestion.firmSlug}`}>Discount %</Label>
+                  <Input
+                    id={`suggestion-discount-${suggestion.firmSlug}`}
+                    name="discountPercent"
+                    type="number"
+                    step="0.01"
+                    defaultValue={suggestion.discountPercent || ''}
+                  />
+                </div>
+              </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-fee-${firm.id}`}>Challenge Fee</Label>
-              <Input
-                id={`suggestion-fee-${firm.id}`}
-                name="challengeFee"
-                type="number"
-                step="0.01"
-                defaultValue={suggestion.challengeFee || ''}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-claim-${firm.id}`}>Claim / Affiliate URL</Label>
-              <Input
-                id={`suggestion-claim-${firm.id}`}
-                name="claimUrl"
-                type="url"
-                defaultValue={suggestion.claimUrl}
-              />
-            </div>
-          </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-fee-${suggestion.firmSlug}`}>Challenge Fee</Label>
+                  <Input
+                    id={`suggestion-fee-${suggestion.firmSlug}`}
+                    name="challengeFee"
+                    type="number"
+                    step="0.01"
+                    defaultValue={suggestion.challengeFee || ''}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-claim-${suggestion.firmSlug}`}>Claim / Affiliate URL</Label>
+                  <Input
+                    id={`suggestion-claim-${suggestion.firmSlug}`}
+                    name="claimUrl"
+                    type="url"
+                    defaultValue={suggestion.claimUrl}
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-1">
-            <Label htmlFor={`suggestion-description-${firm.id}`}>Description</Label>
-            <Textarea
-              id={`suggestion-description-${firm.id}`}
-              name="description"
-              defaultValue={suggestion.description}
-              className="min-h-[92px] resize-y"
-            />
-          </div>
+              <div className="space-y-1">
+                <Label htmlFor={`suggestion-description-${suggestion.firmSlug}`}>Description</Label>
+                <Textarea
+                  id={`suggestion-description-${suggestion.firmSlug}`}
+                  name="description"
+                  defaultValue={suggestion.description}
+                  className="min-h-[92px] resize-y"
+                />
+              </div>
 
-          <div className="grid gap-3 md:grid-cols-3">
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-platform-${firm.id}`}>Platform Override</Label>
-              <Input
-                id={`suggestion-platform-${firm.id}`}
-                name="platform"
-                defaultValue={suggestion.platform}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-payout-${firm.id}`}>Payout Override</Label>
-              <Input
-                id={`suggestion-payout-${firm.id}`}
-                name="payoutModel"
-                defaultValue={suggestion.payoutModel}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-drawdown-${firm.id}`}>Drawdown Override</Label>
-              <Input
-                id={`suggestion-drawdown-${firm.id}`}
-                name="drawdownType"
-                defaultValue={suggestion.drawdownType}
-              />
-            </div>
-          </div>
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-platform-${suggestion.firmSlug}`}>Platform Override</Label>
+                  <Input
+                    id={`suggestion-platform-${suggestion.firmSlug}`}
+                    name="platform"
+                    defaultValue={suggestion.platform}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-payout-${suggestion.firmSlug}`}>Payout Override</Label>
+                  <Input
+                    id={`suggestion-payout-${suggestion.firmSlug}`}
+                    name="payoutModel"
+                    defaultValue={suggestion.payoutModel}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-drawdown-${suggestion.firmSlug}`}>Drawdown Override</Label>
+                  <Input
+                    id={`suggestion-drawdown-${suggestion.firmSlug}`}
+                    name="drawdownType"
+                    defaultValue={suggestion.drawdownType}
+                  />
+                </div>
+              </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-starts-${firm.id}`}>Starts At</Label>
-              <Input id={`suggestion-starts-${firm.id}`} name="startsAt" type="datetime-local" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor={`suggestion-expires-${firm.id}`}>Expires At</Label>
-              <Input id={`suggestion-expires-${firm.id}`} name="expiresAt" type="datetime-local" />
-            </div>
-          </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-starts-${suggestion.firmSlug}`}>Starts At</Label>
+                  <Input id={`suggestion-starts-${suggestion.firmSlug}`} name="startsAt" type="datetime-local" />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`suggestion-expires-${suggestion.firmSlug}`}>Expires At</Label>
+                  <Input id={`suggestion-expires-${suggestion.firmSlug}`} name="expiresAt" type="datetime-local" />
+                </div>
+              </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="couponIsActive"
-                value="1"
-                defaultChecked
-                className="h-4 w-4 rounded border-input accent-primary"
-              />
-              <span className="text-sm">Active</span>
-            </div>
-            <FormActionButton type="submit" pendingLabel="Creating coupon...">
-              <Plus className="h-4 w-4" />
-              Save as coupon
-            </FormActionButton>
-          </div>
-        </form>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="couponIsActive"
+                    value="1"
+                    defaultChecked
+                    className="h-4 w-4 rounded border-input accent-primary"
+                  />
+                  <span className="text-sm">Active</span>
+                </div>
+                <FormActionButton type="submit" pendingLabel="Creating coupon...">
+                  <Plus className="h-4 w-4" />
+                  Save as coupon
+                </FormActionButton>
+              </div>
+            </form>
+          </>
+        )}
       </CardContent>
     </Card>
   )
@@ -681,29 +713,35 @@ export default async function AdminCouponsPage({
   const soonExpiringCount = coupons.filter((coupon) => getCouponTimingState(coupon).isExpiringSoon).length
   const firmCoverageCount = new Set(coupons.map((coupon) => coupon.propFirmId)).size
   const isReadOnlyFallback = !hasConfiguredDatabaseConnection
-  const couponSuggestions = isReadOnlyFallback
-    ? []
-    : firms
-        .filter((firm) => firm.isActive)
-        .map((firm) => {
-          if (coupons.some((coupon) => coupon.propFirmId === firm.id)) return null
 
-          const suggestion = getSpotlightCouponSuggestionForFirm({
-            name: firm.name,
-            slug: firm.slug,
-          })
-          if (!suggestion) return null
+  // Compute suggestions directly from spotlight data — independent of DB firms
+  // This ensures suggestions ALWAYS show, even with empty PropFirm table or in fallback mode
+  const existingCouponFirmSlugs = new Set(
+    coupons.map((coupon) => coupon.propFirm?.slug).filter(Boolean),
+  )
+  const existingCouponFirmNames = new Set(
+    coupons.map((coupon) => coupon.propFirm?.name).filter(Boolean),
+  )
 
-          return { firm, suggestion }
-        })
-        .filter(
-          (
-            value,
-          ): value is {
-            firm: Awaited<ReturnType<typeof loadFirms>>[number]
-            suggestion: NonNullable<ReturnType<typeof getSpotlightCouponSuggestionForFirm>>
-          } => value !== null,
-        )
+  // Find DB firm IDs for matching firms (needed for the create form propFirmId)
+  const firmIdBySlug = new Map(firms.map((f) => [f.slug, f.id]))
+  const firmIdByName = new Map(firms.map((f) => [f.name, f.id]))
+
+  const couponSuggestions = listSpotlightCouponSuggestions()
+    .filter((suggestion) => {
+      // Skip if this firm already has a saved coupon
+      if (existingCouponFirmSlugs.has(suggestion.firmSlug)) return false
+      if (existingCouponFirmNames.has(suggestion.firmName)) return false
+      return true
+    })
+    .map((suggestion) => {
+      // Look up DB firm ID if the firm exists in the database
+      const firmId =
+        firmIdBySlug.get(suggestion.firmSlug) ??
+        firmIdByName.get(suggestion.firmName) ??
+        null
+      return { ...suggestion, firmId }
+    })
 
   return (
     <div className="space-y-6">
@@ -888,12 +926,12 @@ export default async function AdminCouponsPage({
           </CardHeader>
           <CardContent size="sm" className="pt-4">
             <div className="grid gap-4 xl:grid-cols-2">
-              {couponSuggestions.map(({ firm, suggestion }) => (
+              {couponSuggestions.map((suggestion) => (
                 <CouponSuggestionCard
-                  key={firm.id}
-                  firm={firm}
-                  locale={locale}
+                  key={suggestion.firmSlug}
                   suggestion={suggestion}
+                  locale={locale}
+                  isReadOnly={isReadOnlyFallback}
                 />
               ))}
             </div>

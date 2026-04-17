@@ -1,52 +1,72 @@
 import { ShieldCheck, Sparkles, Users } from 'lucide-react'
 import PricingPlans from '@/components/pricing-plans'
 import { UnifiedPageShell } from '@/components/layout/unified-page-shell'
+import {
+  unifiedChipClassName,
+  unifiedHeroPanelClassName,
+  unifiedSectionPanelClassName,
+} from '@/components/layout/unified-page-recipes'
+import { cn } from '@/lib/utils'
 
 export function PricingPageClient() {
   return (
     <UnifiedPageShell widthClassName="max-w-[1320px]" className="py-12 sm:py-16">
-      <section className="relative overflow-hidden rounded-2xl border border-[hsl(var(--mk-border)/0.4)] bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_36px_80px_-62px_hsl(var(--foreground)/0.95)] sm:p-8 lg:p-10">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
+      <div className="space-y-6">
+        <section
+          className={cn(unifiedHeroPanelClassName, 'animate-fade-up-smooth p-5 sm:p-8 lg:p-10')}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(700px_260px_at_12%_6%,rgba(255,255,255,0.07),transparent_72%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(540px_220px_at_88%_6%,rgba(255,255,255,0.045),transparent_74%)]" />
 
-        <header className="relative mb-8 space-y-4 lg:mb-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            Pricing Plans
-          </span>
+          <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.72fr)] xl:items-end">
+            <header className="space-y-4 lg:space-y-5">
+              <span className={unifiedChipClassName}>
+                <Sparkles className="h-3.5 w-3.5" />
+                Pricing plans
+              </span>
 
-          <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground/95">
-            Pick a plan that matches your execution cadence.
-          </h1>
+              <h1 className="max-w-4xl text-[clamp(2.2rem,5vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-foreground/95">
+                Pick a plan that matches your execution cadence.
+              </h1>
 
-          <p className="max-w-3xl text-sm leading-[1.55] text-muted-foreground sm:text-base">
-            Start with the essentials, then unlock deeper AI debriefs and behavior analytics
-            as your workflow matures.
-          </p>
+              <p className="max-w-3xl text-sm leading-[1.6] text-muted-foreground sm:text-base">
+                Start with the essentials, then unlock deeper AI debriefs and behavior analytics as
+                your workflow matures.
+              </p>
+            </header>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <PricingMetaChip
-              icon={ShieldCheck}
-              label="No lock-in"
-              value="Monthly flexibility"
-            />
-            <PricingMetaChip
-              icon={Users}
-              label="Teams ready"
-              value="Shared coaching flows"
-            />
-            <PricingMetaChip
-              icon={Sparkles}
-              label="AI included"
-              value="Debriefs and pattern review"
-            />
+            <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+              <PricingMetaChip
+                icon={ShieldCheck}
+                label="No lock-in"
+                value="Monthly flexibility"
+                className="animate-scale-reveal animate-scale-reveal-d1"
+              />
+              <PricingMetaChip
+                icon={Users}
+                label="Teams ready"
+                value="Shared coaching flows"
+                className="animate-scale-reveal animate-scale-reveal-d2"
+              />
+              <PricingMetaChip
+                icon={Sparkles}
+                label="AI included"
+                value="Debriefs and pattern review"
+                className="animate-scale-reveal animate-scale-reveal-d3"
+              />
+            </div>
           </div>
-        </header>
+        </section>
 
-        <div className="relative">
+        <section
+          className={cn(
+            unifiedSectionPanelClassName,
+            'animate-fade-up-smooth animate-fade-up-smooth-d2 p-4 sm:p-6 lg:p-8',
+          )}
+        >
           <PricingPlans />
-        </div>
-      </section>
+        </section>
+      </div>
     </UnifiedPageShell>
   )
 }
@@ -55,13 +75,20 @@ function PricingMetaChip({
   icon: Icon,
   label,
   value,
+  className,
 }: {
   icon: typeof ShieldCheck
   label: string
   value: string
+  className?: string
 }) {
   return (
-    <div className="rounded-xl border border-[hsl(var(--mk-border)/0.36)] bg-[hsl(var(--mk-surface-muted)/0.78)] px-4 py-3">
+    <div
+      className={cn(
+        'rounded-xl border border-border/40 bg-card/55 px-4 py-3 shadow-[0_20px_42px_-34px_rgba(0,0,0,0.88)]',
+        className,
+      )}
+    >
       <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3.5 w-3.5 text-primary" />
         {label}

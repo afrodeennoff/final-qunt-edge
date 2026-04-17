@@ -85,3 +85,15 @@
 - **RC:** Tests mocked `@/lib/logger` with only `{ logger: {...} }` but `cache-service.ts` also uses `createLogger` from the same module. When any import chain reaches cache-service, the incomplete mock breaks.
 - **R:** When mocking `@/lib/logger`, always include both `logger` and `createLogger: () => ({ info, warn, error, debug })` in the mock
 - **E:** save-trades-action, trades-mutation-batch, user-id-resolution tests all fixed
+
+## Lesson 56: Wireframes should drive analytics page order before card styling
+- **M:** The trader profile still felt empty and slightly disorganized even after a broader visual polish pass.
+- **RC:** The page had better surfaces than before, but its macro layout still reflected the old overview/feed composition instead of the user’s intended review flow.
+- **R:** When a user provides a rough analytics wireframe, preserve the existing logic and map the section order to that sketch first: profile/control row, compact signal strip, account block, large calendar/content block, stacked comparison rail, then full-width history.
+- **E:** Reordering the trader profile to match that sequence made the page feel fuller and easier to scan without changing any metrics or interactions.
+
+## Lesson 57: Shared page recipes beat route-local redesigns for public UI consistency
+- **M:** Public landing pages and the teams landing page started drifting apart even after `/deals` established a much stronger section and CTA language.
+- **RC:** The shared shell alone was not enough; routes still carried their own hero panels, inset cards, and motion timing, so each page slowly became a one-off design system.
+- **R:** When one route becomes the reference experience, extract its reusable page recipes and entrance timing helpers into shared layout primitives, then move the outlier routes onto those recipes instead of restyling each page independently.
+- **E:** `components/layout/unified-page-recipes.ts` now carries the shared hero/surface/action classes, and the staged `animate-fade-up-smooth-d*` / `animate-scale-reveal-d*` helpers make public page motion consistent without inline animation delays.

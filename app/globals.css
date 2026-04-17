@@ -2313,12 +2313,34 @@
 
   /* Smooth fade-up for scroll reveals */
   .animate-fade-up-smooth {
-    animation: fade-up-smooth 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: fade-up-smooth 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   /* Scale reveal for widgets/cards */
   .animate-scale-reveal {
-    animation: scale-reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: scale-reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-fade-up-smooth-d1 {
+    animation-delay: 0.08s;
+  }
+  .animate-fade-up-smooth-d2 {
+    animation-delay: 0.16s;
+  }
+  .animate-fade-up-smooth-d3 {
+    animation-delay: 0.24s;
+  }
+  .animate-fade-up-smooth-d4 {
+    animation-delay: 0.32s;
+  }
+  .animate-scale-reveal-d1 {
+    animation-delay: 0.08s;
+  }
+  .animate-scale-reveal-d2 {
+    animation-delay: 0.16s;
+  }
+  .animate-scale-reveal-d3 {
+    animation-delay: 0.24s;
   }
 
   /* ===== HERO ENTRANCE — CSS-driven for soft navigation resilience ===== */
@@ -2347,11 +2369,21 @@
     animation: hero-entrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  .hero-entrance-d1 { animation-delay: 0.1s; }
-  .hero-entrance-d2 { animation-delay: 0.25s; }
-  .hero-entrance-d3 { animation-delay: 0.35s; }
-  .hero-entrance-d4 { animation-delay: 0.4s; }
-  .hero-entrance-d5 { animation-delay: 0.5s; }
+  .hero-entrance-d1 {
+    animation-delay: 0.1s;
+  }
+  .hero-entrance-d2 {
+    animation-delay: 0.25s;
+  }
+  .hero-entrance-d3 {
+    animation-delay: 0.35s;
+  }
+  .hero-entrance-d4 {
+    animation-delay: 0.4s;
+  }
+  .hero-entrance-d5 {
+    animation-delay: 0.5s;
+  }
 
   /* ===== AUTH PAGE ENTRANCE ===== */
   @keyframes auth-entrance {

@@ -22,12 +22,14 @@ export type SpotlightCouponSuggestion = {
 }
 
 function parseDiscountPercentFromPromoText(promoText: string): number | null {
-  const match = promoText.match(/(\d{1,3}(?:\.\d+)?)\s*%/i)
-  if (!match) return null
+  // Match percentage discounts: "85% off", "20% off all accounts"
+  const percentMatch = promoText.match(/(\d{1,3}(?:\.\d+)?)\s*%/i)
+  if (percentMatch) {
+    const parsed = Number(percentMatch[1])
+    if (Number.isFinite(parsed) && parsed > 0) return Math.min(100, Math.round(parsed))
+  }
 
-  const parsed = Number(match[1])
-  if (!Number.isFinite(parsed) || parsed <= 0) return null
-  return Math.min(100, Math.round(parsed))
+  return null
 }
 
 function getAccountSizesFromConfig(firmName: string) {
@@ -54,7 +56,8 @@ function toSpotlightCouponSuggestion(
   spotlight: (typeof PROP_FIRM_MATCH_SPOTLIGHTS)[number],
 ): SpotlightCouponSuggestion | null {
   const discountPercent = parseDiscountPercentFromPromoText(spotlight.promoText)
-  if (discountPercent === null) return null
+  // Include spotlights even without a % discount — they still have a code and claim URL
+  // discountPercent will be null/0, but the description carries the real promo text
 
   const profile =
     getVerifiedPropFirmProfileBySlug(spotlight.slug) ??
@@ -67,7 +70,7 @@ function toSpotlightCouponSuggestion(
     spotlightSlug: spotlight.slug,
     firmSlug,
     firmName,
-    discountPercent,
+    discountPercent: discountPercent ?? 0,
     couponCode: spotlight.promoCode?.trim() || 'MATCH',
     challengeFee: estimateChallengeFeeFromConfig(firmName),
     claimUrl: profile?.referralUrl ?? spotlight.sourceUrl,

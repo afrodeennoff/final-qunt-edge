@@ -6,6 +6,19 @@
 
 ## Current State
 
+### Global Page-Shell + Motion Unification — COMPLETE (2026-04-17)
+- Extracted shared `/deals`-style page recipes into `components/layout/unified-page-recipes.ts` so public and team landing routes can share the same hero panels, inset surfaces, and primary/secondary action hierarchy
+- Updated `components/layout/unified-page-shell.tsx` to use stronger shared surface treatment, explicit transition properties, and a calmer primary-atmosphere shell so routes already on the shared shell inherit the same visual language automatically
+- Added staged motion helpers in `app/globals.css` so `animate-fade-up-smooth` and `animate-scale-reveal` now use `animation-fill-mode: both`, plus reusable `-d1/-d4` delay classes for coordinated section entrances
+- Rebuilt the main remaining route outliers onto that system: pricing, referral, leaderboard, teams landing, and prop-firm catalogue now follow the same section rhythm and CTA hierarchy as `/deals` instead of older one-off page chrome
+- Verified with targeted ESLint on all touched route/layout files and `npx tsc --noEmit`
+
+### Trader Profile Diagram Alignment — COMPLETE (2026-04-17)
+- Rebuilt `app/[locale]/dashboard/trader-profile/page-client.tsx` to follow the user-provided wireframe more directly: profile + visibility row, thin signal strip, active accounts section, large calendar block, stacked right-rail benchmark/portfolio/risk cards, and full-width trade history
+- Preserved the existing calculations and interactions (leaderboard toggle, review window filters, benchmark fetch, calendar selection, and trade history pagination) while rebalancing the page vertically and horizontally
+- Updated `app/[locale]/dashboard/trader-profile/loading.tsx` to mirror the new shell so the loading state no longer flashes a mismatched layout
+- Confirmed that `/deals/compare`, `/deals/calculator`, `/deals/guides`, and `/deals/faq` already unify through anchored redirects into the main `/deals` experience, so no extra shell work was required there
+
 ### Comprehensive Audit Fix Sprint — COMPLETE (2026-04-17)
 Fixed 9 audit findings across security, reliability, and data integrity:
 
