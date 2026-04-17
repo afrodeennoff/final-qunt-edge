@@ -50,6 +50,17 @@ Additional fixes:
 ### Backend Performance & Reliability Rework — COMPLETE (2026-04-16)
 8-phase program completed. See previous memory entries for full details.
 
+### Trader Profile Cleanup + PropFirm Seed + Deploy — COMPLETE
+- Removed all `<h3>` subheadings and verbose description paragraphs from `app/[locale]/dashboard/trader-profile/page-client.tsx`
+- Kept only overline labels (tiny uppercase) as section identifiers for a cleaner, denser layout
+- Removed helper text from stat tiles — labels are self-explanatory
+- Wider right rail in hero section (240px → 280px) for the control panel
+- Added `scripts/seed-prop-firms.ts` — seeds PropFirm table from VERIFIED_PROPFIRM_PROFILES
+- Ran seed: 14 prop firms created in the production Supabase database
+- Admin coupon system is now fully functional: firms exist, forms submit to real DB mutations
+- Added `npm run db:seed-firms` convenience script
+- Deployed to Vercel production: commit `b00ad7f2`, build succeeded in 7m, status Ready
+
 ### Build Stack
 - **Node**: v22.22.2 (nvm use 22, `.nvmrc` = 22)
 - **Bun**: v1.3.12 (package manager + build runner)
@@ -59,6 +70,7 @@ Additional fixes:
 ### Build Status
 - `npx tsc --noEmit` = 0 errors ✅
 - `npm run lint` = 0 errors (921 pre-existing warnings) ✅
+- Vercel production: **Ready** ✅
 - Test suite: 1 pre-existing failure (sidebar-trigger-contract), 433 passed ✅
 
 ## New Files Created

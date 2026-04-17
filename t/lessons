@@ -68,6 +68,16 @@
 - **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
 - **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.
 
+## Lesson 53: Empty database tables can make admin forms appear broken even when code is correct
+- **M:** Admin coupon page showed forms and firms but creating coupons always failed silently
+- **RC:** The `PropFirm` table had 0 rows. The firm dropdown used fallback config data with fake `fallback-xxx` IDs that don't exist in the database. When the user tried to create a coupon, Prisma threw a P2003 foreign key error because the `propFirmId` didn't match any real row.
+- **R:** Always verify database state (row counts) before debugging form submission issues. If a form depends on a parent entity, seed the parent table first. Created `scripts/seed-prop-firms.ts` for idempotent firm seeding.
+- **E:** `npm run db:seed-firms` now seeds 14 verified prop firms, after which the coupon CRUD works end-to-end. Large landing pages look fragmented when every section invents its own surface recipe
+- **M:** The deals page felt visually empty and disjointed even though it already had strong content blocks like the spotlight, filters, and comparison tools.
+- **RC:** Too many route-local card wrappers, white-tinted borders, and inconsistent CTA treatments made the page read like unrelated panels instead of one guided flow.
+- **R:** For multi-tool landing pages, centralize the page shell and a small set of shared surface/action recipes first, then build each section from that system instead of styling every block ad hoc.
+- **E:** The refreshed deals experience now uses `UnifiedPageShell` plus shared page-local surface/button classes across the hero, spotlight, filters, snapshot panel, and offer cards.
+
 ## Lesson 53: Cache invalidation must happen AFTER transaction commit, not inside
 - **M:** `server/trades.ts` called `updateTag()` and `invalidateNamespace()` inside the `prisma.$transaction()` callback
 - **RC:** If the transaction rolls back (write conflict, constraint violation), cache invalidation has already fired. Users see stale-then-fresh-then-stale data. Also, if invalidation throws, the entire trade save aborts.
