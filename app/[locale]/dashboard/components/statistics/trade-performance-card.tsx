@@ -64,15 +64,15 @@ function TradePerformanceCardInner({ size = 'medium' }: TradePerformanceCardProp
  contentClassName="flex items-center justify-center h-full gap-2 p-2"
  info={t('widgets.tradePerformance.tooltip')}
  >
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/18 px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.06)] px-2 py-0.5">
  <TrendingUp className="h-3 w-3 metric-positive" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-positive">{winRate}%</span>
  </div>
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/14 px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.04)] px-2 py-0.5">
  <Minus className="h-3 w-3 text-v2-text-secondary" />
  <span className="font-terminal font-bold text-[11px] tabular-nums text-v2-text-secondary">{beRate}%</span>
  </div>
- <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-secondary/14 px-2 py-0.5">
+ <div className="precision-panel-premium flex items-center gap-1.5 rounded-md bg-[oklch(0.65_0.22_260/0.04)] px-2 py-0.5">
  <TrendingDown className="h-3 w-3 metric-negative" />
  <span className="font-terminal font-bold text-[11px] tabular-nums metric-negative">{lossRate}%</span>
  </div>

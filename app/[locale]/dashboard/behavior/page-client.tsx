@@ -25,7 +25,7 @@ const MindsetWidget = dynamic(
   () => import('../components/mindset/mindset-widget').then((m) => ({ default: m.MindsetWidget })),
   {
     loading: () => (
-      <div className="h-full w-full animate-pulse rounded-xl border border-border/45 bg-card/45" />
+      <div className="h-full w-full animate-pulse rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.02)]" />
     ),
   },
 )
@@ -37,14 +37,14 @@ const AnalysisOverview = dynamic(
     })),
   {
     loading: () => (
-      <div className="h-80 w-full animate-pulse rounded-xl border border-border/45 bg-card/45" />
+      <div className="h-80 w-full animate-pulse rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.02)]" />
     ),
   },
 )
 
 const ChatWidget = dynamic(() => import('../components/chat/chat'), {
   loading: () => (
-    <div className="h-full w-full animate-pulse rounded-xl border border-border/45 bg-card/45" />
+    <div className="h-full w-full animate-pulse rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.02)]" />
   ),
 })
 
@@ -177,7 +177,7 @@ export default function DashboardBehaviorPage() {
 
   return (
     <div className="w-full space-y-6 p-3 sm:p-4 lg:p-6">
-      <Card className="rounded-xl border border-border/45 bg-card/55 shadow-sm">
+      <Card className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] shadow-sm">
         <CardHeader className="pb-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-2">
@@ -302,14 +302,14 @@ export default function DashboardBehaviorPage() {
       </Card>
 
       <Tabs defaultValue="insights" className="space-y-4">
-        <TabsList className="h-auto rounded-xl border border-border/45 bg-card/50 p-1">
+        <TabsList className="h-auto rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.025)] p-1">
           <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="workspace">Workspace</TabsTrigger>
         </TabsList>
 
         <TabsContent value="insights" className="space-y-4">
           <section className="grid gap-4 lg:grid-cols-3">
-            <Card className="border-border/45 bg-card/55 lg:col-span-2">
+            <Card className="border-border/45 bg-[oklch(0.65_0.22_260/0.03)] lg:col-span-2">
               <CardHeader>
                 <CardTitle className="text-base">Behavior Health</CardTitle>
               </CardHeader>
@@ -335,7 +335,7 @@ export default function DashboardBehaviorPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/45 bg-card/55">
+            <Card className="border-border/45 bg-[oklch(0.65_0.22_260/0.03)]">
               <CardHeader>
                 <CardTitle className="text-base">Live Prompt</CardTitle>
               </CardHeader>
@@ -357,7 +357,7 @@ export default function DashboardBehaviorPage() {
           </section>
 
           {(insights?.drivers?.length ?? 0) > 0 ? (
-            <section className="rounded-xl border border-border/45 bg-card/55 p-4 md:p-6">
+            <section className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] p-4 md:p-6">
               <div className="mb-3 flex items-center gap-2">
                 <Gauge className="h-4 w-4 text-foreground/95" />
                 <h3 className="text-base font-semibold">Top Risk Drivers</h3>
@@ -380,7 +380,7 @@ export default function DashboardBehaviorPage() {
           ) : null}
 
           <section className="grid gap-4 lg:grid-cols-2">
-            <Card className="border-border/45 bg-card/55">
+            <Card className="border-border/45 bg-[oklch(0.65_0.22_260/0.03)]">
               <CardHeader>
                 <CardTitle className="text-base">Training & Reflection</CardTitle>
               </CardHeader>
@@ -409,7 +409,7 @@ export default function DashboardBehaviorPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/45 bg-card/55">
+            <Card className="border-border/45 bg-[oklch(0.65_0.22_260/0.03)]">
               <CardHeader>
                 <CardTitle className="text-base">Achievements & Guidance</CardTitle>
               </CardHeader>
@@ -439,7 +439,7 @@ export default function DashboardBehaviorPage() {
           </section>
 
           {recommendationList.length > 0 ? (
-            <section className="rounded-xl border border-border/45 bg-card/55 p-4 md:p-6">
+            <section className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] p-4 md:p-6">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-foreground/95" />
                 <h3 className="text-base font-semibold">AI Recommendations</h3>
@@ -480,14 +480,14 @@ export default function DashboardBehaviorPage() {
         <TabsContent value="workspace" className="space-y-4">
           <section
             id="analysis-section"
-            className="rounded-xl border border-border/45 bg-card/55 p-4 md:p-6"
+            className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] p-4 md:p-6"
           >
             <AnalysisOverview />
           </section>
 
           <section
             id="coach-section"
-            className="rounded-xl border border-border/45 bg-card/55 p-4 md:p-6"
+            className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] p-4 md:p-6"
           >
             <div className="mb-4 flex items-center gap-2">
               <Bot className="h-5 w-5 text-primary" />
@@ -500,7 +500,7 @@ export default function DashboardBehaviorPage() {
 
           <section
             id="mindset-section"
-            className="rounded-xl border border-border/45 bg-card/55 p-4 md:p-6"
+            className="rounded-xl border border-border/45 bg-[oklch(0.65_0.22_260/0.03)] p-4 md:p-6"
           >
             <div className="mb-4 flex items-center gap-2">
               <MessageSquareText className="h-5 w-5 text-primary" />
