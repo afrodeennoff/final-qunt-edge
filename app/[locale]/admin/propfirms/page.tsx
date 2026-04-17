@@ -29,7 +29,6 @@ async function handleDelete(formData: FormData) {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import {
-  buildCouponAdminRedirectUrl,
   type CouponAdminSearchParamValue,
   type CouponAdminNotice,
 } from '../components/coupon-admin-utils'
@@ -40,6 +39,8 @@ function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamV
   const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
 
   switch (status) {
+    case 'saved':
+      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
     case 'deleted':
       return { variant: 'success', title: 'Firm deleted', description: message ?? 'The firm has been removed.' }
     case 'error':

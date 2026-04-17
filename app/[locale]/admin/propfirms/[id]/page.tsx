@@ -36,6 +36,8 @@ import {
   formatAdminDateTimeInput,
   getCouponAdminNotice,
   getCouponTimingState,
+  type CouponAdminSearchParamValue,
+  type CouponAdminNotice,
 } from '../../components/coupon-admin-utils'
 import { FormActionButton } from '../../components/form-action-button'
 
@@ -565,9 +567,9 @@ function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }
               <input type="checkbox" name="isVerified" className="h-4 w-4 rounded border-input accent-primary" />
               Verified
             </label>
-            <Button type="submit" size="sm" variant="outline">
+            <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Adding...">
               <Plus className="w-4 h-4 mr-1" /> Add
-            </Button>
+            </FormActionButton>
           </div>
         </form>
       </CardHeader>
@@ -590,7 +592,7 @@ function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }
                         <input type="checkbox" name="isVerified" defaultChecked={review.isVerified} className="h-4 w-4 rounded border-input accent-primary" />
                         Verified
                       </label>
-                      <Button type="submit" size="sm" variant="outline">Save</Button>
+                      <FormActionButton type="submit" size="sm" variant="outline" pendingLabel="Saving...">Save</FormActionButton>
                     </div>
                     <Textarea
                       name="content"
@@ -607,9 +609,9 @@ function ReviewsSection({ firm, locale }: { firm: PropFirmData; locale: string }
                   <input type="hidden" name="reviewId" value={review.id} />
                   <input type="hidden" name="propFirmId" value={firm.id} />
                   <input type="hidden" name="locale" value={locale} />
-                  <Button type="submit" size="sm" variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
+                  <FormActionButton type="submit" size="sm" variant="ghost" pendingLabel="Deleting..." className="text-red-500 hover:text-red-400 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </FormActionButton>
                 </form>
               </div>
             ))}
