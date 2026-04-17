@@ -50,11 +50,11 @@
 ## v2.1 Requirements (Active)
 
 ### Visual Refresh
-- [ ] REQ-VISUAL-001: Consistent frost/terminal design language across all public-facing pages (landing, auth, pricing)
-- [ ] REQ-VISUAL-002: Dashboard UI components updated to v2 design system (shadcn/ui v2 components)
+- [x] REQ-VISUAL-001: Consistent frost/terminal design language across all public-facing pages (landing, auth, pricing) — Phase 01 PASS
+- [x] REQ-VISUAL-002: Dashboard UI components updated to v2 design system (shadcn/ui v2 components) — Phase 01 PASS
 - [ ] REQ-VISUAL-003: Import flow visual polish (platform cards, progress indicators, ATAS processor)
-- [ ] REQ-VISUAL-004: Error boundaries and loading states with v2 skeleton/styling
-- [ ] REQ-VISUAL-005: Responsive design improvements for mobile and tablet viewports
+- [x] REQ-VISUAL-004: Error boundaries and loading states with v2 skeleton/styling — Phase 01 PASS
+- [x] REQ-VISUAL-005: Responsive design improvements for mobile and tablet viewports — Phase 01 PASS
 
 ### Server Dashboard Bootstrap
 - [ ] REQ-SRV-001: Dashboard first paint renders authenticated user state, sidebar, layout, first trade snapshot from server loaders before hydration
@@ -73,13 +73,13 @@
 - [ ] REQ-IMPORT-003: Import cards use lightweight ImportPlatformCardViewModel, decoupled from parser/runtime modules
 
 ### Dark-Only Theme Enforcement
-- [ ] REQ-DARK-001: Remove route-based light-theme branching across all surfaces
-- [ ] REQ-DARK-002: All public, auth, dashboard, admin, team, shared, embed, error, and fallback surfaces use dark theme contract
+- [x] REQ-DARK-001: Remove route-based light-theme branching across all surfaces — Phase 05 PASS
+- [x] REQ-DARK-002: All public, auth, dashboard, admin, team, shared, embed, error, and fallback surfaces use dark theme contract — Phase 05 PASS
 
 ### Navigation & Sidebar
-- [ ] REQ-NAV-001: Admin sidebar gets visible Main Dashboard back-link with consistent labeling
-- [ ] REQ-NAV-002: Teams sidebar gets consistent Main Dashboard back-link pattern
-- [ ] REQ-NAV-003: Mobile navigation mirrors desktop contract for admin/team panels
+- [x] REQ-NAV-001: Admin sidebar gets visible Main Dashboard back-link with consistent labeling — Phase 06 PASS
+- [x] REQ-NAV-002: Teams sidebar gets consistent Main Dashboard back-link pattern — Phase 06 PASS
+- [x] REQ-NAV-003: Mobile navigation mirrors desktop contract for admin/team panels — Phase 06 PASS
 
 ### Dashboard Polish
 - [ ] REQ-POLISH-001: Unify header actions into one subdued pill system
