@@ -131,13 +131,17 @@ async function handleCreateReview(formData: FormData) {
   'use server'
   const propFirmId = requireFormString(formData, 'propFirmId')
   const locale = requireFormString(formData, 'locale')
-  await createPropFirmReview(propFirmId, {
-    rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
-    title: normalizeOptionalText(formData.get('title')),
-    content: normalizeOptionalText(formData.get('content')),
-    isVerified: formData.has('isVerified'),
-  })
-  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  try {
+    await createPropFirmReview(propFirmId, {
+      rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
+      title: normalizeOptionalText(formData.get('title')),
+      content: normalizeOptionalText(formData.get('content')),
+      isVerified: formData.has('isVerified'),
+    })
+  } catch {
+    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+create+review`)
+  }
+  redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=saved`)
 }
 
 async function handleUpdateReview(formData: FormData) {
@@ -145,13 +149,17 @@ async function handleUpdateReview(formData: FormData) {
   const reviewId = requireFormString(formData, 'reviewId')
   const propFirmId = requireFormString(formData, 'propFirmId')
   const locale = requireFormString(formData, 'locale')
-  await updatePropFirmReview(reviewId, {
-    rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
-    title: normalizeOptionalText(formData.get('title')),
-    content: normalizeOptionalText(formData.get('content')),
-    isVerified: formData.has('isVerified'),
-  })
-  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  try {
+    await updatePropFirmReview(reviewId, {
+      rating: Number.parseInt(requireText(formData.get('rating'), '0'), 10),
+      title: normalizeOptionalText(formData.get('title')),
+      content: normalizeOptionalText(formData.get('content')),
+      isVerified: formData.has('isVerified'),
+    })
+  } catch {
+    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+update+review`)
+  }
+  redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=saved`)
 }
 
 async function handleDeleteReview(formData: FormData) {
@@ -159,8 +167,12 @@ async function handleDeleteReview(formData: FormData) {
   const reviewId = requireFormString(formData, 'reviewId')
   const propFirmId = requireFormString(formData, 'propFirmId')
   const locale = requireFormString(formData, 'locale')
-  await deletePropFirmReview(reviewId)
-  redirect(`/${locale}/admin/propfirms/${propFirmId}`)
+  try {
+    await deletePropFirmReview(reviewId)
+  } catch {
+    redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=error&firmMessage=Failed+to+delete+review`)
+  }
+  redirect(`/${locale}/admin/propfirms/${propFirmId}?firmStatus=deleted`)
 }
 
 async function handleCreateCoupon(formData: FormData) {
@@ -329,6 +341,24 @@ function buildFallbackFirm(id: string): PropFirmData | null {
 // ---------------------------------------------------------------------------
 
 // eslint-disable-next-line complexity
+function getFirmAdminNotice(searchParams: Record<string, CouponAdminSearchParamValue>): CouponAdminNotice | null {
+  const status = Array.isArray(searchParams.firmStatus) ? searchParams.firmStatus[0] : searchParams.firmStatus
+  if (!status) return null
+  const message = Array.isArray(searchParams.firmMessage) ? searchParams.firmMessage[0] : searchParams.firmMessage
+
+  switch (status) {
+    case 'saved':
+      return { variant: 'success', title: 'Saved', description: message ?? 'Changes saved successfully.' }
+    case 'deleted':
+      return { variant: 'success', title: 'Deleted', description: message ?? 'Item removed.' }
+    case 'error':
+      return { variant: 'destructive', title: 'Action failed', description: message ?? 'The change did not save.' }
+    default:
+      return null
+  }
+}
+
+// eslint-disable-next-line complexity
 export default async function PropFirmEditPage({
   params,
   searchParams,
@@ -338,7 +368,9 @@ export default async function PropFirmEditPage({
 }) {
   await assertAdminAccess()
   const { locale, id } = await params
-  const notice = getCouponAdminNotice(await searchParams)
+  const couponNotice = getCouponAdminNotice(await searchParams)
+  const firmNotice = getFirmAdminNotice(await searchParams)
+  const notice = firmNotice ?? couponNotice
   const isNew = id === 'new'
   const isReadOnlyFallback = !hasConfiguredDatabaseConnection
 
@@ -497,7 +529,7 @@ export default async function PropFirmEditPage({
               <Button variant="outline" asChild>
                 <Link href={`/${locale}/admin/propfirms`}>Cancel</Link>
               </Button>
-              <Button type="submit">{isNew ? 'Create' : 'Save Changes'}</Button>
+              <FormActionButton type="submit">{isNew ? 'Create' : 'Save Changes'}</FormActionButton>
             </div>
           </CardContent>
         </Card>
