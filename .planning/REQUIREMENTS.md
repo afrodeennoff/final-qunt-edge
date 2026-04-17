@@ -63,9 +63,9 @@
 - [x] REQ-SRV-004: Expensive derivations (sorting, filtering, score metrics, calendar aggregates) precomputed server-side for first paint — Phase 02 WIRED
 
 ### Widget Server Shells
-- [ ] REQ-WIDGET-001: Widget titles, summaries, counts, empty states, and shell chrome rendered on the server
-- [ ] REQ-WIDGET-002: Charts, drag/drop, editors, chat, and upload interactions remain client-side islands with lazy imports
-- [ ] REQ-WIDGET-003: Remove blanket `ssr: false` usage in widget registry; replace with server wrappers and targeted lazy imports
+- [x] REQ-WIDGET-001: Widget titles, summaries, counts, empty states, and shell chrome rendered on the server — Phase 03 ssr:false removed
+- [x] REQ-WIDGET-002: Charts, drag/drop, editors, chat, and upload interactions remain client-side islands with lazy imports — Phase 03 lazy imports kept
+- [x] REQ-WIDGET-003: Remove blanket `ssr: false` usage in widget registry; replace with server wrappers and targeted lazy imports — Phase 03 60+ removed
 
 ### Import Flow Polish
 - [x] REQ-IMPORT-001: Import type selector is stable with no layout jumping, predictable card heights, fast filtering/search — Phase 04 layout fix done
