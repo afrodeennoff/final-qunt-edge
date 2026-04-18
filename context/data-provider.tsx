@@ -1695,6 +1695,7 @@ export const DataProvider: React.FC<{
   const renameGroup = useCallback(
     async (groupId: string, name: string) => {
       if (!supabaseUser?.id) return;
+      const previousGroups = [...useUserStore.getState().groups];
       try {
         setGroups(
           groups.map((group) =>
@@ -1703,6 +1704,7 @@ export const DataProvider: React.FC<{
         );
         await renameGroupAction(groupId, name);
       } catch (error) {
+        setGroups(previousGroups);
         logger.error({ error }, "Error renaming group");
         throw error;
       }
@@ -1713,8 +1715,10 @@ export const DataProvider: React.FC<{
   // Add deleteGroup function
   const deleteGroup = useCallback(
     async (groupId: string) => {
+      const previousGroups = [...useUserStore.getState().groups];
+      const previousAccounts = [...useUserStore.getState().accounts];
       try {
-        // Remove groupdId from accounts
+        // Remove groupId from accounts
         const updatedAccounts = accounts.map((account: Account) => {
           if (account.groupId === groupId) {
             return { ...account, groupId: null };
@@ -1725,6 +1729,8 @@ export const DataProvider: React.FC<{
         setGroups(groups.filter((group) => group.id !== groupId));
         await deleteGroupAction(groupId);
       } catch (error) {
+        setGroups(previousGroups);
+        setAccounts(previousAccounts);
         logger.error({ error }, "Error deleting group");
         throw error;
       }
@@ -1977,6 +1983,7 @@ export const DataProvider: React.FC<{
   const deletePayout = useCallback(
     async (payoutId: string) => {
       if (!supabaseUser?.id || isSharedView) return;
+      const previousAccounts = [...useUserStore.getState().accounts];
 
       try {
         // Find the account that has this payout
@@ -2018,6 +2025,7 @@ export const DataProvider: React.FC<{
           setAccounts(updatedAccounts);
         }
       } catch (error) {
+        setAccounts(previousAccounts);
         logger.error({ error }, "Error deleting payout");
         throw error;
       }
@@ -2172,6 +2180,7 @@ export const DataProvider: React.FC<{
   const saveDashboardLayout = useCallback(
     async (layout: PrismaDashboardLayout) => {
       if (!supabaseUser?.id) return;
+      const previousLayout = useUserStore.getState().dashboardLayout;
 
       try {
         const normalizedLayout = {
@@ -2183,6 +2192,7 @@ export const DataProvider: React.FC<{
         setDashboardLayout(normalizedLayout as unknown as DashboardLayoutWithWidgets);
         await saveDashboardLayoutAction(normalizedLayout);
       } catch (error: unknown) {
+        setDashboardLayout(previousLayout as unknown as DashboardLayoutWithWidgets);
         logger.error({ error }, "Error saving dashboard layout");
         throw error;
       }
