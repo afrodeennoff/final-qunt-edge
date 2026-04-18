@@ -439,7 +439,7 @@ export function DailySummaryModal() {
  <DialogTrigger asChild>
  <Button
  variant="outline"
- className="group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-v2-text-secondary shadow-none transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary md:px-4"
+ className="group flex h-9 items-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/80/70 hover:text-foreground md:px-4"
  >
  <BarChart3 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
  <span className="hidden md:inline text-[10px] font-semibold uppercase tracking-[0.18em]">PnL Summary</span>

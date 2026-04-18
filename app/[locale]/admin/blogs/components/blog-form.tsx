@@ -182,7 +182,7 @@ export function BlogForm({ post, locale }: Props) {
         <select
           id="category"
           {...register('category', { required: 'Category is required' })}
-          className="flex h-10 w-full rounded-v2-md border border-v2-border bg-v2-bg-surface px-3 py-2 text-sm text-v2-text-primary outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base"
+          className="flex h-10 w-full rounded-v2-md border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-v2-accent focus-visible:ring-offset-2 focus-visible:ring-offset-v2-bg-base"
         >
           {categoryOptions.map((option) => (
             <option key={option.value} value={option.value}>

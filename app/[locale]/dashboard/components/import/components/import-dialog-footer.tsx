@@ -39,9 +39,9 @@ export function ImportDialogFooter({
  const isSyncFirstStep = isFirstStep && (importType === 'rithmic-sync' || importType === 'tradovate-sync')
 
  return (
- <div className="flex-none border-t border-v2-border bg-v2-bg-surface/95 px-6 py-4 supports-backdrop-filter:bg-v2-bg-surface/60">
+ <div className="flex-none border-t border-border bg-card/95 px-6 py-4 supports-backdrop-filter:bg-card/60">
  <div className="flex items-center justify-between">
- <span className="text-xs text-v2-text-muted tabular-nums">
+ <span className="text-xs text-muted-foreground tabular-nums">
  {currentStepIndex + 1} / {platform.steps.length}
  </span>
  <div className="flex items-center gap-3">

@@ -112,21 +112,21 @@ export default React.memo(function TimeOfDayTradeChart({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
- <div className="flex justify-between items-center mb-2 border-b border-v2-border/40 pb-1">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
- <span className="font-bold text-v2-text-primary text-sm uppercase">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="flex justify-between items-center mb-2 border-b border-border/40 pb-1">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.time")}</span>
+ <span className="font-bold text-foreground text-sm uppercase">{`${label}:00 - ${(label + 1) % 24}:00`}</span>
  </div>
  <div className="space-y-1.5">
  <div className="flex justify-between items-center">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.averagePnl")}</span>
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.averagePnl")}</span>
  <span className={cn("font-bold text-sm tabular-nums",
  data.avgPnl >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.avgPnl)}</span>
  </div>
- <div className="flex justify-between items-center pt-1.5 border-t border-v2-border/40">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
- <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ <div className="flex justify-between items-center pt-1.5 border-t border-border/40">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">{t("pnlTime.tooltip.trades")}</span>
+ <span className="font-bold text-foreground text-sm tabular-nums">
  {data.tradeCount}
  </span>
  </div>

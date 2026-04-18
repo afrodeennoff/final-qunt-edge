@@ -38,28 +38,28 @@ function CommissionsTooltip({
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
- <div className="flex flex-col mb-2 border-b border-v2-border/40 pb-1">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="flex flex-col mb-2 border-b border-border/40 pb-1">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("commissions.tooltip.type")}
  </span>
- <span className="font-bold text-v2-text-primary text-sm uppercase">
+ <span className="font-bold text-foreground text-sm uppercase">
  {data.name}
  </span>
  </div>
  <div className="flex flex-col mb-2">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("commissions.tooltip.amount")}
  </span>
  <span className={cn("font-bold text-sm tabular-nums",
  data.raw >= 0 ?"metric-positive" :"metric-negative"
  )}>{formatCurrency(data.raw)}</span>
  </div>
- <div className="flex flex-col pt-2 border-t border-v2-border/40">
- <span className="text-v2-text-secondary text-[10px] font-semibold uppercase tracking-wider">
+ <div className="flex flex-col pt-2 border-t border-border/40">
+ <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider">
  {t("commissions.tooltip.percentage")}
  </span>
- <span className="font-bold text-v2-text-primary text-sm tabular-nums">
+ <span className="font-bold text-foreground text-sm tabular-nums">
  {data.value.toFixed(2)}%</span>
  </div>
  </div>

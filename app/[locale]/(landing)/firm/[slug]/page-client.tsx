@@ -417,7 +417,7 @@ function FactTile({
   value: string
 }) {
   return (
-    <div className="rounded-xl border border-border/20 bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))] px-4 py-4">
+    <div className="rounded-xl border border-border/20 bg-card/80 px-4 py-4">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/40 bg-background/0.05">
           <Icon className="h-4 w-4 text-v2-accent" />
@@ -438,7 +438,7 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
         'rounded-xl border border-border/20 px-4 py-4',
         highlight
           ? 'bg-[linear-gradient(145deg,rgba(20,184,166,0.16),rgba(20,184,166,0.05))]'
-          : 'bg-[linear-gradient(150deg,hsl(var(--background)/0.82),hsl(var(--card)/0.38))]'
+          : 'bg-card/80'
       )}
     >
       <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
@@ -1233,7 +1233,7 @@ function HeaderRadarMini({ firm }: { firm: FirmData }) {
 
   return (
     <div className="w-full lg:w-auto">
-      <Card className="w-full rounded-xl border-border/20 bg-[linear-gradient(160deg,hsl(var(--background)/0.78),hsl(var(--card)/0.45))] lg:w-[276px]">
+      <Card className="w-full rounded-xl border-border/20 bg-card/80 lg:w-[276px]">
         <CardContent className="flex flex-col items-center p-3.5">
           <p className="text-center text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Radar Snapshot</p>
           <ChartContainer
@@ -1278,7 +1278,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
   const headerMetrics = buildHeaderMetrics(firm)
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-border/20 bg-[linear-gradient(180deg,rgba(8,8,8,0.96),rgba(3,3,3,0.94))] p-5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)] sm:p-7 lg:p-9">
+    <section className="relative overflow-hidden rounded-2xl border border-border/30 bg-card/90 p-5 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] sm:p-7 lg:p-9">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.04),_transparent_40%)]" />
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">

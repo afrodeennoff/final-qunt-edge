@@ -60,14 +60,14 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  ) : (
  <TrendingDown className="h-4 w-4 shrink-0 metric-negative" />
  )}
- <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-v2-text-secondary">Net</span>
- <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-v2-text-primary">
+ <span className="micro-sans shrink-0 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Net</span>
+ <span className="micro-sans tabular-nums shrink-0 text-center text-[30px] font-black leading-none tracking-tight text-foreground">
  {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}
  </span>
  <TooltipProvider>
  <Tooltip>
  <TooltipTrigger asChild>
- <Info className="h-4 w-4 shrink-0 cursor-help text-v2-text-secondary transition-colors hover:text-v2-text-primary" />
+ <Info className="h-4 w-4 shrink-0 cursor-help text-muted-foreground transition-colors hover:text-foreground" />
  </TooltipTrigger>
  <TooltipContent side="bottom" sideOffset={5} className="max-w-[300px]">
  {t('widgets.cumulativePnl.tooltip')}
@@ -97,11 +97,11 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  <div className="grid grid-cols-2 gap-2 pt-2">
  <Separator className="col-span-2 border-dashed" />
  <div className="flex flex-col gap-0.5">
- <span className="text-[9px] font-bold uppercase tracking-tight text-v2-text-secondary">Profits</span>
- <span className="micro-sans text-[11px] font-bold text-v2-text-primary tabular-nums">{formatCurrency(safeGrossWin)}</span>
+ <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Profits</span>
+ <span className="micro-sans text-[11px] font-bold text-foreground tabular-nums">{formatCurrency(safeGrossWin)}</span>
  </div>
  <div className="flex flex-col gap-0.5 text-right">
- <span className="text-[9px] font-bold uppercase tracking-tight text-v2-text-secondary">Losses</span>
+ <span className="text-[9px] font-bold uppercase tracking-tight text-muted-foreground">Losses</span>
  <span className="micro-sans text-[11px] font-bold metric-negative tabular-nums">{formatCurrency(safeGrossLosses)}</span>
  </div>
  </div>

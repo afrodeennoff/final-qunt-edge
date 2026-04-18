@@ -206,7 +206,7 @@ export const AddWidgetSheet = forwardRef<HTMLButtonElement, AddWidgetSheetProps>
  ref={ref}
  variant="ghost"
  disabled={!isCustomizing}
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-muted-foreground shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-background/80/70 hover:text-foreground",
  !isCustomizing &&"opacity-60",
  isMobile && !showLabelOnMobile ?"h-10 w-10 p-0" :"h-9 min-w-[120px] gap-2.5 px-3.5"
  )}

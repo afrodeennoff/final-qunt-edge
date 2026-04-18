@@ -211,7 +211,7 @@ export function ActiveFilterTags({ showAccountNumbers }: { showAccountNumbers: b
  animate={{ height:"auto", opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="overflow-hidden border-t border-v2-border/10 bg-v2-bg-base/35"
+ className="overflow-hidden border-t border-border/10 bg-background/35"
  >
  <div className="px-3 py-2 sm:px-6">
  <div className="relative flex items-center overflow-hidden">

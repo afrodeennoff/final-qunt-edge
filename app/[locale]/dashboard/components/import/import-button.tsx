@@ -54,7 +54,7 @@ class ImportErrorBoundary extends Component<
  if (this.state.hasError) {
  return (
  <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
- <p className="text-sm text-v2-text-muted">Something went wrong loading this import.</p>
+ <p className="text-sm text-muted-foreground">Something went wrong loading this import.</p>
  <Button
  variant="outline"
  size="sm"
@@ -552,7 +552,7 @@ export default function ImportButton() {
  <Button 
  onClick={() => setIsOpen(true)}
  variant="outline"
- className={cn("group h-9 w-auto justify-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-v2-text-secondary shadow-none transition-colors hover:bg-v2-bg-hover/70 hover:text-v2-text-primary md:px-4"
+ className={cn("group h-9 w-auto justify-center gap-2 rounded-full border border-transparent bg-transparent px-3.5 text-muted-foreground shadow-none transition-colors hover:bg-background/80/70 hover:text-foreground md:px-4"
  )}
  id="import-data"
  onMouseEnter={() => uploadIconRef.current?.startAnimation()}
@@ -578,7 +578,7 @@ export default function ImportButton() {
  }}
  >
  <DialogContent
- className={cn("flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-v2-border bg-v2-bg-surface p-0 text-v2-text-primary shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)] sm:h-[80vh] sm:max-w-[80vw]",
+ className={cn("flex h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col overflow-hidden border-border bg-card p-0 text-foreground shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)] sm:h-[80vh] sm:max-w-[80vw]",
  )}
  onPointerDownOutside={(e) => {
  // Prevent accidental closes during import flow

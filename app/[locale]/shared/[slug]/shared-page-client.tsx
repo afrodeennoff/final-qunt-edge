@@ -74,7 +74,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             className={cn(
               "flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
-                ? "border-border/40 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
+                ? "border-border/40 bg-card/80 text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
                 : "border-border/30 bg-background/30 text-muted-foreground hover:border-border/40 hover:bg-background/0.09"
             )}
           >

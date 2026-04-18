@@ -65,25 +65,25 @@ function CustomTooltip({ active, payload, label, t }: CustomTooltipProps) {
  if (active && payload && payload.length) {
  const data = payload[0].payload;
  return (
- <div className="bg-v2-bg-surface/96 p-3 border border-v2-border/50 rounded-xl shadow-xl min-w-[140px]">
+ <div className="bg-card/96 p-3 border border-border/50 rounded-xl shadow-xl min-w-[140px]">
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("timeInPosition.tooltip.time")}
  </span>
- <span className="font-semibold text-v2-text-primary text-sm">
+ <span className="font-semibold text-foreground text-sm">
  {`${Number(label ?? 0)}:00 - ${(Number(label ?? 0) + 1) % 24}:00`}
  </span>
  </div>
  <div className="flex flex-col mb-2">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("timeInPosition.tooltip.averageDuration")}
  </span>
  <span className={cn("font-bold text-sm", data.avgTimeInPosition > 0 ?"metric-positive" :"metric-negative")}>
  {formatTime(data.avgTimeInPosition)}
  </span>
  </div>
- <div className="flex flex-col pt-2 border-t border-v2-border/40">
- <span className="text-[10px] uppercase text-v2-text-secondary font-semibold tracking-wider">
+ <div className="flex flex-col pt-2 border-t border-border/40">
+ <span className="text-[10px] uppercase text-muted-foreground font-semibold tracking-wider">
  {t("timeInPosition.tooltip.trades")}
  </span>
  <span className={cn("font-bold text-sm", data.tradeCount > 0 ?"metric-positive" :"metric-negative")}>

@@ -7,7 +7,7 @@ const alertVariants = cva("relative w-full rounded-xl border p-4 shadow-[0_18px_
  {
  variants: {
  variant: {
- default:"border-[var(--frost-border)] bg-v2-bg-base/60 text-foreground",
+ default:"border-[var(--frost-border)] bg-background/60 text-foreground",
  destructive:"border-[oklch(0.6_0.2_15/0.5)] bg-[oklch(0.6_0.2_15/0.08)] text-[oklch(0.6_0.2_15)] [&>svg]:text-[oklch(0.6_0.2_15)]",
  warning:"border-[oklch(0.65_0.2_45/0.5)] bg-[oklch(0.65_0.2_45/0.08)] text-[oklch(0.65_0.2_45)] [&>svg]:text-[oklch(0.65_0.2_45)]",
  success:"border-[oklch(0.55_0.15_166/0.5)] bg-[oklch(0.55_0.15_166/0.08)] text-[oklch(0.55_0.15_166)] [&>svg]:text-[oklch(0.55_0.15_166)]",

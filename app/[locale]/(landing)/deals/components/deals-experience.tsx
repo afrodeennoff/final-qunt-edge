@@ -74,7 +74,7 @@ const TABS: ReadonlyArray<{ id: string; label: string }> = [
 
 const DEALS_SPOTLIGHT_AUTO_SLIDE_MS = 5000
 const dealsPanelClassName =
-  'rounded-2xl border border-border/40 bg-[linear-gradient(180deg,hsl(var(--primary)/0.08),oklch(0_0_0/0.92))] shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
+  'rounded-xl border border-border/40 bg-card/90 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]'
 const dealsInsetPanelClassName =
   'rounded-2xl border border-border/35 bg-background/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
 const dealsChipClassName =
@@ -1014,7 +1014,7 @@ function BiggestDealsCarousel({
 function BackgroundDealTeaser({ deal, align }: { deal: DealItem; align: 'left' | 'right' }) {
   return (
     <div
-      className={`w-[360px] overflow-hidden rounded-xl border border-border/30 bg-[linear-gradient(180deg,hsl(var(--primary)/0.04),oklch(0_0_0/0.82))] px-6 py-6 opacity-20 ${
+      className={`w-[360px] overflow-hidden rounded-xl border border-border/30 bg-background/50 px-6 py-6 opacity-20 ${
         align === 'left' ? 'translate-x-[-56%]' : 'translate-x-[56%]'
       }`}
     >
@@ -1466,7 +1466,7 @@ function DealCard({
   const isExternalClaim = Boolean(deal.claimUrl)
 
   return (
-    <div className="group overflow-hidden rounded-xl border border-border/40 bg-[linear-gradient(160deg,hsl(var(--primary)/0.08),oklch(0_0_0/0.9))] p-4 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/35 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]">
+    <div className="group overflow-hidden rounded-xl border border-border/40 bg-card/90 p-4 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] transition-[transform,box-shadow,border-color,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border/35 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div

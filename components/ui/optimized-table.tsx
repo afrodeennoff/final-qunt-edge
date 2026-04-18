@@ -118,7 +118,7 @@ export function OptimizedVirtualTable<TData, TValue>({
  return (
  <div
  className={cn(
- 'flex items-center border-b border-border/30 transition-colors hover:bg-v2-bg-hover',
+ 'flex items-center border-b border-border/30 transition-colors hover:bg-background/80',
  onRowClick && 'cursor-pointer'
  )}
  style={{

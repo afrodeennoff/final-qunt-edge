@@ -385,7 +385,7 @@ export const ShareButton = forwardRef<HTMLButtonElement, ShareButtonProps>(
  <Button 
  ref={ref}
  variant={variant}
- className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-v2-text-secondary shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-v2-bg-hover/70 hover:text-v2-text-primary",
+ className={cn("flex items-center justify-center rounded-full border border-transparent bg-transparent text-muted-foreground shadow-none transition-[transform,background-color,color] active:scale-95 hover:bg-background/80/70 hover:text-foreground",
  isMobile ?"h-11 w-11 p-0" :"h-9 min-w-[120px] gap-2.5 px-3.5"
  )}
  >
