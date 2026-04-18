@@ -246,24 +246,32 @@ function SignalTile({
 function StripMetric({
   label,
   value,
+  helper,
   tone = 'default',
+  emphasis = false,
+  className,
 }: {
   label: string
   value: string
+  helper?: string
   tone?: StatTone
+  emphasis?: boolean
+  className?: string
 }) {
   return (
-    <div className={cn(insetPanelClassName, 'p-3')}>
+    <div className={cn(insetPanelClassName, 'p-3.5', className)}>
       <p className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          'mt-1.5 text-sm font-semibold tracking-tight text-foreground',
+          'mt-1.5 font-semibold tracking-tight text-foreground',
+          emphasis ? 'text-base sm:text-lg' : 'text-sm',
           tone === 'positive' && 'text-semantic-success',
           tone === 'negative' && 'text-semantic-error',
         )}
       >
         {value}
       </p>
+      {helper ? <p className="mt-1 text-xs text-muted-foreground">{helper}</p> : null}
     </div>
   )
 }
@@ -672,6 +680,50 @@ export default function TraderProfilePageClient() {
     return `${start}-${end} of ${closedTrades.length}`
   }, [closedTrades.length, tradeFeedPage])
 
+  const primaryStripMetrics: Array<{ label: string; value: string; tone?: StatTone }> = [
+    {
+      label: 'Net PnL',
+      value: formatSigned(metrics.netPnl),
+      tone:
+        metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : ('default' as const),
+    },
+    {
+      label: 'Avg net / trade',
+      value: formatSigned(metrics.avgReturn),
+      tone:
+        metrics.avgReturn > 0
+          ? 'positive'
+          : metrics.avgReturn < 0
+            ? 'negative'
+            : ('default' as const),
+    },
+    {
+      label: 'Consistency',
+      value: `${formatValue(metrics.consistencyRate)}%`,
+      tone: metrics.consistencyRate >= 50 ? ('positive' as const) : ('default' as const),
+    },
+  ]
+
+  const secondaryStripMetrics: Array<{ label: string; value: string; tone?: StatTone }> = [
+    {
+      label: 'Break-even rate',
+      value: `${formatValue(metrics.breakEvenRate)}%`,
+    },
+    {
+      label: 'Active accounts',
+      value: String(activeAccountsCount),
+    },
+    {
+      label: 'Total trades',
+      value: String(metrics.totalTrades),
+    },
+    {
+      label: 'Current streak',
+      value: metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset',
+      tone: metrics.winningStreak > 0 ? ('positive' as const) : ('default' as const),
+    },
+  ]
+
   useEffect(() => {
     const hasSelection = Boolean(selectedCalendarDay)
     const selectionInRange = selectedCalendarDay
@@ -689,169 +741,177 @@ export default function TraderProfilePageClient() {
 
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
-      <div className="space-y-4 sm:space-y-5 lg:space-y-6">
+      <div className="animate-page-enter space-y-4 sm:space-y-5 lg:space-y-6">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-6">
           <section className="min-w-0 space-y-4">
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-              <UnifiedSurface variant="elevated" className="overflow-hidden p-5 sm:p-6 lg:p-7">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                  <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
-                    <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
-                    <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
-                      {profileInitials}
-                    </AvatarFallback>
-                  </Avatar>
+            <UnifiedSurface
+              variant="elevated"
+              className="animate-fade-up-smooth overflow-hidden p-5 sm:p-6 lg:p-7"
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <Avatar className="h-20 w-20 shrink-0 rounded-3xl border border-border/40 bg-background/70 sm:h-24 sm:w-24">
+                  <AvatarImage src={profileAvatar ?? undefined} alt={`${profileName} avatar`} />
+                  <AvatarFallback className="bg-background text-lg font-semibold text-foreground">
+                    {profileInitials}
+                  </AvatarFallback>
+                </Avatar>
 
-                  <div className="min-w-0 flex-1 space-y-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary" className="gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        Trader Profile
-                      </Badge>
-                      <Badge
-                        variant={showOnLeaderboard ? 'success' : 'outline'}
-                        className="gap-1.5"
-                      >
-                        {showOnLeaderboard ? (
-                          <Globe className="h-3.5 w-3.5" />
-                        ) : (
-                          <Lock className="h-3.5 w-3.5" />
-                        )}
-                        {showOnLeaderboard ? 'Public profile' : 'Private profile'}
-                      </Badge>
-                    </div>
-
-                    <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                      {profileName}
-                    </h2>
-                  </div>
-                </div>
-              </UnifiedSurface>
-
-              <UnifiedSurface className="p-5 sm:p-6">
-                <div className="space-y-4">
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Visibility
-                  </p>
-
-                  {isOwnProfile ? (
-                    <div
-                      className={cn(insetPanelClassName, 'flex items-center justify-between p-3')}
-                    >
-                      <div className="space-y-0.5">
-                        <p className="text-xs text-muted-foreground">
-                          Show on public leaderboard
-                        </p>
-                      </div>
-                      <Switch
-                        checked={showOnLeaderboard}
-                        onCheckedChange={handleToggleLeaderboard}
-                        disabled={isTogglingVisibility}
-                        aria-label="Toggle leaderboard visibility"
-                      />
-                    </div>
-                  ) : (
-                    <Badge variant="secondary" className="w-fit">
-                      View only
+                <div className="min-w-0 flex-1 space-y-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary" className="gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Trader Profile
                     </Badge>
-                  )}
-
-                  <div className={cn(insetPanelClassName, 'p-4')}>
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                        Review window
-                      </p>
-                      <Badge variant="secondary">{selectedDayLabel}</Badge>
-                    </div>
-                    <p className="mt-1 text-sm font-semibold text-foreground">
-                      {reviewWindowSummary}
-                    </p>
-
-                    <div className="mt-4 flex flex-col gap-3">
-                      <Select
-                        value={dateFilterPreset}
-                        onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
-                      >
-                        <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="last_week">Last Week</SelectItem>
-                          <SelectItem value="last_month">Last Month</SelectItem>
-                          <SelectItem value="last_3_months">Last 3 Months</SelectItem>
-                          <SelectItem value="last_6_months">Last 6 Months</SelectItem>
-                          <SelectItem value="last_year">Last Year</SelectItem>
-                          <SelectItem value="custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
-                          >
-                            <CalendarIcon className="h-4 w-4" />
-                            {dateFilterLabel ?? 'Custom Range'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2" align="start">
-                          <Calendar
-                            mode="range"
-                            selected={customDateRange}
-                            onSelect={setCustomDateRange}
-                            numberOfMonths={isMobile ? 1 : 2}
-                            className="p-0"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
+                    <Badge
+                      variant={showOnLeaderboard ? 'success' : 'outline'}
+                      className="gap-1.5"
+                    >
+                      {showOnLeaderboard ? (
+                        <Globe className="h-3.5 w-3.5" />
+                      ) : (
+                        <Lock className="h-3.5 w-3.5" />
+                      )}
+                      {showOnLeaderboard ? 'Public profile' : 'Private profile'}
+                    </Badge>
                   </div>
-                </div>
-              </UnifiedSurface>
-            </div>
 
-            <UnifiedSurface className="p-4 sm:p-5">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
-                <StripMetric
-                  label="Consistency"
-                  value={`${formatValue(metrics.consistencyRate)}%`}
-                  tone={metrics.consistencyRate >= 50 ? 'positive' : 'default'}
-                />
-                <StripMetric
-                  label="Avg net / trade"
-                  value={formatSigned(metrics.avgReturn)}
-                  tone={
-                    metrics.avgReturn > 0
-                      ? 'positive'
-                      : metrics.avgReturn < 0
-                        ? 'negative'
-                        : 'default'
-                  }
-                />
-                <StripMetric
-                  label="Break-even rate"
-                  value={`${formatValue(metrics.breakEvenRate)}%`}
-                />
-                <StripMetric label="Active accounts" value={String(activeAccountsCount)} />
-                <StripMetric label="Total trades" value={String(metrics.totalTrades)} />
-                <StripMetric
-                  label="Current streak"
-                  value={metrics.winningStreak > 0 ? `${metrics.winningStreak} wins` : 'Reset'}
-                  tone={metrics.winningStreak > 0 ? 'positive' : 'default'}
-                />
-                <StripMetric
-                  label="Net PnL"
-                  value={formatSigned(metrics.netPnl)}
-                  tone={
-                    metrics.netPnl > 0 ? 'positive' : metrics.netPnl < 0 ? 'negative' : 'default'
-                  }
-                />
+                  <h2 className="truncate text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                    {profileName}
+                  </h2>
+
+                  <p className="max-w-2xl text-sm text-muted-foreground sm:text-[0.95rem]">
+                    Performance board for reviewing consistency, session rhythm, and active
+                    account health in one place.
+                  </p>
+                </div>
               </div>
             </UnifiedSurface>
 
-            <UnifiedSurface className="p-5 sm:p-6">
+            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-4 sm:p-5">
+              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(290px,0.95fr)]">
+                <div className="space-y-3">
+                  <div className="grid gap-3 md:grid-cols-3">
+                    {primaryStripMetrics.map((metric) => (
+                      <StripMetric
+                        key={metric.label}
+                        label={metric.label}
+                        value={metric.value}
+                        tone={metric.tone}
+                        emphasis
+                        className="h-full"
+                      />
+                    ))}
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    {secondaryStripMetrics.map((metric) => (
+                      <StripMetric
+                        key={metric.label}
+                        label={metric.label}
+                        value={metric.value}
+                        tone={metric.tone}
+                        className="h-full"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className={cn(insetPanelClassName, 'p-4 sm:p-[1.125rem]')}>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Review controls
+                        </p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {reviewWindowSummary}
+                        </p>
+                      </div>
+
+                      {isOwnProfile ? (
+                        <div
+                          className={cn(
+                            insetPanelClassName,
+                            'flex items-center gap-3 rounded-full px-3 py-2',
+                          )}
+                        >
+                          <div className="space-y-0.5">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                              Visibility
+                            </p>
+                            <p className="text-xs text-foreground">Public leaderboard</p>
+                          </div>
+                          <Switch
+                            checked={showOnLeaderboard}
+                            onCheckedChange={handleToggleLeaderboard}
+                            disabled={isTogglingVisibility}
+                            aria-label="Toggle leaderboard visibility"
+                          />
+                        </div>
+                      ) : (
+                        <Badge variant="secondary" className="w-fit">
+                          View only
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                      <div className="rounded-2xl border border-border/20 bg-background/45 p-3.5">
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                          Active session
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-foreground">
+                          {selectedDayLabel}
+                        </p>
+                      </div>
+
+                      <div className="grid gap-3">
+                        <Select
+                          value={dateFilterPreset}
+                          onValueChange={(value: DateFilterPreset) => setDateFilterPreset(value)}
+                        >
+                          <SelectTrigger className="h-10 w-full border-border/35 bg-background/70 text-sm text-foreground">
+                            <SelectValue placeholder="Select range" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="last_week">Last Week</SelectItem>
+                            <SelectItem value="last_month">Last Month</SelectItem>
+                            <SelectItem value="last_3_months">Last 3 Months</SelectItem>
+                            <SelectItem value="last_6_months">Last 6 Months</SelectItem>
+                            <SelectItem value="last_year">Last Year</SelectItem>
+                            <SelectItem value="custom">Custom</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="h-10 justify-start border-border/35 bg-background/70 text-sm text-foreground hover:bg-background/85"
+                            >
+                              <CalendarIcon className="h-4 w-4" />
+                              {dateFilterLabel ?? 'Custom Range'}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-2" align="start">
+                            <Calendar
+                              mode="range"
+                              selected={customDateRange}
+                              onSelect={setCustomDateRange}
+                              numberOfMonths={isMobile ? 1 : 2}
+                              className="p-0"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </UnifiedSurface>
+
+            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                   Accounts
@@ -900,7 +960,7 @@ export default function TraderProfilePageClient() {
               </div>
             </UnifiedSurface>
 
-            <UnifiedSurface className="overflow-hidden p-5 sm:p-6">
+            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 overflow-hidden p-5 sm:p-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                   Daily session pattern
@@ -921,7 +981,12 @@ export default function TraderProfilePageClient() {
                 </div>
               </div>
 
-              <div className={cn(insetPanelClassName, 'mt-5 overflow-x-auto p-2 sm:p-3')}>
+              <div
+                className={cn(
+                  insetPanelClassName,
+                  'mt-5 min-h-[30rem] overflow-x-auto p-2 sm:p-3 lg:min-h-[36rem]',
+                )}
+              >
                 <Calendar
                   mode="single"
                   selected={selectedCalendarDay ?? latestTradeDay}
@@ -937,12 +1002,13 @@ export default function TraderProfilePageClient() {
                   }}
                   className="w-full min-w-[19rem] p-0"
                   classNames={{
-                    months: 'flex flex-col gap-3',
-                    month: 'space-y-3',
-                    weekday: 'w-10 text-center text-[0.75rem] font-medium text-muted-foreground',
-                    day: 'relative h-10 w-10 overflow-hidden rounded-lg p-0 text-center align-middle',
+                    months: 'flex min-h-[26rem] flex-col gap-4 lg:min-h-[31rem]',
+                    month: 'space-y-4',
+                    weekday:
+                      'w-11 text-center text-[0.75rem] font-medium text-muted-foreground sm:w-12',
+                    day: 'relative h-11 w-11 overflow-hidden rounded-lg p-0 text-center align-middle sm:h-12 sm:w-12',
                     day_button:
-                      'h-10 w-10 rounded-lg p-0 font-normal text-foreground hover:bg-background/90 aria-selected:bg-primary/12 aria-selected:text-foreground',
+                      'h-11 w-11 rounded-lg p-0 font-normal text-foreground transition-[background-color,border-color,color] hover:bg-background/90 aria-selected:bg-primary/12 aria-selected:text-foreground sm:h-12 sm:w-12',
                   }}
                   components={{
                     DayButton: ({ day, className, ...buttonProps }: DayButtonProps) => {
@@ -1004,7 +1070,10 @@ export default function TraderProfilePageClient() {
           </section>
 
           <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
-            <UnifiedSurface variant="elevated" className="p-5 sm:p-6">
+            <UnifiedSurface
+              variant="elevated"
+              className="animate-fade-up-smooth animate-fade-up-smooth-d1 p-5 sm:p-6"
+            >
               <div className="flex items-start justify-between gap-3">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                   Benchmark
@@ -1045,7 +1114,7 @@ export default function TraderProfilePageClient() {
               </p>
             </UnifiedSurface>
 
-            <UnifiedSurface className="p-5 sm:p-6">
+            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d2 p-5 sm:p-6">
               <div className="flex items-center gap-2">
                 <Wallet className="h-4 w-4 text-muted-foreground" />
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -1089,7 +1158,7 @@ export default function TraderProfilePageClient() {
               </div>
             </UnifiedSurface>
 
-            <UnifiedSurface className="p-5 sm:p-6">
+            <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d3 p-5 sm:p-6">
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
@@ -1142,7 +1211,7 @@ export default function TraderProfilePageClient() {
           </aside>
         </div>
 
-        <UnifiedSurface className="p-5 sm:p-6">
+        <UnifiedSurface className="animate-fade-up-smooth animate-fade-up-smooth-d4 p-5 sm:p-6">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
               Trade history

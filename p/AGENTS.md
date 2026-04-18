@@ -88,6 +88,7 @@
 - For trader-profile-style analytics pages, prefer a two-stage composition: an elevated summary hero first, then a responsive main/aside grid with `min-w-0` content columns and a sticky right rail only at larger breakpoints.
 - On trader-profile-style pages, the hero should carry a short performance brief plus compact signal tiles inside the control rail so the page reads overview → day pattern → benchmark/feed instead of a flat stack of equal-weight stats.
 - If a trader-profile-style page is being aligned to a user wireframe, lock the macro order before styling details: profile/control row, thin metrics strip, dedicated active-account block, large calendar/content panel, stacked analytics rail, then full-width trade history.
+- If trader-profile controls start feeling detached from the summary story, fold the visibility/date-range controls into the same summary band as the quick metrics. Keep the seven quick metrics in a `3 + 4` hierarchy, with the first row reserved for the top three signals and a taller calendar panel below to rebalance the page.
 - For full-site visual refreshes, start with shared chrome first: `components/layout/unified-page-shell.tsx`, `components/layout/unified-page-recipes.ts`, public navbar/footer/shell wrappers, and core CTA/surface primitives. Route-by-route passes should inherit from that refreshed base instead of inventing local shells again.
 - Home page hero redesigns should use a dominant product-UI canvas plus restrained animated SVG overlays rather than gradient-heavy marketing treatment. Prefer one-shot stroke/node animations and flat tinted surfaces over decorative gradients or continuous glow effects.
 - If the user asks for “unified like `/deals`” with no function changes, treat it as a visual-only system pass: shared shell, shared panel recipes, shared CTA hierarchy, and route-local content reflow only. Do not change route behavior, data loading, filtering, or server contracts.
@@ -98,9 +99,11 @@
 - Admin CRUD server action types must expose ALL Prisma schema fields that the public UI consumes, not just a subset. When the public page reads `claimUrl`, `challengeFee`, `expiresAt`, `isActive`, the admin input type and forms must allow editing all of them.
 - `PropFirmCouponInput` in `server/prop-firms.ts` is the canonical admin input type for coupons/deals. It maps to all 11 editable fields on the `PropFirmCoupon` Prisma model.
 - Coupon forms exist in two locations: inline on `/admin/propfirms/[id]` (CouponsSection component) and standalone on `/admin/coupons` (CouponEditCard component). Both must stay in sync when fields change.
+- Read-only prop-firm admin gating should come from the shared `getPropFirmAdminPageState()` helper, not route-local booleans. That helper is the contract for `isFallbackRecord`, `isReadOnly`, and the `canManage*` flags across `/admin/propfirms` list/detail surfaces.
 - When a coupon has override fields (platform, payoutModel, drawdownType), the deals data mapping (`server/deals.ts`) uses coupon-level values first, falling back to firm-level values: `coupon.platform || coupon.propFirm.platform || 'Default'`.
 - Admin coupon fields that flow to the public deals page: `code` → coupon code display + copy button, `discountPercent` → discount badge, `challengeFee` → price display, `claimUrl` → affiliate/claim link, `expiresAt` → expiry badge, `isActive` → visibility filter.
 - Coupon visibility on public surfaces must honor the full schedule window, not just `isActive`/`expiresAt`. If admin exposes `startsAt`, public readers (`server/deals.ts`, `server/firm-coupons.ts`, firm detail surfaces) must also require `startsAt <= now`.
+- Keep that public schedule logic centralized in `lib/prop-firms/coupon-visibility.ts`. Reuse `buildPublicCouponWindowWhere(now)` for deals, firm-detail readers, banner readers, and any future public coupon query instead of rewriting schedule filters inline.
 - Public deals can also fall back to spotlight/web-sourced offers when no coupon rows exist. If admin needs to manage those offers, bridge them into prefilled create flows rather than leaving admin screens blank.
 - Keep spotlight-to-coupon fallback values centralized. Public deals fallback and admin suggestion UIs should read from the same helper so discount/code/fee/claim defaults stay aligned.
 - Admin server actions are co-located in `server/prop-firms.ts` and re-exported from the admin page files where they are consumed. All admin mutations call `assertAdminAccess()` and call `updateTag('prop-firms')` after writes.
@@ -110,6 +113,7 @@
 - If admin coupon pages are using fallback/read-only data because the database connection is unavailable, disable the write forms and show a warning instead of leaving dead-looking controls on screen.
 - Apply that same read-only contract to `/admin/propfirms` and any sibling admin CRUD page: if the page is showing fallback data or the schema is unavailable, do not leave live create/edit/delete controls mounted for firms or reviews.
 - For admin schedule fields backed by `input[type=\"datetime-local\"]`, never use `toISOString().slice(0, 16)` for default values. Render local wall-clock components so editing and re-saving a timestamp does not shift it by timezone offset.
+- Keep admin control granularity aligned to the schema. Example: `PropFirmReview.rating` is an `Int`, so review forms should use integer steps instead of advertising half-step values that the backend cannot store faithfully.
 
 ## API Route & Rate Limiting Patterns
 - ALL authenticated user-facing API routes should be wrapped with `withRateLimited` from `lib/api/with-api-route.ts`
@@ -125,6 +129,10 @@
 - Use `updateTag()` for Next.js `'use cache'` cached server functions
 - Use `CacheService.invalidateNamespace()` for Redis-layer cached data
 - Always invalidate both layers when mutating data that flows through both
+- **Always use composite invalidation helpers** from `lib/cache/cache-invalidation.ts` (`invalidateTradeDataCaches`, `invalidateAccountRelatedCaches`, etc.) instead of listing individual `updateTag()` calls. Manual tag lists are error-prone.
+- **`revalidatePath()` alone is NOT sufficient** for `'use cache'` data. Always pair with `updateTag()` for the relevant cache tags.
+- **Webhook handlers MUST invalidate caches** after subscription/payment mutations. Add invalidation at the central `processEvent` level, not in individual handlers.
+- **Team mutations MUST invalidate** `teams-${userId}` cache tag for all affected user IDs (owner + members).
 
 ## Test Mock Patterns
 - When mocking `@/lib/logger`, always include BOTH `logger` and `createLogger: () => ({ info, warn, error, debug })`

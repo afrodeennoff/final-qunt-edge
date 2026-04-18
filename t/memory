@@ -1,9 +1,51 @@
 # Project Memory
 
-**Updated:** 2026-04-17
+**Updated:** 2026-04-18
 **Branch:** codex-obsidian-v3-redesign
 
-## Current State: All Requirements Complete + Admin + Import Fully Functional
+## Current State: All Requirements Complete + Frontend-Backend Audit Done
+
+### Admin coupons + prop-firms repair completed (2026-04-18)
+- `/admin/propfirms` list and detail pages now share explicit read-only/fallback gating through `lib/prop-firms/admin-state.ts`. Firm, review, and coupon mutations are disabled consistently when the DB is unavailable or a fallback record is being rendered.
+- `/admin/propfirms/[id]` coupon editing was reorganized into a cleaner card flow and made responsive on mobile by replacing fixed `grid-cols-2/3` layouts with `md:` breakpoints. The page also links back to the standalone coupon workspace.
+- Coupon scheduling is now centralized in `lib/prop-firms/coupon-visibility.ts`. Public readers in `server/deals.ts`, `server/firm-coupons.ts`, and `server/prop-firms.ts` all require `startsAt <= now` and `expiresAt >= now` before exposing a coupon.
+- Admin coupon `datetime-local` defaults now render local wall time via `formatDateTimeLocalValue()` instead of `toISOString().slice(0, 16)`, which previously shifted saved times by timezone offset.
+- Prop-firm review inputs now match the schema contract: the admin UI only offers integer rating steps because `PropFirmReview.rating` is stored as an `Int`.
+- Verification:
+  - `TZ=Asia/Kolkata npx vitest run tests/server/firm-coupons.test.ts tests/server/deals-scheduling.test.ts tests/server/prop-firms-public-coupons.test.ts tests/app/admin/coupon-admin-utils.test.ts tests/lib/prop-firms/admin-state.test.ts`
+  - `npx eslint 'app/[locale]/admin/propfirms/[id]/page.tsx' 'app/[locale]/admin/propfirms/page.tsx' 'app/[locale]/admin/components/coupon-admin-utils.ts' server/deals.ts server/firm-coupons.ts server/prop-firms.ts lib/prop-firms/coupon-visibility.ts lib/prop-firms/admin-state.ts tests/server/firm-coupons.test.ts tests/server/deals-scheduling.test.ts tests/server/prop-firms-public-coupons.test.ts tests/app/admin/coupon-admin-utils.test.ts tests/lib/prop-firms/admin-state.test.ts` (warnings only: existing complexity checks)
+  - `npx tsc --noEmit`
+
+### Frontend↔Backend Communication Audit (2026-04-18)
+Full audit of 4 communication layers: server actions, API routes, state sync, and cache invalidation.
+Found **90 issues** (13 CRITICAL, 30 HIGH, 28 MEDIUM, 19 LOW).
+
+**Fixed (commit 3d5dfde0):**
+- `saveTrades()` now uses comprehensive `invalidateTradeDataCaches()` (7 tags) instead of manual partial tags (was missing DASHBOARD, EQUITY_CHART, LEADERBOARD)
+- Whop webhook handlers now invalidate user caches after all subscription/payment mutations (was zero invalidation)
+- Grace period cron now invalidates user caches after subscription status changes
+- All 8 team mutations now invalidate `teams-${userId}` cache (was zero invalidation)
+- Rithmic sync add/remove now invalidates user data caches
+- Tradovate token removal now invalidates user data + equity chart caches
+- Community mutations now call `updateTag('community-posts')` alongside `revalidatePath`
+- Blog mutations now call `updateTag('blog-posts')` alongside `revalidatePath`
+- `updateDailySyncTimeAction` fixed: `getUserId()` → `getDatabaseUserId()` for legacy user support
+
+**Remaining HIGH findings (not yet fixed — require product/architecture decisions):**
+- Webhook user creation uses `crypto.randomUUID()` when `metadata.user_id` absent — orphaned subscriptions
+- Duplicate accounts state in `trading-domain-store` (dead code — no components read it)
+- 6 optimistic updates without rollback (renameGroup, deleteGroup, saveDashboardLayout, handleApplyTagToAll, deletePayout, tag deletion batching)
+- Subscription data split across 2 stores with different shapes
+- Analysis store persists but never invalidates on trade changes
+- ~15 API routes still using inline rate limiting instead of `withRateLimited` wrapper
+- 5 routes with inconsistent error response shapes (raw JSON instead of `apiError()`)
+
+### Trader Profile Metric-Band Refinement (2026-04-18)
+- `app/[locale]/dashboard/trader-profile/page-client.tsx` now folds the leaderboard visibility toggle and date-range review controls into the summary metric band instead of leaving them in a detached top-right card
+- The seven summary metrics are now split into a clear two-row hierarchy: primary row = `Net PnL`, `Avg net / trade`, `Consistency`; secondary row = `Break-even rate`, `Active accounts`, `Total trades`, `Current streak`
+- The trader-profile calendar panel now has a taller minimum height with slightly larger day cells, and the page uses staged `animate-page-enter` / `animate-fade-up-smooth` classes for a smoother visual load without changing behavior
+- `app/[locale]/dashboard/trader-profile/loading.tsx` was aligned to the new hero/metric/calendar proportions
+- Verification: targeted ESLint passed with only the pre-existing trader-profile complexity warnings, and `npx tsc --noEmit` passed
 
 ### Wave Completion (39/39 REQs — 100%)
 

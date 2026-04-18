@@ -1,6 +1,6 @@
 # Lessons Learned
 
-**Updated:** 2026-04-17
+**Updated:** 2026-04-18
 
 ## Lesson 62: sed removal of `ssr: false` leaves multiline artifacts
 - **M:** Used `sed 's/ssr: false,//g; s/ssr: false//g'` to remove `ssr: false` from 34+ dynamic imports. This left empty lines and malformed option objects like `{  loading: () => widgetFallback }` with extra whitespace, and `{\n  \n  loading:` multiline patterns
@@ -73,3 +73,45 @@
 - **RC:** CSV import is a completely different code path — it reads a file, parses it client-side, and saves trades. It has no dependency on the live WebSocket connection. Disabling them was overly conservative
 - **R:** When disabling a platform, evaluate each platform's dependencies separately. CSV processors only need the file upload + parsing pipeline, not the live sync infrastructure
 - **E:** Re-enabled both Rithmic CSV imports while keeping rithmic-sync disabled
+
+## Lesson 74: Explicitly type mapped UI metric arrays when passing union props
+- **M:** The trader-profile visual pass moved summary metrics into typed arrays and mapped them into `StripMetric`, but `metric.tone` widened to plain `string` and failed the `StatTone` prop check during `npx tsc --noEmit`
+- **RC:** Mixed objects with and without `tone` fields let TypeScript infer a broader array element shape unless the array is explicitly typed or constrained with `satisfies`
+- **R:** For UI config arrays that feed union-typed component props, declare the array shape explicitly up front instead of relying on inference
+- **E:** `const primaryStripMetrics: Array<{ label: string; value: string; tone?: StatTone }>` preserved the `StripMetric` prop contract and cleared the type error
+
+## Lesson 75: Coupon schedule filters must be shared across all public readers
+- **M:** Fixing `/deals` and `server/firm-coupons.ts` was not enough; `server/prop-firms.ts` still exposed scheduled coupons through banner and firm-detail readers because those queries only checked `isActive` and `expiresAt`
+- **RC:** The public coupon visibility rule was duplicated inline across multiple loaders, so one repaired path did not fix the rest
+- **R:** Keep the public coupon schedule window in one helper and reuse it everywhere public coupon visibility is derived. If admin exposes `startsAt`, every public coupon query must consume the same `startsAt <= now && expiresAt >= now` helper
+- **E:** `buildPublicCouponWindowWhere(now)` now powers `server/deals.ts`, `server/firm-coupons.ts`, and `server/prop-firms.ts`
+
+## Lesson 76: Admin controls must match stored semantics exactly
+- **M:** Coupon date fields used `toISOString().slice(0, 16)`, which shifted saved values by timezone offset, and prop-firm review rating inputs offered half-step values even though Prisma stores `PropFirmReview.rating` as an `Int`
+- **RC:** The admin UI treated UTC ISO output like local wall time and exposed value granularity the database could not preserve
+- **R:** For `datetime-local`, render local calendar/time parts instead of UTC ISO slices. For numeric admin controls, match the input step to the actual database type so the UI never advertises values the backend cannot store faithfully
+- **E:** Coupon defaults now use `formatDateTimeLocalValue()`, and prop-firm review forms now use integer rating steps
+
+## Lesson 75: Cache invalidation must cover ALL tags affected by a mutation
+- **M:** `saveTrades()` in `server/trades.ts` manually called `updateTag()` for only 4 of 7+ tags affected by trade imports. Missing DASHBOARD, EQUITY_CHART, and LEADERBOARD caused stale dashboard widgets, charts, and leaderboard after trade imports
+- **RC:** The project already has comprehensive invalidation helpers in `lib/cache/cache-invalidation.ts` (`invalidateTradeDataCaches`, `invalidateAccountRelatedCaches`, etc.), but they were not used in all mutation paths. Manual `updateTag()` calls are error-prone because developers forget tags
+- **R:** Always use the centralized composite invalidation helpers (`invalidateTradeDataCaches`, `invalidateAccountRelatedCaches`, `invalidateDashboardDataCaches`) instead of listing individual `updateTag()` calls. Only add Redis namespace invalidation alongside
+- **E:** Replaced 4 manual `updateTag` calls with single `invalidateTradeDataCaches(userId)` which covers all 7 tags
+
+## Lesson 76: `revalidatePath()` does NOT invalidate `'use cache'` entries
+- **M:** Community and blog mutations called `revalidatePath('/community')` and `revalidatePath('/blogs')` but the data served by `'use cache'` functions (tagged with `'community-posts'`, `'blog-posts'`) remained stale for up to 60 minutes
+- **RC:** Next.js `revalidatePath()` triggers page-level revalidation but does not revalidate `'use cache'` function entries keyed by `cacheTag()`. These are separate cache layers with separate invalidation mechanisms
+- **R:** After any mutation that affects `'use cache'` data, call BOTH `revalidatePath()` (for page cache) AND `updateTag()` (for function cache) to ensure both layers are refreshed
+- **E:** Added `updateTag('community-posts')` and `updateTag('blog-posts')` after all community/blog mutations
+
+## Lesson 77: Webhook handlers are cache-invalidation blind spots
+- **M:** Whop webhook handlers for subscription mutations (activated/deactivated/updated/payment) updated the database but never called `updateTag()` for any user data caches. Users saw stale subscription status for up to 5+ minutes after payment events
+- **RC:** Webhook handlers run server-to-server and don't naturally go through the same code paths as user-initiated actions. They are a separate entry point that developers forget to add invalidation to
+- **R:** After any webhook that modifies user-facing data, resolve the affected user (by email or metadata) and invalidate all relevant caches. Add invalidation at the central `processEvent` level rather than in individual handlers to ensure coverage
+- **E:** Added `invalidateUserCachesForWebhook()` method to WebhookService that resolves user by email and invalidates all user data tags after every successful webhook
+
+## Lesson 78: Webhook user creation with fabricated UUIDs creates orphaned subscriptions
+- **M:** `handleMembershipActivated` uses `userId || membership.user?.id || crypto.randomUUID()` for user identification. When `metadata.user_id` is absent, the subscription is created with a random UUID that doesn't correspond to any real user. `getSubscriptionData()` can never find these subscriptions
+- **RC:** The Whop checkout flow is supposed to pass `user_id` in metadata, but direct Whop checkout links bypass the app's metadata injection
+- **R:** Never use `crypto.randomUUID()` as a user ID fallback in webhook handlers. Instead, look up existing users by email first, and only create a new user record if none exists (with a proper auth_user_id mapping strategy)
+- **E:** Identified but not yet fixed — requires product decision on how to handle Whop-native checkout flows

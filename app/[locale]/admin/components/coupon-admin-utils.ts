@@ -1,3 +1,5 @@
+import { formatDateTimeLocalValue } from '@/lib/prop-firms/coupon-visibility'
+
 export type CouponAdminSearchParamValue = string | string[] | undefined
 
 export type CouponAdminStatus = 'created' | 'updated' | 'deleted' | 'error'
@@ -92,7 +94,7 @@ export function getCouponTimingState({ isActive, startsAt, expiresAt }: CouponTi
 }
 
 export function formatAdminDateTimeInput(value: Date | null): string {
-  return value ? new Date(value).toISOString().slice(0, 16) : ''
+  return formatDateTimeLocalValue(value)
 }
 
 export type FirmAdminStatus = 'saved' | 'deleted' | 'error'

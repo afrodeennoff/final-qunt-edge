@@ -6,6 +6,16 @@
 
 ## Current UI Audit
 
+### Trader profile metric-band rebalance (2026-04-18)
+- [x] Move the visibility and review-window controls from the detached hero rail into the summary metric board
+- [x] Rebuild the seven quick metrics into a two-row `3 + 4` hierarchy while keeping the existing trader-profile logic untouched
+- [x] Increase the calendar panel height, add smoother staged page-entry motion, and re-verify with targeted lint + typecheck
+
+### Admin coupons + prop-firms repair (2026-04-18)
+- [x] Add failing tests for coupon scheduling visibility and admin datetime-local formatting, then implement the shared helpers they need
+- [x] Refactor `/admin/propfirms` list/detail routes to use a cleaner admin layout and fully disable write actions in fallback/read-only states
+- [x] Re-verify the repaired admin surfaces with targeted tests, lint/typecheck, then persist memory/lessons/pattern updates
+
 ### Full-site unified product-led redesign (2026-04-18)
 - [x] Decompose the full-site redesign into shared foundations plus Wave 1 public, Wave 2 dashboard/teams, and Wave 3 admin/internal surfaces
 - [x] Lock the visual direction with the approved constraints: product-led, unified across all pages, visual-only, no gradients, and hybrid product-UI plus restrained animated SVG media
@@ -326,3 +336,12 @@ Each phase is independently shippable and backward-compatible.
 
 ## In Progress
 - [ ] Awaiting approval for Phase 1 implementation
+
+### Frontend↔Backend Communication Audit (2026-04-18)
+- [x] Run parallel audit agents covering server actions, API routes, state sync, and cache invalidation
+- [x] Compile findings: 90 total (13 CRITICAL, 30 HIGH, 28 MEDIUM, 19 LOW)
+- [x] Fix CRITICAL cache invalidation gaps: saveTrades, webhooks, teams, rithmic sync, tradovate sync, community, blogs
+- [x] Fix auth inconsistency: updateDailySyncTimeAction getUserId → getDatabaseUserId
+- [x] Verify with typecheck + lint (0 new errors)
+- [x] Commit fixes (3d5dfde0)
+- [ ] Fix remaining HIGH findings: webhook UUID fallback, optimistic update rollbacks, API route standardization
