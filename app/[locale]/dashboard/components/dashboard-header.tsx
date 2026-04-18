@@ -6,6 +6,7 @@ import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import {
   unifiedInsetPanelClassName,
   unifiedPrimaryActionClassName,
+  unifiedSectionPanelClassName,
 } from '@/components/layout/unified-page-recipes'
 import { cn } from '@/lib/utils'
 import { useDashboardActions, useDashboardFilters } from '@/context/data-provider'
@@ -102,9 +103,15 @@ export function DashboardHeader() {
     >
       <div className="relative mx-auto max-w-[1800px]">
         <div className="pointer-events-none absolute inset-x-4 top-0 h-16 rounded-b-[1.8rem] border border-primary/10 bg-primary/[0.03]" />
-        <div className="relative flex min-h-[5rem] items-center justify-between gap-3 rounded-[2rem] border border-border/45 bg-background/78 px-3 py-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.88)] transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4">
-          <div className="relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4 pointer-events-auto">
-            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-xl border border-border/40 bg-background/72 text-foreground/62 shadow-none transition-[opacity,background-color,border-color] duration-200 hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
+        <div
+          className={cn(
+            unifiedSectionPanelClassName,
+            'relative flex min-h-[5rem] items-center justify-between gap-3 overflow-hidden px-3 py-3 transition-[opacity,background-color,border-color] duration-300 sm:gap-4 sm:px-4',
+          )}
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="pointer-events-auto relative z-10 flex min-w-0 items-center gap-2.5 pr-3 sm:gap-3 sm:pr-4">
+            <SidebarTrigger className="h-10 w-10 shrink-0 rounded-[1rem] border border-primary/12 bg-primary/[0.05] text-foreground/64 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-[opacity,background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
             <div className="flex min-w-0 items-center gap-3">
               <div className="hidden h-8 w-px bg-border/40 sm:block" />
               <div className="min-w-0 max-w-[min(32rem,44vw)]">
@@ -130,8 +137,8 @@ export function DashboardHeader() {
             </div>
           </div>
 
-          <div className="relative z-10 flex min-w-0 flex-1 items-center justify-end pointer-events-auto">
-            <div className="flex min-w-0 w-full items-center justify-end gap-1">
+          <div className="pointer-events-auto relative z-10 flex min-w-0 flex-1 items-center justify-end">
+            <div className="flex min-w-0 w-full items-center justify-end gap-1.5">
               <div className="flex min-w-0 items-center gap-1">
                 <FilterCommandMenu
                   variant="navbar"
@@ -175,7 +182,7 @@ export function DashboardHeader() {
 
       {isMobile && isDashboardRoot && isWidgetsTab ? (
         <div className="relative mx-auto max-w-[1800px] pt-2">
-          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-2 py-2 sm:px-3')}>
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.55rem] px-2 py-2 sm:px-3')}>
             <DashboardHeaderWidgetControls isMobile={isMobile} />
           </div>
         </div>
@@ -183,7 +190,7 @@ export function DashboardHeader() {
 
       {hasActiveFilters ? (
         <div className={cn('relative mx-auto max-w-[1800px] pt-2')}>
-          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.75rem] px-3 py-2')}>
+          <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.55rem] px-3 py-2.5')}>
             <ActiveFilterTags showAccountNumbers={true} />
           </div>
         </div>

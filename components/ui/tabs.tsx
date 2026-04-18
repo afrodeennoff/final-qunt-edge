@@ -28,7 +28,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     data-slot="tabs-list"
     className={cn(
-      'inline-flex min-h-10 items-center justify-center rounded-lg border border-border/60 bg-background/70 p-1 text-muted-foreground shadow-sm',
+      'inline-flex min-h-10 items-center justify-center rounded-[1.1rem] border border-border/60 bg-background/74 p-1 text-muted-foreground shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03)]',
       className,
     )}
     {...props}
@@ -44,7 +44,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     data-slot="tabs-trigger"
     className={cn(
-      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-md px-3.5 py-2 ring-offset-background transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm hover:bg-muted/50 hover:text-foreground',
+      'type-label inline-flex items-center justify-center whitespace-nowrap rounded-[0.95rem] px-3.5 py-2 ring-offset-background transition-[background-color,border-color,color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm hover:bg-muted/50 hover:text-foreground',
       className,
     )}
     {...props}

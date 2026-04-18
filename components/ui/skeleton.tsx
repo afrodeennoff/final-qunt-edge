@@ -11,7 +11,7 @@ function Skeleton({
 }: SkeletonProps) {
  return (
  <Component
- className={cn("animate-pulse rounded-md bg-secondary/30", className)}
+ className={cn("animate-pulse rounded-[1rem] border border-primary/8 bg-[linear-gradient(180deg,hsl(var(--background)/0.88),hsl(var(--background)/0.72))]", className)}
  {...props}
  />
  )
@@ -19,9 +19,9 @@ function Skeleton({
 
 export function DashboardHeaderSkeleton() {
  return (
- <div className="gap-3 mb-6">
+ <div className="mb-6 gap-3">
  <div className="flex items-center justify-between">
- <div className="gap-2">
+ <div className="space-y-2">
  <Skeleton className="h-7 w-48" />
  <Skeleton className="h-4 w-32" />
  </div>
@@ -42,9 +42,9 @@ export function DashboardHeaderSkeleton() {
 
 export function WidgetGridSkeleton() {
  return (
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
  {Array.from({ length: 8 }).map((_, i) => (
- <Skeleton key={i} className="h-32 w-full" />
+ <Skeleton key={i} className="h-32 w-full rounded-[1.4rem]" />
  ))}
  </div>
  )
@@ -52,14 +52,14 @@ export function WidgetGridSkeleton() {
 
 export function TableSkeleton() {
  return (
- <div className="gap-3">
+ <div className="space-y-3">
  <div className="flex items-center justify-between">
  <Skeleton className="h-10 w-64" />
  <Skeleton className="h-10 w-32" />
  </div>
- <div className="gap-2">
+ <div className="space-y-2">
  {Array.from({ length: 10 }).map((_, i) => (
- <Skeleton key={i} className="h-12 w-full" />
+ <Skeleton key={i} className="h-12 w-full rounded-[1.1rem]" />
  ))}
  </div>
  </div>
@@ -68,15 +68,15 @@ export function TableSkeleton() {
 
 export function AccountsSkeleton() {
  return (
- <div className="gap-4">
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <Skeleton className="h-24 w-full" />
- <Skeleton className="h-24 w-full" />
- <Skeleton className="h-24 w-full" />
+ <div className="space-y-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+ <Skeleton className="h-24 w-full rounded-[1.35rem]" />
+ <Skeleton className="h-24 w-full rounded-[1.35rem]" />
+ <Skeleton className="h-24 w-full rounded-[1.35rem]" />
  </div>
- <div className="gap-2">
+ <div className="space-y-2">
  {Array.from({ length: 5 }).map((_, i) => (
- <Skeleton key={i} className="h-16 w-full" />
+ <Skeleton key={i} className="h-16 w-full rounded-[1.2rem]" />
  ))}
  </div>
  </div>

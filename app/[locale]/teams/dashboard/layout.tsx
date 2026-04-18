@@ -7,7 +7,7 @@ import { parseSidebarStateCookieValue, SIDEBAR_STATE_COOKIE_NAME } from "@/lib/s
 import { SidebarRootProviders } from "@/components/providers/root-providers"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import {
-    unifiedInsetPanelClassName,
+    unifiedMetricPanelClassName,
     unifiedSectionPanelClassName,
 } from "@/components/layout/unified-page-recipes"
 import { cn } from "@/lib/utils"
@@ -89,9 +89,10 @@ export default async function DashboardLayout({
                             className={`sticky top-0 ${HEADER_Z_INDEX} px-3 pb-2 pt-3 sm:px-4 sm:pb-3 sm:pt-4`}
                         >
                             <div className="mx-auto w-full max-w-[1800px]">
-                                <div className={cn(unifiedSectionPanelClassName, 'flex min-h-[4.5rem] flex-col gap-4 rounded-[2rem] px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
+                                <div className={cn(unifiedSectionPanelClassName, 'relative flex min-h-[4.5rem] flex-col gap-4 overflow-hidden rounded-[2rem] px-3 py-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between')}>
+                                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                                     <div className="flex min-w-0 items-center gap-3">
-                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/40 bg-background/72 text-foreground/62 shadow-none hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
+                                        <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-[1rem] border border-primary/12 bg-primary/[0.05] text-foreground/64 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] hover:border-primary/18 hover:bg-primary/10 hover:text-foreground/95 md:h-9 md:w-9" />
                                         <div className="flex min-w-0 flex-1 flex-col">
                                             <div className="flex items-center gap-2.5">
                                                 <span className="hidden rounded-full border border-primary/18 bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
@@ -108,7 +109,7 @@ export default async function DashboardLayout({
                                     </div>
 
                                     <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
-                                        <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.3rem] px-3 py-2.5')}>
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
                                                 Focus
                                             </span>
@@ -116,7 +117,7 @@ export default async function DashboardLayout({
                                                 Members and process visibility
                                             </span>
                                         </div>
-                                        <div className={cn(unifiedInsetPanelClassName, 'rounded-[1.3rem] px-3 py-2.5')}>
+                                        <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
                                             <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
                                                 Surface
                                             </span>

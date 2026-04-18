@@ -23,7 +23,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
       <div className="pointer-events-none absolute inset-0 hidden marketing-grid opacity-5 lg:block" />
       <div className="pointer-events-none absolute inset-x-0 top-[22%] h-px bg-border/40" />
 
-      <main className="relative z-10 mx-auto w-full max-w-[1360px] min-w-0">
+      <main className="relative z-10 mx-auto w-full max-w-[1400px] min-w-0 px-2 sm:px-4 lg:px-6">
         <Hero locale={locale} />
         <LiveStatsStrip />
         <SocialProof />

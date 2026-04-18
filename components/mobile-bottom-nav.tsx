@@ -109,7 +109,7 @@ function TabItem({ item }: { item: MobileNavItem }) {
       </span>
       {active && (
         <>
-          <div className="absolute inset-0 rounded-2xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.10)] shadow-[0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.22),0_18px_32px_-24px_oklch(0.4865_0.2423_291.8661/0.45)]" />
+          <div className="absolute inset-0 rounded-2xl border border-[oklch(0.2505_0.0293_299.5707/0.9)] bg-[oklch(0.6083_0.2172_297.1153/0.10)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_0_0.5px_oklch(0.6083_0.2172_297.1153/0.22),0_18px_32px_-24px_oklch(0.4865_0.2423_291.8661/0.45)]" />
           <div className="absolute left-1/2 top-1.5 h-[2px] w-6 -translate-x-1/2 rounded-full bg-sidebar-primary shadow-[0_0_14px_oklch(0.6083_0.2172_297.1153/0.45)]" />
         </>
       )}

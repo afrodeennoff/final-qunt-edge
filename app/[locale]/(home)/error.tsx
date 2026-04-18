@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function HomeError({
   error,
@@ -14,17 +15,12 @@ export default function HomeError({
   }, [error])
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-      <p className="text-sm font-medium text-muted-foreground">
-        Something went wrong loading this page.
-      </p>
-      <button
-        type="button"
-        onClick={reset}
-        className="rounded-full border border-white/[0.06] bg-card/70 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-card"
-      >
-        Try again
-      </button>
-    </div>
+    <RouteErrorScreen
+      eyebrow="Home"
+      title="Home failed to load"
+      description={error.message || 'The main public surface could not be composed right now.'}
+      onRetry={reset}
+      fullScreen={false}
+    />
   )
 }

@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Logo } from '@/components/logo'
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, Home, Search, Moon } from "lucide-react"
+import { ArrowLeft, Home, Search } from 'lucide-react'
+import { unifiedInsetPanelClassName } from '@/components/layout/unified-page-recipes'
+import { Button } from '@/components/ui/button'
+import { RouteStateShell } from '@/components/ui/route-state'
 import { useDebounce } from '@/hooks/use-debounce'
+import { cn } from '@/lib/utils'
 
 // Define translations locally to avoid I18nProvider dependency
 const translations = {
@@ -211,145 +213,139 @@ function NotFoundContent() {
     blurTimeout.current = window.setTimeout(() => setShowResults(false), 100)
   }
 
+  const primaryActions = (
+    <>
+      <Button asChild className="rounded-full px-5">
+        <Link href={`/${locale}`}>
+          <Home className="mr-2 h-4 w-4" />
+          {t.goHome}
+        </Link>
+      </Button>
+      <Button variant="outline" onClick={handleGoBack} className="rounded-full px-5">
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        {t.goBack}
+      </Button>
+    </>
+  )
+
   // Show fallback during hydration with French as default.
   if (!isClient) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 relative">
-        {/* Placeholder for theme toggle */}
-        <div className="absolute top-4 right-4 w-10 h-8" />
-
-        <Logo className="w-16 h-16 mb-8 fill-primary" />
-        <h1 className="text-6xl font-bold mb-4 text-foreground">404</h1>
-        <h2 className="text-2xl font-semibold text-muted-foreground mb-6 text-center">
-          Page introuvable
-        </h2>
-        <p className="text-muted-foreground mb-8 text-center max-w-md leading-relaxed">
-          La page que vous recherchez n&apos;existe pas ou a été déplacée.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-          <Button  asChild variant="default" className="flex-1">
+      <RouteStateShell
+        eyebrow="Not found"
+        title="Page introuvable"
+        description="La page que vous recherchez n&apos;existe pas ou a ete deplacee."
+        actions={
+          <Button asChild className="rounded-full px-5">
             <Link href={`/${locale}`}>
-              <Home className="w-4 h-4 mr-2" />
-              Retour à l&apos;accueil
+              <Home className="mr-2 h-4 w-4" />
+              Retour a l'accueil
             </Link>
           </Button>
+        }
+      >
+        <div className="flex flex-col items-center gap-5">
+          <div className="rounded-full border border-primary/16 bg-primary/10 px-6 py-2 text-4xl font-semibold tracking-[-0.06em] text-foreground shadow-[0_20px_40px_-28px_rgba(0,0,0,0.9)]">
+            404
+          </div>
         </div>
-      </div>
+      </RouteStateShell>
     )
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 relative">
-      <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-border/50 bg-background/70 px-3 py-2 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-        <Moon className="h-4 w-4 text-primary" />
-        Dark
-      </div>
-
-      <Logo className="w-16 h-16 mb-8 fill-primary" />
-
-      {/* Large 404 */}
-      <h1 className="text-6xl font-bold mb-4 text-foreground">404</h1>
-
-      {/* Heading */}
-      <h2 className="text-2xl font-semibold text-muted-foreground mb-6 text-center">
-        {t.heading}
-      </h2>
-
-      {/* Description */}
-      <p className="text-muted-foreground mb-8 text-center max-w-md leading-relaxed">
-        {t.description}
-      </p>
-
-      {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-        <Button asChild variant="default" className="flex-1">
-          <Link href={`/${locale}`}>
-            <Home className="w-4 h-4 mr-2" />
-            {t.goHome}
-          </Link>
-        </Button>
-
-        <Button
-          variant="outline"
-          onClick={handleGoBack}
-          className="flex-1"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          {t.goBack}
-        </Button>
-      </div>
-
-      {/* Search box */}
-      <div className="mt-8 w-full max-w-md">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <input
-            type="text"
-            aria-label={t.searchPlaceholder}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value)
-              setShowResults(true)
-            }}
-            onKeyDown={onKeyDownSearch}
-            onBlur={onBlurSearch}
-            onFocus={() => setShowResults(true)}
-            placeholder={t.searchPlaceholder}
-            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:border-transparent transition-[box-shadow,opacity] duration-200 ease-out"
-            autoComplete="off"
-          />
-          {(() => {
-            const shouldShow = showResults && (query.length > 0 || isLoadingRoutes || filteredRoutes.length > 0)
-            return (
-              <ul
-                ref={resultsRef}
-                role="listbox"
-                aria-hidden={!shouldShow}
-                style={{ maxHeight: '200px' }} // ~5 items visible (40px each)
-                className={`absolute z-10 mt-2 w-full overflow-y-auto overflow-x-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md origin-top will-change-[opacity,transform] transition duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none ${shouldShow ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
-              >
-                {isLoadingRoutes && (
-                  <li className="px-3 py-2 text-sm text-muted-foreground">Loading…</li>
-                )}
-                {!isLoadingRoutes && filteredRoutes.length === 0 && query.length > 0 && (
-                  <li className="px-3 py-2 text-sm text-muted-foreground">No results</li>
-                )}
-                {!isLoadingRoutes && filteredRoutes.map((r, idx) => (
-                  <Link
-                    onClick={
-                      () => {
-                        setShowResults(false)
-                        setQuery('Redirecting...')
-                      }
-                    }
-                    key={r}
-                    href={r}
-                  >
-                    <li
-
-                      key={r}
-                      className={`px-3 py-2 text-sm cursor-pointer transition-colors duration-200 ease-out ${idx === selectedIndex ? 'bg-accent text-accent-foreground' : 'hover:bg-accent hover:text-accent-foreground'}`}
-                      role="option"
-                      aria-selected={idx === selectedIndex}
-                      onMouseEnter={() => setSelectedIndex(idx)}
-                      onMouseDown={(e) => e.preventDefault()}
-                      title={r}
-                    >
-                      {displayLabel(r)}
-                    </li>
-                  </Link>
-                ))}
-              </ul>
-            )
-          })()}
+    <RouteStateShell
+      eyebrow="Not found"
+      title={t.heading}
+      description={t.description}
+      actions={primaryActions}
+    >
+      <div className="flex flex-col items-center gap-6">
+        <div className="rounded-full border border-primary/16 bg-primary/10 px-6 py-2 text-4xl font-semibold tracking-[-0.06em] text-foreground shadow-[0_20px_40px_-28px_rgba(0,0,0,0.9)]">
+          404
         </div>
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          {concreteRoutesForLocale.length > 0
-            ? `${concreteRoutesForLocale.length} pages available`
-            : t.searchComingSoon}
-        </p>
+
+        <div className="w-full max-w-xl">
+          <div className="relative">
+            <div className={cn(unifiedInsetPanelClassName, 'relative px-4 py-3')}>
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                aria-label={t.searchPlaceholder}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value)
+                  setShowResults(true)
+                }}
+                onKeyDown={onKeyDownSearch}
+                onBlur={onBlurSearch}
+                onFocus={() => setShowResults(true)}
+                placeholder={t.searchPlaceholder}
+                className="w-full bg-transparent pl-8 pr-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden"
+                autoComplete="off"
+              />
+            </div>
+
+            {(() => {
+              const shouldShow =
+                showResults && (query.length > 0 || isLoadingRoutes || filteredRoutes.length > 0)
+
+              return (
+                <ul
+                  ref={resultsRef}
+                  role="listbox"
+                  aria-hidden={!shouldShow}
+                  style={{ maxHeight: '220px' }}
+                  className={cn(
+                    unifiedInsetPanelClassName,
+                    'absolute z-10 mt-2 w-full origin-top overflow-y-auto overflow-x-hidden px-1 py-1 transition duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none',
+                    shouldShow
+                      ? 'pointer-events-auto scale-100 opacity-100'
+                      : 'pointer-events-none scale-95 opacity-0',
+                  )}
+                >
+                  {isLoadingRoutes && (
+                    <li className="px-3 py-2 text-sm text-muted-foreground">Loading...</li>
+                  )}
+                  {!isLoadingRoutes && filteredRoutes.length === 0 && query.length > 0 && (
+                    <li className="px-3 py-2 text-sm text-muted-foreground">No results</li>
+                  )}
+                  {!isLoadingRoutes &&
+                    filteredRoutes.map((route, idx) => (
+                      <li key={route} role="option" aria-selected={idx === selectedIndex}>
+                        <Link
+                          href={route}
+                          onClick={() => {
+                            setShowResults(false)
+                            setQuery('Redirecting...')
+                          }}
+                          onMouseEnter={() => setSelectedIndex(idx)}
+                          onMouseDown={(e) => e.preventDefault()}
+                          title={route}
+                          className={cn(
+                            'block rounded-[0.95rem] px-3 py-2 text-sm transition-[background-color,color,border-color] duration-200',
+                            idx === selectedIndex
+                              ? 'bg-primary/10 text-foreground'
+                              : 'text-muted-foreground hover:bg-background/70 hover:text-foreground',
+                          )}
+                        >
+                          {displayLabel(route)}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              )
+            })()}
+          </div>
+
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            {concreteRoutesForLocale.length > 0
+              ? `${concreteRoutesForLocale.length} pages available`
+              : t.searchComingSoon}
+          </p>
+        </div>
       </div>
-    </div>
+    </RouteStateShell>
   )
 }
 

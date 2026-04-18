@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
  <DialogPrimitive.Overlay
  ref={ref}
  data-slot="dialog-overlay"
- className={cn("fixed inset-0 z-50 bg-black/85 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+ className={cn("fixed inset-0 z-50 bg-black/88 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
  className
  )}
  {...props}
@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
  <DialogPrimitive.Content
  ref={ref}
  data-slot="dialog-content"
- className={cn("fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-white/[0.08] bg-[oklch(0.048_0.005_264)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(180,210,255,0.06),0_40px_100px_-24px_rgba(0,0,0,0.95)] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+ className={cn("fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-[1.75rem] border border-white/[0.08] bg-[linear-gradient(180deg,oklch(0.05_0.006_264),oklch(0.042_0.005_264))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_0_0.5px_rgba(180,210,255,0.06),0_40px_100px_-24px_rgba(0,0,0,0.95)] duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
  className
  )}
  {...props}

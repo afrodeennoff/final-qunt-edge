@@ -1,7 +1,12 @@
+import { RouteLoadingScreen } from '@/components/ui/route-state'
+
 export default function HomeLoading() {
   return (
-    <div className="flex min-h-[80vh] items-center justify-center">
-      <div className="h-5 w-5 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-primary" />
-    </div>
+    <RouteLoadingScreen
+      eyebrow="Home"
+      title="Composing the home surface"
+      description="Bringing the hero, proof, and navigation layers into view."
+      fullScreen={false}
+    />
   )
 }

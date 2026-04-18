@@ -1,6 +1,7 @@
-"use client"
+'use client'
 
-import { useEffect } from "react"
+import { useEffect } from 'react'
+import { RouteErrorScreen } from '@/components/ui/route-state'
 
 export default function GlobalError({
   error,
@@ -17,29 +18,15 @@ export default function GlobalError({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen bg-background text-foreground">
-        <div className="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center gap-6 px-6 text-center">
-          <div className="space-y-2">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Qunt Edge</p>
-            <h1 className="text-2xl font-semibold">Something went wrong</h1>
-            <p className="text-sm text-muted-foreground">
-              The app hit an unexpected error. Reload the page to recover.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              className="rounded-md border border-subtle bg-surface-subtle px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
-              onClick={() => window.location.reload()}
-            >
-              Reload
-            </button>
-            <button
-              className="rounded-md border border-subtle px-4 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-              onClick={reset}
-            >
-              Try again
-            </button>
-          </div>
-        </div>
+        <RouteErrorScreen
+          eyebrow="Global boundary"
+          title="The app hit an unexpected error"
+          description={error.message || 'Reload the page to restore the full application shell.'}
+          onRetry={() => window.location.reload()}
+          retryLabel="Reload"
+          secondaryLabel="Try again"
+          onSecondary={reset}
+        />
       </body>
     </html>
   )

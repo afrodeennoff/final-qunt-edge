@@ -46,11 +46,11 @@ export function SidebarUserMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="group/user w-full rounded-xl px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:bg-sidebar-primary/8 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
+              className="group/user w-full rounded-[1.15rem] border border-transparent px-2.5 py-1.5 transition-[opacity,background-color,border-color] duration-200 hover:border-sidebar-primary/14 hover:bg-sidebar-primary/8 data-[state=open]:border-sidebar-primary/18 data-[state=open]:bg-sidebar-primary/10 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2!"
             >
               <div className="flex w-full items-center gap-2.5">
                 <div className="relative shrink-0">
-                  <Avatar className="h-9 w-9 overflow-hidden rounded-[var(--radius-icon)] ring-1 ring-sidebar-primary/20">
+                  <Avatar className="h-9 w-9 overflow-hidden rounded-[1rem] ring-1 ring-sidebar-primary/20">
                     <AvatarImage src={user?.avatar_url} alt={displayName} />
                     <AvatarFallback className="rounded-[var(--radius-icon)] bg-gradient-to-br from-sidebar-primary/80 via-sidebar-primary/60 to-sidebar-primary/40 text-sidebar-primary-foreground text-xs font-bold tracking-wide">
                       {initials}

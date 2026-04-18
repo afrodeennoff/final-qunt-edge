@@ -1,7 +1,12 @@
+import { RouteLoadingScreen } from '@/components/ui/route-state'
+
 export default function Loading() {
- return (
-   <div className="flex h-full min-h-[50vh] items-center justify-center">
-     <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-   </div>
- )
+  return (
+    <RouteLoadingScreen
+      eyebrow="Teams dashboard"
+      title="Loading team command"
+      description="Hydrating team summaries, members, and shared performance context."
+      fullScreen={false}
+    />
+  )
 }

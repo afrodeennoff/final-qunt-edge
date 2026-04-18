@@ -1,7 +1,5 @@
+import { RouteLoadingScreen } from '@/components/ui/route-state'
+
 export default function EmbedLoading() {
-  return (
-    <div className="flex h-screen items-center justify-center bg-background">
-      <div className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-primary" />
-    </div>
-  )
+  return <RouteLoadingScreen eyebrow="Embed" title="Loading embedded chart" description="Preparing the share-safe market view." />
 }

@@ -57,7 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isInteractive ? onClick : undefined}
         className={cn(
           'group relative overflow-hidden text-foreground',
-          'rounded-lg border border-border/45 bg-card/95 shadow-[0_18px_46px_-32px_rgba(0,0,0,0.9)]',
+          'rounded-xl border border-border/45 bg-[linear-gradient(180deg,hsl(var(--card)/0.98),hsl(var(--background)/0.92))] shadow-[0_18px_46px_-32px_rgba(0,0,0,0.9)]',
           variant === 'glass' && 'border-primary/12 bg-primary/8',
           variant === 'elevated' &&
             'border-primary/14 bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_28px_70px_-42px_rgba(0,0,0,0.92)]',
