@@ -8,6 +8,17 @@
 Production deployment: https://qunt-edge.vercel.app (commit b938c939)
 Build: 7min, 177 static pages, 0 TypeScript errors, Prisma migrations up to date.
 
+### Admin coupons + prop-firms visual refinement (2026-04-18)
+- Added `app/[locale]/admin/components/admin-surface.tsx` to give admin pages a shared header, stat-card, and section-shell language instead of route-local header/card repetition.
+- `/admin/coupons` now uses a cleaner stacked editing flow: one shared page header, calmer stat strip, grouped create form panels, single-column live-suggestion cards, and single-column saved coupon editors. The messy two-up coupon card layout was removed.
+- `/admin/propfirms` list now shares the same admin shell language and renders stacked mobile cards below `lg` instead of forcing horizontal table scrolling. The table remains for larger screens.
+- `/admin/propfirms/[id]` was further refined with grouped firm-detail sections, frosted section chrome, and cleaner review/coupon composition so the page reads as one workspace instead of several competing slabs.
+- Verification:
+  - `npx prettier --write 'app/[locale]/admin/components/admin-surface.tsx' 'app/[locale]/admin/coupons/page.tsx' 'app/[locale]/admin/propfirms/page.tsx' 'app/[locale]/admin/propfirms/[id]/page.tsx'`
+  - `npx eslint 'app/[locale]/admin/components/admin-surface.tsx' 'app/[locale]/admin/coupons/page.tsx' 'app/[locale]/admin/propfirms/page.tsx' 'app/[locale]/admin/propfirms/[id]/page.tsx'` (warnings only: pre-existing complexity checks)
+  - `npx tsc --noEmit`
+- Limitation: no live browser/dev-server visual pass was available in this thread, so the verification is code-level rather than screenshot-driven.
+
 ### Trader profile layout cleanup (2026-04-18)
 - `app/[locale]/dashboard/trader-profile/page-client.tsx` was refined so the public visibility control now lives in the profile identity card’s top-right instead of the review-controls panel.
 - The accounts block is now clearly labeled `Active accounts`, kept above the calendar, and given cleaner hierarchy with a compact description plus a tidier chip/stat split.

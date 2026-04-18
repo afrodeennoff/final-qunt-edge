@@ -121,3 +121,9 @@
 - **RC:** The page mixed profile-level state with filter controls, which weakened the top-of-page hierarchy and created awkward spacing in the summary band
 - **R:** Keep public visibility in the profile identity card’s top-right area, and keep the review-controls panel focused on range selection and active-session context. Maintain the reading order as identity header → metric band → active accounts → calendar
 - **E:** Trader profile now uses a dedicated top-right visibility panel in the header and a cleaner `Active accounts` section above the calendar
+
+## Lesson 80: Admin editor-heavy pages need one primary vertical workflow
+- **M:** `/admin/coupons` felt messy because suggestion cards and saved coupon editors were rendered in a two-column grid, so full edit forms competed side-by-side and forced zig-zag scanning
+- **RC:** Editor-heavy admin surfaces are not browse cards. When every card contains form controls, badges, links, and destructive actions, multi-column layouts amplify clutter and weaken the “next step” hierarchy
+- **R:** For admin CRUD pages with rich editors, prefer one shared page header, a quiet stat strip, one primary create section, and then stacked editable cards in a single lane. Use inset grouped panels inside a section before reintroducing multiple outer cards per row
+- **E:** `/admin/coupons` now uses grouped create panels plus a single-column stack for live suggestions and saved coupon editors, while `/admin/propfirms` uses the same shared admin shell language

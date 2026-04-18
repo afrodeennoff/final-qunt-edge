@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { connection } from 'next/server'
+import type { ReactNode } from 'react'
 import { hasConfiguredDatabaseConnection, prisma } from '@/lib/prisma'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getSpotlightCouponSuggestionForFirm } from '@/lib/prop-firms/spotlight-coupon-suggestions'
@@ -26,6 +27,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { AlertTriangle, ArrowUpRight, CheckCircle2, Eye, Plus, Trash2 } from 'lucide-react'
+import { AdminStatCard } from '../../components/admin-surface'
 import {
   buildCouponAdminRedirectUrl,
   formatAdminDateTimeInput,
@@ -313,6 +315,26 @@ function buildFallbackFirm(id: string): PropFirmData | null {
   }
 }
 
+function FormFieldGroup({
+  title,
+  description,
+  children,
+}: {
+  title: string
+  description?: string
+  children: ReactNode
+}) {
+  return (
+    <div className="space-y-4 rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/40 p-4">
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-foreground">{title}</p>
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
+      </div>
+      {children}
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------------------
 // Page (Server Component — no function props passed to client boundaries)
 // ---------------------------------------------------------------------------
@@ -364,7 +386,7 @@ export default async function PropFirmEditPage({
   const fieldClass = 'grid gap-2'
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="max-w-5xl space-y-5">
       <div className="flex flex-col gap-3 border-b border-[oklch(0.65_0.22_260/0.08)] pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <Button variant="ghost" size="sm" asChild className="w-fit">
@@ -425,8 +447,25 @@ export default async function PropFirmEditPage({
         </Alert>
       ) : null}
 
+      {!isNew && firm ? (
+        <div className="grid gap-3 sm:grid-cols-3">
+          <AdminStatCard label="Reviews" value={firm.reviews.length.toString()} />
+          <AdminStatCard label="Coupons" value={firm.coupons.length.toString()} />
+          <AdminStatCard
+            label="Workspace mode"
+            value={pageState.isReadOnly ? 'Read-only' : 'Editable'}
+            hint={
+              pageState.isReadOnly ? 'Fallback or DB unavailable' : 'Live admin schema connected'
+            }
+          />
+        </div>
+      ) : null}
+
       <form action={handleAction}>
-        <Card variant="flat" hover>
+        <Card
+          variant="frost"
+          className="border-border/45 bg-background/72 shadow-[0_22px_52px_-34px_rgba(0,0,0,0.9)]"
+        >
           <CardHeader className="space-y-1 border-b border-[oklch(0.65_0.22_260/0.08)]">
             <CardTitle>Firm details</CardTitle>
             <p className="text-sm text-muted-foreground">
@@ -438,114 +477,134 @@ export default async function PropFirmEditPage({
             <input type="hidden" name="locale" value={locale} />
             {firm && <input type="hidden" name="id" value={id} />}
             <fieldset disabled={!pageState.canManageFirm} className="space-y-4">
-              <div className={fieldClass}>
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
-              </div>
+              <FormFieldGroup
+                title="Identity"
+                description="Core details that control how the firm appears in the catalogue and routing."
+              >
+                <div className={fieldClass}>
+                  <Label htmlFor="name">Name</Label>
+                  <Input id="name" name="name" defaultValue={firm?.name ?? ''} required />
+                </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className={fieldClass}>
-                  <Label htmlFor="slug">Slug</Label>
-                  <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="slug">Slug</Label>
+                    <Input id="slug" name="slug" defaultValue={firm?.slug ?? ''} required />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="category">Category</Label>
+                    <Input
+                      id="category"
+                      name="category"
+                      defaultValue={firm?.category ?? ''}
+                      placeholder="Futures, Forex, Crypto..."
+                    />
+                  </div>
                 </div>
-                <div className={fieldClass}>
-                  <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    name="category"
-                    defaultValue={firm?.category ?? ''}
-                    placeholder="Futures, Forex, Crypto..."
-                  />
-                </div>
-              </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
                 <div className={fieldClass}>
-                  <Label htmlFor="platform">Platform</Label>
-                  <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
+                  <Label htmlFor="shortDesc">Short description</Label>
+                  <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
                 </div>
-                <div className={fieldClass}>
-                  <Label htmlFor="payoutModel">Payout model</Label>
-                  <Input
-                    id="payoutModel"
-                    name="payoutModel"
-                    defaultValue={firm?.payoutModel ?? ''}
-                  />
-                </div>
-              </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className={fieldClass}>
-                  <Label htmlFor="drawdownType">Drawdown type</Label>
-                  <Input
-                    id="drawdownType"
-                    name="drawdownType"
-                    defaultValue={firm?.drawdownType ?? ''}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    name="isActive"
+                    value="1"
+                    defaultChecked={firm?.isActive ?? true}
+                    className="h-4 w-4 rounded border-input accent-primary"
                   />
+                  <Label htmlFor="isActive" className="cursor-pointer font-normal">
+                    Active
+                  </Label>
                 </div>
-                <div className={fieldClass}>
-                  <Label htmlFor="profitSplit">Profit split</Label>
-                  <Input
-                    id="profitSplit"
-                    name="profitSplit"
-                    defaultValue={firm?.profitSplit ?? ''}
-                  />
-                </div>
-              </div>
+              </FormFieldGroup>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className={fieldClass}>
-                  <Label htmlFor="maxAllocation">Max allocation</Label>
-                  <Input
-                    id="maxAllocation"
-                    name="maxAllocation"
-                    defaultValue={firm?.maxAllocation ?? ''}
-                  />
+              <FormFieldGroup
+                title="Commercial profile"
+                description="Platform, payout, and funding terms used across the firm detail and deals surfaces."
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="platform">Platform</Label>
+                    <Input id="platform" name="platform" defaultValue={firm?.platform ?? ''} />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="payoutModel">Payout model</Label>
+                    <Input
+                      id="payoutModel"
+                      name="payoutModel"
+                      defaultValue={firm?.payoutModel ?? ''}
+                    />
+                  </div>
                 </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="drawdownType">Drawdown type</Label>
+                    <Input
+                      id="drawdownType"
+                      name="drawdownType"
+                      defaultValue={firm?.drawdownType ?? ''}
+                    />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="profitSplit">Profit split</Label>
+                    <Input
+                      id="profitSplit"
+                      name="profitSplit"
+                      defaultValue={firm?.profitSplit ?? ''}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className={fieldClass}>
+                    <Label htmlFor="maxAllocation">Max allocation</Label>
+                    <Input
+                      id="maxAllocation"
+                      name="maxAllocation"
+                      defaultValue={firm?.maxAllocation ?? ''}
+                    />
+                  </div>
+                  <div className={fieldClass}>
+                    <Label htmlFor="referralUrl">Referral URL</Label>
+                    <Input
+                      id="referralUrl"
+                      name="referralUrl"
+                      type="url"
+                      defaultValue={firm?.referralUrl ?? ''}
+                    />
+                  </div>
+                </div>
+              </FormFieldGroup>
+
+              <FormFieldGroup
+                title="Copy and media"
+                description="Public-facing copy and branding assets used on firm pages."
+              >
                 <div className={fieldClass}>
-                  <Label htmlFor="referralUrl">Referral URL</Label>
+                  <Label htmlFor="logoUrl">Logo URL</Label>
                   <Input
-                    id="referralUrl"
-                    name="referralUrl"
+                    id="logoUrl"
+                    name="logoUrl"
                     type="url"
-                    defaultValue={firm?.referralUrl ?? ''}
+                    defaultValue={firm?.logoUrl ?? ''}
                   />
                 </div>
-              </div>
 
-              <div className={fieldClass}>
-                <Label htmlFor="logoUrl">Logo URL</Label>
-                <Input id="logoUrl" name="logoUrl" type="url" defaultValue={firm?.logoUrl ?? ''} />
-              </div>
-
-              <div className={fieldClass}>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  rows={4}
-                  defaultValue={firm?.description ?? ''}
-                />
-              </div>
-
-              <div className={fieldClass}>
-                <Label htmlFor="shortDesc">Short description</Label>
-                <Input id="shortDesc" name="shortDesc" defaultValue={firm?.shortDesc ?? ''} />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  name="isActive"
-                  value="1"
-                  defaultChecked={firm?.isActive ?? true}
-                  className="h-4 w-4 rounded border-input accent-primary"
-                />
-                <Label htmlFor="isActive" className="cursor-pointer font-normal">
-                  Active
-                </Label>
-              </div>
+                <div className={fieldClass}>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    rows={5}
+                    defaultValue={firm?.description ?? ''}
+                  />
+                </div>
+              </FormFieldGroup>
             </fieldset>
 
             <p className="text-xs text-muted-foreground">
@@ -597,7 +656,10 @@ function ReviewsSection({
   canManageReviews: boolean
 }) {
   return (
-    <Card variant="flat" hover>
+    <Card
+      variant="frost"
+      className="border-border/45 bg-background/72 shadow-[0_20px_48px_-32px_rgba(0,0,0,0.9)]"
+    >
       <CardHeader className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
@@ -620,7 +682,10 @@ function ReviewsSection({
           </Alert>
         ) : null}
 
-        <form action={handleCreateReview}>
+        <form
+          action={handleCreateReview}
+          className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/40 p-4"
+        >
           <input type="hidden" name="propFirmId" value={firm.id} />
           <input type="hidden" name="locale" value={locale} />
           <fieldset disabled={!canManageReviews} className="space-y-3">
@@ -753,7 +818,10 @@ function CouponsSection({
   const createDefaults = firm.coupons.length === 0 ? spotlightSuggestion : null
 
   return (
-    <Card variant="flat" hover>
+    <Card
+      variant="frost"
+      className="border-border/45 bg-background/72 shadow-[0_20px_48px_-32px_rgba(0,0,0,0.9)]"
+    >
       <CardHeader className="space-y-3 border-b border-[oklch(0.65_0.22_260/0.08)]">
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">

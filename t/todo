@@ -16,6 +16,11 @@
 - [x] Refactor `/admin/propfirms` list/detail routes to use a cleaner admin layout and fully disable write actions in fallback/read-only states
 - [x] Re-verify the repaired admin surfaces with targeted tests, lint/typecheck, then persist memory/lessons/pattern updates
 
+### Admin coupons + prop-firms visual refinement (2026-04-18)
+- [x] Rebuild `/admin/coupons` into a cleaner single-column stacked workspace with calmer section hierarchy
+- [x] Polish `/admin/propfirms` list/detail layouts to match the refined coupon workspace and reduce visual clutter
+- [x] Re-run lint/typecheck, review the diff, and persist the refined admin UI patterns
+
 ### Full-site unified product-led redesign (2026-04-18)
 - [x] Decompose the full-site redesign into shared foundations plus Wave 1 public, Wave 2 dashboard/teams, and Wave 3 admin/internal surfaces
 - [x] Lock the visual direction with the approved constraints: product-led, unified across all pages, visual-only, no gradients, and hybrid product-UI plus restrained animated SVG media

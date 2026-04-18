@@ -8,10 +8,10 @@ import { getPropFirmAdminPageState } from '@/lib/prop-firms/admin-state'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertTriangle, CheckCircle2, PencilLine } from 'lucide-react'
 import { propFirms } from '@/app/[locale]/dashboard/components/accounts/config'
 import { getVerifiedPropFirmProfileByName } from '@/lib/prop-firms/verified-profiles'
+import { AdminPageHeader, AdminSection, AdminStatCard } from '../components/admin-surface'
 import { ConfirmDeleteButton } from '../components/confirm-delete-button'
 import {
   getFirmAdminNotice,
@@ -110,30 +110,20 @@ export default async function PropFirmsListPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 border-b border-[oklch(0.65_0.22_260/0.08)] pb-6 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary/80">
-            Admin Prop Firms
-          </p>
-          <div className="space-y-1">
-            <h1 className="text-3xl font-semibold tracking-tight">Prop Firms</h1>
-            <p className="max-w-2xl text-sm text-muted-foreground">
-              Keep the catalogue clean, review which firms are live, and jump into the detail
-              workspace for reviews and coupon management.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {pageState.canManageFirm ? (
+      <AdminPageHeader
+        eyebrow="Admin Prop Firms"
+        title="Prop Firms"
+        description="Review firm coverage, open a cleaner detail workspace for reviews and coupons, and keep the admin directory easy to scan instead of table-heavy."
+        actions={
+          pageState.canManageFirm ? (
             <Button asChild>
               <Link href={`/${locale}/admin/propfirms/new`}>Add firm</Link>
             </Button>
           ) : (
             <Badge variant="secondary">Reference only</Badge>
-          )}
-        </div>
-      </div>
+          )
+        }
+      />
 
       {notice ? (
         <Alert variant={notice.variant}>
@@ -160,127 +150,172 @@ export default async function PropFirmsListPage({
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <AdminStat label="Total firms" value={firms.length.toString()} />
-        <AdminStat label="Active" value={activeCount.toString()} />
-        <AdminStat label="Inactive" value={inactiveCount.toString()} />
-        <AdminStat label="Reviews / Coupons" value={`${totalReviews} / ${totalCoupons}`} />
+        <AdminStatCard label="Total firms" value={firms.length.toString()} />
+        <AdminStatCard label="Active" value={activeCount.toString()} />
+        <AdminStatCard label="Inactive" value={inactiveCount.toString()} />
+        <AdminStatCard label="Reviews / Coupons" value={`${totalReviews} / ${totalCoupons}`} />
       </div>
 
-      <Card variant="flat" hover>
-        <CardHeader className="space-y-1 border-b border-[oklch(0.65_0.22_260/0.08)]">
-          <CardTitle size="md">Firm directory</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Every row links into the detail workspace. Destructive actions only appear when the live
-            admin schema is available.
-          </p>
-        </CardHeader>
-        <CardContent size="sm" className="pt-4">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[oklch(0.65_0.22_260/0.08)]">
-                  <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
-                  <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">
-                    Category
-                  </th>
-                  <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">
-                    Platform
-                  </th>
-                  <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">
-                    Reviews
-                  </th>
-                  <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">
-                    Coupons
-                  </th>
-                  <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">State</th>
-                  <th className="pb-3 text-left font-medium text-muted-foreground">Actions</th>
+      <AdminSection
+        title="Firm directory"
+        description="Every row links into the detail workspace. Destructive actions only appear when the live admin schema is available."
+        badge={<Badge variant="secondary">{firms.length} total</Badge>}
+      >
+        <div className="space-y-3 lg:hidden">
+          {firms.length === 0 ? (
+            <div className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] px-4 py-8 text-center text-sm text-muted-foreground">
+              No prop firms found yet.
+            </div>
+          ) : (
+            firms.map((firm) => {
+              const rowState = getPropFirmAdminPageState({
+                hasConfiguredDatabaseConnection,
+                firmId: firm.id,
+              })
+
+              return (
+                <div
+                  key={firm.id}
+                  className="rounded-xl border border-[oklch(0.65_0.22_260/0.08)] bg-background/40 p-4"
+                >
+                  <div className="flex flex-col gap-4">
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium">{firm.name}</p>
+                        <Badge variant={firm.isActive ? 'default' : 'secondary'}>
+                          {firm.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                        {rowState.isReadOnly ? <Badge variant="outline">Read-only</Badge> : null}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{firm.slug}</p>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="text-sm text-muted-foreground">
+                        Category: <span className="text-foreground">{firm.category ?? '—'}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Platform: <span className="text-foreground">{firm.platform ?? '—'}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Reviews: <span className="text-foreground">{firm._count.reviews}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Coupons: <span className="text-foreground">{firm._count.coupons}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={`/${locale}/admin/propfirms/${firm.id}`}>
+                          <PencilLine className="h-4 w-4" />
+                          {rowState.canManageFirm ? 'Edit' : 'View'}
+                        </Link>
+                      </Button>
+
+                      {rowState.canManageFirm ? (
+                        <form action={handleDelete}>
+                          <input type="hidden" name="id" value={firm.id} />
+                          <input type="hidden" name="locale" value={locale} />
+                          <ConfirmDeleteButton
+                            variant="ghost"
+                            size="sm"
+                            confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
+                            pendingLabel="Deleting..."
+                            className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                          />
+                        </form>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+
+        <div className="hidden overflow-x-auto lg:block">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[oklch(0.65_0.22_260/0.08)]">
+                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Name</th>
+                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Category</th>
+                <th className="pb-3 pr-4 text-left font-medium text-muted-foreground">Platform</th>
+                <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Reviews</th>
+                <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">Coupons</th>
+                <th className="pb-3 pr-4 text-center font-medium text-muted-foreground">State</th>
+                <th className="pb-3 text-left font-medium text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {firms.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-muted-foreground">
+                    No prop firms found yet.
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {firms.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="py-8 text-center text-muted-foreground">
-                      No prop firms found yet.
-                    </td>
-                  </tr>
-                ) : (
-                  firms.map((firm) => {
-                    const rowState = getPropFirmAdminPageState({
-                      hasConfiguredDatabaseConnection,
-                      firmId: firm.id,
-                    })
-
-                    return (
-                      <tr
-                        key={firm.id}
-                        className="border-b border-[oklch(0.65_0.22_260/0.08)] last:border-0"
-                      >
-                        <td className="py-3 pr-4">
-                          <div className="space-y-1">
-                            <p className="font-medium">{firm.name}</p>
-                            <p className="text-xs text-muted-foreground">{firm.slug}</p>
-                          </div>
-                        </td>
-                        <td className="py-3 pr-4 text-muted-foreground">{firm.category ?? '—'}</td>
-                        <td className="py-3 pr-4 text-muted-foreground">{firm.platform ?? '—'}</td>
-                        <td className="py-3 pr-4 text-center">{firm._count.reviews}</td>
-                        <td className="py-3 pr-4 text-center">{firm._count.coupons}</td>
-                        <td className="py-3 pr-4 text-center">
-                          <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Badge variant={firm.isActive ? 'default' : 'secondary'}>
-                              {firm.isActive ? 'Active' : 'Inactive'}
-                            </Badge>
-                            {rowState.isReadOnly ? (
-                              <Badge variant="outline">Read-only</Badge>
-                            ) : null}
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="ghost" size="sm" asChild>
-                              <Link href={`/${locale}/admin/propfirms/${firm.id}`}>
-                                <PencilLine className="h-4 w-4" />
-                                {rowState.canManageFirm ? 'Edit' : 'View'}
-                              </Link>
-                            </Button>
-
-                            {rowState.canManageFirm ? (
-                              <form action={handleDelete}>
-                                <input type="hidden" name="id" value={firm.id} />
-                                <input type="hidden" name="locale" value={locale} />
-                                <ConfirmDeleteButton
-                                  variant="ghost"
-                                  size="sm"
-                                  confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
-                                  pendingLabel="Deleting..."
-                                  className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
-                                />
-                              </form>
-                            ) : null}
-                          </div>
-                        </td>
-                      </tr>
-                    )
+              ) : (
+                firms.map((firm) => {
+                  const rowState = getPropFirmAdminPageState({
+                    hasConfiguredDatabaseConnection,
+                    firmId: firm.id,
                   })
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
 
-function AdminStat({ label, value }: { label: string; value: string }) {
-  return (
-    <Card variant="flat" hover>
-      <CardContent size="sm">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-          {label}
-        </p>
-        <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
-      </CardContent>
-    </Card>
+                  return (
+                    <tr
+                      key={firm.id}
+                      className="border-b border-[oklch(0.65_0.22_260/0.08)] last:border-0"
+                    >
+                      <td className="py-3 pr-4">
+                        <div className="space-y-1">
+                          <p className="font-medium">{firm.name}</p>
+                          <p className="text-xs text-muted-foreground">{firm.slug}</p>
+                        </div>
+                      </td>
+                      <td className="py-3 pr-4 text-muted-foreground">{firm.category ?? '—'}</td>
+                      <td className="py-3 pr-4 text-muted-foreground">{firm.platform ?? '—'}</td>
+                      <td className="py-3 pr-4 text-center">{firm._count.reviews}</td>
+                      <td className="py-3 pr-4 text-center">{firm._count.coupons}</td>
+                      <td className="py-3 pr-4 text-center">
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          <Badge variant={firm.isActive ? 'default' : 'secondary'}>
+                            {firm.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                          {rowState.isReadOnly ? <Badge variant="outline">Read-only</Badge> : null}
+                        </div>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link href={`/${locale}/admin/propfirms/${firm.id}`}>
+                              <PencilLine className="h-4 w-4" />
+                              {rowState.canManageFirm ? 'Edit' : 'View'}
+                            </Link>
+                          </Button>
+
+                          {rowState.canManageFirm ? (
+                            <form action={handleDelete}>
+                              <input type="hidden" name="id" value={firm.id} />
+                              <input type="hidden" name="locale" value={locale} />
+                              <ConfirmDeleteButton
+                                variant="ghost"
+                                size="sm"
+                                confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
+                                pendingLabel="Deleting..."
+                                className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                              />
+                            </form>
+                          ) : null}
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </AdminSection>
+    </div>
   )
 }
