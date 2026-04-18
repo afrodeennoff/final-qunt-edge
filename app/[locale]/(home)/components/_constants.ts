@@ -46,4 +46,4 @@ export const SHADOW_SECTION =
 export const TRANSITION_CARD =
   'transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]'
 export const TRANSITION_INTERACTIVE =
-  'transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]'
+  'transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]'

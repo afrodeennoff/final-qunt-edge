@@ -134,7 +134,7 @@ export function FirmGrid({ firms, pageSize = 9, locale }: FirmGridProps) {
                   onClick={() => goToPage(page)}
                   disabled={isPending}
                   className={cn(
-                    "h-8 w-8 p-0 text-xs font-medium rounded-md transition-all duration-200",
+                    "h-8 w-8 p-0 text-xs font-medium rounded-md transition-[background-color,border-color,color,opacity] duration-200",
                     currentPage === page
                       ? "bg-primary/15 text-foreground border border-primary/30"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

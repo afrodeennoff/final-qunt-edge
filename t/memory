@@ -4,9 +4,32 @@
 **Branch:** codex-obsidian-v3-redesign
 
 ## Enterprise-Grade Visual Refresh (2026-04-19)
-228 files changed across the entire mounted product. All visual-only, zero behavior changes.
+3 commits: 47fa8ab0 (bulk normalization) + 4f697bba (refinement pass) + final semantic token pass.
+506+ files changed total across 3 passes. All visual-only, zero behavior changes.
 
-### Shared Primitives Refined
+### Semantic Color Token Normalization (Pass 3)
+12 code files with remaining hardcoded Tailwind color tokens normalized to semantic equivalents:
+- All `text-red-400`/`text-red-500` → `text-destructive` (admin forms, delete buttons, PnL negatives)
+- All `text-emerald-400` → `text-success` (PnL positives, status badges)
+- All `text-yellow-400` → `text-warning` (star ratings, admin indicators)
+- All `text-blue-400` → `text-primary` (leaderboard highlights)
+- All `border-emerald-500/40` → `border-success/30` (coupon badges)
+- PnL color normalization in `stats-card.tsx`, `leaderboard-table.tsx`, `trader/[slug]/page.tsx`
+- Zero remaining hardcoded `text-red-*`, `text-emerald-*`, `text-yellow-*`, `text-blue-*`, `text-green-*` in TSX files
+
+### Verification
+- `npx tsc --noEmit`: 0 errors ✅
+- `npm run lint -- --quiet`: 0 errors ✅
+- No behavior changes: all flows, auth, API, store, cache, backend unchanged
+
+### Anti-pattern Elimination Status
+- `variant="error"`: 0 remaining ✅
+- `variant="accent"` (Badge): 0 remaining ✅
+- `oklch(0.65_0.22_260)` hardcoded: 0 remaining ✅
+- `rounded-[1.Xrem]`: 0 remaining ✅
+- `bg-white/[X]` (non-hero): 0 remaining ✅
+- `border-white/[X]`: 0 remaining ✅
+- Hardcoded Tailwind colors (text-red/blue/green/yellow/emerald): 0 remaining ✅
 - `components/ui/card.tsx`: Calmer surface (bg-card/95), normalized border (border-border/40), reduced shadow intensity, removed hover translate
 - `components/ui/button.tsx`: All 18 variants refined — reduced shadow, calmer hover states, no inset highlights on outline/ghost
 - `components/ui/badge.tsx`: All 20 variants normalized — reduced tint opacity from /10 to /8, borders from /22 to /18

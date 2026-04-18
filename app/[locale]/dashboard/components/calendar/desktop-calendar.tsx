@@ -187,7 +187,7 @@ function RenewalBadge({ renewals }: { renewals: Account[] }) {
  </Badge>
  </PopoverTrigger>
  <PopoverContent
- className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] bg-background/0.14 border-border/55"
+ className="w-[320px] sm:w-[380px] md:w-[420px] max-w-[90vw] p-0 z-50 border shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] bg-background/0.14 border-border/55"
  align="start"
  side="right"
  sideOffset={8}

@@ -22,7 +22,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
     setStaticParamsLocale(locale);
 
     return (
-        <div className="w-full py-20 px-4 sm:px-6 sm:py-24 lg:px-8">
+        <div className="w-full py-12 px-4 sm:px-6 sm:py-16 lg:px-8">
             <header className="mb-12">
                 <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">Documentation</h1>
                 <p className="text-xl text-muted-foreground">Everything you need to master Qunt Edge workflows.</p>

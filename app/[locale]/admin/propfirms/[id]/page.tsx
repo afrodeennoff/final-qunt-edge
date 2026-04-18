@@ -784,7 +784,7 @@ function ReviewsSection({
                         variant="ghost"
                         disabled={!canManageReviews}
                         pendingLabel="Deleting..."
-                        className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete review
@@ -1028,7 +1028,7 @@ function CouponEditorCard({
               {coupon.isActive ? 'Active' : 'Inactive'}
             </Badge>
             {timing.isLive ? (
-              <Badge variant="outline" className="border-emerald-500/40 text-emerald-300">
+              <Badge variant="outline" className="border-success/30 text-success">
                 Live on deals
               </Badge>
             ) : null}
@@ -1210,7 +1210,7 @@ function CouponEditorCard({
             variant="ghost"
             disabled={!canManageCoupons}
             pendingLabel="Deleting..."
-            className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="w-4 h-4" />
             Delete coupon

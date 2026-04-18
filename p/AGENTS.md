@@ -15,6 +15,37 @@
 - **Never use** `bg-white/[X]` or `border-white/[X]` — use `bg-background/[X]` and `border-border/[X]` with scaled opacity
 - **Never use** `rounded-[1.Xrem]` — use standard `rounded-lg`, `rounded-xl`, `rounded-2xl` tokens
 - **Never exceed** 16px shadow spread on product surfaces (except modals at 32px)
+- **Never use** hardcoded Tailwind color names — use semantic tokens: `text-destructive` (not `text-red-*`), `text-success` (not `text-emerald-*`), `text-warning` (not `text-yellow-*
+
+### Border Opacity Tiers (3 levels)
+- **Neutral/inset**: `border-border/30` — inset panels, subtle separators, nested groups
+- **Primary surfaces**: `border-border/40` — cards, panels, dialogs, surfaces
+- **Hover/emphasis**: `border-border/50` — only on interactive elements during hover
+
+### Eyebrow/Label Typography
+- One shared token: `text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground`
+- Use for all eyebrow labels, info labels, section tags, admin badges, panel labels
+
+### Text Opacity Tiers (5 levels)
+- **`text-foreground`** — headings, primary content, key values (was /95, /90, /85 — normalized to full)
+- **`text-foreground/80`** — marketing body text (deliberate softening for long-form copy)
+- **`text-foreground/70`** — secondary text, supporting descriptions
+- **`text-foreground/60`** — tertiary labels, metric descriptions, admin panel values
+- **`text-foreground/35`** — widget micro-labels, stat section headers, very subtle captions
+- **`text-muted-foreground`** — semantic secondary text (use for labels, descriptions, form hints)
+- Never use intermediate values like /34, /46, /52, /56, /62, /68, /72, /78, /85, /90, /95
+
+### Semantic Color Tokens
+- **Positive/Success**: `text-success`, `bg-success/8`, `border-success/30` — PnL gains, live status
+- **Negative/Destructive**: `text-destructive`, `bg-destructive/8`, `border-destructive/30` — PnL losses, errors
+- **Warning**: `text-warning`, `bg-warning/8`, `border-warning/30` — star ratings, caution
+- **Primary/Info**: `text-primary`, `bg-primary/8`, `border-primary/30` — accent, focus, info
+- Never use `text-red-*`, `text-emerald-*`, `text-yellow-*`, `text-blue-*`, `text-green-*` in product code
+
+### Hover Policy
+- **Interactive elements** (buttons, links, tabs, clickable cards): hover border/bg/shadow OK
+- **Structural containers** (page headers, section shells, inset panels): NO hover states
+- `UnifiedSurface` and `UnifiedPageHeader` must not have hover transitions by default
 
 ## Performance Rules (Enforced)
 - No `repeat: Infinity` in interactive components (loading states OK)

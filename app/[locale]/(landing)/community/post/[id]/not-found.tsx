@@ -24,7 +24,7 @@ export default function NotFound() {
         </Button>
       }
     >
-      <div className="rounded-full border border-primary/16 bg-primary/10 px-5 py-1.5 text-3xl font-semibold tracking-[-0.06em] text-foreground">
+      <div className="rounded-full border border-border/30 bg-background/40 px-5 py-1.5 text-3xl font-semibold tracking-[-0.06em] text-foreground">
         404
       </div>
     </RouteStateShell>

@@ -538,7 +538,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomOut()}
  disabled={scale <= 0.5}
  >
@@ -550,7 +550,7 @@ export function TradeImageEditor({ trade, tradeIds }: TradeImageEditorProps) {
  <Button 
  variant="ghost"
  size="icon"
- className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
+ className="bg-linear-to-r bg-primary/[0.03] hover:bg-accent/70 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] border border-border/30 ring-1 ring-border/24 h-7 w-7 sm:h-8 sm:w-8"
  onClick={() => zoomIn()}
  disabled={scale >= 3}
  >

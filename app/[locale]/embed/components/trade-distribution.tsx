@@ -154,7 +154,7 @@ export default function TradeDistributionChartEmbed({
                   <Cell
                     key={`cell-${idx}`}
                     fill={entry.color}
-                    className="transition-all duration-300 ease-in-out hover:opacity-80 dark:brightness-90"
+                    className="transition-[opacity,fill] duration-300 ease-in-out hover:opacity-80 dark:brightness-90"
                   />
                 ))}
                 <Label

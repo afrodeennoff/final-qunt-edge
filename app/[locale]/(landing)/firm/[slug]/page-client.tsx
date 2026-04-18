@@ -799,7 +799,7 @@ function StarRating({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'md
           key={star}
           className={cn(
             sizeClasses[size],
-            star <= rating ? 'text-yellow-400' : 'text-muted-foreground/40'
+            star <= rating ? 'text-warning' : 'text-muted-foreground/40'
           )}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -1283,7 +1283,7 @@ function FirmHeader({ firm }: { firm: FirmData }) {
       <div className="relative space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_276px] lg:items-start">
           <div className="flex items-start gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-background/0.01 shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] shadow-foreground/20">
+            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-background/0.01 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] shadow-foreground/20">
               {firm.logoUrl ? (
                 <Image
                   src={firm.logoUrl}
@@ -1347,7 +1347,7 @@ export function FirmDetailClient({ firm, localePrefix }: { firm: FirmData; local
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_34%),linear-gradient(180deg,hsl(var(--background))_0%,rgba(10,10,10,0.96)_24%,hsl(var(--background))_100%)]">
-      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+      <div className="mx-auto w-full max-w-[1240px] flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <FirmHeader firm={firm} />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">

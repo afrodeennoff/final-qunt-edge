@@ -204,7 +204,7 @@ export default function DailyPnLChartEmbed({
                 dataKey="pnl"
                 radius={[3, 3, 0, 0]}
                 maxBarSize={40}
-                className="transition-all duration-300 ease-in-out"
+                className="transition-[opacity,fill] duration-300 ease-in-out"
               >
                 {chartData.map((entry, idx) => (
                   <Cell

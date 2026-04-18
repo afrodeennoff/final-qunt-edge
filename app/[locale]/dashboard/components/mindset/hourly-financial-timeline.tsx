@@ -107,7 +107,7 @@ function SessionIndicator({ session, hourElements, containerRef }: {
 
 function SessionLegend({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
  return (
- <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+ <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-center gap-4 text-xs">
  {SESSIONS.map((session) => (
  <button

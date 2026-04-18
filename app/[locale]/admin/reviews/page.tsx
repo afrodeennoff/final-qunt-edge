@@ -120,7 +120,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       <span className="font-medium">
                         {item.review.propFirm.name}
                       </span>
-                      <span className="text-yellow-400">
+                      <span className="text-warning">
                         {'★'.repeat(item.review.rating)}
                       </span>
                     </div>

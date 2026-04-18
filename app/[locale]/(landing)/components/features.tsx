@@ -41,7 +41,7 @@ type FeatureCard = {
 function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; index: number; isVisible: boolean }) {
  return (
  <div
- className={cn("group relative overflow-hidden rounded-2xl border transition-all duration-500","border-border/30 bg-background/40","shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_24px_60px_-36px_rgba(0,0,0,0.92)] hover:border-border/40 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]","hover:-translate-y-1","opacity-0 translate-y-8",
+ className={cn("group relative overflow-hidden rounded-xl border transition-[transform,opacity,background-color,border-color,box-shadow] duration-500","border-border/30 bg-background/40","shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] hover:border-border/40 hover:shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]","hover:-translate-y-1","opacity-0 translate-y-8",
  isVisible &&"opacity-100 translate-y-0",
  index < 2 ? 'lg:col-span-3' :
  index === 2 ? 'lg:col-span-4' : 'lg:col-span-2',
@@ -74,7 +74,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  </p>
  </div>
  <div
- className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border border-border/30 bg-background/25","group-hover:border-border/35 group-hover:bg-background/35 transition-all duration-500",
+ className={cn("relative flex w-full items-center justify-center overflow-hidden rounded-xl","border border-border/30 bg-background/25","group-hover:border-border/35 group-hover:bg-background/35 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500",
  feature.wrapperClass ??"h-[250px] sm:h-[300px] md:h-[350px]"
  )}
  >
@@ -177,7 +177,7 @@ export default function Features() {
  <section 
  id="features" 
  ref={sectionRef}
- className="relative px-6 py-16 sm:py-20 lg:py-24"
+ className="relative px-6 py-12 sm:py-16 lg:py-24"
  >
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
@@ -186,7 +186,7 @@ export default function Features() {
  
  <div className="relative mx-auto max-w-6xl space-y-8">
  <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
- <div className={cn("transition-all duration-700","opacity-0 translate-y-4",
+ <div className={cn("transition-[transform,opacity] duration-700","opacity-0 translate-y-4",
  isVisible &&"opacity-100 translate-y-0"
  )}>
  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
@@ -201,7 +201,7 @@ export default function Features() {
  {features.map((feature, index) => (
  <div
  key={feature.id}
- className={cn("rounded-xl border border-border/30 bg-background/40 p-6 transition-all duration-500 shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_20px_50px_-34px_rgba(0,0,0,0.92)]","hover:-translate-y-1","opacity-0",
+ className={cn("rounded-xl border border-border/35 bg-background/40 p-5 sm:p-6 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]","hover:-translate-y-1","opacity-0",
  isVisible &&"opacity-100"
  )}
  style={{

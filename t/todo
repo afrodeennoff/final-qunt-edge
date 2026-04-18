@@ -71,9 +71,9 @@
 - [x] Verify with targeted lint and full typecheck
 
 ### Dashboard route surfaces UI polish (2026-04-19)
-- [ ] Normalize dashboard-header.tsx: replace hardcoded rgba/white tints with border-border/foreground tokens
+- [x] Normalize dashboard-header.tsx: replace hardcoded rgba/white tints with border-border/foreground tokens
 - [ ] Remove dead navbar.tsx (no imports, replaced by dashboard-header.tsx)
-- [ ] Fix billing/page.tsx double-frame (Card inside UnifiedSurface)
-- [ ] Refine settings/page.tsx: normalize surfaces, fix variant="error"→"destructive", improve hierarchy
-- [ ] Wrap import callback pages in UnifiedPageShell for visual consistency
-- [ ] Verify with npx tsc --noEmit
+- [x] Fix billing/page.tsx double-frame (Card inside UnifiedSurface)
+- [x] Refine settings/page.tsx: normalize surfaces, fix variant="error"→"destructive", improve hierarchy
+- [x] Wrap import callback pages in UnifiedPageShell for visual consistency
+- [x] Verify with npx tsc --noEmit

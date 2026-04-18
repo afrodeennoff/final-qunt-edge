@@ -22,6 +22,7 @@ type UnifiedSurfaceProps = {
   children: ReactNode
   className?: string
   variant?: 'default' | 'glass' | 'gradient-border' | 'elevated' | 'subtle'
+  hover?: boolean
 }
 
 export function UnifiedPageShell({
@@ -42,8 +43,8 @@ export function UnifiedPageShell({
     <div
       className={cn(
         'scroll-smooth-butter animate-page-enter relative mx-auto w-full',
-        variant === 'refined' && 'border-x border-v2-border/12',
-        variant === 'minimal' && 'border-x border-v2-border/8',
+        variant === 'refined' && 'border-x border-border/12',
+        variant === 'minimal' && 'border-x border-border/8',
         widthClassName === 'max-w-none' && 'max-w-[1800px]',
         widthClassName,
         'px-4 sm:px-6 lg:px-8 xl:px-12',
@@ -123,7 +124,7 @@ export function UnifiedPageHeader({
   )
 }
 
-export function UnifiedSurface({ children, className, variant = 'default' }: UnifiedSurfaceProps) {
+export function UnifiedSurface({ children, className, variant = 'default', hover = false }: UnifiedSurfaceProps) {
   return (
     <section
       className={cn(
@@ -131,24 +132,24 @@ export function UnifiedSurface({ children, className, variant = 'default' }: Uni
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-border/35 bg-card/80',
-          '',
+          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
         ],
         variant === 'glass' && [
           'border-border/30 bg-primary/4',
-          '',
+          hover ? 'hover:border-border/40 hover:bg-primary/6' : '',
           '',
         ],
         variant === 'gradient-border' && [
           'border-border/35 bg-card/70',
-          '',
+          hover ? 'hover:border-border/45' : '',
         ],
         variant === 'elevated' && [
           'border-border/40 bg-card/90 shadow-sm',
-          '',
+          hover ? 'hover:border-border/50 hover:bg-card/95' : '',
         ],
         variant === 'subtle' && [
           'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
-          '',
+          hover ? 'hover:border-border/40 hover:bg-background/80' : '',
         ],
         className,
       )}

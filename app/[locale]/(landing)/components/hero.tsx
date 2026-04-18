@@ -74,14 +74,14 @@ export default function Hero({ }: HeroProps) {
  >
  <Link
  href={`/${locale}/authentication?next=dashboard`}
- className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-all hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] sm:w-auto shadow-[0_0_32px_rgba(255,255,255,0.15)]"
+ className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center rounded-full bg-white px-8 text-center text-[13px] font-semibold text-black tracking-[-0.01em] transition-[transform,background-color,opacity,border-color] hover:bg-white/90 hover:scale-[1.02] active:scale-[0.98] sm:w-auto shadow-[0_0_32px_rgba(255,255,255,0.15)]"
  >
  <span className="relative z-10">Start Free Audit</span>
  </Link>
 
  <Link
  href={`/${locale}/updates`}
- className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-border/0.08 bg-background/30 px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-all hover:border-border/0.14 hover:bg-background/0.11 hover:text-foreground sm:w-auto"
+ className="touch-target group relative inline-flex h-12 w-full min-w-[220px] items-center justify-center gap-2 rounded-full border border-border/0.08 bg-background/30 px-8 text-center text-[13px] font-medium text-foreground/80 tracking-[-0.01em] transition-[transform,background-color,opacity,border-color] hover:border-border/0.14 hover:bg-background/0.11 hover:text-foreground sm:w-auto"
  >
  View Product Updates
  <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
@@ -92,13 +92,13 @@ export default function Hero({ }: HeroProps) {
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  transition={{ duration: 0.6, delay: 0.6 }}
- className="mt-20 border-t border-border/30 px-4 pt-10 opacity-50 transition-all duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
+ className="mt-20 border-t border-border/30 px-4 pt-10 opacity-50 transition-[opacity] duration-700 hover:opacity-100 sm:mt-24 sm:pt-12"
  >
  <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20">
- <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
- <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">RITHMIC</span>
- <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">IBKR</span>
- <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-all duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">CQG</span>
+ <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">TRADOVATE</span>
+ <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">RITHMIC</span>
+ <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">IBKR</span>
+ <span className="text-[11px] font-black tracking-[0.20em] uppercase text-foreground/35 transition-[color,letter-spacing] duration-300 hover:text-foreground hover:tracking-[0.15em] cursor-default">CQG</span>
  </div>
  </motion.div>
  </motion.div>

@@ -206,7 +206,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  </div>
  <div className="w-full bg-muted/30 dark:bg-muted/60 rounded-full h-2">
  <div 
- className="bg-semantic-info-bg dark:bg-semantic-info-bg h-2 rounded-full transition-all duration-300"
+ className="bg-semantic-info-bg dark:bg-semantic-info-bg h-2 rounded-full transition-[width] duration-300"
  style={{ width: `${progress}%` }}
  ></div>
  </div>

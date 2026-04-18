@@ -267,7 +267,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  isolation:"isolate",
  }}
  >
- <div className="h-full w-full overflow-hidden rounded-lg border border-border/30 bg-primary/[0.03] shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] transition-all duration-500">
+ <div className="h-full w-full overflow-hidden rounded-lg border border-border/30 bg-primary/[0.03] shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] transition-[opacity,transform,max-height] duration-500">
  <div className="p-4 h-full flex flex-col min-h-0">
  <div className="mb-4 flex shrink-0 items-center gap-2 border-b border-border/30 pb-2 transition-colors duration-300">
  <Bot className="h-4 w-4 text-foreground transition-colors duration-300" />
@@ -290,7 +290,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  className={`flex items-start gap-2 max-w-[85%] ${message.role ==="user" ?"flex-row-reverse" :""}`}
  >
  <div
- className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+ className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-[opacity,transform,max-height] duration-300 ${
  message.role ==="user" ?"bg-primary" :"bg-background/25"
  }`}
  >
@@ -302,7 +302,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
  </div>
 
  <div
- className={`p-2 rounded-lg transition-all duration-300 ${
+ className={`p-2 rounded-lg transition-[opacity,transform,max-height] duration-300 ${
  message.role ==="user"
  ?"bg-primary text-primary-foreground"
  :"bg-background/25 text-foreground border border-muted"
@@ -317,7 +317,7 @@ export default function TradingChatAssistant({ className ="", maxMessages = 3 }:
 
  {message.analysis && message.role ==="assistant" && (
  <div
- className={`overflow-hidden transition-all duration-500 ease-out ${
+ className={`overflow-hidden transition-[opacity,transform,max-height] duration-500 ease-out ${
  message.showAnalysis ?"max-h-32 opacity-100 mt-2" :"max-h-0 opacity-0 mt-0"
  }`}
  >

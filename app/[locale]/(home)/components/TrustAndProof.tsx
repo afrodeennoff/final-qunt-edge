@@ -33,7 +33,7 @@ const enforcement = [
 
 export default function TrustAndProof() {
  return (
- <section className="relative bg-gradient-to-b from-card/5 to-background px-4 py-16 sm:py-20 lg:py-24 sm:px-6 lg:px-8">
+ <section className="relative bg-gradient-to-b from-card/5 to-background px-4 py-12 sm:py-16 lg:py-20 sm:px-6 lg:px-8">
  <div className="mx-auto max-w-6xl">
  <div className="mb-10 text-center sm:mb-14">
  <Badge variant="outline" className="border-primary/35 bg-primary/10 text-[10px] uppercase tracking-[0.2em] [font-family:var(--home-copy)]">

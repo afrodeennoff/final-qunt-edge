@@ -83,7 +83,7 @@ export function createOptimizedTransition(
   duration: number = 300,
   easing: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' = 'ease-out'
 ): string {
-  return `transition-all ${duration}ms ${easing}`
+  return `transition-[opacity,background-color,border-color] ${duration}ms ${easing}`
 }
 
 export const reduceMotion = () => {

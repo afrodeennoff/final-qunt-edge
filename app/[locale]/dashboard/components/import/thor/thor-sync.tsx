@@ -170,7 +170,7 @@ export function ThorSync({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }
  muted
  controls
  playsInline
- className="rounded-lg border border-border/30 shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] w-full h-full object-cover"
+ className="rounded-lg border border-border/30 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] w-full h-full object-cover"
  >
  <source src="/videos/thor-tutorial.mp4" type="video/mp4" />
  <track

@@ -33,7 +33,7 @@ export default function Navigation({ locale }: NavigationProps) {
  <Link
  key={link.href}
  href={link.href}
- className="rounded-full px-4 py-2 text-[13px] font-medium tracking-[-0.01em] text-muted-foreground transition-all duration-200 hover:bg-background/0.09 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+ className="rounded-full px-4 py-2 text-[13px] font-medium tracking-[-0.01em] text-muted-foreground transition-[background-color,border-color,color,opacity] duration-200 hover:bg-background/0.09 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
  >
  {link.label}
  </Link>

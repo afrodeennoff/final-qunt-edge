@@ -39,7 +39,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
   return (
     <Link href={`/${locale}/firm/${slug}`} className="block group">
-      <article className="relative overflow-hidden rounded-xl border border-border/30 bg-background/0.14 transition-all duration-300 hover:-translate-y-1 hover:border-border/40 hover:bg-primary/[0.03]">
+      <article className="relative overflow-hidden rounded-xl border border-border/30 bg-background/0.14 transition-[transform,opacity,background-color,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-border/40 hover:bg-primary/[0.03]">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -117,7 +117,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
           {/* Progress bar */}
           <div className="h-1 overflow-hidden rounded-full bg-muted/50">
             <div
-              className="h-full rounded-full bg-primary/60 transition-all duration-500"
+              className="h-full rounded-full bg-primary/60 transition-[width] duration-500"
               style={{ width: `${paidPercentage}%` }}
             />
           </div>
@@ -143,7 +143,7 @@ export function FirmCard({ locale, name, slug, stats, accountSizesCount }: FirmC
 
         {/* Footer CTA */}
         <div className="px-5 pb-4">
-          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/20 text-xs font-medium text-muted-foreground transition-all duration-200 group-hover:border-border/30 group-hover:bg-muted/50 group-hover:text-foreground">
+          <span className="inline-flex h-9 w-full items-center justify-center rounded-full border border-border/20 text-xs font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 group-hover:border-border/30 group-hover:bg-muted/50 group-hover:text-foreground">
             View Details
             <svg className="ml-1.5 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

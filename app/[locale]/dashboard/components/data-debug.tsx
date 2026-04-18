@@ -41,7 +41,7 @@ export function DataDebug() {
  variant="outline"
  size="icon"
  onClick={() => setIsOpen(true)}
- className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]"
+ className="rounded-full bg-background/80 border-border/14 hover:bg-foreground/10 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]"
  >
  <Bug className="h-4 w-4 text-primary" />
  </Button>

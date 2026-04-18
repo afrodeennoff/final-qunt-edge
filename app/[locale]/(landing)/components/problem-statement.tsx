@@ -63,7 +63,7 @@ export default function ProblemStatement() {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: i * 0.1 }}
- className="group relative rounded-2xl border border-border/30 bg-background/30 p-5 transition-all duration-500 hover:border-border/40"
+ className="group relative rounded-xl border border-border/30 bg-background/30 p-5 transition-[transform,opacity,background-color,border-color,box-shadow] duration-500 hover:border-border/40"
  >
  <div className="relative h-full overflow-hidden rounded-xl border border-border/30 bg-black/25 p-4 transition-colors group-hover:border-border/40 sm:p-6">
  <div className="absolute right-3 top-3 text-[8px] font-mono text-foreground/80 transition-colors group-hover:text-fg-primary sm:right-4 sm:top-4 sm:text-[9px]">

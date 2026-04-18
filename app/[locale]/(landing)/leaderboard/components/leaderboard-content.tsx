@@ -102,7 +102,7 @@ export function LeaderboardContent({ initialEntries, locale }: LeaderboardConten
               to understand how they are actually performing instead of who had one lucky day.
             </p>
             {isDemoBoard ? (
-              <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/22 bg-emerald-500/8 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+              <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/8 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
                 <Shield className="mr-1 h-3 w-3" />
                 Demo rankings shown until live accounts connect
               </div>
@@ -221,14 +221,14 @@ const ACCENT = {
     text: 'text-orange-400',
   },
   green: {
-    icon: 'text-emerald-400',
-    badge: 'border-emerald-500/18 bg-emerald-500/8',
-    text: 'text-emerald-400',
+    icon: 'text-success',
+    badge: 'border-emerald-500/18 bg-success/8',
+    text: 'text-success',
   },
   blue: {
-    icon: 'text-blue-400',
+    icon: 'text-primary',
     badge: 'border-blue-500/20 bg-blue-500/10',
-    text: 'text-blue-400',
+    text: 'text-primary',
   },
 } as const
 

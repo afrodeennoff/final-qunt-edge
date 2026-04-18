@@ -199,8 +199,8 @@ const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(
  config.value,
  trend
  ? trend.isPositive
- ?"text-emerald-400"
- :"text-red-400"
+ ?"text-success"
+ :"text-destructive"
  :"text-foreground"
  )}
  aria-label={`Value: ${displayValue}`}
@@ -347,8 +347,8 @@ const ModernStatsCard = React.forwardRef<HTMLDivElement, ModernStatsCardProps>(
  config.value,
  trend
  ? trend.isPositive
- ?"text-emerald-400"
- :"text-red-400"
+ ?"text-success"
+ :"text-destructive"
  :"text-foreground"
  )}
  aria-label={`Value: ${displayValue}`}

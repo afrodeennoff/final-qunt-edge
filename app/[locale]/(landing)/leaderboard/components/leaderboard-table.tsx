@@ -239,7 +239,7 @@ function LeaderboardEntryCard({ entry, locale }: { entry: LeaderboardEntry; loca
             </p>
           </div>
         </div>
-        <p className={cn('text-sm font-semibold', positive ? 'text-emerald-400' : 'text-red-400')}>
+        <p className={cn('text-sm font-semibold', positive ? 'text-success' : 'text-destructive')}>
           {positive ? '+' : ''}
           {formatCurrency(entry.monthlyPnl)}
         </p>
@@ -301,7 +301,7 @@ function LeaderboardEntryRow({ entry, locale }: { entry: LeaderboardEntry; local
         className={cn(
           'border-b px-6 py-4 align-middle text-sm font-semibold',
           rowDividerClassName,
-          positive ? 'text-emerald-400' : 'text-red-400',
+          positive ? 'text-success' : 'text-destructive',
         )}
       >
         {positive ? '+' : ''}

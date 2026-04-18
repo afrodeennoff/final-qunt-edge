@@ -257,7 +257,7 @@ export default function EnhancedInput({
  {showSuggestions && filteredSuggestions.length > 0 && (
  <ul
  ref={suggestionsRef}
- className={cn("absolute z-10 mt-1 w-full overflow-auto rounded-md border py-1 text-sm shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] max-h-[200px]","border-input bg-background","text-foreground"
+ className={cn("absolute z-10 mt-1 w-full overflow-auto rounded-md border py-1 text-sm shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)] max-h-[200px]","border-input bg-background","text-foreground"
  )}
  role="listbox"
  >

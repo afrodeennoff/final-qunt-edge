@@ -125,7 +125,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.title}
         />
         {errors.title && (
-          <p className="text-sm text-red-500">{errors.title.message}</p>
+          <p className="text-sm text-destructive">{errors.title.message}</p>
         )}
       </div>
 
@@ -138,7 +138,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.slug}
         />
         {errors.slug && (
-          <p className="text-sm text-red-500">{errors.slug.message}</p>
+          <p className="text-sm text-destructive">{errors.slug.message}</p>
         )}
       </div>
 
@@ -163,7 +163,7 @@ export function BlogForm({ post, locale }: Props) {
           error={!!errors.excerpt}
         />
         {errors.excerpt && (
-          <p className="text-sm text-red-500">{errors.excerpt.message}</p>
+          <p className="text-sm text-destructive">{errors.excerpt.message}</p>
         )}
       </div>
 
@@ -191,7 +191,7 @@ export function BlogForm({ post, locale }: Props) {
           ))}
         </select>
         {errors.category && (
-          <p className="text-sm text-red-500">{errors.category.message}</p>
+          <p className="text-sm text-destructive">{errors.category.message}</p>
         )}
       </div>
 
@@ -206,7 +206,7 @@ export function BlogForm({ post, locale }: Props) {
           className="font-mono text-sm"
         />
         {errors.content && (
-          <p className="text-sm text-red-500">{errors.content.message}</p>
+          <p className="text-sm text-destructive">{errors.content.message}</p>
         )}
       </div>
 

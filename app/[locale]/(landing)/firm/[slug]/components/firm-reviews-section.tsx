@@ -62,7 +62,7 @@ function InteractiveStarRating({
               sizeClasses[size],
               "transition-colors",
               (hoverRating || rating) >= star
-                ? "fill-yellow-400 text-yellow-400"
+                ? "fill-warning text-warning"
                 : "fill-transparent text-muted-foreground/50 stroke-muted-foreground/60"
             )}
           />
@@ -86,7 +86,7 @@ function StaticStarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm'
           className={cn(
             sizeClasses[size],
             star <= rating
-              ? "fill-yellow-400 text-yellow-400"
+              ? "fill-warning text-warning"
               : "fill-transparent text-muted-foreground/50 stroke-muted-foreground/60"
           )}
         />
@@ -109,7 +109,7 @@ function RatingDistributionBar({
   return (
     <div className="flex items-center gap-2">
       <span className="w-3 text-xs text-muted-foreground">{rating}</span>
-      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+      <Star className="h-3 w-3 fill-warning text-warning" />
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-background/0.11">
         <div
           className="h-full rounded-full bg-[oklch(0.82_0.16_85)/80] transition-[opacity,background-color,border-color,transform] duration-500"

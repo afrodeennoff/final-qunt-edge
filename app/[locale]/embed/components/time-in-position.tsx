@@ -124,7 +124,7 @@ export default function TimeInPositionByHourChart({ trades }: { trades: TradeLik
                 tickFormatter={formatTime}
               />
               <Tooltip content={<CustomTooltip t={t} />} wrapperStyle={{ fontSize: '12px', zIndex: 1000 }} />
-              <Bar dataKey="avgTimeInPosition" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-all duration-300 ease-in-out">
+              <Bar dataKey="avgTimeInPosition" radius={[3, 3, 0, 0]} maxBarSize={40} className="transition-[opacity,fill] duration-300 ease-in-out">
                 {chartData.map((entry, idx) => (
                   <Cell key={`cell-${idx}`} fill={getColor(entry.tradeCount)} />
                 ))}

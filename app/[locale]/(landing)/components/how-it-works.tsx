@@ -19,7 +19,7 @@ return (
  initial={{ opacity: 0, y: 8 }}
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
- className="rounded-2xl border border-border/30 bg-background/30 p-6"
+ className="rounded-xl border border-border/30 bg-background/30 p-6"
  >
  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
  Optimization Pipeline

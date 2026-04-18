@@ -211,7 +211,7 @@ function CouponBadges({
     <div className="flex flex-wrap items-center gap-2">
       <Badge variant={active ? 'default' : 'secondary'}>{active ? 'Active' : 'Inactive'}</Badge>
       {live ? (
-        <Badge variant="outline" className="border-emerald-500/40 text-emerald-300">
+        <Badge variant="outline" className="border-success/30 text-success">
           Live on deals
         </Badge>
       ) : null}

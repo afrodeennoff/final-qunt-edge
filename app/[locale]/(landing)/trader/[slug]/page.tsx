@@ -90,7 +90,7 @@ export async function generateMetadata({
 /* ─── Not found state ─── */
 function NotFoundState({ slug, locale }: { slug: string; locale: string }) {
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-black px-6 py-20 sm:px-8">
+    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1120px]">
         <div className={`rounded-2xl border ${FB} bg-black p-8`} style={FR}>
           <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Trader profile</p>
@@ -151,7 +151,7 @@ export default async function TraderProfilePage({
   const negative = snapshot.totalPnl < 0
 
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-black px-6 py-20 sm:px-8">
+    <div className="min-h-[calc(100vh-72px)] bg-black px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personSchema, breadcrumbSchema]) }}
@@ -175,7 +175,7 @@ export default async function TraderProfilePage({
                     Trader Profile
                   </span>
                   {snapshot.demo ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/22 bg-emerald-400/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-emerald-400">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/22 bg-emerald-400/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-success">
                       Demo
                     </span>
                   ) : null}
@@ -198,7 +198,7 @@ export default async function TraderProfilePage({
           <div className="grid gap-4 sm:grid-cols-2">
             <div className={`rounded-xl border ${FB} bg-black p-5`} style={FR}>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Total Profit</p>
-              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-emerald-400' : negative ? 'text-red-400' : 'text-foreground'}`}>
+              <p className={`mt-2 text-2xl font-semibold tracking-[-0.02em] ${positive ? 'text-success' : negative ? 'text-destructive' : 'text-foreground'}`}>
                 {formatCurrency(snapshot.totalPnl)}
               </p>
               <p className="mt-2 text-[12px] text-muted-foreground">Current public performance snapshot</p>
@@ -231,7 +231,7 @@ export default async function TraderProfilePage({
                 {snapshot.returnPct !== undefined && (
                   <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
                     <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Return</p>
-                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <p className={`mt-2 text-3xl font-semibold ${snapshot.returnPct >= 0 ? 'text-success' : 'text-destructive'}`}>
                       {formatSigned(snapshot.returnPct)}%
                     </p>
                     <div className={`mt-3 h-1.5 rounded-full ${FM}`}>
@@ -323,7 +323,7 @@ export default async function TraderProfilePage({
 /* ─── Shared stat cell ─── */
 
 function StatCell({ label, value, accent }: { label: string; value: string; accent?: 'green' | 'red' }) {
-  const color = accent === 'green' ? 'text-emerald-400' : accent === 'red' ? 'text-red-400' : 'text-foreground'
+  const color = accent === 'green' ? 'text-success' : accent === 'red' ? 'text-destructive' : 'text-foreground'
   return (
     <div className={`rounded-xl border ${FB} ${FS} p-4`} style={FR}>
       <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</p>

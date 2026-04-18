@@ -222,7 +222,7 @@ export default async function PropFirmsListPage({
                             size="sm"
                             confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
                             pendingLabel="Deleting..."
-                            className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                           />
                         </form>
                       ) : null}
@@ -302,7 +302,7 @@ export default async function PropFirmsListPage({
                                 size="sm"
                                 confirmMessage="Delete this firm? It will be soft-deleted and hidden from public pages."
                                 pendingLabel="Deleting..."
-                                className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                               />
                             </form>
                           ) : null}

@@ -126,7 +126,7 @@ export function AccountsBarChart({
             aria-pressed={showPayoutBars}
             onClick={() => setShowPayoutBars((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showPayoutBars
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-background/0.12 hover:text-foreground"
@@ -140,7 +140,7 @@ export function AccountsBarChart({
             aria-pressed={showAccountValue}
             onClick={() => setShowAccountValue((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showAccountValue
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-background/0.12 hover:text-foreground"
@@ -154,7 +154,7 @@ export function AccountsBarChart({
             aria-pressed={showRegistered}
             onClick={() => setShowRegistered((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showRegistered
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-background/0.12 hover:text-foreground"
@@ -168,7 +168,7 @@ export function AccountsBarChart({
             aria-pressed={showSized}
             onClick={() => setShowSized((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showSized
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-background/0.12 hover:text-foreground"
@@ -182,7 +182,7 @@ export function AccountsBarChart({
             aria-pressed={showZeroFirms}
             onClick={() => setShowZeroFirms((v) => !v)}
             className={cn(
-              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "h-7 px-2 border-border/0.04 text-[11px] tracking-wide transition-[background-color,border-color,color,opacity] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
               showZeroFirms
                 ? "border-primary/60 bg-primary/20 text-foreground"
                 : "text-foreground/80 hover:bg-background/0.12 hover:text-foreground"
