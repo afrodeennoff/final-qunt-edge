@@ -189,7 +189,17 @@ export const useAnalysisStore = create<AnalysisStore>()(
       // Custom serialization for dates
       onRehydrateStorage: () => (state) => {
         if (state?.lastUpdated) {
-          state.lastUpdated = new Date(state.lastUpdated);
+          // Auto-clear stale analysis if older than 24 hours
+          const lastUpdated = new Date(state.lastUpdated)
+          const staleThreshold = 24 * 60 * 60 * 1000 // 24 hours
+          if (Date.now() - lastUpdated.getTime() > staleThreshold) {
+            state.accountPerformanceData = null
+            state.analysisResult = null
+            state.lastUpdated = null
+            state.error = null
+          } else {
+            state.lastUpdated = lastUpdated
+          }
         }
       },
     },
