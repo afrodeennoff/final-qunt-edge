@@ -124,7 +124,7 @@ export function TradeComment({ tradeIds, comment: initialComment, onCommentChang
  </div>
  )}
  {showSuccess && !isUpdating && (
- <div className="absolute right-2 top-2 text-foreground/95 animate-in fade-in zoom-in duration-300">
+ <div className="absolute right-2 top-2 text-foreground animate-in fade-in zoom-in duration-300">
  <svg
  className="h-4 w-4"
  fill="none"

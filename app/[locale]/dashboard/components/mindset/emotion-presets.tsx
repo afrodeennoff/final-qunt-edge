@@ -82,7 +82,7 @@ export function EmotionPresets({ value, onChange }: EmotionPresetsProps) {
  }}
  >
  <span style={{ color: tone.color }}>{preset.icon}</span>
- <span className="text-xs leading-tight text-foreground/90">{preset.label}</span>
+ <span className="text-xs leading-tight text-foreground">{preset.label}</span>
  </button>
  )
  })}

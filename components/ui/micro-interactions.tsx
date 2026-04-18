@@ -18,7 +18,7 @@ export const HoverLift = React.forwardRef<HTMLDivElement, HoverLiftProps>(
  return (
  <div
  ref={ref}
- className={cn("transition-[opacity,background-color,border-color] duration-200 ease-out","hover:shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] hover:shadow-foreground/20",
+ className={cn("transition-[opacity,background-color,border-color] duration-200 ease-out","hover:shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] hover:shadow-foreground/20",
  `hover:${liftAmount}`,
  className
  )}

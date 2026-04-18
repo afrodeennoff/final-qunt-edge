@@ -126,11 +126,11 @@ export function DashboardHeader() {
                       {sectionLabel}
                     </span>
                   )}
-                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground/95 sm:text-sm sm:uppercase sm:tracking-[0.18em]">
+                  <h1 className="truncate text-[11px] font-bold tracking-[0.14em] text-foreground sm:text-sm sm:uppercase sm:tracking-[0.18em]">
                     {title}
                   </h1>
                 </div>
-                <p className="hidden truncate pt-1 text-xs text-foreground/46 xl:block">
+                <p className="hidden truncate pt-1 text-xs text-muted-foreground xl:block">
                   {subtitle}
                 </p>
               </div>

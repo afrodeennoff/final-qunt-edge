@@ -107,7 +107,7 @@ export const WebPreviewNavigationButton = ({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button 
-          className="h-8 w-8 p-0 hover:text-foreground/95"
+          className="h-8 w-8 p-0 hover:text-foreground"
           disabled={disabled}
           onClick={onClick}
           size="sm"
@@ -233,7 +233,7 @@ export const WebPreviewConsole = ({
                   "text-xs",
                   log.level === "error" && "text-destructive",
                   log.level === "warn" && "text-semantic-warning",
-                  log.level === "log" && "text-foreground/95"
+                  log.level === "log" && "text-foreground"
                 )}
                 key={`${log.timestamp.getTime()}-${index}`}
               >

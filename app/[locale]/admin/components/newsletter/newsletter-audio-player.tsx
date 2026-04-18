@@ -151,7 +151,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  <div className={`p-4 bg-background/0.3 border border-border/0.42 rounded-lg ${className}`}>
  <div className="space-y-4">
  {/* File name */}
- <div className="text-sm font-medium text-foreground/95 truncate">
+ <div className="text-sm font-medium text-foreground truncate">
  {fileName}
  </div>
 
@@ -194,7 +194,7 @@ export function AudioPlayer({ audioBuffer, fileName, className ="" }: AudioPlaye
  <div className="flex items-center gap-2">
  <button
  onClick={toggleMute}
- className="p-1 text-muted-foreground hover:text-foreground/95 transition-colors"
+ className="p-1 text-muted-foreground hover:text-foreground transition-colors"
  >
  {isMuted ? (
  <VolumeX className="w-4 h-4" />

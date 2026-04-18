@@ -88,7 +88,7 @@ export default function Hero({ locale }: { locale: string }) {
                 {integrations.map((integration) => (
                   <span
                     key={String(integration)}
-                    className="rounded-full border border-border/45 bg-background/80 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/75"
+                    className="rounded-full border border-border/45 bg-background/80 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground"
                   >
                     {integration}
                   </span>
@@ -124,7 +124,7 @@ export default function Hero({ locale }: { locale: string }) {
             screenshot={<DashboardPreview />}
             overlay={<SignalOverlay />}
             caption={
-              <div className="flex flex-wrap items-center gap-2 rounded-full border border-border/45 bg-background/80 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/75">
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-border/45 bg-background/80 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 <span className="inline-flex h-2 w-2 rounded-full bg-primary" />
                 Live review system
               </div>

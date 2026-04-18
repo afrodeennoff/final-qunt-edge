@@ -185,7 +185,7 @@ export function GlobalSyncButton() {
  <Clock className="w-3 h-3" />
  <span>Next Sync</span>
  </div>
- <span className="font-mono text-foreground/95">{nextSyncText}</span>
+ <span className="font-mono text-foreground">{nextSyncText}</span>
  </div>
 
  <button

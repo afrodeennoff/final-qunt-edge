@@ -57,7 +57,7 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  
  <div className="relative h-full">
  <CardHeader className="flex flex-row items-center justify-between gap-0 border-b border-border/30 pb-4">
- <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground/95 sm:text-lg">{feature.title}</CardTitle>
+ <CardTitle className="text-base font-medium tracking-[-0.02em] text-foreground sm:text-lg">{feature.title}</CardTitle>
  <div className="relative">
  <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
  <div className="relative">
@@ -68,8 +68,8 @@ function FeatureCard({ feature, index, isVisible }: { feature: FeatureCard; inde
  <CardContent>
  <div className="flex flex-col gap-3 sm:gap-4">
  <div>
- <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 sm:text-[32px]">{feature.stat}</div>
- <p className="mt-3 text-xs leading-[1.7] text-foreground/54 sm:text-sm">
+ <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground sm:text-[32px]">{feature.stat}</div>
+ <p className="mt-3 text-xs leading-[1.7] text-muted-foreground sm:text-sm">
  {feature.description}
  </p>
  </div>
@@ -189,11 +189,11 @@ export default function Features() {
  <div className={cn("transition-all duration-700","opacity-0 translate-y-4",
  isVisible &&"opacity-100 translate-y-0"
  )}>
- <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34 [font-family:var(--home-copy)]">Platform Weapons</p>
- <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground/95 [font-family:var(--home-display)]">
+ <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground [font-family:var(--home-copy)]">Platform Weapons</p>
+ <h2 className="mt-3 text-[clamp(1.95rem,4.9vw,3.4rem)] font-[350] leading-[0.92] tracking-[-0.045em] text-foreground [font-family:var(--home-display)]">
  {t("landing.features.heading")}
  </h2>
- <p className="mt-4 max-w-2xl text-sm leading-[1.8] text-foreground/56 sm:text-base md:text-lg">
+ <p className="mt-4 max-w-2xl text-sm leading-[1.8] text-muted-foreground sm:text-base md:text-lg">
  {t("landing.features.subheading")}
  </p>
  </div>
@@ -211,7 +211,7 @@ export default function Features() {
  <div className="mb-4 flex size-8 items-center justify-center rounded-lg border border-border/30 bg-background/30">
  {feature.icon}
  </div>
- <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/72">
+ <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground/70">
  {feature.title}
  </p>
  </div>

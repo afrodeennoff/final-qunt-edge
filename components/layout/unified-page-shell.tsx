@@ -77,15 +77,15 @@ export function UnifiedPageHeader({
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-border/35 bg-card/80',
-          'hover:border-border/50 hover:bg-card/95',
+          '',
         ],
         variant === 'gradient' && [
           'border-primary/14 bg-[hsl(var(--card)/0.96)]',
-          'hover:border-border/50 hover:bg-card/95',
+          '',
         ],
         variant === 'elevated' && [
           'border-border/40 bg-card/90 shadow-sm',
-          'hover:border-border/50',
+          '',
         ],
         className,
       )}
@@ -93,13 +93,13 @@ export function UnifiedPageHeader({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="gap-2">
           {eyebrow && (
-            <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-v2-text-muted mb-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground mb-2">
               {eyebrow}
             </p>
           )}
           <h1
             className={cn(
-              'font-semibold tracking-tight text-v2-text-primary sm:tracking-tight',
+              'font-semibold tracking-tight text-foreground sm:tracking-tight',
               'text-3xl sm:text-4xl',
               variant === 'gradient' && 'text-foreground',
             )}
@@ -109,7 +109,7 @@ export function UnifiedPageHeader({
           {description && (
             <p
               className={cn(
-                'max-w-3xl mt-2 text-sm text-v2-text-secondary sm:text-base',
+                'max-w-3xl mt-2 text-sm text-muted-foreground sm:text-base',
                 'leading-relaxed',
               )}
             >
@@ -131,24 +131,24 @@ export function UnifiedSurface({ children, className, variant = 'default' }: Uni
         'animate-fade-up-smooth transition-[transform,background-color,border-color,box-shadow,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         variant === 'default' && [
           'border-border/35 bg-card/80',
-          'hover:border-border/50',
+          '',
         ],
         variant === 'glass' && [
           'border-border/30 bg-primary/4',
           '',
-          'hover:border-border/40 hover:bg-primary/6',
+          '',
         ],
         variant === 'gradient-border' && [
           'border-border/35 bg-card/70',
-          'hover:border-border/45',
+          '',
         ],
         variant === 'elevated' && [
           'border-border/40 bg-card/90 shadow-sm',
-          'hover:border-border/50 hover:bg-card/95',
+          '',
         ],
         variant === 'subtle' && [
           'border-border/35 bg-[hsl(var(--background)/0.62)] shadow-none',
-          'hover:border-border/40 hover:bg-background/50',
+          '',
         ],
         className,
       )}

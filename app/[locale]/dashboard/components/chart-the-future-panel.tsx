@@ -91,12 +91,12 @@ function ChartPanel() {
  const [interval, setInterval] = useState<TimeframeValue>(TIMEFRAMES[2].value);
 
  return (
- <section className="rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] overflow-hidden">
+ <section className="rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
  <header className="flex flex-wrap items-center gap-2 border-b border-border/30 p-3">
  <select
  value={symbol}
  onChange={(event) => setSymbol(event.target.value as SymbolValue)}
- className="h-8 rounded-md border border-input bg-background px-2 text-[10px] font-bold uppercase tracking-widest text-foreground/95 outline-none hover:bg-background/25 transition-colors"
+ className="h-8 rounded-md border border-input bg-background px-2 text-[10px] font-bold uppercase tracking-widest text-foreground outline-none hover:bg-background/25 transition-colors"
  >
  {SYMBOLS.map((item) => (
  <option key={item.value} value={item.value}>
@@ -146,9 +146,9 @@ function AssistantPanel() {
  };
 
  return (
- <aside className="flex min-h-[500px] flex-col rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] overflow-hidden">
+ <aside className="flex min-h-[500px] flex-col rounded-xl border border-border/30 bg-primary/[0.03] overflow-hidden">
  <div className="flex items-center justify-between border-b border-border/30 p-4">
- <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/95">AI Assistant</h3>
+ <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground">AI Assistant</h3>
  <Bot className="size-4 text-primary" />
  </div>
 
@@ -158,7 +158,7 @@ function AssistantPanel() {
  key={message.id}
  className={cn("rounded-lg border-border/30 px-3 py-2 text-xs leading-relaxed",
  message.role ==="user"
- ?"border-primary/20 bg-primary/10 text-foreground/95"
+ ?"border-primary/20 bg-primary/10 text-foreground"
  :"border-border/30 bg-muted/40 text-muted-foreground",
  )}
  >
@@ -176,7 +176,7 @@ function AssistantPanel() {
  if (event.key ==="Enter") onSend();
  }}
  placeholder="Ask about this chart..."
- className="h-8 flex-1 bg-transparent text-xs text-foreground/95 outline-none placeholder:text-muted-foreground/50"
+ className="h-8 flex-1 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground/50"
  />
  <button
  type="button"
@@ -193,7 +193,7 @@ function AssistantPanel() {
 
 export function ChartTheFuturePanel() {
  return (
- <div className="text-foreground/95">
+ <div className="text-foreground">
  <TopNav title="Chart the Future" />
 
  <div className="grid gap-3 xl:grid-cols-[1.9fr_1fr]">

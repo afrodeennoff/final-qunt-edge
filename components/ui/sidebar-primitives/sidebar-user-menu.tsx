@@ -78,7 +78,7 @@ export function SidebarUserMenu({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2.5 bg-gradient-to-r from-sidebar-primary/18 to-sidebar-accent/10 px-3 py-2.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+                <Avatar className="h-8 w-8 rounded-xl shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
                   <AvatarImage src={user?.avatar_url} alt={displayName} />
                   <AvatarFallback className="rounded-lg bg-gradient-to-br from-sidebar-primary to-sidebar-primary/70 text-sidebar-primary-foreground text-xs font-semibold">
                     {initials}

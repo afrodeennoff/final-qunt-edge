@@ -45,7 +45,7 @@ export default function AIFeatures() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.reasonTrailTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.ai.reasonTrailDescription')}
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function AIFeatures() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.ai.liveContextTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.ai.liveContextDescription')}
               </p>
             </div>

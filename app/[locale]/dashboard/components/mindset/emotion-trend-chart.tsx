@@ -68,7 +68,7 @@ export function EmotionTrendChart({ data, className }: EmotionTrendChartProps) {
  >
  <div className="space-y-3">
  <div className="flex items-center justify-between">
- <p className="text-sm font-medium text-foreground/95">{t("mindset.emotion.title")}</p>
+ <p className="text-sm font-medium text-foreground">{t("mindset.emotion.title")}</p>
  <span className="text-xs text-muted-foreground">Last 7 days</span>
  </div>
 

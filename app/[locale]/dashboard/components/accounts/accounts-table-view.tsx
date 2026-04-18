@@ -379,7 +379,7 @@ function AccountsTableSection({
  </div>
  {showScrollHint && (
  <div className="pointer-events-none absolute bottom-2 right-2">
- <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/30 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div className="pointer-events-auto flex items-start gap-2 rounded-md border border-border/30 bg-background/90 px-3 py-2 text-xs text-muted-foreground shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <span className="max-w-[220px] leading-snug">
  {t("accounts.table.scrollHint")}
  </span>

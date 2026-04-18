@@ -11,7 +11,7 @@ export const unifiedMetricPanelClassName =
   'rounded-xl border border-border/30 bg-background/40 p-4'
 
 export const unifiedChipClassName =
-  'inline-flex items-center gap-2 rounded-full border border-primary/14 bg-primary/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary/90'
+  'inline-flex items-center gap-2 rounded-full border border-primary/14 bg-primary/6 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
 
 export const unifiedGhostActionClassName =
   'inline-flex items-center justify-center gap-2 rounded-full border border-border/35 bg-background/40 px-4 py-2 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-border/50 hover:bg-muted/40 hover:text-foreground'
@@ -28,7 +28,7 @@ export const unifiedDisplayTitleClassName =
 export const unifiedBodyCopyClassName = 'text-sm leading-[1.7] text-muted-foreground sm:text-base'
 
 export const unifiedInfoLabelClassName =
-  'text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/80'
+  'text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground'
 
 export const unifiedInfoValueClassName =
   'text-sm font-medium tracking-[-0.01em] text-foreground sm:text-[15px]'

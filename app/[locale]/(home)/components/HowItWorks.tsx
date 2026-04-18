@@ -42,7 +42,7 @@ export default function HowItWorks() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.workflow.signalTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.workflow.signalDescription')}
               </p>
             </div>
@@ -50,7 +50,7 @@ export default function HowItWorks() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 {t('landing.home.workflow.cadenceTitle')}
               </p>
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-foreground">
                 {t('landing.home.workflow.cadenceDescription')}
               </p>
             </div>

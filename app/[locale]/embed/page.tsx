@@ -242,28 +242,28 @@ export default function EmbedPage() {
               <section className="overflow-hidden rounded-[2rem] border border-border/30 bg-black/70 px-5 py-5 shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_24px_70px_-34px_rgba(0,0,0,0.9)] lg:px-6">
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_320px]">
                   <div className="rounded-2xl border border-border/30 bg-background/30 p-5">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
+                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
                       Embed Library
                     </div>
                     <div className="pt-4">
                       <h1 className="text-xl font-[350] tracking-[-0.04em] text-foreground lg:text-2xl">
                         Qunt Edge chart modules
                       </h1>
-                      <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-foreground/56">
+                      <p className="max-w-3xl pt-2 text-sm leading-[1.75] text-muted-foreground">
                         Production-ready embed cards with preserved query-param theming, selection, and postMessage contracts.
                       </p>
                     </div>
                   </div>
-                  <MotionStagger className="grid gap-2 text-xs text-foreground/50 sm:grid-cols-2 lg:grid-cols-1">
+                  <MotionStagger className="grid gap-2 text-xs text-muted-foreground/80 sm:grid-cols-2 lg:grid-cols-1">
                     <MotionStaggerItem>
                       <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Preset</span>
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Preset</span>
                         <span className="block pt-1 text-sm font-medium text-foreground">{preset ?? 'Default'}</span>
                       </div>
                     </MotionStaggerItem>
                     <MotionStaggerItem>
                       <div className="rounded-xl border border-border/30 bg-background/30 px-3 py-2.5">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">Charts</span>
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Charts</span>
                         <span className="block pt-1 text-sm font-medium text-foreground">
                           {selectedCharts ? Array.from(selectedCharts).length : 'All'}
                         </span>

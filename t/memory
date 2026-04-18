@@ -3,6 +3,54 @@
 **Updated:** 2026-04-19
 **Branch:** codex-obsidian-v3-redesign
 
+## Enterprise-Grade Visual Refresh (2026-04-19)
+228 files changed across the entire mounted product. All visual-only, zero behavior changes.
+
+### Shared Primitives Refined
+- `components/ui/card.tsx`: Calmer surface (bg-card/95), normalized border (border-border/40), reduced shadow intensity, removed hover translate
+- `components/ui/button.tsx`: All 18 variants refined — reduced shadow, calmer hover states, no inset highlights on outline/ghost
+- `components/ui/badge.tsx`: All 20 variants normalized — reduced tint opacity from /10 to /8, borders from /22 to /18
+- `components/ui/input.tsx`: Calmer border (border-border/40), refined focus ring (ring/40), floating label uses text-foreground/90 instead of primary
+- `components/ui/tabs.tsx`: Calmer surface (bg-background/60), refined active state (font-medium instead of primary color)
+- `components/ui/skeleton.tsx`: Replaced gradient background with bg-muted/50, normalized rounded values
+- `components/ui/dialog.tsx`: Replaced white-tinted surface with bg-card, calmer close button, subtler top glass line
+- `components/ui/route-state.tsx`: Calmer icon containers (border-border/30 bg-background/40), removed heavy shadows
+- `components/ui/sidebar.tsx`: Calmer inner surface (border/35, no dramatic gradient), refined trigger button
+
+### Shared Recipes & Shell
+- `components/layout/unified-page-recipes.ts`: All 13 recipe classes rebuilt for calmer enterprise look — reduced borders, shadows, and gradients
+- `components/layout/unified-page-shell.tsx`: Header and surface variants normalized, removed dramatic elevated hover, standardized rounded values
+
+### Shell Surfaces Refined
+- Marketing navbar: Calmer container (rounded-2xl), reduced logo shadow, calmer active link
+- Marketing layout shell: Reduced top spacing and content gaps, calmer decorative element
+- Dashboard header: Calmer sidebar trigger, reduced top glow
+- Admin layout: Calmer trigger, reduced rounded values, normalized badges
+- Teams layout: Same refinements as admin
+- Auth page: Calmer gradient orbs, reduced divider intensity
+- Global not-found: Calmer 404 badge
+
+### Bulk Normalization (200+ files)
+- All `rounded-[1.Xrem]` → standard `rounded-xl/2xl/lg` tokens (0 remaining)
+- All `bg-white/[X]` → `bg-background/[X*1.5]` with scaled opacity (0 remaining)
+- All `border-white/[X]` → `border-border/[X*0.7]` (0 remaining)
+- All dramatic shadows (`shadow-[0_25+px]`) → calmer `shadow-[0_4-12px]` (0 remaining)
+- All `border-[oklch(0.65_0.22_260/...)]` → `border-border/30-50` tokens
+- All `bg-[oklch(0.65_0.22_260/...)]` → `bg-background/20-35` tokens
+
+### Verification
+- `npx tsc --noEmit`: 0 errors ✅
+- `npm run lint -- --quiet`: 0 errors ✅
+- No behavior changes: all flows, auth, API, store, cache, backend unchanged
+
+### Blockers
+None.
+
+### Remaining Visual Follow-ups (lower priority)
+- Some landing page hero CTAs still use `bg-white` for intentional light-on-dark contrast
+- ~47 `transition-all` in marketing pages (acceptable for animation effects)
+- Some route-local leaf pages could benefit from richer skeleton passes
+
 ## Public landing/home route surface normalization (2026-04-19)
 - Normalized border tokens across 5 files: `border-primary/XX` → `border-border/40-50` for neutral surfaces (nav links, footer borders, shell glow bars, hero pills)
 - Normalized background tokens: `bg-primary/[0.03]` → `bg-background/40` for glow overlays, `bg-background/70-82` → `bg-background/80` for consistent pill opacity

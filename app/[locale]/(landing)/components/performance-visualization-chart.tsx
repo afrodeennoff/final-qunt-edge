@@ -42,16 +42,16 @@ export function PerformanceVisualizationChart() {
  const mid = chartHeight / 2
 
  return (
- <div className="mx-6 rounded-xl p-6 bg-[oklch(0.65_0.22_260/0.03)] shadow-card">
+ <div className="mx-6 rounded-xl p-6 bg-primary/[0.03] shadow-card">
  <div className="flex items-center gap-3 mb-4">
  <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
  <TrendingUp className="size-[18px] text-primary" strokeWidth={2} />
  </div>
- <p className="text-[12px] uppercase tracking-[0.05em] text-foreground/85 font-medium">
+ <p className="text-[12px] uppercase tracking-[0.05em] text-foreground font-medium">
  Performance Viz
  </p>
  </div>
- <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-[oklch(0.65_0.22_260/0.03)] px-4 py-3 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
+ <div data-chart-surface="modern" className="h-full w-full rounded-xl border bg-primary/[0.03] px-4 py-3 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]">
  <div className="mb-3 flex items-center justify-between text-sm text-foreground/80">
  <div className="flex items-center gap-3">
  <span className="flex items-center gap-1">

@@ -219,7 +219,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  {/* Segments List */}
  {segments.length > 0 && (
  <div className="mt-6">
- <h3 className="text-lg font-semibold text-foreground/95 mb-4">
+ <h3 className="text-lg font-semibold text-foreground mb-4">
  Generated Segments ({segments.length})
  </h3>
  <div className="space-y-3">
@@ -229,7 +229,7 @@ export function AudioSplitter({ onSegmentsCreated }: AudioSplitterProps) {
  className="flex items-center justify-between p-3 bg-background/0.04 dark:bg-background/0.11 rounded-lg border border-border/0.42"
  >
  <div className="flex-1">
- <div className="font-medium text-foreground/95">
+ <div className="font-medium text-foreground">
  {segment.fileName}
  </div>
  <div className="text-sm text-muted-foreground">

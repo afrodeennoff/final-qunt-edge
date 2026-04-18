@@ -56,7 +56,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Left Side: Sidebar Toggle & Brand */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="-ml-1 h-9 w-9 rounded-xl text-muted-foreground/60 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8 hover:text-foreground/95" />
+            <SidebarTrigger className="-ml-1 h-9 w-9 rounded-xl text-muted-foreground/60 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8 hover:text-foreground" />
             <div className="mx-1 hidden h-5 w-px bg-border/50 sm:block" />
           </div>
 
@@ -77,8 +77,8 @@ export default function Navbar() {
                 className={cn(
                   'h-9 w-auto px-3 sm:px-4 gap-2 rounded-xl transition-[opacity,background-color,border-color] duration-500',
                   isCustomizing
-                    ? 'bg-[oklch(0.65_0.22_260)] text-white shadow-[0_0_16px_oklch(0.65_0.22_260/0.45)] font-semibold'
-                    : 'text-muted-foreground/70 hover:bg-primary/8 hover:text-foreground/95',
+                    ? 'bg-primary text-white shadow-[0_0_16px_hsl(var(--primary)/0.45)] font-semibold'
+                    : 'text-muted-foreground/70 hover:bg-primary/8 hover:text-foreground',
                 )}
               >
                 <Pencil className={cn('w-3.5 h-3.5', isCustomizing && 'animate-pulse')} />
@@ -92,7 +92,7 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={flushPendingSaves}
-                  className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground/95 transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
+                  className="hidden sm:flex h-9 gap-2 rounded-xl border border-border/45 px-3 text-foreground transition-[opacity,background-color,border-color] hover:border-primary/18 hover:bg-primary/8"
                 >
                   <CloudUpload className="w-3.5 h-3.5 animate-bounce" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Save Now</span>
@@ -129,7 +129,7 @@ export default function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/95 shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
+                      className="h-9 gap-2 rounded-xl border border-primary/18 bg-primary/8 px-5 text-[10px] font-black uppercase tracking-[0.2em] text-foreground shadow-none transition-[opacity,background-color,border-color] duration-500 hover:border-primary/26 hover:bg-primary/12"
                       aria-label="Upgrade to Elite plan"
                     >
                       <Sparkles className="w-3.5 h-3.5 animate-pulse" aria-hidden="true" />

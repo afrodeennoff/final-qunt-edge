@@ -34,7 +34,7 @@ export function FirmCouponsSection({
     <Card className="rounded-xl border-border/40 bg-background/35 p-6">
       <div className="mb-2 flex items-center gap-2">
         <DealsIcon size={18} className="text-v2-accent" />
-        <span className="text-lg font-semibold text-foreground/95">Current coupons</span>
+        <span className="text-lg font-semibold text-foreground">Current coupons</span>
         <span className="text-xs text-muted-foreground">({coupons.length})</span>
       </div>
       <CardDescription className="mb-4 text-sm leading-6 text-muted-foreground">
@@ -64,7 +64,7 @@ export function FirmCouponsSection({
                 href={referralUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border/40 bg-background/50 px-4 py-2 text-xs font-semibold text-foreground/95 transition-colors hover:bg-background/80"
+                className="rounded-full border border-border/40 bg-background/50 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-background/80"
               >
                 Visit Official Site
               </a>
@@ -79,7 +79,7 @@ export function FirmCouponsSection({
                 <span className="font-mono text-sm font-bold text-v2-accent bg-v2-accent-subtle px-2 py-1 rounded">
                   {coupon.code}
                 </span>
-                <Badge variant="accent">{coupon.discountPercent}% off</Badge>
+                <Badge variant="default">{coupon.discountPercent}% off</Badge>
               </div>
               {coupon.challengeFee !== null && (
                 <div className="mt-1 text-xs text-muted-foreground">

@@ -61,7 +61,7 @@ export default function AnalysisDemo() {
             </p>
             <h2 className="type-h2 mt-3 text-balance text-foreground lg:text-h1">
               {t('landing.home.analysis.title')}
-              <span className="block text-foreground/90">{t('landing.home.analysis.accent')}</span>
+              <span className="block text-foreground">{t('landing.home.analysis.accent')}</span>
             </h2>
           </div>
           <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
@@ -112,7 +112,7 @@ export default function AnalysisDemo() {
                   isMobile ? 'min-h-0' : 'min-h-[224px]',
                 )}
               >
-                <p className="text-sm leading-relaxed text-foreground/90">{activeLog}</p>
+                <p className="text-sm leading-relaxed text-foreground">{activeLog}</p>
               </div>
 
               <MetricCard label={String(t('landing.home.analysis.planAdherence'))} value="87%" />

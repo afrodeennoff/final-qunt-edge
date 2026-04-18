@@ -16,7 +16,7 @@ import { FormatPreview } from '../components/format-preview'
 // Lazy-load heavy processor modules to prevent import dialog freeze
 const importLoading = () => (
   <div className="flex items-center justify-center p-8">
-    <div className="h-6 w-6 animate-spin rounded-full border-2 border-[oklch(0.65_0.22_260/0.3)] border-t-[oklch(0.65_0.22_260)]" />
+    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary/30 border-t-[hsl(var(--primary))]" />
   </div>
 )
 

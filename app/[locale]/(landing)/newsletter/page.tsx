@@ -40,12 +40,12 @@ export default async function NewsletterPage(
                   <CheckCircle2 className="h-5 w-5 text-semantic-success shrink-0" />
                   <CardTitle className="text-lg sm:text-xl">{t("unsubscribed.title")}</CardTitle>
                 </div>
-                <CardDescription className="text-foreground/95 text-sm sm:text-base">
+                <CardDescription className="text-foreground text-sm sm:text-base">
                   {t("unsubscribed.description")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm sm:text-base text-foreground/95 break-all">
+                <p className="text-sm sm:text-base text-foreground break-all">
                   {email && `${t("unsubscribed.email")}: ${email}`}
                 </p>
               </CardContent>

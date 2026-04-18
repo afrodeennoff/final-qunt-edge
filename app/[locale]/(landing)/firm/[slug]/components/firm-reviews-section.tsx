@@ -151,7 +151,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="truncate text-sm font-medium text-foreground/95">
+              <span className="truncate text-sm font-medium text-foreground">
                 {review.userId ? 'Verified Trader' : 'Anonymous Trader'}
               </span>
               {review.isVerified && (
@@ -182,7 +182,7 @@ function ReviewCard({ review, onFlag, canFlag }: { review: FirmReviewItem; onFla
           </div>
           
           {review.title && (
-            <h4 className="mt-2 text-sm font-medium text-foreground/95">
+            <h4 className="mt-2 text-sm font-medium text-foreground">
               {review.title}
             </h4>
           )}
@@ -411,7 +411,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
         <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-6">
             <ReviewsIcon size={20} className="text-v2-accent" />
-            <CardTitle className="text-2xl text-foreground/95">User reviews & ratings</CardTitle>
+            <CardTitle className="text-2xl text-foreground">User reviews & ratings</CardTitle>
           </div>
           <CardDescription className="mb-6 max-w-2xl text-sm leading-6 text-muted-foreground">
             Approved trader submissions from Qunt Edge users. Review counts, averages, and moderation states stay visible in one place.
@@ -420,7 +420,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
           <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
             {/* Average Rating Display */}
             <div className="flex flex-col items-center justify-center rounded-xl border border-border/30 bg-background/0.09 p-6">
-              <div className="text-5xl font-bold tracking-tight text-foreground/95">
+              <div className="text-5xl font-bold tracking-tight text-foreground">
                 {stats.average > 0 ? stats.average.toFixed(1) : '—'}
               </div>
               <div className="mt-2">
@@ -473,7 +473,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       <Card className="rounded-xl border-border/30 bg-background/0.12">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground/95">Write a Review</h3>
+            <h3 className="text-lg font-semibold text-foreground">Write a Review</h3>
             {!showForm && isAuthenticated && !hasUserReviewed && (
               <Button
                 variant="outline"
@@ -625,9 +625,9 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       {/* Flag Report Dialog */}
       {showFlagDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80">
-          <div className="w-full max-w-md rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-border/30 bg-primary/[0.03] p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-foreground/95">Report Review</h3>
+              <h3 className="text-lg font-semibold text-foreground">Report Review</h3>
               <button onClick={() => setShowFlagDialog(false)} className="rounded p-1 hover:bg-background/0.11">
                 <XCircle className="h-5 w-5 text-muted-foreground" />
               </button>
@@ -638,7 +638,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                 <select
                   value={flagReason}
                   onChange={(e) => setFlagReason(e.target.value)}
-                  className="w-full rounded-xl border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] px-4 py-2.5 text-sm text-foreground/95 placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
+                  className="w-full rounded-xl border border-border/30 bg-primary/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-v2-accent focus:outline-none"
                   required
                 >
                   <option value="">Select a reason</option>
@@ -675,7 +675,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
       <Card className="rounded-xl border-border/30 bg-background/0.12">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-            <h3 className="text-lg font-semibold text-foreground/95">
+            <h3 className="text-lg font-semibold text-foreground">
               All Reviews
               {stats.total > 0 && (
                 <span className="ml-2 text-sm font-normal text-muted-foreground">({stats.total})</span>
@@ -691,7 +691,7 @@ export function FirmReviewsSection({ firmId }: { firmId: string }) {
                   setSortBy(e.target.value as ReviewSortOption)
                   setCurrentPage(1)
                 }}
-                className="rounded-lg border border-border/30 bg-[oklch(0.65_0.22_260/0.03)] px-3 py-1.5 text-sm text-foreground/95 focus:border-v2-accent focus:outline-none"
+                className="rounded-lg border border-border/30 bg-primary/[0.03] px-3 py-1.5 text-sm text-foreground focus:border-v2-accent focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>

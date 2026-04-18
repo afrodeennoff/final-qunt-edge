@@ -254,7 +254,7 @@ export function RithmicSyncNotifications() {
  cy="24"
  />
  <circle
- className="text-foreground/95"
+ className="text-foreground"
  strokeWidth="2"
  strokeDasharray={125.6}
  strokeDashoffset={Math.max(0, 125.6 - (125.6 * (progressPercentage || 0)) / 100)}

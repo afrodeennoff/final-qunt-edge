@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import ImportCallbackPageClient from "@/app/[locale]/dashboard/import/page-client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getI18n } from "@/locales/server";
+import { UnifiedPageShell } from "@/components/layout/unified-page-shell";
 
 interface ImportCallbackFallbackProps {
   title: string;
@@ -16,23 +17,21 @@ function ImportCallbackFallback({
   status,
 }: ImportCallbackFallbackProps): ReactElement {
   return (
-    <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-md">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              {title}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center gap-2">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{status}</p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <UnifiedPageShell density="compact">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            {title}
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">{status}</p>
+        </CardContent>
+      </Card>
+    </UnifiedPageShell>
   );
 }
 

@@ -108,7 +108,7 @@ export default function FAQSection() {
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {t('landing.home.faq.bestForTitle')}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-foreground/90">
+            <p className="mt-3 text-sm leading-relaxed text-foreground">
               {t('landing.home.faq.bestForDescription')}
             </p>
           </div>

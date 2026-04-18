@@ -111,7 +111,7 @@ function getPlanCardClassName(popular: boolean): string {
   return cn(
     'relative flex w-full flex-col overflow-hidden transition-[opacity,background-color,border-color,transform] duration-300 hover:-translate-y-1',
     !popular && 'rounded-2xl border border-border/0.06 bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_rgba(180,210,255,0.06),0_8px_32px_-8px_rgba(0,0,0,0.80)]',
-    popular && 'relative rounded-2xl border border-[oklch(0.65_0.22_260/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.30),0_0_40px_oklch(0.65_0.22_260/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
+    popular && 'relative rounded-2xl border border-[hsl(var(--primary)/0.35)] bg-[oklch(0.038_0.005_264)] shadow-[0_0_0_0.5px_hsl(var(--primary)/0.30),0_0_40px_hsl(var(--primary)/0.12),0_16px_48px_-12px_rgba(0,0,0,0.88)]',
   )
 }
 
@@ -213,7 +213,7 @@ function FreePlanCard({
               }}
               className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
             />
-            <span className="ml-1 text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">{t('pricing.free.name')}</span>
+            <span className="ml-1 text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">{t('pricing.free.name')}</span>
           </div>
           <ul className="space-y-3">
             {plan.features.map((feature, index) => (
@@ -363,7 +363,7 @@ function PlusPlanCard({
         </CardHeader>
         <CardContent>
           <div className="mb-4 space-y-3 rounded-xl border border-border/0.06 bg-background/0.04 p-4">
-            <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+            <span className="block text-center text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35">
               {t('pricing.billingPeriod')}
             </span>
 
@@ -375,7 +375,7 @@ function PlusPlanCard({
                     'rounded-xl px-3 py-2 text-xs capitalize transition-[opacity,background-color,border-color,transform]',
                     billingPeriod === option.key
                       ? 'bg-white text-black font-semibold shadow-[0_8px_20px_-12px_rgba(255,255,255,0.45)]'
-                      : 'text-foreground/46 hover:bg-background/0.09 hover:text-foreground',
+                      : 'text-muted-foreground/75 hover:bg-background/0.09 hover:text-foreground',
                   )}
                   onClick={() => setBillingPeriod(option.key)}
                   title={option.description}
@@ -390,8 +390,8 @@ function PlusPlanCard({
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-[1rem] border px-3 py-2 text-xs font-medium transition-[opacity,background-color,border-color,transform]',
                   billingPeriod === 'lifetime'
-                    ? 'border-[oklch(0.65_0.22_260/0.28)] bg-[oklch(0.65_0.22_260/0.08)] text-[oklch(0.75_0.22_260)]'
-                    : 'border-border/0.06 text-foreground/54 hover:bg-background/0.09 hover:text-foreground',
+                    ? 'border-[hsl(var(--primary)/0.28)] bg-[hsl(var(--primary)/0.08)] text-[oklch(0.75_0.22_260)]'
+                    : 'border-border/0.06 text-muted-foreground hover:bg-background/0.09 hover:text-foreground',
                 )}
                 onClick={() => setBillingPeriod('lifetime')}
               >
@@ -436,7 +436,7 @@ function PlusPlanCard({
                     className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
                   />
                 </div>
-                <p className="text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">
+                <p className="text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">
                   {t('pricing.oneTimePayment')}
                 </p>
               </div>
@@ -452,7 +452,7 @@ function PlusPlanCard({
                   }}
                   className="text-[40px] font-[250] tracking-[-0.05em] text-foreground leading-none"
                 />
-                <p className="text-[13px] text-foreground/40 font-medium tracking-[-0.01em]">
+                <p className="text-[13px] text-muted-foreground/70 font-medium tracking-[-0.01em]">
                   {billingPeriod === 'monthly'
                     ? t('pricing.monthlyFlexibility')
                     : billingPeriod === 'yearly'

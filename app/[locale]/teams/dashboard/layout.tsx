@@ -81,7 +81,7 @@ export default async function DashboardLayout({
             <DashboardProviders>
                 <TeamsSidebar />
 
-                <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground/95">
+                <SidebarInset className="qe-v2-app-shell relative h-dvh overflow-hidden selection:bg-primary/20 selection:text-foreground">
                     <div className="pointer-events-none absolute inset-x-6 top-0 z-0 h-32 rounded-b-2xl border border-border/20 bg-primary/[0.02]" />
 
                     <div className="relative z-0 flex h-full flex-col">
@@ -95,14 +95,14 @@ export default async function DashboardLayout({
                                         <SidebarTrigger className="-ml-0.5 h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
                                         <div className="flex min-w-0 flex-1 flex-col">
                                             <div className="flex items-center gap-2.5">
-                                                <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
+                                                <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:inline-flex">
                                                     Team
                                                 </span>
-                                                <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground/95">
+                                                <h1 className="truncate text-sm font-bold uppercase tracking-[0.18em] text-foreground">
                                                     Team Command
                                                 </h1>
                                             </div>
-                                            <span className="truncate pt-1 text-xs text-foreground/46">
+                                            <span className="truncate pt-1 text-xs text-muted-foreground">
                                                 Unified oversight for members, performance, and operational team health.
                                             </span>
                                         </div>
@@ -110,18 +110,18 @@ export default async function DashboardLayout({
 
                                     <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
                                         <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Focus
                                             </span>
-                                            <span className="block pt-1 text-sm text-foreground/72">
+                                            <span className="block pt-1 text-sm text-foreground/60">
                                                 Members and process visibility
                                             </span>
                                         </div>
                                         <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                                                 Surface
                                             </span>
-                                            <span className="block pt-1 text-sm text-foreground/72">
+                                            <span className="block pt-1 text-sm text-foreground/60">
                                                 Shared team operating layer
                                             </span>
                                         </div>

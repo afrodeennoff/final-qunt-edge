@@ -21,9 +21,9 @@ type Theme = {
 }
 
 const THEMES: Record<string, Theme> = {
- obsidian: { name: 'Obsidian', primary: 'text-foreground/95', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/10', pattern: 'radial-gradient(circle at 1.5px 1.5px, hsl(var(--foreground) / 0.35) 1px, transparent 0)' },
+ obsidian: { name: 'Obsidian', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/10', pattern: 'radial-gradient(circle at 1.5px 1.5px, hsl(var(--foreground) / 0.35) 1px, transparent 0)' },
  graphite: { name: 'Graphite', primary: 'text-foreground/80', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'linear-gradient(hsl(var(--foreground) / 0.35) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.35) 1px, transparent 1px)' },
- silver: { name: 'Silver', primary: 'text-foreground/90', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/15', pattern: 'radial-gradient(hsl(var(--foreground) / 0.35) 2px, transparent 0)' },
+ silver: { name: 'Silver', primary: 'text-foreground', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/15', pattern: 'radial-gradient(hsl(var(--foreground) / 0.35) 2px, transparent 0)' },
  ghost: { name: 'Ghost', primary: 'text-foreground/60', glow: 'hsl(var(--foreground) / 0.35)', bgAccent: 'bg-foreground/5', pattern: 'repeating-linear-gradient(45deg, hsl(var(--foreground) / 0.35) 0, hsl(var(--foreground) / 0.35) 1px, transparent 0, transparent 50%)' }
 }
 
@@ -256,11 +256,11 @@ const formatHeroPnlValue = (pnl: number, mode: 'currency' | 'percent', totalAcco
 const getTimeframeLabel = (timeframe: Timeframe): string => (timeframe === 'total' ? 'Lifetime' : timeframe)
 const getDisplaySuffix = (mode: 'currency' | 'percent'): string => (mode === 'percent' ? '%' : '')
 const getSignSymbol = (isPositive: boolean): string => (isPositive ? '+' : '-')
-const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground/95" :"text-foreground/60")
-const getHeroSignClass = (isPositive: boolean): string => (isPositive ?"text-foreground/70" :"text-foreground/45")
+const getHeroWrapperClass = (isPositive: boolean): string => (isPositive ?"text-foreground" :"text-foreground/60")
+const getHeroSignClass = (isPositive: boolean): string => (isPositive ?"text-foreground/70" :"text-muted-foreground/75")
 
 const getDisplayModeButtonClass = (mode: 'currency' | 'percent', currentMode: 'currency' | 'percent') => cn("px-2.5 py-1 rounded-sm text-[10px] font-bold transition-[opacity,background-color,border-color]",
- mode === currentMode ?"bg-secondary/35 text-foreground/95 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]" :"text-muted-foreground hover:text-foreground/95"
+ mode === currentMode ?"bg-secondary/35 text-foreground shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)]" :"text-muted-foreground hover:text-foreground"
 )
 
 const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-[opacity,background-color,border-color] duration-700 cursor-pointer relative overflow-hidden",
@@ -270,10 +270,10 @@ const getBlurCardClass = (isActive: boolean) => cn("group border rounded-xl p-4 
 )
 
 const getBlurIcon = (isActive: boolean): React.ReactElement => (
- isActive ? <Eye className="w-3 h-3 text-foreground/60" /> : <EyeOff className="w-3 h-3 text-foreground/40" />
+ isActive ? <Eye className="w-3 h-3 text-foreground/60" /> : <EyeOff className="w-3 h-3 text-muted-foreground/70" />
 )
 
-const getStatTextClass = (value: number): string => (value >= 0 ?"text-foreground/95" :"text-foreground/40")
+const getStatTextClass = (value: number): string => (value >= 0 ?"text-foreground" :"text-muted-foreground/70")
 
 const formatIntervalDisplayValue = (
  value: number,
@@ -288,7 +288,7 @@ const formatIntervalDisplayValue = (
  return `${percentValue}%`
 }
 
-const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground/60" :"text-foreground/95")
+const getGoalTextClass = (value: number): string => (value < 0 ?"text-foreground/60" :"text-foreground")
 const getGoalBarClass = (value: number): string => (value < 0 ?"bg-foreground/20 shadow-none" :"bg-gradient-to-r from-foreground/60 via-foreground/70 to-foreground/80 shadow-none")
 
 const getDownloadLabel = (isExporting: boolean): string => (isExporting ?"Saving..." :"Download Image")
@@ -328,7 +328,7 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  <input
  autoFocus
  type="number"
- className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground/95 placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+ className="w-24 border-b border-border/0.03 bg-transparent text-sm font-bold text-foreground placeholder:text-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
  defaultValue={customTarget}
  onBlur={(e) => {
  const val = parseFloat(e.target.value)
@@ -344,7 +344,7 @@ const EditableTarget = ({ customTarget, isEditing, onStartEditing, onFinishEditi
  <button
  type="button"
  onClick={onStartEditing}
- className="text-sm font-bold text-foreground/90 transition-colors hover:text-foreground/95"
+ className="text-sm font-bold text-foreground transition-colors hover:text-foreground"
  aria-label="Edit total goal target"
  >
  ${customTarget.toLocaleString()}
@@ -451,7 +451,7 @@ export function DailySummaryModal() {
  <motion.div
  initial={{ scale: 0.95, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="w-full aspect-[7/4] bg-background text-foreground/95 rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-2xl"
+ className="w-full aspect-[7/4] bg-background text-foreground rounded-2xl overflow-hidden border border-border/30 relative flex flex-col sm:shadow-2xl"
  ref={cardRef}
  >
  {/* Refined Background Mesh */}
@@ -463,10 +463,10 @@ export function DailySummaryModal() {
  <div className="flex justify-between items-center mb-8">
  <div className="flex items-center gap-4">
  <div className="w-10 h-10 rounded-xl bg-secondary/30 border border-border/30 flex items-center justify-center shadow-inner">
- <Zap className="w-5 h-5 text-foreground/95" />
+ <Zap className="w-5 h-5 text-foreground" />
  </div>
  <div className="flex flex-col">
- <h3 className="font-semibold text-lg tracking-tight text-foreground/95 leading-none">
+ <h3 className="font-semibold text-lg tracking-tight text-foreground leading-none">
  QuntEdge
  </h3>
  <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-1">
@@ -483,18 +483,18 @@ export function DailySummaryModal() {
  aria-label="Edit handle"
  >
  {isEditingHandle ? (
- <input autoFocus className="w-24 border-none bg-transparent text-right text-xs font-bold uppercase tracking-wider text-foreground/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" value={handle} onChange={(e) => setHandle(e.target.value)} onBlur={() => setIsEditingHandle(false)} />
+ <input autoFocus className="w-24 border-none bg-transparent text-right text-xs font-bold uppercase tracking-wider text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" value={handle} onChange={(e) => setHandle(e.target.value)} onBlur={() => setIsEditingHandle(false)} />
  ) : (
- <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground/95 uppercase tracking-wider transition-colors">@{handle}</span>
+ <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground uppercase tracking-wider transition-colors">@{handle}</span>
  )}
  </button>
- <div className="flex items-center bg-[oklch(0.65_0.22_260/0.03)] rounded-lg p-0.5 border border-border/30">
+ <div className="flex items-center bg-primary/[0.03] rounded-lg p-0.5 border border-border/30">
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('currency'); }} className={currencyButtonClass}>$</button>
  <button onClick={(e) => { e.stopPropagation(); setDisplayMode('percent'); }} className={percentButtonClass}>%</button>
  </div>
  <button
  onClick={() => setIsOpen(false)}
- className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/30 text-muted-foreground hover:text-foreground/95 transition-colors"
+ className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary/30 border border-border/30 text-muted-foreground hover:text-foreground transition-colors"
  aria-label="Close summary"
  >
  <X className="w-4 h-4" />
@@ -514,7 +514,7 @@ export function DailySummaryModal() {
 
  <div className="ml-auto flex items-center gap-2">
  <select
- className="cursor-pointer rounded bg-transparent text-[10px] font-bold uppercase text-muted-foreground transition-colors hover:text-foreground/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+ className="cursor-pointer rounded bg-transparent text-[10px] font-bold uppercase text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
  value={timeframe}
  onChange={(e) => setTimeframe(e.target.value as Timeframe)}
  aria-label="Summary timeframe"
@@ -577,18 +577,18 @@ export function DailySummaryModal() {
  <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 h-full justify-center">
  {/* Streak - Refined */}
  <div className="flex-1 bg-gradient-to-br from-card/70 to-muted/40 border border-border/14 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden group hover:border-border/30 transition-[opacity,background-color,border-color]">
- <div className="text-6xl font-black tracking-tighter text-foreground/95 mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
+ <div className="text-6xl font-black tracking-tighter text-foreground mb-2 relative z-10 drop-shadow-2xl">{stats.currentStreak}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.3em] font-bold relative z-10">Win Streak</div>
  <Zap className="absolute -bottom-6 -right-6 w-32 h-32 text-foreground/[0.03] group-hover:text-foreground/[0.05] transition-colors" />
  </div>
 
  <div className="grid grid-cols-2 gap-4">
  <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
- <div className="text-2xl font-black text-foreground/90 mb-1">{scoreVal}</div>
+ <div className="text-2xl font-black text-foreground mb-1">{scoreVal}</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Score</div>
  </div>
  <div className="bg-background/0.08 border border-border/14 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-accent/70 transition-colors">
- <div className="text-2xl font-black text-foreground/90 mb-1">{stats.winRate}%</div>
+ <div className="text-2xl font-black text-foreground mb-1">{stats.winRate}%</div>
  <div className="text-[9px] text-fg-muted uppercase tracking-[0.2em] font-bold">Win Rate</div>
  </div>
  </div>
@@ -636,11 +636,11 @@ export function DailySummaryModal() {
  </motion.div>
 
  <div className="mt-6 flex items-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
- <button className="text-xs font-medium uppercase tracking-wider text-foreground/95 hover:underline decoration-foreground/30 underline-offset-4" onClick={handleDownload} disabled={isExporting} aria-label="Download summary image">
+ <button className="text-xs font-medium uppercase tracking-wider text-foreground hover:underline decoration-foreground/30 underline-offset-4" onClick={handleDownload} disabled={isExporting} aria-label="Download summary image">
  {downloadLabel}
  </button>
- <span className="text-foreground/50">•</span>
- <button className="text-xs font-medium uppercase tracking-wider text-foreground/95 hover:underline decoration-foreground/30 underline-offset-4" onClick={handleShare} disabled={isExporting} aria-label="Share summary image">
+ <span className="text-muted-foreground/80">•</span>
+ <button className="text-xs font-medium uppercase tracking-wider text-foreground hover:underline decoration-foreground/30 underline-offset-4" onClick={handleShare} disabled={isExporting} aria-label="Share summary image">
  Share
  </button>
  {THEME_KEYS.map((themeKey) => (

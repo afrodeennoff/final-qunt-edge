@@ -40,10 +40,10 @@ export default function CompletedTimeline({ milestones, locale }: { milestones: 
  <time className="mb-2 block text-sm text-foreground/80">
  {format(new Date(milestone.completedDate), 'MMMM d, yyyy', { locale: dateLocale })}
  </time>
- <h3 className="text-lg font-semibold text-foreground/95">
+ <h3 className="text-lg font-semibold text-foreground">
  {milestone.title}
  </h3>
- <p className="mt-2 text-foreground/85">
+ <p className="mt-2 text-foreground">
  {milestone.description}
  </p>
  

@@ -38,7 +38,7 @@ export function DegradedStateBanner() {
   if (!visible || services.length === 0) return null
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-xl border border-[oklch(0.65_0.22_260/0.12)] bg-[oklch(0.65_0.22_260/0.05)] px-4 py-3 text-sm text-muted-foreground">
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-xl border border-[hsl(var(--primary)/0.12)] bg-primary/[0.05] px-4 py-3 text-sm text-muted-foreground">
       <p className="font-medium text-foreground">Some services are experiencing issues</p>
       <ul className="mt-1 space-y-0.5">
         {services.map((s) => (

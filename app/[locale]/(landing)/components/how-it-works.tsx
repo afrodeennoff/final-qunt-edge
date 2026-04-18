@@ -21,14 +21,14 @@ return (
  viewport={{ once: true }}
  className="rounded-2xl border border-border/30 bg-background/30 p-6"
  >
- <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
+ <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
  Optimization Pipeline
  </p>
  <motion.h2
  initial={{ opacity: 0, y: 8 }}
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
- className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground/95 sm:text-4xl lg:text-5xl"
+ className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground sm:text-4xl lg:text-5xl"
  >
  A closed loop built to turn trading behavior into something measurable.
  </motion.h2>
@@ -37,7 +37,7 @@ return (
  whileInView={{ opacity: 1 }}
  viewport={{ once: true }}
  transition={{ delay: 0.2 }}
- className="mt-5 max-w-lg text-base leading-[1.8] text-foreground/62"
+ className="mt-5 max-w-lg text-base leading-[1.8] text-foreground/60"
  >
  The product captures intent, audits execution, and forces review into a repeatable rhythm instead of leaving performance buried in screenshots and hindsight.
  </motion.p>
@@ -64,16 +64,16 @@ return (
  >
  <div className="mb-6 flex items-center justify-between gap-3">
  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border/35 bg-black/50">
- <span className="font-mono text-xs font-bold text-foreground/85 sm:text-sm">0{i+1}</span>
+ <span className="font-mono text-xs font-bold text-foreground sm:text-sm">0{i+1}</span>
  </div>
- <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/28">
+ <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
  Step {i + 1}
  </span>
  </div>
 
  <div className="px-1">
- <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/72">{step.name}</h3>
- <p className="text-sm leading-[1.8] text-foreground/62">{step.desc}</p>
+ <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/70">{step.name}</h3>
+ <p className="text-sm leading-[1.8] text-foreground/60">{step.desc}</p>
  </div>
  </motion.div>
  ))}

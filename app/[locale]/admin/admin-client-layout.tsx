@@ -72,14 +72,14 @@ export function AdminClientLayout({
                 <SidebarTrigger className="h-10 w-10 rounded-xl border border-border/30 bg-background/40 text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-border/50 hover:bg-background/60 hover:text-foreground md:h-9 md:w-9" />
                 <div className="flex min-w-0 flex-1 flex-col">
                   <div className="flex items-center gap-2.5">
-                    <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/90 sm:inline-flex">
+                    <span className="hidden rounded-full border border-border/30 bg-background/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground sm:inline-flex">
                       Admin
                     </span>
-                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground/95">
+                    <h1 className="truncate whitespace-nowrap text-sm font-bold uppercase tracking-[0.18em] text-foreground">
                       Operations Studio
                     </h1>
                   </div>
-                  <p className="truncate pt-1 text-xs text-foreground/46">
+                  <p className="truncate pt-1 text-xs text-muted-foreground">
                     Production-ready controls for publishing, campaigns, reviews, and internal operations.
                   </p>
                 </div>
@@ -87,18 +87,18 @@ export function AdminClientLayout({
 
               <div className="grid gap-2 sm:grid-cols-2 lg:w-auto">
                 <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                     Mode
                   </span>
-                  <span className="block pt-1 text-sm text-foreground/72">
+                  <span className="block pt-1 text-sm text-foreground/60">
                     Editorial and growth ops
                   </span>
                 </div>
                 <div className={cn(unifiedMetricPanelClassName, 'min-w-[220px] px-3 py-2.5')}>
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                     Scope
                   </span>
-                  <span className="block pt-1 text-sm text-foreground/72">
+                  <span className="block pt-1 text-sm text-foreground/60">
                     Publishing, offers, mail, recap
                   </span>
                 </div>

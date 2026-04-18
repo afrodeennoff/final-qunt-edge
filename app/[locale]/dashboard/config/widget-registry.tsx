@@ -258,7 +258,7 @@ function createMindsetPreview() {
                 "h-6 w-6 rounded-full border-2 flex items-center justify-center",
                 index === 2 ? "bg-foreground border-foreground" : "border-muted-foreground/20"
               )}>
-                <div className="h-1 w-1 rounded-full bg-[oklch(0.65_0.22_260/0.03)]" />
+                <div className="h-1 w-1 rounded-full bg-primary/[0.03]" />
               </div>
               {index < 6 && <div className="h-4 w-px bg-background/25-foreground/20" />}
             </div>

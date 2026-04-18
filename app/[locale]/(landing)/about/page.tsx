@@ -33,7 +33,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   return (
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <header className="mb-6 rounded-xl border border-border/30 bg-background/0.11 p-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground/95">About Qunt Edge</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">About Qunt Edge</h1>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground sm:text-base">
           Built for serious discretionary traders who want better decision quality, tighter risk control, and repeatable performance.
         </p>
@@ -41,7 +41,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <Link href={`/${locale}/pricing`} className="rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground">
             View Pricing
           </Link>
-          <Link href={`/${locale}/support`} className="rounded-full border border-border/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground/95 hover:bg-accent/50">
+          <Link href={`/${locale}/support`} className="rounded-full border border-border/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-foreground hover:bg-accent/50">
             Contact Support
           </Link>
         </div>

@@ -178,7 +178,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <div className="flex items-center justify-between w-full">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
  size ==="small" ?"text-sm" :"text-base"
  )}
  >
@@ -188,7 +188,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4"
  )}
  />
@@ -207,7 +207,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <div className="flex items-center gap-1.5 p-1 rounded-md bg-secondary/22 border border-border/55">
  <span
  className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-[opacity,background-color,border-color]",
- displayMode ==="ticks" ?"text-foreground/95 drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
+ displayMode ==="ticks" ?"text-foreground drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
  )}
  onClick={() => setDisplayMode("ticks")}
  >
@@ -216,7 +216,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <div className="h-2.5 w-[1px] bg-secondary/30" />
  <span
  className={cn("text-[9px] uppercase font-black tracking-widest cursor-pointer transition-[opacity,background-color,border-color]",
- displayMode ==="points" ?"text-foreground/95 drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
+ displayMode ==="points" ?"text-foreground drop-shadow-none" :"text-muted-foreground hover:text-muted-foreground"
  )}
  onClick={() => setDisplayMode("points")}
  >
@@ -238,7 +238,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  variant="ghost"
  size="sm"
  onClick={() => handleQuickIncrement(-1)}
- className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground/95 rounded-full transition-colors"
+ className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
  >
  <Minus className="h-3 w-3" />
  </Button>
@@ -246,7 +246,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  variant="ghost"
  size="sm"
  onClick={() => handleQuickIncrement(1)}
- className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground/95 rounded-full transition-colors"
+ className="h-6 w-6 p-0 hover:bg-secondary/22 text-muted-foreground hover:text-foreground rounded-full transition-colors"
  >
  <Plus className="h-3 w-3" />
  </Button>
@@ -257,14 +257,14 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <Button 
  variant="ghost"
  size="sm"
- className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground/95 rounded-full transition-colors"
+ className="h-6 w-6 p-0 hover:bg-secondary/30 text-muted-foreground hover:text-foreground rounded-full transition-colors"
  >
  <Target className="h-3 w-3" />
  </Button>
  </DialogTrigger>
  <DialogContent className="border-border/55 bg-background/95">
  <DialogHeader>
- <DialogTitle className="text-foreground/95">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
+ <DialogTitle className="text-foreground">{t("widgets.dailyTickTarget.setTarget")}</DialogTitle>
  <DialogDescription className="text-muted-foreground">
  {t("widgets.dailyTickTarget.setTargetDescription")}
  </DialogDescription>
@@ -283,14 +283,14 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  value={targetValue}
  onChange={(e) => setTargetValue(e.target.value)}
  placeholder={Math.round(convertToDisplayValue(progress.target)).toString()}
- className="bg-secondary/22 border-border/55 text-foreground/95 placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-[opacity,background-color,border-color]"
+ className="bg-secondary/22 border-border/55 text-foreground placeholder:text-muted-foreground focus:border-border/65 focus:ring-border/20 transition-[opacity,background-color,border-color]"
  />
  </div>
  <div className="flex justify-end gap-2">
  <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-border/55 hover:bg-secondary/22 text-muted-foreground">
  {t("common.cancel")}
  </Button>
- <Button onClick={handleSaveTarget} className="bg-[oklch(0.65_0.22_260/0.03)] hover:bg-background/0.14 text-foreground/95 font-bold">
+ <Button onClick={handleSaveTarget} className="bg-primary/[0.03] hover:bg-background/0.14 text-foreground font-bold">
  {t("common.save")}
  </Button>
  </div>
@@ -318,7 +318,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  </span>
  <span
  className={cn("font-black tracking-tighter tabular-nums",
- progress.current >= progress.target && progress.target > 0 ?"text-foreground/95 drop-shadow-none" :"text-foreground/95",
+ progress.current >= progress.target && progress.target > 0 ?"text-foreground drop-shadow-none" :"text-foreground",
  size ==="small" ?"text-2xl" :"text-4xl"
  )}
  >
@@ -359,7 +359,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  <div className="flex items-center justify-between px-3 py-2 bg-secondary/22 border border-border/55 rounded-lg">
  <div className="flex flex-col">
  <span
- className={cn("text-[10px] uppercase font-bold tracking-wider text-foreground/95",
+ className={cn("text-[10px] uppercase font-bold tracking-wider text-foreground",
  )}
  >
  {t("widgets.dailyTickTarget.positive")}
@@ -407,7 +407,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  </span>
  <span
  className={cn("font-black tabular-nums transition-[opacity,background-color,border-color]",
- isOverTarget ?"text-foreground/95 text-lg scale-110 drop-shadow-none" :"text-muted-foreground",
+ isOverTarget ?"text-foreground text-lg scale-110 drop-shadow-none" :"text-muted-foreground",
  size ==="small" ?"text-xs" :"text-sm"
  )}
  >
@@ -420,7 +420,7 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  isOverTarget ?"bg-secondary/30" :""
  )}
  indicatorClassName={cn("transition-[opacity,background-color,border-color] duration-700",
- isOverTarget ?"bg-[oklch(0.65_0.22_260/0.03)] shadow-none" :"bg-background/0.06"
+ isOverTarget ?"bg-primary/[0.03] shadow-none" :"bg-background/0.06"
  )}
  />
  </div>
@@ -429,9 +429,9 @@ export default React.memo(function DailyTickTargetChart({ size = 'medium' }: Dai
  {/* No target set message */}
  {!isTargetSet && (
  <div className="flex flex-col items-center gap-2 text-center py-2 opacity-20">
- <Target className="h-6 w-6 text-foreground/95" />
+ <Target className="h-6 w-6 text-foreground" />
  <span
- className={cn("text-foreground/95 font-black uppercase tracking-widest",
+ className={cn("text-foreground font-black uppercase tracking-widest",
  size ==="small" ?"text-[10px]" :"text-xs"
  )}
  >

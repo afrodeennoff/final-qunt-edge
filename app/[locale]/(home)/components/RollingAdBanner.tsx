@@ -35,7 +35,7 @@ export default async function RollingAdBanner() {
               ) : (
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               )}
-              <span className="text-foreground/90">{item.firmName}</span>
+              <span className="text-foreground">{item.firmName}</span>
               <span
                 className={cn(
                   'rounded-full px-3 py-1 text-[11px] font-medium uppercase tracking-wide',

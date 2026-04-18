@@ -88,7 +88,7 @@ function CumulativePnlCardInner({ size = 'medium' }: CumulativePnlCardProps) {
  contentClassName="flex flex-col justify-center gap-3 p-4"
  >
  <div className={cn("text-center micro-sans font-black tracking-tight tabular-nums",
- netPnl === 0 ?"text-foreground/95" : isPositive ?"metric-positive" :"metric-negative",
+ netPnl === 0 ?"text-foreground" : isPositive ?"metric-positive" :"metric-negative",
  valueSizeClass === 'text-2xl' ? 'text-3xl' : 'text-xl'
  )}>
  {netPnl === 0 ? '' : isPositive ? '+' : '-'}{formatCurrency(netPnl)}

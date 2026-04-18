@@ -108,7 +108,7 @@ export default function PropFirmsExplorer({ locale, firms }: PropFirmsExplorerPr
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t('landing.home.explorer.liveViewTitle')}
                 </p>
-                <p className="mt-1 text-sm text-foreground/90">
+                <p className="mt-1 text-sm text-foreground">
                   {t('landing.home.explorer.liveViewCount', {
                     count: filteredFirms.length,
                   })}

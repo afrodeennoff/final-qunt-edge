@@ -163,7 +163,7 @@ export default function PricingSection({ locale }: { locale: string }) {
                     <span className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Check className="h-3 w-3" />
                     </span>
-                    <span className="text-sm leading-relaxed text-foreground/90">{feature}</span>
+                    <span className="text-sm leading-relaxed text-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>

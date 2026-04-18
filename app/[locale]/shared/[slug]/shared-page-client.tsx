@@ -38,14 +38,14 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
   return (
     <div className="flex flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xs:flex-row xs:items-center xs:gap-0">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/34">{t('shared.tradingAccounts')}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{t('shared.tradingAccounts')}</p>
         <div className="flex flex-wrap items-center gap-1.5 w-full xs:w-auto justify-end">
           {accounts.length > 2 && (
             <Button 
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground/95"
+              className="h-7 min-w-0 gap-1 text-xs text-foreground/60 hover:text-foreground"
             >
               {isExpanded 
                 ? t('shared.showLessAccounts')
@@ -60,7 +60,7 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             variant="ghost" 
             size="sm"
             onClick={toggleAll}
-            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground/95"
+            className="h-7 min-w-0 whitespace-nowrap text-xs text-foreground/60 hover:text-foreground"
           >
             {accountNumbers.length === accounts.length ? t('shared.deselectAll') : t('shared.selectAll')}
           </Button>
@@ -74,8 +74,8 @@ function AccountsSelector({ accounts }: { accounts: string[] }) {
             className={cn(
               "flex items-center rounded-xl border px-2 py-2 transition-[opacity,background-color,border-color,transform] duration-200 hover:-translate-y-0.5",
               accountNumbers.includes(account) 
-                ? "border-border/40 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] text-foreground/95 shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
-                : "border-border/30 bg-background/30 text-foreground/56 hover:border-border/40 hover:bg-background/0.09"
+                ? "border-border/40 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] text-foreground shadow-[0_18px_36px_-26px_rgba(255,255,255,0.08)]"
+                : "border-border/30 bg-background/30 text-muted-foreground hover:border-border/40 hover:bg-background/0.09"
             )}
           >
             <div className={cn(
@@ -103,7 +103,7 @@ export function SharedPageClient() {
       <div className="qe-v2-app-shell flex flex-col items-center justify-center px-4 pt-28 sm:pt-32">
         <div className="flex w-full max-w-lg flex-col items-center gap-3 rounded-[2rem] border border-border/30 bg-[oklch(0.038_0_0)] px-6 py-8 text-center shadow-[0_0_0_0.5px_rgba(255,255,255,0.05),0_18px_44px_-30px_rgba(0,0,0,0.9)]">
           <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
-          <p className="text-sm text-foreground/54">{t('shared.loading')}</p>
+          <p className="text-sm text-muted-foreground">{t('shared.loading')}</p>
         </div>
       </div>
     )
@@ -135,14 +135,14 @@ export function SharedPageClient() {
               <div className="grid gap-4 xl:grid-cols-[minmax(0,1.12fr)_340px] xl:gap-6">
                 <div className="rounded-2xl border border-border/30 bg-background/30 p-5 sm:p-6">
                   <CardHeader className="space-y-4 p-0">
-                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
+                    <div className="inline-flex w-fit rounded-full border border-border/0.08 bg-background/30 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
                       Shared Report
                     </div>
                     <div className="flex flex-col gap-2">
                       <CardTitle className="text-xl font-[350] tracking-[-0.04em] sm:text-2xl lg:text-3xl">
                         {sharedParams.title || t('shared.title')}
                       </CardTitle>
-                      <CardDescription className="max-w-3xl text-sm leading-[1.7] text-foreground/56 sm:text-base">
+                      <CardDescription className="max-w-3xl text-sm leading-[1.7] text-muted-foreground sm:text-base">
                         {sharedParams.description || t('shared.description')}
                       </CardDescription>
                     </div>
@@ -153,7 +153,7 @@ export function SharedPageClient() {
                   <MotionStaggerItem>
                     <Card className="border-border/30 bg-background/30 shadow-none">
                       <CardContent className="p-4">
-                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/34">{t('shared.sharedOn')}</p>
+                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{t('shared.sharedOn')}</p>
                         <p className="text-sm text-foreground/70">
                           {format(new Date(sharedParams.createdAt || new Date()), 'PPP')}
                         </p>
@@ -163,7 +163,7 @@ export function SharedPageClient() {
                   <MotionStaggerItem>
                     <Card className="border-border/30 bg-background/30 shadow-none">
                       <CardContent className="p-4">
-                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/34">
+                        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                           {dateRange.to ? t('shared.period') : t('shared.since')}
                         </p>
                         <p className="text-sm text-foreground/70">

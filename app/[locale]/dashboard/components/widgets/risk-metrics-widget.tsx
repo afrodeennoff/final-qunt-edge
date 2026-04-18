@@ -111,7 +111,7 @@ export default function RiskMetricsWidget({ size = 'medium' }: { size?: 'tiny' |
  )}>
  <div className="flex justify-between items-end mb-2">
  <div className="flex flex-col">
- <span className="text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 tabular-nums">
+ <span className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums">
  {formatCurrency(safeMaxDrawdown)}
  </span>
  </div>

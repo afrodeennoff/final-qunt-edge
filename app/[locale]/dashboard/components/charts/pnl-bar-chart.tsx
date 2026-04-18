@@ -153,7 +153,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -163,7 +163,7 @@ export default React.memo(function PNLChart({ size ="medium" }: PNLChartProps) {
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />

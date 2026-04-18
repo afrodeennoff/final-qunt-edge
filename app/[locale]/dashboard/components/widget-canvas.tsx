@@ -77,7 +77,7 @@ function DeprecatedWidget({ onRemove }: { onRemove: () => void }) {
  state="error"
  errorMessage={t('widgets.deprecated.description')}
  actions={(
- <Button variant="error" size="sm" onClick={onRemove}>
+ <Button variant="destructive" size="sm" onClick={onRemove}>
  {t('widgets.deprecated.remove')}
  </Button>
  )}
@@ -134,7 +134,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <div className="absolute inset-0 rounded-xl border border-v2-border/25 border-dashed" />
  <div className="absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_top,hsl(var(--foreground)/0.12),hsl(var(--background)/0.8)_62%)] opacity-100" />
  <div className="absolute inset-0 flex items-center justify-center opacity-100 drag-handle cursor-grab active:cursor-grabbing">
- <div className="flex flex-col items-center gap-2 rounded-xl border border-v2-border/15 bg-v2-bg-surface/70 px-4 py-3 text-v2-text-primary shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+ <div className="flex flex-col items-center gap-2 rounded-xl border border-v2-border/15 bg-v2-bg-surface/70 px-4 py-3 text-v2-text-primary shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
  <GripVertical className="h-6 w-4" />
  <p className="text-sm font-medium">{t('widgets.dragToMove')}</p>
  </div>
@@ -270,7 +270,7 @@ const WidgetWrapper = React.memo(({ children, onRemove, onChangeSize, isCustomiz
  <AlertDialog>
  <AlertDialogTrigger asChild>
  <Button 
- variant="error"
+ variant="destructive"
  size="icon"
  className="h-8 w-8 rounded-full border border-v2-error/20 bg-v2-error/10 text-v2-text-primary hover:bg-v2-error/20"
  aria-label="Remove widget"
@@ -563,7 +563,7 @@ export default function WidgetCanvas() {
  if (currentLayout.length === 0) {
  return (
  <div className="relative mt-0 w-full min-h-0" role="status">
- <div className="mx-auto mt-8 max-w-lg rounded-xl border border-v2-border/15 bg-v2-bg-surface/50 p-6 text-center shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]" role="alert">
+ <div className="mx-auto mt-8 max-w-lg rounded-xl border border-v2-border/15 bg-v2-bg-surface/50 p-6 text-center shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]" role="alert">
  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-v2-border/15 bg-v2-bg-elevated text-v2-text-muted">
  <Maximize2 className="h-5 w-5" />
  </div>

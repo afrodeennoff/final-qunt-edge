@@ -742,13 +742,13 @@ export default function AtasProcessor({
  onChange={(e) =>
  handleCommissionChange(pair, e.target.value)
  }
- className="w-24 bg-background/60 border-border/30 text-foreground/95"
+ className="w-24 bg-background/60 border-border/30 text-foreground"
  />
  </div>
  );
  })}
  </div>
- <Button onClick={applyCommissions} className="mt-4 bg-background/0.14 text-foreground/95 hover:bg-background/0.12">
+ <Button onClick={applyCommissions} className="mt-4 bg-background/0.14 text-foreground hover:bg-background/0.12">
  {t("import.commission.apply")}
  </Button>
  </div>

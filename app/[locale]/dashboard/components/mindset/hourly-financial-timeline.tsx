@@ -107,7 +107,7 @@ function SessionIndicator({ session, hourElements, containerRef }: {
 
 function SessionLegend({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
  return (
- <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
+ <div className="p-2 bg-background/95 supports-backdrop-filter:bg-background/60 border-t shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)]">
  <div className="flex items-center justify-center gap-4 text-xs">
  {SESSIONS.map((session) => (
  <button
@@ -455,7 +455,7 @@ function FinancialEventCard({ event, onClick, timezone, dateLocale, expanded = f
  case"LOW":
  return"bg-semantic-info-bg border-semantic-info-border text-semantic-info dark:bg-semantic-info-bg/30 dark:border-semantic-info-border dark:text-semantic-info"
  default:
- return"bg-background/25 border-border/30 text-foreground/95 dark:text-muted-foreground"
+ return"bg-background/25 border-border/30 text-foreground dark:text-muted-foreground"
  }
  }
 
@@ -552,7 +552,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  <div
  className={cn("border-l-4 rounded-r-md p-2 cursor-pointer transition-colors hover:opacity-90",
  trade.totalPnL > 0 
- ?"bg-accent/70 border-border/30 text-foreground/95 dark:text-foreground/95"
+ ?"bg-accent/70 border-border/30 text-foreground dark:text-foreground"
  :"bg-semantic-error-bg border-semantic-error-border text-semantic-error dark:bg-semantic-error-bg/30 dark:border-semantic-error-border dark:text-semantic-error"
  )}
  >
@@ -585,7 +585,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  <div className="flex items-center gap-2 mt-1">
  <DollarSign className="h-4 w-4" />
  <span className={cn("font-medium",
- trade.totalPnL > 0 ?"text-foreground/95" :"text-semantic-error"
+ trade.totalPnL > 0 ?"text-foreground" :"text-semantic-error"
  )}>
  {trade.totalPnL.toFixed(2)}
  </span>
@@ -610,7 +610,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  {formatInTimeZone(new Date(t.entryDate), timezone,"HH:mm:ss", { locale: dateLocale })}
  </TableCell>
  <TableCell className={cn("text-right",
- t.pnl > 0 ?"text-foreground/95" :"text-semantic-error"
+ t.pnl > 0 ?"text-foreground" :"text-semantic-error"
  )}>
  {t.pnl.toFixed(2)}
  </TableCell>
@@ -618,7 +618,7 @@ function TradeCard({ trade, onClick, timezone, dateLocale, expanded = false, dat
  {t.commission.toFixed(2)}
  </TableCell>
  <TableCell className={cn("text-right font-medium",
- (t.pnl - t.commission) > 0 ?"text-foreground/95" :"text-semantic-error"
+ (t.pnl - t.commission) > 0 ?"text-foreground" :"text-semantic-error"
  )}>
  {(t.pnl - t.commission).toFixed(2)}
  </TableCell>

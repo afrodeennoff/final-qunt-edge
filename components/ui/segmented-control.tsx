@@ -22,7 +22,7 @@ export function SegmentedControl({ options, value, onChange, className }: Segmen
  type="button"
  onClick={() => onChange(option.value)}
  className={cn("rounded px-2 py-1 text-[11px] font-semibold transition-colors",
- value === option.value ?"bg-primary/20 text-foreground/95" :"text-muted-foreground hover:text-foreground/95",
+ value === option.value ?"bg-primary/20 text-foreground" :"text-muted-foreground hover:text-foreground",
  )}
  >
  {option.label}

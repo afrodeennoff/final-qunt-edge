@@ -224,7 +224,7 @@ export default function EnhancedInput({
  placeholder={placeholder}
  aria-invalid={isValid === false}
  aria-describedby={isValid === false ?"validation-message" : undefined}
- className={cn("w-full rounded-md border-0 bg-transparent px-3 py-2 text-sm outline-hidden ring-0 focus:ring-0 pr-14","text-foreground/95","placeholder:text-muted-foreground",
+ className={cn("w-full rounded-md border-0 bg-transparent px-3 py-2 text-sm outline-hidden ring-0 focus:ring-0 pr-14","text-foreground","placeholder:text-muted-foreground",
  isValid === false ?"text-destructive" :"",
  isValid === true ?"text-semantic-success-fg" :"",
  )}
@@ -257,7 +257,7 @@ export default function EnhancedInput({
  {showSuggestions && filteredSuggestions.length > 0 && (
  <ul
  ref={suggestionsRef}
- className={cn("absolute z-10 mt-1 w-full overflow-auto rounded-md border py-1 text-sm shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] max-h-[200px]","border-input bg-background","text-foreground/95"
+ className={cn("absolute z-10 mt-1 w-full overflow-auto rounded-md border py-1 text-sm shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] max-h-[200px]","border-input bg-background","text-foreground"
  )}
  role="listbox"
  >

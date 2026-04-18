@@ -242,7 +242,7 @@ function InferenceResultsDialog({
  <div className="text-sm text-muted-foreground">Processed</div>
  </div>
  <div className="text-center">
- <div className="text-2xl font-bold text-foreground/95">{results.summary.totalUpdated}</div>
+ <div className="text-2xl font-bold text-foreground">{results.summary.totalUpdated}</div>
  <div className="text-sm text-muted-foreground">Updated</div>
  </div>
  <div className="text-center">
@@ -418,7 +418,7 @@ function SubscriberRow({
  </TableCell>
  <TableCell>
  <span className={`px-2 py-1 rounded-full text-xs ${
- subscriber.isActive ?"bg-accent/70 text-foreground/95" :"bg-semantic-error-bg text-semantic-error"
+ subscriber.isActive ?"bg-accent/70 text-foreground" :"bg-semantic-error-bg text-semantic-error"
  }`}>
  {subscriber.isActive ?"Active" :"Inactive"}
  </span>
@@ -440,7 +440,7 @@ function SubscriberRow({
  )}
  </Button>
  <Button 
- variant="error"
+ variant="destructive"
  size="sm"
  onClick={() => onDelete(subscriber.email)}
  >

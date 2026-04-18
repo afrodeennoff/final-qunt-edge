@@ -125,7 +125,7 @@ export default async function ReviewsModerationPage({ params, searchParams }: Pa
                       </span>
                     </div>
                     {item.review.title && (
-                      <h4 className="mb-1 text-sm font-medium text-foreground/95">
+                      <h4 className="mb-1 text-sm font-medium text-foreground">
                         {item.review.title}
                       </h4>
                     )}

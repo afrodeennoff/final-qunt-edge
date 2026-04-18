@@ -360,10 +360,10 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  href={`${localePrefix}/teams/dashboard/trader/${user.userId}`}
  target="_blank"
  rel="noopener noreferrer"
- className="p-1 rounded transition-colors text-muted-foreground hover:text-foreground/95 hover:bg-secondary/30"
+ className="p-1 rounded transition-colors text-muted-foreground hover:text-foreground hover:bg-secondary/30"
  title={String(t('teams.equity.viewTraderDetails'))}
  >
- <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground/95 transition-colors" />
+ <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
  </Link>
  </div>
  </div>
@@ -389,7 +389,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  </div>
  <div className="flex justify-between">
  <span className="text-muted-foreground">{t('teams.equity.avgWin')}:</span>
- <span className="font-medium text-foreground/95">
+ <span className="font-medium text-foreground">
  {user.statistics.averageWin.toFixed(2)}
  </span>
  </div>
@@ -397,7 +397,7 @@ export function TeamEquityGridClient({ teamId }: TeamEquityGridClientProps) {
  <div className="space-y-1">
  <div className="flex justify-between">
  <span className="text-muted-foreground">{t('teams.equity.wins')}:</span>
- <span className="font-medium text-foreground/95">{user.statistics.winningTrades}</span>
+ <span className="font-medium text-foreground">{user.statistics.winningTrades}</span>
  </div>
  <div className="flex justify-between">
  <span className="text-muted-foreground">{t('teams.equity.losses')}:</span>

@@ -20,7 +20,7 @@ export function TermsPageClient() {
     <UnifiedPageShell widthClassName="max-w-[1280px]" className="py-8">
       <UnifiedSurface className="space-y-8">
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground/95">Terms of Service</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Terms of Service</h1>
           <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
             These terms describe account usage, payment policies, and service responsibilities for Qunt Edge.
           </p>

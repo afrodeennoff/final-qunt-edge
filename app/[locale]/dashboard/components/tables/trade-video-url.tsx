@@ -164,7 +164,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  )}
  {showSuccess && !isUpdating && (
  <svg
- className="h-4 w-4 text-foreground/95"
+ className="h-4 w-4 text-foreground"
  xmlns="http://www.w3.org/2000/svg"
  fill="none"
  stroke="currentColor"
@@ -201,7 +201,7 @@ export function TradeVideoUrl({ tradeIds, videoUrl: initialVideoUrl, onVideoUrlC
  size="icon"
  disabled={isUpdating || !draftUrl}
  onClick={handleClear}
- className="shrink-0 text-muted-foreground hover:text-foreground/95"
+ className="shrink-0 text-muted-foreground hover:text-foreground"
  >
  <Trash2 className="h-4 w-4" />
  </Button>

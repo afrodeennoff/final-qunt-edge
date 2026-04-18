@@ -18,21 +18,21 @@ export default function ProblemStatement() {
  <div className="w-1.5 h-1.5 rounded-full bg-foreground/60 animate-pulse"></div>
  <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-fg-secondary">System Failure Detected</span>
  </div>
- <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[350] mb-6 sm:mb-8 tracking-[-0.05em] leading-[0.92] text-foreground/95">
+ <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[350] mb-6 sm:mb-8 tracking-[-0.05em] leading-[0.92] text-foreground">
  PnL is a <br/>
- <span className="text-foreground/90">Lagging Indicator.</span>
+ <span className="text-foreground">Lagging Indicator.</span>
  </h2>
- <div className="max-w-lg space-y-6 text-foreground/64 text-base leading-[1.8] font-light sm:space-y-8 sm:text-lg">
+ <div className="max-w-lg space-y-6 text-foreground/60 text-base leading-[1.8] font-light sm:space-y-8 sm:text-lg">
  <p>
  Your bank account tells you <em>what</em> happened. It doesn&apos;t tell you <em>why</em>.
- Legacy journals are static graveyards of data that fail to capture the most critical variable in trading: <strong className="text-foreground/95 font-medium">State of Mind.</strong>
+ Legacy journals are static graveyards of data that fail to capture the most critical variable in trading: <strong className="text-foreground font-medium">State of Mind.</strong>
  </p>
  <p>
  Profit masks incompetence. You can violate every rule in your system, get lucky, and book a win. This reinforcement loop is the silent killer of careers.
  </p>
  <div className="mt-8 border-t border-border/30 pt-6 sm:mt-10 sm:pt-8">
- <p className="text-foreground/95 font-bold uppercase tracking-widest text-[10px] sm:text-xs mono mb-2">The Paradigm Shift</p>
- <p className="text-foreground/95 font-medium text-lg sm:text-xl tracking-tight">
+ <p className="text-foreground font-bold uppercase tracking-widest text-[10px] sm:text-xs mono mb-2">The Paradigm Shift</p>
+ <p className="text-foreground font-medium text-lg sm:text-xl tracking-tight">
  Stop auditing the money. Audit the execution.
  </p>
  </div>
@@ -70,9 +70,9 @@ export default function ProblemStatement() {
  {item.code}
  </div>
  <div className="flex items-start gap-4 sm:gap-6">
- <div className="mt-1 font-mono text-xl font-bold text-foreground/80 transition-colors group-hover:text-foreground/95 sm:text-2xl">0{i+1}</div>
+ <div className="mt-1 font-mono text-xl font-bold text-foreground/80 transition-colors group-hover:text-foreground sm:text-2xl">0{i+1}</div>
  <div>
- <h3 className="mb-2 text-lg font-bold tracking-tight text-foreground/90 transition-colors group-hover:text-foreground/95 sm:mb-3 sm:text-xl">{item.title}</h3>
+ <h3 className="mb-2 text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-foreground sm:mb-3 sm:text-xl">{item.title}</h3>
  <p className="text-xs leading-relaxed text-foreground/80 sm:text-sm">{item.desc}</p>
  </div>
  </div>

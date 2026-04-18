@@ -146,7 +146,7 @@ export default React.memo(function TickDistributionChart({
  <div className="flex items-center justify-between w-full">
  <div className="flex items-center gap-2">
  <span
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -156,7 +156,7 @@ export default React.memo(function TickDistributionChart({
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />
@@ -171,7 +171,7 @@ export default React.memo(function TickDistributionChart({
  <Button 
  variant="ghost"
  size="sm"
- className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground/95 hover:bg-secondary/22"
+ className="h-6 px-2 text-[9px] uppercase font-black tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary/22"
  onClick={() => setTickFilter({ value: null })}
  >
  {t("tickDistribution.clearFilter")}

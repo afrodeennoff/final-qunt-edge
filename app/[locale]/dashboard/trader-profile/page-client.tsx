@@ -801,7 +801,7 @@ export default function TraderProfilePageClient() {
 
   return (
     <UnifiedPageShell density="compact" widthClassName="max-w-[1720px]">
-      <div className="animate-page-enter space-y-3.5 sm:space-y-4 lg:space-y-5">
+      <div className="animate-page-enter space-y-4 sm:space-y-5">
         <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.92fr)] xl:gap-5">
           <section className="min-w-0 space-y-3.5 sm:space-y-4">
             <UnifiedSurface
@@ -876,7 +876,7 @@ export default function TraderProfilePageClient() {
                   </div>
                 </div>
 
-                <div className={cn(insetPanelClassName, 'p-4 sm:p-[1.125rem]')}>
+                <div className={cn(insetPanelClassName, 'p-4 sm:p-4')}>
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-1">

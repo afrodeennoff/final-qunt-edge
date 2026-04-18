@@ -65,8 +65,8 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  switch (type) {
  case 'risk': return <AlertTriangle className="h-4 w-4 text-muted-foreground" />
  case 'opportunity': return <Lightbulb className="h-4 w-4 text-muted-foreground" />
- case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground/95" />
- default: return <Brain className="h-4 w-4 text-foreground/95" />
+ case 'achievement': return <CheckCircle2 className="h-4 w-4 text-foreground" />
+ default: return <Brain className="h-4 w-4 text-foreground" />
  }
  }
 
@@ -107,7 +107,7 @@ export function SmartInsightsWidget({ size = 'medium' }: SmartInsightsWidgetProp
  <Button 
  variant="ghost"
  size="icon"
- className="h-6 w-6 text-muted-foreground hover:text-foreground/95"
+ className="h-6 w-6 text-muted-foreground hover:text-foreground"
  onClick={fetchInsights}
  disabled={loading}
  >

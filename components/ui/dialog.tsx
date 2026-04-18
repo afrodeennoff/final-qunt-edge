@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
  {/* Ambient glow */}
  <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-primary/[0.02] to-transparent pointer-events-none" />
  {children}
- <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg border border-border/40 bg-background/50 p-1.5 opacity-60 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:bg-background/80 hover:opacity-100 hover:border-border/55 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
+ <DialogPrimitive.Close className="absolute right-4 top-4 rounded-xl border border-border/35 bg-background/50 p-1.5 opacity-70 ring-offset-background transition-[opacity,background-color,border-color] duration-200 hover:bg-background/70 hover:opacity-100 hover:border-border/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:text-muted-foreground">
  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
  </DialogPrimitive.Close>
  </DialogPrimitive.Content>
@@ -88,7 +88,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
  <DialogPrimitive.Title
  ref={ref}
- className={cn("text-lg font-semibold leading-none tracking-tight text-foreground/95",
+ className={cn("text-lg font-semibold leading-none tracking-tight text-foreground",
  className
  )}
  {...props}

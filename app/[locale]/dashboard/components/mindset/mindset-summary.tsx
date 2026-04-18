@@ -85,7 +85,7 @@ export function MindsetSummary({
  if (value < 40) return { label: t('mindset.emotion.sad'), color:"text-muted-foreground/50" }
  if (value < 60) return { label: t('mindset.emotion.neutral'), color:"text-muted-foreground" }
  if (value < 80) return { label: t('mindset.emotion.happy'), color:"text-muted-foreground/90" }
- return { label: t('mindset.emotion.veryHappy'), color:"text-foreground/95" }
+ return { label: t('mindset.emotion.veryHappy'), color:"text-foreground" }
  }
 
  // Filter trades for the selected date

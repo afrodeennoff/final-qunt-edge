@@ -65,7 +65,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           variant === 'flat' && 'border-transparent bg-transparent shadow-none',
           variant === 'gradient-border' &&
             'border-primary/14 bg-card/95 shadow-[inset_0_1px_0_hsl(var(--foreground)/0.03),0_8px_24px_-12px_rgba(0,0,0,0.64)]',
-          variant === 'frost' && 'border-border/35 bg-background/60 shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]',
+          variant === 'frost' && 'border-border/40 bg-background/60 shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]',
           accent && accentClassMap[accent],
           size === 'sm' && 'text-body-sm',
           size === 'md' && 'type-body',
@@ -233,7 +233,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 border-t border-border/35',
+        'flex items-center gap-3 border-t border-border/40',
         {
           'p-4': size === 'sm',
           'p-5': size === 'md',

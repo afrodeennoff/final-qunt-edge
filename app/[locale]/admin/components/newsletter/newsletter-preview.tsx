@@ -118,7 +118,7 @@ export function NewsletterPreview() {
  />
  <Button 
  type="button"
- variant="error"
+ variant="destructive"
  size="icon"
  onClick={() => removeFeature(index)}
  disabled={content.features.length <= 1}

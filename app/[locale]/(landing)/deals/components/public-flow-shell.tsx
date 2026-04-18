@@ -49,12 +49,12 @@ export function PublicFlowShell({
 
               <div className="relative">
                 <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground/95">
+                  <span className="qe-soft-surface rounded-full px-2 py-1 text-foreground">
                     Qunt Edge
                   </span>
                   <span>Futures Funding Offers Hub</span>
                 </div>
-                <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-foreground/95 sm:text-5xl">
+                <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
                   {title}
                 </h1>
                 <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -73,7 +73,7 @@ export function PublicFlowShell({
                           'rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                           active
                             ? 'border-primary bg-primary text-primary-foreground'
-                            : 'border-border/35 bg-background/60 text-foreground/95 hover:border-border/45 hover:bg-background/25'
+                            : 'border-border/35 bg-background/60 text-foreground hover:border-border/45 hover:bg-background/25'
                         )}
                       >
                         {link.label}
@@ -86,15 +86,15 @@ export function PublicFlowShell({
 
             <section className="qe-soft-panel mt-4 grid gap-3 rounded-xl p-4 text-xs text-muted-foreground sm:grid-cols-3 sm:p-5">
               <article className="qe-soft-surface rounded-xl px-3 py-2">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground/95">Offer Checks</p>
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Offer Checks</p>
                 <p className="mt-1">Deal terms re-validated before listing changes are published.</p>
               </article>
               <article className="qe-soft-surface rounded-xl px-3 py-2">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground/95">Policy Context</p>
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Policy Context</p>
                 <p className="mt-1">Pricing, drawdown style, and payout notes linked in one flow.</p>
               </article>
               <article className="qe-soft-surface rounded-xl px-3 py-2">
-                <p className="font-semibold uppercase tracking-[0.12em] text-foreground/95">Decision Tools</p>
+                <p className="font-semibold uppercase tracking-[0.12em] text-foreground">Decision Tools</p>
                 <p className="mt-1">Compare, plan costs, and verify rules before committing capital.</p>
               </article>
             </section>

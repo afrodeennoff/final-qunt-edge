@@ -64,7 +64,7 @@ export default function Navbar() {
                 key={link.href}
                 href={`/${locale}${link.href}`}
                 className={cn(
-                  'rounded-full border border-border/35 px-4 py-2.5 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                  'rounded-full border border-border/35 h-9 px-4 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
                   isActive(link.href)
                     ? 'border-border/50 bg-background/60 text-foreground'
                     : 'text-muted-foreground hover:border-border/50 hover:bg-background/72 hover:text-foreground',

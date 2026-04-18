@@ -174,7 +174,7 @@ function CommentComponent({
             <Button 
               variant="ghost"
               size="sm"
-              className="h-auto px-2 text-muted-foreground hover:text-foreground/95"
+              className="h-auto px-2 text-muted-foreground hover:text-foreground"
               onClick={() => setIsReplying(!isReplying)}
               disabled={isSubmitting}
             >

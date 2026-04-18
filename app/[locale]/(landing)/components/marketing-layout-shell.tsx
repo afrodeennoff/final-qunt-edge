@@ -40,7 +40,7 @@ export default function MarketingLayoutShell({
           shellVariant === 'black' ? 'opacity-[0.05]' : 'opacity-[0.08]',
         )}
       />
-      <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_top,oklch(0.65_0.22_260/0.12),transparent_38%)]" />
+      <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_38%)]" />
       <div className="pointer-events-none fixed inset-x-8 top-0 z-0 h-40 rounded-b-2xl border border-border/30 bg-background/30" />
       <div className="flex min-h-screen w-full">
         {/* Full-width content: no sidebar column */}

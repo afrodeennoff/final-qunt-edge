@@ -11,10 +11,10 @@ export default function FAQ() {
  <div className="container mx-auto px-4">
  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
  <div className="rounded-2xl border border-border/30 bg-background/30 p-6">
- <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/34">
+ <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-foreground/35">
  FAQ
  </p>
- <h2 className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground/95 sm:text-4xl">
+ <h2 className="mt-5 text-3xl font-[350] tracking-[-0.05em] text-foreground sm:text-4xl">
  {t("faq.heading")}
  </h2>
  <p className="mt-4 max-w-lg text-sm leading-[1.8] text-foreground/60">
@@ -24,50 +24,50 @@ export default function FAQ() {
  <div className="rounded-2xl border border-border/30 bg-black/20 p-5">
  <div className="space-y-4">
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question1")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer1")}
  </p>
  </details>
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question2")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer2")}
  </p>
  </details>
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question3")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer3")}
  </p>
  </details>
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question4")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer4")}
  </p>
  </details>
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question5")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer5")}
  </p>
  </details>
  <details className="rounded-xl border border-border/30 bg-background/30 p-4">
- <summary className="cursor-pointer font-semibold text-foreground/95">
+ <summary className="cursor-pointer font-semibold text-foreground">
  {t("faq.question6")}
  </summary>
- <p className="mt-3 text-sm leading-[1.75] text-foreground/68">
+ <p className="mt-3 text-sm leading-[1.75] text-foreground/70">
  {t("faq.answer6")}
  </p>
  </details>

@@ -89,7 +89,7 @@ export default function AudienceSegmentation() {
                     {audience.features.map((feature) => (
                       <li key={String(feature)} className="flex items-start gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                        <span className="text-sm leading-relaxed text-foreground/90">
+                        <span className="text-sm leading-relaxed text-foreground">
                           {feature}
                         </span>
                       </li>

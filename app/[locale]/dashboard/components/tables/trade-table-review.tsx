@@ -991,7 +991,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
           const value = showPoints ? calculation.points : calculation.ticks
           return (
             <div className="text-right font-medium tabular-nums">
-              <span className={cn(value >= 0 ? 'text-foreground/95' : 'text-muted-foreground')}>
+              <span className={cn(value >= 0 ? 'text-foreground' : 'text-muted-foreground')}>
                 {showPoints ? value.toFixed(2) : value}
               </span>
             </div>
@@ -1229,7 +1229,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground/95 transition-colors cursor-help" />
+                    <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent side="top">
                     <p>{t('trade-table.description')}</p>
@@ -1297,7 +1297,7 @@ function TradeTableReviewComponent({ tradesParam, config }: TradeTableReviewProp
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Info
-                              className="h-4 w-4 text-muted-foreground hover:text-foreground/95 transition-colors cursor-help mr-2 shrink-0"
+                              className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors cursor-help mr-2 shrink-0"
                               onClick={(e) => e.stopPropagation()}
                             />
                           </TooltipTrigger>

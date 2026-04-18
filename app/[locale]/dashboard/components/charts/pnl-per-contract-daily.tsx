@@ -202,7 +202,7 @@ export default React.memo(function PnLPerContractDailyChart({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-1.5">
  <CardTitle
- className={cn("line-clamp-1 font-bold tracking-tight text-foreground/95 uppercase tracking-widest",
+ className={cn("line-clamp-1 font-bold tracking-tight text-foreground uppercase tracking-widest",
  size ==="small" ?"text-sm" :"text-base",
  )}
  >
@@ -212,7 +212,7 @@ export default React.memo(function PnLPerContractDailyChart({
  <UITooltip>
  <TooltipTrigger asChild>
  <Info
- className={cn("text-muted-foreground hover:text-foreground/95 transition-colors cursor-help",
+ className={cn("text-muted-foreground hover:text-foreground transition-colors cursor-help",
  size ==="small" ?"h-3.5 w-3.5" :"h-4 w-4",
  )}
  />
@@ -230,7 +230,7 @@ export default React.memo(function PnLPerContractDailyChart({
  >
  <SelectTrigger
  className={cn("w-[120px]",
- size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-border/55 text-foreground/95 font-black uppercase tracking-widest"
+ size ==="small" ?"h-6 text-[9px]" :"h-8 text-[10px]","bg-secondary/22 border-border/55 text-foreground font-black uppercase tracking-widest"
  )}
  >
  <SelectValue
@@ -239,7 +239,7 @@ export default React.memo(function PnLPerContractDailyChart({
  </SelectTrigger>
  <SelectContent className="bg-background/0.14 border-border/55">
  {availableInstruments.map((instrument) => (
- <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground/95">
+ <SelectItem key={instrument} value={instrument} className="text-[10px] font-black uppercase tracking-widest text-muted-foreground focus:text-foreground">
  {instrument}
  </SelectItem>
  ))}

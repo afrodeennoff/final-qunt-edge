@@ -52,12 +52,12 @@ function UserSection({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className={cn(unifiedInsetPanelClassName, 'flex items-center gap-3 px-3 py-2.5')}>
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-primary/16 bg-primary/10 text-sm font-semibold text-sidebar-foreground">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/16 bg-primary/10 text-sm font-semibold text-sidebar-foreground">
         {user?.user_metadata?.avatar_url ? (
           <img
             src={user.user_metadata.avatar_url}
             alt=""
-            className="h-full w-full rounded-[1rem] object-cover"
+            className="h-full w-full rounded-xl object-cover"
           />
         ) : (
           <User className="h-4 w-4" />
@@ -72,7 +72,7 @@ function UserSection({ onLogout }: { onLogout: () => void }) {
       <button
         type="button"
         onClick={onLogout}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1rem] border border-border/30 bg-background/60 text-sidebar-foreground/50 transition-[background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-sidebar-foreground"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/30 bg-background/60 text-sidebar-foreground/50 transition-[background-color,border-color,color] duration-200 hover:border-primary/20 hover:bg-primary/10 hover:text-sidebar-foreground"
         aria-label="Sign out"
       >
         <LogOut className="h-4 w-4" />
@@ -152,10 +152,10 @@ export function UnifiedMobileNav({
                             href={link.href.startsWith('/') ? link.href : `/${locale}${link.href}`}
                             onClick={() => setOpen(false)}
                             className={cn(
-                              'flex min-h-[44px] items-center gap-3 rounded-[1rem] px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200',
+                              'flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,border-color,color,box-shadow] duration-200',
                               active
-                                ? 'border border-primary/18 bg-primary/10 text-sidebar-foreground shadow-[0_0_0_0.5px_oklch(0.65_0.22_260/0.16),0_18px_28px_-24px_rgba(0,0,0,0.84)]'
-                                : 'border border-transparent text-sidebar-foreground/62 hover:border-border/35 hover:bg-background/72 hover:text-sidebar-foreground'
+                                ? 'border border-primary/18 bg-primary/10 text-sidebar-foreground shadow-[0_0_0_0.5px_hsl(var(--primary)/0.16),0_18px_28px_-24px_rgba(0,0,0,0.84)]'
+                                : 'border border-transparent text-sidebar-foreground/60 hover:border-border/35 hover:bg-background/72 hover:text-sidebar-foreground'
                             )}
                           >
                             {link.icon && (

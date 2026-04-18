@@ -1,5 +1,21 @@
 # Project Conventions & Patterns
 
+## Enterprise Surface System (2026-04-19 refresh)
+- **Card surface**: `border-border/35-40 bg-card/80-95 shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5-0.6)]`
+- **Elevated surface**: `border-border/45-50 bg-card/90 shadow-sm`
+- **Inset/subtle surface**: `border-border/25-30 bg-background/30-50`
+- **Dialog/modal**: `border-border/40 bg-card shadow-[0_8px_32px_-8px_rgba(0,0,0,0.7)]`
+- **Sidebar inner**: `border-sidebar-border/35 bg-sidebar/95 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)]`
+- **Tab/toolbar surface**: `border-border/40 bg-background/50-60`
+- **Badge/chip**: `border-[semantic]/18 bg-[semantic]/8`
+- **Primary button**: `border-primary/15 bg-primary shadow-sm`
+- **Ghost/outline button**: `border-border/40 bg-background/50`
+- **Input field**: `border-border/40 bg-background/60 focus:border-border/60`
+- **Skeleton**: `border-border/20 bg-muted/50`
+- **Never use** `bg-white/[X]` or `border-white/[X]` — use `bg-background/[X]` and `border-border/[X]` with scaled opacity
+- **Never use** `rounded-[1.Xrem]` — use standard `rounded-lg`, `rounded-xl`, `rounded-2xl` tokens
+- **Never exceed** 16px shadow spread on product surfaces (except modals at 32px)
+
 ## Performance Rules (Enforced)
 - No `repeat: Infinity` in interactive components (loading states OK)
 - No `filter:blur()` in any animation

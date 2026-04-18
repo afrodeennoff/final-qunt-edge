@@ -288,7 +288,7 @@ export function SharedLayoutsManager({ onBack }: SharedLayoutsManagerProps) {
  {t('share.cancel')}
  </Button>
  <Button 
- variant="error"
+ variant="destructive"
  onClick={handleDelete}
  className="sm:flex-1"
  >

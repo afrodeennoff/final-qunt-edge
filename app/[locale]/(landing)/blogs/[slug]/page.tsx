@@ -91,11 +91,11 @@ export default async function BlogDetailPage(props: Props) {
         )}
 
         <div className="space-y-4">
-          <Badge variant="accent" size="md">
+          <Badge variant="default" size="md">
             {categoryLabel}
           </Badge>
 
-          <h1 className="text-4xl font-bold text-foreground/95 sm:text-5xl">
+          <h1 className="text-4xl font-bold text-foreground sm:text-5xl">
             {post.title}
           </h1>
 

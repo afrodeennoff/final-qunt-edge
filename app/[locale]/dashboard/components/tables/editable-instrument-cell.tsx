@@ -100,7 +100,7 @@ export function EditableInstrumentCell({
  onClick={handleSave}
  disabled={isSaving}
  >
- <Check className="h-3 w-3 text-foreground/95" />
+ <Check className="h-3 w-3 text-foreground" />
  </Button>
  <Button 
  size="sm"

@@ -73,12 +73,12 @@ export default function PropfirmCatalogueWidget() {
  </div>
  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
  <DollarSign className="w-3 h-3 text-muted-foreground" />
- <span className="font-medium text-foreground/95">{stat.payouts.paidCount} Payouts</span>
+ <span className="font-medium text-foreground">{stat.payouts.paidCount} Payouts</span>
  </div>
  </div>
  </div>
  <div className="text-right shrink-0">
- <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground/95 tabular-nums leading-none">
+ <div className="text-[28px] font-[250] tracking-[-0.04em] text-foreground tabular-nums leading-none">
  ${stat.payouts.paidAmount > 1000
  ? `${(stat.payouts.paidAmount / 1000).toFixed(1)}k`
  : stat.payouts.paidAmount.toLocaleString()}

@@ -109,7 +109,7 @@ export function BlogManagementClient({
                 {filteredPosts.map((post) => (
                   <tr key={post.id} className="border-b border-border/40 last:border-0 hover:bg-muted/30">
                     <td className="p-4">
-                      <div className="font-medium text-foreground/95">{post.title}</div>
+                      <div className="font-medium text-foreground">{post.title}</div>
                       {post.excerpt && (
                         <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">
                           {post.excerpt}

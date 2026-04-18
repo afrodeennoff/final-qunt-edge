@@ -332,11 +332,11 @@ export function AccountTable({
  <div className="flex items-center justify-between">
  <div>
  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('propFirm.resetDate.label')}</div>
- <div className="font-medium text-foreground/95">{format(resetDate, 'PP', { locale: dateLocale })}</div>
+ <div className="font-medium text-foreground">{format(resetDate, 'PP', { locale: dateLocale })}</div>
  </div>
  <div className="text-right">
  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">{t('propFirm.startingBalance')}</div>
- <div className="font-medium text-foreground/95">${startingBalance.toFixed(2)}</div>
+ <div className="font-medium text-foreground">${startingBalance.toFixed(2)}</div>
  </div>
  </div>
  </div>

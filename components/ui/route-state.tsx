@@ -62,7 +62,7 @@ function RouteStateShell({
         >
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/15 to-transparent" />
           <div className="flex flex-col items-center text-center">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-foreground">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border/30 bg-background/40 text-muted-foreground">
               <Logo className="size-5 fill-current" />
             </div>
             <span className={unifiedChipClassName}>{eyebrow}</span>

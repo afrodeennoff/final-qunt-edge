@@ -258,7 +258,7 @@ function CouponFormGroup({
   children: ReactNode
 }) {
   return (
-    <div className="space-y-4 rounded-xl border border-border/45 bg-background/60 p-4">
+    <div className="space-y-4 rounded-xl border border-border/30 bg-background/40 p-4">
       <div className="space-y-1">
         <p className="text-sm font-semibold text-foreground">{title}</p>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
@@ -300,7 +300,7 @@ function CouponEditCard({
               />
             </div>
             <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground/95">{coupon.propFirm.name}</span> •{' '}
+              <span className="font-medium text-foreground">{coupon.propFirm.name}</span> •{' '}
               {coupon.propFirm.slug}
             </p>
           </div>
@@ -509,7 +509,7 @@ function CouponSuggestionCard({
               ) : null}
             </div>
             <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground/95">{suggestion.firmName}</span> •
+              <span className="font-medium text-foreground">{suggestion.firmName}</span> •
               visible on the public deals page, but not yet saved as an admin coupon
             </p>
           </div>
@@ -848,7 +848,7 @@ export default async function AdminCouponsPage({
                     id="propFirmId"
                     name="propFirmId"
                     defaultValue={firms[0]?.id ?? ''}
-                    className="flex h-11 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                    className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                   >
                     {firms.map((firm) => (
                       <option key={firm.id} value={firm.id}>

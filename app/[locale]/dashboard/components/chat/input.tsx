@@ -337,7 +337,7 @@ export function ChatInput({
  <Button 
  type="button"
  size="icon"
- variant="error"
+ variant="destructive"
  className="absolute -top-2 -right-2 h-6 w-6 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 transition-opacity"
  onClick={() => removeFile(index)}
  aria-label={`Remove attachment ${index + 1}`}

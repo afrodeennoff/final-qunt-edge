@@ -713,7 +713,7 @@ export function TeamManagement({
  const isActive = pathname.includes(`/teams/dashboard/${team.id}`)
 
  return (
- <Card key={team.id} className={cn("cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
+ <Card key={team.id} className={cn("cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 border-border/40 bg-background/72 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] hover:border-primary/24",
  isActive 
  ?"border-primary ring-2 ring-primary/20" 
  :""
@@ -796,7 +796,7 @@ export function TeamManagement({
  {isOwner && (
  <AlertDialog>
  <AlertDialogTrigger asChild>
- <Button variant="error" size="sm" className="flex-1 text-xs">
+ <Button variant="destructive" size="sm" className="flex-1 text-xs">
  <Trash2 className="h-3 w-3 mr-1" />
  {t('teams.management.delete')}
  </Button>
@@ -859,7 +859,7 @@ export function TeamManagement({
  {filteredTeams.length > 0 && (
  <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
  <DialogTrigger asChild>
- <Card className="cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
+ <Card className="cursor-pointer transition-[opacity,background-color,border-color,transform] duration-200 shadow-[inset_0_1px_0_hsl(var(--primary)/0.06),0_4px_16px_-4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_8px_32px_-8px_rgba(0,0,0,0.4)] border-dashed border-2 border-v2-border/40 hover:border-v2-accent/40 bg-v2-bg-surface/30">
  <CardContent className="flex flex-col items-center justify-center h-48 p-6">
  <Plus className="h-12 w-12 text-muted-foreground mb-4" />
  <CardTitle className="text-lg text-center mb-2">

@@ -78,7 +78,7 @@ export function AccountGroup({
  return (
  <Card
  className={cn("transition-[opacity,background-color,border-color] duration-300 ease-out",
- isDragOver &&"ring-2 ring-primary shadow-[inset_0_1px_0_oklch(0.65_0.22_260/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] scale-[1.02]",
+ isDragOver &&"ring-2 ring-primary shadow-[inset_0_1px_0_hsl(var(--primary)/0.08),0_16px_48px_-16px_rgba(0,0,0,0.5)] scale-[1.02]",
  isHiddenGroup &&"border-destructive",
  className,
  )}
