@@ -3,6 +3,8 @@ import { logger } from '@/lib/logger'
 import { paymentService } from './payment-service'
 import { whop } from '@/lib/whop'
 import type { SubscriptionEventType } from '@/prisma/generated/prisma'
+import { updateTag } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/cache/cache-invalidation'
 import { Prisma } from '@/prisma/generated/prisma'
 
 export interface SubscriptionDetails {
@@ -486,6 +488,16 @@ export class SubscriptionManager {
               })
             }
           })
+
+          // Invalidate caches for this user after subscription status change
+          try {
+            updateTag(CACHE_TAGS.USER_DATA(subscription.userId))
+            updateTag(CACHE_TAGS.USER_DATA_CORE(subscription.userId))
+            updateTag(CACHE_TAGS.USER_DATA_SUPPLEMENTAL(subscription.userId))
+            updateTag(CACHE_TAGS.DASHBOARD(subscription.userId))
+          } catch {
+            // Cache invalidation failure is non-blocking
+          }
 
           processed++
         } catch (error) {
