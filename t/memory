@@ -3,6 +3,40 @@
 **Updated:** 2026-04-19
 **Branch:** codex-obsidian-v3-redesign
 
+## Enterprise UI Refresh — Complete (2026-04-19)
+5 commits covering the full mounted product. All visual-only, zero behavior changes.
+
+| Commit | Scope | Files |
+|--------|-------|-------|
+| `47fa8ab0` | Bulk normalization: shadows, borders, rounded values, bg-white removal | 228 |
+| `4f697bba` | Refinement: border tiers, label typography, hover cleanup, spacing | 18 |
+| `26ac962c` | transition-all elimination (48→0), home/dashboard shell alignment | 75 |
+| `53764a9d` | Gradient removal, V2 token replacement, card surface normalization | 49 |
+| `db591706` | Project notes update | 2 |
+
+### Anti-pattern Status (all zero)
+- `backdrop-blur`: 0
+- `bg-white/[X]`: 0
+- `border-white/[X]`: 0
+- `transition-all`: 0
+- `rounded-[1.Xrem]`: 0
+- `filter:blur()`: 0
+- Hardcoded hex colors in TSX: 0
+
+### Key Visual Decisions
+- **Border opacity tiers**: /30 inset, /40 primary, /50 hover
+- **Card radius**: rounded-xl (cards/surfaces), rounded-2xl (section/hero panels only)
+- **Section rhythm**: py-12 sm:py-16 lg:py-20 (home), py-8 sm:py-10 (dashboard compact)
+- **Shell padding**: px-4 sm:px-6 lg:px-8 xl:px-12 (standard), px-4 sm:px-6 lg:px-8 (compact)
+- **Eyebrow labels**: text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground
+- **Hover policy**: Only interactive elements get hover states. Structural containers (headers, shells) do not.
+- **Shadows**: 4-12px spread on product surfaces, 32px max on modals
+- **V2 tokens**: accent tokens kept (intentional brand), border/bg/text tokens replaced with semantic equivalents
+
+### Verification
+- tsc --noEmit: 0 errors
+- eslint --quiet: 0 errors
+
 ## transition-all Elimination Pass (2026-04-19)
 Commit: 26ac962c. 27 files, 48 `transition-all` → targeted transitions. Visual-only, zero behavior changes.
 - Recharts Bar/Cell (12 embed files): `transition-[opacity,fill]`

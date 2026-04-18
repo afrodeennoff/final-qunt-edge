@@ -203,3 +203,21 @@
 - **RC:** `transition-all` triggers GPU transitions on all CSS properties including transform and filter, blocking click response during animation. Each component type needs a different targeted property set.
 - **R:** Map component types to specific transition properties: Recharts → `[opacity,fill]`, CTA buttons → `[transform,background-color,opacity,border-color]`, marketing cards → `[transform,opacity,background-color,border-color,box-shadow]`, nav pills → `[background-color,border-color,color,opacity]`, progress bars → `[width]`, logos → `[opacity,filter]`, entrance animations → `[transform,opacity]`.
 - **E:** python3 script replaced 48 instances across 27 files in one pass, verified with `npx tsc --noEmit` = 0 errors
+
+## Lesson 89: Gradient backgrounds on product surfaces create visual noise
+- **M:** Gradient backgrounds (linear-gradient with oklch/hsl) were used on deals page cards, firm detail cards, and shared pages
+- **RC:** Marketing-inspired gradient surfaces look premium in isolation but create visual inconsistency when mixed with solid surfaces across the product
+- **R:** Use solid bg-card/N or bg-background/N for all product surfaces. Reserve gradients for dedicated hero sections only.
+- **E:** `bg-[linear-gradient(160deg,hsl(var(--primary)/0.08),oklch(0_0_0/0.9))]` → `bg-card/90`
+
+## Lesson 90: V2 theme tokens should be migrated to standard semantic tokens
+- **M:** 210 instances of v2-text-*, 78 of border-v2-border, 59 of bg-v2-bg-* across the codebase
+- **RC:** The V2 design system introduced parallel CSS custom properties that duplicate standard semantic tokens
+- **R:** Replace border-v2-border → border-border, bg-v2-bg-base → bg-background, bg-v2-bg-surface → bg-card, text-v2-text-primary → text-foreground. Keep accent tokens (v2-accent) as they have different values.
+- **E:** `text-v2-text-secondary` → `text-muted-foreground` (same visual result, one less token layer)
+
+## Lesson 91: transition-all blocks click response during animation
+- **M:** 47 instances of `transition-all` remained after the first pass
+- **RC:** `transition-all` triggers GPU transitions on transform and filter properties, which blocks click handling during the transition window
+- **R:** Always use targeted transitions: `transition-[opacity,background-color,border-color]` for UI, `transition-[transform,opacity]` for animations, `transition-[width]` for progress bars, `transition-[opacity,fill]` for chart elements
+- **E:** Chart `<Bar className="transition-all">` → `<Bar className="transition-[opacity,fill]">`
