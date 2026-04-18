@@ -198,8 +198,8 @@
 - **R:** For file-editing work, use the `general-purpose` subagent type which has direct tool access. The `Explore` subagent type is read-only. For complex parallel work, run agents sequentially or use worktree isolation. Alternatively, do the work directly in the main conversation.
 - **E:** Had to re-do all 3 agents' work manually after they returned plans without edits.
 
-## Lesson 80: Batch-edit with python3 for safe multi-file transformations
-- **M:** Needed to replace `transition-all` across 15 files and hardcoded hex colors across 2 files. Using `sed` or individual `edit` calls would be slow and error-prone.
-- **RC:** python3 scripts with `open/read/replace/write` are safe for multi-file transformations because they operate on exact string matches, not regex on JSX className strings.
-- **R:** For multi-file class replacements, use python3 scripts with exact string match. Avoid sed on className strings (they can be multiline). Always verify with `npx tsc --noEmit` after batch changes.
-- **E:** python3 script replaced 19 `transition-all` across 10 files in one pass, verified clean with tsc.
+## Lesson 89: transition-all replacement must be context-specific per component type
+- **M:** 48 `transition-all` instances remained across marketing, embed, admin, and utility files
+- **RC:** `transition-all` triggers GPU transitions on all CSS properties including transform and filter, blocking click response during animation. Each component type needs a different targeted property set.
+- **R:** Map component types to specific transition properties: Recharts → `[opacity,fill]`, CTA buttons → `[transform,background-color,opacity,border-color]`, marketing cards → `[transform,opacity,background-color,border-color,box-shadow]`, nav pills → `[background-color,border-color,color,opacity]`, progress bars → `[width]`, logos → `[opacity,filter]`, entrance animations → `[transform,opacity]`.
+- **E:** python3 script replaced 48 instances across 27 files in one pass, verified with `npx tsc --noEmit` = 0 errors

@@ -3,6 +3,23 @@
 **Updated:** 2026-04-19
 **Branch:** codex-obsidian-v3-redesign
 
+## transition-all Elimination Pass (2026-04-19)
+Commit: 26ac962c. 27 files, 48 `transition-all` → targeted transitions. Visual-only, zero behavior changes.
+- Recharts Bar/Cell (12 embed files): `transition-[opacity,fill]`
+- Hero CTAs (hero.tsx): `transition-[transform,background-color,opacity,border-color]`
+- Hero badges (hero.tsx): `transition-[color,letter-spacing]`, `transition-[opacity]`
+- Marketing cards (features, problem-statement, firm-card): `transition-[transform,opacity,background-color,border-color,box-shadow]`
+- Nav/filter pills (Navigation, firm-filters, firm-grid, accounts-bar-chart, timeframe-controls): `transition-[background-color,border-color,color,opacity]`
+- Chat feature: `transition-[opacity,transform,max-height]`
+- Partners logos: `transition-[opacity,filter]`
+- Copy notification: `transition-[transform,opacity]`
+- Firm card progress bar: `transition-[width]`
+- Newsletter audio splitter: `transition-[width]`
+- Home constants: `transition-[opacity,transform]`
+- gpu-optimization utility: `transition-[opacity,background-color,border-color]`
+- Features entrance animation: `transition-[transform,opacity]`
+Verification: `npx tsc --noEmit` = 0 errors, `grep -rn transition-all` = 0 remaining
+
 ## Enterprise-Grade Visual Refresh (2026-04-19)
 3 commits: 47fa8ab0 (bulk normalization) + 4f697bba (refinement pass) + final semantic token pass.
 506+ files changed total across 3 passes. All visual-only, zero behavior changes.
@@ -71,7 +88,7 @@ None.
 
 ### Remaining Visual Follow-ups (lower priority)
 - Some landing page hero CTAs still use `bg-white` for intentional light-on-dark contrast
-- ~47 `transition-all` in marketing pages (acceptable for animation effects)
+- **Zero `transition-all`** — all 48 remaining instances replaced with targeted transitions
 - Some route-local leaf pages could benefit from richer skeleton passes
 
 ## Public landing/home route surface normalization (2026-04-19)
@@ -324,5 +341,4 @@ Full audit + fix pass across 4 layers. 90 findings, 30 fixed (13 CRITICAL + 17 H
 **Remaining (lower priority, not blocking launch):**
 - Webhook UUID fallback for users without metadata.user_id (needs product decision)
 - Duplicate dashboard layout cache entry (memory waste, not stale data)
-- ~33 transition-all in embed chart SVG (harmless — Recharts internal)
 - ~20 bg-white/[...] on home/embed pages (intentional dark-overlay design choice)
