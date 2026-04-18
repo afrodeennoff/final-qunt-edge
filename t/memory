@@ -3,7 +3,12 @@
 **Updated:** 2026-04-18
 **Branch:** codex-obsidian-v3-redesign
 
-## Current State: All Requirements Complete + Frontend-Backend Audit Done
+## Current State: Deployed to Production 2026-04-18
+
+Production deployment: https://qunt-edge.vercel.app (commit b938c939)
+Build: 7min, 177 static pages, 0 TypeScript errors, Prisma migrations up to date.
+
+## Previous State: All Requirements Complete + Frontend-Backend Audit Done
 
 ### Admin coupons + prop-firms repair completed (2026-04-18)
 - `/admin/propfirms` list and detail pages now share explicit read-only/fallback gating through `lib/prop-firms/admin-state.ts`. Firm, review, and coupon mutations are disabled consistently when the DB is unavailable or a fallback record is being rendered.
